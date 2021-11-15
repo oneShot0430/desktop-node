@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "module": "commonjs",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "outDir": "dist",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "jsx": "react",
+    "baseUrl": ".",
+    "paths": {
+      "*": ["node_modules/*"],
+      "shared/*": ["./src/shared/*"],
+      "webapp/*": ["./src/webapp/*"],
+      "src/*": ["./src/*"]
+    }
+  },
+  "include": ["src/**/*"]
+}
