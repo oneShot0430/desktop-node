@@ -1,13 +1,13 @@
 import React from 'react';
+import { HashRouter } from 'react-router-dom';
 
-import MainLayout from './components/MainLayout';
-import MyNode from './pages/MyNode';
+import AppRoutes from './AppRoutes';
 
 const App = (): JSX.Element => {
   return (
-    <MainLayout>
-      <MyNode />
-    </MainLayout>
+    <HashRouter>
+      <AppRoutes />
+    </HashRouter>
   );
 };
 
