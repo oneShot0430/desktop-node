@@ -23,6 +23,9 @@ module.exports = {
         lg: '24px',
         xl: '48px',
         xxl: '62px',
+        6.5: '1.625rem',
+        9.75: '2.4375rem',
+        34.5: '8.625rem',
       },
       letterSpacing: {
         finnieSpacing: '0.03em',
