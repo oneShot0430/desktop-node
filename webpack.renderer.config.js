@@ -9,6 +9,16 @@ rules.push({
   use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
 });
 
+rules.push({
+  test: /\.ttf$/i,
+  type: 'asset/resource',
+});
+
+rules.push({
+  test: /\.(png|svg|jpg|jpeg|gif)$/i,
+  use: ['@svgr/webpack'],
+});
+
 module.exports = {
   module: {
     rules,

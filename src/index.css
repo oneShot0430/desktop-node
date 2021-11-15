@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: 'Sora';
+    font-style: normal;
+    font-weight: 400;
+    src: url('./assets/fonts/Sora-Regular.ttf');
+  }
+  @font-face {
+    font-family: 'Sora';
+    font-style: normal;
+    font-weight: 600;
+    src: url('./assets/fonts/Sora-SemiBold.ttf');
+  }
+}
