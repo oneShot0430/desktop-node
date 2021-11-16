@@ -16,10 +16,38 @@ const routes = [
     element: <Wrapper />,
     children: [
       { path: '/my-node', element: <MyNode /> },
-      { path: '/add-tasks', element: <div> Add tasks</div> },
-      { path: '/rewards', element: <div> Rewards </div> },
-      { path: '/notifications', element: <div> Notifications </div> },
-      { path: '/settings', element: <div> Settings </div> },
+      {
+        path: '/add-tasks',
+        element: (
+          <div className="mt-56 w-1/2 text-center mx-auto text-3xl">
+            Add tasks
+          </div>
+        ),
+      },
+      {
+        path: '/rewards',
+        element: (
+          <div className="mt-56 w-1/2 text-center mx-auto text-3xl">
+            Rewards
+          </div>
+        ),
+      },
+      {
+        path: '/notifications',
+        element: (
+          <div className="mt-56 w-1/2 text-center mx-auto text-3xl">
+            Notifications
+          </div>
+        ),
+      },
+      {
+        path: '/settings',
+        element: (
+          <div className="mt-56 w-1/2 text-center mx-auto text-3xl">
+            Settings
+          </div>
+        ),
+      },
       { path: '/', element: <MyNode /> },
     ],
   },
