@@ -16,3 +16,13 @@
     src: url('./assets/fonts/Sora-SemiBold.ttf');
   }
 }
+
+@layer components {
+  .finnie-border-teal {
+    @apply border rounded-finnie border-finnieTeal-100;
+  }
+
+  .finnie-border-orange {
+    @apply border rounded-finnie border-finnieOrange;
+  }
+}
