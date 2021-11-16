@@ -2,8 +2,8 @@ import clsx from 'clsx';
 import React from 'react';
 
 const variants = {
-  teal: 'border-finnieTeal-100',
-  orange: 'border-finnieOrange',
+  teal: 'finnie-border-teal',
+  orange: 'finnie-border-orange',
 };
 
 type ActionButtonProps = {
@@ -16,7 +16,7 @@ const ActionButton = ({ logo: Logo, name, variant }: ActionButtonProps): JSX.Ele
   return (
     <div
       className={clsx(
-        'h-27.5 w-30.5 ml-8 flex flex-col justify-start items-center cursor-pointer border rounded-finnie px-4 pt-4',
+        'h-27.5 w-30.5 ml-8 flex flex-col justify-start items-center cursor-pointer  px-4 pt-4',
         variants[variant]
       )}
     >
