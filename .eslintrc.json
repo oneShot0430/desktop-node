@@ -17,6 +17,7 @@
     "plugin:react/recommended"
   ],
   "rules": {
+    "semi": ["error", "always"],
     "quotes": ["error", "single", { "avoidEscape": true }],
     "jsx-quotes": ["error", "prefer-double"],
     "import/extensions": ["error", "never", { "svg": "always" }],
