@@ -17,7 +17,7 @@ const Navbar = (): JSX.Element => {
         <NavLink
           className={({ isActive }) =>
             clsx(
-              'tracking-finnieSpacing ml-7 p-1 text-right',
+              'tracking-finnieSpacing ml-7 text-right',
               isActive && 'text-finnieTeal font-semibold underline'
             )
           }
