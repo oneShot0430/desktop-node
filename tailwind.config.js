@@ -17,6 +17,9 @@ module.exports = {
           100: '#BEF0ED',
           DEFAULT: '#5ED9D1',
         },
+        finnieOrange: {
+          DEFAULT: '#FFC78F',
+        },
       },
       spacing: {
         sm: '8px',
@@ -28,7 +31,10 @@ module.exports = {
         2.5: '0.625rem',
         5.25: '1.3125rem',
         6.5: '1.625rem',
+        9.5: '2.375rem',
         9.75: '2.4375rem',
+        27.5: '6.875rem',
+        30.5: '7.625rem',
         34.5: '8.625rem',
       },
       letterSpacing: {
@@ -36,7 +42,7 @@ module.exports = {
         'finnieSpacing-wide': '0.03em',
       },
       borderRadius: {
-        koii: '4px',
+        finnie: '4px',
       },
     },
   },
