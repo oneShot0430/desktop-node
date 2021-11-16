@@ -4,7 +4,6 @@ import { useRoutes, Outlet } from 'react-router-dom';
 import MainLayout from './components/MainLayout';
 import MyNode from './pages/MyNode';
 
-// React-router-dom-v6
 const Wrapper = (): JSX.Element => (
   <MainLayout>
     <Outlet />

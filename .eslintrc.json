@@ -13,15 +13,42 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:import/recommended",
     "plugin:import/electron",
-    "plugin:import/typescript"
+    "plugin:import/typescript",
+    "plugin:react/recommended"
   ],
   "rules": {
-    "import/extensions": ["error", "never", { "svg": "always" }]
+    "quotes": ["error", "single", { "avoidEscape": true }],
+    "jsx-quotes": ["error", "prefer-double"],
+    "import/extensions": ["error", "never", { "svg": "always" }],
+    "import/newline-after-import": ["error", { "count": 1 }],
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index",
+          "object",
+          "type"
+        ],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }
+    ]
   },
   "parser": "@typescript-eslint/parser",
   "settings": {
     "import/resolver": {
       "typescript": {}
+    },
+    "react": {
+      "version": "17"
     }
   }
 }
