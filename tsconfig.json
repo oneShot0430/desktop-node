@@ -15,6 +15,7 @@
       "*": ["node_modules/*"],
       "shared/*": ["./src/shared/*"],
       "webapp/*": ["./src/webapp/*"],
+      "svgs/*": ["./src/assets/svgs/*"],
       "src/*": ["./src/*"]
     }
   },
