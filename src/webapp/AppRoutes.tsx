@@ -19,7 +19,7 @@ const routes = [
       { path: '/add-tasks', element: <div> Add tasks</div> },
       { path: '/rewards', element: <div> Rewards </div> },
       { path: '/notifications', element: <div> Notifications </div> },
-      { path: '/settings', element: <MyNode /> },
+      { path: '/settings', element: <div> Settings </div> },
       { path: '/', element: <MyNode /> },
     ],
   },
