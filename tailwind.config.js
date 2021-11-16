@@ -14,6 +14,7 @@ module.exports = {
           light: '#171753',
         },
         finnieTeal: {
+          100: '#BEF0ED',
           DEFAULT: '#5ED9D1',
         },
       },
@@ -23,12 +24,19 @@ module.exports = {
         lg: '24px',
         xl: '48px',
         xxl: '62px',
+        1.5: '0.375rem',
+        2.5: '0.625rem',
+        5.25: '1.3125rem',
         6.5: '1.625rem',
         9.75: '2.4375rem',
         34.5: '8.625rem',
       },
       letterSpacing: {
-        finnieSpacing: '0.03em',
+        'finnieSpacing-tight': '-0.01em',
+        'finnieSpacing-wide': '0.03em',
+      },
+      borderRadius: {
+        koii: '4px',
       },
     },
   },

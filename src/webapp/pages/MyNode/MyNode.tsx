@@ -1,14 +1,13 @@
 import React from 'react';
 
-import NodeLogo from 'src/assets/node-logo.svg';
-import Toolbar from 'webapp/components/Toolbar';
+import MyNodeToolbar from './MyNodeToolbar';
 
 const MyNode = (): JSX.Element => {
   return (
-    <div>
-      <Toolbar logo={NodeLogo} title="My Node" rightPart={<div>Right part</div>} />
+    <>
+      <MyNodeToolbar />
       <div>This is the Node page</div>
-    </div>
+    </>
   );
 };
 
