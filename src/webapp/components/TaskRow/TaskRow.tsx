@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import React from 'react';
 
-import RunButton from '../RunButton';
+import RunButton from 'webapp/components/RunButton';
 
 type Task = {
   name: string;

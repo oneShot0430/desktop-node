@@ -1,6 +1,6 @@
 import React from 'react';
 
-import TaskRow from '../TaskRow';
+import TaskRow from 'webapp/components/TaskRow';
 
 const tasks = [
   {

@@ -47,11 +47,11 @@
 
 @layer components {
   .finnie-border-teal {
-    @apply border rounded-finnie border-finnieTeal-100 filter shadow-md;
+    @apply border rounded-finnie border-finnieTeal-100 shadow-md;
   }
 
   .finnie-border-orange {
-    @apply border rounded-finnie border-finnieOrange filter shadow-md;
+    @apply border rounded-finnie border-finnieOrange shadow-md;
   }
 
   .finnie-border-blue {
