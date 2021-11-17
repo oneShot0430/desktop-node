@@ -26,9 +26,7 @@ const TaskRow = ({
       className={clsx(
         'pl-9.5 pr-8 grid grid-cols-15 gap-x-3 h-xxl items-center text-center text-finnieBlue',
         status === 'paused' && 'bg-finnieOrange bg-opacity-50',
-        status === 'running' && isOdd
-          ? 'bg-trueGray-300 bg-opacity-30'
-          : 'bg-white'
+        status === 'running' && isOdd ? 'bg-trueGray-200' : 'bg-white'
       )}
     >
       <div className="col-span-1 flex items-center justify-center">
@@ -45,8 +43,8 @@ const TaskRow = ({
       </div>
       <div className="col-span-2 text-sm finnieSpacing-wider ">{myStake}</div>
       <div className="col-span-1 text-xs finnieSpacing-wide">{state}</div>
-      <div className="col-span-2 text-xs finnieSpacing-wide">
-        <button className="bg-white w-24 h-12 finnie-border-blue font-semibold">
+      <div className="col-span-2 justify-self-end">
+        <button className="bg-white w-24 h-12 finnie-border-blue rounded-finnie shadow-md font-semibold  text-xs finnieSpacing-wide">
           Withdraw Stake
         </button>
       </div>

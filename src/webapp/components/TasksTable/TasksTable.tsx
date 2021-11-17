@@ -67,7 +67,7 @@ const TasksTable = (): JSX.Element => {
       </div>
       <div className="pt-xxl">
         {tasks.map((task, index) => (
-          <TaskRow key={index} task={task} isOdd={index % 2 !== 0} />
+          <TaskRow key={index} task={task} isOdd={index % 2 === 0} />
         ))}
       </div>
     </div>

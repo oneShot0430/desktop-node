@@ -25,27 +25,24 @@
     src: url('./assets/fonts/Sora-SemiBold.ttf');
   }
 
-  /* width */
+  /* Scroll bar config */
   ::-webkit-scrollbar {
     width: 4px;
     height: 4px;
   }
 
-  /* Track */
   ::-webkit-scrollbar-track {
     background: rgba(165, 165, 165, 0);
     border-radius: 10px;
     border: 0px;
   }
 
-  /* Handle */
   ::-webkit-scrollbar-thumb {
     background: #bef0ed;
     border-radius: 10px;
     border: 0px;
   }
 
-  /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
     background: #555;
   }
@@ -53,14 +50,14 @@
 
 @layer components {
   .finnie-border-teal {
-    @apply border rounded-finnie border-finnieTeal-100 filter shadow;
+    @apply border rounded-finnie border-finnieTeal-100 filter shadow-md;
   }
 
   .finnie-border-orange {
-    @apply border rounded-finnie border-finnieOrange filter shadow;
+    @apply border rounded-finnie border-finnieOrange filter shadow-md;
   }
 
   .finnie-border-blue {
-    @apply border-1.5 rounded-finnie border-finnieBlue filter shadow;
+    @apply border-2 border-finnieBlue filter;
   }
 }

@@ -25,7 +25,7 @@ module.exports = {
         finnieEmerald: {
           DEFAULT: '#49CE8B',
         },
-        trueGray: { ...colors.trueGray, 300: '#D6D6D6' },
+        trueGray: { ...colors.trueGray, 200: '#EAEAEA' },
       },
       spacing: {
         sm: '8px',
@@ -54,9 +54,6 @@ module.exports = {
       gridTemplateColumns: {
         15: 'repeat(15, minmax(0, 1fr))',
         16: 'repeat(16, minmax(0, 1fr))',
-      },
-      borderWidth: {
-        1.5: '1.5px',
       },
     },
   },
