@@ -18,6 +18,7 @@ module.exports = {
         finnieTeal: {
           100: '#BEF0ED',
           DEFAULT: '#5ED9D1',
+          700: '#237B75',
         },
         finnieOrange: {
           DEFAULT: '#FFC78F',
@@ -26,6 +27,9 @@ module.exports = {
           DEFAULT: '#49CE8B',
         },
         trueGray: { ...colors.trueGray, 200: '#EAEAEA' },
+      },
+      fontSize: {
+        '2xs': '11px',
       },
       spacing: {
         sm: '8px',

@@ -34,19 +34,30 @@ const TaskRow = ({
           variant={status === 'running' ? 'pause-active' : 'play-active'}
         />
       </div>
-      <div className="col-span-5 text-lg finnieSpacing-wider text-left pl-2">
-        {name}
+      <div className="col-span-5 text-left pl-2">
+        <div className="text-lg tracking-finnieSpacing-wider">{name}</div>
+        <div className="text-finnieTeal-700 text-2xs">
+          02 Dec 2021, 18:15:02
+        </div>
       </div>
-      <div className="col-span-2 text-sm finnieSpacing-wider">{creator}</div>
-      <div className="col-span-2 text-sm finnieSpacing-wide px-2">
+      <div className="col-span-2 text-sm tracking-finnieSpacing-wider">
+        {creator}
+      </div>
+      <div className="col-span-2 text-sm tracking-finnieSpacing-wide px-2">
         {rewardEarned}
       </div>
-      <div className="col-span-2 text-sm finnieSpacing-wider ">{myStake}</div>
-      <div className="col-span-1 text-xs finnieSpacing-wide">{state}</div>
-      <div className="col-span-2 justify-self-end">
-        <button className="bg-white w-24 h-12 finnie-border-blue rounded-finnie shadow-md font-semibold  text-xs finnieSpacing-wide">
-          Withdraw Stake
-        </button>
+      <div className="col-span-2 text-sm tracking-finnieSpacing-wider ">
+        {myStake}
+      </div>
+      <div className="col-span-3 grid grid-cols-2 gap-x-2 items-center">
+        <div className="col-span-1 text-xs tracking-finnieSpacing-wide">
+          {state}
+        </div>
+        <div className="col-span-1 justify-self-end">
+          <button className="bg-white w-24 h-10 finnie-border-blue rounded-finnie shadow-md font-semibold text-xs tracking-finnieSpacing-wide">
+            Withdraw Stake
+          </button>
+        </div>
       </div>
     </div>
   );

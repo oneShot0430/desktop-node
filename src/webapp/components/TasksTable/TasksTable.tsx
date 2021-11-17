@@ -62,8 +62,10 @@ const TasksTable = (): JSX.Element => {
         <div className="col-span-2">Task Creator</div>
         <div className="col-span-2 px-2">Rewards Earned</div>
         <div className="col-span-2">My Stake</div>
-        <div className="col-span-1">State</div>
-        <div className="col-span-2"></div>
+        <div className="col-span-3 grid grid-cols-2 items-center">
+          <div className="col-span-1">State</div>
+          <div className="col-span-1"></div>
+        </div>
       </div>
       <div className="pt-xxl">
         {tasks.map((task, index) => (

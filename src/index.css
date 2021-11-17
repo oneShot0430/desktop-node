@@ -3,9 +3,6 @@
 @tailwind utilities;
 
 @layer base {
-  * {
-    @apply subpixel-antialiased;
-  }
   @font-face {
     font-family: 'Sora';
     font-style: normal;
