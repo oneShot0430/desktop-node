@@ -36,14 +36,9 @@ module.exports = {
         6.5: '1.625rem',
         9.5: '2.375rem',
         9.75: '2.4375rem',
-        19.5: '4.875rem', // 78px
-        26.25: '6.5625rem', // 105px
         27.5: '6.875rem',
         30.5: '7.625rem',
         34.5: '8.625rem',
-        35.5: '8.875rem', // 142px
-        38.5: '9.625rem', // 154px
-        92.75: '23.1875rem', // 371px
       },
       letterSpacing: {
         'finnieSpacing-tight': '-0.01em',
@@ -51,6 +46,10 @@ module.exports = {
       },
       borderRadius: {
         finnie: '4px',
+      },
+      gridTemplateColumns: {
+        15: 'repeat(15, minmax(0, 1fr))',
+        16: 'repeat(16, minmax(0, 1fr))',
       },
     },
   },
