@@ -55,6 +55,6 @@
   }
 
   .finnie-border-blue {
-    @apply border-2 border-finnieBlue filter;
+    @apply border-2 border-finnieBlue;
   }
 }
