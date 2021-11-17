@@ -8,7 +8,9 @@ const MyNode = (): JSX.Element => {
   return (
     <>
       <MyNodeToolbar />
-      <TasksTable />
+      <div className="mt-34.5">
+        <TasksTable />
+      </div>
     </>
   );
 };

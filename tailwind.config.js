@@ -22,7 +22,10 @@ module.exports = {
         finnieOrange: {
           DEFAULT: '#FFC78F',
         },
-        trueGray: colors.trueGray,
+        finnieEmerald: {
+          DEFAULT: '#49CE8B',
+        },
+        trueGray: { ...colors.trueGray, 300: '#D6D6D6' },
       },
       spacing: {
         sm: '8px',
@@ -42,7 +45,8 @@ module.exports = {
       },
       letterSpacing: {
         'finnieSpacing-tight': '-0.01em',
-        'finnieSpacing-wide': '0.03em',
+        'finnieSpacing-wide': '0.015em',
+        'finnieSpacing-wider': '0.03em',
       },
       borderRadius: {
         finnie: '4px',
@@ -50,6 +54,9 @@ module.exports = {
       gridTemplateColumns: {
         15: 'repeat(15, minmax(0, 1fr))',
         16: 'repeat(16, minmax(0, 1fr))',
+      },
+      borderWidth: {
+        1.5: '1.5px',
       },
     },
   },
