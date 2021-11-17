@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 @layer base {
+  * {
+    @apply subpixel-antialiased;
+  }
   @font-face {
     font-family: 'Sora';
     font-style: normal;
@@ -13,6 +16,12 @@
     font-family: 'Sora';
     font-style: normal;
     font-weight: 600;
+    src: url('./assets/fonts/Sora-Medium.ttf');
+  }
+  @font-face {
+    font-family: 'Sora';
+    font-style: normal;
+    font-weight: 800;
     src: url('./assets/fonts/Sora-SemiBold.ttf');
   }
 }
