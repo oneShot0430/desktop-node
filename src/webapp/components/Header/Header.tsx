@@ -7,7 +7,7 @@ import Navbar from './Navbar';
 
 const Header = (): JSX.Element => {
   return (
-    <header className="fixed w-screen h-xxl flex items-center justify-between pr-8 text-white bg-gradient-to-r from-finnieBlue-dark to-finnieBlue-light">
+    <header className="fixed w-screen z-10 h-xxl flex items-center justify-between pr-8 text-white bg-gradient-to-r from-finnieBlue-dark to-finnieBlue">
       <div className="relative">
         <FinnieLogo className="h-xxl" />
         <HeaderBackground className="absolute top-0" />

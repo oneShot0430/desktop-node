@@ -13,16 +13,48 @@
     font-family: 'Sora';
     font-style: normal;
     font-weight: 600;
+    src: url('./assets/fonts/Sora-Medium.ttf');
+  }
+  @font-face {
+    font-family: 'Sora';
+    font-style: normal;
+    font-weight: 800;
     src: url('./assets/fonts/Sora-SemiBold.ttf');
+  }
+
+  /* Scroll bar config */
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: rgba(165, 165, 165, 0);
+    border-radius: 10px;
+    border: 0px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #bef0ed;
+    border-radius: 10px;
+    border: 0px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
   }
 }
 
 @layer components {
   .finnie-border-teal {
-    @apply border rounded-finnie border-finnieTeal-100;
+    @apply border rounded-finnie border-finnieTeal-100 shadow-md;
   }
 
   .finnie-border-orange {
-    @apply border rounded-finnie border-finnieOrange;
+    @apply border rounded-finnie border-finnieOrange shadow-md;
+  }
+
+  .finnie-border-blue {
+    @apply border-2 border-finnieBlue filter;
   }
 }

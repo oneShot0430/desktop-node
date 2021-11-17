@@ -1,3 +1,5 @@
+const colors = require('tailwindcss/colors');
+
 module.exports = {
   purge: ['./src/**/*.{js,jsx,ts,tsx}', './src/index.html'],
   darkMode: false, // or 'media' or 'class'
@@ -11,15 +13,23 @@ module.exports = {
       colors: {
         finnieBlue: {
           dark: '#030332',
-          light: '#171753',
+          DEFAULT: '#171753',
         },
         finnieTeal: {
           100: '#BEF0ED',
           DEFAULT: '#5ED9D1',
+          700: '#237B75',
         },
         finnieOrange: {
           DEFAULT: '#FFC78F',
         },
+        finnieEmerald: {
+          DEFAULT: '#49CE8B',
+        },
+        trueGray: { ...colors.trueGray, 200: '#EAEAEA' },
+      },
+      fontSize: {
+        '2xs': '11px',
       },
       spacing: {
         sm: '8px',
@@ -39,10 +49,15 @@ module.exports = {
       },
       letterSpacing: {
         'finnieSpacing-tight': '-0.01em',
-        'finnieSpacing-wide': '0.03em',
+        'finnieSpacing-wide': '0.015em',
+        'finnieSpacing-wider': '0.03em',
       },
       borderRadius: {
         finnie: '4px',
+      },
+      gridTemplateColumns: {
+        15: 'repeat(15, minmax(0, 1fr))',
+        16: 'repeat(16, minmax(0, 1fr))',
       },
     },
   },
