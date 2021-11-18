@@ -13,11 +13,27 @@ const MyNodeActionCenter = (): JSX.Element => {
   return (
     <div className="flex justify-between w-full">
       <div>
-        <BalanceInfo logo={FinnieLogoInverse} name="Total KOII" value={3521.066} />
-        <BalanceInfo logo={TotalStakedIcon} name="Total Staked" value={3521.066} />
-        <BalanceInfo logo={PendingRewardsIcon} name="Pending Rewards" value={3521.066} />
+        <BalanceInfo
+          logo={FinnieLogoInverse}
+          name="Total KOII"
+          value={3521.066}
+        />
+        <BalanceInfo
+          logo={TotalStakedIcon}
+          name="Total Staked"
+          value={3521.066}
+        />
+        <BalanceInfo
+          logo={PendingRewardsIcon}
+          name="Pending Rewards"
+          value={3521.066}
+        />
       </div>
-      <ActionButton logo={HistoryAndLogsIcon} name="History & Logs" variant="teal" />
+      <ActionButton
+        logo={HistoryAndLogsIcon}
+        name="History & Logs"
+        variant="teal"
+      />
       <ActionButton logo={AddTasksLogo} name="Add Tasks" variant="orange" />
     </div>
   );

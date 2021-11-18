@@ -1,15 +1,14 @@
 import React from 'react';
 
-import TasksTable from 'webapp/components/TasksTable';
-
-import MyNodeToolbar from './MyNodeToolbar';
+import MyNodeTasksTable from './components/MyNodeTasksTable';
+import MyNodeToolbar from './components/MyNodeToolbar';
 
 const MyNode = (): JSX.Element => {
   return (
     <>
       <MyNodeToolbar />
       <div className="mt-34.5">
-        <TasksTable />
+        <MyNodeTasksTable />
       </div>
     </>
   );
