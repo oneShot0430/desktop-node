@@ -12,7 +12,7 @@ const navItems = [
 
 const Navbar = (): JSX.Element => {
   return (
-    <div className="flex justify-between">
+    <nav className="flex justify-between">
       {navItems.map((item) => (
         <NavLink
           className={({ isActive }) =>
@@ -27,7 +27,7 @@ const Navbar = (): JSX.Element => {
           {item.name}
         </NavLink>
       ))}
-    </div>
+    </nav>
   );
 };
 
