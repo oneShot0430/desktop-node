@@ -6,8 +6,6 @@ import ActionButton from 'webapp/components/ActionButton';
 const AddTasksActionCenter = (): JSX.Element => {
   return (
     <div className="flex">
-      {/* 284 109 */}
-      {/* 288 110 */}
       <div className="flex flex-col bg-finnieBlue font-normal justify-center items-start w-71 h-27.5 pl-4 text-lg rounder shadow-md">
         <div>
           <span className="font-semibold">1. </span>Select new tasks to run.
