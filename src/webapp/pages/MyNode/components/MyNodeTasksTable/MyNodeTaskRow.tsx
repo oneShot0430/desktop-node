@@ -17,7 +17,7 @@ type TaskRowProps = {
   isOdd: boolean;
 };
 
-const TaskRow = ({
+const MyNodeTaskRow = ({
   task: { name, creator, rewardEarned, myStake, state, status },
   isOdd,
 }: TaskRowProps): JSX.Element => {
@@ -63,4 +63,4 @@ const TaskRow = ({
   );
 };
 
-export default TaskRow;
+export default MyNodeTaskRow;
