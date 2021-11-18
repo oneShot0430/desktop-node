@@ -10,14 +10,10 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "jsx": "react",
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "paths": {
-      "*": ["node_modules/*"],
-      "shared/*": ["./src/shared/*"],
-      "webapp/*": ["./src/webapp/*"],
-      "svgs/*": ["./src/assets/svgs/*"],
-      "src/*": ["./src/*"]
+      "svgs/*": ["assets/svgs/*"]
     }
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "tests"]
 }
