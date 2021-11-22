@@ -4,8 +4,8 @@ import AddTasksTaskRow from './AddTasksTaskRow';
 
 const tasks = [
   {
-    name: 'Task 1',
-    creator: 'Creator 1',
+    name: 'Paint a Banana Purple',
+    creator: 'StoreCat',
     bounty: 1000,
     nodes: 125,
     topStake: 100.0,
@@ -14,8 +14,8 @@ const tasks = [
     status: 'running',
   },
   {
-    name: 'Task 2',
-    creator: 'Creator 1',
+    name: 'Burn down the banana stand',
+    creator: 'Koii Network',
     bounty: 1011,
     nodes: 1251,
     topStake: 100.01,
@@ -25,7 +25,7 @@ const tasks = [
   },
   {
     name: 'Task 3',
-    creator: 'Creator 1',
+    creator: 'StoreCat',
     bounty: 1502,
     nodes: 125,
     topStake: 100.02,
@@ -35,7 +35,7 @@ const tasks = [
   },
   {
     name: 'Task 4',
-    creator: 'Creator 1',
+    creator: 'Koii Network',
     bounty: 1035,
     nodes: 25,
     topStake: 100.03,
@@ -45,7 +45,7 @@ const tasks = [
   },
   {
     name: 'Task 5',
-    creator: 'Creator 1',
+    creator: 'StoreCat',
     bounty: 1204,
     nodes: 1125,
     topStake: 100.04,
@@ -55,7 +55,7 @@ const tasks = [
   },
   {
     name: 'Task 6',
-    creator: 'Creator 1',
+    creator: 'Koii Network',
     bounty: 10005,
     nodes: 1235,
     topStake: 100.99,
