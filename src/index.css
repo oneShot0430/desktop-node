@@ -46,6 +46,10 @@
 }
 
 @layer components {
+  * {
+    @apply select-none;
+  }
+
   .finnie-border-teal {
     @apply border rounded-finnie border-finnieTeal-100 shadow-md;
   }
@@ -55,6 +59,10 @@
   }
 
   .finnie-border-blue {
-    @apply border-2 border-finnieBlue filter;
+    @apply border-2 border-finnieBlue;
+  }
+
+  .finnie-border-blue-thin {
+    @apply border border-finnieBlue;
   }
 }

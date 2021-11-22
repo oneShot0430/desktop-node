@@ -1,6 +1,6 @@
 import React from 'react';
 
-import TaskRow from './MyNodeTaskRow';
+import MyNodeTaskRow from './MyNodeTaskRow';
 
 const tasks = [
   {
@@ -53,10 +53,10 @@ const tasks = [
   },
 ];
 
-const TasksTable = (): JSX.Element => {
+const MyNodeTasksTable = (): JSX.Element => {
   return (
     <div className="w-full">
-      <div className="fixed z-10 pl-9.5 pr-8 grid grid-cols-15 gap-x-3 bg-trueGray-100 font-semibold text-finnieBlue h-xxl items-center text-center">
+      <div className="w-full fixed z-10 pl-9.5 pr-8 grid grid-cols-15 gap-x-3 bg-trueGray-100 font-semibold text-finnieBlue h-xxl items-center text-center">
         <div className="col-span-1">Start/ Stop</div>
         <div className="col-span-5 text-left pl-2">Task Name & Start Time</div>
         <div className="col-span-2">Task Creator</div>
@@ -69,11 +69,11 @@ const TasksTable = (): JSX.Element => {
       </div>
       <div className="pt-xxl">
         {tasks.map((task, index) => (
-          <TaskRow key={index} task={task} isOdd={index % 2 === 0} />
+          <MyNodeTaskRow key={index} task={task} isOdd={index % 2 === 0} />
         ))}
       </div>
     </div>
   );
 };
 
-export default TasksTable;
+export default MyNodeTasksTable;

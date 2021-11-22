@@ -2,6 +2,7 @@ import React from 'react';
 import { useRoutes, Outlet } from 'react-router-dom';
 
 import MainLayout from './components/MainLayout';
+import AddTasks from './pages/AddTasks';
 import MyNode from './pages/MyNode';
 
 const Wrapper = (): JSX.Element => (
@@ -18,11 +19,7 @@ const routes = [
       { path: '/my-node', element: <MyNode /> },
       {
         path: '/add-tasks',
-        element: (
-          <div className="mt-56 w-1/2 text-center mx-auto text-3xl">
-            Add tasks
-          </div>
-        ),
+        element: <AddTasks />,
       },
       {
         path: '/rewards',
