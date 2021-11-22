@@ -1,13 +1,17 @@
 import React from 'react';
+import { Provider } from 'react-redux';
 import { HashRouter } from 'react-router-dom';
 
 import AppRoutes from './AppRoutes';
+import store from './store';
 
 const App = (): JSX.Element => {
   return (
-    <HashRouter>
-      <AppRoutes />
-    </HashRouter>
+    <Provider store={store}>
+      <HashRouter>
+        <AppRoutes />
+      </HashRouter>
+    </Provider>
   );
 };
 
