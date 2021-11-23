@@ -75,19 +75,19 @@ const AddTasksTasksTable = (): JSX.Element => {
         <div className="col-span-5 grid grid-cols-3">
           <div className="col-span-1 px-2">
             <div className="tracking-finnieSpacing-wider">Bounty</div>
-            <div className="text-finnieTeal-700 text-2xs tracking-finnieSpacing-wider">
+            <div className="font-normal text-finnieTeal-700 text-2xs tracking-finnieSpacing-wider">
               (KOII)
             </div>
           </div>
           <div className="col-span-1">
             <div className="tracking-finnieSpacing-wider">Nodes</div>
-            <div className="text-finnieTeal-700 text-2xs tracking-finnieSpacing-wider">
+            <div className="font-normal text-finnieTeal-700 text-2xs tracking-finnieSpacing-wider">
               participating
             </div>
           </div>
           <div className="col-span-1">
             <div className="tracking-finnieSpacing-wider">Top Stake</div>
-            <div className="text-finnieTeal-700 text-2xs tracking-finnieSpacing-wider">
+            <div className="font-normal text-finnieTeal-700 text-2xs tracking-finnieSpacing-wider">
               (KOII)
             </div>
           </div>
@@ -95,7 +95,7 @@ const AddTasksTasksTable = (): JSX.Element => {
         <div className="col-span-3 grid grid-cols-5">
           <div className="col-span-3">
             <div className="tracking-finnieSpacing-wider">Set Stake</div>
-            <div className="text-finnieTeal-700 text-2xs tracking-finnieSpacing-wider">
+            <div className="font-normal text-finnieTeal-700 text-2xs tracking-finnieSpacing-wider">
               (KOII)
             </div>
           </div>
