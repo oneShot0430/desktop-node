@@ -40,6 +40,7 @@ const Modal = (): JSX.Element => {
             className="w-156 h-79.5 relative rounded-md shadow-lg bg-finnieGray pt-6.25 text-center"
           >
             <CloseIcon
+              data-testid="close-modal-button"
               onClick={close}
               className="w-6 h-6 absolute top-2 right-2 cursor-pointer"
             />
