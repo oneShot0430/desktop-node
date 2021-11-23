@@ -1,5 +1,7 @@
 import React from 'react';
 
+import Link from 'webapp/components/Link';
+
 const ModalCreateTask = (): JSX.Element => {
   return (
     <div className="flex flex-col items-center text-finnieBlue tracking-finnieSpacing-wider">
@@ -12,12 +14,12 @@ const ModalCreateTask = (): JSX.Element => {
       </div>
       <div className="font-semibold mb-1 leading-7">Are you a developer?</div>
       <div className="font-normal mb-2.5">
-        Head over to the Koii SDK to learn how.
+        Head over to the <Link to="#" text="Koii SDK" /> to learn how.
       </div>
       <div className="font-semibold mb-1 leading-7">Need a developer?</div>
       <div className="font-normal w-128">
-        Check out our Discord server to find developers who are already familiar
-        with Koii and creating Tasks.
+        Check out our <Link to="#" text="Discord server" /> to find developers
+        who are already familiar with Koii and creating Tasks.
       </div>
     </div>
   );

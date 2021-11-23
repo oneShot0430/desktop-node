@@ -34,7 +34,7 @@ const Modal = (): JSX.Element => {
   return (
     <>
       {isOpen && (
-        <div className="absolute top-0 left-0 z-10 w-screen h-screen flex items-center justify-center bg-black bg-opacity-40">
+        <div className="z-20 absolute top-0 left-0 w-screen h-screen flex items-center justify-center bg-black bg-opacity-40">
           <div
             ref={modalRef}
             className="w-156 h-79.5 relative rounded-md shadow-lg bg-finnieGray pt-6.25 text-center"
