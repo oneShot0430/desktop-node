@@ -24,7 +24,7 @@ describe('Modal reducer', () => {
 
   describe('Handle default case', () => {
     it('return initial state', () => {
-      expect(modalReducer(null, { type: '' })).toEqual({
+      expect(modalReducer(undefined, { type: '' })).toEqual({
         isShown: false,
         modalType: 'CREATE_TASK',
       });

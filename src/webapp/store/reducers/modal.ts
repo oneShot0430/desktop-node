@@ -20,6 +20,6 @@ export default function modalReducer(
       return initialState;
 
     default:
-      return initialState;
+      return state;
   }
 }

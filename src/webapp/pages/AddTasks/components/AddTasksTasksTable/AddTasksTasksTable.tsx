@@ -41,7 +41,7 @@ const tasks = [
     topStake: 100.03,
     stake: 0,
     minStake: 275,
-    status: 'initialize',
+    status: 'paused',
   },
   {
     name: 'Task 5',
@@ -51,7 +51,7 @@ const tasks = [
     topStake: 100.04,
     stake: 526.94,
     minStake: 275,
-    status: 'running',
+    status: 'initialize',
   },
   {
     name: 'Task 6',

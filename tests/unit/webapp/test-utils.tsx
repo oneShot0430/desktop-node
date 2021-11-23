@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable import/export */
-
 import { render as rtlRender, RenderResult } from '@testing-library/react';
 import React from 'react';
 import { Provider } from 'react-redux';
@@ -17,9 +16,6 @@ export const render = (
     ...renderOptions
   }: Record<string, any> = {}
 ): RenderResult => {
-  console.log('=======================', preloadedState);
-  console.log('=======================', store.getState());
-
   function Wrapper({ children }: { children: React.ReactNode }) {
     return <Provider store={store}>{children}</Provider>;
   }

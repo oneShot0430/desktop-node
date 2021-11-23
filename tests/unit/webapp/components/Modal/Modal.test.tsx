@@ -2,22 +2,36 @@ import React from 'react';
 
 import Modal from 'webapp/components/Modal';
 
-// eslint-disable-next-line import/namespace
-import { render, screen } from '../../test-utils';
+import { act, render, fireEvent, screen } from '../../test-utils';
 
 describe('Modal', () => {
-  describe('Initial state is shown is true', () => {
-    it('shows the modal', () => {
-      render(<Modal />, {
-        preloadedState1: {
-          modal: {
-            isShown: true,
-            modalType: 'CREATE_TASK',
+  describe('User clicks outside while the Modal is showing', () => {
+    it('close the modal', async () => {
+      render(
+        <div role="document">
+          <Modal />
+        </div>,
+        {
+          preloadedState: {
+            modal: {
+              isShown: true,
+              modalType: 'CREATE_TASK',
+            },
           },
-        },
+        }
+      );
+
+      expect(
+        screen.getByText(/Create your own Koii Tasks/i)
+      ).toBeInTheDocument();
+
+      await act(async () => {
+        await fireEvent.mouseDown(document);
       });
 
-      screen.debug();
+      expect(
+        screen.queryByText(/Create your own Koii Tasks/i)
+      ).not.toBeInTheDocument();
     });
   });
 });
