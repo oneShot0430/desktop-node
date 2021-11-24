@@ -28,14 +28,14 @@ const ModalWithdrawStake = ({
         You’ve earned {rewardEarned} KOII tokens from this task so far.
       </div>
 
-      <div className="flex justify-between w-102">
+      <div className="flex justify-between w-102.75">
         <button
           onClick={close}
-          className="flex items-center justify-center finnie-border-blue w-44.75 h-8 rounded-finnie-small shadow-lg"
+          className="flex items-center justify-center finnie-border-blue bg-white w-44.75 h-8 rounded-finnie-small shadow-lg"
         >
           Stay Staked
         </button>
-        <button className="flex items-center justify-center finnie-border-blue w-44.75 h-8 rounded-finnie-small shadow-lg">
+        <button className="flex items-center justify-center border-2 border-finnieRed-500 bg-white w-44.75 h-8 rounded-finnie-small shadow-lg">
           Withdraw Stake
         </button>
       </div>

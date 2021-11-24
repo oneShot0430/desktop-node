@@ -30,6 +30,9 @@ module.exports = {
           DEFAULT: '#F2F2F2',
         },
         trueGray: { ...colors.trueGray, 200: '#EAEAEA' },
+        finnieRed: {
+          500: '#FF4141',
+        },
       },
       fontSize: {
         '4xs': '7px',
@@ -56,7 +59,7 @@ module.exports = {
         44.75: '11.1875rem',
         71: '17.75rem',
         79.5: '19.875rem',
-        102: '25.5rem',
+        102.75: '25.6875rem',
         128: '32rem',
         156: '39rem',
       },
