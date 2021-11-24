@@ -9,8 +9,6 @@ describe('Modal action', () => {
         payload: 'CREATE_TASK',
       });
     });
-
-    
   });
 
   describe('Hide Modal', () => {
