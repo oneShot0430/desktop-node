@@ -1,5 +1,6 @@
 import React from 'react';
 
+import MainLayout from 'webapp/components/MainLayout';
 import AddTasks from 'webapp/pages/AddTasks';
 
 import { act, render, fireEvent, screen } from '../../test-utils';
@@ -11,7 +12,11 @@ describe('Add Tasks', () => {
 
   describe('User clicks New Task button', () => {
     it('shows the New Task modal', async () => {
-      render(<AddTasks />);
+      render(
+        <MainLayout>
+          <AddTasks />
+        </MainLayout>
+      );
 
       await act(async () => {
         await fireEvent.click(
@@ -27,7 +32,11 @@ describe('Add Tasks', () => {
 
   describe('User clicks Close button on New Task modal', () => {
     it('close the New Task modal', async () => {
-      render(<AddTasks />);
+      render(
+        <MainLayout>
+          <AddTasks />
+        </MainLayout>
+      );
 
       await act(async () => {
         await fireEvent.click(
