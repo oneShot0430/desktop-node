@@ -1,12 +1,17 @@
 import { Action } from 'redux';
 
-export type ModalType = 'CREATE_TASK';
+export type ModalType = 'CREATE_TASK' | 'WITHDRAW_STAKE';
+
+export type ModalPayload = {
+  modalType: 'WITHDRAW_STAKE' | 'CREATE_TASK' | null;
+  taskInfo?: { name: string; creator: string; rewardEarned: number };
+};
 
 export interface IModalState {
   isShown: boolean;
-  modalType: ModalType;
+  modalData: ModalPayload;
 }
 
 export interface ModalAction extends Action<string> {
-  payload?: ModalType;
+  payload?: ModalPayload;
 }

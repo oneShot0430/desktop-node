@@ -3,7 +3,9 @@ import { IModalState, ModalAction } from 'webapp/store/types/modal';
 
 const initialState: IModalState = {
   isShown: false,
-  modalType: 'CREATE_TASK',
+  modalData: {
+    modalType: null,
+  },
 };
 
 export default function modalReducer(
@@ -14,7 +16,7 @@ export default function modalReducer(
 
   switch (type) {
     case SHOW_MODAL:
-      return { ...state, isShown: true, modalType: payload };
+      return { ...state, isShown: true, modalData: payload };
 
     case HIDE_MODAL:
       return initialState;
