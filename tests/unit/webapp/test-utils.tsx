@@ -4,6 +4,7 @@
 import { render as rtlRender, RenderResult } from '@testing-library/react';
 import React from 'react';
 import { Provider } from 'react-redux';
+import { HashRouter } from 'react-router-dom';
 import { createStore } from 'redux';
 
 import rootReducer from 'webapp/store/reducers';
@@ -17,7 +18,11 @@ export const render = (
   }: Record<string, any> = {}
 ): RenderResult => {
   function Wrapper({ children }: { children: React.ReactNode }) {
-    return <Provider store={store}>{children}</Provider>;
+    return (
+      <Provider store={store}>
+        <HashRouter>{children}</HashRouter>
+      </Provider>
+    );
   }
 
   return rtlRender(ui, {
