@@ -1,13 +1,13 @@
 import React from 'react';
-import { HashRouter } from 'react-router-dom';
 
 import AppRoutes from './AppRoutes';
+import AppProvider from './Providers/AppProvider';
 
 const App = (): JSX.Element => {
   return (
-    <HashRouter>
+    <AppProvider>
       <AppRoutes />
-    </HashRouter>
+    </AppProvider>
   );
 };
 

@@ -6,8 +6,8 @@ import PlayActiveIcon from 'svgs/run-button-icons/play-active-icon.svg';
 import PlayDeactivatedIcon from 'svgs/run-button-icons/play-deactivated-icon.svg';
 
 const variants = {
-  'play-active': 'bg-finnieEmerald',
-  'play-deactivated': 'bg-finnieBlue opacity-60',
+  'play-active': 'bg-finnieEmerald pl-1',
+  'play-deactivated': 'bg-finnieBlue opacity-60 pl-1',
   'pause-active': 'bg-finnieTeal-100',
 };
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import AddTasksLogo from 'svgs/add-icons/add-icon-orange.svg';
 import FinnieLogoInverse from 'svgs/finnie-logos/finnie-logo-inverse.svg';
@@ -10,6 +11,7 @@ import ActionButton from 'webapp/components/ActionButton';
 import BalanceInfo from './BalanceInfo';
 
 const MyNodeActionCenter = (): JSX.Element => {
+  const navigate = useNavigate();
   return (
     <div className="flex justify-between w-full">
       <div>
@@ -34,7 +36,12 @@ const MyNodeActionCenter = (): JSX.Element => {
         name="History & Logs"
         variant="teal"
       />
-      <ActionButton logo={AddTasksLogo} name="Add Tasks" variant="orange" />
+      <ActionButton
+        onClick={() => navigate('/add-tasks')}
+        logo={AddTasksLogo}
+        name="Add Tasks"
+        variant="orange"
+      />
     </div>
   );
 };

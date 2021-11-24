@@ -4,15 +4,15 @@ import MyNodeTaskRow from './MyNodeTaskRow';
 
 const tasks = [
   {
-    name: 'Task 1',
-    creator: 'Creator 1',
+    name: 'Paint a Banana Purple',
+    creator: 'StoreCat',
     rewardEarned: 123.123,
     myStake: 101,
     state: 'in progress',
     status: 'running',
   },
   {
-    name: 'Task 2',
+    name: 'Burn down the banana stand',
     creator: 'Creator 2',
     rewardEarned: 124.124,
     myStake: 102,
@@ -29,7 +29,7 @@ const tasks = [
   },
   {
     name: 'Task 4',
-    creator: 'Creator 1',
+    creator: 'Koii Network',
     rewardEarned: 125.123,
     myStake: 101,
     state: 'waiting to verify',
@@ -37,7 +37,7 @@ const tasks = [
   },
   {
     name: 'Task 5',
-    creator: 'Creator 1',
+    creator: 'Koii Network',
     rewardEarned: 121.124,
     myStake: 100,
     state: 'accepted',

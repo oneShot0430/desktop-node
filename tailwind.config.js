@@ -26,6 +26,9 @@ module.exports = {
         finnieEmerald: {
           DEFAULT: '#49CE8B',
         },
+        finnieGray: {
+          DEFAULT: '#F2F2F2',
+        },
         trueGray: { ...colors.trueGray, 200: '#EAEAEA' },
       },
       fontSize: {
@@ -43,6 +46,7 @@ module.exports = {
         3.75: '0.9375rem',
         4.375: '1.09375rem',
         5.25: '1.3125rem',
+        6.25: '1.5625rem',
         6.5: '1.625rem',
         9.5: '2.375rem',
         9.75: '2.4375rem',
@@ -50,6 +54,9 @@ module.exports = {
         30.5: '7.625rem',
         34.5: '8.625rem',
         71: '17.75rem',
+        79.5: '19.875rem',
+        128: '32rem',
+        156: '39rem',
       },
       letterSpacing: {
         'finnieSpacing-tighter': '-0.02em',
