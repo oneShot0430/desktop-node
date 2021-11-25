@@ -5,10 +5,11 @@ import { useAppDispatch, useAppSelector } from 'webapp/hooks/reduxHook';
 import { closeModal } from 'webapp/store/actions/modal';
 
 import ModalCreateTask from './ModalCreateTask';
+import ModalWithdrawStake from './ModalWithdrawStake';
 
 const Modal = (): JSX.Element => {
   const isOpen = useAppSelector((state) => state.modal.isShown);
-  const modalType = useAppSelector((state) => state.modal.modalType);
+  const modalType = useAppSelector((state) => state.modal.modalData.modalType);
 
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -29,6 +30,7 @@ const Modal = (): JSX.Element => {
 
   const modalByTypes = {
     CREATE_TASK: <ModalCreateTask />,
+    WITHDRAW_STAKE: <ModalWithdrawStake close={close} />,
   };
 
   return (

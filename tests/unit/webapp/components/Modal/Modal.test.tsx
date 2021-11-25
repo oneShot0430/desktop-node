@@ -15,7 +15,7 @@ describe('Modal', () => {
           preloadedState: {
             modal: {
               isShown: true,
-              modalType: 'CREATE_TASK',
+              modalData: { modalType: 'CREATE_TASK' },
             },
           },
         }

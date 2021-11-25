@@ -3,6 +3,8 @@ import React from 'react';
 
 import InspectButton from 'webapp/components/InspectButton';
 import RunButton from 'webapp/components/RunButton';
+import { useAppDispatch } from 'webapp/hooks/reduxHook';
+import { showModal } from 'webapp/store/actions/modal';
 
 type Task = {
   name: string;
@@ -22,6 +24,8 @@ const MyNodeTaskRow = ({
   task: { name, creator, rewardEarned, myStake, state, status },
   isOdd,
 }: TaskRowProps): JSX.Element => {
+  const dispatch = useAppDispatch();
+
   return (
     <div
       className={clsx(
@@ -56,7 +60,14 @@ const MyNodeTaskRow = ({
           {state}
         </div>
         <div className="col-span-1 justify-self-end">
-          <button className="bg-white w-24 h-10 finnie-border-blue rounded-finnie shadow-md font-semibold text-xs tracking-finnieSpacing-wide">
+          <button
+            onClick={() =>
+              dispatch(
+                showModal('WITHDRAW_STAKE', { name, creator, rewardEarned })
+              )
+            }
+            className="bg-white w-24 h-10 finnie-border-blue rounded-finnie shadow-md font-semibold text-xs tracking-finnieSpacing-wide"
+          >
             Withdraw Stake
           </button>
         </div>

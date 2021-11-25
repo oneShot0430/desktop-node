@@ -5,28 +5,33 @@ describe('Modal reducer', () => {
   describe('Handle SHOW_MODAL', () => {
     it('returns new state with is shown and the correct modal type', () => {
       expect(
-        modalReducer(null, { type: SHOW_MODAL, payload: 'CREATE_TASK' })
+        modalReducer(null, {
+          type: SHOW_MODAL,
+          payload: { modalType: 'CREATE_TASK' },
+        })
       ).toEqual({
         isShown: true,
-        modalType: 'CREATE_TASK',
+        modalData: {
+          modalType: 'CREATE_TASK',
+        },
       });
     });
   });
 
   describe('Handle HIDE_MODAL', () => {
     it('return initial state', () => {
-      expect(modalReducer(null, { type: HIDE_MODAL })).toEqual({
+      expect(modalReducer(undefined, { type: HIDE_MODAL })).toEqual({
         isShown: false,
-        modalType: 'CREATE_TASK',
+        modalData: { modalType: null },
       });
     });
   });
 
   describe('Handle default case', () => {
     it('return initial state', () => {
-      expect(modalReducer(undefined, { type: '' })).toEqual({
+      expect(modalReducer(undefined, { type: 'AnyType' })).toEqual({
         isShown: false,
-        modalType: 'CREATE_TASK',
+        modalData: { modalType: null },
       });
     });
   });
