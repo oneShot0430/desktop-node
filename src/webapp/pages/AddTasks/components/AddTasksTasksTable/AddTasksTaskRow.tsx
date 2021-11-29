@@ -4,6 +4,8 @@ import React from 'react';
 import LockedIcon from 'svgs/locked-icon.svg';
 import InspectButton from 'webapp/components/InspectButton';
 import RunButton from 'webapp/components/RunButton';
+import { useAppDispatch } from 'webapp/hooks/reduxHook';
+import { showTaskInspector } from 'webapp/store/actions/taskInspector';
 
 type Task = {
   name: string;
@@ -25,6 +27,8 @@ const TaskRow = ({
   task: { name, creator, bounty, nodes, topStake, stake, minStake, status },
   isOdd,
 }: TaskRowProps): JSX.Element => {
+  const dispatch = useAppDispatch();
+
   return (
     <div
       className={clsx(
@@ -34,7 +38,18 @@ const TaskRow = ({
       )}
     >
       <div className="col-span-1 flex items-center">
-        <InspectButton size="big" />
+        <InspectButton
+          onClick={() =>
+            dispatch(
+              showTaskInspector('TASK_INSPECTOR', {
+                name: name,
+                owner: creator,
+                myRewards: 0,
+              })
+            )
+          }
+          size="big"
+        />
       </div>
       <div className="col-span-5 text-left">
         <div className="text-lg tracking-finnieSpacing-wider">{name}</div>

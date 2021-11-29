@@ -65,4 +65,8 @@
   .finnie-border-blue-thin {
     @apply border border-finnieBlue;
   }
+
+  .finnie-border-white {
+    @apply border-2 border-white;
+  }
 }
