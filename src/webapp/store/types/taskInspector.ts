@@ -12,7 +12,6 @@ export type TaskInfo = {
   myKOIIStaked?: number;
   state?: string;
   myRewards?: number;
-
   sourceCode?: string;
 };
 

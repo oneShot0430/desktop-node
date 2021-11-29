@@ -44,6 +44,13 @@ const TaskRow = ({
               showTaskInspector('TASK_INSPECTOR', {
                 name: name,
                 owner: creator,
+                totalKOIIBounty: bounty,
+                nodesParticipating: nodes,
+                myKOIIStaked: stake,
+
+                state: status,
+                totalKOIIStaked: 0,
+                currentTopStake: 0,
                 myRewards: 0,
               })
             )

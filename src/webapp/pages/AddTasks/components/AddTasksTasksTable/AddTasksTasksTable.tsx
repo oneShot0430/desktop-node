@@ -1,69 +1,8 @@
 import React from 'react';
 
-import AddTasksTaskRow from './AddTasksTaskRow';
+import tasks from 'webapp/tasks.json';
 
-const tasks = [
-  {
-    name: 'Paint a Banana Purple',
-    creator: 'StoreCat',
-    bounty: 1000,
-    nodes: 125,
-    topStake: 100.0,
-    stake: 526.94,
-    minStake: 275,
-    status: 'running',
-  },
-  {
-    name: 'Burn down the banana stand',
-    creator: 'Koii Network',
-    bounty: 1011,
-    nodes: 1251,
-    topStake: 100.01,
-    stake: 526.94,
-    minStake: 205,
-    status: 'running',
-  },
-  {
-    name: 'Task 3',
-    creator: 'StoreCat',
-    bounty: 1502,
-    nodes: 125,
-    topStake: 100.02,
-    stake: 526.94,
-    minStake: 275,
-    status: 'running',
-  },
-  {
-    name: 'Task 4',
-    creator: 'Koii Network',
-    bounty: 1035,
-    nodes: 25,
-    topStake: 100.03,
-    stake: 0,
-    minStake: 275,
-    status: 'paused',
-  },
-  {
-    name: 'Task 5',
-    creator: 'StoreCat',
-    bounty: 1204,
-    nodes: 1125,
-    topStake: 100.04,
-    stake: 526.94,
-    minStake: 275,
-    status: 'initialize',
-  },
-  {
-    name: 'Task 6',
-    creator: 'Koii Network',
-    bounty: 10005,
-    nodes: 1235,
-    topStake: 100.99,
-    stake: 526.94,
-    minStake: 275,
-    status: 'running',
-  },
-];
+import AddTasksTaskRow from './AddTasksTaskRow';
 
 const AddTasksTasksTable = (): JSX.Element => {
   return (

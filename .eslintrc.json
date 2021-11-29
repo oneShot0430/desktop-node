@@ -20,7 +20,11 @@
     "semi": ["error", "always"],
     "quotes": ["error", "single", { "avoidEscape": true }],
     "jsx-quotes": ["error", "prefer-double"],
-    "import/extensions": ["error", "never", { "svg": "always" }],
+    "import/extensions": [
+      "error",
+      "never",
+      { "svg": "always", "json": "always" }
+    ],
     "import/newline-after-import": ["error", { "count": 1 }],
     "import/order": [
       "error",

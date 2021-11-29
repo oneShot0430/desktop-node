@@ -1,0 +1,80 @@
+[
+  {
+    "name": "Paint a Banana Purple",
+    "creator": "StoreCat",
+    "bounty": 1000,
+    "nodes": 125,
+    "topStake": 100.0,
+    "stake": 526.94,
+    "minStake": 275,
+    "status": "running",
+    "rewardEarned": 123.123,
+    "myStake": 101,
+    "state": "in progress"
+  },
+  {
+    "name": "Burn down the banana stand",
+    "creator": "Koii Network",
+    "bounty": 1011,
+    "nodes": 1251,
+    "topStake": 100.01,
+    "stake": 526.94,
+    "minStake": 205,
+    "status": "running",
+    "rewardEarned": 123.123,
+    "myStake": 101,
+    "state": "in progress"
+  },
+  {
+    "name": "Task 3",
+    "creator": "StoreCat",
+    "bounty": 1502,
+    "nodes": 125,
+    "topStake": 100.02,
+    "stake": 526.94,
+    "minStake": 275,
+    "status": "running",
+    "rewardEarned": 123.123,
+    "myStake": 101,
+    "state": "in progress"
+  },
+  {
+    "name": "Task 4",
+    "creator": "Koii Network",
+    "bounty": 1035,
+    "nodes": 25,
+    "topStake": 100.03,
+    "stake": 0,
+    "minStake": 275,
+    "status": "paused",
+    "rewardEarned": 123.123,
+    "myStake": 101,
+    "state": "paused"
+  },
+  {
+    "name": "Task 5",
+    "creator": "StoreCat",
+    "bounty": 1204,
+    "nodes": 1125,
+    "topStake": 100.04,
+    "stake": 526.94,
+    "minStake": 275,
+    "status": "initialize",
+    "rewardEarned": 123.123,
+    "myStake": 101,
+    "state": "in progress"
+  },
+  {
+    "name": "Task 6",
+    "creator": "Koii Network",
+    "bounty": 10005,
+    "nodes": 1235,
+    "topStake": 100.99,
+    "stake": 526.94,
+    "minStake": 275,
+    "status": "running",
+    "rewardEarned": 123.123,
+    "myStake": 101,
+    "state": "in progress"
+  }
+]

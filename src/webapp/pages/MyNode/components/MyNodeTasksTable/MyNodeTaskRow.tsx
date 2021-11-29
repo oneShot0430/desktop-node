@@ -10,10 +10,10 @@ import { showTaskInspector } from 'webapp/store/actions/taskInspector';
 type Task = {
   name: string;
   creator: string;
+  status: string;
   rewardEarned: number;
   myStake: number;
   state: string;
-  status: string;
 };
 
 type TaskRowProps = {
@@ -50,7 +50,14 @@ const MyNodeTaskRow = ({
                 showTaskInspector('TASK_INSPECTOR', {
                   name: name,
                   owner: creator,
+                  myKOIIStaked: myStake,
+                  state: state,
                   myRewards: rewardEarned,
+
+                  totalKOIIBounty: 0,
+                  nodesParticipating: 0,
+                  totalKOIIStaked: 0,
+                  currentTopStake: 0,
                 })
               )
             }

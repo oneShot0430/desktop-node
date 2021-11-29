@@ -68,7 +68,7 @@ const ModalTaskInspector = (): JSX.Element => {
                   Total KOII bounty:
                 </div>
                 <div className="text-finnieTeal font-semibold">
-                  {taskInfo.owner}
+                  {taskInfo.totalKOIIBounty}
                 </div>
               </div>
 
@@ -77,7 +77,7 @@ const ModalTaskInspector = (): JSX.Element => {
                   Nodes participating:
                 </div>
                 <div className="text-finnieTeal font-semibold">
-                  {taskInfo.owner}
+                  {taskInfo.nodesParticipating}
                 </div>
               </div>
 
@@ -86,7 +86,7 @@ const ModalTaskInspector = (): JSX.Element => {
                   Total KOII staked:
                 </div>
                 <div className="text-finnieTeal font-semibold">
-                  {taskInfo.owner}
+                  {taskInfo.totalKOIIStaked}
                 </div>
               </div>
 
@@ -95,7 +95,7 @@ const ModalTaskInspector = (): JSX.Element => {
                   Current top stake:
                 </div>
                 <div className="text-finnieTeal font-semibold">
-                  {taskInfo.owner}
+                  {taskInfo.currentTopStake}
                 </div>
               </div>
 
@@ -104,7 +104,7 @@ const ModalTaskInspector = (): JSX.Element => {
                   My KOII staked:
                 </div>
                 <div className="text-finnieTeal font-semibold">
-                  {taskInfo.owner}
+                  {taskInfo.myKOIIStaked}
                 </div>
               </div>
 
@@ -113,7 +113,7 @@ const ModalTaskInspector = (): JSX.Element => {
                   State:
                 </div>
                 <div className="text-finnieTeal font-semibold">
-                  {taskInfo.owner}
+                  {taskInfo.state}
                 </div>
               </div>
 
