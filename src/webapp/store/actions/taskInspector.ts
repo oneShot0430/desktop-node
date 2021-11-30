@@ -1,20 +1,17 @@
 import {
-  TaskInfo,
+  Task,
   TaskInspectorAction,
   TaskInspectorType,
-} from '../types/taskInspector';
+} from 'webapp/store/types/taskInspector';
 
 import { HIDE_TASK_INSPECTOR, SHOW_TASK_INSPECTOR } from './types';
 
 export const showTaskInspector = (
   type: TaskInspectorType,
-  taskInfo: TaskInfo
+  task: Task
 ): TaskInspectorAction => ({
   type: SHOW_TASK_INSPECTOR,
-  taskInspectorPayload: {
-    type,
-    taskInfo,
-  },
+  payload: task,
 });
 
 export const closeTaskInspector = (): TaskInspectorAction => ({

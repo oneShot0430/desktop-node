@@ -2,7 +2,7 @@ import { Action } from 'redux';
 
 export type TaskInspectorType = 'TASK_INSPECTOR';
 
-export type TaskInfo = {
+export type Task = {
   name?: string;
   owner?: string;
   totalKOIIBounty?: number;
@@ -15,16 +15,11 @@ export type TaskInfo = {
   sourceCode?: string;
 };
 
-export type TaskInspectorPayload = {
-  type: 'TASK_INSPECTOR';
-  taskInfo: TaskInfo;
-};
-
 export interface ITaskInspectorState {
   isShown: boolean;
-  taskInspectorData: TaskInspectorPayload;
+  task: Task;
 }
 
 export interface TaskInspectorAction extends Action<string> {
-  taskInspectorPayload?: TaskInspectorPayload;
+  payload?: Task;
 }

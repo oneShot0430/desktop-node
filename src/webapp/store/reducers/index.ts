@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
 
 import modal from './modal';
-import taskInspectorReducer from './taskInspector';
+import taskInpector from './taskInspector';
 
 export default combineReducers({
   modal,
-  taskInspectorReducer,
+  taskInpector,
 });

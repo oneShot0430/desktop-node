@@ -1,29 +1,28 @@
-import { HIDE_TASK_INSPECTOR, SHOW_TASK_INSPECTOR } from '../actions/types';
+import {
+  HIDE_TASK_INSPECTOR,
+  SHOW_TASK_INSPECTOR,
+} from 'webapp/store/actions/types';
 import {
   ITaskInspectorState,
   TaskInspectorAction,
-} from '../types/taskInspector';
+} from 'webapp/store/types/taskInspector';
 
 const initialState: ITaskInspectorState = {
   isShown: false,
-  taskInspectorData: {
-    type: null,
-    taskInfo: null,
-  },
+  task: null,
 };
 
 export default function taskInspectorReducer(
   state = initialState,
   action: TaskInspectorAction
 ): ITaskInspectorState {
-  const { type, taskInspectorPayload } = action;
+  const { type, payload } = action;
 
   switch (type) {
     case SHOW_TASK_INSPECTOR:
       return {
-        ...state,
         isShown: true,
-        taskInspectorData: taskInspectorPayload,
+        task: payload,
       };
     case HIDE_TASK_INSPECTOR:
       return initialState;

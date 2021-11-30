@@ -7,10 +7,8 @@ import { showModal } from 'webapp/store/actions/modal';
 import { closeTaskInspector } from 'webapp/store/actions/taskInspector';
 
 const ModalTaskInspector = (): JSX.Element => {
-  const isOpen = useAppSelector((state) => state.taskInspectorReducer.isShown);
-  const taskInfo = useAppSelector(
-    (state) => state.taskInspectorReducer.taskInspectorData.taskInfo
-  );
+  const isOpen = useAppSelector((state) => state.taskInpector.isShown);
+  const taskInfo = useAppSelector((state) => state.taskInpector.task);
 
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -119,7 +117,7 @@ const ModalTaskInspector = (): JSX.Element => {
 
               <div className="flex text-sm mb-13">
                 <div className="text-white w-59.25 flex items-start leading-6">
-                  My Rewards
+                  My Rewards:
                 </div>
                 <div className="text-finnieTeal font-semibold">
                   {taskInfo.myRewards}
