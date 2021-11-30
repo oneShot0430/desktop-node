@@ -1,57 +1,8 @@
 import React from 'react';
 
-import MyNodeTaskRow from './MyNodeTaskRow';
+import tasks from 'webapp/tasks.json';
 
-const tasks = [
-  {
-    name: 'Paint a Banana Purple',
-    creator: 'StoreCat',
-    rewardEarned: 123.123,
-    myStake: 101,
-    state: 'in progress',
-    status: 'running',
-  },
-  {
-    name: 'Burn down the banana stand',
-    creator: 'Creator 2',
-    rewardEarned: 124.124,
-    myStake: 102,
-    state: 'accepted',
-    status: 'running',
-  },
-  {
-    name: 'Task 3',
-    creator: 'Creator 3',
-    rewardEarned: 123.123,
-    myStake: 103,
-    state: 'waiting to verify',
-    status: 'running',
-  },
-  {
-    name: 'Task 4',
-    creator: 'Koii Network',
-    rewardEarned: 125.123,
-    myStake: 101,
-    state: 'waiting to verify',
-    status: 'running',
-  },
-  {
-    name: 'Task 5',
-    creator: 'Koii Network',
-    rewardEarned: 121.124,
-    myStake: 100,
-    state: 'accepted',
-    status: 'running',
-  },
-  {
-    name: 'Task 6',
-    creator: 'Creator 3',
-    rewardEarned: 120.123,
-    myStake: 103,
-    state: 'in progress',
-    status: 'paused',
-  },
-];
+import MyNodeTaskRow from './MyNodeTaskRow';
 
 const MyNodeTasksTable = (): JSX.Element => {
   return (

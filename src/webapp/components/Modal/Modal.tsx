@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-import CloseIcon from 'svgs/close-modal-icon.svg';
+import CloseIcon from 'svgs/close-icons/close-icon-blue.svg';
 import { useAppDispatch, useAppSelector } from 'webapp/hooks/reduxHook';
 import { closeModal } from 'webapp/store/actions/modal';
 
@@ -36,7 +36,7 @@ const Modal = (): JSX.Element => {
   return (
     <>
       {isOpen && (
-        <div className="z-20 absolute top-0 left-0 w-screen h-screen flex items-center justify-center bg-black bg-opacity-40">
+        <div className="z-30 absolute top-0 left-0 w-screen h-screen flex items-center justify-center bg-black bg-opacity-40">
           <div
             ref={modalRef}
             className="w-156 h-79.5 relative rounded-md shadow-lg bg-finnieGray pt-6.25 text-center"

@@ -13,17 +13,18 @@ const sizes = {
   small: 'flex-row w-6 h-5 ',
 };
 
-type InspectButtonProps = {
+type InspectButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   size: keyof typeof sizes;
 };
 
-const InspectButton = ({ size }: InspectButtonProps): JSX.Element => {
+const InspectButton = ({ size, ...props }: InspectButtonProps): JSX.Element => {
   return (
     <button
       className={clsx(
         'flex items-center justify-center shadow-md rounded-finnie-small bg-trueGray-100',
         sizes[size]
       )}
+      {...props}
     >
       <InspectIcon className={clsx(iconSizes[size])} />
       {size === 'big' && (

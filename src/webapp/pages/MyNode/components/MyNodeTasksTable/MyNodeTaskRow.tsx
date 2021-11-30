@@ -5,14 +5,15 @@ import InspectButton from 'webapp/components/InspectButton';
 import RunButton from 'webapp/components/RunButton';
 import { useAppDispatch } from 'webapp/hooks/reduxHook';
 import { showModal } from 'webapp/store/actions/modal';
+import { showTaskInspector } from 'webapp/store/actions/taskInspector';
 
 type Task = {
   name: string;
   creator: string;
+  status: string;
   rewardEarned: number;
   myStake: number;
   state: string;
-  status: string;
 };
 
 type TaskRowProps = {
@@ -43,7 +44,25 @@ const MyNodeTaskRow = ({
         <div className="text-lg tracking-finnieSpacing-wider">{name}</div>
         <div className="flex justify-between w-48 text-finnieTeal-700 text-2xs tracking-finnieSpacing-wider">
           02 Dec 2021, 18:15:02
-          <InspectButton size="small" />
+          <InspectButton
+            onClick={() =>
+              dispatch(
+                showTaskInspector('TASK_INSPECTOR', {
+                  name: name,
+                  owner: creator,
+                  myKOIIStaked: myStake,
+                  state: state,
+                  myRewards: rewardEarned,
+
+                  totalKOIIBounty: 0,
+                  nodesParticipating: 0,
+                  totalKOIIStaked: 0,
+                  currentTopStake: 0,
+                })
+              )
+            }
+            size="small"
+          />
         </div>
       </div>
       <div className="col-span-2 text-sm tracking-finnieSpacing-wider">

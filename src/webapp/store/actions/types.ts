@@ -1,2 +1,4 @@
 export const SHOW_MODAL = 'SHOW_MODAL';
 export const HIDE_MODAL = 'HIDE_MODAL';
+export const SHOW_TASK_INSPECTOR = 'SHOW_TASK_INSPECTOR';
+export const HIDE_TASK_INSPECTOR = 'HIDE_TASK_INSPECTOR';
