@@ -22,26 +22,31 @@
     src: url('./assets/fonts/Sora-SemiBold.ttf');
   }
 
+  @font-face {
+    font-family: 'Roboto';
+    src: url('./assets/fonts/Roboto-Light.ttf');
+  }
+
   /* Scroll bar config */
   ::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
+    width: 2px;
+    height: 2px;
   }
 
   ::-webkit-scrollbar-track {
-    background: rgba(165, 165, 165, 0);
+    background: #d6d6d6;
     border-radius: 10px;
     border: 0px;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #bef0ed;
+    background: rgb(73, 206, 139);
     border-radius: 10px;
     border: 0px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    background: #405e40;
   }
 }
 

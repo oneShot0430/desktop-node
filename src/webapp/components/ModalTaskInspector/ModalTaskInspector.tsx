@@ -38,14 +38,14 @@ const ModalTaskInspector = (): JSX.Element => {
         <div className="z-20 absolute top-0 left-0 w-screen h-screen flex items-center justify-center bg-black bg-opacity-40">
           <div
             ref={modalRef}
-            className="w-249.75 h-108.25 relative finnie-border-white rounded shadow-lg bg-finnieBlue pt-2.75 text-center"
+            className="w-249.75 min-h-108.25 relative finnie-border-white rounded shadow-lg bg-finnieBlue pt-2.75 text-center"
           >
             <CloseIcon
               data-testid="close-modal-button"
               onClick={close}
               className="w-6 h-6 absolute top-2 right-2 cursor-pointer"
             />
-            <div className="flex flex-col items-start pl-12 tracking-finnieSpacing-wider">
+            <div className="flex flex-col items-start pl-12 tracking-finnieSpacing-wider pr-5 pb-6">
               <div className="flex h-4 w-41.25 justify-between text-white text-xs mb-8">
                 <div
                   className={clsx(
@@ -78,7 +78,6 @@ const ModalTaskInspector = (): JSX.Element => {
                     </div>
                     <div className="text-white">Details</div>
                   </div>
-
                   <div className="flex text-sm mb-1">
                     <div className="text-white w-59.25 flex items-start leading-6">
                       Owner:
@@ -165,6 +164,62 @@ const ModalTaskInspector = (): JSX.Element => {
                   >
                     Withdraw Stake
                   </button>
+                </>
+              )}
+
+              {currentTab === 'SOURCE_CODE' && (
+                <>
+                  <div className="relative flex font-semibold mb-5.5">
+                    <ReportTaskIcon className="absolute top-1 -left-6.25 w-2.5 h-3.5" />
+                    <div className="text-white">Inspect</div>
+                    <div className="text-finnieEmerald">
+                      &nbsp;{taskInfo.name}&nbsp;
+                    </div>
+                  </div>
+                  <div className="w-full text-finnieEmerald whitespace-pre-wrap break-words text-left max-h-116 text-2xs leading-4 tracking-finnieSpacing-wider font-roboto font-normal overflow-y-scroll">
+                    {`
+#!/usr/bin/env node
+require("dotenv").config();
+const prompts = require("prompts");
+const kohaku = require("@_koi/kohaku");
+const axios = require("axios");
+
+// Parse cli params
+const PARSE_ARGS = [
+  "REDIS_IP",
+  "REDIS_PORT",
+  "AR_WALLET",
+  "NODE_MODE",
+  "STAKE",
+  "SERVICE_URL",
+  "TRUSTED_SERVICE_URL",
+  "SERVER_PORT",
+  "TASKS",
+  "RESTORE_KOHAKU"
+];
+let yargs = require("yargs");
+for (const arg of PARSE_ARGS) yargs = yargs.option(arg, { type: "string" });
+const argv = yargs.help().argv;
+for (const arg of PARSE_ARGS)
+  if (argv[arg] !== undefined) process.env[arg] = argv[arg];
+
+const { tools, arweave, Namespace } = require("./src/helpers");
+const { verifyStake, setupWebServer, runPeriodic } = require("./src/service");
+
+const GATEWAY_URL = "https://arweave.net/";
+
+const { tools, arweave, Namespace } = require("./src/helpers");
+const { verifyStake, setupWebServer, runPeriodic } = require("./src/service")
+
+let yargs = require("yargs");
+
+for (const arg of PARSE_ARGS) yargs = yargs.option(arg, { type: "string" });
+
+const argv = yargs.help().argv;
+
+for (const arg of PARSE_ARGS)
+  if (argv[arg] !== undefined) process.env[arg] = argv[arg];`}
+                  </div>
                 </>
               )}
             </div>
