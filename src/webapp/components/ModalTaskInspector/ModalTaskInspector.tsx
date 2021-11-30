@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import CloseIcon from 'svgs/close-icons/close-icon-white.svg';
 import ReportTaskIcon from 'svgs/flag-icon.svg';
+import ShareLinkIcon from 'svgs/share-link-icon.svg';
 import { useAppDispatch, useAppSelector } from 'webapp/hooks/reduxHook';
 import { showModal } from 'webapp/store/actions/modal';
 import { closeTaskInspector } from 'webapp/store/actions/taskInspector';
@@ -175,6 +176,8 @@ const ModalTaskInspector = (): JSX.Element => {
                     <div className="text-finnieEmerald">
                       &nbsp;{taskInfo.name}&nbsp;
                     </div>
+                    <div className="text-white">Source Code</div>
+                    <ShareLinkIcon className="w-3.5 h-3.25 absolute -right-6 top-1 cursor-pointer" />
                   </div>
                   <div className="w-full text-finnieEmerald whitespace-pre-wrap break-words text-left max-h-116 text-2xs leading-4 tracking-finnieSpacing-wider font-roboto font-normal overflow-y-scroll">
                     {`
