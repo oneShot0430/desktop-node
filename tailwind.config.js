@@ -8,6 +8,7 @@ module.exports = {
       sans: ['Sora', 'Open Sans', 'ui-sans-serif', 'system-ui'],
       serif: ['ui-serif', 'Georgia'],
       mono: ['ui-monospace', 'SFMono-Regular'],
+      roboto: ['Roboto', 'ui-sans-serif', 'system-ui'],
     },
     extend: {
       colors: {
@@ -47,6 +48,7 @@ module.exports = {
         1.5: '0.375rem',
         2.5: '0.625rem',
         2.75: '0.6875rem',
+        3.25: '0.8125rem',
         3.5: '0.875rem',
         3.75: '0.9375rem',
         4.375: '1.09375rem',
@@ -67,6 +69,7 @@ module.exports = {
         79.5: '19.875rem',
         102.75: '25.6875rem',
         108.25: '27.0625rem',
+        116: '29rem',
         128: '32rem',
         156: '39rem',
         249.75: '62.4375rem',

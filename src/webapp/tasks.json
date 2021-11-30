@@ -59,7 +59,7 @@
     "topStake": 100.04,
     "stake": 526.94,
     "minStake": 275,
-    "status": "initialize",
+    "status": "running",
     "rewardEarned": 123.123,
     "myStake": 101,
     "state": "in progress"
