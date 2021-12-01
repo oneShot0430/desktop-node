@@ -14,7 +14,7 @@ type Tab = 'DETAIL' | 'SOURCE_CODE';
 
 const ModalTaskInspector = (): JSX.Element => {
   const [currentTab, setCurrentTab] = useState<Tab>('DETAIL');
-  const [showReportView, setShowReportView] = useState(true);
+  const [showReportView, setShowReportView] = useState(false);
 
   const isOpen = useAppSelector((state) => state.taskInpector.isShown);
   const taskInfo = useAppSelector((state) => state.taskInpector.task);
@@ -24,6 +24,9 @@ const ModalTaskInspector = (): JSX.Element => {
 
   const dispatch = useAppDispatch();
   const close = () => dispatch(closeTaskInspector());
+
+  const openReportView = () => setShowReportView(true);
+  const closeReportView = () => setShowReportView(false);
 
   useEffect(() => {
     const handleClickOutSide = (e: Event) => {
@@ -100,17 +103,22 @@ const ModalTaskInspector = (): JSX.Element => {
                   <TaskDetailView
                     taskInfo={taskInfo}
                     showWidthdraw={showWidthdraw}
+                    openReportView={openReportView}
                   />
                 )}
 
                 {currentTab === 'SOURCE_CODE' && (
-                  <SourceCodeView taskName={taskInfo.name} />
+                  <SourceCodeView
+                    taskName={taskInfo.name}
+                    openReportView={openReportView}
+                  />
                 )}
               </div>
             </div>
             {showReportView && (
               <ReportTaskView
                 taskName={taskInfo.name}
+                closeReportView={closeReportView}
                 className="transform -translate-x-1 w-98.5 min-h-108.25 border-2 border-finnieRed-500 rounded-r shadow-lg bg-finnieBlue"
               />
             )}

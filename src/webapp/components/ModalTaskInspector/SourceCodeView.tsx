@@ -5,13 +5,20 @@ import ShareLinkIcon from 'svgs/share-link-icon.svg';
 
 type SourceCodeViewProps = {
   taskName: string;
+  openReportView: () => void;
 };
 
-const SourceCodeView = ({ taskName }: SourceCodeViewProps): JSX.Element => {
+const SourceCodeView = ({
+  taskName,
+  openReportView,
+}: SourceCodeViewProps): JSX.Element => {
   return (
     <>
       <div className="relative flex font-semibold mb-4">
-        <ReportTaskIcon className="absolute top-1 -left-6.25 w-2.5 h-3.5" />
+        <ReportTaskIcon
+          onClick={openReportView}
+          className="absolute top-1 -left-6.25 w-2.5 h-3.5 cursor-pointer"
+        />
         <div className="text-white">Inspect</div>
         <div className="text-finnieEmerald">&nbsp;{taskName}&nbsp;</div>
         <div className="text-white">Source Code</div>

@@ -6,16 +6,21 @@ import { Task } from 'webapp/@type/task';
 type TaskDetailViewProps = {
   taskInfo: Partial<Task>;
   showWidthdraw: () => void;
+  openReportView: () => void;
 };
 
 const TaskDetailView = ({
   taskInfo,
   showWidthdraw,
+  openReportView,
 }: TaskDetailViewProps): JSX.Element => {
   return (
     <>
       <div className="relative flex font-semibold mb-5.5">
-        <ReportTaskIcon className="absolute top-1 -left-6.25 w-2.5 h-3.5" />
+        <ReportTaskIcon
+          onClick={openReportView}
+          className="absolute top-1 -left-6.25 w-2.5 h-3.5 cursor-pointer"
+        />
         <div className="text-finnieEmerald">{taskInfo.name}&nbsp;</div>
         <div className="text-white">Details</div>
       </div>
