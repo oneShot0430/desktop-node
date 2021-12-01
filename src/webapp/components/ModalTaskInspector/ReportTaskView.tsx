@@ -57,6 +57,10 @@ export const ReportTaskView = ({
         setValue={handleDataChange}
         className="text-sm w-full flex-grow"
       />
+
+      <button className="mt-7 w-full h-8 rounded-finnie-small bg-finnieRed-500 text-finnieBlue font-semibold flex justify-center items-center">
+        Report Task
+      </button>
     </div>
   );
 };
