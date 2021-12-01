@@ -6,16 +6,21 @@ import { Task } from 'webapp/@type/task';
 type TaskDetailViewProps = {
   taskInfo: Partial<Task>;
   showWidthdraw: () => void;
+  openReportView: () => void;
 };
 
 const TaskDetailView = ({
   taskInfo,
   showWidthdraw,
+  openReportView,
 }: TaskDetailViewProps): JSX.Element => {
   return (
     <>
       <div className="relative flex font-semibold mb-5.5">
-        <ReportTaskIcon className="absolute top-1 -left-6.25 w-2.5 h-3.5" />
+        <ReportTaskIcon
+          onClick={openReportView}
+          className="absolute top-1 -left-6.25 w-2.5 h-3.5 cursor-pointer"
+        />
         <div className="text-finnieEmerald">{taskInfo.name}&nbsp;</div>
         <div className="text-white">Details</div>
       </div>
@@ -69,7 +74,7 @@ const TaskDetailView = ({
         <div className="text-finnieTeal font-semibold">{taskInfo.state}</div>
       </div>
 
-      <div className="flex text-sm mb-13">
+      <div className="flex text-sm">
         <div className="text-white w-59.25 flex items-start leading-6">
           My Rewards:
         </div>
@@ -79,7 +84,7 @@ const TaskDetailView = ({
       </div>
 
       <button
-        className="bg-white w-44.75 h-8 rounded-finnie-small shadow-lg text-base font-semibold"
+        className="bg-white w-44.75 h-8 rounded-finnie-small shadow-lg text-base font-semibold mt-auto"
         onClick={showWidthdraw}
       >
         Withdraw Stake

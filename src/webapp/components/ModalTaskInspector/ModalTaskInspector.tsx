@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from 'webapp/hooks/reduxHook';
 import { showModal } from 'webapp/store/actions/modal';
 import { closeTaskInspector } from 'webapp/store/actions/taskInspector';
 
+import { ReportTaskView } from './ReportTaskView';
 import SourceCodeView from './SourceCodeView';
 import TaskDetailView from './TaskDetailView';
 
@@ -13,15 +14,18 @@ type Tab = 'DETAIL' | 'SOURCE_CODE';
 
 const ModalTaskInspector = (): JSX.Element => {
   const [currentTab, setCurrentTab] = useState<Tab>('DETAIL');
+  const [showReportView, setShowReportView] = useState(false);
 
-  const isOpen = useAppSelector((state) => state.taskInpector.isShown);
-  const taskInfo = useAppSelector((state) => state.taskInpector.task);
+  const taskInfo = useAppSelector((state) => state.taskInspector.task);
   const isShowingWidthdraw = useAppSelector((state) => state.modal.isShown);
 
   const modalRef = useRef<HTMLDivElement>(null);
 
   const dispatch = useAppDispatch();
   const close = () => dispatch(closeTaskInspector());
+
+  const openReportView = () => setShowReportView(true);
+  const closeReportView = () => setShowReportView(false);
 
   useEffect(() => {
     const handleClickOutSide = (e: Event) => {
@@ -50,55 +54,73 @@ const ModalTaskInspector = (): JSX.Element => {
 
   return (
     <>
-      {isOpen && (
-        <div className="z-20 absolute top-0 left-0 w-screen h-screen flex items-center justify-center bg-black bg-opacity-40">
+      <div className="z-20 absolute top-0 left-0 w-screen h-screen flex items-center justify-center bg-black bg-opacity-40">
+        <div
+          ref={modalRef}
+          className={clsx(
+            currentTab === 'DETAIL' ? 'h-108.25' : 'h-144.75',
+            'flex'
+          )}
+        >
           <div
-            ref={modalRef}
-            className="w-249.75 min-h-108.25 relative finnie-border-white rounded shadow-lg bg-finnieBlue pt-2.75 text-center"
+            className={clsx(
+              showReportView ? 'w-151.25' : 'w-249.75',
+              showReportView && 'transform animate-shrink',
+              'z-30 min-h-108.25 relative finnie-border-white rounded shadow-lg bg-finnieBlue pt-2.75 text-center',
+              'flex flex-col items-start pl-12 tracking-finnieSpacing-wider pr-5 pb-6'
+            )}
           >
             <CloseIcon
               data-testid="close-modal-button"
               onClick={close}
               className="w-6 h-6 absolute top-2 right-2 cursor-pointer"
             />
-            <div className="flex flex-col items-start pl-12 tracking-finnieSpacing-wider pr-5 pb-6">
-              <div className="flex h-4 w-41.25 justify-between text-white text-xs mb-8">
-                <div
-                  className={clsx(
-                    currentTab === 'DETAIL' &&
-                      'border-b-2 border-finnieTeal font-semibold',
-                    'h-4 box-content cursor-pointer'
-                  )}
-                  onClick={() => setCurrentTab('DETAIL')}
-                >
-                  Details
-                </div>
-                <div
-                  className={clsx(
-                    currentTab === 'SOURCE_CODE' &&
-                      'border-b-2 border-finnieTeal font-semibold',
-                    'h-4 box-content cursor-pointer'
-                  )}
-                  onClick={() => setCurrentTab('SOURCE_CODE')}
-                >
-                  Source Code
-                </div>
+            <div className="flex h-4 w-41.25 justify-between text-white text-xs mb-8">
+              <div
+                className={clsx(
+                  currentTab === 'DETAIL' &&
+                    'border-b-2 border-finnieTeal font-semibold',
+                  'h-4 box-content cursor-pointer'
+                )}
+                onClick={() => setCurrentTab('DETAIL')}
+              >
+                Details
               </div>
-
-              {currentTab === 'DETAIL' && (
-                <TaskDetailView
-                  taskInfo={taskInfo}
-                  showWidthdraw={showWidthdraw}
-                />
-              )}
-
-              {currentTab === 'SOURCE_CODE' && (
-                <SourceCodeView taskName={taskInfo.name} />
-              )}
+              <div
+                className={clsx(
+                  currentTab === 'SOURCE_CODE' &&
+                    'border-b-2 border-finnieTeal font-semibold',
+                  'h-4 box-content cursor-pointer'
+                )}
+                onClick={() => setCurrentTab('SOURCE_CODE')}
+              >
+                Source Code
+              </div>
             </div>
+
+            {currentTab === 'DETAIL' && (
+              <TaskDetailView
+                taskInfo={taskInfo}
+                showWidthdraw={showWidthdraw}
+                openReportView={openReportView}
+              />
+            )}
+
+            {currentTab === 'SOURCE_CODE' && (
+              <SourceCodeView
+                taskName={taskInfo.name}
+                openReportView={openReportView}
+              />
+            )}
           </div>
+          {showReportView && (
+            <ReportTaskView
+              taskName={taskInfo.name}
+              closeReportView={closeReportView}
+            />
+          )}
         </div>
-      )}
+      </div>
     </>
   );
 };
