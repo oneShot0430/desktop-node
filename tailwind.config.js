@@ -91,6 +91,21 @@ module.exports = {
         15: 'repeat(15, minmax(0, 1fr))',
         16: 'repeat(16, minmax(0, 1fr))',
       },
+      keyframes: {
+        slideOut: {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(-4px)' },
+        },
+
+        shrink: {
+          '0%': { width: '62.4375rem', transform: 'translateX(12.3125rem)' },
+          '100%': { width: '37.8125rem' },
+        },
+      },
+      animation: {
+        slideOut: 'slideOut 0.5s ease-in-out',
+        shrink: 'shrink 0.25s linear',
+      },
     },
   },
   variants: {
