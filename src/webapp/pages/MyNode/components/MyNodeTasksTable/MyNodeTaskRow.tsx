@@ -1,30 +1,21 @@
 import clsx from 'clsx';
 import React from 'react';
 
+import { Task } from 'webapp/@type/task';
 import InspectButton from 'webapp/components/InspectButton';
 import RunButton from 'webapp/components/RunButton';
 import { useAppDispatch } from 'webapp/hooks/reduxHook';
 import { showModal } from 'webapp/store/actions/modal';
 import { showTaskInspector } from 'webapp/store/actions/taskInspector';
 
-type Task = {
-  name: string;
-  creator: string;
-  status: string;
-  rewardEarned: number;
-  myStake: number;
-  state: string;
-};
-
 type TaskRowProps = {
   task: Task;
   isOdd: boolean;
 };
 
-const MyNodeTaskRow = ({
-  task: { name, creator, rewardEarned, myStake, state, status },
-  isOdd,
-}: TaskRowProps): JSX.Element => {
+const MyNodeTaskRow = ({ task, isOdd }: TaskRowProps): JSX.Element => {
+  const { name, owner, rewardEarned, myStake, state, status } = task;
+
   const dispatch = useAppDispatch();
 
   return (
@@ -45,28 +36,13 @@ const MyNodeTaskRow = ({
         <div className="flex justify-between w-48 text-finnieTeal-700 text-2xs tracking-finnieSpacing-wider">
           02 Dec 2021, 18:15:02
           <InspectButton
-            onClick={() =>
-              dispatch(
-                showTaskInspector('TASK_INSPECTOR', {
-                  name: name,
-                  owner: creator,
-                  myKOIIStaked: myStake,
-                  state: state,
-                  myRewards: rewardEarned,
-
-                  totalKOIIBounty: 0,
-                  nodesParticipating: 0,
-                  totalKOIIStaked: 0,
-                  currentTopStake: 0,
-                })
-              )
-            }
+            onClick={() => dispatch(showTaskInspector('TASK_INSPECTOR', task))}
             size="small"
           />
         </div>
       </div>
       <div className="col-span-2 text-sm tracking-finnieSpacing-wider">
-        {creator}
+        {owner}
       </div>
       <div className="col-span-2 text-sm tracking-finnieSpacing-wide px-2">
         {rewardEarned}
@@ -82,7 +58,11 @@ const MyNodeTaskRow = ({
           <button
             onClick={() =>
               dispatch(
-                showModal('WITHDRAW_STAKE', { name, creator, rewardEarned })
+                showModal('WITHDRAW_STAKE', {
+                  name,
+                  creator: owner,
+                  rewardEarned,
+                })
               )
             }
             className="bg-white w-24 h-10 finnie-border-blue rounded-finnie shadow-md font-semibold text-xs tracking-finnieSpacing-wide"

@@ -2,31 +2,21 @@ import clsx from 'clsx';
 import React from 'react';
 
 import LockedIcon from 'svgs/locked-icon.svg';
+import { Task } from 'webapp/@type/task';
 import InspectButton from 'webapp/components/InspectButton';
 import RunButton from 'webapp/components/RunButton';
 import { useAppDispatch } from 'webapp/hooks/reduxHook';
 import { showTaskInspector } from 'webapp/store/actions/taskInspector';
-
-type Task = {
-  name: string;
-  creator: string;
-  bounty: number;
-  nodes: number;
-  topStake: number;
-  stake: number;
-  minStake: number;
-  status: string;
-};
 
 type TaskRowProps = {
   task: Task;
   isOdd: boolean;
 };
 
-const TaskRow = ({
-  task: { name, creator, bounty, nodes, topStake, stake, minStake, status },
-  isOdd,
-}: TaskRowProps): JSX.Element => {
+const TaskRow = ({ task, isOdd }: TaskRowProps): JSX.Element => {
+  const { name, owner, bounty, nodes, topStake, stake, minStake, status } =
+    task;
+
   const dispatch = useAppDispatch();
 
   return (
@@ -39,22 +29,7 @@ const TaskRow = ({
     >
       <div className="col-span-1 flex items-center">
         <InspectButton
-          onClick={() =>
-            dispatch(
-              showTaskInspector('TASK_INSPECTOR', {
-                name: name,
-                owner: creator,
-                totalKOIIBounty: bounty,
-                nodesParticipating: nodes,
-                myKOIIStaked: stake,
-
-                state: status,
-                totalKOIIStaked: 0,
-                currentTopStake: 0,
-                myRewards: 0,
-              })
-            )
-          }
+          onClick={() => dispatch(showTaskInspector('TASK_INSPECTOR', task))}
           size="big"
         />
       </div>
@@ -65,7 +40,7 @@ const TaskRow = ({
         </div>
       </div>
       <div className="col-span-2 text-sm tracking-finnieSpacing-wider">
-        {creator}
+        {owner}
       </div>
 
       <div className="col-span-5 grid grid-cols-3 gap-x-2 items-center">

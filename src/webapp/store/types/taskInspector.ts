@@ -1,19 +1,8 @@
 import { Action } from 'redux';
 
-export type TaskInspectorType = 'TASK_INSPECTOR';
+import { Task } from 'webapp/@type/task';
 
-export type Task = {
-  name?: string;
-  owner?: string;
-  totalKOIIBounty?: number;
-  nodesParticipating?: number;
-  totalKOIIStaked?: number;
-  currentTopStake?: number;
-  myKOIIStaked?: number;
-  state?: string;
-  myRewards?: number;
-  sourceCode?: string;
-};
+export type TaskInspectorType = 'TASK_INSPECTOR';
 
 export interface ITaskInspectorState {
   isShown: boolean;
