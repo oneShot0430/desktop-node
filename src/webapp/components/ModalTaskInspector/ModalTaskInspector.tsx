@@ -44,7 +44,7 @@ const ModalTaskInspector = (): JSX.Element => {
       showModal('WITHDRAW_STAKE', {
         name: taskInfo.name,
         creator: taskInfo.owner,
-        rewardEarned: taskInfo.myRewards,
+        rewardEarned: taskInfo.rewardEarned,
       })
     );
 

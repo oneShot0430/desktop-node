@@ -1,5 +1,5 @@
+import { Task } from 'webapp/@type/task';
 import {
-  Task,
   TaskInspectorAction,
   TaskInspectorType,
 } from 'webapp/store/types/taskInspector';

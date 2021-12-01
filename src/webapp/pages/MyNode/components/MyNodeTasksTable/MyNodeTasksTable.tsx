@@ -1,6 +1,6 @@
 import React from 'react';
 
-import tasks from 'webapp/tasks.json';
+import tasks from 'webapp/tasks';
 
 import MyNodeTaskRow from './MyNodeTaskRow';
 

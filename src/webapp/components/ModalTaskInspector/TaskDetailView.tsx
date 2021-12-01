@@ -1,18 +1,8 @@
 import React from 'react';
 
 import ReportTaskIcon from 'svgs/flag-icon.svg';
+import { Task } from 'webapp/@type/task';
 
-type Task = {
-  name: string;
-  owner: string;
-  totalKOIIBounty: number;
-  nodesParticipating: number;
-  totalKOIIStaked: number;
-  currentTopStake: number;
-  myKOIIStaked: number;
-  state: string;
-  myRewards: number;
-};
 type TaskDetailViewProps = {
   taskInfo: Partial<Task>;
   showWidthdraw: () => void;
@@ -40,45 +30,36 @@ const TaskDetailView = ({
         <div className="text-white w-59.25 flex items-start leading-6">
           Total KOII bounty:
         </div>
-        <div className="text-finnieTeal font-semibold">
-          {taskInfo.totalKOIIBounty}
-        </div>
+        <div className="text-finnieTeal font-semibold">{taskInfo.bounty}</div>
       </div>
 
       <div className="flex text-sm mb-1">
         <div className="text-white w-59.25 flex items-start leading-6">
           Nodes participating:
         </div>
-        <div className="text-finnieTeal font-semibold">
-          {taskInfo.nodesParticipating}
-        </div>
+        <div className="text-finnieTeal font-semibold">{taskInfo.nodes}</div>
       </div>
 
+      {/** This field is mocked */}
       <div className="flex text-sm mb-1">
         <div className="text-white w-59.25 flex items-start leading-6">
           Total KOII staked:
         </div>
-        <div className="text-finnieTeal font-semibold">
-          {taskInfo.totalKOIIStaked}
-        </div>
+        <div className="text-finnieTeal font-semibold">{taskInfo.topStake}</div>
       </div>
 
       <div className="flex text-sm mb-1">
         <div className="text-white w-59.25 flex items-start leading-6">
           Current top stake:
         </div>
-        <div className="text-finnieTeal font-semibold">
-          {taskInfo.currentTopStake}
-        </div>
+        <div className="text-finnieTeal font-semibold">{taskInfo.topStake}</div>
       </div>
 
       <div className="flex text-sm mb-1">
         <div className="text-white w-59.25 flex items-start leading-6">
           My KOII staked:
         </div>
-        <div className="text-finnieTeal font-semibold">
-          {taskInfo.myKOIIStaked}
-        </div>
+        <div className="text-finnieTeal font-semibold">{taskInfo.stake}</div>
       </div>
 
       <div className="flex text-sm mb-1">
@@ -93,7 +74,7 @@ const TaskDetailView = ({
           My Rewards:
         </div>
         <div className="text-finnieTeal font-semibold">
-          {taskInfo.myRewards}
+          {taskInfo.rewardEarned}
         </div>
       </div>
 

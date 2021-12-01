@@ -6,6 +6,7 @@ import ShareLinkIcon from 'svgs/share-link-icon.svg';
 type SourceCodeViewProps = {
   taskName: string;
 };
+
 const SourceCodeView = ({ taskName }: SourceCodeViewProps): JSX.Element => {
   return (
     <>
