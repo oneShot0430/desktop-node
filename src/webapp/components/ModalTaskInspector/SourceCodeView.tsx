@@ -10,7 +10,7 @@ type SourceCodeViewProps = {
 const SourceCodeView = ({ taskName }: SourceCodeViewProps): JSX.Element => {
   return (
     <>
-      <div className="relative flex font-semibold mb-5.5">
+      <div className="relative flex font-semibold mb-4">
         <ReportTaskIcon className="absolute top-1 -left-6.25 w-2.5 h-3.5" />
         <div className="text-white">Inspect</div>
         <div className="text-finnieEmerald">&nbsp;{taskName}&nbsp;</div>
