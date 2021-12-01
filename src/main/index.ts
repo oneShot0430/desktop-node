@@ -1,5 +1,7 @@
-import { ipcMain } from 'electron';
+import initHandlers from './initHandlers';
+import node from './node';
 
-import controllers from './controllers';
-
-ipcMain.handle('getTasks', controllers.getTasks);
+export default async () => {
+  initHandlers();
+  await node();
+};
