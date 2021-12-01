@@ -1,9 +1,11 @@
 import config from 'config';
+import errorHandler from 'main/errorHandler';
 import arweave from 'services/arweave';
 import koiiState from 'services/koiiState';
 import sdk from 'services/sdk';
 
-export default async (): Promise<any> => {
+
+const restoreKohaku = async (): Promise<any> => {
   if (config.node.RESTORE_KOHAKU) {
     const restore = await sdk.koiiTools.redisGetAsync('kohaku');
 
@@ -18,7 +20,13 @@ export default async (): Promise<any> => {
       */
       let cache = await sdk.kohaku.exportCache();
       cache = JSON.parse(cache);
-      koiiState.setState(cache.contracts[config.node.KOII_CONTRACT].state);
+
+      const state = JSON.parse(cache.contracts[config.node.KOII_CONTRACT].state);
+      let tasks = state.tasks;
+      
+      tasks = await Promise.all(tasks.map((task: any) => sdk.koiiTools.getState(task.txId)));
+      state.tasks = tasks;
+      koiiState.setState(state);
 
       console.log('Restore to height ', sdk.kohaku.getCacheHeight());
     }
@@ -31,3 +39,5 @@ export default async (): Promise<any> => {
   */
   return false;
 };
+
+export default errorHandler(restoreKohaku, 'Restore Kohaku error');

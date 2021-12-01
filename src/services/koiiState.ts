@@ -22,6 +22,10 @@ class KoiiState {
   setActivatedTasks(activatedTasks: []) {
     this.activatedTasks = activatedTasks;
   }
+
+  getTasks() {
+    return this.state.tasks || []; 
+  }
 }
 
 export default new KoiiState({}, []);

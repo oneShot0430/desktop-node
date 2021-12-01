@@ -1,9 +1,12 @@
 import errorHandler from 'main/errorHandler';
 
-import connectRedis from './connectRedis';
-import restoreKohaku from './restoreKohaku';
+import getNodes from './getNodes';
+import Namespace from './Namespace';
+import regNodes from './regNodes';
+
 
 export default {
-  connectRedis: errorHandler(connectRedis, 'Connect Redis error: '),
-  restoreKohaku: errorHandler(restoreKohaku, 'Restore Kohaku error: ')
+  getNodes: errorHandler(getNodes, 'Get nodes error'),
+  regNodes: errorHandler(regNodes, 'Register node error'),
+  Namespace
 };

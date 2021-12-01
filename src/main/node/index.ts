@@ -1,24 +1,39 @@
 import config from 'config';
 import koiiState from 'services/koiiState';
 
-import helpers from './helpers';
+import connectRedis from './connectRedis';
+import initExpressApp from './initExpressApp';
+import initKohaku from './initKohaku';
+import restoreKohaku from './restoreKohaku';
+
 
 
 export default async (): Promise<any> => {
   /* Connect Redis */
-  await helpers.connectRedis(
+  await connectRedis(
     config.node.REDIS.IP,
     config.node.REDIS.PORT
   );
 
   /* Restore koiiState from Redis */
-  await helpers.restoreKohaku();
+  const hasCachedData = await restoreKohaku();
 
-  /* Init Express server */
+  /* Init kohaku */
+  if (hasCachedData) {
+    initKohaku();
+  } else {
+    await initKohaku();
+  }
+
+  const state = koiiState.getState();
+  console.log('===== Tasks =====');
+  console.log(state.tasks);
+
+  /* Init Express app */
+  const expressApp = await initExpressApp();
+
+  /* Load tasks */
 
 
-  /* Get tasks */
-
-  
   /* Execute tasks */
 };
