@@ -118,7 +118,6 @@ const ModalTaskInspector = (): JSX.Element => {
             <ReportTaskView
               taskName={taskInfo.name}
               closeReportView={closeReportView}
-              className="transform -translate-x-1 animate-slideOut w-98.5 min-h-108.25 border-2 border-finnieRed-500 rounded-r shadow-lg bg-finnieBlue"
             />
           )}
         </div>

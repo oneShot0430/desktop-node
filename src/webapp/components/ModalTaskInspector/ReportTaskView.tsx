@@ -1,4 +1,3 @@
-import clsx from 'clsx';
 import React, { useState } from 'react';
 
 import CloseIcon from 'svgs/close-icons/close-icon-white.svg';
@@ -6,20 +5,27 @@ import CloseIcon from 'svgs/close-icons/close-icon-white.svg';
 import InputField from '../InputField';
 
 type ReportTaskViewProps = {
-  className: string;
   taskName: string;
   closeReportView: () => void;
 };
 
 export const ReportTaskView = ({
-  className,
   taskName,
   closeReportView,
 }: ReportTaskViewProps): JSX.Element => {
-  const [problemLine, setProblemLine] = useState('');
+  const [reportData, setReportData] = useState({
+    problematicLines: '',
+    detail: '',
+  });
+
+  const handleDataChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setReportData({ ...reportData, [e.target.name]: e.target.value });
+  };
 
   return (
-    <div className={clsx(className, 'relative text-white pt-5 pl-9 pr-8')}>
+    <div className="relative flex flex-col text-white pt-5 pl-9 pr-8 pb-6 transform -translate-x-1 animate-slideOut w-98.5 min-h-108.25 border-2 border-finnieRed-500 rounded-r shadow-lg bg-finnieBlue">
       <CloseIcon
         onClick={closeReportView}
         className="w-6 h-6 absolute top-2 right-2 cursor-pointer"
@@ -35,10 +41,21 @@ export const ReportTaskView = ({
       </div>
 
       <InputField
+        type="input"
+        name="problematicLines"
         label="Problematic lines"
-        value={problemLine}
-        setValue={(e) => setProblemLine(e.target.value)}
-        className="text-sm w-full"
+        value={reportData.problematicLines}
+        setValue={handleDataChange}
+        className="text-sm w-full mb-7"
+      />
+
+      <InputField
+        type="textArea"
+        name="detail"
+        label="Detailed description of the issue"
+        value={reportData.detail}
+        setValue={handleDataChange}
+        className="text-sm w-full flex-grow"
       />
     </div>
   );
