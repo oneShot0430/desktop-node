@@ -10,4 +10,4 @@ const initHandlers = (): void => {
   ipcMain.handle(config.endpoints.GET_TASKS, controllers.getTasks);
 };
 
-export default errorHandler(initHandlers, 'Init handlers error: ');
+export default errorHandler(initHandlers, 'Init handlers error');

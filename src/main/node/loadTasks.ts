@@ -1,3 +1,4 @@
+import Arweave from 'arweave';
 import axios from 'axios';
 import { Express } from 'express';
 
@@ -21,26 +22,37 @@ const loadTasks = async (app: Express) => {
 
     return { src: data, txId: task.txId };
   }));
-  
+
   return taskSrcs.map(({ src, txId }): any => {
-
-
-    const loadedTask = new Function(`
-      const [tools, namespace, require] = arguments;
-      ${src}
-      return { setup, execute }
-    `);
-
-    // return loadedTask(
-    //   sdk.koiiTools, 
-    //   namespace, 
-    //   require
-    // );
+    return loadTaskSource(
+      src,
+      new Namespace(txId, app)
+    );
   });
 };
 
-// const loadTaskSource = (src: string, namespace: Namespace) => {
 
-// };
+const loadTaskSource = (src: string, namespace: Namespace) => {
+  const loadedTask = new Function(`
+    const [tools, namespace, require] = arguments;
+    ${src};
+    return {setup, execute};
+  `);
+
+  const _require = (module: string) => {
+    switch (module) {
+      case 'arweave': return Arweave;
+      case '@_koi/kohaku': return sdk.kohaku;
+      case 'axios': return axios;
+      case 'crypto': return () => {/* */};
+    }
+  };
+
+  return loadedTask(
+    sdk.koiiTools,
+    namespace,
+    _require
+  );
+};
 
 export default errorHandler(loadTasks, 'Load tasks error');

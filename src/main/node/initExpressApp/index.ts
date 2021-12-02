@@ -6,7 +6,7 @@ import koiiState from 'services/koiiState';
 
 import app from './app';
 
-const initExpressApp = async () => {
+const initExpressApp = async (): Promise<Express> => {
   // skip stake for now
 
   const expressApp = app();

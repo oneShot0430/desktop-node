@@ -24,7 +24,15 @@ const restoreKohaku = async (): Promise<any> => {
       const state = JSON.parse(cache.contracts[config.node.KOII_CONTRACT].state);
       let tasks = state.tasks;
       
-      tasks = await Promise.all(tasks.map((task: any) => sdk.koiiTools.getState(task.txId)));
+      tasks = await Promise.all(tasks.map(async (task: any) => {
+        const taskState = sdk.koiiTools.getState(task.txId);
+
+        return {
+          txId: task.txId,
+          name: task.name,
+          executableId: taskState.executableId
+        };
+      }));
       state.tasks = tasks;
       koiiState.setState(state);
 
