@@ -10,19 +10,20 @@ import routes from './routes';
 const verifyTaskEndpoints = (req: Request, res: Response, next: NextFunction): void => {
   const match = req.originalUrl.match(/\/(.*?)\//i);
 
-  let taskStarted = false;
+  let taskActivated = false;
   let isTask = false;
 
   if (match) {
     const taskId = match[1];
     if (taskId?.length === 43) {
       isTask = true;
-      const activatedTasks = koiiState.getActivatedTasks();
-      if (activatedTasks.includes(taskId)) taskStarted = true;
+      taskActivated = !(koiiState.getAddedTasks().every(addedTask => {
+        return addedTask.contractId !== taskId || !addedTask.activated;
+      }));
     }
   }
 
-  if (!taskStarted && isTask) {
+  if (!taskActivated && isTask) {
     res.status(400).send('This service has been stopped.');
   } else {
     next();

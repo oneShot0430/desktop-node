@@ -1,10 +1,17 @@
+import { Task } from 'main/type';
+
+type AddedTask = {
+  contractId: string,
+  activated: boolean
+}
+
 class KoiiState {
   private state: any
-  private activatedTasks: string[]
+  private addedTasks: AddedTask[]
 
-  constructor(state: any, activatedTasks: string[]) {
+  constructor(state: any, addedTasks: AddedTask[]) {
     this.state = state;
-    this.activatedTasks = activatedTasks;
+    this.addedTasks = addedTasks;
   }
 
   getState(): any {
@@ -15,16 +22,26 @@ class KoiiState {
     this.state = state;
   } 
 
-  getActivatedTasks(): string[] {
-    return this.activatedTasks;
+  getAddedTasks(): AddedTask[] {
+    return this.addedTasks || [];
   }
 
-  setActivatedTasks(activatedTasks: []) {
-    this.activatedTasks = activatedTasks;
+  setAddedTasks(addedTasks: AddedTask[]) {
+    this.addedTasks = addedTasks;
   }
 
   getTasks() {
     return this.state.tasks || []; 
+  }
+
+  findTask(transactionId: string): Task | null {
+    if (!(this.state.tasks instanceof Array)) return null;
+
+    for (const task of this.state.tasks) {
+      if (task.txId === transactionId) return task;
+    }
+
+    return null;
   }
 }
 
