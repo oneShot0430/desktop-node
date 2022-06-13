@@ -1,7 +1,7 @@
 import React from 'react';
 
 import AppRoutes from './AppRoutes';
-import AppProvider from './providers/AppProvider';
+import AppProvider from './Providers/AppProvider';
 
 const App = (): JSX.Element => {
   return (
