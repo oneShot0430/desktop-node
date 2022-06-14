@@ -107,6 +107,8 @@
   "dependencies": {
     "@_koi/kohaku": "^1.1.2",
     "@_koi/sdk": "^2.4.11",
+    "@_koi/web3.js": "^0.0.6",
+    "@solana/buffer-layout": "^4.0.0",
     "@types/cookie-parser": "^1.4.2",
     "@types/cors": "^2.8.12",
     "axios": "^0.24.0",
