@@ -2,13 +2,14 @@ import { Event } from 'electron';
 
 import {
     Keypair,
-    Connection,
     PublicKey,
     TransactionInstruction,
     Transaction,
     sendAndConfirmTransaction,
     SYSVAR_CLOCK_PUBKEY,
 } from '@_koi/web3.js';
+
+import sdk from 'services/sdk';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 
@@ -28,7 +29,6 @@ const TASK_CONTRACT_ID: PublicKey = new PublicKey(
 );
 
 interface DelegateStakeParam {
-    connection: Connection,
     mainSystemAccount: Keypair,
     taskStateInfoPublicKey: PublicKey,
     stakingAccKeypair: Keypair,
@@ -38,7 +38,6 @@ interface DelegateStakeParam {
 
 const delegateStake = async (event: Event, payload: DelegateStakeParam) => {
     const {
-        connection,
         mainSystemAccount,
         taskStateInfoPublicKey,
         stakingAccKeypair,
@@ -65,7 +64,7 @@ const delegateStake = async (event: Event, payload: DelegateStakeParam) => {
         data: data,
     });
     const response = await sendAndConfirmTransaction(
-        connection,
+        sdk.k2Connection,
         new Transaction().add(instruction),
         [mainSystemAccount, stakingAccKeypair]
     );

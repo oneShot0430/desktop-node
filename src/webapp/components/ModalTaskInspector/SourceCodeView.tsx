@@ -12,6 +12,7 @@ const SourceCodeView = ({
   taskName,
   openReportView,
 }: SourceCodeViewProps): JSX.Element => {
+  // window.main.getTaskSource({taskStatePublicKey:"DEXm1P3rVRZT9EqBfupBmpbJpo2noUKapfSRSwEPSSYm"}).then(console.log)
   return (
     <>
       <div className="relative flex font-semibold mb-4">

@@ -13,11 +13,14 @@ export const SERVER_PORT = 8887;
 
 export const GATEWAY_URL = 'https://arweave.net';
 
+export const k2_NETWORK_URL = 'http://localhost:8899';
+
 export default {
   REDIS,
   BUNDLER_URL,
   KOII_CONTRACT,
   RESTORE_KOHAKU,
   SERVER_PORT,
-  GATEWAY_URL
+  GATEWAY_URL,
+  k2_NETWORK_URL
 };

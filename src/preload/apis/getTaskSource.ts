@@ -1,9 +1,9 @@
 import config from 'config';
 import sendMessage from 'preload/sendMessage';
 
-type GetTaskSourcePayload = {
-  transactionId: string
+interface GetTaskSourceParam {
+  taskStatePublicKey: string
 }
 
-export default (payload: GetTaskSourcePayload): Promise<string> => 
+export default (payload: GetTaskSourceParam): Promise<string> =>
   sendMessage(config.endpoints.GET_TASK_SOURCE, payload);

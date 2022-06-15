@@ -11,6 +11,7 @@ const initHandlers = (): void => {
   ipcMain.handle(config.endpoints.GET_TASK_SOURCE, controllers.getTaskSource);
   ipcMain.handle(config.endpoints.ADD_TASK, controllers.addTask);
   ipcMain.handle(config.endpoints.TOGGLE_TASK, controllers.toggleTask);
+  ipcMain.handle(config.endpoints.DELEGATE_STAKE, controllers.delegateStake);
 };
 
 export default errorHandler(initHandlers, 'Init handlers error');
