@@ -1,4 +1,5 @@
 import addTask from './addTask';
+import createWallet from './createWallet';
 import delegateStake from './delegateStake';
 import getTaskInfo from './getTaskInfo';
 import getTasks from './getTasks';
@@ -10,6 +11,7 @@ export default {
   getTaskSource,
   toggleTask,
   addTask,
+  createWallet,
   delegateStake,
-  getTaskInfo
+  getTaskInfo,
 };
