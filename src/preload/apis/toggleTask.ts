@@ -3,8 +3,8 @@ import sendMessage from 'preload/sendMessage';
 import { Task } from 'preload/type/tasks';
 
 type ToggleTaskPayload = {
-  contractId: string
-}
+  contractId: string;
+};
 
-export default (payload: ToggleTaskPayload): Promise<Task> => 
+export default (payload: ToggleTaskPayload): Promise<Task> =>
   sendMessage(config.endpoints.TOGGLE_TASK, payload);

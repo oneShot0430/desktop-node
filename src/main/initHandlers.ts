@@ -1,6 +1,5 @@
 import { ipcMain } from 'electron';
 
-
 import config from 'config';
 
 import controllers from './controllers';

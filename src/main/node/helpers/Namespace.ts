@@ -4,10 +4,9 @@ import { Express } from 'express';
 
 import sdk from 'services/sdk';
 
-
 export default class Namespace {
-  taskTxId: string
-  app: Express
+  taskTxId: string;
+  app: Express;
 
   /**
    * @param {*} taskTxId Tasks transaction ID to be used as the namespace name
@@ -46,7 +45,9 @@ export default class Namespace {
    */
   async fs(method: string, path: string, ...args: any[]): Promise<any> {
     const basePath = 'namespace/' + this.taskTxId;
-    await fsPromises.mkdir(basePath, { recursive: true }).catch(() => {/** */});
+    await fsPromises.mkdir(basePath, { recursive: true }).catch(() => {
+      /** */
+    });
     return fsPromises[method](`${basePath}/${path}`, ...args);
   }
 
@@ -57,7 +58,7 @@ export default class Namespace {
    * @param {Function} callback // Callback function on traffic receive
    */
   express(method: string, path: string, callback: FunctionConstructor): void {
-    type MethodKey = keyof typeof this.app
+    type MethodKey = keyof typeof this.app;
     this.app[method as MethodKey]('/' + this.taskTxId + path, callback);
   }
 }

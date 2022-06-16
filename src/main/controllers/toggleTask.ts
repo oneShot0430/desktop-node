@@ -1,13 +1,12 @@
 import { Event } from 'electron';
 
-
 import koiiState from 'services/koiiState';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 
 type ToggleTaskPayload = {
-  contractId: string
-}
+  contractId: string;
+};
 
 const toggleTask = (event: Event, payload: ToggleTaskPayload) => {
   const { contractId } = payload;

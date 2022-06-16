@@ -1,13 +1,13 @@
 import { Task } from 'main/type';
 
 type AddedTask = {
-  contractId: string,
-  activated: boolean
-}
+  contractId: string;
+  activated: boolean;
+};
 
 class KoiiState {
-  private state: any
-  private addedTasks: AddedTask[]
+  private state: any;
+  private addedTasks: AddedTask[];
 
   constructor(state: any, addedTasks: AddedTask[]) {
     this.state = state;
@@ -20,7 +20,7 @@ class KoiiState {
 
   setState(state: any) {
     this.state = state;
-  } 
+  }
 
   getAddedTasks(): AddedTask[] {
     return this.addedTasks || [];
@@ -31,7 +31,7 @@ class KoiiState {
   }
 
   getTasks() {
-    return this.state.tasks || []; 
+    return this.state.tasks || [];
   }
 
   findTask(transactionId: string): Task | null {

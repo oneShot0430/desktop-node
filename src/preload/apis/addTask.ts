@@ -3,8 +3,8 @@ import sendMessage from 'preload/sendMessage';
 import { Task } from 'preload/type/tasks';
 
 type AddTaskPayload = {
-  contractId: string
-}
+  contractId: string;
+};
 
-export default (payload: AddTaskPayload): Promise<Task> => 
+export default (payload: AddTaskPayload): Promise<Task> =>
   sendMessage(config.endpoints.ADD_TASK, payload);

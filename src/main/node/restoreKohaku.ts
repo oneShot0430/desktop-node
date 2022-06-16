@@ -4,7 +4,6 @@ import arweave from 'services/arweave';
 import koiiState from 'services/koiiState';
 import sdk from 'services/sdk';
 
-
 const restoreKohaku = async (): Promise<any> => {
   if (config.node.RESTORE_KOHAKU) {
     const restore = await sdk.koiiTools.redisGetAsync('kohaku');
@@ -21,18 +20,22 @@ const restoreKohaku = async (): Promise<any> => {
       let cache = await sdk.kohaku.exportCache();
       cache = JSON.parse(cache);
 
-      const state = JSON.parse(cache.contracts[config.node.KOII_CONTRACT].state);
+      const state = JSON.parse(
+        cache.contracts[config.node.KOII_CONTRACT].state
+      );
       let tasks = state.tasks;
-      
-      tasks = await Promise.all(tasks.map(async (task: any) => {
-        const taskState = sdk.koiiTools.getState(task.txId);
 
-        return {
-          txId: task.txId,
-          name: task.name,
-          executableId: taskState.executableId
-        };
-      }));
+      tasks = await Promise.all(
+        tasks.map(async (task: any) => {
+          const taskState = sdk.koiiTools.getState(task.txId);
+
+          return {
+            txId: task.txId,
+            name: task.name,
+            executableId: taskState.executableId,
+          };
+        })
+      );
       state.tasks = tasks;
       koiiState.setState(state);
 
