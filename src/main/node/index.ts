@@ -1,10 +1,11 @@
 import * as fsSync from 'fs';
 
+import * as dotenv from 'dotenv';
+
 import config from 'config';
 import koiiState from 'services/koiiState';
 
-// import * as dotenv from 'dotenv';
-// dotenv.config();
+dotenv.config();
 import executeTasks from './executeTasks';
 import { Namespace, namespaceInstance } from './helpers/Namespace';
 import initExpressApp from './initExpressApp';
