@@ -15,6 +15,8 @@ export const GATEWAY_URL = 'https://arweave.net';
 
 export const k2_NETWORK_URL = 'http://localhost:8899';
 
+export const TASK_CONTRACT_ID='Koiitask22222222222222222222222222222222222';
+
 export default {
   REDIS,
   BUNDLER_URL,
@@ -22,5 +24,6 @@ export default {
   RESTORE_KOHAKU,
   SERVER_PORT,
   GATEWAY_URL,
-  k2_NETWORK_URL
+  k2_NETWORK_URL,
+  TASK_CONTRACT_ID
 };

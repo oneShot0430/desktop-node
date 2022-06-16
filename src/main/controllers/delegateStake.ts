@@ -7,8 +7,11 @@ import {
     Transaction,
     sendAndConfirmTransaction,
     SYSVAR_CLOCK_PUBKEY,
+    SystemProgram,
+    LAMPORTS_PER_SOL,
 } from '@_koi/web3.js';
 
+import config from 'config';
 import sdk from 'services/sdk';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
@@ -25,7 +28,7 @@ const STAKE_INSTRUCTION_LAYOUT = {
     ]),
 };
 const TASK_CONTRACT_ID: PublicKey = new PublicKey(
-    'Koiitask22222222222222222222222222222222222',
+    config.node.TASK_CONTRACT_ID || '',
 );
 
 interface DelegateStakeParam {
@@ -44,6 +47,23 @@ const delegateStake = async (event: Event, payload: DelegateStakeParam) => {
         stakePotAccount,
         stakeAmount,
     } = payload;
+    const createSubmitterAccTransaction = new Transaction().add(
+        SystemProgram.createAccount({
+            fromPubkey: mainSystemAccount.publicKey,
+            newAccountPubkey: stakingAccKeypair.publicKey,
+            lamports:
+                stakeAmount * LAMPORTS_PER_SOL +
+                (await sdk.k2Connection.getMinimumBalanceForRentExemption(100)) +
+                10000, //Adding 10,000 extra lamports for padding
+            space: 100,
+            programId: TASK_CONTRACT_ID,
+        }),
+    );
+    await sendAndConfirmTransaction(
+        sdk.k2Connection,
+        createSubmitterAccTransaction,
+        [mainSystemAccount, stakingAccKeypair],
+    );
     const data = encodeData(STAKE_INSTRUCTION_LAYOUT, { stakeAmount });
     const instruction = new TransactionInstruction({
         keys: [
