@@ -1,24 +1,35 @@
 import { Event } from 'electron';
 
+import {
+  PublicKey
+} from '@_koi/web3.js';
 import axios from 'axios';
 
 import config from 'config';
 import koiiState from 'services/koiiState';
+import sdk from 'services/sdk';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 
-const getTaskSource = async (event: Event, payload: any): Promise<string> => {
-  const { transactionId } = payload;
-  const task = koiiState.findTask(transactionId);
 
-  if (!task) throw new Error('Task not found');
+interface GetTaskSourceParam {
+  taskStatePublicKey: string
+}
+const getTaskSource = async (event: Event, payload: GetTaskSourceParam): Promise<string> => {
+  const {taskStatePublicKey } = payload;
 
-  const url = `${config.node.GATEWAY_URL}/${task.executableId}`;
+  const accountInfo = await sdk.k2Connection.getAccountInfo(new PublicKey(taskStatePublicKey));
+  const taskData=JSON.parse(accountInfo.data.toString());
+  console.log('DATA',taskData);
+  if (!taskData) throw new Error('Task not found');
+
+  const url = `${config.node.GATEWAY_URL}/${taskData.task_audit_program}`;
   
   try {
     const { data: src } = await axios.get(url);
     return src;
   } catch (err) {
+    console.error(err);
     throw new Error('Get task source error');
   }
 };
