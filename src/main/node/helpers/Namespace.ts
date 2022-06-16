@@ -13,6 +13,8 @@ import {
 import axios from 'axios';
 import * as redis from 'redis';
 
+import config from 'config';
+ 
 // eslint-disable-next-line
 const BufferLayout = require('@solana/buffer-layout');
 
@@ -69,7 +71,7 @@ class Namespace {
    */
   taskTxId: string;
   app: any;
-  redisClient?: any;
+  #redisClient?: any;
   taskData: TaskData;
   #mainSystemAccount: Keypair;
   mainSystemAccountPubKey: PublicKey;
@@ -96,10 +98,10 @@ class Namespace {
    * @returns {Promise<*>} Promise containing data
    */
   async redisGet(key: string): Promise<string> {
-    if (this.redisClient === undefined) throw 'Redis not connected';
+    if (this.#redisClient === undefined) throw 'Redis not connected';
     else
       try {
-        const response = await this.redisClient.get(this.taskTxId + key);
+        const response = await this.#redisClient.get(this.taskTxId + key);
         return response;
       } catch (e) {
         console.error(e);
@@ -113,10 +115,10 @@ class Namespace {
    * @returns Element
    */
   async redisLPush(key: string, value: any): Promise<any> {
-    if (this.redisClient === undefined) throw 'Redis not connected';
+    if (this.#redisClient === undefined) throw 'Redis not connected';
     else
       try {
-        const response = await this.redisClient.lPush(
+        const response = await this.#redisClient.lPush(
           this.taskTxId + key,
           value,
         );
@@ -135,10 +137,10 @@ class Namespace {
    * @returns confirmation of deleting the element from the list
    */
   async redisLRem(key: string, occurance: number, value: any): Promise<any> {
-    if (this.redisClient === undefined) throw 'Redis not connected';
+    if (this.#redisClient === undefined) throw 'Redis not connected';
     else
       try {
-        const response = await this.redisClient.LREM(
+        const response = await this.#redisClient.LREM(
           this.taskTxId + key,
           occurance,
           value,
@@ -161,10 +163,10 @@ class Namespace {
     start: number,
     stop: number,
   ): Promise<Array<any>> {
-    if (this.redisClient === undefined) throw 'Redis not connected';
+    if (this.#redisClient === undefined) throw 'Redis not connected';
     else
       try {
-        const response = await this.redisClient.lRange(
+        const response = await this.#redisClient.lRange(
           this.taskTxId + key,
           start,
           stop,
@@ -176,10 +178,10 @@ class Namespace {
       }
   }
   async redisLLen(key: string): Promise<string> {
-    if (this.redisClient === undefined) throw 'Redis not connected';
+    if (this.#redisClient === undefined) throw 'Redis not connected';
     else
       try {
-        const response = await this.redisClient.lLen(this.taskTxId + key);
+        const response = await this.#redisClient.lLen(this.taskTxId + key);
         return response;
       } catch (e) {
         console.error(e);
@@ -193,10 +195,10 @@ class Namespace {
    * @returns {Promise<void>}
    */
   async redisSet(key: string, value: string): Promise<any> {
-    if (this.redisClient === undefined) throw 'Redis not connected';
+    if (this.#redisClient === undefined) throw 'Redis not connected';
     else
       try {
-        const response = await this.redisClient.set(this.taskTxId + key, value);
+        const response = await this.#redisClient.set(this.taskTxId + key, value);
         return response;
       } catch (e) {
         console.error(e);
@@ -239,9 +241,9 @@ class Namespace {
    */
   redisKeys(pattern: string) {
     return new Promise((resolve, reject) => {
-      if (this.redisClient === undefined) reject('Redis not connected');
+      if (this.#redisClient === undefined) reject('Redis not connected');
       else
-        this.redisClient.keys(this.taskTxId + pattern, (err: any, res: any) => {
+        this.#redisClient.keys(this.taskTxId + pattern, (err: any, res: any) => {
           err ? reject(err) : resolve(res);
         });
     });
@@ -254,9 +256,9 @@ class Namespace {
    */
   redisDel(key: string) {
     return new Promise((resolve, reject) => {
-      if (this.redisClient === undefined) reject('Redis not connected');
+      if (this.#redisClient === undefined) reject('Redis not connected');
       else
-        this.redisClient.del(this.taskTxId + key, (err: any, res: any) => {
+        this.#redisClient.del(this.taskTxId + key, (err: any, res: any) => {
           err ? reject(err) : resolve(res);
         });
     });
@@ -275,25 +277,25 @@ class Namespace {
   /**
    * Loads redis client
    */
-  loadRedisClient(config?: redisConfig): void {
+  loadRedisClient(redisConfig?: redisConfig): void {
     const host =
-      config && config.redis_ip ? config.redis_ip : process.env.REDIS_IP;
+      redisConfig && redisConfig.redis_ip ? redisConfig.redis_ip : config.node.REDIS.IP;
     const port =
-      config && config.redis_port
-        ? config.redis_port
-        : parseInt(process.env.REDIS_PORT as string);
+      redisConfig && redisConfig.redis_port
+        ? redisConfig.redis_port
+        : config.node.REDIS.PORT;
     const password =
-      config && config.redis_password
-        ? config.redis_password
-        : process.env.REDIS_PASSWORD;
+      redisConfig && redisConfig.redis_password
+        ? redisConfig.redis_password
+        : '';
     const username =
-      config && config.username ? config.username : process.env.REDIS_USERNAME;
+      redisConfig && redisConfig.username ? redisConfig.username : process.env.REDIS_USERNAME;
     if (!host || !port) throw Error('CANNOT READ REDIS IP OR PORT FROM ENV');
-    this.redisClient = redis.createClient({
+    this.#redisClient = redis.createClient({
       url: `redis://${username || ''}:${password}@${host}:${port}`,
     });
-    this.redisClient.connect();
-    this.redisClient.on('error', function (error: any) {
+    this.#redisClient.connect();
+    this.#redisClient.on('error', function (error: any) {
       console.error('redisClient ' + error);
     });
   }

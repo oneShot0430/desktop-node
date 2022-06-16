@@ -1,12 +1,12 @@
 import * as fsSync from 'fs';
 
-import { Keypair } from '@_koi/web3.js';
-
 import config from 'config';
 import koiiState from 'services/koiiState';
 
+// import * as dotenv from 'dotenv';
+// dotenv.config();
 import executeTasks from './executeTasks';
-import { namespaceInstance } from './helpers/Namespace';
+import { Namespace, namespaceInstance } from './helpers/Namespace';
 import initExpressApp from './initExpressApp';
 // import initKohaku from './initKohaku';
 import loadTasks from './loadTasks';
@@ -21,13 +21,17 @@ export default async (): Promise<any> => {
   //   config.node.REDIS.IP,
   //   config.node.REDIS.PORT
   // );
-  if (await namespaceInstance.redisGet('WALLET_LOCATION')) {
-    /* Init Express app */
-    const expressApp = await initExpressApp();
-    /* Load tasks */
-    const executableTasks = await loadTasks(expressApp);
-    /* Execute tasks */
-    await executeTasks(executableTasks);
+  try {
+    await namespaceInstance.loadRedisClient();
+    if (await namespaceInstance.redisGet('WALLET_LOCATION')) {
+      /* Init Express app */
+      const expressApp = await initExpressApp();
+      /* Load tasks */
+      const executableTasks = await loadTasks(expressApp);
+      /* Execute tasks */
+      await executeTasks(executableTasks);
+    }
+  } catch (e) {
+    console.error(e);
   }
-
 };

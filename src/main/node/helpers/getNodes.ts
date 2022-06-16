@@ -1,4 +1,3 @@
-import sdk from 'services/sdk';
 
 import { getCacheNodes } from './Namespace';
 

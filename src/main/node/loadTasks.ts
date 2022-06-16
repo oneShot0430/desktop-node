@@ -63,7 +63,6 @@ const loadTaskSource = (src: string, namespace: Namespace) => {
   const _require = (module: string) => {
     switch (module) {
       case 'arweave': return Arweave;
-      case '@_koi/kohaku': return sdk.kohaku;
       case 'axios': return axios;
       case 'crypto': return () => {/* */ };
     }

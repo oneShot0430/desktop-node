@@ -1,6 +1,5 @@
 import arweave from 'services/arweave';
 import koiiState from 'services/koiiState';
-import sdk from 'services/sdk';
 
 import { getCacheNodes, namespaceInstance } from './Namespace';
 
