@@ -12,7 +12,7 @@ const SourceCodeView = ({
   taskName,
   openReportView,
 }: SourceCodeViewProps): JSX.Element => {
-  window.main.createWallet({ walletName: 'raj' }).then(console.log);
+  // window.main.createWallet({ walletName: 'raj' }).then(console.log);
   return (
     <>
       <div className="relative flex font-semibold mb-4">
