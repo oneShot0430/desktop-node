@@ -14,10 +14,9 @@ import axios from 'axios';
 import * as redis from 'redis';
 
 import config from 'config';
- 
+
 // eslint-disable-next-line
 const BufferLayout = require('@solana/buffer-layout');
-
 
 interface redisConfig {
   redis_ip?: string;
@@ -35,7 +34,7 @@ interface TaskData {
 }
 const BUNDLER_NODES = '/nodes';
 const TASK_CONTRACT_ID: PublicKey = new PublicKey(
-  'Koiitask22222222222222222222222222222222222',
+  'Koiitask22222222222222222222222222222222222'
 );
 const TASK_INSTRUCTION_LAYOUTS = Object.freeze({
   SubmitTask: {
@@ -80,7 +79,7 @@ class Namespace {
     expressApp: any,
     operationMode: string,
     mainSystemAccount: Keypair,
-    taskData: TaskData,
+    taskData: TaskData
   ) {
     this.taskTxId = taskTxId;
     this.app = expressApp;
@@ -101,6 +100,7 @@ class Namespace {
     if (this.#redisClient === undefined) throw 'Redis not connected';
     else
       try {
+        console.log({ hehhehehehheheh: this.taskTxId + key });
         const response = await this.#redisClient.get(this.taskTxId + key);
         return response;
       } catch (e) {
@@ -120,7 +120,7 @@ class Namespace {
       try {
         const response = await this.#redisClient.lPush(
           this.taskTxId + key,
-          value,
+          value
         );
         return response;
       } catch (e) {
@@ -143,7 +143,7 @@ class Namespace {
         const response = await this.#redisClient.LREM(
           this.taskTxId + key,
           occurance,
-          value,
+          value
         );
         return response;
       } catch (e) {
@@ -161,7 +161,7 @@ class Namespace {
   async redisLRange(
     key: string,
     start: number,
-    stop: number,
+    stop: number
   ): Promise<Array<any>> {
     if (this.#redisClient === undefined) throw 'Redis not connected';
     else
@@ -169,7 +169,7 @@ class Namespace {
         const response = await this.#redisClient.lRange(
           this.taskTxId + key,
           start,
-          stop,
+          stop
         );
         return response;
       } catch (e) {
@@ -198,7 +198,10 @@ class Namespace {
     if (this.#redisClient === undefined) throw 'Redis not connected';
     else
       try {
-        const response = await this.#redisClient.set(this.taskTxId + key, value);
+        const response = await this.#redisClient.set(
+          this.taskTxId + key,
+          value
+        );
         return response;
       } catch (e) {
         console.error(e);
@@ -243,9 +246,12 @@ class Namespace {
     return new Promise((resolve, reject) => {
       if (this.#redisClient === undefined) reject('Redis not connected');
       else
-        this.#redisClient.keys(this.taskTxId + pattern, (err: any, res: any) => {
-          err ? reject(err) : resolve(res);
-        });
+        this.#redisClient.keys(
+          this.taskTxId + pattern,
+          (err: any, res: any) => {
+            err ? reject(err) : resolve(res);
+          }
+        );
     });
   }
 
@@ -279,7 +285,9 @@ class Namespace {
    */
   loadRedisClient(redisConfig?: redisConfig): void {
     const host =
-      redisConfig && redisConfig.redis_ip ? redisConfig.redis_ip : config.node.REDIS.IP;
+      redisConfig && redisConfig.redis_ip
+        ? redisConfig.redis_ip
+        : config.node.REDIS.IP;
     const port =
       redisConfig && redisConfig.redis_port
         ? redisConfig.redis_port
@@ -289,7 +297,9 @@ class Namespace {
         ? redisConfig.redis_password
         : '';
     const username =
-      redisConfig && redisConfig.username ? redisConfig.username : process.env.REDIS_USERNAME;
+      redisConfig && redisConfig.username
+        ? redisConfig.username
+        : process.env.REDIS_USERNAME;
     if (!host || !port) throw Error('CANNOT READ REDIS IP OR PORT FROM ENV');
     this.#redisClient = redis.createClient({
       url: `redis://${username || ''}:${password}@${host}:${port}`,
@@ -304,14 +314,14 @@ class Namespace {
     taskStateInfoKeypairPubKey: PublicKey,
     submitterKeypair: Keypair,
     stakePotAccount: PublicKey,
-    submission: string,
+    submission: string
   ): Promise<string> {
     if (submission.length > 512) {
       throw Error('Submission cannot be greater than 512 characters');
     }
     const data = encodeData(TASK_INSTRUCTION_LAYOUTS.SubmitTask, {
       submission: new TextEncoder().encode(
-        padStringWithSpaces(submission, 512),
+        padStringWithSpaces(submission, 512)
       ), //must be 512 chracters long
     });
     const instruction = new TransactionInstruction({
@@ -334,7 +344,7 @@ class Namespace {
     const result = await sendAndConfirmTransaction(
       connection,
       new Transaction().add(instruction),
-      [this.#mainSystemAccount, submitterKeypair],
+      [this.#mainSystemAccount, submitterKeypair]
     );
     return result;
   }
@@ -342,7 +352,7 @@ class Namespace {
     connection: Connection,
     taskStateInfoKeypairPubKey: PublicKey,
     submitterPubkey: PublicKey,
-    voterKeypair: Keypair,
+    voterKeypair: Keypair
   ): Promise<string> {
     const data = encodeData(TASK_INSTRUCTION_LAYOUTS.Vote, {
       is_valid: 1,
@@ -364,7 +374,7 @@ class Namespace {
     const result = await sendAndConfirmTransaction(
       connection,
       new Transaction().add(instruction),
-      [this.#mainSystemAccount, voterKeypair],
+      [this.#mainSystemAccount, voterKeypair]
     );
     return result;
   }
@@ -373,7 +383,7 @@ class Namespace {
     taskStateInfoPublicKey: PublicKey,
     stakingAccKeypair: Keypair,
     stakePotAccount: PublicKey,
-    stakeAmount: number,
+    stakeAmount: number
   ): Promise<string> {
     const data = encodeData(TASK_INSTRUCTION_LAYOUTS.Stake, { stakeAmount });
     const instruction = new TransactionInstruction({
@@ -397,7 +407,7 @@ class Namespace {
     const response = await sendAndConfirmTransaction(
       connection,
       new Transaction().add(instruction),
-      [this.#mainSystemAccount, stakingAccKeypair],
+      [this.#mainSystemAccount, stakingAccKeypair]
     );
     return response;
   }
@@ -410,7 +420,7 @@ class Namespace {
   async sendAndConfirmTransactionWrapper(
     connection: Connection,
     transaction: Transaction,
-    signers: Keypair[],
+    signers: Keypair[]
   ): Promise<string> {
     const response = await sendAndConfirmTransaction(connection, transaction, [
       this.#mainSystemAccount,
@@ -424,7 +434,7 @@ const namespaceInstance = new Namespace(
   null,
   process.env.NODE_MODE || '',
   new Keypair(),
-  {},
+  {}
 );
 
 /**
@@ -467,7 +477,7 @@ async function registerNodes(newNodes: any) {
   // Filter stale nodes from registry
   let nodes = await getCacheNodes();
   console.log(
-    `Registry contains ${nodes.length} nodes. Registering ${newNodes.length} more`,
+    `Registry contains ${nodes.length} nodes. Registering ${newNodes.length} more`
   );
 
   // Verify each registration TODO process promises in parallel
@@ -548,4 +558,4 @@ function padStringWithSpaces(input: string, length: number) {
   input = input.padEnd(length);
   return input;
 }
-export { Namespace, getNodes, registerNodes, getCacheNodes,namespaceInstance};
+export { Namespace, getNodes, registerNodes, getCacheNodes, namespaceInstance };

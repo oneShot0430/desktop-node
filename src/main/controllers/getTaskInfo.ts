@@ -55,3 +55,4 @@ const getTaskInfo = async (event: Event, payload: GetTaskInfoParam): Promise<Tas
 };
 
 export default mainErrorHandler(getTaskInfo);
+
