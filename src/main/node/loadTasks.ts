@@ -28,7 +28,7 @@ const loadTasks = async (expressApp: Express) => {
     ),
   );
 
-  // Fetch all tasks => selectedTasks = koiiState.getActiveTasks()
+  // TODO: Fetch all tasks => selectedTasks = koiiState.getActiveTasks()
   
   const selectedTasks: any = [];
   const taskSrcProms = selectedTasks.map((task: any) =>

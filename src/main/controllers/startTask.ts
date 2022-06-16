@@ -55,7 +55,7 @@ const startTask = async (event: Event, payload: StartTaskPayload) => {
                 ),
             );
         await taskSrc.setup();
-        await taskSrc.execute();
+        taskSrc.execute();
     } catch (err) {
         console.error(err);
         throw new Error('Get task source error');
