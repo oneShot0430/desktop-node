@@ -13,7 +13,7 @@ import mainErrorHandler from '../../utils/mainErrorHandler';
 
 
 interface GetTaskInfoParam {
-    taskStatePublicKey: string
+    taskAccountPubKey: string
 }
 interface TaskState {
     taskName: string,
@@ -30,9 +30,9 @@ interface TaskState {
     stakeList: any      
 }
 const getTaskInfo = async (event: Event, payload: GetTaskInfoParam): Promise<TaskState> => {
-    const { taskStatePublicKey } = payload;
+    const { taskAccountPubKey } = payload;
 
-    const accountInfo = await sdk.k2Connection.getAccountInfo(new PublicKey(taskStatePublicKey));
+    const accountInfo = await sdk.k2Connection.getAccountInfo(new PublicKey(taskAccountPubKey));
     const taskData = JSON.parse(accountInfo.data.toString());
     if (!taskData) throw new Error('Task not found');
 

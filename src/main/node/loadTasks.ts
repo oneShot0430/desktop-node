@@ -1,3 +1,6 @@
+import * as fsSync from 'fs';
+
+import { Keypair } from '@_koi/web3.js';
 import Arweave from 'arweave';
 import axios from 'axios';
 import { Express } from 'express';
@@ -7,34 +10,52 @@ import errorHandler from 'main/errorHandler';
 import koiiState from 'services/koiiState';
 import sdk from 'services/sdk';
 
-import Namespace from './helpers/Namespace';
+import { Namespace, namespaceInstance } from './helpers/Namespace';
 
+const OPERATION_MODE = 'service';
+const loadTasks = async (expressApp: Express) => {
+  if (!await namespaceInstance.redisGet('WALLET_LOCATION')) {
+    throw Error('WALLET_LOCATION not specified');
+  }
+  const mainSystemAccount = Keypair.fromSecretKey(
+    Uint8Array.from(
+      JSON.parse(
+        fsSync.readFileSync(
+          await namespaceInstance.redisGet('WALLET_LOCATION'),
+          'utf-8',
+        ),
+      ),
+    ),
+  );
 
-const loadTasks = async (app: Express) => {
-  let tasks = koiiState.getTasks();
-  tasks = tasks.filter((task: any) => !!task.executableId);
+  // Fetch all tasks => selectedTasks = koiiState.getActiveTasks()
+  
+  const selectedTasks: any = [];
+  const taskSrcProms = selectedTasks.map((task: any) =>
+    axios.get(`${config.node.GATEWAY_URL}/${task[2]}`),
+  );
 
-  const taskSrcs = await Promise.all(tasks.map(async (task: any) => {
-    const { executableId } = task;
-    const url = `${config.node.GATEWAY_URL}/${executableId}`;
-
-    const { data } = await axios.get(url);
-
-    return { src: data, txId: task.txId };
-  }));
-
-  return taskSrcs.map(({ src, txId }): any => {
-    return loadTaskSource(
+  const taskSrcs = (await Promise.all(taskSrcProms)).map(
+    (res: any) => res.data || res,
+  );
+  return taskSrcs.map((src, i) =>
+    loadTaskSource(
       src,
-      new Namespace(txId, app)
-    );
-  });
+      new Namespace(
+        selectedTasks[i][0],
+        expressApp,
+        OPERATION_MODE,
+        mainSystemAccount,
+        selectedTasks[i][3],
+      ),
+    ),
+  );
 };
 
 
 const loadTaskSource = (src: string, namespace: Namespace) => {
   const loadedTask = new Function(`
-    const [tools, namespace, require] = arguments;
+    const [namespace, require] = arguments;
     ${src};
     return {setup, execute};
   `);
@@ -44,14 +65,14 @@ const loadTaskSource = (src: string, namespace: Namespace) => {
       case 'arweave': return Arweave;
       case '@_koi/kohaku': return sdk.kohaku;
       case 'axios': return axios;
-      case 'crypto': return () => {/* */};
+      case 'crypto': return () => {/* */ };
     }
   };
 
+  // TODO: Instead of passing require change to _require and allow only selected node modules
   return loadedTask(
-    sdk.koiiTools,
     namespace,
-    _require
+    require
   );
 };
 
