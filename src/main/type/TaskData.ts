@@ -9,9 +9,9 @@ export interface TaskData {
   bountyAmountPerRound: number;
   status: unknown;
   currentRound: number;
-  availableBalances: number;
+  availableBalances: any;
   stakeList: unknown;
-  isRunning:boolean;
+  isRunning: boolean;
 }
 
 export interface Task {

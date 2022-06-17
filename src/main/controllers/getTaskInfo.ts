@@ -23,7 +23,7 @@ interface TaskState {
   bountyAmountPerRound: number;
   status: any;
   currentRound: number;
-  availableBalances: number;
+  availableBalances: any;
   stakeList: any;
 }
 const getTaskInfo = async (
