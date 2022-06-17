@@ -1,8 +1,6 @@
 import { Event } from 'electron';
 
-import {
-  PublicKey
-} from '@_koi/web3.js';
+import { PublicKey } from '@_koi/web3.js';
 import axios from 'axios';
 
 import config from 'config';
@@ -11,20 +9,24 @@ import sdk from 'services/sdk';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 
-
 interface GetTaskSourceParam {
-  taskStatePublicKey: string
+  taskStatePublicKey: string;
 }
-const getTaskSource = async (event: Event, payload: GetTaskSourceParam): Promise<string> => {
-  const {taskStatePublicKey } = payload;
+const getTaskSource = async (
+  event: Event,
+  payload: GetTaskSourceParam
+): Promise<string> => {
+  const { taskStatePublicKey } = payload;
 
-  const accountInfo = await sdk.k2Connection.getAccountInfo(new PublicKey(taskStatePublicKey));
-  const taskData=JSON.parse(accountInfo.data.toString());
-  console.log('DATA',taskData);
+  const accountInfo = await sdk.k2Connection.getAccountInfo(
+    new PublicKey(taskStatePublicKey)
+  );
+  const taskData = JSON.parse(accountInfo.data.toString());
+  console.log('DATA', taskData);
   if (!taskData) throw new Error('Task not found');
 
   const url = `${config.node.GATEWAY_URL}/${taskData.task_audit_program}`;
-  
+
   try {
     const { data: src } = await axios.get(url);
     return src;

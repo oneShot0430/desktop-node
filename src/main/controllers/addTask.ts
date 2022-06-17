@@ -1,13 +1,12 @@
 import { Event } from 'electron';
 
-
 import koiiState from 'services/koiiState';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 
 type AddTaskPayload = {
-  contractId: string
-}
+  contractId: string;
+};
 
 const addTask = (event: Event, payload: AddTaskPayload) => {
   const { contractId } = payload;
@@ -18,7 +17,7 @@ const addTask = (event: Event, payload: AddTaskPayload) => {
 
   const newTask = {
     contractId,
-    activated: false
+    activated: false,
   };
 
   addedTasks.push(newTask);

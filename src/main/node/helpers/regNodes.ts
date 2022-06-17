@@ -12,7 +12,7 @@ export default async (newNodes: any[]) => {
     `Registry contains ${nodes.length} nodes. Registering ${newNodes.length} more`
   );
 
-  newNodes = newNodes.filter(async node => {
+  newNodes = newNodes.filter(async (node) => {
     const owner = node.owner;
 
     if (typeof owner !== 'string') {

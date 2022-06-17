@@ -2,9 +2,7 @@ import config from 'config';
 import sendMessage from 'preload/sendMessage';
 import { Task } from 'preload/type/tasks';
 
-type GetTasksPayload = {
+type GetTasksPayload = unknown;
 
-}
-
-export default (payload: GetTasksPayload): Promise<Task> => 
+export default (payload: GetTasksPayload): Promise<Task> =>
   sendMessage(config.endpoints.GET_TASKS, payload);

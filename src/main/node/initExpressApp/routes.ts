@@ -5,9 +5,11 @@ import sdk from 'services/sdk';
 import helpers from '../helpers';
 
 const heartbeat = (req: Request, res: Response): void => {
-  res.status(200).send(
-    '<body style="background:black"><img src="https://media.giphy.com/media/OMD2Ca7SN87gQ/giphy.gif" style="width:100vw;height:auto"></img></body>'
-  );
+  res
+    .status(200)
+    .send(
+      '<body style="background:black"><img src="https://media.giphy.com/media/OMD2Ca7SN87gQ/giphy.gif" style="width:100vw;height:auto"></img></body>'
+    );
 };
 
 const getState = (req: Request, res: Response): void => {
@@ -38,7 +40,7 @@ const registerNodes = async (req: Request, res: Response): Promise<any> => {
       res.status(200).end();
     } else {
       res.status(409).json({
-        message: 'Registration is duplicate, outdated, or invalid'
+        message: 'Registration is duplicate, outdated, or invalid',
       });
     }
   } catch (err) {

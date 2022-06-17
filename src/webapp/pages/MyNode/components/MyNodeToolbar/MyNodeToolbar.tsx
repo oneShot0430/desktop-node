@@ -8,7 +8,11 @@ import MyNodeActionCenter from './MyNodeActionCenter';
 const MyNodeToolbar = (): JSX.Element => {
   return (
     <div>
-      <Toolbar logo={MyNodeIcon} title="My Node" rightPart={<MyNodeActionCenter />} />
+      <Toolbar
+        logo={MyNodeIcon}
+        title="My Node"
+        rightPart={<MyNodeActionCenter />}
+      />
     </div>
   );
 };

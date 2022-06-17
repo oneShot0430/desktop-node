@@ -1,5 +1,5 @@
 export type Task = {
-  taskName: string,
-  contractId: string
-  error: string
-}
+  taskName: string;
+  contractId: string;
+  error: string;
+};

@@ -8,15 +8,10 @@ import initKohaku from './initKohaku';
 import loadTasks from './loadTasks';
 import restoreKohaku from './restoreKohaku';
 
-
-
 export default async (): Promise<any> => {
   if (!process.env.NODE_MODE) throw new Error('env not found');
   /* Connect Redis */
-  await connectRedis(
-    config.node.REDIS.IP,
-    config.node.REDIS.PORT
-  );
+  await connectRedis(config.node.REDIS.IP, config.node.REDIS.PORT);
 
   /* Restore koiiState from Redis */
   const hasCachedData = await restoreKohaku();

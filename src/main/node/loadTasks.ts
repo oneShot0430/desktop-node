@@ -9,28 +9,25 @@ import sdk from 'services/sdk';
 
 import Namespace from './helpers/Namespace';
 
-
 const loadTasks = async (app: Express) => {
   let tasks = koiiState.getTasks();
   tasks = tasks.filter((task: any) => !!task.executableId);
 
-  const taskSrcs = await Promise.all(tasks.map(async (task: any) => {
-    const { executableId } = task;
-    const url = `${config.node.GATEWAY_URL}/${executableId}`;
+  const taskSrcs = await Promise.all(
+    tasks.map(async (task: any) => {
+      const { executableId } = task;
+      const url = `${config.node.GATEWAY_URL}/${executableId}`;
 
-    const { data } = await axios.get(url);
+      const { data } = await axios.get(url);
 
-    return { src: data, txId: task.txId };
-  }));
+      return { src: data, txId: task.txId };
+    })
+  );
 
   return taskSrcs.map(({ src, txId }): any => {
-    return loadTaskSource(
-      src,
-      new Namespace(txId, app)
-    );
+    return loadTaskSource(src, new Namespace(txId, app));
   });
 };
-
 
 const loadTaskSource = (src: string, namespace: Namespace) => {
   const loadedTask = new Function(`
@@ -41,18 +38,20 @@ const loadTaskSource = (src: string, namespace: Namespace) => {
 
   const _require = (module: string) => {
     switch (module) {
-      case 'arweave': return Arweave;
-      case '@_koi/kohaku': return sdk.kohaku;
-      case 'axios': return axios;
-      case 'crypto': return () => {/* */};
+      case 'arweave':
+        return Arweave;
+      case '@_koi/kohaku':
+        return sdk.kohaku;
+      case 'axios':
+        return axios;
+      case 'crypto':
+        return () => {
+          /* */
+        };
     }
   };
 
-  return loadedTask(
-    sdk.koiiTools,
-    namespace,
-    _require
-  );
+  return loadedTask(sdk.koiiTools, namespace, _require);
 };
 
 export default errorHandler(loadTasks, 'Load tasks error');

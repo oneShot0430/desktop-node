@@ -4,7 +4,7 @@ import sdk from 'services/sdk';
 const connectRedis = (redis_ip: string, redis_port: number): void => {
   sdk.koiiTools.loadRedisClient({
     redis_ip,
-    redis_port
+    redis_port,
   });
 };
 

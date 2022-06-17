@@ -1,13 +1,16 @@
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import express, { Express ,Request, Response, NextFunction } from 'express';
+import express, { Express, Request, Response, NextFunction } from 'express';
 
 import koiiState from 'services/koiiState';
 
 import routes from './routes';
 
-
-const verifyTaskEndpoints = (req: Request, res: Response, next: NextFunction): void => {
+const verifyTaskEndpoints = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
   const match = req.originalUrl.match(/\/(.*?)\//i);
 
   let taskActivated = false;
@@ -17,9 +20,9 @@ const verifyTaskEndpoints = (req: Request, res: Response, next: NextFunction): v
     const taskId = match[1];
     if (taskId?.length === 43) {
       isTask = true;
-      taskActivated = !(koiiState.getAddedTasks().every(addedTask => {
+      taskActivated = !koiiState.getAddedTasks().every((addedTask) => {
         return addedTask.contractId !== taskId || !addedTask.activated;
-      }));
+      });
     }
   }
 
@@ -39,6 +42,6 @@ export default (): Express => {
   app.use(cookieParser());
   app.use(verifyTaskEndpoints);
   routes(app);
-  
+
   return app;
 };

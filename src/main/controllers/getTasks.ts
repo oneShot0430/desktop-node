@@ -1,6 +1,5 @@
 import { Event } from 'electron';
 
-
 import koiiState from 'services/koiiState';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
