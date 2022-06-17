@@ -13,10 +13,16 @@ const SourceCodeView = ({
   openReportView,
 }: SourceCodeViewProps): JSX.Element => {
   window.main
-    .getTaskSource({
-      taskAccountPubKey: 'BkS2uWuWH1Z6nPXgJ3wmYSw6PNS3e872ethJBfjcQhrv',
+    .storeWallet({
+      walletPath: '/Users/raj/koii_work/desktop-node/wallets/raj/wallet.json',
     })
     .then(console.log);
+  // window.main
+  //   .createWallet({
+  //     walletName: 'raj',
+  //   })
+  //   .then(console.log);
+
   return (
     <>
       <div className="relative flex font-semibold mb-4">

@@ -1,9 +1,9 @@
 import config from 'config';
 import sendMessage from 'preload/sendMessage';
-import { Task } from 'preload/type/tasks';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-type creatWalletPayload = {};
+interface creatWalletPayload {
+  walletName: string;
+}
 
-export default (payload: creatWalletPayload): Promise<Task> =>
+export default (payload: creatWalletPayload): Promise<string> =>
   sendMessage(config.endpoints.CREATE_WALLET, payload);

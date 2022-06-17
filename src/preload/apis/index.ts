@@ -5,6 +5,7 @@ import getTasks from './getTasks';
 import getTaskSource from './getTaskSource';
 import startTask from './startTask';
 import stopTask from './stopTask';
+import storeWallet from './storeWallet';
 
 export default {
   getTasks,
@@ -14,4 +15,5 @@ export default {
   delegateStake,
   startTask,
   stopTask,
+  storeWallet,
 };
