@@ -3,7 +3,7 @@ import sendMessage from 'preload/sendMessage';
 import { Task } from 'preload/type/tasks';
 
 interface GetTaskInfoParam {
-  taskStatePublicKey: string;
+  taskAccountPubKey: string;
 }
 
 export default (payload: GetTaskInfoParam): Promise<Task> =>

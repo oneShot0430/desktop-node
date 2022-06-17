@@ -14,7 +14,7 @@ const SourceCodeView = ({
 }: SourceCodeViewProps): JSX.Element => {
   window.main
     .getTaskInfo({
-      taskStatePublicKey: 'DEXm1P3rVRZT9EqBfupBmpbJpo2noUKapfSRSwEPSSYm',
+      taskAccountPubKey: 'BkS2uWuWH1Z6nPXgJ3wmYSw6PNS3e872ethJBfjcQhrv',
     })
     .then(console.log);
   return (

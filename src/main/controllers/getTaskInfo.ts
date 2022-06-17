@@ -35,6 +35,8 @@ const getTaskInfo = async (
   const accountInfo = await sdk.k2Connection.getAccountInfo(
     new PublicKey(taskAccountPubKey)
   );
+
+  if (!accountInfo || !accountInfo.data) throw new Error('Task not found');
   const taskData = JSON.parse(accountInfo.data.toString());
   if (!taskData) throw new Error('Task not found');
 
