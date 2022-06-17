@@ -10,7 +10,7 @@ class KoiiTasks {
   constructor() {
     FetchAllTasks().then((res: any) => {
       this.tasks = res;
-      this.getTasksStateFromERedis();
+      this.getTasksStateFromRedis();
     });
     this.watchTasks();
   }
@@ -22,24 +22,24 @@ class KoiiTasks {
     return task;
   }
 
-  getActiveTasks(): any {
-    return this.tasks.length ? this.tasks.filter((e) => e.data.isActive) : [];
+  getRunningTasks(): Task[] {
+    return this.tasks.length ? this.tasks.filter((e) => e.data.isRunning) : [];
   }
 
-  getALlTasks(): Task[] {
+  getAllTasks(): Task[] {
     return this.tasks.length ? this.tasks : [];
   }
   private async watchTasks() {
     setInterval(() => {
       FetchAllTasks().then((res: Task[]) => {
         this.tasks = res;
-        this.getTasksStateFromERedis();
+        this.getTasksStateFromRedis();
         
       });
-    }, 15000);
+    }, 60000);
   }
 
-  async taskStared(publicKey: string): Promise<void> {
+  async taskStarted(publicKey: string): Promise<void> {
     this.tasks.map((task) => {
       if (task.publicKey == publicKey) {
         task.data.isRunning = true;
@@ -69,7 +69,7 @@ class KoiiTasks {
     this.syncRedis();
   }
 
-  private async getTasksStateFromERedis() {
+  private async getTasksStateFromRedis() {
     const runningTasksStr: string = await namespaceInstance.redisGet(
       'runningTasks'
     );
@@ -86,4 +86,4 @@ class KoiiTasks {
     });
   }
 }
-export default KoiiTasks;
+export default new KoiiTasks();

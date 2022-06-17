@@ -27,7 +27,7 @@ interface redisConfig {
 interface TaskData {
   task_id?: string;
   task_name?: string;
-  task_manager?: PublicKey;
+  task_manager?: string;
   task_audit_program?: string;
   stake_pot_account?: string;
   bounty_amount_per_round?: number;
@@ -100,7 +100,6 @@ class Namespace {
     if (this.#redisClient === undefined) throw 'Redis not connected';
     else
       try {
-        console.log({ hehhehehehheheh: this.taskTxId + key });
         const response = await this.#redisClient.get(this.taskTxId + key);
         return response;
       } catch (e) {
@@ -509,14 +508,6 @@ async function registerNodes(newNodes: any) {
       continue;
     }
 
-    // Filter addresses that don't have a stake
-    // const address = await arweave.wallets.ownerToAddress(owner);
-
-    // // TODO: Get the stake for each address
-    // if (!(address in state.stakes)) {
-    //     console.error("Node tried registering without stake:", address);
-    //     continue;
-    // }
 
     // Make this node the latest if the timestamp is more recent
     const latest = latestNodes[owner];

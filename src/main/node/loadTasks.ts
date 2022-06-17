@@ -7,7 +7,7 @@ import { Express } from 'express';
 
 import config from 'config';
 import errorHandler from 'main/errorHandler';
-import koiiState from 'services/koiiState';
+import koiiTasks from 'services/koiiTasks';
 import sdk from 'services/sdk';
 
 import { Namespace, namespaceInstance } from './helpers/Namespace';
@@ -28,11 +28,9 @@ const loadTasks = async (expressApp: Express) => {
     ),
   );
 
-  // TODO: Fetch all tasks => selectedTasks = koiiState.getActiveTasks()
-  
-  const selectedTasks: any = [];
-  const taskSrcProms = selectedTasks.map((task: any) =>
-    axios.get(`${config.node.GATEWAY_URL}/${task[2]}`),
+  const selectedTasks = koiiTasks.getRunningTasks();
+  const taskSrcProms = selectedTasks.map((task) =>
+    axios.get(`${config.node.GATEWAY_URL}/${task.data.taskAuditProgram}`),
   );
 
   const taskSrcs = (await Promise.all(taskSrcProms)).map(
@@ -42,11 +40,19 @@ const loadTasks = async (expressApp: Express) => {
     loadTaskSource(
       src,
       new Namespace(
-        selectedTasks[i][0],
+        selectedTasks[i].publicKey,
         expressApp,
         OPERATION_MODE,
         mainSystemAccount,
-        selectedTasks[i][3],
+        {
+          task_id: selectedTasks[i].publicKey,
+          task_name: selectedTasks[i].data.taskName,
+          task_manager: selectedTasks[i].data.taskManager,
+          task_audit_program: selectedTasks[i].data.taskAuditProgram,
+          stake_pot_account: selectedTasks[i].data.stakePotAccount,
+          bounty_amount_per_round: selectedTasks[i].data.bountyAmountPerRound,
+
+        }
       ),
     ),
   );

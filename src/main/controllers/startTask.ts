@@ -7,7 +7,7 @@ import axios from 'axios';
 
 import config from 'config';
 import { Namespace, namespaceInstance } from 'main/node/helpers/Namespace';
-import koiiState from 'services/koiiState';
+import koiiTasks from 'services/koiiTasks';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import initExpressApp from '../node/initExpressApp';
@@ -35,8 +35,7 @@ const startTask = async (event: Event, payload: StartTaskPayload) => {
         ),
     );
 
-    // TODO: REPLACE WITH koiiState.getTaskInfo
-    const taskInfo = getTaskInfo({ taskAccountPubKey });
+    const taskInfo = koiiTasks.getTaskByPublicKey(taskAccountPubKey);
     const expressApp = await initExpressApp();
 
     try {
