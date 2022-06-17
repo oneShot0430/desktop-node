@@ -2,7 +2,7 @@ import config from 'config';
 import sendMessage from 'preload/sendMessage';
 
 interface GetTaskSourceParam {
-  taskStatePublicKey: string;
+  taskAccountPubKey: string;
 }
 
 export default (payload: GetTaskSourceParam): Promise<string> =>

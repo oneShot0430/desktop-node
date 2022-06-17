@@ -13,7 +13,7 @@ const SourceCodeView = ({
   openReportView,
 }: SourceCodeViewProps): JSX.Element => {
   window.main
-    .getTaskInfo({
+    .getTaskSource({
       taskAccountPubKey: 'BkS2uWuWH1Z6nPXgJ3wmYSw6PNS3e872ethJBfjcQhrv',
     })
     .then(console.log);

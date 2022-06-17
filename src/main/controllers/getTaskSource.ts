@@ -10,17 +10,18 @@ import sdk from 'services/sdk';
 import mainErrorHandler from '../../utils/mainErrorHandler';
 
 interface GetTaskSourceParam {
-  taskStatePublicKey: string;
+  taskAccountPubKey: string;
 }
 const getTaskSource = async (
   event: Event,
   payload: GetTaskSourceParam
 ): Promise<string> => {
-  const { taskStatePublicKey } = payload;
+  const { taskAccountPubKey } = payload;
 
   const accountInfo = await sdk.k2Connection.getAccountInfo(
-    new PublicKey(taskStatePublicKey)
+    new PublicKey(taskAccountPubKey)
   );
+  if (!accountInfo || !accountInfo.data) throw new Error('Task not found');
   const taskData = JSON.parse(accountInfo.data.toString());
   console.log('DATA', taskData);
   if (!taskData) throw new Error('Task not found');
