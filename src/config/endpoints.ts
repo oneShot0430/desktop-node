@@ -11,4 +11,6 @@ export default {
   CREATE_WALLET,
   DELEGATE_STAKE,
   GET_TASK_INFO,
+  START_TASK,
+  STOP_TASK,
 };
