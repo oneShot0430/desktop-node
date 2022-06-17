@@ -1,9 +1,10 @@
-import sdk from 'services/sdk';
+
+import { getCacheNodes } from './Namespace';
 
 export default async (): Promise<any> => {
   let nodes = [];
   try {
-    nodes = JSON.parse(await sdk.koiiTools.redisGetAsync('nodeRegistry')) || [];
+    nodes = await getCacheNodes();
   } catch (err) {
     console.error('Get nodes error: ', err.message);
   }
