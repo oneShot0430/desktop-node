@@ -3,6 +3,8 @@ import fs from 'fs';
 
 import { Keypair } from '@_koi/web3.js';
 
+import { namespaceInstance } from 'main/node/helpers/Namespace';
+
 import mainErrorHandler from '../../utils/mainErrorHandler';
 
 interface createWalletParam {
@@ -39,6 +41,7 @@ const createWallet = async (
           }
         }
       );
+      namespaceInstance.redisSet(walletName, filePath);
       return wallet.publicKey.toBase58();
     }
   } catch (err) {
