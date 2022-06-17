@@ -53,6 +53,7 @@ const startTask = async (event: Event, payload: StartTaskPayload) => {
                     taskInfo
                 ),
             );
+        await koiiTasks.taskStarted(taskAccountPubKey);
         await taskSrc.setup();
         taskSrc.execute();
     } catch (err) {

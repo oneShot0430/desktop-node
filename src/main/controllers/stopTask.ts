@@ -1,7 +1,7 @@
 import { Event } from 'electron';
 
 
-import koiiState from 'services/koiiState';
+import koiiTasks from 'services/koiiTasks';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 
@@ -9,8 +9,10 @@ type StopTaskPayload = {
     taskAccountPubKey: string
 }
 
-const stopTask = (event: Event, payload: StopTaskPayload) => {
+const stopTask = async (event: Event, payload: StopTaskPayload) => {
+    const { taskAccountPubKey } = payload;
 
+    await koiiTasks.taskStopped(taskAccountPubKey);
     return true;
 };
 

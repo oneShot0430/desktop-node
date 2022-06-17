@@ -1,5 +1,5 @@
 // import { Task } from 'main/type';
-import FetchAllTasks from '../main/controllers/FetchAlltasks';
+import fetchAllTasks from '../main/controllers/fetchAlltasks';
 import { Namespace, namespaceInstance } from '../main/node/helpers/Namespace';
 import { Task, TaskData } from '../main/type/TaskData';
 
@@ -8,7 +8,7 @@ class KoiiTasks {
   // private addedTasks: AddedTask[]
 
   constructor() {
-    FetchAllTasks().then((res: any) => {
+    fetchAllTasks().then((res: any) => {
       this.tasks = res;
       this.getTasksStateFromRedis();
     });
@@ -31,7 +31,7 @@ class KoiiTasks {
   }
   private async watchTasks() {
     setInterval(() => {
-      FetchAllTasks().then((res: Task[]) => {
+      fetchAllTasks().then((res: Task[]) => {
         this.tasks = res;
         this.getTasksStateFromRedis();
         

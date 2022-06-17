@@ -1,10 +1,10 @@
 import { Event } from 'electron';
 
 
-import koiiState from 'services/koiiState';
+import koiiTasks from 'services/koiiTasks';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 
-const getTasks = (event: Event, payload: any) => koiiState.getTasks();
+const getTasks = (event: Event, payload: any) => koiiTasks.getAllTasks();
 
 export default mainErrorHandler(getTasks);
