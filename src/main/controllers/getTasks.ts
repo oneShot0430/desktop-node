@@ -1,6 +1,5 @@
 import { Event } from 'electron';
 
-
 import koiiTasks from 'services/koiiTasks';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';

@@ -34,7 +34,6 @@ class KoiiTasks {
       fetchAllTasks().then((res: Task[]) => {
         this.tasks = res;
         this.getTasksStateFromRedis();
-        
       });
     }, 60000);
   }
@@ -76,7 +75,7 @@ class KoiiTasks {
     const runningTasks: Array<string> = runningTasksStr
       ? JSON.parse(runningTasksStr)
       : [];
-      console.log({runningTasksStr});
+    console.log({ runningTasksStr });
     this.tasks.map((task) => {
       if (runningTasks.includes(task.publicKey)) {
         task.data.isRunning = true;

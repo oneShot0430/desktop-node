@@ -6,5 +6,5 @@
 //   contractId: string
 // }
 
-// export default (payload: AddTaskPayload): Promise<Task> => 
+// export default (payload: AddTaskPayload): Promise<Task> =>
 //   sendMessage(config.endpoints.ADD_TASK, payload);
