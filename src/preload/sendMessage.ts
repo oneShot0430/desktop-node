@@ -1,5 +1,6 @@
 import { ipcRenderer } from 'electron';
 
-const sendMessage = (api: string, payload: any) => ipcRenderer.invoke(api, payload);
+const sendMessage = <T>(api: string, payload: unknown): Promise<T> =>
+  ipcRenderer.invoke(api, payload);
 
 export default sendMessage;

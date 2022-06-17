@@ -1,5 +1,5 @@
 export type Task = {
-  contractId: string,
-  name: string,
-  executableId: string
-}
+  contractId: string;
+  name: string;
+  executableId: string;
+};

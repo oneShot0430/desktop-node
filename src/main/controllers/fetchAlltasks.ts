@@ -10,7 +10,7 @@ import mainErrorHandler from '../../utils/mainErrorHandler';
 import { Task, TaskData } from '../type/TaskData';
 // import koiiState from 'services/koiiState';
 // import sdk from 'services/sdk';
-async function fetchAllTasks(): Promise<Array<Task>> {
+async function fetchAllTasks(): Promise<Task[]> {
   let taskAccountInfo = await sdk.k2Connection.getProgramAccounts(
     new PublicKey(config.node.TASK_CONTRACT_ID)
   );

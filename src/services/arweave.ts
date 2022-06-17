@@ -1,3 +1,7 @@
 import Arweave from 'arweave';
 
-export default Arweave.init({ host: 'arweave.net', protocol: 'https', port: 443 });
+export default Arweave.init({
+  host: 'arweave.net',
+  protocol: 'https',
+  port: 443,
+});
