@@ -58,27 +58,39 @@ const loadTasks = async (expressApp: Express) => {
 };
 
 const loadTaskSource = (src: string, namespace: Namespace) => {
-  const loadedTask = new Function(`
+  try {
+    const loadedTask = new Function(`
     const [namespace, require] = arguments;
     ${src};
     return {setup, execute};
   `);
 
-  const _require = (module: string) => {
-    switch (module) {
-      case 'arweave':
-        return Arweave;
-      case 'axios':
-        return axios;
-      case 'crypto':
-        return () => {
-          /* */
-        };
-    }
-  };
+    /*
+  const log_file = fs.createWriteStream(__dirname + '/debug.log', {flags: 'w'});
+    let console = {
+      log: (d) =>{
+        log_file.write(util.format(d) + '\n');
+      },
+    };
+  */
+    const _require = (module: string) => {
+      switch (module) {
+        case 'arweave':
+          return Arweave;
+        case 'axios':
+          return axios;
+        case 'crypto':
+          return () => {
+            /* */
+          };
+      }
+    };
 
-  // TODO: Instead of passing require change to _require and allow only selected node modules
-  return loadedTask(namespace, require);
+    // TODO: Instead of passing require change to _require and allow only selected node modules
+    return loadedTask(namespace, require);
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 export default errorHandler(loadTasks, 'Load tasks error');

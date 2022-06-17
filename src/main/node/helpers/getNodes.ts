@@ -1,4 +1,3 @@
-
 import { getCacheNodes } from './Namespace';
 
 export default async (): Promise<any> => {

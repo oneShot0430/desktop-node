@@ -508,7 +508,6 @@ async function registerNodes(newNodes: any) {
       continue;
     }
 
-
     // Make this node the latest if the timestamp is more recent
     const latest = latestNodes[owner];
     if (latest === undefined || node.data.timestamp > latest.data.timestamp)
