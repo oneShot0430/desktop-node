@@ -1,6 +1,6 @@
 export const REDIS = {
   IP: 'localhost',
-  PORT: 6379
+  PORT: 6379,
 };
 
 export const BUNDLER_URL = 'https://mainnet.koii.live';
@@ -15,7 +15,7 @@ export const GATEWAY_URL = 'https://arweave.net';
 
 export const k2_NETWORK_URL = 'http://localhost:8899';
 
-export const TASK_CONTRACT_ID='Koiitask22222222222222222222222222222222222';
+export const TASK_CONTRACT_ID = 'Koiitask22222222222222222222222222222222222';
 
 export default {
   REDIS,
@@ -25,5 +25,5 @@ export default {
   SERVER_PORT,
   GATEWAY_URL,
   k2_NETWORK_URL,
-  TASK_CONTRACT_ID
+  TASK_CONTRACT_ID,
 };

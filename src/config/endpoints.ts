@@ -11,5 +11,5 @@ export default {
   ADD_TASK,
   TOGGLE_TASK,
   DELEGATE_STAKE,
-  GET_TASK_INFO
+  GET_TASK_INFO,
 };

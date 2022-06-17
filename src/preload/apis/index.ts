@@ -11,5 +11,5 @@ export default {
   addTask,
   toggleTask,
   getTaskInfo,
-  delegateStake
+  delegateStake,
 };
