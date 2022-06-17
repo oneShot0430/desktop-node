@@ -7,5 +7,5 @@ export default {
   getTasks,
   getTaskSource,
   getTaskInfo,
-  delegateStake
+  delegateStake,
 };

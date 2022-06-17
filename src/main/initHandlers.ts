@@ -1,6 +1,5 @@
 import { ipcMain } from 'electron';
 
-
 import config from 'config';
 
 import controllers from './controllers';
@@ -13,7 +12,6 @@ const initHandlers = (): void => {
   ipcMain.handle(config.endpoints.GET_TASK_INFO, controllers.getTaskInfo);
   ipcMain.handle(config.endpoints.START_TASK, controllers.startTask);
   ipcMain.handle(config.endpoints.STOP_TASK, controllers.stopTask);
-
 };
 
 export default errorHandler(initHandlers, 'Init handlers error');

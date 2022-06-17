@@ -23,7 +23,7 @@ const createWindow = (): void => {
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
-    show: false
+    show: false,
   });
 
   // and load the index.html of the app.
@@ -37,10 +37,7 @@ const createWindow = (): void => {
       mainWindow.show();
     })
     .catch((err): void => {
-      dialog.showErrorBox(
-        'Something went wrong!',
-        err.message
-      );
+      dialog.showErrorBox('Something went wrong!', err.message);
 
       app.quit();
     });
