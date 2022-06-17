@@ -1,7 +1,7 @@
 import errorHandler from 'main/errorHandler';
 
 import getNodes from './getNodes';
-import Namespace from './Namespace';
+import { Namespace } from './Namespace';
 import regNodes from './regNodes';
 
 export default {

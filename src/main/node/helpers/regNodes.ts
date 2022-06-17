@@ -1,30 +1,33 @@
 import arweave from 'services/arweave';
 import koiiState from 'services/koiiState';
-import sdk from 'services/sdk';
 
-import getNodes from './getNodes';
+import { getCacheNodes, namespaceInstance } from './Namespace';
 
 export default async (newNodes: any[]) => {
-  const state = koiiState.getState();
-  let nodes = await getNodes();
-
+  // Filter stale nodes from registry
+  let nodes = await getCacheNodes();
   console.log(
-    `Registry contains ${nodes.length} nodes. Registering ${newNodes.length} more`
+    `Registry contains ${nodes.length} nodes. Registering ${newNodes.length} more`,
   );
 
+  // Verify each registration TODO process promises in parallel
   newNodes = newNodes.filter(async (node) => {
+    // Filter registrations that don't have an owner or url
     const owner = node.owner;
-
     if (typeof owner !== 'string') {
-      console.log('Invalid node input: ', node);
+      console.error('Invalid node input:', node);
       return false;
     }
 
-    return await sdk.koiiTools.verifySignature(node);
+    // TODO: Filter addresses with an invalid signature
+    // return await tools.verifySignature(node);
+    return true;
   });
 
-  const latestNodes = {} as any;
+  // Filter out duplicate entries
+  const latestNodes: any = {};
   for (const node of nodes.concat(newNodes)) {
+    // Filter registrations that don't have an owner or url
     const owner = node.owner;
     if (
       typeof owner !== 'string' ||
@@ -35,23 +38,17 @@ export default async (newNodes: any[]) => {
       console.error('Invalid node input:', node);
       continue;
     }
-
-    const address = await arweave.wallets.ownerToAddress(owner);
-    if (!(address in state)) {
-      console.error('Node tried registering without stake:', address);
-      continue;
-    }
-
+    // Make this node the latest if the timestamp is more recent
     const latest = latestNodes[owner];
-    if (latest === undefined || node.data.timestamp > latest.data.timestamp) {
+    if (latest === undefined || node.data.timestamp > latest.data.timestamp)
       latestNodes[owner] = node;
-    }
   }
 
   nodes = Object.values(latestNodes);
 
+  // Update registry
   console.log(`Registry now contains ${nodes.length} nodes`);
-  await sdk.koiiTools.redisSetAsync('nodeRegistry', JSON.stringify(nodes));
+  await namespaceInstance.redisSet('nodeRegistry', JSON.stringify(nodes));
 
   return newNodes.length > 0;
 };
