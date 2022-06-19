@@ -7,7 +7,7 @@ export default async (newNodes: any[]) => {
   // Filter stale nodes from registry
   let nodes = await getCacheNodes();
   console.log(
-    `Registry contains ${nodes.length} nodes. Registering ${newNodes.length} more`,
+    `Registry contains ${nodes.length} nodes. Registering ${newNodes.length} more`
   );
 
   // Verify each registration TODO process promises in parallel

@@ -15,7 +15,7 @@ class KoiiTasks {
     this.watchTasks();
   }
 
-  getTaskByPublicKey(publicKey: string): any {
+  getTaskByPublicKey(publicKey: string): Task {
     const task: Task = this.tasks.find((task) => {
       return task.publicKey == publicKey;
     });
