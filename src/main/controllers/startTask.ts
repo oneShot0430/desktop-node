@@ -1,5 +1,6 @@
 import { Event } from 'electron';
 import * as fsSync from 'fs';
+import * as util from 'util';
 
 import { Keypair } from '@_koi/web3.js';
 import * as web3 from '@_koi/web3.js';
@@ -49,11 +50,8 @@ const startTask = async (event: Event, payload: StartTaskPayload) => {
   const taskInfo = koiiTasks.getTaskByPublicKey(taskAccountPubKey);
   const expressApp = await initExpressApp();
   try {
-    // taskInfo.data.task_audit_program
-    // TODO: remove hardcoded arweave id:J1z1YsAPJA4kFzG1YrWEYQjZNdbPigm3Ev5rtpPSyug
-    const url = `${
-      config.node.GATEWAY_URL
-    }/${'J1z1YsAPJA4kFzG1YrWEYQjZNdbPigm3Ev5rtpPSyug'}`;
+    //  remove hardcoded arweave id:J1z1YsAPJA4kFzG1YrWEYQjZNdbPigm3Ev5rtpPSyug
+    const url = `${config.node.GATEWAY_URL}/${taskInfo.data.taskAuditProgram}`;
     const { data: src } = await axios.get(url);
 
     const taskSrc = loadTaskSource(
@@ -80,26 +78,35 @@ const startTask = async (event: Event, payload: StartTaskPayload) => {
     console.log('STARTING EXECUTING TASK');
     taskSrc.execute();
   } catch (err) {
-    console.error(err);
+    console.error('ERR-:', err);
     throw new Error(err);
   }
 };
 const loadTaskSource = (src: string, namespace: Namespace) => {
-  console.log('__dirname', __dirname);
-  console.log('AAAAAA', namespace.taskData);
+  global.console.log('__dirname', __dirname);
+  global.console.log('AAAAAA', namespace.taskData);
+  // TODO: change below path to /var/log/namespace.task_id
+  const log_file = fsSync.createWriteStream(
+    `namespace/${namespace.taskData.task_id}/task.log`,
+    { flags: 'w' }
+  );
+  const logger = {
+    log: (...d: any) => {
+      log_file.write(util.format(...d) + '\n');
+    },
+    error: (...d: any) => {
+      log_file.write('ERROR: {' + util.format(...d) + '}\n');
+    },
+  };
   const loadedTask = new Function(`
-      const [namespace, require] = arguments;
+      const [namespace, require, logger] = arguments;
+      const console = logger;
       ${src};
       return {setup, execute};
     `);
 
   /*
-          const log_file = fs.createWriteStream(__dirname + '/debug.log', {flags: 'w'});
-      let console = {
-        log: (d) =>{
-          log_file.write(util.format(d) + '\n');
-        },
-      };
+         
     */
   const _require = (module: string) => {
     switch (module) {
@@ -133,7 +140,7 @@ const loadTaskSource = (src: string, namespace: Namespace) => {
   };
 
   // TODO: Instead of passing require change to _require and allow only selected node modules
-  return loadedTask(namespace, _require);
+  return loadedTask(namespace, _require, logger);
 };
 
 export default mainErrorHandler(startTask);
