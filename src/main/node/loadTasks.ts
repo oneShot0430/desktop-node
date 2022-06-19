@@ -1,16 +1,26 @@
 import * as fsSync from 'fs';
 
 import { Keypair } from '@_koi/web3.js';
+import * as web3 from '@_koi/web3.js';
 import Arweave from 'arweave';
 import axios from 'axios';
+import * as base64 from 'base-64';
+import * as bodyParser from 'body-parser';
+import * as bs58 from 'bs58';
+import * as dotenv from 'dotenv';
 import { Express } from 'express';
+import * as cron from 'node-cron';
+import * as smartweave from 'smartweave';
+import * as nacl from 'tweetnacl';
 
 import config from 'config';
 import errorHandler from 'main/errorHandler';
 import koiiTasks from 'services/koiiTasks';
-import sdk from 'services/sdk';
 
 import { Namespace, namespaceInstance } from './helpers/Namespace';
+
+// eslint-disable-next-line
+const bufferlayout = require('buffer-layout')
 
 const OPERATION_MODE = 'service';
 const loadTasks = async (expressApp: Express) => {
@@ -30,11 +40,6 @@ const loadTasks = async (expressApp: Express) => {
 
   const selectedTasks = koiiTasks.getRunningTasks();
   const taskSrcProms = selectedTasks.map((task) => {
-    console.log('TASK ', task);
-    console.log(
-      '${config.node.GATEWAY_URL}/${task.data.taskAuditProgram}',
-      `${config.node.GATEWAY_URL}/${task.data.taskAuditProgram}`
-    );
     return axios.get(
       `${config.node.GATEWAY_URL}/${task.data.taskAuditProgram}`
     );
@@ -63,7 +68,8 @@ const loadTasks = async (expressApp: Express) => {
           }
         )
       )
-    );
+    )
+    .filter((e) => !!e);
 };
 
 const loadTaskSource = (src: string, namespace: Namespace) => {
@@ -88,17 +94,35 @@ const loadTaskSource = (src: string, namespace: Namespace) => {
           return Arweave;
         case 'axios':
           return axios;
+        case '@_koi/web3.js':
+          return web3;
         case 'crypto':
           return () => {
             /* */
           };
+        case 'tweetnacl':
+          return nacl;
+        case 'bs58':
+          return bs58;
+        case 'node-cron':
+          return cron;
+        case 'bodyParser':
+          return bodyParser;
+        case 'bufferlayout':
+          return bufferlayout;
+        case 'dotenv':
+          return dotenv;
+        case 'smartweave':
+          return smartweave;
+        case 'base64':
+          return base64;
       }
     };
 
     // TODO: Instead of passing require change to _require and allow only selected node modules
-    return loadedTask(namespace, require);
+    return loadedTask(namespace, _require);
   } catch (err) {
-    console.error(err);
+    console.error('ERROR in LoadTask', err);
   }
 };
 
