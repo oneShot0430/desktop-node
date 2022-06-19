@@ -428,13 +428,7 @@ class Namespace {
     return response;
   }
 }
-const namespaceInstance = new Namespace(
-  '',
-  null,
-  process.env.NODE_MODE || '',
-  new Keypair(),
-  {}
-);
+const namespaceInstance = new Namespace('', null, 'service', new Keypair(), {});
 
 /**
  * Gets the node registry from Redis cache

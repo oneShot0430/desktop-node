@@ -6,9 +6,12 @@ import koiiState from 'services/koiiState';
 
 import app from './app';
 
+let isExpressListening = false;
 const initExpressApp = async (): Promise<Express> => {
   // skip stake for now
 
+  if (isExpressListening) return;
+  isExpressListening = true;
   const expressApp = app();
 
   expressApp.get('/id', (req: Request, res: Response) => {

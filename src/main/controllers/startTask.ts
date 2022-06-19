@@ -47,20 +47,14 @@ const startTask = async (event: Event, payload: StartTaskPayload) => {
   );
 
   const taskInfo = koiiTasks.getTaskByPublicKey(taskAccountPubKey);
-  console.log('ZZZ', taskInfo);
   const expressApp = await initExpressApp();
-
   try {
     // taskInfo.data.task_audit_program
+    // TODO: remove hardcoded arweave id:J1z1YsAPJA4kFzG1YrWEYQjZNdbPigm3Ev5rtpPSyug
     const url = `${
       config.node.GATEWAY_URL
     }/${'J1z1YsAPJA4kFzG1YrWEYQjZNdbPigm3Ev5rtpPSyug'}`;
     const { data: src } = await axios.get(url);
-    console.log('AAAAZXXXCXZCVCXVXCCCXX', taskInfo);
-    console.log(
-      'AAAAZXXXCXZCVCXVXCCCXXzz',
-      mainSystemAccount.publicKey.toBase58()
-    );
 
     const taskSrc = loadTaskSource(
       src,

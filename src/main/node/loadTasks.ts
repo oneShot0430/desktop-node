@@ -29,32 +29,41 @@ const loadTasks = async (expressApp: Express) => {
   );
 
   const selectedTasks = koiiTasks.getRunningTasks();
-  const taskSrcProms = selectedTasks.map((task) =>
-    axios.get(`${config.node.GATEWAY_URL}/${task.data.taskAuditProgram}`)
-  );
+  const taskSrcProms = selectedTasks.map((task) => {
+    console.log('TASK ', task);
+    console.log(
+      '${config.node.GATEWAY_URL}/${task.data.taskAuditProgram}',
+      `${config.node.GATEWAY_URL}/${task.data.taskAuditProgram}`
+    );
+    return axios.get(
+      `${config.node.GATEWAY_URL}/${task.data.taskAuditProgram}`
+    );
+  });
 
-  const taskSrcs = (await Promise.all(taskSrcProms)).map(
-    (res: any) => res.data || res
-  );
-  return taskSrcs.map((src, i) =>
-    loadTaskSource(
-      src,
-      new Namespace(
-        selectedTasks[i].publicKey,
-        expressApp,
-        OPERATION_MODE,
-        mainSystemAccount,
-        {
-          task_id: selectedTasks[i].publicKey,
-          task_name: selectedTasks[i].data.taskName,
-          task_manager: selectedTasks[i].data.taskManager,
-          task_audit_program: selectedTasks[i].data.taskAuditProgram,
-          stake_pot_account: selectedTasks[i].data.stakePotAccount,
-          bounty_amount_per_round: selectedTasks[i].data.bountyAmountPerRound,
-        }
+  const taskSrcs = (await Promise.allSettled(taskSrcProms))
+    .filter((e) => e.status == 'fulfilled')
+    .map((res: any) => res.value.data || null);
+  return taskSrcs
+    .filter((e) => e != null)
+    .map((src, i) =>
+      loadTaskSource(
+        src,
+        new Namespace(
+          selectedTasks[i].publicKey,
+          expressApp,
+          OPERATION_MODE,
+          mainSystemAccount,
+          {
+            task_id: selectedTasks[i].publicKey,
+            task_name: selectedTasks[i].data.taskName,
+            task_manager: selectedTasks[i].data.taskManager,
+            task_audit_program: selectedTasks[i].data.taskAuditProgram,
+            stake_pot_account: selectedTasks[i].data.stakePotAccount,
+            bounty_amount_per_round: selectedTasks[i].data.bountyAmountPerRound,
+          }
+        )
       )
-    )
-  );
+    );
 };
 
 const loadTaskSource = (src: string, namespace: Namespace) => {
