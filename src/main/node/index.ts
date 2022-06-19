@@ -28,18 +28,18 @@ export default async (): Promise<any> => {
       'WALLET_LOCATION',
       '/home/ghazanfer/.config/solana/id.json'
     );
-    // await startTask(null, {
-    //   taskAccountPubKey: 'dGeVfkp1BcLDK13gxoNz5cy4aMMKXVsvSjDAhyLpPCR',
-    // });
+    await startTask(null, {
+      taskAccountPubKey: 'dGeVfkp1BcLDK13gxoNz5cy4aMMKXVsvSjDAhyLpPCR',
+    });
 
     if (await namespaceInstance.redisGet('WALLET_LOCATION')) {
       /* Init Express app */
       const expressApp = await initExpressApp();
       /* Load tasks */
-      const executableTasks = await loadTasks(expressApp);
-      console.log('LOADING TASKS COMPLETED');
-      /* Execute tasks */
-      await executeTasks(executableTasks);
+      // const executableTasks = await loadTasks(expressApp);
+      // console.log('LOADING TASKS COMPLETED');
+      // /* Execute tasks */
+      // await executeTasks(executableTasks);
     }
   } catch (e) {
     console.error('ERROR In TASK start', e);

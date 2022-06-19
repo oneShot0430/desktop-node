@@ -65,7 +65,11 @@ const startTask = async (event: Event, payload: StartTaskPayload) => {
         mainSystemAccount,
         {
           task_id: taskInfo.publicKey,
-          ...taskInfo.data,
+          task_name: taskInfo.data.taskName,
+          task_manager: taskInfo.data.taskManager,
+          task_audit_program: taskInfo.data.taskAuditProgram,
+          stake_pot_account: taskInfo.data.stakePotAccount,
+          bounty_amount_per_round: taskInfo.data.bountyAmountPerRound,
         }
       )
     );
