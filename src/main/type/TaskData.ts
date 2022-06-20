@@ -12,6 +12,7 @@ export interface TaskData {
   availableBalances: any;
   stakeList: unknown;
   isRunning: boolean;
+  cronArray: any;
 }
 
 export interface Task {

@@ -48,10 +48,16 @@ const startTask = async (event: Event, payload: StartTaskPayload) => {
   );
 
   const taskInfo = koiiTasks.getTaskByPublicKey(taskAccountPubKey);
+  console.log({ taskInfo });
+  console.log('koiiTasks.getAllTasks()', koiiTasks.getAllTasks());
+  if (!taskInfo) {
+    console.error("Task doesn't exist");
+    throw Error("Task doesn't exist");
+  }
   const expressApp = await initExpressApp();
   try {
-    //  remove hardcoded arweave id:J1z1YsAPJA4kFzG1YrWEYQjZNdbPigm3Ev5rtpPSyug
-    const url = `${config.node.GATEWAY_URL}/${taskInfo.data.taskAuditProgram}`;
+    //  remove hardcoded arweave id:J1z1YsAPJA4kFzG1YrWEYQjZNdbPigm3Ev5rtpPSyug / ${taskInfo.data.taskAuditProgram}
+    const url = `${config.node.GATEWAY_URL}/ywK1Wmilq2Z3Ykwqa0QWNvkyTOgPRSOTpp-u9Y1QNLA`;
     const { data: src } = await axios.get(url);
 
     const taskSrc = loadTaskSource(
@@ -71,20 +77,18 @@ const startTask = async (event: Event, payload: StartTaskPayload) => {
         }
       )
     );
-    console.log('AAAZZ');
-    await koiiTasks.taskStarted(taskAccountPubKey);
     console.log('SETTING UP TASK');
     await taskSrc.setup();
     console.log('STARTING EXECUTING TASK');
-    taskSrc.execute();
+    const cronArray = await taskSrc.execute();
+    console.log('CRON ARRAY', cronArray);
+    await koiiTasks.taskStarted(taskAccountPubKey, cronArray);
   } catch (err) {
     console.error('ERR-:', err);
     throw new Error(err);
   }
 };
 const loadTaskSource = (src: string, namespace: Namespace) => {
-  global.console.log('__dirname', __dirname);
-  global.console.log('AAAAAA', namespace.taskData);
   // TODO: change below path to /var/log/namespace.task_id
   const log_file = fsSync.createWriteStream(
     `namespace/${namespace.taskData.task_id}/task.log`,

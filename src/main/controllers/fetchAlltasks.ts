@@ -38,6 +38,7 @@ async function fetchAllTasks(): Promise<Task[]> {
         availableBalances: rawTaskData.available_balances,
         stakeList: rawTaskData.stake_list,
         isRunning: false,
+        cronArray: [],
       };
       const task: Task = {
         publicKey: e.pubkey.toBase58(),
