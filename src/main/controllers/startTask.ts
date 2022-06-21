@@ -57,7 +57,7 @@ const startTask = async (event: Event, payload: StartTaskPayload) => {
   const expressApp = await initExpressApp();
   try {
     //  remove hardcoded arweave id:J1z1YsAPJA4kFzG1YrWEYQjZNdbPigm3Ev5rtpPSyug / ${taskInfo.data.taskAuditProgram}
-    const url = `${config.node.GATEWAY_URL}/ywK1Wmilq2Z3Ykwqa0QWNvkyTOgPRSOTpp-u9Y1QNLA`;
+    const url = `${config.node.GATEWAY_URL}/${taskInfo.data.taskAuditProgram}`;
     const { data: src } = await axios.get(url);
 
     const taskSrc = loadTaskSource(
