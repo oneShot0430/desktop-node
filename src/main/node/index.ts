@@ -25,10 +25,10 @@ export default async (): Promise<any> => {
   // );
 
   try {
-    await namespaceInstance.redisSet(
-      'WALLET_LOCATION',
-      '/home/ghazanfer/.config/solana/id.json'
-    );
+    // await namespaceInstance.redisSet(
+    //   'WALLET_LOCATION',
+    //   '/home/ghazanfer/.config/solana/id.json'
+    // );
     // await startTask(null, {
     //   taskAccountPubKey: 'dGeVfkp1BcLDK13gxoNz5cy4aMMKXVsvSjDAhyLpPCR',
     // });

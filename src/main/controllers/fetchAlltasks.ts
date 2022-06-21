@@ -21,35 +21,37 @@ async function fetchAllTasks(): Promise<Task[]> {
     (e) =>
       e.account.data.length > config.node.MINIMUM_ACCEPTED_LENGTH_TASK_CONTRACT
   );
-  const tasks: Task[] = taskAccountInfo.map((e) => {
-    try {
-      const rawTaskData = JSON.parse(e.account.data.toString());
-      const taskData: TaskData = {
-        taskName: rawTaskData.task_name,
-        taskManager: rawTaskData.task_manager,
-        isWhitelisted: rawTaskData.is_whitelisted,
-        isActive: rawTaskData.is_active,
-        taskAuditProgram: rawTaskData.task_audit_program,
-        stakePotAccount: rawTaskData.stake_pot_account,
-        totalBountyAmount: rawTaskData.total_bounty_amount,
-        bountyAmountPerRound: rawTaskData.bounty_amount_per_round,
-        status: rawTaskData.status,
-        currentRound: rawTaskData.current_round,
-        availableBalances: rawTaskData.available_balances,
-        stakeList: rawTaskData.stake_list,
-        isRunning: false,
-        cronArray: [],
-      };
-      const task: Task = {
-        publicKey: e.pubkey.toBase58(),
-        data: taskData,
-      };
-      return task;
-    } catch (e) {
-      console.error(e);
-      return {} as Task;
-    }
-  });
+  const tasks: Task[] = taskAccountInfo
+    .map((e) => {
+      try {
+        const rawTaskData = JSON.parse(e.account.data.toString());
+        const taskData: TaskData = {
+          taskName: rawTaskData.task_name,
+          taskManager: rawTaskData.task_manager,
+          isWhitelisted: rawTaskData.is_whitelisted,
+          isActive: rawTaskData.is_active,
+          taskAuditProgram: rawTaskData.task_audit_program,
+          stakePotAccount: rawTaskData.stake_pot_account,
+          totalBountyAmount: rawTaskData.total_bounty_amount,
+          bountyAmountPerRound: rawTaskData.bounty_amount_per_round,
+          status: rawTaskData.status,
+          currentRound: rawTaskData.current_round,
+          availableBalances: rawTaskData.available_balances,
+          stakeList: rawTaskData.stake_list,
+          isRunning: false,
+          cronArray: [],
+        };
+        const task: Task = {
+          publicKey: e.pubkey.toBase58(),
+          data: taskData,
+        };
+        return task;
+      } catch (e) {
+        console.error(e);
+        return null as Task;
+      }
+    })
+    .filter((e) => e != null);
   return tasks;
 }
 
