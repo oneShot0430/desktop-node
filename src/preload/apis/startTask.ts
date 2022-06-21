@@ -6,4 +6,4 @@ interface GetTaskSourceParam {
 }
 
 export default (payload: GetTaskSourceParam): Promise<void> =>
-  sendMessage(config.endpoints.STOP_TASK, payload);
+  sendMessage(config.endpoints.START_TASK, payload);

@@ -47,7 +47,6 @@ async function fetchAllTasks(): Promise<Task[]> {
         };
         return task;
       } catch (e) {
-        console.error(e);
         return null as Task;
       }
     })
