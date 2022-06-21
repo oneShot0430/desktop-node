@@ -12,11 +12,23 @@ const SourceCodeView = ({
   taskName,
   openReportView,
 }: SourceCodeViewProps): JSX.Element => {
+  // window.main
+  //   .storeWallet({
+  //     walletPath: '/Users/raj/fresh-pull/desktop-node/wallets/raj/wallet.json',
+  //   })
+  //   .then(console.log);
   window.main
-    .getTaskSource({
-      taskAccountPubKey: 'BkS2uWuWH1Z6nPXgJ3wmYSw6PNS3e872ethJBfjcQhrv',
+    .createWallet({
+      taskId: 'taskid',
     })
     .then(console.log);
+
+  // window.main
+  //   .startTask({
+  //     taskAccountPubKey: '8AQp5xko5C2VDBM9mdq5P2BfP2ix7YTWG3wQh72oDvra',
+  //   })
+  //   .then(console.log);
+
   return (
     <>
       <div className="relative flex font-semibold mb-4">

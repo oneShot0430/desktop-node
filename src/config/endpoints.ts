@@ -5,6 +5,7 @@ const DELEGATE_STAKE = 'DELEGATE_STAKE';
 const GET_TASK_INFO = 'GET_TASK_INFO';
 const START_TASK = 'START_TASK';
 const STOP_TASK = 'STOP_TASK';
+const STORE_WALLET = 'STORE_WALLET';
 export default {
   GET_TASKS,
   GET_TASK_SOURCE,
@@ -13,4 +14,5 @@ export default {
   GET_TASK_INFO,
   START_TASK,
   STOP_TASK,
+  STORE_WALLET,
 };
