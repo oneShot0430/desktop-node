@@ -46,6 +46,8 @@ const delegateStake = async (event: Event, payload: DelegateStakeParam) => {
     stakePotAccount,
     stakeAmount,
   } = payload;
+  //TODO: don't accept mainSystemAccount in param get the location from redis and load that
+  // stakingAccKeypair Automatically get by the task_id
   const createSubmitterAccTransaction = new Transaction().add(
     SystemProgram.createAccount({
       fromPubkey: mainSystemAccount.publicKey,
