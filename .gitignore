@@ -91,5 +91,3 @@ out/
 # folder containing wallets 
 wallets
 .idea
-
-namespace/*

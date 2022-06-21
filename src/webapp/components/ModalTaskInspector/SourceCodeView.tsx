@@ -12,14 +12,20 @@ const SourceCodeView = ({
   taskName,
   openReportView,
 }: SourceCodeViewProps): JSX.Element => {
+  // window.main
+  //   .storeWallet({
+  //     walletPath: '/Users/raj/fresh-pull/desktop-node/wallets/raj/wallet.json',
+  //   })
+  //   .then(console.log);
   window.main
-    .storeWallet({
-      walletPath: '/Users/raj/koii_work/desktop-node/wallets/raj/wallet.json',
+    .createWallet({
+      taskId: 'taskid',
     })
     .then(console.log);
+
   // window.main
-  //   .createWallet({
-  //     walletName: 'raj',
+  //   .startTask({
+  //     taskAccountPubKey: '8AQp5xko5C2VDBM9mdq5P2BfP2ix7YTWG3wQh72oDvra',
   //   })
   //   .then(console.log);
 

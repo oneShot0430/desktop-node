@@ -8,7 +8,7 @@ import { namespaceInstance } from 'main/node/helpers/Namespace';
 import mainErrorHandler from '../../utils/mainErrorHandler';
 
 interface createWalletParam {
-  walletName: string;
+  taskId: string;
 }
 
 const createWallet = async (
@@ -16,14 +16,14 @@ const createWallet = async (
   payload: createWalletParam
 ): Promise<string> => {
   //async function createWallet(walletNameSample: string) {
-  const { walletName } = payload;
+  const { taskId } = payload;
   //fs.mkdirSync(walletName);
   try {
-    const path = 'wallets/' + walletName;
+    const path = 'namespace/' + taskId;
     if (!fs.existsSync(path)) {
       fs.mkdirSync(path);
       //const filePath = walletName + '/wallet.json';
-      const filePath = 'wallets/' + walletName + '/wallet.json';
+      const filePath = 'namespace/' + taskId + '/stakingWallet.json';
       console.log('WALLET PATH', filePath);
       const wallet = Keypair.generate();
       console.log('WALLET', wallet.publicKey.toBase58());
@@ -36,7 +36,7 @@ const createWallet = async (
           }
         }
       );
-      namespaceInstance.redisSet(walletName, filePath);
+      // namespaceInstance.redisSet(taskId, filePath);
       return wallet.publicKey.toBase58();
     }
   } catch (err) {

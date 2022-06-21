@@ -2,7 +2,7 @@ import config from 'config';
 import sendMessage from 'preload/sendMessage';
 
 interface creatWalletPayload {
-  walletName: string;
+  taskId: string;
 }
 
 export default (payload: creatWalletPayload): Promise<string> =>
