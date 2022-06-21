@@ -5,11 +5,7 @@ import sendMessage from 'preload/sendMessage';
 import { Task } from 'preload/type/tasks';
 
 interface DelegateStakeParam {
-  connection: Connection;
-  mainSystemAccount: Keypair;
-  taskStateInfoPublicKey: PublicKey;
-  stakingAccKeypair: Keypair;
-  stakePotAccount: PublicKey;
+  taskAccountPubKey: PublicKey;
   stakeAmount: number;
 }
 

@@ -379,7 +379,7 @@ class Namespace {
   }
   async stakeOnChain(
     connection: Connection,
-    taskStateInfoPublicKey: PublicKey,
+    taskAccountPubKey: PublicKey,
     stakingAccKeypair: Keypair,
     stakePotAccount: PublicKey,
     stakeAmount: number
@@ -388,7 +388,7 @@ class Namespace {
     const instruction = new TransactionInstruction({
       keys: [
         {
-          pubkey: taskStateInfoPublicKey,
+          pubkey: taskAccountPubKey,
           isSigner: false,
           isWritable: true,
         },
