@@ -5,5 +5,5 @@ interface GetTaskSourceParam {
   taskAccountPubKey: string;
 }
 
-export default (payload: GetTaskSourceParam): Promise<string> =>
+export default (payload: GetTaskSourceParam): Promise<void> =>
   sendMessage(config.endpoints.STOP_TASK, payload);

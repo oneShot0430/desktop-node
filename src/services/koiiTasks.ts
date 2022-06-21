@@ -15,7 +15,7 @@ class KoiiTasks {
     this.watchTasks();
   }
 
-  getTaskByPublicKey(publicKey: string): any {
+  getTaskByPublicKey(publicKey: string): Task {
     const task: Task = this.tasks.find((task) => {
       return task.publicKey == publicKey;
     });
@@ -38,10 +38,11 @@ class KoiiTasks {
     }, 60000);
   }
 
-  async taskStarted(publicKey: string): Promise<void> {
+  async taskStarted(publicKey: string, cronArray: any): Promise<void> {
     this.tasks.map((task) => {
       if (task.publicKey == publicKey) {
         task.data.isRunning = true;
+        task.data.cronArray = cronArray;
       }
       return task;
     });
@@ -61,6 +62,13 @@ class KoiiTasks {
     this.tasks.map((task) => {
       if (task.publicKey == publicKey) {
         task.data.isRunning = false;
+        task.data.cronArray.map((e: any) => {
+          try {
+            e.stop();
+          } catch (e) {
+            console.error('ERROR in task stop:', e);
+          }
+        });
       }
       return task;
     });
@@ -75,7 +83,7 @@ class KoiiTasks {
     const runningTasks: Array<string> = runningTasksStr
       ? JSON.parse(runningTasksStr)
       : [];
-    console.log({ runningTasksStr });
+    console.log({ runningTasks });
     this.tasks.map((task) => {
       if (runningTasks.includes(task.publicKey)) {
         task.data.isRunning = true;

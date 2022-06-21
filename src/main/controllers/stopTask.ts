@@ -11,7 +11,7 @@ type StopTaskPayload = {
 const stopTask = async (event: Event, payload: StopTaskPayload) => {
   const { taskAccountPubKey } = payload;
 
-  await koiiTasks.taskStopped(taskAccountPubKey);
+  koiiTasks.taskStopped(taskAccountPubKey);
   return true;
 };
 

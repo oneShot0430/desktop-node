@@ -26,12 +26,7 @@ const createWallet = async (
       const filePath = 'wallets/' + walletName + '/wallet.json';
       console.log('WALLET PATH', filePath);
       const wallet = Keypair.generate();
-      console.log('KEY PAIR', wallet);
       console.log('WALLET', wallet.publicKey.toBase58());
-      console.log(
-        'WALLET INFO TO BE SAVED',
-        JSON.stringify(Array.from(wallet.secretKey))
-      );
       fs.writeFile(
         filePath,
         JSON.stringify(Array.from(wallet.secretKey)),

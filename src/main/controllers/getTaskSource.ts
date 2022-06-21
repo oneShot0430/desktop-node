@@ -23,7 +23,6 @@ const getTaskSource = async (
   );
   if (!accountInfo || !accountInfo.data) throw new Error('Task not found');
   const taskData = JSON.parse(accountInfo.data.toString());
-  console.log('DATA', taskData);
   if (!taskData) throw new Error('Task not found');
 
   const url = `${config.node.GATEWAY_URL}/${taskData.task_audit_program}`;

@@ -13,5 +13,5 @@ interface DelegateStakeParam {
   stakeAmount: number;
 }
 
-export default (payload: DelegateStakeParam): Promise<Task> =>
+export default (payload: DelegateStakeParam): Promise<string> =>
   sendMessage(config.endpoints.DELEGATE_STAKE, payload);

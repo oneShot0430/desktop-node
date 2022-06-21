@@ -428,13 +428,7 @@ class Namespace {
     return response;
   }
 }
-const namespaceInstance = new Namespace(
-  '',
-  null,
-  process.env.NODE_MODE || '',
-  new Keypair(),
-  {}
-);
+const namespaceInstance = new Namespace('', null, 'service', new Keypair(), {});
 
 /**
  * Gets the node registry from Redis cache
@@ -507,7 +501,6 @@ async function registerNodes(newNodes: any) {
       console.error('Invalid node input:', node);
       continue;
     }
-
 
     // Make this node the latest if the timestamp is more recent
     const latest = latestNodes[owner];
