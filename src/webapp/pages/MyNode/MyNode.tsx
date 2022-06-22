@@ -7,10 +7,10 @@ const MyNode = (): JSX.Element => {
   return (
     <div>
       My Node
-      {/* <MyNodeToolbar />
+      <MyNodeToolbar />
       <div className="mt-34.5">
         <MyNodeTasksTable />
-      </div> */}
+      </div>
     </div>
   );
 };

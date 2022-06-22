@@ -21,9 +21,11 @@ const MainLayout = ({ children }: MainLayoutProps): JSX.Element => {
       <Modal />
       {showTaskInspector && <ModalTaskInspect />}
       <Header />
-      <main className="min-h-screen bg-gradient-to-b from-finnieBlue-dark-secondary to-finnieBlue">
-        <BackButton />
-        {children}
+      <main className="pt-[72px] min-h-screen bg-gradient-to-b from-finnieBlue-dark-secondary to-finnieBlue">
+        <div className="px-4 mx-auto">
+          <BackButton />
+          {children}
+        </div>
       </main>
     </div>
   );
