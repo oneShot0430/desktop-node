@@ -1,6 +1,6 @@
 import { AppRoute } from './AppRoutes';
 
-export const getRouteVieLabel = (route: AppRoute) => {
+export const getRouteViewLabel = (route: AppRoute) => {
   switch (route) {
     case AppRoute.MyNode:
       return 'My Node';

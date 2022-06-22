@@ -3,13 +3,13 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import BackIcon from 'svgs/back-icon.svg';
 import { AppRoute } from 'webapp/routing/AppRoutes';
-import { getRouteVieLabel } from 'webapp/routing/utils';
+import { getRouteViewLabel } from 'webapp/routing/utils';
 import { Button } from 'webapp/ui/Button';
 
 export const BackButton = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const routeLabel = getRouteVieLabel(location.pathname as AppRoute);
+  const routeLabel = getRouteViewLabel(location.pathname as AppRoute);
 
   const handleBackButtonClick = () => {
     navigate(-1);
