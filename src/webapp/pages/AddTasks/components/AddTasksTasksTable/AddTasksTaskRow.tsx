@@ -24,7 +24,7 @@ const TaskRow = ({ task, isOdd }: TaskRowProps): JSX.Element => {
       className={clsx(
         'pl-6 pr-6 grid grid-cols-16 gap-x-3 h-xxl items-center text-center text-finnieBlue',
         status === 'paused' && 'bg-finnieOrange bg-opacity-50',
-        status === 'running' && isOdd ? 'bg-trueGray-200' : 'bg-white'
+        status === 'running' && isOdd ? 'bg-neutral-200' : 'bg-white'
       )}
     >
       <div className="col-span-1 flex items-center">

@@ -21,7 +21,7 @@ const InspectButton = ({ size, ...props }: InspectButtonProps): JSX.Element => {
   return (
     <button
       className={clsx(
-        'flex items-center justify-center shadow-md rounded-finnie-small bg-trueGray-100',
+        'flex items-center justify-center shadow-md rounded-finnie-small bg-neutral-100',
         sizes[size]
       )}
       {...props}

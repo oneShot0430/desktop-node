@@ -1,8 +1,8 @@
 const colors = require('tailwindcss/colors');
 
 module.exports = {
-  purge: ['./src/**/*.{js,jsx,ts,tsx}', './src/index.html'],
-  darkMode: false, // or 'media' or 'class'
+  content: ['./src/**/*.{js,jsx,ts,tsx}', './src/index.html'],
+  media: false, // or 'media' or 'class'
   theme: {
     fontFamily: {
       sans: ['Sora', 'Open Sans', 'ui-sans-serif', 'system-ui'],
@@ -32,7 +32,7 @@ module.exports = {
         finnieGray: {
           DEFAULT: '#F2F2F2',
         },
-        trueGray: { ...colors.trueGray, 200: '#EAEAEA' },
+        neutral: { ...colors.neutral, 200: '#EAEAEA' },
         finnieRed: {
           500: '#FF4141',
         },

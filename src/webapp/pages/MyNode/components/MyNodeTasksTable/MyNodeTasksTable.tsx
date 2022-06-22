@@ -7,7 +7,7 @@ import MyNodeTaskRow from './MyNodeTaskRow';
 const MyNodeTasksTable = (): JSX.Element => {
   return (
     <div className="w-full">
-      <div className="w-full fixed z-10 pl-9.5 pr-8 grid grid-cols-15 gap-x-3 bg-trueGray-100 font-semibold text-finnieBlue h-xxl items-center text-center">
+      <div className="w-full fixed z-10 pl-9.5 pr-8 grid grid-cols-15 gap-x-3 bg-neutral-100 font-semibold text-finnieBlue h-xxl items-center text-center">
         <div className="col-span-1">Start/ Stop</div>
         <div className="col-span-5 text-left pl-2">Task Name & Start Time</div>
         <div className="col-span-2">Task Creator</div>
