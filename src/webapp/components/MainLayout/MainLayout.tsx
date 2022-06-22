@@ -5,6 +5,8 @@ import Modal from 'webapp/components/Modal';
 import ModalTaskInspect from 'webapp/components/ModalTaskInspector';
 import { useAppSelector } from 'webapp/hooks/reduxHook';
 
+import { BackButton } from '../BackButton/BackButton';
+
 type MainLayoutProps = {
   children: React.ReactNode;
 };
@@ -19,7 +21,12 @@ const MainLayout = ({ children }: MainLayoutProps): JSX.Element => {
       <Modal />
       {showTaskInspector && <ModalTaskInspect />}
       <Header />
-      <main className="pt-xxl">{children}</main>
+      <main className="pt-[72px] min-h-screen bg-gradient-to-b from-finnieBlue-dark-secondary to-finnieBlue">
+        <div className="px-4 mx-auto">
+          <BackButton />
+          {children}
+        </div>
+      </main>
     </div>
   );
 };

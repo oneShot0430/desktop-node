@@ -14,6 +14,8 @@ module.exports = {
       colors: {
         finnieBlue: {
           dark: '#030332',
+          light: '#211C52',
+          'dark-secondary': '#04043D',
           DEFAULT: '#171753',
         },
         finnieTeal: {
