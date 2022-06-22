@@ -5,7 +5,7 @@ import sendMessage from 'preload/sendMessage';
 import { Task } from 'preload/type/tasks';
 
 interface DelegateStakeParam {
-  taskAccountPubKey: PublicKey;
+  taskAccountPubKey: string;
   stakeAmount: number;
 }
 

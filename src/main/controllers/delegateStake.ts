@@ -35,7 +35,7 @@ const TASK_CONTRACT_ID: PublicKey = new PublicKey(
 );
 
 interface DelegateStakeParam {
-  taskAccountPubKey: PublicKey;
+  taskAccountPubKey: string;
   // stakingAccKeypair: Keypair;
   // stakePotAccount: PublicKey;
   stakeAmount: number;
@@ -75,7 +75,9 @@ const delegateStake = async (event: Event, payload: DelegateStakeParam) => {
     console.error(e);
     throw Error("System Account or StakingWallet Account doesn't exist");
   }
-  const accountInfo = await sdk.k2Connection.getAccountInfo(taskAccountPubKey);
+  const accountInfo = await sdk.k2Connection.getAccountInfo(
+    new PublicKey(taskAccountPubKey)
+  );
   if (!accountInfo || !accountInfo.data) throw new Error('Task not found');
   const taskData = JSON.parse(accountInfo.data.toString());
   if (!taskData) throw new Error('Task not found');
@@ -115,7 +117,7 @@ const delegateStake = async (event: Event, payload: DelegateStakeParam) => {
     const instruction = new TransactionInstruction({
       keys: [
         {
-          pubkey: taskAccountPubKey,
+          pubkey: new PublicKey(taskAccountPubKey),
           isSigner: false,
           isWritable: true,
         },
@@ -162,7 +164,7 @@ const delegateStake = async (event: Event, payload: DelegateStakeParam) => {
     const instruction = new TransactionInstruction({
       keys: [
         {
-          pubkey: taskAccountPubKey,
+          pubkey: new PublicKey(taskAccountPubKey),
           isSigner: false,
           isWritable: true,
         },
