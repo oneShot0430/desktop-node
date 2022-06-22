@@ -5,12 +5,13 @@ import MyNodeToolbar from './components/MyNodeToolbar';
 
 const MyNode = (): JSX.Element => {
   return (
-    <>
-      <MyNodeToolbar />
+    <div>
+      My Node
+      {/* <MyNodeToolbar />
       <div className="mt-34.5">
         <MyNodeTasksTable />
-      </div>
-    </>
+      </div> */}
+    </div>
   );
 };
 
