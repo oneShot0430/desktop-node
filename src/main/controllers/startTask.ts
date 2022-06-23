@@ -1,5 +1,6 @@
 import { Event } from 'electron';
 import * as fsSync from 'fs';
+import * as fsPromises from 'fs/promises';
 import * as util from 'util';
 
 import { Keypair } from '@_koi/web3.js';
