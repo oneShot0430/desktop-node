@@ -32,6 +32,7 @@ const SourceCodeView = ({
     //     taskAccountPubKey: '8AQp5xko5C2VDBM9mdq5P2BfP2ix7YTWG3wQh72oDvra',
     //   })
     //   .then(console.log);
+    window.main.getTasks().then(console.log);
   }, []);
 
   return (
