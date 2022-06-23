@@ -16,13 +16,13 @@ export const BackButton = () => {
   };
 
   return (
-    <div className="flex items-center">
+    <div className="flex items-center pt-[20px] pb-[30px]">
       <Button
-        icon={<BackIcon className="cursor-pointer " />}
+        icon={<BackIcon className="cursor-pointer" />}
         onClick={handleBackButtonClick}
       />
 
-      <div className="text-white self-center uppercase leading-[30px] text-[30px] pl-4">
+      <div className="text-white self-center uppercase h-[40px] leading-[40px] text-[30px] align-middle pl-4 flex flex-col justify-center">
         {routeLabel}
       </div>
     </div>
