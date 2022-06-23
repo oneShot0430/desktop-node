@@ -7,7 +7,7 @@ import AddTasksTaskRow from './AddTasksTaskRow';
 const AddTasksTasksTable = (): JSX.Element => {
   return (
     <div className="w-full">
-      <div className="w-full fixed z-10 pl-6 pr-6 grid grid-cols-16 gap-x-3 bg-trueGray-100 font-semibold text-finnieBlue h-xxl pt-3 text-center">
+      <div className="w-full fixed z-10 pl-6 pr-6 grid grid-cols-16 gap-x-3 bg-neutral-100 font-semibold text-finnieBlue h-xxl pt-3 text-center">
         <div className="col-span-1"></div>
         <div className="col-span-5 text-left">Task Name & Start Time</div>
         <div className="col-span-2">Task Creator</div>

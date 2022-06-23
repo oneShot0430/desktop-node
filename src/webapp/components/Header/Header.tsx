@@ -1,16 +1,14 @@
 import React from 'react';
 
 import FinnieLogo from 'svgs/finnie-logos/finnie-logo.svg';
-import HeaderBackground from 'svgs/header-background.svg';
 
 import Navbar from './Navbar';
 
 const Header = (): JSX.Element => {
   return (
-    <header className="fixed w-screen z-10 h-xxl flex items-center justify-between pr-8 text-white bg-gradient-to-r from-finnieBlue-dark to-finnieBlue">
-      <div className="relative">
+    <header className="fixed top-0 z-10 flex items-center justify-between w-screen pr-8 text-white h-xxl bg-finnieBlue-light">
+      <div className="relative pl-4">
         <FinnieLogo className="h-xxl" />
-        <HeaderBackground className="absolute top-0" />
       </div>
       <Navbar />
     </header>
