@@ -23,11 +23,10 @@ const SourceCodeView = ({
     //     taskId: 'GsNf1k1kprYuduVyT3mxiCyY8qDirZiFLkuQyqhke6NU',
     //   })
     //   .then(console.log);
-    window.main.delegateStake({
-      taskAccountPubKey: 'GsNf1k1kprYuduVyT3mxiCyY8qDirZiFLkuQyqhke6NU',
-      stakeAmount: 50,
-    });
-
+    // window.main.delegateStake({
+    //   taskAccountPubKey: 'GsNf1k1kprYuduVyT3mxiCyY8qDirZiFLkuQyqhke6NU',
+    //   stakeAmount: 50,
+    // });
     // window.main
     //   .startTask({
     //     taskAccountPubKey: '8AQp5xko5C2VDBM9mdq5P2BfP2ix7YTWG3wQh72oDvra',
