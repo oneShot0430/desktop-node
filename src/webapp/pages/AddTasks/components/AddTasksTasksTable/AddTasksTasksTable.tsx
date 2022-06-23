@@ -1,10 +1,11 @@
 import React from 'react';
 
-import tasks from 'webapp/tasks';
+import { Task } from 'webapp/@type/task';
 
 import AddTasksTaskRow from './AddTasksTaskRow';
 
 const AddTasksTasksTable = (): JSX.Element => {
+  const tasks: Task[] = [];
   return (
     <div className="w-full">
       <div className="w-full fixed z-10 pl-6 pr-6 grid grid-cols-16 gap-x-3 bg-neutral-100 font-semibold text-finnieBlue h-xxl pt-3 text-center">

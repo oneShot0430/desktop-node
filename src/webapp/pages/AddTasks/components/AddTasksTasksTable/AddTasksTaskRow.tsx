@@ -6,16 +6,22 @@ import { Task } from 'webapp/@type/task';
 import InspectButton from 'webapp/components/InspectButton';
 import RunButton from 'webapp/components/RunButton';
 import { useAppDispatch } from 'webapp/hooks/reduxHook';
+import { TaskService } from 'webapp/services/taskService';
 import { showTaskInspector } from 'webapp/store/actions/taskInspector';
 
 type TaskRowProps = {
   task: Task;
   isOdd: boolean;
+  onChange?: () => void;
 };
 
-const TaskRow = ({ task, isOdd }: TaskRowProps): JSX.Element => {
-  const { name, owner, bounty, nodes, topStake, stake, minStake, status } =
+const TaskRow = ({ task, isOdd, onChange }: TaskRowProps): JSX.Element => {
+  const { taskName, taskManager, isRunning, publicKey, bountyAmountPerRound } =
     task;
+  const stake = TaskService.getMyStake(task);
+  const nodes = TaskService.getNodesCount(task);
+  const topStake = TaskService.getTopStake(task);
+  const minStake = TaskService.getMinStake(task);
 
   const dispatch = useAppDispatch();
 
@@ -23,8 +29,7 @@ const TaskRow = ({ task, isOdd }: TaskRowProps): JSX.Element => {
     <div
       className={clsx(
         'pl-6 pr-6 grid grid-cols-16 gap-x-3 h-xxl items-center text-center text-finnieBlue',
-        status === 'paused' && 'bg-finnieOrange bg-opacity-50',
-        status === 'running' && isOdd ? 'bg-neutral-200' : 'bg-white'
+        isRunning && isOdd ? 'bg-neutral-200' : 'bg-white'
       )}
     >
       <div className="col-span-1 flex items-center">
@@ -34,18 +39,18 @@ const TaskRow = ({ task, isOdd }: TaskRowProps): JSX.Element => {
         />
       </div>
       <div className="col-span-5 text-left">
-        <div className="text-lg tracking-finnieSpacing-wider">{name}</div>
+        <div className="text-lg tracking-finnieSpacing-wider">{taskName}</div>
         <div className="text-finnieTeal-700 text-2xs tracking-finnieSpacing-wider">
           02 Dec 2021, 18:15:02
         </div>
       </div>
       <div className="col-span-2 text-sm tracking-finnieSpacing-wider">
-        {owner}
+        {taskManager}
       </div>
 
       <div className="col-span-5 grid grid-cols-3 gap-x-2 items-center">
         <div className="col-span-1 text-sm tracking-finnieSpacing-wide px-2">
-          {bounty}
+          {bountyAmountPerRound}
         </div>
         <div className="col-span-1 text-sm tracking-finnieSpacing-wide">
           {nodes}
@@ -76,13 +81,16 @@ const TaskRow = ({ task, isOdd }: TaskRowProps): JSX.Element => {
         </div>
         <div className="col-span-2 justify-self-center">
           <RunButton
-            variant={
-              status === 'running'
-                ? 'pause-active'
-                : stake !== 0
-                ? 'play-active'
-                : 'play-deactivated'
-            }
+            isRunning={isRunning}
+            taskAccountPubKey={publicKey}
+            onStateChange={onChange}
+            // variant={
+            //   status === 'running'
+            //     ? 'pause-active'
+            //     : stake !== 0
+            //     ? 'play-active'
+            //     : 'play-deactivated'
+            // }
           />
         </div>
       </div>

@@ -43,12 +43,12 @@ const ModalTaskInspector = (): JSX.Element => {
     return () => document.removeEventListener('mousedown', handleClickOutSide);
   }, [modalRef, isShowingWidthdraw]);
 
-  const showWidthdraw = () =>
+  const showWithdraw = () =>
     dispatch(
       showModal('WITHDRAW_STAKE', {
-        name: taskInfo.name,
-        creator: taskInfo.owner,
-        rewardEarned: taskInfo.rewardEarned,
+        name: taskInfo.taskName,
+        creator: taskInfo.taskManager,
+        rewardEarned: 0, //taskInfo.rewardEarned, FIXME
       })
     );
 
@@ -100,22 +100,22 @@ const ModalTaskInspector = (): JSX.Element => {
 
             {currentTab === 'DETAIL' && (
               <TaskDetailView
-                taskInfo={taskInfo}
-                showWidthdraw={showWidthdraw}
+                task={taskInfo}
+                showWithdraw={showWithdraw}
                 openReportView={openReportView}
               />
             )}
 
             {currentTab === 'SOURCE_CODE' && (
               <SourceCodeView
-                taskName={taskInfo.name}
+                taskName={taskInfo.taskName}
                 openReportView={openReportView}
               />
             )}
           </div>
           {showReportView && (
             <ReportTaskView
-              taskName={taskInfo.name}
+              taskName={taskInfo.taskName}
               closeReportView={closeReportView}
             />
           )}

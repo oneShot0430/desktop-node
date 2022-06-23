@@ -1,20 +1,36 @@
 import clsx from 'clsx';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Task } from 'webapp/@type/task';
 import InspectButton from 'webapp/components/InspectButton';
 import RunButton from 'webapp/components/RunButton';
 import { useAppDispatch } from 'webapp/hooks/reduxHook';
+import { TaskService, TaskStatusToLabeMap } from 'webapp/services/taskService';
 import { showModal } from 'webapp/store/actions/modal';
 import { showTaskInspector } from 'webapp/store/actions/taskInspector';
 
 type TaskRowProps = {
   task: Task;
   isOdd: boolean;
+  onChange?: () => void;
 };
 
-const MyNodeTaskRow = ({ task, isOdd }: TaskRowProps): JSX.Element => {
-  const { name, owner, rewardEarned, myStake, state, status } = task;
+const MyNodeTaskRow = ({
+  task,
+  isOdd,
+  onChange,
+}: TaskRowProps): JSX.Element => {
+  const { taskName: name, taskManager: owner, isRunning, publicKey } = task;
+
+  const [rewardEarned, setRewardEarned] = useState(0);
+
+  useEffect(() => {
+    //TODO:  GET REWARD FROM API
+    setRewardEarned(0);
+  }, []);
+
+  const myStake = TaskService.getMyStake(task);
+  const state = TaskStatusToLabeMap[TaskService.getStatus(task)];
 
   const dispatch = useAppDispatch();
 
@@ -22,13 +38,14 @@ const MyNodeTaskRow = ({ task, isOdd }: TaskRowProps): JSX.Element => {
     <div
       className={clsx(
         'pl-9.5 pr-8 grid grid-cols-15 gap-x-3 h-xxl items-center text-center text-finnieBlue',
-        status === 'paused' && 'bg-finnieOrange bg-opacity-50',
-        status === 'running' && isOdd ? 'bg-neutral-200' : 'bg-white'
+        isRunning && isOdd ? 'bg-neutral-200' : 'bg-white'
       )}
     >
       <div className="col-span-1 flex items-center justify-center">
         <RunButton
-          variant={status === 'running' ? 'pause-active' : 'play-active'}
+          isRunning={isRunning}
+          taskAccountPubKey={publicKey}
+          onStateChange={onChange}
         />
       </div>
       <div className="col-span-5 text-left pl-2">
@@ -42,7 +59,7 @@ const MyNodeTaskRow = ({ task, isOdd }: TaskRowProps): JSX.Element => {
         </div>
       </div>
       <div className="col-span-2 text-sm tracking-finnieSpacing-wider">
-        {owner}
+        <span title={owner}>{owner.substring(0, 6)}...</span>
       </div>
       <div className="col-span-2 text-sm tracking-finnieSpacing-wide px-2">
         {rewardEarned}

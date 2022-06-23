@@ -12,9 +12,10 @@ export interface TaskData {
   stakePotAccount: string;
   totalBountyAmount: number;
   bountyAmountPerRound: number;
-  status: unknown;
+  status: Record<'AcceptingSubmissions' | 'Voting' | 'Completed', number>;
   currentRound: number;
-  availableBalances: any;
-  stakeList: unknown;
+  availableBalances: Record<string, number>;
+  stakeList: Record<string, number>;
   isRunning: boolean;
+  cronArray: unknown[];
 }

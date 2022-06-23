@@ -1,15 +1,9 @@
-export type Task = {
-  name: string;
-  owner: string;
-  txId: string;
+import { Task as TS, TaskData } from 'preload/type/tasks';
 
-  bounty: number;
-  nodes: number;
-  topStake: number;
-  stake: number;
-  minStake: number;
-  status: 'running' | 'paused';
-  rewardEarned: number;
-  myStake: number;
-  state: 'in progress' | 'accepted' | 'waiting to verify';
-};
+export type Task = Omit<TS, 'data'> & TaskData;
+
+export enum TaskStatus {
+  ACCEPTING_SUBMISSIONS = 'ACCEPTING_SUBMISSIONS',
+  VOTING = 'VOTING',
+  COMPLETED = 'COMPLETED',
+}
