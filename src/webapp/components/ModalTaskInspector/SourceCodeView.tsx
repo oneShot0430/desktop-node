@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import ReportTaskIcon from 'svgs/flag-icon.svg';
 import ShareLinkIcon from 'svgs/share-link-icon.svg';
@@ -12,22 +12,28 @@ const SourceCodeView = ({
   taskName,
   openReportView,
 }: SourceCodeViewProps): JSX.Element => {
-  // window.main
-  //   .storeWallet({
-  //     walletPath: '/Users/raj/fresh-pull/desktop-node/wallets/raj/wallet.json',
-  //   })
-  //   .then(console.log);
-  window.main
-    .createWallet({
-      taskId: 'taskid',
-    })
-    .then(console.log);
+  useEffect(() => {
+    // window.main
+    //   .storeWallet({
+    //     walletPath: '/home/ghazanfer/.config/solana/id.json',
+    //   })
+    //   .then(console.log);
+    // window.main
+    //   .createWallet({
+    //     taskId: 'GsNf1k1kprYuduVyT3mxiCyY8qDirZiFLkuQyqhke6NU',
+    //   })
+    //   .then(console.log);
+    window.main.delegateStake({
+      taskAccountPubKey: 'GsNf1k1kprYuduVyT3mxiCyY8qDirZiFLkuQyqhke6NU',
+      stakeAmount: 50,
+    });
 
-  // window.main
-  //   .startTask({
-  //     taskAccountPubKey: '8AQp5xko5C2VDBM9mdq5P2BfP2ix7YTWG3wQh72oDvra',
-  //   })
-  //   .then(console.log);
+    // window.main
+    //   .startTask({
+    //     taskAccountPubKey: '8AQp5xko5C2VDBM9mdq5P2BfP2ix7YTWG3wQh72oDvra',
+    //   })
+    //   .then(console.log);
+  }, []);
 
   return (
     <>
