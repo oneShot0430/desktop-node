@@ -22,22 +22,25 @@ const MyNode = (): JSX.Element => {
   return (
     <div className="relative overflow-x-auto">
       <table className="w-full text-[14px] text-left table-auto">
-        <thead className="font-semibold h-[40px]">
-          <tr className="border">
+        <thead className="pb-8 font-semibold">
+          <tr className="border-b-2">
             {tableHeaders.map((headerText) => (
               <th
                 key={headerText}
-                className="font-semibold leading-5 text-white racking-[0.03em]"
+                className="font-semibold leading-5 text-white racking-[0.03em] pb-4"
               >
                 {headerText}
               </th>
             ))}
-            <button onClick={() => dispatch(showModal('EDIT_STAKE_AMOUNT'))}>
-              Edit Stake Amount
-            </button>
           </tr>
         </thead>
       </table>
+      <button
+        onClick={() => dispatch(showModal('EDIT_STAKE_AMOUNT'))}
+        className="text-white"
+      >
+        Edit Stake Amount
+      </button>
       {/* <div className="mt-34.5">
         <MyNodeTasksTable />
       </div> */}
