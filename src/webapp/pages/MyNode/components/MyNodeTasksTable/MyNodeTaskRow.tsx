@@ -25,8 +25,14 @@ const MyNodeTaskRow = ({
   const [rewardEarned, setRewardEarned] = useState(0);
 
   useEffect(() => {
-    //TODO:  GET REWARD FROM API
-    setRewardEarned(0);
+    window.main
+      .getEarnedRewardByNode({
+        taskAccountPubKey: publicKey,
+        available_balances: task.availableBalances,
+      })
+      .then((rewardEarned) => {
+        setRewardEarned(rewardEarned);
+      });
   }, []);
 
   const myStake = TaskService.getMyStake(task);

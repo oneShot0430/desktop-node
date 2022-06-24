@@ -18,8 +18,12 @@ const TaskDetailView = ({
   const [rewardEarned, setRewardEarned] = useState(0);
 
   useEffect(() => {
-    //TODO:  GET REWARD FROM API
-    setRewardEarned(0);
+    window.main
+      .getEarnedRewardByNode({
+        taskAccountPubKey: task.publicKey,
+        available_balances: task.availableBalances,
+      })
+      .then((rewardEarned) => setRewardEarned(rewardEarned));
   }, []);
 
   const stake = TaskService.getMyStake(task);
