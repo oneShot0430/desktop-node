@@ -6,4 +6,4 @@ interface creatWalletPayload {
 }
 
 export default (payload: creatWalletPayload): Promise<string> =>
-  sendMessage(config.endpoints.CREATE_WALLET, payload);
+  sendMessage(config.endpoints.CREATE_STAKING_WALLET, payload);
