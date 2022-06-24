@@ -35,6 +35,7 @@ module.exports = {
         },
         neutral: { ...colors.neutral, 200: '#EAEAEA' },
         finnieRed: {
+          DEFAULT: '#FFA6A6',
           500: '#FF4141',
         },
       },

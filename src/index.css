@@ -75,3 +75,7 @@
     @apply border-2 border-white;
   }
 }
+
+.koii_input > input[text] {
+  color: red;
+}

@@ -27,7 +27,7 @@ const MainLayout = ({ children }: MainLayoutProps): JSX.Element => {
           <BackButton />
           <div className="flex">
             <Sidebar />
-            {children}
+            <div className="w-[100%]">{children}</div>
           </div>
         </div>
       </main>

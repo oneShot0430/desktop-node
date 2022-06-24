@@ -73,15 +73,7 @@ const MyNodeTaskRow = ({
         </div>
         <div className="col-span-1 justify-self-end">
           <button
-            onClick={() =>
-              dispatch(
-                showModal('WITHDRAW_STAKE', {
-                  name: taskName,
-                  creator: taskManager,
-                  rewardEarned,
-                })
-              )
-            }
+            onClick={() => dispatch(showModal('EDIT_STAKE_AMOUNT'))}
             className="bg-white w-24 h-10 finnie-border-blue rounded-finnie shadow-md font-semibold text-xs tracking-finnieSpacing-wide"
           >
             Withdraw Stake
