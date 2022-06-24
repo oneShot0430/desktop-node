@@ -35,7 +35,7 @@ const MyNode = (): JSX.Element => {
       {/*    </tr>*/}
       {/*  </thead>*/}
       {/*</table>*/}
-      <div className="mt-34.5">
+      <div>
         <MyNodeTasksTable />
       </div>
     </div>
