@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 
-import CloseIcon from 'svgs/close-icons/close-icon-blue.svg';
 import { useAppDispatch, useAppSelector } from 'webapp/hooks/reduxHook';
 import { closeModal } from 'webapp/store/actions/modal';
 
+import { EditStakeAmountModal } from './EditStakeAmountModal/EditStakeAmountModal';
 import ModalCreateTask from './ModalCreateTask';
 import ModalWithdrawStake from './ModalWithdrawStake';
 
@@ -31,21 +31,17 @@ const Modal = (): JSX.Element => {
   const modalByTypes = {
     CREATE_TASK: <ModalCreateTask />,
     WITHDRAW_STAKE: <ModalWithdrawStake close={close} />,
+    EDIT_STAKE_AMOUNT: <EditStakeAmountModal onClose={close} />,
   };
 
   return (
     <>
       {isOpen && (
-        <div className="z-30 absolute top-0 left-0 w-screen h-screen flex items-center justify-center bg-black bg-opacity-40">
+        <div className="absolute top-0 left-0 z-30 flex items-center justify-center w-screen h-screen bg-black bg-opacity-40">
           <div
             ref={modalRef}
-            className="w-156 h-79.5 relative rounded-md shadow-lg bg-finnieGray pt-6.25 text-center"
+            className="w-[600px] h-[380px] relative rounded-md shadow-lg bg-finnieGray text-center"
           >
-            <CloseIcon
-              data-testid="close-modal-button"
-              onClick={close}
-              className="w-6 h-6 absolute top-2 right-2 cursor-pointer"
-            />
             {modalByTypes[modalType]}
           </div>
         </div>
