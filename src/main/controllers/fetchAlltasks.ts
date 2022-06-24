@@ -27,11 +27,13 @@ async function fetchAllTasks(): Promise<Task[]> {
         const rawTaskData = JSON.parse(e.account.data.toString());
         const taskData: TaskData = {
           taskName: rawTaskData.task_name,
-          taskManager: rawTaskData.task_manager,
+          taskManager: new PublicKey(rawTaskData.task_manager).toBase58(),
           isWhitelisted: rawTaskData.is_whitelisted,
           isActive: rawTaskData.is_active,
           taskAuditProgram: rawTaskData.task_audit_program,
-          stakePotAccount: rawTaskData.stake_pot_account,
+          stakePotAccount: new PublicKey(
+            rawTaskData.stake_pot_account
+          ).toBase58(),
           totalBountyAmount: rawTaskData.total_bounty_amount,
           bountyAmountPerRound: rawTaskData.bounty_amount_per_round,
           status: rawTaskData.status,

@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { noop } from 'lodash';
 import React from 'react';
 
 import PauseActiveIcon from 'svgs/run-button-icons/pause-active-icon.svg';
@@ -18,18 +19,31 @@ const logos = {
 };
 
 type RunButtonProps = {
-  variant: keyof typeof variants;
+  isRunning: boolean;
+  taskAccountPubKey: string;
+  onStateChange?: () => void;
 };
 
-const RunButton = ({ variant }: RunButtonProps): JSX.Element => {
+const RunButton = ({
+  isRunning,
+  taskAccountPubKey,
+  onStateChange = noop,
+}: RunButtonProps): JSX.Element => {
+  const changeState = () => {
+    window.main[isRunning ? 'stopTask' : 'startTask']({
+      taskAccountPubKey,
+    }).finally(onStateChange);
+  };
+
   return (
     <div
       className={clsx(
         'flex items-center justify-center rounded-full w-8 h-8 filter drop-shadow cursor-pointer',
-        variants[variant]
+        variants[isRunning ? 'pause-active' : 'play-active']
       )}
+      onClick={changeState}
     >
-      {logos[variant]}
+      {logos[isRunning ? 'pause-active' : 'play-active']}
     </div>
   );
 };

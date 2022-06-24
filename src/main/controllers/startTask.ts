@@ -1,5 +1,6 @@
 import { Event } from 'electron';
 import * as fsSync from 'fs';
+import * as fsPromises from 'fs/promises';
 import * as util from 'util';
 
 import { Keypair } from '@_koi/web3.js';
@@ -60,7 +61,7 @@ const startTask = async (event: Event, payload: StartTaskPayload) => {
     const url = `${config.node.GATEWAY_URL}/${taskInfo.data.taskAuditProgram}`;
     const { data: src } = await axios.get(url);
 
-    const taskSrc = loadTaskSource(
+    const taskSrc = await loadTaskSource(
       src,
       new Namespace(
         taskAccountPubKey,
@@ -88,8 +89,11 @@ const startTask = async (event: Event, payload: StartTaskPayload) => {
     throw new Error(err);
   }
 };
-const loadTaskSource = (src: string, namespace: Namespace) => {
+const loadTaskSource = async (src: string, namespace: Namespace) => {
   // TODO: change below path to /var/log/namespace.task_id
+  await fsPromises
+    .mkdir(`namespace/${namespace.taskData.task_id}`, { recursive: true })
+    .catch(console.error);
   const log_file = fsSync.createWriteStream(
     `namespace/${namespace.taskData.task_id}/task.log`,
     { flags: 'w' }
