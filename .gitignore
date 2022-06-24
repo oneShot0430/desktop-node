@@ -93,3 +93,7 @@ wallets
 .idea
 
 namespace/*
+
+id.json
+
+env
