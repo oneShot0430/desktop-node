@@ -20,7 +20,7 @@ const MyNodeTaskRow = ({
   isOdd,
   onChange,
 }: TaskRowProps): JSX.Element => {
-  const { taskName: name, taskManager: owner, isRunning, publicKey } = task;
+  const { taskName, taskManager, isRunning, publicKey } = task;
 
   const [rewardEarned, setRewardEarned] = useState(0);
 
@@ -49,7 +49,7 @@ const MyNodeTaskRow = ({
         />
       </div>
       <div className="col-span-5 text-left pl-2">
-        <div className="text-lg tracking-finnieSpacing-wider">{name}</div>
+        <div className="text-lg tracking-finnieSpacing-wider">{taskName}</div>
         <div className="flex justify-between w-48 text-finnieTeal-700 text-2xs tracking-finnieSpacing-wider">
           02 Dec 2021, 18:15:02
           <InspectButton
@@ -59,7 +59,7 @@ const MyNodeTaskRow = ({
         </div>
       </div>
       <div className="col-span-2 text-sm tracking-finnieSpacing-wider">
-        <span title={owner}>{owner.substring(0, 6)}...</span>
+        <span title={taskManager}>{taskManager.substring(0, 6)}...</span>
       </div>
       <div className="col-span-2 text-sm tracking-finnieSpacing-wide px-2">
         {rewardEarned}
@@ -76,8 +76,8 @@ const MyNodeTaskRow = ({
             onClick={() =>
               dispatch(
                 showModal('WITHDRAW_STAKE', {
-                  name,
-                  creator: owner,
+                  name: taskName,
+                  creator: taskManager,
                   rewardEarned,
                 })
               )
