@@ -6,4 +6,4 @@ interface checkWalletParam {
 }
 
 export default (payload: checkWalletParam): Promise<unknown> =>
-  sendMessage(config.endpoints.CHECK_WALLET, payload);
+  sendMessage(config.endpoints.CHECK_WALLET_EXISTS, payload);

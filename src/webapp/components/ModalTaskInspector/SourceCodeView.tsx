@@ -19,7 +19,7 @@ const SourceCodeView = ({
     //   })
     //   .then(console.log);
     window.main
-      .checkWallet({
+      .checkWalletExists({
         taskId: 'sample-task-id',
       })
       .then(console.log);

@@ -20,8 +20,14 @@ const initHandlers = (): void => {
     config.endpoints.STORE_MAIN_WALLET,
     controllers.storeMainWallet
   );
-  ipcMain.handle(config.endpoints.REWARD_WALLET, controllers.rewardWallet);
-  ipcMain.handle(config.endpoints.CHECK_WALLET, controllers.checkWallet);
+  ipcMain.handle(
+    config.endpoints.GET_EARNED_REWARD_BY_NODE,
+    controllers.getEarnedRewardByNode
+  );
+  ipcMain.handle(
+    config.endpoints.CHECK_WALLET_EXISTS,
+    controllers.checkWalletExists
+  );
 };
 
 export default errorHandler(initHandlers, 'Init handlers error');

@@ -7,4 +7,4 @@ interface rewardWalletPayload {
 }
 
 export default (payload: rewardWalletPayload): Promise<unknown> =>
-  sendMessage(config.endpoints.REWARD_WALLET, payload);
+  sendMessage(config.endpoints.GET_EARNED_REWARD_BY_NODE, payload);
