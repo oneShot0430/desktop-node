@@ -14,6 +14,7 @@ const initHandlers = (): void => {
   ipcMain.handle(config.endpoints.START_TASK, controllers.startTask);
   ipcMain.handle(config.endpoints.STOP_TASK, controllers.stopTask);
   ipcMain.handle(config.endpoints.STORE_WALLET, controllers.storeWallet);
+  ipcMain.handle(config.endpoints.REWARD_WALLET, controllers.rewardWallet);
 };
 
 export default errorHandler(initHandlers, 'Init handlers error');
