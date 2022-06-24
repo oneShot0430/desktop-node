@@ -39,11 +39,11 @@ const RunButton = ({
     <div
       className={clsx(
         'flex items-center justify-center rounded-full w-8 h-8 filter drop-shadow cursor-pointer',
-        variants[isRunning ? 'play-active' : 'pause-active']
+        variants[isRunning ? 'pause-active' : 'play-active']
       )}
       onClick={changeState}
     >
-      {logos[isRunning ? 'play-active' : 'pause-active']}
+      {logos[isRunning ? 'pause-active' : 'play-active']}
     </div>
   );
 };
