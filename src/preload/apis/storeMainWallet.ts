@@ -6,4 +6,4 @@ interface storeWalletPayload {
 }
 
 export default (payload: storeWalletPayload): Promise<boolean> =>
-  sendMessage(config.endpoints.STORE_WALLET, payload);
+  sendMessage(config.endpoints.STORE_MAIN_WALLET, payload);
