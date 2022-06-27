@@ -14,13 +14,18 @@ const SourceCodeView = ({
 }: SourceCodeViewProps): JSX.Element => {
   useEffect(() => {
     // window.main
-    //   .storeWallet({
-    //     walletPath: '/home/ghazanfer/.config/solana/id.json',
+    //   .storeMainWallet({
+    //     walletPath: '/Users/raj/fresh-pull/desktop-node/id.json',
     //   })
     //   .then(console.log);
+    window.main
+      .checkWalletExists({
+        taskId: 'sample-task-id',
+      })
+      .then(console.log);
     // window.main
-    //   .createWallet({
-    //     taskId: 'GsNf1k1kprYuduVyT3mxiCyY8qDirZiFLkuQyqhke6NU',
+    //   .createStakingWallet({
+    //     taskId: 'sample-task-id',
     //   })
     //   .then(console.log);
     // window.main.delegateStake({
@@ -28,11 +33,21 @@ const SourceCodeView = ({
     //   stakeAmount: 50,
     // });
     // window.main
-    //   .startTask({
-    //     taskAccountPubKey: '8AQp5xko5C2VDBM9mdq5P2BfP2ix7YTWG3wQh72oDvra',
+    //   .stopTask({
+    //     taskAccountPubKey: 'CcfAB4AmHrQbqEgSKEmgL6ta7nVww6mccDiUiJfQjxUL',
     //   })
     //   .then(console.log);
-    window.main.getTasks().then(console.log);
+    // window.main
+    //   .rewardWallet({
+    //     available_balances: {
+    //       BtAMrFLopE5EePTZC4taRfitWwBntyBJXhefWnnhDfuv: 30000000000,
+    //       FieNuC7qwzF2Kf2LgcRnsedVyM6FThotzGKKkj6Jjkc9: 30000000000,
+    //       '7hJTZB8iFLp4cLj3vDVjXYqRoEejwW18gYCNksqkcTNc': 80000000000,
+    //     },
+    //     taskAccountPubKey: 'sample-task-id',
+    //   })
+    //   .then(console.log);
+    //window.main.getTasks().then(console.log);
   }, []);
 
   return (

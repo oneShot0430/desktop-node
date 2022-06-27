@@ -1,30 +1,13 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
 
-import { TaskData } from 'main/type/TaskData';
-import { Button } from 'webapp/components/ui/Button';
-import { Table } from 'webapp/components/ui/Table/Table';
-import { showModal } from 'webapp/store/actions/modal';
-
-import MyNodeTasksTable from './components/MyNodeTasksTable';
-import MyNodeToolbar from './components/MyNodeToolbar';
+import { Task } from 'webapp/@type/task';
+import { MyNodeTable } from 'webapp/components/MyNodeTable/MyNodeTable';
 
 const MyNode = (): JSX.Element => {
-  const tableHeaders = [
-    'Start/Stop',
-    'TaskName & Start Time',
-    'Role',
-    'Creator',
-    'Earned',
-    'Stake',
-    'Status',
-    'Add/Withdraw',
-  ];
-
-  const tasks: TaskData[] = [
+  const tasks: Task[] = [
     {
-      taskName: '',
-      taskManager: '',
+      taskName: 'Name',
+      taskManager: 'Creator name',
       isWhitelisted: true,
       isActive: true,
       taskAuditProgram: '',
@@ -37,16 +20,17 @@ const MyNode = (): JSX.Element => {
       stakeList: null,
       isRunning: true,
       cronArray: null,
+      publicKey: 'sjisdhjsd',
     },
   ];
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   return (
     <div className="relative overflow-x-auto">
-      <Table tableHeaders={tableHeaders}>table</Table>
+      <MyNodeTable tasks={tasks} />
 
-      {/* <div className="mt-34.5">
+      {/* <div>
         <MyNodeTasksTable />
       </div> */}
     </div>

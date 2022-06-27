@@ -1,19 +1,23 @@
-import createWallet from './createWallet';
+import checkWalletExists from './checkWalletExists';
+import createStakingWallet from './createMainWallet';
 import delegateStake from './delegateStake';
+import getEarnedRewardByNode from './getEarnedRewardByNode';
 import getTaskInfo from './getTaskInfo';
 import getTasks from './getTasks';
 import getTaskSource from './getTaskSource';
 import startTask from './startTask';
 import stopTask from './stopTask';
-import storeWallet from './storeWallet';
+import storeMainWallet from './storeMainWallet';
 
 export default {
   getTasks,
   getTaskSource,
-  createWallet,
+  createStakingWallet,
   getTaskInfo,
   delegateStake,
   startTask,
   stopTask,
-  storeWallet,
+  storeMainWallet,
+  getEarnedRewardByNode,
+  checkWalletExists,
 };

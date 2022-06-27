@@ -16,7 +16,7 @@ export const BackButton = () => {
   };
 
   return (
-    <div className="flex items-center pt-[20px] pb-[30px]">
+    <div className="flex items-center pt-[20px] pb-[20px]">
       <Button
         onlyIcon
         icon={<BackIcon className="cursor-pointer" />}
