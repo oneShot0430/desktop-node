@@ -7,7 +7,7 @@ export type PropsType = {
 export const TableHeader = ({ tableHeaders }: PropsType) => {
   return (
     <thead className="pb-8 font-semibold">
-      <tr className="border-b-2">
+      <tr className="border-b-2 border-gray-500">
         {tableHeaders.map((headerText) => (
           <th
             key={headerText}

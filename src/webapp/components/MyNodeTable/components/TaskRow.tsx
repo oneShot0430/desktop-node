@@ -1,4 +1,5 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 
 import AddWithdrawIcon from 'assets/svgs/add-withdraw-icon.svg';
 import CodeIcon from 'assets/svgs/code-icon.svg';
@@ -7,16 +8,22 @@ import PlayIcon from 'assets/svgs/play-icon.svg';
 import { Task } from 'webapp/@type/task';
 import { Button } from 'webapp/components/ui/Button';
 import { TableRow } from 'webapp/components/ui/Table';
+import { showModal } from 'webapp/store/actions/modal';
+
+const TableCell = ({ children }: { children: React.ReactNode }) => (
+  <td className="pt-2 align-middle ">{children}</td>
+);
 
 export const TaskRow = ({ task }: { task: Task }) => {
   const { isRunning, taskName } = task;
+  const dispatch = useDispatch();
 
   return (
     <TableRow>
-      <td className="align-middle">
+      <TableCell>
         <Button onlyIcon icon={isRunning ? <PauseIcon /> : <PlayIcon />} />
-      </td>
-      <td className="align-middle">
+      </TableCell>
+      <TableCell>
         <div className="flex items-center justify-start gap-1">
           <CodeIcon />
           <div className="text-xs">
@@ -24,14 +31,18 @@ export const TaskRow = ({ task }: { task: Task }) => {
             <div className="text-finnieTeal">{'date tbd'}</div>
           </div>
         </div>
-      </td>
-      <td className="align-middle">{task.taskManager}</td>
-      <td className="align-middle">{task.totalBountyAmount}</td>
-      <td className="align-middle">{'TBD'}</td>
-      <td className="align-middle">{'TBD'}</td>
-      <td className="flex flex-col items-center justify-center">
-        <AddWithdrawIcon />
-      </td>
+      </TableCell>
+      <TableCell>{task.taskManager}</TableCell>
+      <TableCell>{task.totalBountyAmount}</TableCell>
+      <TableCell>{'TBD'}</TableCell>
+      <TableCell>{'TBD'}</TableCell>
+      <TableCell>
+        <Button
+          onClick={() => dispatch(showModal('EDIT_STAKE_AMOUNT'))}
+          onlyIcon
+          icon={<AddWithdrawIcon />}
+        />
+      </TableCell>
     </TableRow>
   );
 };
