@@ -1,6 +1,9 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 
+import { TaskData } from 'main/type/TaskData';
+import { Button } from 'webapp/components/ui/Button';
+import { Table } from 'webapp/components/ui/Table/Table';
 import { showModal } from 'webapp/store/actions/modal';
 
 import MyNodeTasksTable from './components/MyNodeTasksTable';
@@ -17,30 +20,32 @@ const MyNode = (): JSX.Element => {
     'Status',
     'Add/Withdraw',
   ];
+
+  const tasks: TaskData[] = [
+    {
+      taskName: '',
+      taskManager: '',
+      isWhitelisted: true,
+      isActive: true,
+      taskAuditProgram: '',
+      stakePotAccount: '',
+      totalBountyAmount: 0,
+      bountyAmountPerRound: 0,
+      status: null,
+      currentRound: 0,
+      availableBalances: null,
+      stakeList: null,
+      isRunning: true,
+      cronArray: null,
+    },
+  ];
+
   const dispatch = useDispatch();
 
   return (
     <div className="relative overflow-x-auto">
-      <table className="w-full text-[14px] text-left table-auto">
-        <thead className="pb-8 font-semibold">
-          <tr className="border-b-2">
-            {tableHeaders.map((headerText) => (
-              <th
-                key={headerText}
-                className="font-semibold leading-5 text-white racking-[0.03em] pb-4"
-              >
-                {headerText}
-              </th>
-            ))}
-          </tr>
-        </thead>
-      </table>
-      <button
-        onClick={() => dispatch(showModal('EDIT_STAKE_AMOUNT'))}
-        className="text-white"
-      >
-        Edit Stake Amount
-      </button>
+      <Table tableHeaders={tableHeaders}>table</Table>
+
       {/* <div className="mt-34.5">
         <MyNodeTasksTable />
       </div> */}

@@ -7,7 +7,7 @@ export interface TaskData {
   stakePotAccount: string;
   totalBountyAmount: number;
   bountyAmountPerRound: number;
-  status: unknown;
+  status: any;
   currentRound: number;
   availableBalances: any;
   stakeList: unknown;

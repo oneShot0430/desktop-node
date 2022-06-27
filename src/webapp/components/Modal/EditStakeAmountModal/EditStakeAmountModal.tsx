@@ -1,6 +1,6 @@
 import React, { useReducer, useCallback } from 'react';
 
-import { Button } from 'webapp/ui/Button';
+import { Button } from 'webapp/components/ui/Button';
 
 // import { useAppSelector } from 'webapp/hooks/reduxHook';
 

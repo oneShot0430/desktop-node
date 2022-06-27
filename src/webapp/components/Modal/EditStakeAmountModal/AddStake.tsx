@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Button } from 'webapp/ui/Button';
+import { Button } from 'webapp/components/ui/Button';
 
 export type PropsType = { balance: number };
 
