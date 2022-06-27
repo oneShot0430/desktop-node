@@ -10,7 +10,7 @@ export interface TaskData {
   status: any;
   currentRound: number;
   availableBalances: any;
-  stakeList: unknown;
+  stakeList: Record<string, number>;
   isRunning: boolean;
   cronArray: any;
 }

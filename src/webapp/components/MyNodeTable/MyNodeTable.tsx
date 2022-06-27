@@ -8,6 +8,8 @@ import { TaskRow } from './components/TaskRow';
 
 type PropsType = {
   tasks: Task[];
+  isLoading?: boolean;
+  error?: string;
 };
 
 const tableHeaders = [
@@ -20,9 +22,9 @@ const tableHeaders = [
   'Add/Withdraw',
 ];
 
-export const MyNodeTable = ({ tasks }: PropsType) => {
+export const MyNodeTable = ({ tasks = [], isLoading, error }: PropsType) => {
   return (
-    <Table tableHeaders={tableHeaders}>
+    <Table tableHeaders={tableHeaders} isLoading={isLoading} error={error}>
       {tasks.map((task) => (
         <TaskRow key={task.publicKey} task={task} />
       ))}

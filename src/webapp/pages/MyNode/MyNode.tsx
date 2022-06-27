@@ -1,34 +1,15 @@
 import React from 'react';
+import { useQuery } from 'react-query';
 
-import { Task } from 'webapp/@type/task';
 import { MyNodeTable } from 'webapp/components/MyNodeTable/MyNodeTable';
+import { fetchTasks } from 'webapp/services/api';
 
 const MyNode = (): JSX.Element => {
-  const tasks: Task[] = [
-    {
-      taskName: 'Name',
-      taskManager: 'Creator name',
-      isWhitelisted: true,
-      isActive: true,
-      taskAuditProgram: '',
-      stakePotAccount: '',
-      totalBountyAmount: 0,
-      bountyAmountPerRound: 0,
-      status: null,
-      currentRound: 0,
-      availableBalances: null,
-      stakeList: null,
-      isRunning: true,
-      cronArray: null,
-      publicKey: 'sjisdhjsd',
-    },
-  ];
-
-  // const dispatch = useDispatch();
+  const { isLoading, data, error } = useQuery('tasks', fetchTasks);
 
   return (
     <div className="relative overflow-x-auto">
-      <MyNodeTable tasks={tasks} />
+      <MyNodeTable tasks={data} isLoading={isLoading} error={error as string} />
 
       {/* <div>
         <MyNodeTasksTable />

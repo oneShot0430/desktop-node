@@ -1,4 +1,5 @@
 import React from 'react';
+import { useQuery } from 'react-query';
 import { useDispatch } from 'react-redux';
 
 import AddWithdrawIcon from 'assets/svgs/add-withdraw-icon.svg';
@@ -8,6 +9,7 @@ import PlayIcon from 'assets/svgs/play-icon.svg';
 import { Task } from 'webapp/@type/task';
 import { Button } from 'webapp/components/ui/Button';
 import { TableRow } from 'webapp/components/ui/Table';
+import { getRewardEarned } from 'webapp/services/api';
 import { showModal } from 'webapp/store/actions/modal';
 
 const TableCell = ({ children }: { children: React.ReactNode }) => (
@@ -15,11 +17,15 @@ const TableCell = ({ children }: { children: React.ReactNode }) => (
 );
 
 export const TaskRow = ({ task }: { task: Task }) => {
-  const { isRunning, taskName } = task;
   const dispatch = useDispatch();
+  const { taskName, taskManager, isRunning, publicKey, availableBalances } =
+    task;
+  const { data: earnedReward } = useQuery(`rewardEarned${publicKey}`, () =>
+    getRewardEarned(publicKey, availableBalances)
+  );
 
   return (
-    <TableRow>
+    <TableRow key={publicKey}>
       <TableCell>
         <Button onlyIcon icon={isRunning ? <PauseIcon /> : <PlayIcon />} />
       </TableCell>
@@ -32,8 +38,8 @@ export const TaskRow = ({ task }: { task: Task }) => {
           </div>
         </div>
       </TableCell>
-      <TableCell>{task.taskManager}</TableCell>
-      <TableCell>{task.totalBountyAmount}</TableCell>
+      <TableCell>{taskManager}</TableCell>
+      <TableCell>{earnedReward}</TableCell>
       <TableCell>{'TBD'}</TableCell>
       <TableCell>{'TBD'}</TableCell>
       <TableCell>

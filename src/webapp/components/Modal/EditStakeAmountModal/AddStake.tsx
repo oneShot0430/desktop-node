@@ -9,7 +9,6 @@ export const AddStake = ({ balance }: PropsType) => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (inputValue > balance) {
-      // TODO: display error
       console.warn('Exceded balance');
     }
 
@@ -27,11 +26,12 @@ export const AddStake = ({ balance }: PropsType) => {
       </div>
       <div className="mb-3">
         <input
+          placeholder="ahaahagh"
           min="0"
           pattern="[0-9]+"
           type="number"
           value={inputValue}
-          className="w-[240px] h-[46px] bg-gray-200 border-b-finnieBlue border-2 text-4xl text-right koii_input"
+          className="w-[240px] h-[46px] outline-none bg-gray-200 border-b-finnieBlue border-2 text-4xl text-right koii_input"
           onChange={handleInputChange}
         />
       </div>
