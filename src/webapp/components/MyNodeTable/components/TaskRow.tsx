@@ -39,7 +39,9 @@ export const TaskRow = ({ task }: { task: Task }) => {
           </div>
         </div>
       </TableCell>
-      <TableCell>{`${taskManager.substring(0, 6)}...`}</TableCell>
+      <TableCell>
+        <span title={taskManager}>{`${taskManager.substring(0, 6)}...`}</span>
+      </TableCell>
       <TableCell>{earnedReward}</TableCell>
       <TableCell>{'TBD'}</TableCell>
       <TableCell>
