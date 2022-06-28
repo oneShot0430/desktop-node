@@ -8,13 +8,12 @@ import PauseIcon from 'assets/svgs/pause-icon.svg';
 import PlayIcon from 'assets/svgs/play-icon.svg';
 import { Task } from 'webapp/@type/task';
 import { Button } from 'webapp/components/ui/Button';
-import { TableRow } from 'webapp/components/ui/Table';
+import { TableRow, TableCell } from 'webapp/components/ui/Table';
 import { getRewardEarned } from 'webapp/services/api';
+import { TaskService } from 'webapp/services/taskService';
 import { showModal } from 'webapp/store/actions/modal';
 
-const TableCell = ({ children }: { children: React.ReactNode }) => (
-  <td className="pt-2 align-middle ">{children}</td>
-);
+import { NodeStatus } from './NodeStatus';
 
 export const TaskRow = ({ task }: { task: Task }) => {
   const dispatch = useDispatch();
@@ -23,6 +22,8 @@ export const TaskRow = ({ task }: { task: Task }) => {
   const { data: earnedReward } = useQuery(`rewardEarned${publicKey}`, () =>
     getRewardEarned(publicKey, availableBalances)
   );
+
+  const nodeStatus = TaskService.getStatus(task);
 
   return (
     <TableRow key={publicKey}>
@@ -38,10 +39,12 @@ export const TaskRow = ({ task }: { task: Task }) => {
           </div>
         </div>
       </TableCell>
-      <TableCell>{taskManager}</TableCell>
+      <TableCell>{`${taskManager.substring(0, 6)}...`}</TableCell>
       <TableCell>{earnedReward}</TableCell>
       <TableCell>{'TBD'}</TableCell>
-      <TableCell>{'TBD'}</TableCell>
+      <TableCell>
+        <NodeStatus status={nodeStatus} />
+      </TableCell>
       <TableCell>
         <Button
           onClick={() => dispatch(showModal('EDIT_STAKE_AMOUNT'))}
