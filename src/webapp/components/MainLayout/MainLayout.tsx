@@ -17,6 +17,19 @@ const MainLayout = ({ children }: MainLayoutProps): JSX.Element => {
     (state) => state.taskInspector.isShown
   );
 
+  window.main.mainAccountPubKey().then(console.log);
+  // window.main
+  //   .checkWalletExists({
+  //     taskId: 'sample-task-id',
+  //   })
+  //   .then(console.log);
+
+  // window.main
+  //   .storeMainWallet({
+  //     walletPath: '/Users/raj/fresh-pull/desktop-node/id.json',
+  //   })
+  //   .then(console.log);
+
   return (
     <div>
       <Modal />

@@ -28,6 +28,10 @@ const initHandlers = (): void => {
     config.endpoints.CHECK_WALLET_EXISTS,
     controllers.checkWalletExists
   );
+  ipcMain.handle(
+    config.endpoints.MAIN_ACCOUNT_PUBKEY,
+    controllers.mainAccountPubKey
+  );
 };
 
 export default errorHandler(initHandlers, 'Init handlers error');
