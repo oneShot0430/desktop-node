@@ -1,43 +1,45 @@
 import React from 'react';
-// import { useDispatch } from 'react-redux';
+import { useQuery } from 'react-query';
 
-// import { showModal } from 'webapp/store/actions/modal';
-
-import MyNodeTasksTable from './components/MyNodeTasksTable';
-// import MyNodeToolbar from './components/MyNodeToolbar';
+import { MyNodeTable } from 'webapp/components/MyNodeTable/MyNodeTable';
+import { fetchTasks } from 'webapp/services/api';
 
 const MyNode = (): JSX.Element => {
-  // const tableHeaders = [
-  //   'Start/Stop',
-  //   'TaskName & Start Time',
-  //   'Role',
-  //   'Creator',
-  //   'Earned',
-  //   'Stake',
-  //   'Status',
-  //   'Add/Withdraw',
-  // ];
-  // const dispatch = useDispatch();
+  const { isLoading, data: tasks, error } = useQuery('tasks', fetchTasks);
+
+  const tasksMock = [
+    {
+      publicKey: 'CnPVv3ptH7B28eYetVVQF5CBdbSwpiNsmraDjcoNpfoU',
+      taskName: 'test',
+      taskManager: 'BMfzW8e1rftddiWCmmunMbFusS3Ecc3M6mZKvAW98vRf',
+      isWhitelisted: false,
+      isActive: true,
+      taskAuditProgram: 'ywK1Wmilq2Z3Ykwqa0QWNvkyTOgPRSOTpp-u9Y1QNLA',
+      stakePotAccount: 'HPoJ9Mhwm29F3RrzNWE8utXBi7jVPUKMpVYZs9a2mVm5',
+      totalBountyAmount: 20000000000,
+      bountyAmountPerRound: 5000000000,
+      status: {
+        AcceptingSubmissions: 100000,
+      },
+      currentRound: 0,
+      availableBalances: {},
+      stakeList: {},
+      isRunning: false,
+      cronArray: [''],
+    },
+  ];
 
   return (
     <div className="relative overflow-x-auto">
-      {/*<table className="w-full text-[14px] text-left table-auto">*/}
-      {/*  <thead className="pb-8 font-semibold">*/}
-      {/*    <tr className="border-b-2">*/}
-      {/*      {tableHeaders.map((headerText) => (*/}
-      {/*        <th*/}
-      {/*          key={headerText}*/}
-      {/*          className="font-semibold leading-5 text-white racking-[0.03em] pb-4"*/}
-      {/*        >*/}
-      {/*          {headerText}*/}
-      {/*        </th>*/}
-      {/*      ))}*/}
-      {/*    </tr>*/}
-      {/*  </thead>*/}
-      {/*</table>*/}
-      <div>
+      <MyNodeTable
+        tasks={tasksMock}
+        isLoading={isLoading}
+        error={error as string}
+      />
+
+      {/* <div>
         <MyNodeTasksTable />
-      </div>
+      </div> */}
     </div>
   );
 };

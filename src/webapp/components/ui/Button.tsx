@@ -1,5 +1,4 @@
 import * as React from 'react';
-// import { twMerge } from 'tailwind-merge';
 
 type ButtonVariants = 'primary' | 'danger';
 
@@ -20,28 +19,25 @@ export const Button = ({
   onlyIcon,
   ...rest
 }: ButtonProps) => {
-  const getButtonColors = React.useCallback(
-    (variant: ButtonVariants) => {
-      switch (variant) {
-        case 'primary':
-          return {
-            bg: 'finnieBlue-light-secondary',
-            text: 'white',
-          };
-        case 'danger':
-          return {
-            bg: 'finnieRed',
-            text: 'finnieBlue-light-secondary',
-          };
-        default:
-          return {
-            bg: 'finnieBlue-light-secondary',
-            text: 'white',
-          };
-      }
-    },
-    [variant]
-  );
+  const getButtonColors = (variant: ButtonVariants) => {
+    switch (variant) {
+      case 'primary':
+        return {
+          bg: 'finnieBlue-light-secondary',
+          text: 'white',
+        };
+      case 'danger':
+        return {
+          bg: 'finnieRed',
+          text: 'finnieBlue-light-secondary',
+        };
+      default:
+        return {
+          bg: 'finnieBlue-light-secondary',
+          text: 'white',
+        };
+    }
+  };
 
   if (onlyIcon) {
     return (

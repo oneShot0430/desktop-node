@@ -43,18 +43,11 @@ const ModalTaskInspector = (): JSX.Element => {
     return () => document.removeEventListener('mousedown', handleClickOutSide);
   }, [modalRef, isShowingWidthdraw]);
 
-  const showWithdraw = () =>
-    dispatch(
-      showModal('WITHDRAW_STAKE', {
-        name: taskInfo.taskName,
-        creator: taskInfo.taskManager,
-        rewardEarned: 0, //taskInfo.rewardEarned, FIXME
-      })
-    );
+  const showWithdraw = () => dispatch(showModal('WITHDRAW_STAKE', taskInfo));
 
   return (
     <>
-      <div className="z-20 absolute top-0 left-0 w-screen h-screen flex items-center justify-center bg-black bg-opacity-40">
+      <div className="absolute top-0 left-0 z-20 flex items-center justify-center w-screen h-screen bg-black bg-opacity-40">
         <div
           ref={modalRef}
           className={clsx(
@@ -73,7 +66,7 @@ const ModalTaskInspector = (): JSX.Element => {
             <CloseIcon
               data-testid="close-modal-button"
               onClick={close}
-              className="w-6 h-6 absolute top-2 right-2 cursor-pointer"
+              className="absolute w-6 h-6 cursor-pointer top-2 right-2"
             />
             <div className="flex h-4 w-41.25 justify-between text-white text-xs mb-8">
               <div

@@ -1,5 +1,7 @@
 import { isNil, max, min, sum } from 'lodash';
 
+import { Task as TaskRaw } from 'main/type/TaskData';
+
 import { Task, TaskStatus } from '../@type/task';
 
 export class TaskService {
@@ -28,6 +30,10 @@ export class TaskService {
       return TaskStatus.ACCEPTING_SUBMISSIONS;
     if (!isNil(task.status['Voting'])) return TaskStatus.VOTING;
     if (!isNil(task.status['Completed'])) return TaskStatus.COMPLETED;
+  }
+
+  static parseTask({ data, publicKey }: TaskRaw): Task {
+    return { publicKey, ...data };
   }
 }
 
