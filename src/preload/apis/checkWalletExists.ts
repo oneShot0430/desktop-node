@@ -1,9 +1,8 @@
 import config from 'config';
+import { CheckWalletExistsParameters, CheckWalletExistsResponse } from 'models';
 import sendMessage from 'preload/sendMessage';
 
-interface checkWalletParam {
-  taskId: string;
-}
-
-export default (payload: checkWalletParam): Promise<unknown> =>
+export default (
+  payload: CheckWalletExistsParameters
+): Promise<CheckWalletExistsResponse> =>
   sendMessage(config.endpoints.CHECK_WALLET_EXISTS, payload);
