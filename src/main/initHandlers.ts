@@ -29,8 +29,8 @@ const initHandlers = (): void => {
     controllers.checkWalletExists
   );
   ipcMain.handle(
-    config.endpoints.MAIN_ACCOUNT_PUBKEY,
-    controllers.mainAccountPubKey
+    config.endpoints.GET_MAIN_ACCOUNT_PUBKEY,
+    controllers.getMainAccountPubKey
   );
 };
 
