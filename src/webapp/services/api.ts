@@ -1,8 +1,8 @@
-import { parseTask } from './api-utils';
+import { TaskService } from './taskService';
 
 export const fetchTasks = async () => {
   const tasks = await window.main.getTasks();
-  return tasks.map(parseTask);
+  return tasks.map(TaskService.parseTask);
 };
 
 export const getRewardEarned = async (
