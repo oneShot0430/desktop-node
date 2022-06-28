@@ -9,8 +9,8 @@ type ModalWithDrawStakeProps = {
 const ModalWithdrawStake = ({
   close,
 }: ModalWithDrawStakeProps): JSX.Element => {
-  const { name, creator, rewardEarned } = useAppSelector(
-    (state) => state.modal.modalData.taskInfo
+  const { taskName, taskManager } = useAppSelector(
+    (state) => state.modal.modalData.task
   );
 
   return (
@@ -22,10 +22,10 @@ const ModalWithdrawStake = ({
         Are you sure you want to withdraw your stake from this task? You can’t
         earn any rewards if you unstake your tokens.
       </div>
-      <div className="font-semibold mb-1 leading-7">{name}</div>
-      <div className="font-normal mb-2.5">{creator}</div>
+      <div className="mb-1 font-semibold leading-7">{taskName}</div>
+      <div className="font-normal mb-2.5">{taskManager}</div>
       <div className="font-normal w-128 mb-6.25">
-        You’ve earned {rewardEarned} KOII tokens from this task so far.
+        You’ve earned {'TBD'} KOII tokens from this task so far.
       </div>
 
       <div className="flex justify-between w-102.75">

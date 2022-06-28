@@ -25,8 +25,14 @@ const MyNodeTaskRow = ({
   const [rewardEarned, setRewardEarned] = useState(0);
 
   useEffect(() => {
-    //TODO:  GET REWARD FROM API
-    setRewardEarned(0);
+    window.main
+      .getEarnedRewardByNode({
+        taskAccountPubKey: publicKey,
+        available_balances: task.availableBalances,
+      })
+      .then((rewardEarned) => {
+        setRewardEarned(rewardEarned);
+      });
   }, []);
 
   const myStake = TaskService.getMyStake(task);
@@ -73,15 +79,7 @@ const MyNodeTaskRow = ({
         </div>
         <div className="col-span-1 justify-self-end">
           <button
-            onClick={() =>
-              dispatch(
-                showModal('WITHDRAW_STAKE', {
-                  name: taskName,
-                  creator: taskManager,
-                  rewardEarned,
-                })
-              )
-            }
+            onClick={() => dispatch(showModal('EDIT_STAKE_AMOUNT'))}
             className="bg-white w-24 h-10 finnie-border-blue rounded-finnie shadow-md font-semibold text-xs tracking-finnieSpacing-wide"
           >
             Withdraw Stake

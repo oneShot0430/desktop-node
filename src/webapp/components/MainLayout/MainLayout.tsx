@@ -22,12 +22,14 @@ const MainLayout = ({ children }: MainLayoutProps): JSX.Element => {
       <Modal />
       {showTaskInspector && <ModalTaskInspect />}
       <Header />
-      <main className="pt-[64px] min-h-screen bg-gradient-to-b from-finnieBlue-dark-secondary to-finnieBlue">
-        <div className="px-4 mx-auto">
+      <main className="pt-[64px] min-h-screen bg-gradient-to-b from-finnieBlue-dark-secondary to-finnieBlue flex flex-col ">
+        <div className="px-4 mx-auto w-[100%]">
           <BackButton />
+        </div>
+        <div className="px-4 mx-auto main-bg h-[100%] pb-[24px] pt-3 w-[100%] flex-grow">
           <div className="flex">
             <Sidebar />
-            {children}
+            <div className="w-[100%]">{children}</div>
           </div>
         </div>
       </main>

@@ -12,7 +12,9 @@ export interface TaskData {
   stakePotAccount: string;
   totalBountyAmount: number;
   bountyAmountPerRound: number;
-  status: Record<'AcceptingSubmissions' | 'Voting' | 'Completed', number>;
+  status: Partial<
+    Record<'AcceptingSubmissions' | 'Voting' | 'Completed', number>
+  >;
   currentRound: number;
   availableBalances: Record<string, number>;
   stakeList: Record<string, number>;
