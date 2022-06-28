@@ -2,6 +2,7 @@ import checkWalletExists from './checkWalletExists';
 import createStakingWallet from './createMainWallet';
 import delegateStake from './delegateStake';
 import getEarnedRewardByNode from './getEarnedRewardByNode';
+import getMainAccountPubKey from './getMainAccountPubKey';
 import getTaskInfo from './getTaskInfo';
 import getTasks from './getTasks';
 import getTaskSource from './getTaskSource';
@@ -20,4 +21,5 @@ export default {
   storeMainWallet,
   getEarnedRewardByNode,
   checkWalletExists,
+  getMainAccountPubKey,
 };
