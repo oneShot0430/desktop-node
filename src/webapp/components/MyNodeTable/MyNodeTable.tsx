@@ -19,7 +19,7 @@ const tableHeaders = [
   'Earned',
   'Stake',
   'Status',
-  'Add/Withdraw',
+  'Actions',
 ];
 
 export const MyNodeTable = ({ tasks = [], isLoading, error }: PropsType) => {
