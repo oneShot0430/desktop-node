@@ -2,8 +2,8 @@ import React, { useReducer, useCallback } from 'react';
 
 import { Button } from 'webapp/components/ui/Button';
 
-// import { useAppSelector } from 'webapp/hooks/reduxHook';
-
+import { useAppSelector } from '../../../hooks/reduxHook';
+import PrimitiveOnboarding from '../../PrimitiveOnboarding';
 import { ModalTopBar } from '../ModalTopBar';
 
 import { AddStake } from './AddStake';
@@ -29,25 +29,17 @@ function reducer(
 }
 
 export const EditStakeAmountModal = ({ onClose }: PropsType) => {
-  // const { name, creator, rewardEarned } = useAppSelector(
-  //   (state) => state.modal.modalData.taskInfo
-  // );
+  const task = useAppSelector((state) => state.modal.modalData.task);
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const {
-    taskName,
-    taskCreator,
-    stakedTokensAmount,
-    earnedKoiiAmount,
-    balance,
-  } = {
-    taskName: 'Tack Name',
-    taskCreator: 'task Creator',
+  const { stakedTokensAmount, earnedKoiiAmount, balance } = {
     stakedTokensAmount: 100000,
     earnedKoiiAmount: 10000,
     balance: 2330000,
   };
+
+  const { taskName, taskManager } = task;
 
   const getTitle = useCallback(() => {
     switch (state.show) {
@@ -79,7 +71,7 @@ export const EditStakeAmountModal = ({ onClose }: PropsType) => {
         <div className="flex flex-col justify-center pt-10 text-finnieBlue-dark">
           <div className="mb-[28px] text-lg">
             <div className="font-semibold">{taskName}</div>
-            <div>{taskCreator}</div>
+            <div>{taskManager}</div>
           </div>
 
           <div className="flex flex-col justify-center mb-[40px] text-base">
@@ -99,6 +91,9 @@ export const EditStakeAmountModal = ({ onClose }: PropsType) => {
               onClick={() => dispatch({ type: 'stake' })}
               label="Add More Stake"
             />
+          </div>
+          <div className="pt-4">
+            <PrimitiveOnboarding taskId={task.publicKey} />
           </div>
         </div>
       )}

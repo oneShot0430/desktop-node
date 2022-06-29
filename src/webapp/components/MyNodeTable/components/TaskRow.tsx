@@ -49,7 +49,7 @@ export const TaskRow = ({ task }: { task: Task }) => {
       </TableCell>
       <TableCell>
         <Button
-          onClick={() => dispatch(showModal('EDIT_STAKE_AMOUNT'))}
+          onClick={() => dispatch(showModal('EDIT_STAKE_AMOUNT', task))}
           onlyIcon
           icon={<AddWithdrawIcon />}
         />
