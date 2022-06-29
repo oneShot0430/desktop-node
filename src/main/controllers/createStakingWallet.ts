@@ -36,7 +36,7 @@ const createWallet = async (
           }
         }
       );
-      // namespaceInstance.redisSet(taskId, filePath);
+      // namespaceInstance.storeSet(taskId, filePath);
       return wallet.publicKey.toBase58();
     }
   } catch (err) {

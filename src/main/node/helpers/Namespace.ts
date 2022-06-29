@@ -11,9 +11,12 @@ import {
   SYSVAR_CLOCK_PUBKEY,
 } from '@_koi/web3.js';
 import axios from 'axios';
+import leveldown from 'leveldown';
+import levelup from 'levelup';
 import * as redis from 'redis';
 
 import config from 'config';
+// import store from 'store2'
 
 // eslint-disable-next-line
 const BufferLayout = require('@solana/buffer-layout');
@@ -74,6 +77,7 @@ class Namespace {
   taskData: TaskData;
   #mainSystemAccount: Keypair;
   mainSystemAccountPubKey: PublicKey;
+  db: any;
   constructor(
     taskTxId: string,
     expressApp: any,
@@ -84,129 +88,163 @@ class Namespace {
     this.taskTxId = taskTxId;
     this.app = expressApp;
     if (operationMode === 'service') {
-      this.loadRedisClient();
+      // this.loadRedisClient();
     }
     this.#mainSystemAccount = mainSystemAccount;
     this.mainSystemAccountPubKey = mainSystemAccount.publicKey;
     this.taskData = taskData;
+    this.db = levelup(leveldown('./desktopKoiiNodeDB'));
   }
 
   /**
-   * Namespace wrapper of redisGetAsync
+   * Namespace wrapper of storeGetAsync
    * @param {string} key // Path to get
    * @returns {Promise<*>} Promise containing data
    */
-  async redisGet(key: string): Promise<string> {
-    if (this.#redisClient === undefined) throw 'Redis not connected';
-    else
-      try {
-        const response = await this.#redisClient.get(this.taskTxId + key);
-        return response;
-      } catch (e) {
+  async storeGet(key: string): Promise<string> {
+    try {
+      const response = await this.db.get(this.taskTxId + key);
+      return response.toString();
+    } catch (e) {
+      if (e.type == 'NotFoundError') {
+        console.error(key, 'Not found');
+      } else {
         console.error(e);
-        throw e;
       }
+      return null;
+    }
   }
   /**
-   *
-   * @param key key od list to push
-   * @param value element to push in List
-   * @returns Element
-   */
-  async redisLPush(key: string, value: any): Promise<any> {
-    if (this.#redisClient === undefined) throw 'Redis not connected';
-    else
-      try {
-        const response = await this.#redisClient.lPush(
-          this.taskTxId + key,
-          value
-        );
-        return response;
-      } catch (e) {
-        console.error(e);
-        throw e;
-      }
-  }
-
-  /**
-   *
-   * @param key key of list
-   * @param value element to delete
-   * @param occurance number of occurances to delete
-   * @returns confirmation of deleting the element from the list
-   */
-  async redisLRem(key: string, occurance: number, value: any): Promise<any> {
-    if (this.#redisClient === undefined) throw 'Redis not connected';
-    else
-      try {
-        const response = await this.#redisClient.LREM(
-          this.taskTxId + key,
-          occurance,
-          value
-        );
-        return response;
-      } catch (e) {
-        console.error(e);
-        throw e;
-      }
-  }
-  /**
-   *
-   * @param key Key of list to get elements from
-   * @param start start Index
-   * @param stop End index
-   * @returns Array of elements
-   */
-  async redisLRange(
-    key: string,
-    start: number,
-    stop: number
-  ): Promise<Array<any>> {
-    if (this.#redisClient === undefined) throw 'Redis not connected';
-    else
-      try {
-        const response = await this.#redisClient.lRange(
-          this.taskTxId + key,
-          start,
-          stop
-        );
-        return response;
-      } catch (e) {
-        console.error(e);
-        throw e;
-      }
-  }
-  async redisLLen(key: string): Promise<string> {
-    if (this.#redisClient === undefined) throw 'Redis not connected';
-    else
-      try {
-        const response = await this.#redisClient.lLen(this.taskTxId + key);
-        return response;
-      } catch (e) {
-        console.error(e);
-        throw e;
-      }
-  }
-  /**
-   * Namespace wrapper over redisSetAsync
+   * Namespace wrapper over storeSetAsync
    * @param {string} key Path to set
    * @param {*} value Data to set
    * @returns {Promise<void>}
    */
-  async redisSet(key: string, value: string): Promise<any> {
-    if (this.#redisClient === undefined) throw 'Redis not connected';
-    else
-      try {
-        const response = await this.#redisClient.set(
-          this.taskTxId + key,
-          value
-        );
-        return response;
-      } catch (e) {
-        console.error(e);
-        throw e;
-      }
+  async storeSet(key: string, value: string): Promise<any> {
+    try {
+      const response = await this.db.put(this.taskTxId + key, value);
+      return response;
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
   }
+  // /**
+  //  * Namespace wrapper of storeGetAsync
+  //  * @param {string} key // Path to get
+  //  * @returns {Promise<*>} Promise containing data
+  //  */
+  // async storeGet(key: string): Promise<string> {
+  //   if (this.#redisClient === undefined) throw 'Redis not connected';
+  //   else
+  //     try {
+  //       const response = await this.#redisClient.get(this.taskTxId + key);
+  //       return response;
+  //     } catch (e) {
+  //       console.error(e);
+  //       throw e;
+  //     }
+  // }
+  // /**
+  //  *
+  //  * @param key key od list to push
+  //  * @param value element to push in List
+  //  * @returns Element
+  //  */
+  // async redisLPush(key: string, value: any): Promise<any> {
+  //   if (this.#redisClient === undefined) throw 'Redis not connected';
+  //   else
+  //     try {
+  //       const response = await this.#redisClient.lPush(
+  //         this.taskTxId + key,
+  //         value
+  //       );
+  //       return response;
+  //     } catch (e) {
+  //       console.error(e);
+  //       throw e;
+  //     }
+  // }
+
+  // /**
+  //  *
+  //  * @param key key of list
+  //  * @param value element to delete
+  //  * @param occurance number of occurances to delete
+  //  * @returns confirmation of deleting the element from the list
+  //  */
+  // async redisLRem(key: string, occurance: number, value: any): Promise<any> {
+  //   if (this.#redisClient === undefined) throw 'Redis not connected';
+  //   else
+  //     try {
+  //       const response = await this.#redisClient.LREM(
+  //         this.taskTxId + key,
+  //         occurance,
+  //         value
+  //       );
+  //       return response;
+  //     } catch (e) {
+  //       console.error(e);
+  //       throw e;
+  //     }
+  // }
+  // /**
+  //  *
+  //  * @param key Key of list to get elements from
+  //  * @param start start Index
+  //  * @param stop End index
+  //  * @returns Array of elements
+  //  */
+  // async redisLRange(
+  //   key: string,
+  //   start: number,
+  //   stop: number
+  // ): Promise<Array<any>> {
+  //   if (this.#redisClient === undefined) throw 'Redis not connected';
+  //   else
+  //     try {
+  //       const response = await this.#redisClient.lRange(
+  //         this.taskTxId + key,
+  //         start,
+  //         stop
+  //       );
+  //       return response;
+  //     } catch (e) {
+  //       console.error(e);
+  //       throw e;
+  //     }
+  // }
+  // async redisLLen(key: string): Promise<string> {
+  //   if (this.#redisClient === undefined) throw 'Redis not connected';
+  //   else
+  //     try {
+  //       const response = await this.#redisClient.lLen(this.taskTxId + key);
+  //       return response;
+  //     } catch (e) {
+  //       console.error(e);
+  //       throw e;
+  //     }
+  // }
+  // /**
+  //  * Namespace wrapper over storeSetAsync
+  //  * @param {string} key Path to set
+  //  * @param {*} value Data to set
+  //  * @returns {Promise<void>}
+  //  */
+  // async storeSet(key: string, value: string): Promise<any> {
+  //   if (this.#redisClient === undefined) throw 'Redis not connected';
+  //   else
+  //     try {
+  //       const response = await this.#redisClient.set(
+  //         this.taskTxId + key,
+  //         value
+  //       );
+  //       return response;
+  //     } catch (e) {
+  //       console.error(e);
+  //       throw e;
+  //     }
+  // }
 
   /**
    * Namespace wrapper over fsPromises methods
@@ -282,32 +320,32 @@ class Namespace {
   /**
    * Loads redis client
    */
-  loadRedisClient(redisConfig?: redisConfig): void {
-    const host =
-      redisConfig && redisConfig.redis_ip
-        ? redisConfig.redis_ip
-        : config.node.REDIS.IP;
-    const port =
-      redisConfig && redisConfig.redis_port
-        ? redisConfig.redis_port
-        : config.node.REDIS.PORT;
-    const password =
-      redisConfig && redisConfig.redis_password
-        ? redisConfig.redis_password
-        : '';
-    const username =
-      redisConfig && redisConfig.username
-        ? redisConfig.username
-        : process.env.REDIS_USERNAME;
-    if (!host || !port) throw Error('CANNOT READ REDIS IP OR PORT FROM ENV');
-    this.#redisClient = redis.createClient({
-      url: `redis://${username || ''}:${password}@${host}:${port}`,
-    });
-    this.#redisClient.connect();
-    this.#redisClient.on('error', function (error: any) {
-      console.error('redisClient ' + error);
-    });
-  }
+  // loadRedisClient(redisConfig?: redisConfig): void {
+  //   const host =
+  //     redisConfig && redisConfig.redis_ip
+  //       ? redisConfig.redis_ip
+  //       : config.node.REDIS.IP;
+  //   const port =
+  //     redisConfig && redisConfig.redis_port
+  //       ? redisConfig.redis_port
+  //       : config.node.REDIS.PORT;
+  //   const password =
+  //     redisConfig && redisConfig.redis_password
+  //       ? redisConfig.redis_password
+  //       : '';
+  //   const username =
+  //     redisConfig && redisConfig.username
+  //       ? redisConfig.username
+  //       : process.env.REDIS_USERNAME;
+  //   if (!host || !port) throw Error('CANNOT READ REDIS IP OR PORT FROM ENV');
+  //   this.#redisClient = redis.createClient({
+  //     url: `redis://${username || ''}:${password}@${host}:${port}`,
+  //   });
+  //   this.#redisClient.connect();
+  //   this.#redisClient.on('error', function (error: any) {
+  //     console.error('redisClient ' + error);
+  //   });
+  // }
   async submissionOnChain(
     connection: Connection,
     taskStateInfoKeypairPubKey: PublicKey,
@@ -438,7 +476,7 @@ async function getCacheNodes() {
   // Get nodes from cache
   let nodes;
   try {
-    nodes = JSON.parse(await namespaceInstance.redisGet('nodeRegistry'));
+    nodes = JSON.parse(await namespaceInstance.storeGet('nodeRegistry'));
     if (nodes === null) nodes = [];
   } catch (e) {
     console.error(e);
@@ -512,7 +550,7 @@ async function registerNodes(newNodes: any) {
 
   // Update registry
   console.log(`Registry now contains ${nodes.length} nodes`);
-  await namespaceInstance.redisSet('nodeRegistry', JSON.stringify(nodes));
+  await namespaceInstance.storeSet('nodeRegistry', JSON.stringify(nodes));
 
   return newNodes.length > 0;
 }

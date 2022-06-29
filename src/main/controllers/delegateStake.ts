@@ -45,7 +45,7 @@ const delegateStake = async (event: Event, payload: DelegateStakeParam) => {
   const { taskAccountPubKey, stakeAmount } = payload;
   //TODO: don't accept mainSystemAccount in param get the location from redis and load that
   // stakingAccKeypair Automatically get by the task_id
-  if (!(await namespaceInstance.redisGet('WALLET_LOCATION'))) {
+  if (!(await namespaceInstance.storeGet('WALLET_LOCATION'))) {
     throw Error('WALLET_LOCATION not specified');
   }
   let mainSystemAccount;
@@ -55,7 +55,7 @@ const delegateStake = async (event: Event, payload: DelegateStakeParam) => {
       Uint8Array.from(
         JSON.parse(
           fsSync.readFileSync(
-            await namespaceInstance.redisGet('WALLET_LOCATION'),
+            await namespaceInstance.storeGet('WALLET_LOCATION'),
             'utf-8'
           )
         )

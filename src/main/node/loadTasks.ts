@@ -24,14 +24,22 @@ const bufferlayout = require('buffer-layout')
 
 const OPERATION_MODE = 'service';
 const loadTasks = async (expressApp: Express) => {
-  if (!(await namespaceInstance.redisGet('WALLET_LOCATION'))) {
+  console.log(
+    'TESTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT',
+    await namespaceInstance.storeGet('WALLET_LOCATION')
+  );
+
+  // console.log("TESTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",await namespaceInstance.storeSet('WALLET_LOCATION',"ZZZZZZZZZZZZZZZZ"))
+
+  // console.log("TESTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",await namespaceInstance.storeGet('WALLET_LOCATION'))
+  if (!(await namespaceInstance.storeGet('WALLET_LOCATION'))) {
     throw Error('WALLET_LOCATION not specified');
   }
   const mainSystemAccount = Keypair.fromSecretKey(
     Uint8Array.from(
       JSON.parse(
         fsSync.readFileSync(
-          await namespaceInstance.redisGet('WALLET_LOCATION'),
+          await namespaceInstance.storeGet('WALLET_LOCATION'),
           'utf-8'
         )
       )
