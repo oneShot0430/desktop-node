@@ -24,14 +24,6 @@ const bufferlayout = require('buffer-layout')
 
 const OPERATION_MODE = 'service';
 const loadTasks = async (expressApp: Express) => {
-  console.log(
-    'TESTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT',
-    await namespaceInstance.storeGet('WALLET_LOCATION')
-  );
-
-  // console.log("TESTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",await namespaceInstance.storeSet('WALLET_LOCATION',"ZZZZZZZZZZZZZZZZ"))
-
-  // console.log("TESTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",await namespaceInstance.storeGet('WALLET_LOCATION'))
   if (!(await namespaceInstance.storeGet('WALLET_LOCATION'))) {
     throw Error('WALLET_LOCATION not specified');
   }
