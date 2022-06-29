@@ -55,7 +55,7 @@ class KoiiTasks {
     this.tasks.forEach((e) => {
       if (e.data.isRunning) runningTasks.push(e.publicKey);
     });
-    namespaceInstance.redisSet('runningTasks', JSON.stringify(runningTasks));
+    namespaceInstance.storeSet('runningTasks', JSON.stringify(runningTasks));
     return;
   }
   taskStopped(publicKey: string) {
@@ -77,7 +77,7 @@ class KoiiTasks {
   }
 
   private async getTasksStateFromRedis() {
-    const runningTasksStr: string = await namespaceInstance.redisGet(
+    const runningTasksStr: string = await namespaceInstance.storeGet(
       'runningTasks'
     );
     const runningTasks: Array<string> = runningTasksStr

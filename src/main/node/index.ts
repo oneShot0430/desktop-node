@@ -25,7 +25,7 @@ export default async (): Promise<any> => {
   // );
 
   try {
-    // await namespaceInstance.redisSet(
+    // await namespaceInstance.storeSet(
     //   'WALLET_LOCATION',
     //   '/home/ghazanfer/.config/solana/id.json'
     // );
@@ -39,7 +39,7 @@ export default async (): Promise<any> => {
     //     taskAccountPubKey: 'dGeVfkp1BcLDK13gxoNz5cy4aMMKXVsvSjDAhyLpPCR',
     //   })
     // }, 60000)
-    if (await namespaceInstance.redisGet('WALLET_LOCATION')) {
+    if (await namespaceInstance.storeGet('WALLET_LOCATION')) {
       /* Init Express app */
       const expressApp = await initExpressApp();
       /* Load tasks */

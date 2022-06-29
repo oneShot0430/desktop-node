@@ -48,7 +48,7 @@ export default async (newNodes: any[]) => {
 
   // Update registry
   console.log(`Registry now contains ${nodes.length} nodes`);
-  await namespaceInstance.redisSet('nodeRegistry', JSON.stringify(nodes));
+  await namespaceInstance.storeSet('nodeRegistry', JSON.stringify(nodes));
 
   return newNodes.length > 0;
 };
