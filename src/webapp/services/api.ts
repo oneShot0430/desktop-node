@@ -10,7 +10,6 @@ export const getRewardEarned = async (
   availableBalances: Record<string, number>
 ) => {
   const results = await window.main.getEarnedRewardByNode({
-    taskAccountPubKey: publicKey,
     available_balances: availableBalances,
   });
   return results;

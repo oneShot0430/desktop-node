@@ -20,7 +20,6 @@ const TaskDetailView = ({
   useEffect(() => {
     window.main
       .getEarnedRewardByNode({
-        taskAccountPubKey: task.publicKey,
         available_balances: task.availableBalances,
       })
       .then((rewardEarned) => setRewardEarned(rewardEarned));

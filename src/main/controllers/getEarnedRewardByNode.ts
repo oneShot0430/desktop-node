@@ -7,25 +7,19 @@ import mainErrorHandler from '../../utils/mainErrorHandler';
 
 interface rewardWalletPayload {
   available_balances: any;
-  taskAccountPubKey: string;
 }
 
 const rewardWallet = async (
   event: Event,
   payload: rewardWalletPayload
 ): Promise<unknown> => {
-  const { available_balances, taskAccountPubKey } = payload;
+  const { available_balances } = payload;
   console.log('IN THE API');
   let stakingAccKeypair;
   try {
     stakingAccKeypair = Keypair.fromSecretKey(
       Uint8Array.from(
-        JSON.parse(
-          fsSync.readFileSync(
-            `namespace/${taskAccountPubKey}/stakingWallet.json`,
-            'utf-8'
-          )
-        )
+        JSON.parse(fsSync.readFileSync('namespace/stakingWallet.json', 'utf-8'))
       )
     );
     const stakingPubkey = stakingAccKeypair.publicKey.toBase58();

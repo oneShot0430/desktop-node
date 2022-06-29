@@ -34,7 +34,7 @@ const SourceCodeView = ({
     //   })
     //   .then(console.log);
     // window.main
-    //   .rewardWallet({
+    //   .getEarnedRewardByNode({
     //     available_balances: {
     //       BtAMrFLopE5EePTZC4taRfitWwBntyBJXhefWnnhDfuv: 30000000000,
     //       FieNuC7qwzF2Kf2LgcRnsedVyM6FThotzGKKkj6Jjkc9: 30000000000,

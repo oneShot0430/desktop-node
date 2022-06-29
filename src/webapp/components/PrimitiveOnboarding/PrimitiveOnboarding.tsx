@@ -30,7 +30,7 @@ const PrimitiveOnboarding = ({ taskId }: Props): JSX.Element => {
     setMainWalletLoading(true);
     setStakingWalletLoading(true);
     window.main
-      .checkWalletExists({ taskId })
+      .checkWalletExists()
       .then(({ mainSystemAccount, stakingWallet }) => {
         setIsMainWalletSet(mainSystemAccount);
         setIsStakingWalletSet(stakingWallet);
@@ -49,7 +49,7 @@ const PrimitiveOnboarding = ({ taskId }: Props): JSX.Element => {
 
   const generateStakingWallet = () => {
     setStakingWalletLoading(true);
-    window.main.createStakingWallet({ taskId }).finally(() => {
+    window.main.createStakingWallet().finally(() => {
       checkWalletExists();
       setStakingWalletLoading(false);
     });
