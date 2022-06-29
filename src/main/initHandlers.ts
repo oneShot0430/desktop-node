@@ -32,6 +32,7 @@ const initHandlers = (): void => {
     config.endpoints.GET_MAIN_ACCOUNT_PUBKEY,
     controllers.getMainAccountPubKey
   );
+  ipcMain.handle(config.endpoints.GET_TASK_LOGS, controllers.getTaskLogs);
 };
 
 export default errorHandler(initHandlers, 'Init handlers error');
