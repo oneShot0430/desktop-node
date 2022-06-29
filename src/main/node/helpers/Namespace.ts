@@ -13,10 +13,9 @@ import {
 import axios from 'axios';
 import leveldown from 'leveldown';
 import levelup from 'levelup';
-import * as redis from 'redis';
+// import * as redis from 'redis';
 
 import config from 'config';
-// import store from 'store2'
 
 // eslint-disable-next-line
 const BufferLayout = require('@solana/buffer-layout');
