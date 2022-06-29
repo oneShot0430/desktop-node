@@ -7,23 +7,15 @@ import { namespaceInstance } from 'main/node/helpers/Namespace';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 
-interface createWalletParam {
-  taskId: string;
-}
-
-const createWallet = async (
-  event: Event,
-  payload: createWalletParam
-): Promise<string> => {
+const createWallet = async (event: Event): Promise<string> => {
   //async function createWallet(walletNameSample: string) {
-  const { taskId } = payload;
   //fs.mkdirSync(walletName);
   try {
-    const path = 'namespace/' + taskId;
+    const path = 'namespace/';
     if (!fs.existsSync(path)) {
       fs.mkdirSync(path);
       //const filePath = walletName + '/wallet.json';
-      const filePath = 'namespace/' + taskId + '/stakingWallet.json';
+      const filePath = 'namespace/' + '/stakingWallet.json';
       console.log('WALLET PATH', filePath);
       const wallet = Keypair.generate();
       console.log('WALLET', wallet.publicKey.toBase58());

@@ -18,11 +18,7 @@ const SourceCodeView = ({
     //     walletPath: '/Users/raj/fresh-pull/desktop-node/id.json',
     //   })
     //   .then(console.log);
-    window.main
-      .checkWalletExists({
-        taskId: 'sample-task-id',
-      })
-      .then(console.log);
+    //window.main.checkWalletExists().then(console.log);
     // window.main
     //   .createStakingWallet({
     //     taskId: 'sample-task-id',

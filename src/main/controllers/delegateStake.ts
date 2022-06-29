@@ -63,12 +63,7 @@ const delegateStake = async (event: Event, payload: DelegateStakeParam) => {
     );
     stakingAccKeypair = Keypair.fromSecretKey(
       Uint8Array.from(
-        JSON.parse(
-          fsSync.readFileSync(
-            `namespace/${taskAccountPubKey}/stakingWallet.json`,
-            'utf-8'
-          )
-        )
+        JSON.parse(fsSync.readFileSync('namespace/stakingWallet.json', 'utf-8'))
       )
     );
   } catch (e) {
