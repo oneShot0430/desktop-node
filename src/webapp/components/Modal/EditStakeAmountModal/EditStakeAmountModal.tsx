@@ -1,8 +1,11 @@
 import React, { useReducer, useCallback } from 'react';
+import { useQuery } from 'react-query';
 
 import { Button } from 'webapp/components/ui/Button';
+import { useAppSelector } from 'webapp/hooks/reduxHook';
+import { getMainAccountBalance, getRewardEarned } from 'webapp/services/api';
+import { TaskService } from 'webapp/services/taskService';
 
-import { useAppSelector } from '../../../hooks/reduxHook';
 import PrimitiveOnboarding from '../../PrimitiveOnboarding';
 import { ModalTopBar } from '../ModalTopBar';
 
@@ -33,11 +36,15 @@ export const EditStakeAmountModal = ({ onClose }: PropsType) => {
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const { stakedTokensAmount, earnedKoiiAmount, balance } = {
-    stakedTokensAmount: 100000,
-    earnedKoiiAmount: 10000,
-    balance: 2330000,
-  };
+  const stakedTokensAmount = TaskService.getMyStake(task);
+
+  const { data: earnedReward } = useQuery(`rewardEarned${task.publicKey}`, () =>
+    getRewardEarned(task.publicKey, task.availableBalances)
+  );
+
+  const { data: balance } = useQuery('mainAccountBalance', () =>
+    getMainAccountBalance()
+  );
 
   const { taskName, taskManager } = task;
 
@@ -64,9 +71,14 @@ export const EditStakeAmountModal = ({ onClose }: PropsType) => {
         showBackButton={showBackButton}
       />
       {state.show === 'withdraw' && (
-        <Withdraw stakedBalance={stakedTokensAmount} />
+        <Withdraw
+          stakedBalance={stakedTokensAmount}
+          publicKey={task.publicKey}
+        />
       )}
-      {state.show === 'stake' && <AddStake balance={balance} />}
+      {state.show === 'stake' && (
+        <AddStake balance={balance} publicKey={task.publicKey} />
+      )}
       {state.show === 'selectAction' && (
         <div className="flex flex-col justify-center pt-10 text-finnieBlue-dark">
           <div className="mb-[28px] text-lg">
@@ -76,7 +88,7 @@ export const EditStakeAmountModal = ({ onClose }: PropsType) => {
 
           <div className="flex flex-col justify-center mb-[40px] text-base">
             <p>
-              {`You’ve earned ${earnedKoiiAmount} KOII by staking ${stakedTokensAmount} tokens on this task.`}
+              {`You’ve earned ${earnedReward} KOII by staking ${stakedTokensAmount} tokens on this task.`}
             </p>
             <p>You can withdraw your stake or add more now.</p>
           </div>
@@ -86,6 +98,7 @@ export const EditStakeAmountModal = ({ onClose }: PropsType) => {
               onClick={() => dispatch({ type: 'withdraw' })}
               label="Withdraw Stake"
               variant="danger"
+              disabled={stakedTokensAmount === 0}
             />
             <Button
               onClick={() => dispatch({ type: 'stake' })}
