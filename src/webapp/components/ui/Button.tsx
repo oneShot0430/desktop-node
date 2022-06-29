@@ -51,7 +51,9 @@ export const Button = ({
 
   return (
     <button
-      className={`rounded w-[180px] h-[40px] bg-${bg} border border-finnieBlue-light-secondary`}
+      className={`rounded w-[180px] h-[40px] bg-${bg} border border-finnieBlue-light-secondary ${
+        rest.disabled && 'opacity-60'
+      }`}
       {...rest}
     >
       <span>{icon}</span>

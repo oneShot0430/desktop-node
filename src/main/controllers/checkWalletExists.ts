@@ -1,17 +1,15 @@
 import { Event } from 'electron';
 import fs from 'fs';
 
+import { CheckWalletExistsParameters, CheckWalletExistsResponse } from 'models';
+
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import { namespaceInstance } from '../node/helpers/Namespace';
 
-interface checkWalletParam {
-  taskId: string;
-}
-
 const checkWallet = async (
   event: Event,
-  payload: checkWalletParam
-): Promise<unknown> => {
+  payload: CheckWalletExistsParameters
+): Promise<CheckWalletExistsResponse> => {
   console.log('IN THE API');
   const { taskId } = payload;
   let mainSystemAccount: boolean;
