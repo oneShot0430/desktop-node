@@ -41,63 +41,63 @@ const TaskDetailView = ({
         <div className="text-finnieEmerald">{task.taskName}&nbsp;</div>
         <div className="text-white">Details</div>
       </div>
-      <div className="flex text-sm mb-1">
+      <div className="flex mb-1 text-sm">
         <div className="text-white w-59.25 flex items-start leading-6">
           Owner:
         </div>
-        <div className="text-finnieTeal font-semibold">{task.taskManager}</div>
+        <div className="font-semibold text-finnieTeal">{task.taskManager}</div>
       </div>
 
-      <div className="flex text-sm mb-1">
+      <div className="flex mb-1 text-sm">
         <div className="text-white w-59.25 flex items-start leading-6">
           Total KOII bounty:
         </div>
-        <div className="text-finnieTeal font-semibold">
+        <div className="font-semibold text-finnieTeal">
           {task.bountyAmountPerRound}
         </div>
       </div>
 
-      <div className="flex text-sm mb-1">
+      <div className="flex mb-1 text-sm">
         <div className="text-white w-59.25 flex items-start leading-6">
           Nodes participating:
         </div>
-        <div className="text-finnieTeal font-semibold">{nodes}</div>
+        <div className="font-semibold text-finnieTeal">{nodes}</div>
       </div>
 
       {/** This field is mocked */}
-      <div className="flex text-sm mb-1">
+      <div className="flex mb-1 text-sm">
         <div className="text-white w-59.25 flex items-start leading-6">
           Total KOII staked:
         </div>
-        <div className="text-finnieTeal font-semibold">{totalStake}</div>
+        <div className="font-semibold text-finnieTeal">{totalStake}</div>
       </div>
 
-      <div className="flex text-sm mb-1">
+      <div className="flex mb-1 text-sm">
         <div className="text-white w-59.25 flex items-start leading-6">
           Current top stake:
         </div>
-        <div className="text-finnieTeal font-semibold">{topStake}</div>
+        <div className="font-semibold text-finnieTeal">{topStake}</div>
       </div>
 
-      <div className="flex text-sm mb-1">
+      <div className="flex mb-1 text-sm">
         <div className="text-white w-59.25 flex items-start leading-6">
           My KOII staked:
         </div>
-        <div className="text-finnieTeal font-semibold">{stake}</div>
+        <div className="font-semibold text-finnieTeal">{stake}</div>
       </div>
 
-      <div className="flex text-sm mb-1">
+      <div className="flex mb-1 text-sm">
         <div className="text-white w-59.25 flex items-start leading-6">
           State:
         </div>
-        <div className="text-finnieTeal font-semibold">{state}</div>
+        <div className="font-semibold text-finnieTeal">{state}</div>
       </div>
 
       <div className="flex text-sm">
         <div className="text-white w-59.25 flex items-start leading-6">
           My Rewards:
         </div>
-        <div className="text-finnieTeal font-semibold">{rewardEarned}</div>
+        <div className="font-semibold text-finnieTeal">{rewardEarned}</div>
       </div>
 
       <button

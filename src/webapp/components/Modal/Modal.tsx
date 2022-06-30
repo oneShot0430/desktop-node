@@ -6,7 +6,7 @@ import { closeModal } from 'webapp/store/actions/modal';
 import { EditStakeAmountModal } from './EditStakeAmountModal/EditStakeAmountModal';
 import ModalCreateTask from './ModalCreateTask';
 import ModalWithdrawStake from './ModalWithdrawStake';
-import { TaskDetailsModal } from './TaskDetailsModal/TaskDetailsModal';
+import { TaskDetailsModal } from './TaskDetailsModal';
 
 const Modal = (): JSX.Element => {
   const isOpen = useAppSelector((state) => state.modal.isShown);
