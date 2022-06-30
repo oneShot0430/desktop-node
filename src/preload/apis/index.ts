@@ -1,5 +1,5 @@
 import checkWalletExists from './checkWalletExists';
-import createStakingWallet from './createMainWallet';
+import createStakingWallet from './createStakingWallet';
 import delegateStake from './delegateStake';
 import getEarnedRewardByNode from './getEarnedRewardByNode';
 import getMainAccountPubKey from './getMainAccountPubKey';

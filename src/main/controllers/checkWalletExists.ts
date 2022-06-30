@@ -7,14 +7,12 @@ import mainErrorHandler from '../../utils/mainErrorHandler';
 import { namespaceInstance } from '../node/helpers/Namespace';
 
 const checkWallet = async (
-  event: Event,
-  payload: CheckWalletExistsParameters
+  event: Event
 ): Promise<CheckWalletExistsResponse> => {
   console.log('IN THE API');
-  const { taskId } = payload;
   let mainSystemAccount: boolean;
   let stakingWallet: boolean;
-  const filePath = 'namespace/' + taskId + '/stakingWallet.json';
+  const filePath = 'namespace' + '/stakingWallet.json';
   try {
     if (fs.existsSync(filePath)) {
       stakingWallet = true;
