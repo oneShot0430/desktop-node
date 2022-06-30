@@ -17,7 +17,7 @@ import loadTasks from './loadTasks';
 // import restoreKohaku from './restoreKohaku';
 
 export default async (): Promise<any> => {
-  if (!process.env.NODE_MODE) throw new Error('env not found');
+  // if (!process.env.NODE_MODE) throw new Error('env not found');
   /* Connect Redis */
   // await connectRedis(
   //   config.node.REDIS.IP,
