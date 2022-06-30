@@ -31,7 +31,10 @@ export const TaskRow = ({ task }: { task: Task }) => {
         <Button onlyIcon icon={isRunning ? <PauseIcon /> : <PlayIcon />} />
       </TableCell>
       <TableCell>
-        <div className="flex items-center justify-start gap-1">
+        <div
+          className="flex items-center justify-start gap-1 cursor-pointer"
+          onClick={() => dispatch(showModal('TASK_DETAILS', task))}
+        >
           <CodeIcon />
           <div className="text-xs">
             <div>{taskName ?? ''}</div>

@@ -15,11 +15,13 @@ export const Table = ({
   isLoading,
   error,
 }: PropsType) => {
+  if (isLoading) return <div>Loading...</div>;
+
+  if (error) return <div>{error}</div>;
+
   return (
     <table className="w-full text-[14px] text-left table-auto">
       <TableHeader tableHeaders={tableHeaders} />
-      {isLoading && <div>Loading...</div>}
-      {error ? error : null}
       <tbody>{children}</tbody>
     </table>
   );

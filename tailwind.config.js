@@ -29,9 +29,11 @@ module.exports = {
         },
         finnieEmerald: {
           DEFAULT: '#49CE8B',
+          light: '#9BE7C4',
         },
         finnieGray: {
           DEFAULT: '#F2F2F2',
+          secondary: '#9B9BB2',
         },
         neutral: { ...colors.neutral, 200: '#EAEAEA' },
         finnieRed: {
