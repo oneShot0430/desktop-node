@@ -33,6 +33,10 @@ const initHandlers = (): void => {
     controllers.getMainAccountPubKey
   );
   ipcMain.handle(config.endpoints.GET_TASK_LOGS, controllers.getTaskLogs);
+  ipcMain.handle(
+    config.endpoints.GET_STAKING_ACCOUNT_PUBKEY,
+    controllers.getStakingAccountPubKey
+  );
 };
 
 export default errorHandler(initHandlers, 'Init handlers error');
