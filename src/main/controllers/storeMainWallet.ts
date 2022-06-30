@@ -21,7 +21,7 @@ const storeWallet = async (
   try {
     if (!fs.existsSync(walletPath)) throw Error('Invalid Wallet Path');
     const wallet = 'WALLET_LOCATION';
-    namespaceInstance.redisSet(wallet, path);
+    namespaceInstance.storeSet(wallet, path);
     return true;
   } catch (err) {
     console.log('ERROR', err);

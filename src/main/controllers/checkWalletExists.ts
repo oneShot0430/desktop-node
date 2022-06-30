@@ -23,7 +23,7 @@ const checkWallet = async (
     console.error('ERROR IN  STAKING ACCOUNT CHECK', err);
   }
   try {
-    const wallet = await namespaceInstance.redisGet('WALLET_LOCATION');
+    const wallet = await namespaceInstance.storeGet('WALLET_LOCATION');
     console.log('WALLET PATH', wallet);
     if (wallet == undefined) {
       mainSystemAccount = false;

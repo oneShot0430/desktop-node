@@ -11,7 +11,7 @@ const mainAccountPubKey = async (event: Event): Promise<string> => {
   let mainSystemAccount;
   let pubkey: string;
 
-  if (!(await namespaceInstance.redisGet('WALLET_LOCATION'))) {
+  if (!(await namespaceInstance.storeGet('WALLET_LOCATION'))) {
     throw Error('WALLET_LOCATION not specified');
   }
   try {
@@ -19,7 +19,7 @@ const mainAccountPubKey = async (event: Event): Promise<string> => {
       Uint8Array.from(
         JSON.parse(
           fsSync.readFileSync(
-            await namespaceInstance.redisGet('WALLET_LOCATION'),
+            await namespaceInstance.storeGet('WALLET_LOCATION'),
             'utf-8'
           )
         )

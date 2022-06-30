@@ -5,6 +5,7 @@ import delegateStake from './delegateStake';
 import getEarnedRewardByNode from './getEarnedRewardByNode';
 import getMainAccountPubKey from './getMainAccountPubKey';
 import getTaskInfo from './getTaskInfo';
+import getTaskLogs from './getTaskLogs';
 import getTasks from './getTasks';
 import getTaskSource from './getTaskSource';
 import startTask from './startTask';
@@ -24,4 +25,5 @@ export default {
   getEarnedRewardByNode,
   checkWalletExists,
   getMainAccountPubKey,
+  getTaskLogs,
 };
