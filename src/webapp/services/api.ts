@@ -48,3 +48,17 @@ export const stopTask = (taskAccountPubKey: string) => {
   console.log('STOPING TASK', taskAccountPubKey);
   return window.main.stopTask({ taskAccountPubKey });
 };
+
+export const getLogs = (taskAccountPubKey: string, noOfLines: number) => {
+  console.log('GETTING LOGS', taskAccountPubKey);
+  return window.main
+    .getTaskLogs({
+      taskAccountPubKey,
+      noOfLines,
+    })
+    .then((logs) => {
+      console.log('----- LOGS ------');
+      console.log(logs);
+      console.log('----- END OF LOGS ------');
+    });
+};
