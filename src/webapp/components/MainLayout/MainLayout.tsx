@@ -16,7 +16,6 @@ const MainLayout = ({ children }: MainLayoutProps): JSX.Element => {
   const showTaskInspector = useAppSelector(
     (state) => state.taskInspector.isShown
   );
-
   return (
     <div>
       <Modal />
