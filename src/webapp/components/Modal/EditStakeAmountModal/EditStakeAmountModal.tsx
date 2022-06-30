@@ -3,8 +3,12 @@ import { useQuery } from 'react-query';
 
 import { Button } from 'webapp/components/ui/Button';
 import { useAppSelector } from 'webapp/hooks/reduxHook';
-import { getMainAccountBalance, getRewardEarned } from 'webapp/services/api';
-import { TaskService } from 'webapp/services/taskService';
+import {
+  QueryKeys,
+  TaskService,
+  getMainAccountBalance,
+  getRewardEarned,
+} from 'webapp/services';
 
 import PrimitiveOnboarding from '../../PrimitiveOnboarding';
 import { ModalTopBar } from '../ModalTopBar';
@@ -38,11 +42,12 @@ export const EditStakeAmountModal = ({ onClose }: PropsType) => {
 
   const stakedTokensAmount = TaskService.getMyStake(task);
 
-  const { data: earnedReward } = useQuery(`rewardEarned${task.publicKey}`, () =>
-    getRewardEarned(task.publicKey, task.availableBalances)
+  const { data: earnedReward } = useQuery(
+    [QueryKeys.taskReward, task.publicKey],
+    () => getRewardEarned(task.publicKey, task.availableBalances)
   );
 
-  const { data: balance } = useQuery('mainAccountBalance', () =>
+  const { data: balance } = useQuery(QueryKeys.mainAccountBalance, () =>
     getMainAccountBalance()
   );
 

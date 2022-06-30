@@ -2,10 +2,14 @@ import React from 'react';
 import { useQuery } from 'react-query';
 
 import { MyNodeTable } from 'webapp/components/MyNodeTable/MyNodeTable';
-import { fetchTasks } from 'webapp/services/api';
+import { QueryKeys, fetchTasks } from 'webapp/services';
 
 const MyNode = (): JSX.Element => {
-  const { isLoading, data: tasks, error } = useQuery('tasks', fetchTasks);
+  const {
+    isLoading,
+    data: tasks,
+    error,
+  } = useQuery(QueryKeys.taskList, fetchTasks);
 
   return (
     <div className="relative overflow-x-auto">
