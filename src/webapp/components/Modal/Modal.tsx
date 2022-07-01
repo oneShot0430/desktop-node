@@ -44,7 +44,7 @@ const Modal = (): JSX.Element => {
           {modalType === 'TASK_DETAILS' ? (
             <div
               ref={modalRef}
-              className="w-[90vw] h-[80vh] relative rounded-md shadow-lg bg-finnieBlue-light-secondary text-cente text-white o"
+              className="w-[90vw] h-[80vh] relative rounded-md shadow-lg bg-finnieBlue-light-secondary text-cente text-white"
             >
               {modalByTypes[modalType]}
             </div>
