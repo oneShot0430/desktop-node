@@ -1,4 +1,5 @@
 import React from 'react';
+import { useQuery } from 'react-query';
 import { useDispatch } from 'react-redux';
 
 import { Task } from 'webapp/@type/task';
@@ -8,18 +9,21 @@ import {
   NodeStatusCell,
 } from 'webapp/components/ui/Table';
 import { TaskDetailsCell } from 'webapp/components/ui/Table/TaskDetailsCell';
-import { TaskService } from 'webapp/services/taskService';
+import { QueryKeys, TaskService } from 'webapp/services';
 import { showModal } from 'webapp/store/actions/modal';
 
 export const HistoryRow = ({ task }: { task: Task }) => {
   const dispatch = useDispatch();
   const { taskName, publicKey } = task;
 
-  const stake = TaskService.getMyStake(task);
   const nodes = TaskService.getNodesCount(task);
   const topStake = TaskService.getTopStake(task);
 
   const nodeStatus = TaskService.getStatus(task);
+
+  const { data: myStake } = useQuery([QueryKeys.myStake, task.publicKey], () =>
+    TaskService.getMyStake(task)
+  );
 
   return (
     <TableRow key={publicKey}>
@@ -32,7 +36,7 @@ export const HistoryRow = ({ task }: { task: Task }) => {
       <NodeStatusCell status={nodeStatus} />
       <TableCell>{nodes}</TableCell>
       <TableCell>{topStake}</TableCell>
-      <TableCell>{stake}</TableCell>
+      <TableCell>{myStake}</TableCell>
     </TableRow>
   );
 };

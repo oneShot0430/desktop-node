@@ -3,11 +3,7 @@ import { useFilePicker } from 'use-file-picker';
 
 import { Button } from 'webapp/components/ui/Button';
 
-interface Props {
-  taskId: string;
-}
-
-const PrimitiveOnboarding = ({ taskId }: Props): JSX.Element => {
+const PrimitiveOnboarding = (): JSX.Element => {
   const [openFileSelector, { plainFiles }] = useFilePicker({
     accept: '.json',
     multiple: false,
@@ -58,7 +54,7 @@ const PrimitiveOnboarding = ({ taskId }: Props): JSX.Element => {
   useEffect(() => checkWalletExists(), []);
 
   return (
-    <div className="flex justify-center gap-[20px]">
+    <div className="flex justify-center gap-[20px] pt-[20px] pb-[20px] pr-4">
       <Button
         label="Select Keyfile"
         onClick={openFileSelector}

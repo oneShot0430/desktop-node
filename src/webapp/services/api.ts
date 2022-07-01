@@ -11,14 +11,11 @@ export const fetchTasks = async (): Promise<Task[]> => {
   return tasks.map(TaskService.parseTask);
 };
 
-export const getRewardEarned = async (
-  publicKey: string,
-  availableBalances: Record<string, number>
-): Promise<number> => {
+export const getRewardEarned = async (task: Task): Promise<number> => {
   const result = await window.main.getEarnedRewardByNode({
-    available_balances: availableBalances,
+    available_balances: task.availableBalances,
   });
-  console.log('GETTING REWARD', result, publicKey);
+  console.log('GETTING REWARD', result, task.publicKey);
   return result || 0;
 };
 
@@ -31,6 +28,13 @@ export const getMainAccountBalance = (): Promise<number> => {
       console.log('GETTING MAIN ACCOUNT BALANCE', balance);
       return balance;
     });
+};
+
+export const getStakingAccountPublicKey = (): Promise<string> => {
+  return window.main.getStakingAccountPubKey().then((pubkey) => {
+    console.log('GETTING STAKING ACCOUNT PUBKEY', pubkey);
+    return pubkey;
+  });
 };
 
 export const stakeOnTask = (taskAccountPubKey: string, stakeAmount: number) => {
@@ -48,7 +52,7 @@ export const stopTask = (taskAccountPubKey: string) => {
   return window.main.stopTask({ taskAccountPubKey });
 };
 
-export const getLogs = (taskAccountPubKey: string, noOfLines: number) => {
+export const getLogs = (taskAccountPubKey: string, noOfLines = 500) => {
   console.log('GETTING LOGS', taskAccountPubKey);
   return window.main
     .getTaskLogs({
@@ -56,8 +60,8 @@ export const getLogs = (taskAccountPubKey: string, noOfLines: number) => {
       noOfLines,
     })
     .then((logs) => {
-      console.log('----- LOGS ------');
+      console.log('--------------- NODE LOGS ----------------');
       console.log(logs);
-      console.log('----- END OF LOGS ------');
+      console.log('--------------- END OF NODE LOGS ----------------');
     });
 };

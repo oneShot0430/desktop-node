@@ -10,7 +10,6 @@ import {
   getRewardEarned,
 } from 'webapp/services';
 
-import PrimitiveOnboarding from '../../PrimitiveOnboarding';
 import { ModalTopBar } from '../ModalTopBar';
 
 import { AddStake } from './AddStake';
@@ -40,11 +39,13 @@ export const EditStakeAmountModal = ({ onClose }: PropsType) => {
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const stakedTokensAmount = TaskService.getMyStake(task);
+  const { data: myStake } = useQuery([QueryKeys.myStake, task.publicKey], () =>
+    TaskService.getMyStake(task)
+  );
 
   const { data: earnedReward } = useQuery(
     [QueryKeys.taskReward, task.publicKey],
-    () => getRewardEarned(task.publicKey, task.availableBalances)
+    () => getRewardEarned(task)
   );
 
   const { data: balance } = useQuery(QueryKeys.mainAccountBalance, () =>
@@ -76,10 +77,7 @@ export const EditStakeAmountModal = ({ onClose }: PropsType) => {
         showBackButton={showBackButton}
       />
       {state.show === 'withdraw' && (
-        <Withdraw
-          stakedBalance={stakedTokensAmount}
-          publicKey={task.publicKey}
-        />
+        <Withdraw stakedBalance={myStake} publicKey={task.publicKey} />
       )}
       {state.show === 'stake' && (
         <AddStake balance={balance} publicKey={task.publicKey} />
@@ -93,7 +91,7 @@ export const EditStakeAmountModal = ({ onClose }: PropsType) => {
 
           <div className="flex flex-col justify-center mb-[40px] text-base">
             <p>
-              {`You’ve earned ${earnedReward} KOII by staking ${stakedTokensAmount} tokens on this task.`}
+              {`You’ve earned ${earnedReward} KOII by staking ${myStake} tokens on this task.`}
             </p>
             <p>You can withdraw your stake or add more now.</p>
           </div>
@@ -104,15 +102,12 @@ export const EditStakeAmountModal = ({ onClose }: PropsType) => {
               label="Withdraw Stake"
               variant="danger"
               className="bg-finnieRed text-finnieBlue-light-secondary"
-              disabled={stakedTokensAmount === 0}
+              disabled={myStake === 0}
             />
             <Button
               onClick={() => dispatch({ type: 'stake' })}
               label="Add More Stake"
             />
-          </div>
-          <div className="pt-4">
-            <PrimitiveOnboarding taskId={task.publicKey} />
           </div>
         </div>
       )}

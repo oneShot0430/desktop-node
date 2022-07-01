@@ -2,14 +2,13 @@ import React from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 import { useDispatch } from 'react-redux';
 
+import ActionHistoryIcon from 'assets/svgs/action-history-icon.svg';
 import AddWithdrawIcon from 'assets/svgs/add-withdraw-icon.svg';
 import PauseIcon from 'assets/svgs/pause-icon.svg';
 import PlayIcon from 'assets/svgs/play-icon.svg';
 import { Task } from 'webapp/@type/task';
 import { Button } from 'webapp/components/ui/Button';
 import {
-  TableRow,
-  TableCell,
   TableRow,
   TableCell,
   NodeStatusCell,
@@ -21,21 +20,24 @@ import {
   stopTask,
   startTask,
   TaskService,
+  getLogs,
 } from 'webapp/services';
 import { showModal } from 'webapp/store/actions/modal';
 
 export const TaskRow = ({ task }: { task: Task }) => {
   const dispatch = useDispatch();
-  const { taskName, taskManager, isRunning, publicKey, availableBalances } =
-    task;
+  const { taskName, taskManager, isRunning, publicKey } = task;
 
   const { data: earnedReward } = useQuery(
     [QueryKeys.taskReward, publicKey],
-    () => getRewardEarned(publicKey, availableBalances)
+    () => getRewardEarned(task)
+  );
+
+  const { data: myStake } = useQuery([QueryKeys.myStake, publicKey], () =>
+    TaskService.getMyStake(task)
   );
 
   const nodeStatus = TaskService.getStatus(task);
-  const myState = TaskService.getMyStake(task);
 
   const handleToggleTask = () => {
     (isRunning ? stopTask(publicKey) : startTask(publicKey)).finally(() => {
@@ -63,13 +65,20 @@ export const TaskRow = ({ task }: { task: Task }) => {
         <span title={taskManager}>{`${taskManager.substring(0, 6)}...`}</span>
       </TableCell>
       <TableCell>{earnedReward}</TableCell>
-      <TableCell>{myState}</TableCell>
+      <TableCell>{myStake}</TableCell>
       <NodeStatusCell status={nodeStatus} />
       <TableCell>
         <Button
           onClick={() => dispatch(showModal('EDIT_STAKE_AMOUNT', task))}
           onlyIcon
           icon={<AddWithdrawIcon />}
+        />
+      </TableCell>
+      <TableCell>
+        <Button
+          onClick={() => getLogs(task.publicKey)}
+          onlyIcon
+          icon={<ActionHistoryIcon />}
         />
       </TableCell>
     </TableRow>
