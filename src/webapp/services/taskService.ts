@@ -1,6 +1,7 @@
-import { isNil, max, min, sum } from 'lodash';
+import { isNil, max, min, sum, isString } from 'lodash';
 
 import { Task as TaskRaw } from 'main/type/TaskData';
+import arweave from 'services/arweave';
 
 import { Task, TaskStatus } from '../@type/task';
 
@@ -15,6 +16,16 @@ export class TaskService {
     return getStakingAccountPublicKey().then(
       (pubKey) => task.stakeList[pubKey] || 0
     );
+  }
+
+  static getTaskSourceCode(task: Task): Promise<string> {
+    return arweave.transactions
+      .getData(task.taskAuditProgram, { decode: true })
+      .then((dataBuffer) => {
+        return isString(dataBuffer)
+          ? dataBuffer
+          : new TextDecoder().decode(dataBuffer);
+      });
   }
 
   static getTopStake(task: Task): number {

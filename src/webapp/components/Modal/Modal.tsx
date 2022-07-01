@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from 'webapp/hooks/reduxHook';
 import { closeModal } from 'webapp/store/actions/modal';
 
-import { EditStakeAmountModal } from './EditStakeAmountModal/EditStakeAmountModal';
+import { EditStakeAmountModal } from './EditStakeAmountModal';
 import ModalCreateTask from './ModalCreateTask';
 import ModalWithdrawStake from './ModalWithdrawStake';
 import { TaskDetailsModal } from './TaskDetailsModal';

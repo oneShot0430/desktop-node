@@ -17,7 +17,7 @@ const ModalTaskInspector = (): JSX.Element => {
   const [showReportView, setShowReportView] = useState(false);
 
   const taskInfo = useAppSelector((state) => state.taskInspector.task);
-  const isShowingWidthdraw = useAppSelector((state) => state.modal.isShown);
+  const isShowingWithdraw = useAppSelector((state) => state.modal.isShown);
 
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -32,7 +32,7 @@ const ModalTaskInspector = (): JSX.Element => {
       if (
         modalRef.current &&
         !modalRef.current.contains(e.target as Node) &&
-        !isShowingWidthdraw
+        !isShowingWithdraw
       ) {
         close();
       }
@@ -41,7 +41,7 @@ const ModalTaskInspector = (): JSX.Element => {
     document.addEventListener('mousedown', handleClickOutSide);
 
     return () => document.removeEventListener('mousedown', handleClickOutSide);
-  }, [modalRef, isShowingWidthdraw]);
+  }, [modalRef, isShowingWithdraw]);
 
   const showWithdraw = () => dispatch(showModal('WITHDRAW_STAKE', taskInfo));
 

@@ -16,11 +16,6 @@ import {
 import { SourceCode } from './SourceCode';
 import { TaskDetails } from './TaskDetails';
 
-const exampleSourceCode = `#!/usr/bin/env node require("dotenv").config();
-const prompts = require("prompts");
-const kohaku = require("@_koi/kohaku");
-`;
-
 type TabsType = 'TaskDetails' | 'SourceCode';
 
 type PropsType = {
@@ -34,6 +29,11 @@ export const TaskDetailsModal = ({ task, onClose }: PropsType) => {
   const { data: myTotalRewards } = useQuery(
     [QueryKeys.taskReward, task.publicKey],
     () => getRewardEarned(task)
+  );
+
+  const { data: sourceCode } = useQuery(
+    [QueryKeys.taskSourceCode, task.publicKey],
+    () => TaskService.getTaskSourceCode(task)
   );
 
   const totalStake = TaskService.getTotalStaked(task);
@@ -52,7 +52,7 @@ export const TaskDetailsModal = ({ task, onClose }: PropsType) => {
   const activeClasses = 'border-b-2 border-finnieEmerald-light';
 
   return (
-    <div className="pt-6 pl-8 pr-8">
+    <div className="py-6 px-8 h-full flex flex-col">
       <div className="flex justify-between">
         <div className="flex justify-start gap-6 pl-6 mb-5">
           <div
@@ -91,13 +91,18 @@ export const TaskDetailsModal = ({ task, onClose }: PropsType) => {
         </div>
         {/*TODO: handle open in the browser window */}
         {currentView === 'SourceCode' && (
-          <a className="cursor-pointer" href="/">
+          <a
+            className="cursor-pointer"
+            target="_blank"
+            href={`https://viewblock.io/arweave/tx/${task.taskAuditProgram}`}
+            rel="noreferrer"
+          >
             <ExternalSourceIconSvg />
           </a>
         )}
       </div>
 
-      <div>
+      <div className="overflow-y-auto">
         {currentView === 'TaskDetails' && (
           <>
             <div className="pl-6">
@@ -124,8 +129,8 @@ export const TaskDetailsModal = ({ task, onClose }: PropsType) => {
           </>
         )}
         {currentView === 'SourceCode' && (
-          <div className="select-text">
-            <SourceCode sourceCode={exampleSourceCode} />
+          <div className="select-text ">
+            <SourceCode sourceCode={sourceCode} />
           </div>
         )}
       </div>

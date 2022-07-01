@@ -75,11 +75,13 @@ export const TaskRow = ({ task }: { task: Task }) => {
         />
       </TableCell>
       <TableCell>
-        <Button
-          onClick={() => getLogs(task.publicKey)}
-          onlyIcon
-          icon={<ActionHistoryIcon />}
-        />
+        <span title="Output Node logs to console">
+          <Button
+            onClick={() => getLogs(task.publicKey)}
+            onlyIcon
+            icon={<ActionHistoryIcon />}
+          />
+        </span>
       </TableCell>
     </TableRow>
   );
