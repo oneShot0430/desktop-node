@@ -47,7 +47,8 @@
           "caseInsensitive": true
         }
       }
-    ]
+    ],
+    "unused-imports/no-unused-imports": "error"
   },
   "parser": "@typescript-eslint/parser",
   "settings": {

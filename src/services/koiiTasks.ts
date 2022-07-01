@@ -1,7 +1,7 @@
 // import { Task } from 'main/type';
 import fetchAllTasks from '../main/controllers/fetchAlltasks';
-import { Namespace, namespaceInstance } from '../main/node/helpers/Namespace';
-import { Task, TaskData } from '../main/type/TaskData';
+import { namespaceInstance } from '../main/node/helpers/Namespace';
+import { Task } from '../main/type/TaskData';
 
 class KoiiTasks {
   private tasks: Task[] = [];

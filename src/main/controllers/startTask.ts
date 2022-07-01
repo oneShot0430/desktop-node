@@ -22,8 +22,6 @@ import koiiTasks from 'services/koiiTasks';
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import initExpressApp from '../node/initExpressApp';
 
-import getTaskInfo from './getTaskInfo';
-
 // eslint-disable-next-line
 const bufferlayout = require('buffer-layout')
 

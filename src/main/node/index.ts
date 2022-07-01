@@ -1,15 +1,8 @@
-import * as fsSync from 'fs';
-
 import * as dotenv from 'dotenv';
-
-import config from 'config';
-import startTask from 'main/controllers/startTask';
-import stopTask from 'main/controllers/stopTask';
-import koiiState from 'services/koiiState';
 
 dotenv.config();
 import executeTasks from './executeTasks';
-import { Namespace, namespaceInstance } from './helpers/Namespace';
+import { namespaceInstance } from './helpers/Namespace';
 import initExpressApp from './initExpressApp';
 // import initKohaku from './initKohaku';
 import loadTasks from './loadTasks';

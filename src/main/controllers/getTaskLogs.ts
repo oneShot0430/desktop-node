@@ -1,5 +1,4 @@
 import { Event } from 'electron';
-import fs from 'fs/promises';
 
 import * as readLastLines from 'read-last-lines';
 

@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { Task } from 'webapp/@type/task';
-
 import { Table } from '../ui/Table';
 
 import { HistoryRow } from './components/HistoryRow';

@@ -3,8 +3,6 @@ import fs from 'fs';
 
 import { Keypair } from '@_koi/web3.js';
 
-import { namespaceInstance } from 'main/node/helpers/Namespace';
-
 import mainErrorHandler from '../../utils/mainErrorHandler';
 
 const createWallet = async (event: Event): Promise<string> => {

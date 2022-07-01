@@ -4,7 +4,6 @@ import { PublicKey } from '@_koi/web3.js';
 import axios from 'axios';
 
 import config from 'config';
-import koiiState from 'services/koiiState';
 import sdk from 'services/sdk';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';

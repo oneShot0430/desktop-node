@@ -1,8 +1,5 @@
 import React from 'react';
 
-import AddTasksTasksTable from './components/AddTasksTasksTable';
-import AddTasksToolbar from './components/AddTasksToolbar';
-
 const AddTasks = (): JSX.Element => {
   return (
     <div>Add task</div>
