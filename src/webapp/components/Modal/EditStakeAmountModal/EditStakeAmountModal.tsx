@@ -103,6 +103,7 @@ export const EditStakeAmountModal = ({ onClose }: PropsType) => {
               onClick={() => dispatch({ type: 'withdraw' })}
               label="Withdraw Stake"
               variant="danger"
+              className="bg-finnieRed text-finnieBlue-light-secondary"
               disabled={stakedTokensAmount === 0}
             />
             <Button

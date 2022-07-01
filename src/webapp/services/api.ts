@@ -16,7 +16,6 @@ export const getRewardEarned = async (
   availableBalances: Record<string, number>
 ): Promise<number> => {
   const result = await window.main.getEarnedRewardByNode({
-    taskAccountPubKey: publicKey,
     available_balances: availableBalances,
   });
   console.log('GETTING REWARD', result, publicKey);

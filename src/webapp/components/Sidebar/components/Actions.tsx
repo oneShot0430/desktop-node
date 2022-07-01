@@ -9,12 +9,14 @@ import { showModal } from 'webapp/store/actions/modal';
 
 export const Actions = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const handleAddTaskClick = () => {
     dispatch(showModal('CREATE_TASK'));
   };
 
   const handleHistoryClick = () => {
-    console.log('handle history click');
+    navigate(AppRoute.History);
   };
 
   return (
@@ -29,8 +31,11 @@ export const Actions = () => {
         <div className="text-finnieBlue-light-secondary">Add Task</div>
       </button>
 
-      <button className="flex gap-[10px] flex-col items-center justify-center rounded bg-finnieBlue-light-secondary w-[186px] h-[108px]">
-        <div onClick={handleHistoryClick}>
+      <button
+        onClick={handleHistoryClick}
+        className="flex gap-[10px] flex-col items-center justify-center rounded bg-finnieBlue-light-secondary w-[186px] h-[108px]"
+      >
+        <div>
           <ActionHistoryIcon />
         </div>
         <div className="text-white">History</div>

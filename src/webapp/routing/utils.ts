@@ -12,6 +12,8 @@ export const getRouteViewLabel = (route: AppRoute) => {
       return 'Rewards';
     case AppRoute.Settings:
       return 'Settings';
+    case AppRoute.History:
+      return 'History';
     default:
       return '';
   }

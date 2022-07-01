@@ -48,7 +48,12 @@ export const Withdraw = ({ stakedBalance, publicKey }: PropsType) => {
 
       <div className="py-2 mb-3 text-xs text-finnieTeal-700">{`Current KOII Staked: ${stakedBalance} KOII`}</div>
 
-      <Button label="Withdraw" variant="danger" onClick={handleWithdraw} />
+      <Button
+        label="Withdraw"
+        variant="danger"
+        onClick={handleWithdraw}
+        className="bg-finnieRed text-finnieBlue-light-secondary"
+      />
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useRoutes, Outlet } from 'react-router-dom';
 
+import { History } from '../components/History';
 import MainLayout from '../components/MainLayout';
 import AddTasks from '../pages/AddTasks';
 import MyNode from '../pages/MyNode';
@@ -12,6 +13,7 @@ export enum AppRoute {
   AddTask = '/add-tasks',
   Notifications = '/notifications',
   Settings = '/settings',
+  History = '/history',
 }
 
 const Wrapper = (): JSX.Element => (
@@ -45,6 +47,10 @@ const routes = [
             Notifications
           </div>
         ),
+      },
+      {
+        path: AppRoute.History,
+        element: <History />,
       },
       {
         path: AppRoute.Settings,

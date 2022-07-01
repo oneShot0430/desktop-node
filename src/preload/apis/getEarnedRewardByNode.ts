@@ -5,7 +5,6 @@ import { TaskData } from '../type/tasks';
 
 interface rewardWalletPayload {
   available_balances: TaskData['availableBalances'];
-  taskAccountPubKey: string;
 }
 
 export default (payload: rewardWalletPayload): Promise<number> =>

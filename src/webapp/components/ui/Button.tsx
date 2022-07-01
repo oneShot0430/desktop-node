@@ -1,12 +1,14 @@
 import * as React from 'react';
+import { twMerge } from 'tailwind-merge';
 
-type ButtonVariants = 'primary' | 'danger';
+type ButtonVariants = 'primary' | 'danger' | 'neutral';
 
 type ButtonProps = {
   label?: string;
   icon?: React.ReactNode;
   variant?: ButtonVariants;
   onlyIcon?: boolean;
+  className?: string;
 } & React.DetailedHTMLProps<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
   HTMLButtonElement
@@ -15,30 +17,10 @@ type ButtonProps = {
 export const Button = ({
   label,
   icon,
-  variant,
   onlyIcon,
+  className,
   ...rest
 }: ButtonProps) => {
-  const getButtonColors = (variant: ButtonVariants) => {
-    switch (variant) {
-      case 'primary':
-        return {
-          bg: 'finnieBlue-light-secondary',
-          text: 'white',
-        };
-      case 'danger':
-        return {
-          bg: 'finnieRed',
-          text: 'finnieBlue-light-secondary',
-        };
-      default:
-        return {
-          bg: 'finnieBlue-light-secondary',
-          text: 'white',
-        };
-    }
-  };
-
   if (onlyIcon) {
     return (
       <button aria-label={label} {...rest}>
@@ -47,17 +29,18 @@ export const Button = ({
     );
   }
 
-  const { bg, text } = getButtonColors(variant);
+  const classes = twMerge(
+    'rounded w-[180px] h-[40px] bg-finnieBlue-light-secondary',
+    className
+  );
 
   return (
     <button
-      className={`rounded w-[180px] h-[40px] bg-${bg} border border-finnieBlue-light-secondary ${
-        rest.disabled && 'opacity-60'
-      }`}
+      className={`${classes} text-white ${rest.disabled && 'opacity-60'}`}
       {...rest}
     >
       <span>{icon}</span>
-      <span className={`text-${text} self-center`}>{label}</span>
+      <span className={'self-center'}>{label}</span>
     </button>
   );
 };
