@@ -10,13 +10,12 @@ import mainErrorHandler from '../../utils/mainErrorHandler';
 interface createWalletParam {
   mnemonic?: string;
 }
-const createWallet = async (
+const retrieveStakingWalletFromMnemonics = async (
   event: Event,
   payload: createWalletParam
 ): Promise<string> => {
   console.log('IN CREATE WALLET  API');
   const { mnemonic } = payload;
-
   try {
     const filePath = 'namespace/' + 'stakingWallet.json';
     console.log('WALLET PATH', filePath);
@@ -44,4 +43,4 @@ const createWallet = async (
   }
 };
 
-export default mainErrorHandler(createWallet);
+export default mainErrorHandler(retrieveStakingWalletFromMnemonics);
