@@ -75,22 +75,6 @@ const delegateStake = async (event: Event, payload: DelegateStakeParam) => {
   );
   const taskState = await getTaskInfo(null, { taskAccountPubKey });
   if (!taskState) throw new Error('Task not found');
-  // const taskData = JSON.parse(accountInfo.data.toString());
-
-  // const taskState = {
-  //   taskName: taskData.task_name,
-  //   taskManager: new PublicKey(taskData.task_manager).toBase58(),
-  //   isWhitelisted: taskData.is_whitelisted,
-  //   isActive: taskData.is_active,
-  //   taskAuditProgram: taskData.task_audit_program,
-  //   stakePotAccount: new PublicKey(taskData.stake_pot_account),
-  //   totalBountyAmount: taskData.total_bounty_amount,
-  //   bountyAmountPerRound: taskData.bounty_amount_per_round,
-  //   status: taskData.status,
-  //   currentRound: taskData.current_round,
-  //   availableBalances: taskData.available_balances,
-  //   stakeList: taskData.stake_list,
-  // };
   console.log('ACCOUNT OWNER', accountInfo?.owner?.toBase58());
   if (
     accountInfo?.owner?.toBase58() ==

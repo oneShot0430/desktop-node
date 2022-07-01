@@ -11,6 +11,7 @@ import getTaskSource from './getTaskSource';
 import startTask from './startTask';
 import stopTask from './stopTask';
 import storeMainWallet from './storeMainWallet';
+import withdrawStake from './withdrawStake';
 
 export default {
   getTasks,
@@ -26,4 +27,5 @@ export default {
   getMainAccountPubKey,
   getTaskLogs,
   getStakingAccountPubKey,
+  withdrawStake,
 };
