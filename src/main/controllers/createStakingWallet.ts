@@ -25,7 +25,9 @@ const createWallet = async (
       const seed = bip39.mnemonicToSeedSync(mnemonic, '');
       const path = "m/44'/501'/99'/0'";
       wallet = Keypair.fromSeed(derivePath(path, seed.toString('hex')).key);
+      console.log('Generating from mnemonic');
     } else {
+      console.log('Generating random keypair');
       wallet = Keypair.generate();
     }
     console.log('WALLET', wallet.publicKey.toBase58());
