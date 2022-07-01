@@ -13,9 +13,21 @@ type PropsType = {
 
 export const NodeStatusCell = ({ status }: PropsType) => {
   const statusComponent = {
-    [TaskStatus.ACCEPTING_SUBMISSIONS]: <StatusAcceptingSubmissionIcon />,
-    [TaskStatus.COMPLETED]: <StatusCompletedIcon />,
-    [TaskStatus.VOTING]: <StatusVotingIcon />,
+    [TaskStatus.ACCEPTING_SUBMISSIONS]: (
+      <span title="Accepting Submissions">
+        <StatusAcceptingSubmissionIcon />
+      </span>
+    ),
+    [TaskStatus.COMPLETED]: (
+      <span title="Completed">
+        <StatusCompletedIcon />
+      </span>
+    ),
+    [TaskStatus.VOTING]: (
+      <span title="Voting">
+        <StatusVotingIcon />
+      </span>
+    ),
   }[status];
 
   return <TableCell>{statusComponent ?? null}</TableCell>;

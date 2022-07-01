@@ -1,7 +1,7 @@
 import { Event } from 'electron';
 import fs from 'fs';
 
-import { CheckWalletExistsParameters, CheckWalletExistsResponse } from 'models';
+import { CheckWalletExistsResponse } from 'models';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import { namespaceInstance } from '../node/helpers/Namespace';

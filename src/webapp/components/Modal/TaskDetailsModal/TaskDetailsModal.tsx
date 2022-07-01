@@ -6,8 +6,12 @@ import FlagIconTealSvg from 'assets/svgs/flag-teal-icon.svg';
 import CloseIcon from 'svgs/close-icons/close-icon-white.svg';
 import { Task } from 'webapp/@type/task';
 import { Button } from 'webapp/components/ui/Button';
-import { getRewardEarned } from 'webapp/services/api';
-import { TaskService, TaskStatusToLabeMap } from 'webapp/services/taskService';
+import {
+  QueryKeys,
+  getRewardEarned,
+  TaskService,
+  TaskStatusToLabeMap,
+} from 'webapp/services';
 
 import { SourceCode } from './SourceCode';
 import { TaskDetails } from './TaskDetails';
@@ -26,19 +30,20 @@ type PropsType = {
 
 export const TaskDetailsModal = ({ task, onClose }: PropsType) => {
   const [currentView, setCurrentView] = useState<TabsType>('TaskDetails');
-  const {
-    data: myTotalRewards,
-    isLoading,
-    error,
-  } = useQuery(`rewardEarned${task.publicKey}`, () =>
-    getRewardEarned(task.publicKey, task.availableBalances)
+
+  const { data: myTotalRewards } = useQuery(
+    [QueryKeys.taskReward, task.publicKey],
+    () => getRewardEarned(task)
   );
 
-  const stake = TaskService.getMyStake(task);
   const totalStake = TaskService.getTotalStaked(task);
   const nodes = TaskService.getNodesCount(task);
   const topStake = TaskService.getTopStake(task);
   const state = TaskStatusToLabeMap[TaskService.getStatus(task)];
+
+  const { data: myStake } = useQuery([QueryKeys.myStake, task.publicKey], () =>
+    TaskService.getMyStake(task)
+  );
 
   const handleWithdraw = () => {
     console.log('Wthdraw action');
@@ -102,7 +107,7 @@ export const TaskDetailsModal = ({ task, onClose }: PropsType) => {
                 nodesParticipating={nodes}
                 totalKoiiStaked={totalStake}
                 currentTopStake={topStake}
-                myCurrentStake={stake}
+                myCurrentStake={myStake}
                 state={state}
                 myTotalRewards={myTotalRewards}
               />

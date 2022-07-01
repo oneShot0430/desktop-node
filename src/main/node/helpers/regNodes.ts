@@ -1,6 +1,3 @@
-import arweave from 'services/arweave';
-import koiiState from 'services/koiiState';
-
 import { getCacheNodes, namespaceInstance } from './Namespace';
 
 export default async (newNodes: any[]) => {

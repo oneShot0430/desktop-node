@@ -4,13 +4,17 @@ import { Task as TaskRaw } from 'main/type/TaskData';
 
 import { Task, TaskStatus } from '../@type/task';
 
+import { getStakingAccountPublicKey } from './api';
+
 export class TaskService {
   static getTotalStaked(task: Task): number {
     return sum(Object.values(task.stakeList));
   }
 
-  static getMyStake(task: Task): number {
-    return task.stakeList[task.publicKey] || 0;
+  static getMyStake(task: Task): Promise<number> {
+    return getStakingAccountPublicKey().then(
+      (pubKey) => task.stakeList[pubKey] || 0
+    );
   }
 
   static getTopStake(task: Task): number {

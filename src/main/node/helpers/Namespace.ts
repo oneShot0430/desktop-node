@@ -15,8 +15,6 @@ import leveldown from 'leveldown';
 import levelup from 'levelup';
 // import * as redis from 'redis';
 
-import config from 'config';
-
 // eslint-disable-next-line
 const BufferLayout = require('@solana/buffer-layout');
 

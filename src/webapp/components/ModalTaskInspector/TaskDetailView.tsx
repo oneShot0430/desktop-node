@@ -1,8 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useQuery } from 'react-query';
 
 import ReportTaskIcon from 'svgs/flag-icon.svg';
 import { Task } from 'webapp/@type/task';
-import { TaskService, TaskStatusToLabeMap } from 'webapp/services/taskService';
+import {
+  getRewardEarned,
+  QueryKeys,
+  TaskService,
+  TaskStatusToLabeMap,
+} from 'webapp/services';
 
 type TaskDetailViewProps = {
   task: Task;
@@ -15,21 +21,19 @@ const TaskDetailView = ({
   showWithdraw,
   openReportView,
 }: TaskDetailViewProps): JSX.Element => {
-  const [rewardEarned, setRewardEarned] = useState(0);
+  const { data: rewardEarned } = useQuery(
+    [QueryKeys.taskReward, task.publicKey],
+    () => getRewardEarned(task)
+  );
 
-  useEffect(() => {
-    window.main
-      .getEarnedRewardByNode({
-        available_balances: task.availableBalances,
-      })
-      .then((rewardEarned) => setRewardEarned(rewardEarned));
-  }, []);
-
-  const stake = TaskService.getMyStake(task);
   const totalStake = TaskService.getTotalStaked(task);
   const nodes = TaskService.getNodesCount(task);
   const topStake = TaskService.getTopStake(task);
   const state = TaskStatusToLabeMap[TaskService.getStatus(task)];
+
+  const { data: myStake } = useQuery([QueryKeys.myStake, task.publicKey], () =>
+    TaskService.getMyStake(task)
+  );
 
   return (
     <>
@@ -83,7 +87,7 @@ const TaskDetailView = ({
         <div className="text-white w-59.25 flex items-start leading-6">
           My KOII staked:
         </div>
-        <div className="font-semibold text-finnieTeal">{stake}</div>
+        <div className="font-semibold text-finnieTeal">{myStake}</div>
       </div>
 
       <div className="flex mb-1 text-sm">
