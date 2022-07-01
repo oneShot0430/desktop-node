@@ -10,13 +10,12 @@ import mainErrorHandler from '../../utils/mainErrorHandler';
 interface createWalletParam {
   mnemonic?: string;
 }
-const createWallet = async (
+const retrieveStakingWalletFromMnemonics = async (
   event: Event,
   payload: createWalletParam
 ): Promise<string> => {
   console.log('IN CREATE WALLET  API');
   const { mnemonic } = payload;
-
   try {
     const filePath = 'namespace/' + 'stakingWallet.json';
     console.log('WALLET PATH', filePath);
@@ -25,9 +24,7 @@ const createWallet = async (
       const seed = bip39.mnemonicToSeedSync(mnemonic, '');
       const path = "m/44'/501'/99'/0'";
       wallet = Keypair.fromSeed(derivePath(path, seed.toString('hex')).key);
-      console.log('Generating from mnemonic');
     } else {
-      console.log('Generating random keypair');
       wallet = Keypair.generate();
     }
     console.log('WALLET', wallet.publicKey.toBase58());
@@ -46,4 +43,4 @@ const createWallet = async (
   }
 };
 
-export default mainErrorHandler(createWallet);
+export default mainErrorHandler(retrieveStakingWalletFromMnemonics);

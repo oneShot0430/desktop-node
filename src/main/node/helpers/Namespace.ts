@@ -70,7 +70,7 @@ class Namespace {
    */
   taskTxId: string;
   app: any;
-  #redisClient?: any;
+  // #redisClient?: any;
   taskData: TaskData;
   #mainSystemAccount: Keypair;
   mainSystemAccountPubKey: PublicKey;
@@ -271,38 +271,38 @@ class Namespace {
     const file = fs.readFileSync(image);
     return file;
   }
-  /**
-   * Namespace wrapper over redisKeysAsync
-   * @param {string} pattern Pattern of keys to be found
-   * @returns {Promise<Array<String>>}
-   */
-  redisKeys(pattern: string) {
-    return new Promise((resolve, reject) => {
-      if (this.#redisClient === undefined) reject('Redis not connected');
-      else
-        this.#redisClient.keys(
-          this.taskTxId + pattern,
-          (err: any, res: any) => {
-            err ? reject(err) : resolve(res);
-          }
-        );
-    });
-  }
+  // /**
+  //  * Namespace wrapper over redisKeysAsync
+  //  * @param {string} pattern Pattern of keys to be found
+  //  * @returns {Promise<Array<String>>}
+  //  */
+  // redisKeys(pattern: string) {
+  //   return new Promise((resolve, reject) => {
+  //     if (this.#redisClient === undefined) reject('Redis not connected');
+  //     else
+  //       this.#redisClient.keys(
+  //         this.taskTxId + pattern,
+  //         (err: any, res: any) => {
+  //           err ? reject(err) : resolve(res);
+  //         }
+  //       );
+  //   });
+  // }
 
-  /**
-   * Namespace wrapper over redisDelAsync
-   * @param {string} key Key to delete
-   * @returns {Promise<Number>}
-   */
-  redisDel(key: string) {
-    return new Promise((resolve, reject) => {
-      if (this.#redisClient === undefined) reject('Redis not connected');
-      else
-        this.#redisClient.del(this.taskTxId + key, (err: any, res: any) => {
-          err ? reject(err) : resolve(res);
-        });
-    });
-  }
+  // /**
+  //  * Namespace wrapper over redisDelAsync
+  //  * @param {string} key Key to delete
+  //  * @returns {Promise<Number>}
+  //  */
+  // redisDel(key: string) {
+  //   return new Promise((resolve, reject) => {
+  //     if (this.#redisClient === undefined) reject('Redis not connected');
+  //     else
+  //       this.#redisClient.del(this.taskTxId + key, (err: any, res: any) => {
+  //         err ? reject(err) : resolve(res);
+  //       });
+  //   });
+  // }
 
   /**
    * Namespace wrapper over express app methods
