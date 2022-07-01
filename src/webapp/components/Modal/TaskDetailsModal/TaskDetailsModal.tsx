@@ -91,7 +91,12 @@ export const TaskDetailsModal = ({ task, onClose }: PropsType) => {
         </div>
         {/*TODO: handle open in the browser window */}
         {currentView === 'SourceCode' && (
-          <a className="cursor-pointer" href="/">
+          <a
+            className="cursor-pointer"
+            target="_blank"
+            href={`https://viewblock.io/arweave/tx/${task.taskAuditProgram}`}
+            rel="noreferrer"
+          >
             <ExternalSourceIconSvg />
           </a>
         )}
