@@ -1,4 +1,4 @@
-import React, { useReducer, useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useQuery } from 'react-query';
 
 import { Button } from 'webapp/components/ui/Button';
@@ -15,29 +15,17 @@ import { ModalTopBar } from '../ModalTopBar';
 import { AddStake } from './AddStake';
 import { Withdraw } from './Withdraw';
 
-type PropsType = Readonly<{ onClose: () => void }>;
-
-const initialState = { show: 'selectAction' };
-
-function reducer(
-  state: { show: 'withdraw' | 'stake' | 'selectAction' },
-  action: any
-) {
-  console.log('action', action);
-  switch (action.type) {
-    case 'withdraw':
-      return { show: 'withdraw' };
-    case 'stake':
-      return { show: 'stake' };
-    default:
-      return { show: 'selectAction' };
-  }
+enum View {
+  Withdraw = 'Withdraw',
+  Stake = 'Stake',
+  SelectAction = 'SelectAction',
 }
 
-export const EditStakeAmountModal = ({ onClose }: PropsType) => {
-  const task = useAppSelector((state) => state.modal.modalData.task);
+type PropsType = Readonly<{ onClose: () => void }>;
 
-  const [state, dispatch] = useReducer(reducer, initialState);
+export const EditStakeAmountModal = ({ onClose }: PropsType) => {
+  const [view, setView] = useState<View>(View.SelectAction);
+  const task = useAppSelector((state) => state.modal.modalData.task);
 
   const { data: myStake } = useQuery([QueryKeys.myStake, task.publicKey], () =>
     TaskService.getMyStake(task)
@@ -55,17 +43,17 @@ export const EditStakeAmountModal = ({ onClose }: PropsType) => {
   const { taskName, taskManager } = task;
 
   const getTitle = useCallback(() => {
-    switch (state.show) {
-      case 'selectAction':
+    switch (view) {
+      case View.SelectAction:
         return 'Edit Stake Amount';
-      case 'withdraw':
+      case View.Withdraw:
         return 'Withdraw Stake';
-      case 'stake':
+      case View.Stake:
         return 'Add Stake';
     }
-  }, [state.show]);
+  }, [view]);
 
-  const showBackButton = state.show !== 'selectAction';
+  const showBackButton = view !== View.SelectAction;
   const title = getTitle();
 
   return (
@@ -73,16 +61,16 @@ export const EditStakeAmountModal = ({ onClose }: PropsType) => {
       <ModalTopBar
         title={title}
         onClose={onClose}
-        onBackClick={() => dispatch({ show: 'selectAction' })}
+        onBackClick={() => setView(View.SelectAction)}
         showBackButton={showBackButton}
       />
-      {state.show === 'withdraw' && (
+      {view === View.Withdraw && (
         <Withdraw stakedBalance={myStake} publicKey={task.publicKey} />
       )}
-      {state.show === 'stake' && (
+      {view === View.Stake && (
         <AddStake balance={balance} publicKey={task.publicKey} />
       )}
-      {state.show === 'selectAction' && (
+      {view === View.SelectAction && (
         <div className="flex flex-col justify-center pt-10 text-finnieBlue-dark">
           <div className="mb-[28px] text-lg">
             <div className="font-semibold">{taskName}</div>
@@ -98,14 +86,14 @@ export const EditStakeAmountModal = ({ onClose }: PropsType) => {
 
           <div className="flex justify-center gap-[60px] ">
             <Button
-              onClick={() => dispatch({ type: 'withdraw' })}
+              onClick={() => setView(View.Withdraw)}
               label="Withdraw Stake"
               variant="danger"
               className="bg-finnieRed text-finnieBlue-light-secondary"
               disabled={myStake === 0}
             />
             <Button
-              onClick={() => dispatch({ type: 'stake' })}
+              onClick={() => setView(View.Stake)}
               label="Add More Stake"
             />
           </div>

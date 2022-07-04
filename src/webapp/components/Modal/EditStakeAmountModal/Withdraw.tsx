@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import { Button } from 'webapp/components/ui/Button';
+import { withdrawStake } from 'webapp/services';
 
 export type PropsType = { stakedBalance: number; publicKey: string };
 
@@ -19,12 +20,16 @@ export const Withdraw = ({ stakedBalance, publicKey }: PropsType) => {
     setInputValue(value);
   };
 
-  const handleWithdraw = () => {
-    setLoading(true);
-    // TODO hook up proper endpoint
-    Promise.resolve([publicKey, inputValue]).finally(() => {
+  const handleWithdraw = async () => {
+    try {
+      setLoading(true);
+      await withdrawStake(publicKey);
+    } catch (error) {
+      console.log('###withdraw stake error ->', error);
+      setError(error);
+    } finally {
       setLoading(false);
-    });
+    }
   };
 
   return (

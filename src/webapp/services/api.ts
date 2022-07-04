@@ -37,6 +37,10 @@ export const getStakingAccountPublicKey = (): Promise<string> => {
   });
 };
 
+export const withdrawStake = (taskAccountPubKey: string) => {
+  return window.main.withdrawStake({ taskAccountPubKey });
+};
+
 export const stakeOnTask = (taskAccountPubKey: string, stakeAmount: number) => {
   console.log('STAKING ON', stakeAmount, taskAccountPubKey);
   return window.main.delegateStake({ taskAccountPubKey, stakeAmount });

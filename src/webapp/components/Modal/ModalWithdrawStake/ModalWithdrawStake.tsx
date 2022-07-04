@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { useAppSelector } from 'webapp/hooks/reduxHook';
+import { withdrawStake } from 'webapp/services';
 
 type ModalWithDrawStakeProps = {
   close: () => void;
@@ -9,9 +10,20 @@ type ModalWithDrawStakeProps = {
 const ModalWithdrawStake = ({
   close,
 }: ModalWithDrawStakeProps): JSX.Element => {
-  const { taskName, taskManager } = useAppSelector(
+  const [error, setError] = useState<string>(null);
+  const { taskName, taskManager, publicKey } = useAppSelector(
     (state) => state.modal.modalData.task
   );
+
+  const handleWithdraw = async () => {
+    console.log('####withdrawing...');
+    try {
+      await withdrawStake(publicKey);
+    } catch (error) {
+      console.log('### Withdraw error ->', error);
+      setError(error);
+    }
+  };
 
   return (
     <div className="flex flex-col items-center text-finnieBlue tracking-finnieSpacing-wider">
@@ -28,6 +40,8 @@ const ModalWithdrawStake = ({
         You’ve earned {'TBD'} KOII tokens from this task so far.
       </div>
 
+      {error && <div className="text-finnieRed">{error}</div>}
+
       <div className="flex justify-between w-102.75">
         <button
           onClick={close}
@@ -35,7 +49,10 @@ const ModalWithdrawStake = ({
         >
           Stay Staked
         </button>
-        <button className="flex items-center justify-center border-2 border-finnieRed-500 bg-white w-44.75 h-8 rounded-finnie-small shadow-lg">
+        <button
+          onClick={handleWithdraw}
+          className="flex items-center justify-center border-2 border-finnieRed-500 bg-white w-44.75 h-8 rounded-finnie-small shadow-lg"
+        >
           Withdraw Stake
         </button>
       </div>
