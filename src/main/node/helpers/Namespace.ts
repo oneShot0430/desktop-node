@@ -256,6 +256,12 @@ class Namespace {
     return fsPromises[method](`${basePath}/${path}`, ...args);
   }
 
+  async fsStaking(method: string, path: string, ...args: any) {
+    const basePath = 'namespace/';
+    await fsPromises.mkdir(basePath, { recursive: true }).catch(console.error);
+    return fsPromises[method](`${basePath}/${path}`, ...args);
+  }
+
   async fsWriteStream(imagepath: string) {
     const basePath = 'namespace/' + this.taskTxId;
     await fsPromises.mkdir(basePath, { recursive: true }).catch(console.error);
