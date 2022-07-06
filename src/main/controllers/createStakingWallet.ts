@@ -20,27 +20,32 @@ const createWallet = async (
   try {
     const filePath = 'namespace/' + 'stakingWallet.json';
     console.log('WALLET PATH', filePath);
-    let wallet;
-    if (mnemonic) {
-      const seed = bip39.mnemonicToSeedSync(mnemonic, '');
-      const path = "m/44'/501'/99'/0'";
-      wallet = Keypair.fromSeed(derivePath(path, seed.toString('hex')).key);
-      console.log('Generating from mnemonic');
+    if (fs.existsSync(filePath)) {
+      // path exists
+      console.log('FILE ALREADY EXISTS', filePath);
     } else {
-      console.log('Generating random keypair');
-      wallet = Keypair.generate();
-    }
-    console.log('WALLET', wallet.publicKey.toBase58());
-    fs.writeFile(
-      filePath,
-      JSON.stringify(Array.from(wallet.secretKey)),
-      (err) => {
-        if (err) {
-          console.error(err);
-        }
+      let wallet;
+      if (mnemonic) {
+        const seed = bip39.mnemonicToSeedSync(mnemonic, '');
+        const path = "m/44'/501'/99'/0'";
+        wallet = Keypair.fromSeed(derivePath(path, seed.toString('hex')).key);
+        console.log('Generating from mnemonic');
+      } else {
+        console.log('Generating random keypair');
+        wallet = Keypair.generate();
       }
-    );
-    return wallet.publicKey.toBase58();
+      console.log('WALLET', wallet.publicKey.toBase58());
+      fs.writeFile(
+        filePath,
+        JSON.stringify(Array.from(wallet.secretKey)),
+        (err) => {
+          if (err) {
+            console.error(err);
+          }
+        }
+      );
+      return wallet.publicKey.toBase58();
+    }
   } catch (err) {
     console.error(err);
   }

@@ -17,6 +17,7 @@ const MainLayout = ({ children }: MainLayoutProps): JSX.Element => {
   const showTaskInspector = useAppSelector(
     (state) => state.taskInspector.isShown
   );
+  window.main.createStakingWallet().then(console.log);
   return (
     <div>
       <Modal />
