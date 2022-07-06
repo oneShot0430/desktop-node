@@ -1,8 +1,7 @@
 import React from 'react';
 import * as ReactRouterDom from 'react-router-dom';
 
-import MainLayout from 'webapp/components/MainLayout';
-import MyNode from 'webapp/pages/MyNode';
+import { MainLayout, MyNode } from 'webapp/components';
 
 import { act, fireEvent, render, screen } from '../../test-utils';
 

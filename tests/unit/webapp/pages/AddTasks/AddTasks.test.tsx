@@ -1,7 +1,6 @@
 import React from 'react';
 
-import MainLayout from 'webapp/components/MainLayout';
-import AddTasks from 'webapp/pages/AddTasks';
+import { MainLayout, AddTasks } from 'webapp/components';
 
 import { act, render, fireEvent, screen } from '../../test-utils';
 

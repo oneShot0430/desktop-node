@@ -1,10 +1,7 @@
 import React from 'react';
 import { useRoutes, Outlet } from 'react-router-dom';
 
-import { History } from '../components/History';
-import MainLayout from '../components/MainLayout';
-import AddTasks from '../pages/AddTasks';
-import MyNode from '../pages/MyNode';
+import { History, MainLayout, Settings, AddTasks, MyNode } from '../components';
 
 export enum AppRoute {
   Root = '/',
@@ -54,11 +51,7 @@ const routes = [
       },
       {
         path: AppRoute.Settings,
-        element: (
-          <div className="w-1/2 mx-auto mt-56 text-3xl text-center">
-            Settings
-          </div>
-        ),
+        element: <Settings />,
       },
       { path: AppRoute.Root, element: <MyNode /> },
     ],

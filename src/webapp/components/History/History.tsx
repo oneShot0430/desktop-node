@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { memo } from 'react';
+
+import { Task } from 'webapp/@type/task';
 
 import { Table } from '../ui/Table';
 
@@ -18,9 +20,13 @@ const tableHeaders = [
 export const History = () => {
   return (
     <Table tableHeaders={tableHeaders}>
-      {historyRows.map(({ publicKey, task }: { publicKey: any; task: any }) => (
-        <HistoryRow key={publicKey} task={task} />
-      ))}
+      {historyRows.map(
+        ({ publicKey, task }: { publicKey: string; task: Task }) => (
+          <HistoryRow key={publicKey} task={task} />
+        )
+      )}
     </Table>
   );
 };
+
+export default memo(History);

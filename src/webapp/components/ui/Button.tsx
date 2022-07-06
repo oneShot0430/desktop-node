@@ -36,10 +36,12 @@ export const Button = ({
 
   return (
     <button
-      className={`${classes} text-white ${rest.disabled && 'opacity-60'}`}
+      className={`${classes} text-white ${
+        rest.disabled && 'opacity-60'
+      } flex items-center justify-center`}
       {...rest}
     >
-      <span>{icon}</span>
+      {icon}
       <span className={'self-center'}>{label}</span>
     </button>
   );
