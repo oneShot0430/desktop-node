@@ -12,6 +12,38 @@ const accountsMock: AccountType[] = [
   { name: 'Name', address: '12345xx', balance: 12345 },
 ];
 
+const logsMock = `
+#!/usr/bin/env node
+require("dotenv").config();
+const prompts = require("prompts");
+const kohaku = require("@_koi/kohaku");
+const axios = require("axios");
+
+// Parse cli params
+const PARSE_ARGS = [
+  "REDIS_IP",
+  "REDIS_PORT",
+  "AR_WALLET",
+  "NODE_MODE",
+  "STAKE",
+  "SERVICE_URL",
+  "TRUSTED_SERVICE_URL",
+  "SERVER_PORT",
+  "TASKS",
+  "RESTORE_KOHAKU"
+];
+let yargs = require("yargs");
+for (const arg of PARSE_ARGS) yargs = yargs.option(arg, { type: "string" });
+const argv = yargs.help().argv;
+for (const arg of PARSE_ARGS)
+  if (argv[arg] !== undefined) process.env[arg] = argv[arg];
+
+const { tools, arweave, Namespace } = require("./src/helpers");
+const { verifyStake, setupWebServer, runPeriodic } = require("./src/service");
+
+const GATEWAY_URL = "https://arweave.net/";
+`;
+
 enum Tab {
   KeyManagement = 'KeyManagement',
   NodeLogs = 'NodeLogs',
@@ -55,7 +87,7 @@ const Settings = () => {
       {tab === Tab.KeyManagement && (
         <KeyManagementTable accounts={accountsMock} />
       )}
-      {tab === Tab.NodeLogs && <NodeLogs />}
+      {tab === Tab.NodeLogs && <NodeLogs logs={logsMock} />}
     </div>
   );
 };

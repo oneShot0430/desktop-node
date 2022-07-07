@@ -13,7 +13,8 @@ import {
   TaskStatusToLabeMap,
 } from 'webapp/services';
 
-import { SourceCode } from './SourceCode';
+import { SourceCode } from '../../SourceCode';
+
 import { TaskDetails } from './TaskDetails';
 
 type TabsType = 'TaskDetails' | 'SourceCode';
@@ -52,7 +53,7 @@ export const TaskDetailsModal = ({ task, onClose }: PropsType) => {
   const activeClasses = 'border-b-2 border-finnieEmerald-light';
 
   return (
-    <div className="py-6 px-8 h-full flex flex-col">
+    <div className="flex flex-col h-full px-8 py-6">
       <div className="flex justify-between">
         <div className="flex justify-start gap-6 pl-6 mb-5">
           <div

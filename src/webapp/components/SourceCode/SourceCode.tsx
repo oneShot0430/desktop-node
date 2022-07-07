@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 
 import codeTheme from './codeTheme';
@@ -6,8 +6,7 @@ import codeTheme from './codeTheme';
 type PropsType = {
   sourceCode: string;
 };
-
-export const SourceCode = ({ sourceCode }: PropsType) => {
+const SourceCode = ({ sourceCode }: PropsType) => {
   return (
     <SyntaxHighlighter
       showLineNumbers
@@ -22,3 +21,5 @@ export const SourceCode = ({ sourceCode }: PropsType) => {
     </SyntaxHighlighter>
   );
 };
+
+export default memo(SourceCode);
