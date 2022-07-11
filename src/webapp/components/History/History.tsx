@@ -6,7 +6,7 @@ import { Table } from '../ui/Table';
 
 import { HistoryRow } from './components/HistoryRow';
 
-const historyRows = [] as any;
+const historyRows = [] as { publicKey: string; task: Task }[];
 
 const tableHeaders = [
   'TaskName & Start Time',
@@ -20,11 +20,9 @@ const tableHeaders = [
 export const History = () => {
   return (
     <Table tableHeaders={tableHeaders}>
-      {historyRows.map(
-        ({ publicKey, task }: { publicKey: string; task: Task }) => (
-          <HistoryRow key={publicKey} task={task} />
-        )
-      )}
+      {historyRows.map(({ publicKey, task }) => (
+        <HistoryRow key={publicKey} task={task} />
+      ))}
     </Table>
   );
 };
