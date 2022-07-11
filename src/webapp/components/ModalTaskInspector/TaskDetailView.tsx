@@ -2,13 +2,13 @@ import React from 'react';
 import { useQuery } from 'react-query';
 
 import ReportTaskIcon from 'svgs/flag-icon.svg';
-import { Task } from 'webapp/@type/task';
 import {
   getRewardEarned,
   QueryKeys,
   TaskService,
   TaskStatusToLabeMap,
 } from 'webapp/services';
+import { Task } from 'webapp/types';
 
 type TaskDetailViewProps = {
   task: Task;

@@ -6,7 +6,6 @@ import ActionHistoryIcon from 'assets/svgs/action-history-icon.svg';
 import AddWithdrawIcon from 'assets/svgs/add-withdraw-icon.svg';
 import PauseIcon from 'assets/svgs/pause-icon.svg';
 import PlayIcon from 'assets/svgs/play-icon.svg';
-import { Task } from 'webapp/@type/task';
 import { Button } from 'webapp/components/ui/Button';
 import {
   TableRow,
@@ -23,6 +22,7 @@ import {
   getLogs,
 } from 'webapp/services';
 import { showModal } from 'webapp/store/actions/modal';
+import { Task } from 'webapp/types';
 
 export const TaskRow = ({ task }: { task: Task }) => {
   const dispatch = useDispatch();

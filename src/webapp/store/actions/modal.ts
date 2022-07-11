@@ -1,4 +1,4 @@
-import { Task } from 'webapp/@type/task';
+import { Task } from 'webapp/types';
 
 import { ModalType, ModalAction } from '../types/modal';
 

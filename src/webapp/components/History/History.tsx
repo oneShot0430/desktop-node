@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 
-import { Task } from 'webapp/@type/task';
+import { Task } from 'webapp/types';
 
 import { Table } from '../ui/Table';
 

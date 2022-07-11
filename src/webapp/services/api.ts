@@ -1,7 +1,7 @@
 import { LAMPORTS_PER_SOL, PublicKey } from '@_koi/web3.js';
 
 import sdk from 'services/sdk';
-import { Task } from 'webapp/@type/task';
+import { Task } from 'webapp/types';
 
 import { TaskService } from './taskService';
 
