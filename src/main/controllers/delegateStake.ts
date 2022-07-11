@@ -15,6 +15,7 @@ import {
 import config from 'config';
 import sdk from 'services/sdk';
 
+import { DelegateStakeParam, DelegateStakeResponse } from '../../models/api';
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import { namespaceInstance } from '../node/helpers/Namespace';
 
@@ -34,14 +35,10 @@ const TASK_CONTRACT_ID: PublicKey = new PublicKey(
   config.node.TASK_CONTRACT_ID || ''
 );
 
-interface DelegateStakeParam {
-  taskAccountPubKey: string;
-  // stakingAccKeypair: Keypair;
-  // stakePotAccount: PublicKey;
-  stakeAmount: number;
-}
-
-const delegateStake = async (event: Event, payload: DelegateStakeParam) => {
+const delegateStake = async (
+  event: Event,
+  payload: DelegateStakeParam
+): Promise<DelegateStakeResponse> => {
   const { taskAccountPubKey, stakeAmount } = payload;
   //TODO: don't accept mainSystemAccount in param get the location from redis and load that
   // stakingAccKeypair Automatically get by the task_id

@@ -70,3 +70,8 @@ export const getLogs = (taskAccountPubKey: string, noOfLines = 500) => {
       console.log('--------------- END OF NODE LOGS ----------------');
     });
 };
+
+export const createStakingWallet = (mnemonic?: string) => {
+  console.log('CREATING STAKING WALLET');
+  return window.main.createStakingWallet({ mnemonic });
+};

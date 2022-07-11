@@ -1,7 +1,6 @@
 import config from 'config';
+import { TaskData } from 'models/task';
 import sendMessage from 'preload/sendMessage';
-
-import { TaskData } from '../type/tasks';
 
 interface rewardWalletPayload {
   available_balances: TaskData['availableBalances'];

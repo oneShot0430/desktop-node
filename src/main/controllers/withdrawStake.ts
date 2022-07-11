@@ -10,7 +10,7 @@ import {
 } from '@_koi/web3.js';
 
 import config from 'config';
-import { WithdrawStakeParam } from 'models';
+import { WithdrawStakeParam } from 'models/api';
 import sdk from 'services/sdk';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';

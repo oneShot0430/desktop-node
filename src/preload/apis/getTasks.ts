@@ -1,6 +1,6 @@
 import config from 'config';
+import { Task } from 'models';
 import sendMessage from 'preload/sendMessage';
-import { Task } from 'preload/type/tasks';
 
 export default (): Promise<Task[]> =>
   sendMessage(config.endpoints.GET_TASKS, {});

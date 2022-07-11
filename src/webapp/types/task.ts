@@ -1,4 +1,4 @@
-import { Task as TS, TaskData } from 'preload/type/tasks';
+import { Task as TS, TaskData } from 'models/task';
 
 export type Task = Omit<TS, 'data'> & TaskData;
 

@@ -1,10 +1,6 @@
 import config from 'config';
+import { GetTaskInfoParam, GetTaskInfoResponse } from 'models/api';
 import sendMessage from 'preload/sendMessage';
-import { TaskData } from 'preload/type/tasks';
 
-interface GetTaskInfoParam {
-  taskAccountPubKey: string;
-}
-
-export default (payload: GetTaskInfoParam): Promise<TaskData> =>
+export default (payload: GetTaskInfoParam): Promise<GetTaskInfoResponse> =>
   sendMessage(config.endpoints.GET_TASK_INFO, payload);
