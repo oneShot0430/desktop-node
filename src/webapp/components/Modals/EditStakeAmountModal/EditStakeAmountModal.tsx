@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { memo, useCallback, useState } from 'react';
 import { useQuery } from 'react-query';
 
 import { Button } from 'webapp/components/ui/Button';
@@ -10,7 +10,8 @@ import {
   getRewardEarned,
 } from 'webapp/services';
 
-import { ModalTopBar } from '../ModalTopBar';
+import ModalContent from '../Modal/ModalContent';
+import ModalTopBar from '../Modal/ModalTopBar';
 
 import { AddStake } from './AddStake';
 import { Withdraw } from './Withdraw';
@@ -23,7 +24,7 @@ enum View {
 
 type PropsType = Readonly<{ onClose: () => void }>;
 
-export const EditStakeAmountModal = ({ onClose }: PropsType) => {
+const EditStakeAmountModal = ({ onClose }: PropsType) => {
   const [view, setView] = useState<View>(View.SelectAction);
   const task = useAppSelector((state) => state.modal.modalData.task);
 
@@ -57,7 +58,7 @@ export const EditStakeAmountModal = ({ onClose }: PropsType) => {
   const title = getTitle();
 
   return (
-    <div>
+    <ModalContent>
       <ModalTopBar
         title={title}
         onClose={onClose}
@@ -99,6 +100,8 @@ export const EditStakeAmountModal = ({ onClose }: PropsType) => {
           </div>
         </div>
       )}
-    </div>
+    </ModalContent>
   );
 };
+
+export default memo(EditStakeAmountModal);

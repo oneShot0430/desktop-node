@@ -6,7 +6,8 @@ export type ModalType =
   | 'CREATE_TASK'
   | 'WITHDRAW_STAKE'
   | 'EDIT_STAKE_AMOUNT'
-  | 'TASK_DETAILS';
+  | 'TASK_DETAILS'
+  | 'ADD_NEW_KEY';
 
 export type ModalPayload = {
   modalType: ModalType | null;

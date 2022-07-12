@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import { useQuery } from 'react-query';
 
 import ExternalSourceIconSvg from 'assets/svgs/external-source-icon-white.svg';
@@ -24,7 +24,7 @@ type PropsType = {
   onClose: () => void;
 };
 
-export const TaskDetailsModal = ({ task, onClose }: PropsType) => {
+const TaskDetailsModal = ({ task, onClose }: PropsType) => {
   const [currentView, setCurrentView] = useState<TabsType>('TaskDetails');
 
   const { data: myTotalRewards } = useQuery(
@@ -138,3 +138,5 @@ export const TaskDetailsModal = ({ task, onClose }: PropsType) => {
     </div>
   );
 };
+
+export default memo(TaskDetailsModal);

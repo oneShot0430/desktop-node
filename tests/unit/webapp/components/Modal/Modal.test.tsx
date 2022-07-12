@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Modal from 'webapp/components/Modal';
+import { Modal } from 'webapp/components/Modals';
 
 import { act, render, fireEvent, screen } from '../../test-utils';
 

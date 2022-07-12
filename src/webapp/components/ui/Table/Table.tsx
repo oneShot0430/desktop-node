@@ -20,7 +20,7 @@ export const Table = ({
   if (error) return <div>{error}</div>;
 
   return (
-    <table className="w-full text-[14px] text-left table-auto">
+    <table className="w-full text-[14px] text-left table-auto overflow-hidden">
       <TableHeader tableHeaders={tableHeaders} />
       <tbody>{children}</tbody>
     </table>

@@ -14,13 +14,7 @@ type ButtonProps = {
   HTMLButtonElement
 >;
 
-export const Button = ({
-  label,
-  icon,
-  onlyIcon,
-  className,
-  ...rest
-}: ButtonProps) => {
+const Button = ({ label, icon, onlyIcon, className, ...rest }: ButtonProps) => {
   if (onlyIcon) {
     return (
       <button aria-label={label} {...rest}>
@@ -46,3 +40,5 @@ export const Button = ({
     </button>
   );
 };
+
+export default Button;

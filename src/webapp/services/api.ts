@@ -68,6 +68,7 @@ export const getLogs = (taskAccountPubKey: string, noOfLines = 500) => {
       console.log('--------------- NODE LOGS ----------------');
       console.log(logs);
       console.log('--------------- END OF NODE LOGS ----------------');
+      return logs;
     });
 };
 
