@@ -20,7 +20,7 @@ export default async (): Promise<any> => {
   try {
     // await namespaceInstance.storeSet(
     //   'WALLET_LOCATION',
-    //   '/home/ghazanfer/.config/solana/id.json'
+    //   '{WALLET_PATH_HERE}'
     // );
     // await startTask(null, {
     //   taskAccountPubKey: 'dGeVfkp1BcLDK13gxoNz5cy4aMMKXVsvSjDAhyLpPCR',
