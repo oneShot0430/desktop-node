@@ -11,8 +11,9 @@ import {
   SYSVAR_CLOCK_PUBKEY,
 } from '@_koi/web3.js';
 import axios from 'axios';
-import leveldown from 'leveldown';
-import levelup from 'levelup';
+
+import leveldbWrapper from './leveldb';
+
 // import * as redis from 'redis';
 
 // eslint-disable-next-line
@@ -90,7 +91,7 @@ class Namespace {
     this.#mainSystemAccount = mainSystemAccount;
     this.mainSystemAccountPubKey = mainSystemAccount.publicKey;
     this.taskData = taskData;
-    this.db = levelup(leveldown('./desktopKoiiNodeDB'));
+    this.db = leveldbWrapper.levelDb;
   }
 
   /**
