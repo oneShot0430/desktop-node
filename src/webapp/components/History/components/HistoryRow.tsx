@@ -2,7 +2,6 @@ import React from 'react';
 import { useQuery } from 'react-query';
 import { useDispatch } from 'react-redux';
 
-import { Task } from 'webapp/@type/task';
 import {
   TableRow,
   TableCell,
@@ -11,6 +10,7 @@ import {
 import { TaskDetailsCell } from 'webapp/components/ui/Table/TaskDetailsCell';
 import { QueryKeys, TaskService } from 'webapp/services';
 import { showModal } from 'webapp/store/actions/modal';
+import { Task } from 'webapp/types';
 
 export const HistoryRow = ({ task }: { task: Task }) => {
   const dispatch = useDispatch();

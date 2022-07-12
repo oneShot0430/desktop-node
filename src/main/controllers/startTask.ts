@@ -17,6 +17,7 @@ import * as nacl from 'tweetnacl';
 
 import config from 'config';
 import { Namespace, namespaceInstance } from 'main/node/helpers/Namespace';
+import { TaskStartStopParam } from 'models/api';
 import koiiTasks from 'services/koiiTasks';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
@@ -25,12 +26,9 @@ import initExpressApp from '../node/initExpressApp';
 // eslint-disable-next-line
 const bufferlayout = require('buffer-layout')
 
-type StartTaskPayload = {
-  taskAccountPubKey: string;
-};
 const OPERATION_MODE = 'service';
 
-const startTask = async (event: Event, payload: StartTaskPayload) => {
+const startTask = async (event: Event, payload: TaskStartStopParam) => {
   const { taskAccountPubKey } = payload;
   if (!(await namespaceInstance.storeGet('WALLET_LOCATION'))) {
     throw Error('WALLET_LOCATION not specified');

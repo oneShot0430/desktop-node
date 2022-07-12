@@ -4,7 +4,6 @@ import { useQuery } from 'react-query';
 import ExternalSourceIconSvg from 'assets/svgs/external-source-icon-white.svg';
 import FlagIconTealSvg from 'assets/svgs/flag-teal-icon.svg';
 import CloseIcon from 'svgs/close-icons/close-icon-white.svg';
-import { Task } from 'webapp/@type/task';
 import { Button } from 'webapp/components/ui/Button';
 import {
   QueryKeys,
@@ -12,6 +11,7 @@ import {
   TaskService,
   TaskStatusToLabeMap,
 } from 'webapp/services';
+import { Task } from 'webapp/types';
 
 import { SourceCode } from '../../SourceCode';
 

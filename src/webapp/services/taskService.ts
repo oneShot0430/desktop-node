@@ -2,8 +2,7 @@ import { isNil, max, min, sum, isString } from 'lodash';
 
 import { Task as TaskRaw } from 'main/type/TaskData';
 import arweave from 'services/arweave';
-
-import { Task, TaskStatus } from '../@type/task';
+import { Task, TaskStatus } from 'webapp/types';
 
 import { getStakingAccountPublicKey } from './api';
 

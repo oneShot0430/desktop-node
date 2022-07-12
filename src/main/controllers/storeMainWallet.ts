@@ -2,16 +2,13 @@ import { Event } from 'electron';
 import fs from 'fs';
 
 import { namespaceInstance } from 'main/node/helpers/Namespace';
+import { StoreMainWalletParam } from 'models/api';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 
-interface storeWalletParam {
-  walletPath: string;
-}
-
 const storeWallet = async (
   event: Event,
-  payload: storeWalletParam
+  payload: StoreMainWalletParam
 ): Promise<boolean> => {
   console.log('IN THE API');
   const { walletPath } = payload;

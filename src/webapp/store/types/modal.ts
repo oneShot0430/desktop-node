@@ -1,6 +1,6 @@
 import { Action } from 'redux';
 
-import { Task } from 'webapp/@type/task';
+import { Task } from 'webapp/types';
 
 export type ModalType =
   | 'CREATE_TASK'

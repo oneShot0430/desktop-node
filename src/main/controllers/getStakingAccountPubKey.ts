@@ -4,9 +4,12 @@ import fs from 'fs';
 
 import { Keypair } from '@_koi/web3.js';
 
+import { GetStakingAccountPubKeyResponse } from '../../models/api';
 import mainErrorHandler from '../../utils/mainErrorHandler';
 
-const stakingAccountPubKey = async (event: Event): Promise<string> => {
+const stakingAccountPubKey = async (
+  event: Event
+): Promise<GetStakingAccountPubKeyResponse> => {
   console.log('IN THE API');
   let stakingAccount;
   let pubkey: string;

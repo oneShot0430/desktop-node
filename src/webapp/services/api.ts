@@ -1,7 +1,7 @@
 import { LAMPORTS_PER_SOL, PublicKey } from '@_koi/web3.js';
 
 import sdk from 'services/sdk';
-import { Task } from 'webapp/@type/task';
+import { Task } from 'webapp/types';
 
 import { TaskService } from './taskService';
 
@@ -38,6 +38,7 @@ export const getStakingAccountPublicKey = (): Promise<string> => {
 };
 
 export const withdrawStake = (taskAccountPubKey: string) => {
+  console.log('WITHDRAWING FROM', taskAccountPubKey);
   return window.main.withdrawStake({ taskAccountPubKey });
 };
 
@@ -68,4 +69,9 @@ export const getLogs = (taskAccountPubKey: string, noOfLines = 500) => {
       console.log(logs);
       console.log('--------------- END OF NODE LOGS ----------------');
     });
+};
+
+export const createStakingWallet = (mnemonic?: string) => {
+  console.log('CREATING STAKING WALLET');
+  return window.main.createStakingWallet({ mnemonic });
 };

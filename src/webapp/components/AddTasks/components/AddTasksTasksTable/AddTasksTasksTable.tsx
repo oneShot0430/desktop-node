@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Task } from 'webapp/@type/task';
+import { Task } from 'webapp/types';
 
 import AddTasksTaskRow from './AddTasksTaskRow';
 

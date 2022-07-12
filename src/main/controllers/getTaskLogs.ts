@@ -2,14 +2,14 @@ import { Event } from 'electron';
 
 import * as readLastLines from 'read-last-lines';
 
-import { GetTaskLogsParam } from 'models';
+import { GetTaskLogsParam, GetTaskLogsResponse } from 'models/api';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 
 const getTaskLogs = async (
   event: Event,
   payload: GetTaskLogsParam
-): Promise<string> => {
+): Promise<GetTaskLogsResponse> => {
   const { taskAccountPubKey, noOfLines } = payload;
 
   try {

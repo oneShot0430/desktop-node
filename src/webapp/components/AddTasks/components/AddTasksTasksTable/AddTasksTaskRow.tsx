@@ -3,12 +3,12 @@ import React from 'react';
 import { useQuery } from 'react-query';
 
 import LockedIcon from 'svgs/locked-icon.svg';
-import { Task } from 'webapp/@type/task';
 import InspectButton from 'webapp/components/InspectButton';
 import RunButton from 'webapp/components/RunButton';
 import { useAppDispatch } from 'webapp/hooks/reduxHook';
 import { QueryKeys, TaskService } from 'webapp/services';
 import { showTaskInspector } from 'webapp/store/actions/taskInspector';
+import { Task } from 'webapp/types';
 
 type TaskRowProps = {
   task: Task;

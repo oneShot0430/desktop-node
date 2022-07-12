@@ -1,10 +1,6 @@
 import config from 'config';
+import { DelegateStakeParam, DelegateStakeResponse } from 'models/api';
 import sendMessage from 'preload/sendMessage';
 
-interface DelegateStakeParam {
-  taskAccountPubKey: string;
-  stakeAmount: number;
-}
-
-export default (payload: DelegateStakeParam): Promise<string> =>
+export default (payload: DelegateStakeParam): Promise<DelegateStakeResponse> =>
   sendMessage(config.endpoints.DELEGATE_STAKE, payload);

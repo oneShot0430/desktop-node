@@ -5,15 +5,17 @@ import { Keypair } from '@_koi/web3.js';
 import * as bip39 from 'bip39';
 import { derivePath } from 'ed25519-hd-key';
 
+import {
+  CreateStakingWalletParam,
+  CreateStakingWalletResponse,
+} from 'models/api';
+
 import mainErrorHandler from '../../utils/mainErrorHandler';
 
-interface createWalletParam {
-  mnemonic?: string;
-}
 const createWallet = async (
   event: Event,
-  payload: createWalletParam
-): Promise<string> => {
+  payload: CreateStakingWalletParam
+): Promise<CreateStakingWalletResponse> => {
   console.log('IN CREATE WALLET  API');
   const { mnemonic } = payload;
 

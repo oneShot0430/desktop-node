@@ -3,10 +3,14 @@ import * as fsSync from 'fs';
 
 import { Keypair } from '@_koi/web3.js';
 
+import { GetMainAccountPubKeyResponse } from 'models/api';
+
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import { namespaceInstance } from '../node/helpers/Namespace';
 
-const mainAccountPubKey = async (event: Event): Promise<string> => {
+const mainAccountPubKey = async (
+  event: Event
+): Promise<GetMainAccountPubKeyResponse> => {
   console.log('IN THE API');
   let mainSystemAccount;
   let pubkey: string;

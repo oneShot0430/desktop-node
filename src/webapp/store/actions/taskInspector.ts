@@ -1,8 +1,8 @@
-import { Task } from 'webapp/@type/task';
 import {
   TaskInspectorAction,
   TaskInspectorType,
 } from 'webapp/store/types/taskInspector';
+import { Task } from 'webapp/types';
 
 import { HIDE_TASK_INSPECTOR, SHOW_TASK_INSPECTOR } from './types';
 

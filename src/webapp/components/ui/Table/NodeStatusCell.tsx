@@ -3,7 +3,7 @@ import React from 'react';
 import StatusAcceptingSubmissionIcon from 'assets/svgs/status-accepting-icon.svg';
 import StatusCompletedIcon from 'assets/svgs/status-completed-icon.svg';
 import StatusVotingIcon from 'assets/svgs/status-voting-icon.svg';
-import { TaskStatus } from 'webapp/@type/task';
+import { TaskStatus } from 'webapp/types';
 
 import { TableCell } from './TableCell';
 

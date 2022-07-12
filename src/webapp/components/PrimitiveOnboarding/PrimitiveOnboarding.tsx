@@ -3,6 +3,8 @@ import { useFilePicker } from 'use-file-picker';
 
 import { Button } from 'webapp/components/ui/Button';
 
+import { createStakingWallet } from '../../services';
+
 const PrimitiveOnboarding = (): JSX.Element => {
   const [openFileSelector, { plainFiles }] = useFilePicker({
     accept: '.json',
@@ -45,7 +47,7 @@ const PrimitiveOnboarding = (): JSX.Element => {
 
   const generateStakingWallet = () => {
     setStakingWalletLoading(true);
-    window.main.createStakingWallet().finally(() => {
+    createStakingWallet().finally(() => {
       checkWalletExists();
       setStakingWalletLoading(false);
     });
