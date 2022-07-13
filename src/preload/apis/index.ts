@@ -3,6 +3,7 @@ import createStakingWallet from './createStakingWallet';
 import delegateStake from './delegateStake';
 import getEarnedRewardByNode from './getEarnedRewardByNode';
 import getMainAccountPubKey from './getMainAccountPubKey';
+import getMyTasks from './getMyTasks';
 import getStakingAccountPubKey from './getStakingAccountPubKey';
 import getTaskInfo from './getTaskInfo';
 import getTaskLogs from './getTaskLogs';
@@ -28,4 +29,5 @@ export default {
   getTaskLogs,
   getStakingAccountPubKey,
   withdrawStake,
+  getMyTasks,
 };

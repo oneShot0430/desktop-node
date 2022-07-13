@@ -7,6 +7,7 @@ import errorHandler from './errorHandler';
 
 const initHandlers = (): void => {
   ipcMain.handle(config.endpoints.GET_TASKS, controllers.getTasks);
+  ipcMain.handle(config.endpoints.GET_MY_TASKS, controllers.getMyTasks);
   ipcMain.handle(config.endpoints.GET_TASK_SOURCE, controllers.getTaskSource);
   ipcMain.handle(
     config.endpoints.CREATE_STAKING_WALLET,
