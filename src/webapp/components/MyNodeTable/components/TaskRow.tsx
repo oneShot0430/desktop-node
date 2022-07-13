@@ -26,6 +26,7 @@ import { Task } from 'webapp/types';
 
 export const TaskRow = ({ task }: { task: Task }) => {
   const dispatch = useDispatch();
+  const queryCache = useQueryClient();
   const { taskName, taskManager, isRunning, publicKey } = task;
 
   const { data: earnedReward } = useQuery(
@@ -39,11 +40,18 @@ export const TaskRow = ({ task }: { task: Task }) => {
 
   const nodeStatus = TaskService.getStatus(task);
 
-  const handleToggleTask = () => {
-    (isRunning ? stopTask(publicKey) : startTask(publicKey)).finally(() => {
-      console.log('invalidate query');
-      useQueryClient().invalidateQueries(QueryKeys.taskList);
-    });
+  const handleToggleTask = async () => {
+    try {
+      if (isRunning) {
+        await stopTask(publicKey);
+      } else {
+        await startTask(publicKey);
+      }
+    } catch (error) {
+      console.warn(error);
+    } finally {
+      queryCache.invalidateQueries();
+    }
   };
 
   return (
