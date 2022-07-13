@@ -14,6 +14,7 @@ import {
 import { Task } from 'webapp/types';
 
 import { SourceCode } from '../../SourceCode';
+import { ModalContent } from '../Modal';
 
 import { TaskDetails } from './TaskDetails';
 
@@ -53,89 +54,91 @@ const TaskDetailsModal = ({ task, onClose }: PropsType) => {
   const activeClasses = 'border-b-2 border-finnieEmerald-light';
 
   return (
-    <div className="flex flex-col h-full px-8 py-6">
-      <div className="flex justify-between">
-        <div className="flex justify-start gap-6 pl-6 mb-5">
-          <div
-            className={`${
-              currentView === 'TaskDetails' && activeClasses
-            } text-semibold`}
-            onClick={() => setCurrentView('TaskDetails')}
-          >
-            Task Details
+    <ModalContent theme="dark" className="text-white w-[900px] h-[460px]">
+      <div className="flex flex-col h-full px-8 py-6">
+        <div className="flex justify-between">
+          <div className="flex justify-start gap-6 pl-6 mb-5">
+            <div
+              className={`${
+                currentView === 'TaskDetails' && activeClasses
+              } text-semibold`}
+              onClick={() => setCurrentView('TaskDetails')}
+            >
+              Task Details
+            </div>
+            <div
+              className={`${
+                currentView === 'SourceCode' && activeClasses
+              } text-semibold`}
+              onClick={() => setCurrentView('SourceCode')}
+            >
+              Source Code
+            </div>
           </div>
-          <div
-            className={`${
-              currentView === 'SourceCode' && activeClasses
-            } text-semibold`}
-            onClick={() => setCurrentView('SourceCode')}
-          >
+
+          <CloseIcon
+            data-testid="close-modal-button"
+            onClick={onClose}
+            className="w-[24px] h-[24px] cursor-pointer"
+          />
+        </div>
+
+        <div className="flex items-center mb-5 w-[100%]">
+          <div className="cursor-pointer">
+            <FlagIconTealSvg />
+          </div>
+          <div className="pl-[14px] pr-[14px]">
+            Inspect{' '}
+            <span className="text-finnieEmerald-light">{task.taskName}</span>{' '}
             Source Code
           </div>
+          {/*TODO: handle open in the browser window */}
+          {currentView === 'SourceCode' && (
+            <a
+              className="cursor-pointer"
+              target="_blank"
+              href={`https://viewblock.io/arweave/tx/${task.taskAuditProgram}`}
+              rel="noreferrer"
+            >
+              <ExternalSourceIconSvg />
+            </a>
+          )}
         </div>
 
-        <CloseIcon
-          data-testid="close-modal-button"
-          onClick={onClose}
-          className="w-[24px] h-[24px] cursor-pointer"
-        />
-      </div>
+        <div className="overflow-y-auto">
+          {currentView === 'TaskDetails' && (
+            <>
+              <div className="pl-6">
+                <TaskDetails
+                  owner={task.taskManager}
+                  totalBounty={task.bountyAmountPerRound}
+                  nodesParticipating={nodes}
+                  totalKoiiStaked={totalStake}
+                  currentTopStake={topStake}
+                  myCurrentStake={myStake}
+                  state={state}
+                  myTotalRewards={myTotalRewards}
+                />
+              </div>
 
-      <div className="flex items-center mb-5 w-[100%]">
-        <div className="cursor-pointer">
-          <FlagIconTealSvg />
-        </div>
-        <div className="pl-[14px] pr-[14px]">
-          Inspect{' '}
-          <span className="text-finnieEmerald-light">{task.taskName}</span>{' '}
-          Source Code
-        </div>
-        {/*TODO: handle open in the browser window */}
-        {currentView === 'SourceCode' && (
-          <a
-            className="cursor-pointer"
-            target="_blank"
-            href={`https://viewblock.io/arweave/tx/${task.taskAuditProgram}`}
-            rel="noreferrer"
-          >
-            <ExternalSourceIconSvg />
-          </a>
-        )}
-      </div>
-
-      <div className="overflow-y-auto">
-        {currentView === 'TaskDetails' && (
-          <>
-            <div className="pl-6">
-              <TaskDetails
-                owner={task.taskManager}
-                totalBounty={task.bountyAmountPerRound}
-                nodesParticipating={nodes}
-                totalKoiiStaked={totalStake}
-                currentTopStake={topStake}
-                myCurrentStake={myStake}
-                state={state}
-                myTotalRewards={myTotalRewards}
-              />
+              <div className="pl-6 mt-16">
+                <Button
+                  onClick={handleWithdraw}
+                  label="Withdraw Stake"
+                  variant="danger"
+                  className="bg-finnieGray-secondary text-finnieBlue"
+                />
+              </div>
+            </>
+          )}
+          {currentView === 'SourceCode' && (
+            <div className="select-text ">
+              <SourceCode sourceCode={sourceCode} />
             </div>
-
-            <div className="pl-6 mt-16">
-              <Button
-                onClick={handleWithdraw}
-                label="Withdraw Stake"
-                variant="danger"
-                className="bg-finnieGray-secondary text-finnieBlue"
-              />
-            </div>
-          </>
-        )}
-        {currentView === 'SourceCode' && (
-          <div className="select-text ">
-            <SourceCode sourceCode={sourceCode} />
-          </div>
-        )}
+          )}
+        </div>
       </div>
-    </div>
+    </ModalContent>
   );
 };
 
