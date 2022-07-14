@@ -1,8 +1,8 @@
 {
-  "name": "finnie-desktop",
-  "productName": "finnie-desktop",
+  "name": "desktop-task-node",
+  "productName": "desktop-task-node",
   "version": "1.0.0",
-  "description": "Finnie desktop node",
+  "description": "Desktop Task Node",
   "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",
@@ -15,19 +15,19 @@
   },
   "keywords": [],
   "author": {
-    "name": "Finnie"
+    "name": "Koii"
   },
   "license": "MIT",
   "config": {
     "forge": {
       "packagerConfig": {
-        "name": "finnie-desktop"
+        "name": "desktop_task_node"
       },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "finnie_desktop"
+            "name": "desktop_task_node"
           }
         },
         {
