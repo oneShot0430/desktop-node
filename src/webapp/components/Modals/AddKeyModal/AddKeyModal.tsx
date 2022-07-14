@@ -1,43 +1,40 @@
-import React, { memo, useEffect, useRef } from 'react';
+import React, { memo, useState } from 'react';
 
-import AddIcon from 'assets/svgs/add-icon-outlined.svg';
-import UploadIcon from 'assets/svgs/upload-icon.svg';
+import CreateNewKey from './components/CreateNewKey';
+import ImportKey from './components/ImportKey';
+import ImportWithKeyPhrase from './components/ImportWithKeyPhrase';
+import KeyCreated from './components/KeyCreated';
 
-import ModalContent from '../Modal/ModalContent';
-import ModalTopBar from '../Modal/ModalTopBar';
-
-import AddKeyAction from './components/AddKeyAction';
+export enum Steps {
+  ImportKey,
+  ImportWithKeyPhrase,
+  CreateNewKey,
+  KeyCreated,
+}
 
 const AddKeyModal = ({ onClose }: { onClose: () => void }) => {
-  const ref = useRef(null);
+  const [currentStep, setCurrentStep] = useState(Steps.ImportKey);
 
-  useEffect(() => {
-    if (ref.current) {
-      console.log('#####ef.current', ref.current);
-      ref.current.focus();
-    }
-  });
+  const getCurrentView = (step: Steps) => {
+    const views = {
+      [Steps.ImportKey]: (
+        <ImportKey onClose={onClose} setNextStep={setCurrentStep} />
+      ),
+      [Steps.ImportWithKeyPhrase]: (
+        <ImportWithKeyPhrase onClose={onClose} setNextStep={setCurrentStep} />
+      ),
+      [Steps.CreateNewKey]: (
+        <CreateNewKey onClose={onClose} setNextStep={setCurrentStep} />
+      ),
+      [Steps.KeyCreated]: (
+        <KeyCreated onClose={onClose} setNextStep={setCurrentStep} />
+      ),
+    };
 
-  return (
-    <ModalContent theme="dark" className="w-[800px] h-[320px]">
-      <ModalTopBar theme="dark" title={'Key Management'} onClose={onClose} />
-      <div className="flex flex-col items-start gap-2 pl-12">
-        <div className="text-xl font-semibold text-white">Add New Account</div>
-        <AddKeyAction
-          ref={ref}
-          title="Import with a seed phrase"
-          description="Import an existing wallet using a 12-word seed phrase"
-          icon={<UploadIcon />}
-        />
+    return views[step];
+  };
 
-        <AddKeyAction
-          title="Get a new key"
-          description="Start from the beginning"
-          icon={<AddIcon />}
-        />
-      </div>
-    </ModalContent>
-  );
+  return getCurrentView(currentStep);
 };
 
 export default memo(AddKeyModal);

@@ -3,12 +3,13 @@ import { twMerge } from 'tailwind-merge';
 
 type PropsType = {
   title: string;
+  onClick: () => void;
   description: string;
   icon: React.ReactNode;
 };
 
 const AddKeyAction = forwardRef<HTMLDivElement, PropsType>(
-  ({ icon, title, description }, ref) => {
+  ({ icon, title, description, onClick }, ref) => {
     const [hasFocus, setFocus] = useState(false);
     const classes = twMerge(
       'w-[436px] h-[68px] hover:bg-finnieBlue-light-tertiary active:hover:bg-finnieBlue-light-tertiary flex gap-6 rounded-lg text-white items-center px-5',
@@ -30,6 +31,7 @@ const AddKeyAction = forwardRef<HTMLDivElement, PropsType>(
         className={classes}
         onFocus={handleFocus}
         onBlur={handleBlur}
+        onClick={onClick}
       >
         {icon}
         <div className="flex flex-col items-start justify-start">

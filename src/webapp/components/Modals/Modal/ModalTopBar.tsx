@@ -11,6 +11,8 @@ type PropsType = Readonly<{
   onBackClick?: () => void;
   showBackButton?: boolean;
   theme?: 'dark' | 'light';
+  titleClasses?: string;
+  wrapperClasses?: string;
 }>;
 
 const getCloseIcon = (theme: 'dark' | 'light') => {
@@ -33,22 +35,26 @@ const ModalTopBar = ({
   onBackClick,
   showBackButton,
   theme = 'light',
+  titleClasses = '',
+  wrapperClasses = '',
 }: PropsType) => {
   const BackIconComponent = getBackIcon(theme);
   const CloseIconComponent = getCloseIcon(theme);
 
-  const topBarClasses = twMerge(
+  const topBarMergedClasses = twMerge(
     'flex justify-between items-center h-[67px] px-4',
-    theme === 'light' && 'shadow-lg'
+    theme === 'light' && 'shadow-lg',
+    wrapperClasses
   );
 
-  const titleClasses = twMerge(
+  const titleMergedClasses = twMerge(
     'text-xl leading-[32px] text-finnieBlue font-semibold',
-    theme === 'dark' && 'text-white'
+    theme === 'dark' && 'text-white',
+    titleClasses
   );
 
   return (
-    <div className={topBarClasses}>
+    <div className={topBarMergedClasses}>
       <div className="w-[36px] h-[36px]">
         {showBackButton && onBackClick && (
           <BackIconComponent
@@ -58,7 +64,7 @@ const ModalTopBar = ({
           />
         )}
       </div>
-      <div className={titleClasses}>{title}</div>
+      <div className={titleMergedClasses}>{title}</div>
       <div className="w-[36px] h-[36px]">
         <CloseIconComponent
           data-testid="close-modal-button"
