@@ -13,11 +13,23 @@ type PropsType = Readonly<{
   setNextStep: (step: Steps) => void;
 }>;
 
-const CreateNewKey = ({ onClose }: PropsType) => {
+// TODO:
+function validatePin(pin: string) {
+  return true;
+}
+
+const CreateNewKey = ({ onClose, setNextStep }: PropsType) => {
   const [pin, setPin] = useState('');
+  const [error, setError] = useState<string>(null);
+
   const handleCreateNewKey = () => {
-    // TODO: implement
-    throw new Error('Function not implemented.');
+    if (validatePin(pin)) {
+      // TODO: implement key creation
+
+      setNextStep(Steps.KeyCreated);
+    } else {
+      setError('Your pin is not correct');
+    }
   };
 
   const handlePinInputChange = (pin: string) => {
