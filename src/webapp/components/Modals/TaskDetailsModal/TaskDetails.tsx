@@ -12,7 +12,7 @@ type PropsType = {
 };
 
 const PropertyRow = ({ label, value }: { label: string; value: string }) => (
-  <div className="flex items-center mb-1 justify-left">
+  <div className="flex items-center mb-1 text-left justify-left">
     <div className="w-[200px]">{`${label}:`}</div>
     <div className="w-[200px] font-semibold text-left text-finnieEmerald-light">
       {value}
@@ -30,7 +30,7 @@ export const TaskDetails = ({
   state,
   myTotalRewards,
 }: PropsType) => (
-  <div className="">
+  <div>
     <PropertyRow label="Owner" value={owner.substring(0, 6)} />
     <PropertyRow label={'Total bounty'} value={`${totalBounty} KOII`} />
     <PropertyRow

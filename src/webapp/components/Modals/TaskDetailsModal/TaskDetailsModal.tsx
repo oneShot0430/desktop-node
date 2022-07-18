@@ -54,7 +54,7 @@ const TaskDetailsModal = ({ task, onClose }: PropsType) => {
   const activeClasses = 'border-b-2 border-finnieEmerald-light';
 
   return (
-    <ModalContent theme="dark" className="text-white w-[900px] h-[460px]">
+    <ModalContent theme="dark" className="text-white w-[900px] h-[480px]">
       <div className="flex flex-col h-full px-8 py-6">
         <div className="flex justify-between">
           <div className="flex justify-start gap-6 pl-6 mb-5">
