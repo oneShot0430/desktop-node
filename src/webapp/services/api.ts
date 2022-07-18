@@ -5,9 +5,15 @@ import { Task } from 'webapp/types';
 
 import { TaskService } from './taskService';
 
-export const fetchTasks = async (): Promise<Task[]> => {
+export const fetchAllTasks = async (): Promise<Task[]> => {
   const tasks = await window.main.getTasks();
   console.log('FETCHING TASKS', tasks);
+  return tasks.map(TaskService.parseTask);
+};
+
+export const fetchMyTasks = async (): Promise<Task[]> => {
+  const tasks = await window.main.getTasks();
+  console.log('FETCHING MY TASKS', tasks);
   return tasks.map(TaskService.parseTask);
 };
 
