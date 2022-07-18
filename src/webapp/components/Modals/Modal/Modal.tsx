@@ -32,7 +32,7 @@ const Modal = (): JSX.Element => {
   }, [modalRef]);
 
   const modalByTypes = {
-    CREATE_TASK: <ModalCreateTask />,
+    CREATE_TASK: <ModalCreateTask onClose={close} />,
     WITHDRAW_STAKE: <ModalWithdrawStake close={close} />,
     EDIT_STAKE_AMOUNT: <EditStakeAmountModal onClose={close} />,
     TASK_DETAILS: <TaskDetailsModal onClose={close} task={task} />,

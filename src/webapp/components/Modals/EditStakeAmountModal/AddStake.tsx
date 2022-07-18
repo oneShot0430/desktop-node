@@ -31,7 +31,7 @@ export const AddStake = ({ balance, publicKey }: PropsType) => {
     <div className="flex flex-col items-center justify-center pt-10 text-finnieBlue-dark">
       {loading && <div>loading...</div>}
       <div className="mb-3">
-        Enter the amount you want to withdraw from your stake.
+        Enter the amount you want to add to your stake.
       </div>
       <div className="mb-3">
         <input
