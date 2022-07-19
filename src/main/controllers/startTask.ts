@@ -10,8 +10,10 @@ import axios from 'axios';
 import * as base64 from 'base-64';
 import * as bodyParser from 'body-parser';
 import * as bs58 from 'bs58';
+import * as cheerio from 'cheerio';
 import * as dotenv from 'dotenv';
 import * as cron from 'node-cron';
+import * as puppeteer from 'puppeteer';
 import * as smartweave from 'smartweave';
 import * as nacl from 'tweetnacl';
 
@@ -24,7 +26,7 @@ import mainErrorHandler from '../../utils/mainErrorHandler';
 import initExpressApp from '../node/initExpressApp';
 
 // eslint-disable-next-line
-const bufferlayout = require('buffer-layout')
+const bufferlayout = require('buffer-layout');
 
 const OPERATION_MODE = 'service';
 
@@ -140,6 +142,10 @@ const loadTaskSource = async (src: string, namespace: Namespace) => {
         return smartweave;
       case 'base64':
         return base64;
+      case 'cheerio':
+        return cheerio;
+      case 'puppeteer':
+        return puppeteer;
     }
   };
 
