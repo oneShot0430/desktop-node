@@ -3,10 +3,12 @@ import React, { useState } from 'react';
 import { Button } from 'webapp/components/ui/Button';
 import { stakeOnTask } from 'webapp/services/api';
 
+import KoiiInput from './components/KoiiInput';
+
 export type PropsType = { balance: number; publicKey: string };
 
 export const AddStake = ({ balance, publicKey }: PropsType) => {
-  const [inputValue, setInputValue] = useState(0);
+  const [inputValue, setInputValue] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -22,6 +24,7 @@ export const AddStake = ({ balance, publicKey }: PropsType) => {
 
   const handleAddStake = () => {
     setLoading(true);
+    console.log('###inputValue', inputValue);
     stakeOnTask(publicKey, inputValue).finally(() => {
       setLoading(false);
     });
@@ -34,15 +37,7 @@ export const AddStake = ({ balance, publicKey }: PropsType) => {
         Enter the amount you want to add to your stake.
       </div>
       <div className="mb-3">
-        <input
-          min="0"
-          pattern="[0-9]+"
-          type="number"
-          value={inputValue}
-          className="w-[240px] h-[46px] outline-none bg-gray-200 border-b-finnieBlue border-2 text-4xl text-right koii_input"
-          disabled={loading}
-          onChange={handleInputChange}
-        />
+        <KoiiInput onInputChange={handleInputChange} disabled={loading} />
         {error && <div className="text-finnieRed-500">{error}</div>}
       </div>
       <div className="py-2 mb-3 text-xs text-finnieTeal-700">{`${balance} KOII available in your balance`}</div>
