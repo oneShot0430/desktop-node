@@ -1,14 +1,14 @@
 import React from 'react';
 import { useQuery } from 'react-query';
 
-import { fetchAllTasks, QueryKeys } from 'webapp/services';
+import { fetchAvailableTasks, QueryKeys } from 'webapp/services';
 
 import AvailableTasksTable from './components/AvailableTasksTable';
 
 const AddTasks = (): JSX.Element => {
   const { data: tasks, isLoading } = useQuery(
-    QueryKeys.taskList,
-    fetchAllTasks
+    QueryKeys.availableTaskList,
+    fetchAvailableTasks
   );
 
   return (

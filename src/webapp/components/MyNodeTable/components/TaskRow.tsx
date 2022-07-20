@@ -50,6 +50,7 @@ export const TaskRow = ({ task }: { task: Task }) => {
     } catch (error) {
       console.warn(error);
     } finally {
+      console.log('####refetch');
       queryCache.invalidateQueries();
     }
   };

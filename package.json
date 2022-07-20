@@ -31,18 +31,17 @@
           }
         },
         {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
+          "name": "@electron-forge/maker-dmg",
+          "config": {
+            "name": "desktop_task_node",
+            "format": "ULFO"
+          }
         },
         {
           "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
+          "config": {
+            "name": "desktop_task_node"
+          }
         }
       ],
       "plugins": [

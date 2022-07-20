@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { Button } from 'webapp/components/ui/Button';
 import { withdrawStake } from 'webapp/services';
 
+import KoiiInput from './components/KoiiInput';
+
 export type PropsType = { stakedBalance: number; publicKey: string };
 
 export const Withdraw = ({ stakedBalance, publicKey }: PropsType) => {
@@ -23,7 +25,8 @@ export const Withdraw = ({ stakedBalance, publicKey }: PropsType) => {
   const handleWithdraw = async () => {
     try {
       setLoading(true);
-      await withdrawStake(publicKey);
+      // TODO:
+      await withdrawStake(publicKey, inputValue);
     } catch (error) {
       console.log('###withdraw stake error ->', error);
       setError(error);
@@ -40,15 +43,8 @@ export const Withdraw = ({ stakedBalance, publicKey }: PropsType) => {
         Enter the amount you want to withdraw from your stake.
       </div>
 
-      <input
-        min="0"
-        pattern="[0-9]+"
-        type="number"
-        value={inputValue}
-        className="w-[240px] h-[46px] bg-gray-200 border-b-finnieBlue text-4xl text-right koii_input"
-        disabled={loading}
-        onChange={handleInputChange}
-      />
+      <KoiiInput onInputChange={handleInputChange} disabled={loading} />
+
       {error && <div className="text-finnieRed-500">{error}</div>}
 
       <div className="py-2 mb-3 text-xs text-finnieTeal-700">{`Current KOII Staked: ${stakedBalance} KOII`}</div>

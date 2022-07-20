@@ -17,6 +17,12 @@ export const fetchMyTasks = async (): Promise<Task[]> => {
   return tasks.map(TaskService.parseTask);
 };
 
+export const fetchAvailableTasks = async (): Promise<Task[]> => {
+  const tasks = await window.main.getAvailableTasks();
+  console.log('FETCHING AVAILABLE TASKS', tasks);
+  return tasks.map(TaskService.parseTask);
+};
+
 export const getRewardEarned = async (task: Task): Promise<number> => {
   const result = await window.main.getEarnedRewardByNode({
     available_balances: task.availableBalances,
@@ -43,7 +49,10 @@ export const getStakingAccountPublicKey = (): Promise<string> => {
   });
 };
 
-export const withdrawStake = (taskAccountPubKey: string) => {
+export const withdrawStake = (
+  taskAccountPubKey: string,
+  stakeAmount?: number
+) => {
   console.log('WITHDRAWING FROM', taskAccountPubKey);
   return window.main.withdrawStake({ taskAccountPubKey });
 };
