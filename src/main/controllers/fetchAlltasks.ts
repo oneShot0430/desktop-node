@@ -52,7 +52,7 @@ async function fetchAllTasks(): Promise<Task[]> {
         return null as Task;
       }
     })
-    .filter((e) => e != null && e.data.isWhitelisted);
+    .filter((e) => e != null && e.data.isWhitelisted && e.data.isActive);
   return tasks;
 }
 
