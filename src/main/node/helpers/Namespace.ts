@@ -84,7 +84,7 @@ class Namespace {
     taskTxId: string,
     expressApp: any,
     operationMode: string,
-    mainSystemAccount: Keypair,
+    mainSystemAccount: Keypair | null,
     taskData: TaskData
   ) {
     this.taskTxId = taskTxId;
@@ -93,9 +93,20 @@ class Namespace {
       // this.loadRedisClient();
     }
     this.#mainSystemAccount = mainSystemAccount;
-    this.mainSystemAccountPubKey = mainSystemAccount.publicKey;
+    this.mainSystemAccountPubKey = mainSystemAccount?.publicKey;
     this.taskData = taskData;
     this.db = leveldbWrapper.levelDb;
+  }
+
+  /**
+   * Namespace wrapper of storeGetAsync
+   * @param {Keypair} mainSystemAccount // mainSystemAccount keypair
+   * @returns {boolean} boolean indicating the success
+   */
+  async setMainSystemAccount(mainSystemAccount: Keypair) {
+    this.#mainSystemAccount = mainSystemAccount;
+    this.mainSystemAccountPubKey = mainSystemAccount?.publicKey;
+    return true;
   }
 
   /**
@@ -361,6 +372,9 @@ class Namespace {
     stakePotAccount: PublicKey,
     submission: string
   ): Promise<string> {
+    if (!this.#mainSystemAccount) {
+      throw Error('Please set the mainSystemAccount path before proceeding');
+    }
     if (submission.length > 512) {
       throw Error('Submission cannot be greater than 512 characters');
     }
@@ -431,6 +445,9 @@ class Namespace {
     stakePotAccount: PublicKey,
     stakeAmount: number
   ): Promise<string> {
+    if (!this.#mainSystemAccount) {
+      throw Error('Please set the mainSystemAccount path before proceeding');
+    }
     const data = encodeData(TASK_INSTRUCTION_LAYOUTS.Stake, { stakeAmount });
     const instruction = new TransactionInstruction({
       keys: [
@@ -465,6 +482,9 @@ class Namespace {
     beneficiaryAccount: PublicKey,
     claimerKeypair: Keypair
   ): Promise<string> {
+    if (!this.#mainSystemAccount) {
+      throw Error('Please set the mainSystemAccount path before proceeding');
+    }
     const data = encodeData(TASK_INSTRUCTION_LAYOUTS.ClaimReward, {});
     const instruction = new TransactionInstruction({
       keys: [
@@ -476,6 +496,10 @@ class Namespace {
       programId: TASK_CONTRACT_ID,
       data: data,
     });
+    console.log(
+      'this.mainSystemAccount',
+      this.#mainSystemAccount.publicKey.toBase58()
+    );
     const response = await sendAndConfirmTransaction(
       connection,
       new Transaction().add(instruction),
@@ -501,7 +525,7 @@ class Namespace {
     return response;
   }
 }
-const namespaceInstance = new Namespace('', null, 'service', new Keypair(), {});
+const namespaceInstance = new Namespace('', null, 'service', null, {});
 
 /**
  * Gets the node registry from Redis cache

@@ -1,6 +1,8 @@
 import { Event } from 'electron';
 import fs from 'fs';
 
+import { Keypair } from '@_koi/web3.js';
+
 import { namespaceInstance } from 'main/node/helpers/Namespace';
 import { StoreMainWalletParam } from 'models/api';
 
@@ -19,6 +21,12 @@ const storeWallet = async (
     if (!fs.existsSync(walletPath)) throw Error('Invalid Wallet Path');
     const wallet = 'WALLET_LOCATION';
     namespaceInstance.storeSet(wallet, path);
+    const mainSystemAccount = Keypair.fromSecretKey(
+      Uint8Array.from(
+        JSON.parse(fs.readFileSync('namespace/stakingWallet.json', 'utf-8'))
+      )
+    );
+    namespaceInstance.setMainSystemAccount(mainSystemAccount);
     return true;
   } catch (err) {
     console.log('ERROR', err);
