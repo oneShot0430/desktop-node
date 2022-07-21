@@ -18,7 +18,11 @@ import { Withdraw } from './Withdraw';
 
 enum View {
   Withdraw = 'Withdraw',
+  WithdrawConfirm = 'WithdrawConfirm',
+  WithdrawSuccess = 'WithdrawSuccess',
   Stake = 'Stake',
+  StakeConfirm = 'StakeConfirm',
+  StakeSuccess = 'StakeSuccess',
   SelectAction = 'SelectAction',
 }
 

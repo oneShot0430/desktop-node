@@ -3,4 +3,4 @@ import { WithdrawStakeParam } from 'models/api';
 import sendMessage from 'preload/sendMessage';
 
 export default (payload: WithdrawStakeParam): Promise<string> =>
-  sendMessage(config.endpoints.CHECK_WALLET_EXISTS, payload);
+  sendMessage(config.endpoints.WITHDRAW_STAKE, payload);
