@@ -14,7 +14,8 @@ const rewardWallet = async (
   payload: rewardWalletPayload
 ): Promise<unknown> => {
   const { available_balances } = payload;
-  console.log('IN THE API');
+  //console.log('AVAILABLE_BALANCE', available_balances);
+  //console.log('IN THE API');
   let stakingAccKeypair;
   try {
     stakingAccKeypair = Keypair.fromSecretKey(
@@ -23,9 +24,9 @@ const rewardWallet = async (
       )
     );
     const stakingPubkey = stakingAccKeypair.publicKey.toBase58();
-    console.log('STAKING PUBLIC KEY', stakingPubkey);
+    //console.log('STAKING PUBLIC KEY', stakingPubkey);
     const size = Object.keys(available_balances).length;
-    console.log('SIZE', size);
+    //console.log('SIZE', size);
     const keys = Object.keys(available_balances);
     const values = Object.values(available_balances);
     let reward: unknown;
@@ -36,6 +37,7 @@ const rewardWallet = async (
       console.log('CANDIDATE PUBLIC KEY', candidatePublicKey);
       if (candidatePublicKey == stakingPubkey) {
         reward = values[i];
+        console.log('REWARD', reward);
       }
     }
     return reward;

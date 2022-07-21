@@ -59,6 +59,10 @@ const TASK_INSTRUCTION_LAYOUTS = Object.freeze({
       BufferLayout.ns64('stakeAmount'),
     ]),
   },
+  ClaimReward: {
+    index: 8,
+    layout: BufferLayout.struct([BufferLayout.u8('instruction')]),
+  },
 });
 // Singletons
 /**
@@ -393,10 +397,11 @@ class Namespace {
     connection: Connection,
     taskStateInfoKeypairPubKey: PublicKey,
     submitterPubkey: PublicKey,
-    voterKeypair: Keypair
+    voterKeypair: Keypair,
+    isValid: boolean
   ): Promise<string> {
     const data = encodeData(TASK_INSTRUCTION_LAYOUTS.Vote, {
-      is_valid: 1,
+      is_valid: isValid,
     });
     const instruction = new TransactionInstruction({
       keys: [
@@ -449,6 +454,32 @@ class Namespace {
       connection,
       new Transaction().add(instruction),
       [this.#mainSystemAccount, stakingAccKeypair]
+    );
+    return response;
+  }
+
+  async claimReward(
+    connection: Connection,
+    taskStateInfoAddress: PublicKey,
+    stakePotAccount: PublicKey,
+    beneficiaryAccount: PublicKey,
+    claimerKeypair: Keypair
+  ): Promise<string> {
+    const data = encodeData(TASK_INSTRUCTION_LAYOUTS.ClaimReward, {});
+    const instruction = new TransactionInstruction({
+      keys: [
+        { pubkey: taskStateInfoAddress, isSigner: false, isWritable: true },
+        { pubkey: claimerKeypair.publicKey, isSigner: true, isWritable: true },
+        { pubkey: stakePotAccount, isSigner: false, isWritable: true },
+        { pubkey: beneficiaryAccount, isSigner: false, isWritable: true },
+      ],
+      programId: TASK_CONTRACT_ID,
+      data: data,
+    });
+    const response = await sendAndConfirmTransaction(
+      connection,
+      new Transaction().add(instruction),
+      [this.#mainSystemAccount, claimerKeypair]
     );
     return response;
   }

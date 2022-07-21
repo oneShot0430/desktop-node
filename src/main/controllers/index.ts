@@ -1,5 +1,6 @@
 import addTask from './addTask';
 import checkWalletExists from './checkWalletExists';
+import claimReward from './claimReward';
 import createStakingWallet from './createStakingWallet';
 import delegateStake from './delegateStake';
 import getAvailableTasks from './getAvailableTasks';
@@ -32,4 +33,5 @@ export default {
   getStakingAccountPubKey,
   getMyTasks,
   getAvailableTasks,
+  claimReward,
 };

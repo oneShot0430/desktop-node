@@ -43,6 +43,7 @@ const initHandlers = (): void => {
     config.endpoints.GET_STAKING_ACCOUNT_PUBKEY,
     controllers.getStakingAccountPubKey
   );
+  ipcMain.handle(config.endpoints.CLAIM_REWARD, controllers.claimReward);
 };
 
 export default errorHandler(initHandlers, 'Init handlers error');

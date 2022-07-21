@@ -8,3 +8,4 @@ export * from './getStakingAccountPubKey';
 export * from './getTaskInfo';
 export * from './storeMainWallet';
 export * from './taskStartStop';
+export * from './claimReward';
