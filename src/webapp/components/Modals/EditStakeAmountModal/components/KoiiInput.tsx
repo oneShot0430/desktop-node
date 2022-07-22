@@ -1,15 +1,15 @@
 import React, { memo, useState } from 'react';
 
 type PropsType = {
-  disabled: boolean;
+  disabled?: boolean;
   onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 const KoiiInput = ({ disabled, onInputChange }: PropsType) => {
-  const [inputValue, setInputValue] = useState(null);
+  const [inputValue, setInputValue] = useState('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(+e.target.value);
+    setInputValue(e.target.value);
     onInputChange(e);
   };
 
