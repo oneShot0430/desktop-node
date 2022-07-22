@@ -92,8 +92,16 @@ class Namespace {
     if (operationMode === 'service') {
       // this.loadRedisClient();
     }
-    this.#mainSystemAccount = mainSystemAccount;
-    this.mainSystemAccountPubKey = mainSystemAccount?.publicKey;
+    if (!mainSystemAccount) {
+      const wallet = 'WALLET_LOCATION';
+      this.storeGet(wallet).then((walletPath) => {
+        const mainSystemAccount = Keypair.fromSecretKey(
+          Uint8Array.from(JSON.parse(fs.readFileSync(walletPath, 'utf-8')))
+        );
+        this.#mainSystemAccount = mainSystemAccount;
+        this.mainSystemAccountPubKey = mainSystemAccount?.publicKey;
+      });
+    }
     this.taskData = taskData;
     this.db = leveldbWrapper.levelDb;
   }
@@ -527,6 +535,14 @@ class Namespace {
 }
 const namespaceInstance = new Namespace('', null, 'service', null, {});
 
+// const wallet = 'WALLET_LOCATION';
+// namespaceInstance.storeGet(wallet).then(async (walletPath)=>{
+//   const mainSystemAccount = Keypair.fromSecretKey(
+//     Uint8Array.from(JSON.parse(fs.readFileSync(walletPath, 'utf-8')))
+//   );
+//   await namespaceInstance.setMainSystemAccount(mainSystemAccount)
+
+// });
 /**
  * Gets the node registry from Redis cache
  * @returns {Array<BundlerPayload<data:RegistrationData>>}
