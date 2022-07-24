@@ -8,3 +8,6 @@ export * from './getStakingAccountPubKey';
 export * from './getTaskInfo';
 export * from './storeMainWallet';
 export * from './taskStartStop';
+export * from './getAvailableTasks';
+export * from './fetchAllTasks';
+export * from './getMyTasks';
