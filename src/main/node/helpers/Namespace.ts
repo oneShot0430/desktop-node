@@ -59,6 +59,10 @@ const TASK_INSTRUCTION_LAYOUTS = Object.freeze({
       BufferLayout.ns64('stakeAmount'),
     ]),
   },
+  ClaimReward: {
+    index: 8,
+    layout: BufferLayout.struct([BufferLayout.u8('instruction')]),
+  },
 });
 // Singletons
 /**
@@ -80,7 +84,7 @@ class Namespace {
     taskTxId: string,
     expressApp: any,
     operationMode: string,
-    mainSystemAccount: Keypair,
+    mainSystemAccount: Keypair | null,
     taskData: TaskData
   ) {
     this.taskTxId = taskTxId;
@@ -88,10 +92,29 @@ class Namespace {
     if (operationMode === 'service') {
       // this.loadRedisClient();
     }
-    this.#mainSystemAccount = mainSystemAccount;
-    this.mainSystemAccountPubKey = mainSystemAccount.publicKey;
+    if (!mainSystemAccount) {
+      const wallet = 'WALLET_LOCATION';
+      this.storeGet(wallet).then((walletPath) => {
+        const mainSystemAccount = Keypair.fromSecretKey(
+          Uint8Array.from(JSON.parse(fs.readFileSync(walletPath, 'utf-8')))
+        );
+        this.#mainSystemAccount = mainSystemAccount;
+        this.mainSystemAccountPubKey = mainSystemAccount?.publicKey;
+      });
+    }
     this.taskData = taskData;
     this.db = leveldbWrapper.levelDb;
+  }
+
+  /**
+   * Namespace wrapper of storeGetAsync
+   * @param {Keypair} mainSystemAccount // mainSystemAccount keypair
+   * @returns {boolean} boolean indicating the success
+   */
+  async setMainSystemAccount(mainSystemAccount: Keypair) {
+    this.#mainSystemAccount = mainSystemAccount;
+    this.mainSystemAccountPubKey = mainSystemAccount?.publicKey;
+    return true;
   }
 
   /**
@@ -357,6 +380,9 @@ class Namespace {
     stakePotAccount: PublicKey,
     submission: string
   ): Promise<string> {
+    if (!this.#mainSystemAccount) {
+      throw Error('Please set the mainSystemAccount path before proceeding');
+    }
     if (submission.length > 512) {
       throw Error('Submission cannot be greater than 512 characters');
     }
@@ -393,10 +419,11 @@ class Namespace {
     connection: Connection,
     taskStateInfoKeypairPubKey: PublicKey,
     submitterPubkey: PublicKey,
-    voterKeypair: Keypair
+    voterKeypair: Keypair,
+    isValid: boolean
   ): Promise<string> {
     const data = encodeData(TASK_INSTRUCTION_LAYOUTS.Vote, {
-      is_valid: 1,
+      is_valid: isValid,
     });
     const instruction = new TransactionInstruction({
       keys: [
@@ -426,6 +453,9 @@ class Namespace {
     stakePotAccount: PublicKey,
     stakeAmount: number
   ): Promise<string> {
+    if (!this.#mainSystemAccount) {
+      throw Error('Please set the mainSystemAccount path before proceeding');
+    }
     const data = encodeData(TASK_INSTRUCTION_LAYOUTS.Stake, { stakeAmount });
     const instruction = new TransactionInstruction({
       keys: [
@@ -452,6 +482,39 @@ class Namespace {
     );
     return response;
   }
+
+  async claimReward(
+    connection: Connection,
+    taskStateInfoAddress: PublicKey,
+    stakePotAccount: PublicKey,
+    beneficiaryAccount: PublicKey,
+    claimerKeypair: Keypair
+  ): Promise<string> {
+    if (!this.#mainSystemAccount) {
+      throw Error('Please set the mainSystemAccount path before proceeding');
+    }
+    const data = encodeData(TASK_INSTRUCTION_LAYOUTS.ClaimReward, {});
+    const instruction = new TransactionInstruction({
+      keys: [
+        { pubkey: taskStateInfoAddress, isSigner: false, isWritable: true },
+        { pubkey: claimerKeypair.publicKey, isSigner: true, isWritable: true },
+        { pubkey: stakePotAccount, isSigner: false, isWritable: true },
+        { pubkey: beneficiaryAccount, isSigner: false, isWritable: true },
+      ],
+      programId: TASK_CONTRACT_ID,
+      data: data,
+    });
+    console.log(
+      'this.mainSystemAccount',
+      this.#mainSystemAccount.publicKey.toBase58()
+    );
+    const response = await sendAndConfirmTransaction(
+      connection,
+      new Transaction().add(instruction),
+      [this.#mainSystemAccount, claimerKeypair]
+    );
+    return response;
+  }
   /**
    * sendAndConfirmTransaction wrapper that injects mainSystemWallet as the first signer for paying the tx fees
    * @param {connection} method // Receive method ["get", "post", "put", "delete"]
@@ -470,8 +533,16 @@ class Namespace {
     return response;
   }
 }
-const namespaceInstance = new Namespace('', null, 'service', new Keypair(), {});
+const namespaceInstance = new Namespace('', null, 'service', null, {});
 
+// const wallet = 'WALLET_LOCATION';
+// namespaceInstance.storeGet(wallet).then(async (walletPath)=>{
+//   const mainSystemAccount = Keypair.fromSecretKey(
+//     Uint8Array.from(JSON.parse(fs.readFileSync(walletPath, 'utf-8')))
+//   );
+//   await namespaceInstance.setMainSystemAccount(mainSystemAccount)
+
+// });
 /**
  * Gets the node registry from Redis cache
  * @returns {Array<BundlerPayload<data:RegistrationData>>}

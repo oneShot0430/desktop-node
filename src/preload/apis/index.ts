@@ -1,4 +1,5 @@
 import checkWalletExists from './checkWalletExists';
+import claimReward from './claimReward';
 import delegateStake from './delegateStake';
 import getAvailableTasks from './getAvailableTasks';
 import getEarnedRewardByNode from './getEarnedRewardByNode';
@@ -28,4 +29,5 @@ export default {
   withdrawStake,
   getMyTasks,
   getAvailableTasks,
+  claimReward,
 };

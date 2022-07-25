@@ -10,7 +10,7 @@ import mainErrorHandler from '../../utils/mainErrorHandler';
 const stakingAccountPubKey = async (
   event: Event
 ): Promise<GetStakingAccountPubKeyResponse> => {
-  console.log('IN THE API');
+  //console.log('IN THE API');
   let stakingAccount;
   let pubkey: string;
   const walletPath = 'namespace/' + 'stakingWallet.json';
@@ -20,7 +20,7 @@ const stakingAccountPubKey = async (
         Uint8Array.from(JSON.parse(fsSync.readFileSync(walletPath, 'utf-8')))
       );
       pubkey = stakingAccount.publicKey.toBase58();
-      console.log('PUBKEY', pubkey);
+      //console.log('PUBKEY', pubkey);
       return pubkey;
     } catch (e) {
       console.error(e);

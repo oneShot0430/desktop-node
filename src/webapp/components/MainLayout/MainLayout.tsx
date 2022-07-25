@@ -17,6 +17,18 @@ const MainLayout = ({ children }: MainLayoutProps): JSX.Element => {
   const showTaskInspector = useAppSelector(
     (state) => state.taskInspector.isShown
   );
+  // window.main
+  //   .storeMainWallet({
+  //     walletPath: '/Users/raj/fresh-pull/desktop-node/id.json',
+  //   })
+  //   .then(() => {
+  //     window.main
+  //       .claimReward({
+  //         taskAccountPubKey: '5iE4xR7nXHUfZ7UimQRrAHYoL8d2aNFiXULhEHrmW3Pp',
+  //       })
+  //       .then(console.log);
+  //   });
+
   return (
     <div className="">
       <Modal />

@@ -35,6 +35,7 @@ const initHandlers = (): void => {
     config.endpoints.GET_STAKING_ACCOUNT_PUBKEY,
     controllers.getStakingAccountPubKey
   );
+  ipcMain.handle(config.endpoints.CLAIM_REWARD, controllers.claimReward);
   ipcMain.handle(
     config.endpoints.CREATE_NODE_WALLETS,
     controllers.createNodeWallets

@@ -10,7 +10,7 @@ import mainErrorHandler from '../../utils/mainErrorHandler';
 const mainAccountPubKey = async (
   event: Event
 ): Promise<GetMainAccountPubKeyResponse> => {
-  console.log('IN THE API');
+  //console.log('IN THE API');
   let mainSystemAccount;
   let pubkey: string;
 
@@ -21,7 +21,7 @@ const mainAccountPubKey = async (
       )
     );
     pubkey = mainSystemAccount.publicKey.toBase58();
-    console.log('PUBKEY', pubkey);
+    //console.log('PUBKEY', pubkey);
     return pubkey;
   } catch (e) {
     console.error(e);
