@@ -6,7 +6,6 @@ import { Keypair } from '@_koi/web3.js';
 import { GetMainAccountPubKeyResponse } from 'models/api';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
-import { namespaceInstance } from '../node/helpers/Namespace';
 
 const mainAccountPubKey = async (
   event: Event
@@ -15,18 +14,10 @@ const mainAccountPubKey = async (
   let mainSystemAccount;
   let pubkey: string;
 
-  if (!(await namespaceInstance.storeGet('WALLET_LOCATION'))) {
-    throw Error('WALLET_LOCATION not specified');
-  }
   try {
     mainSystemAccount = Keypair.fromSecretKey(
       Uint8Array.from(
-        JSON.parse(
-          fsSync.readFileSync(
-            await namespaceInstance.storeGet('WALLET_LOCATION'),
-            'utf-8'
-          )
-        )
+        JSON.parse(fsSync.readFileSync('mainSystemWallet.json', 'utf-8'))
       )
     );
     pubkey = mainSystemAccount.publicKey.toBase58();

@@ -3,8 +3,6 @@ import { useFilePicker } from 'use-file-picker';
 
 import { Button } from 'webapp/components/ui/Button';
 
-import { createStakingWallet } from '../../services';
-
 const PrimitiveOnboarding = (): JSX.Element => {
   const [openFileSelector, { plainFiles }] = useFilePicker({
     accept: '.json',
@@ -39,18 +37,20 @@ const PrimitiveOnboarding = (): JSX.Element => {
 
   const storeMainWallet = () => {
     setMainWalletLoading(true);
-    window.main.storeMainWallet({ walletPath: getPath() }).finally(() => {
-      checkWalletExists();
-      setMainWalletLoading(false);
-    });
+    // FIXME: commented out storeMainWallet as we are not using it now
+    // window.main.storeMainWallet({ walletPath: getPath() }).finally(() => {
+    //   checkWalletExists();
+    //   setMainWalletLoading(false);
+    // });
   };
 
   const generateStakingWallet = () => {
     setStakingWalletLoading(true);
-    createStakingWallet().finally(() => {
-      checkWalletExists();
-      setStakingWalletLoading(false);
-    });
+    // FIXME: commented out createStakingWallet as we are not using it now
+    // createStakingWallet().finally(() => {
+    //   checkWalletExists();
+    //   setStakingWalletLoading(false);
+    // });
   };
 
   useEffect(() => checkWalletExists(), []);

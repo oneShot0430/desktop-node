@@ -14,7 +14,6 @@ import { WithdrawStakeParam } from 'models/api';
 import sdk from 'services/sdk';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
-import { namespaceInstance } from '../node/helpers/Namespace';
 
 // eslint-disable-next-line
 const BufferLayout = require('@solana/buffer-layout');
@@ -38,12 +37,7 @@ const withdrawStake = async (
   try {
     mainSystemAccount = Keypair.fromSecretKey(
       Uint8Array.from(
-        JSON.parse(
-          fsSync.readFileSync(
-            await namespaceInstance.storeGet('WALLET_LOCATION'),
-            'utf-8'
-          )
-        )
+        JSON.parse(fsSync.readFileSync('mainSystemWallet.json', 'utf-8'))
       )
     );
     stakingAccKeypair = Keypair.fromSecretKey(

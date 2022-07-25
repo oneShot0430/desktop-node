@@ -89,5 +89,6 @@ export const getLogs = (taskAccountPubKey: string, noOfLines = 500) => {
 
 export const createStakingWallet = (mnemonic?: string) => {
   console.log('CREATING STAKING WALLET');
-  return window.main.createStakingWallet({ mnemonic });
+  // FIXME: commented out createStakingWallet as we are not using it now
+  // return window.main.createStakingWallet({ mnemonic });
 };
