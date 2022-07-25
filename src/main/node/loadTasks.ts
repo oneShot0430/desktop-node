@@ -19,24 +19,16 @@ import config from 'config';
 import errorHandler from 'main/errorHandler';
 import koiiTasks from 'services/koiiTasks';
 
-import { Namespace, namespaceInstance } from './helpers/Namespace';
+import { Namespace } from './helpers/Namespace';
 
 // eslint-disable-next-line
 const bufferlayout = require('buffer-layout')
 
 const OPERATION_MODE = 'service';
 const loadTasks = async (expressApp: Express) => {
-  if (!(await namespaceInstance.storeGet('WALLET_LOCATION'))) {
-    throw Error('WALLET_LOCATION not specified');
-  }
   const mainSystemAccount = Keypair.fromSecretKey(
     Uint8Array.from(
-      JSON.parse(
-        fsSync.readFileSync(
-          await namespaceInstance.storeGet('WALLET_LOCATION'),
-          'utf-8'
-        )
-      )
+      JSON.parse(fsSync.readFileSync('mainSystemWallet.json', 'utf-8'))
     )
   );
 

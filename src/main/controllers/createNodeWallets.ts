@@ -1,0 +1,71 @@
+import { Event } from 'electron';
+import fs from 'fs';
+
+import { Keypair } from '@_koi/web3.js';
+import * as bip39 from 'bip39';
+import { derivePath } from 'ed25519-hd-key';
+
+import { CreateNodeWalletsParam, CreateNodeWalletsResponse } from 'models/api';
+
+import mainErrorHandler from '../../utils/mainErrorHandler';
+
+const createNodeWallets = async (
+  event: Event,
+  payload: CreateNodeWalletsParam
+): Promise<CreateNodeWalletsResponse> => {
+  console.log('IN CREATE WALLET  API');
+  const { mnemonic } = payload;
+  if (!mnemonic) {
+    throw new Error('Please provide mnemonic to generate wallets');
+  }
+  try {
+    // Creating stakingWallet
+    const stakingWalletFilePath = 'namespace/' + 'stakingWallet.json';
+    console.log('WALLET PATH', stakingWalletFilePath);
+    const stakingSeed = bip39.mnemonicToSeedSync(mnemonic, '');
+    const stakingWalletPath = "m/44'/501'/99'/0'";
+    const stakingWallet = Keypair.fromSeed(
+      derivePath(stakingWalletPath, stakingSeed.toString('hex')).key
+    );
+    console.log('Generating Staking wallet from mnemonic');
+
+    console.log('WALLET', stakingWallet.publicKey.toBase58());
+    fs.writeFile(
+      stakingWalletFilePath,
+      JSON.stringify(Array.from(stakingWallet.secretKey)),
+      (err) => {
+        if (err) {
+          console.error(err);
+        }
+      }
+    );
+    // Creating MainAccount
+    const mainWalletFilePath = 'mainSystemWallet.json';
+    console.log('WALLET PATH', mainWalletFilePath);
+    const mainSeed = bip39.mnemonicToSeedSync(mnemonic, '');
+    const mainWalletPath = "m/44'/501'/0'/0'";
+    const mainWallet = Keypair.fromSeed(
+      derivePath(mainWalletPath, mainSeed.toString('hex')).key
+    );
+    console.log('Generating Staking wallet from mnemonic');
+
+    console.log('WALLET', mainWallet.publicKey.toBase58());
+    fs.writeFile(
+      mainWalletFilePath,
+      JSON.stringify(Array.from(mainWallet.secretKey)),
+      (err) => {
+        if (err) {
+          console.error(err);
+        }
+      }
+    );
+    return {
+      stakingWalletPubKey: stakingWallet.publicKey.toBase58(),
+      mainAccountPubKey: mainWallet.publicKey.toBase58(),
+    };
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+export default mainErrorHandler(createNodeWallets);

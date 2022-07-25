@@ -4,7 +4,6 @@ import fs from 'fs';
 import { CheckWalletExistsResponse } from 'models/api';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
-import { namespaceInstance } from '../node/helpers/Namespace';
 
 const checkWallet = async (
   event: Event
@@ -12,9 +11,11 @@ const checkWallet = async (
   console.log('IN THE API');
   let mainSystemAccount: boolean;
   let stakingWallet: boolean;
-  const filePath = 'namespace' + '/stakingWallet.json';
+  const stakingWalletfilePath = 'namespace' + '/stakingWallet.json';
+  const mainWalletfilePath = 'mainSystemWallet.json';
+
   try {
-    if (fs.existsSync(filePath)) {
+    if (fs.existsSync(stakingWalletfilePath)) {
       stakingWallet = true;
     } else {
       stakingWallet = false;
@@ -23,9 +24,7 @@ const checkWallet = async (
     console.error('ERROR IN  STAKING ACCOUNT CHECK', err);
   }
   try {
-    const wallet = await namespaceInstance.storeGet('WALLET_LOCATION');
-    console.log('WALLET PATH', wallet);
-    if (wallet == undefined) {
+    if (fs.existsSync(mainWalletfilePath)) {
       mainSystemAccount = false;
     } else {
       mainSystemAccount = true;
