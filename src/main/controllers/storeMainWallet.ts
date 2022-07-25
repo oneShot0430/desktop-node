@@ -22,7 +22,7 @@ const storeWallet = async (
     const wallet = 'WALLET_LOCATION';
     namespaceInstance.storeSet(wallet, path);
     const mainSystemAccount = Keypair.fromSecretKey(
-      Uint8Array.from(JSON.parse(fs.readFileSync(path, 'utf-8')))
+      Uint8Array.from(JSON.parse(fs.readFileSync(walletPath, 'utf-8')))
     );
     namespaceInstance.setMainSystemAccount(mainSystemAccount);
     return true;
