@@ -17,11 +17,13 @@ export const BackButton = () => {
 
   return (
     <div className="flex items-center pt-[20px] pb-[20px]">
-      <Button
-        onlyIcon
-        icon={<BackIcon className="cursor-pointer" />}
-        onClick={handleBackButtonClick}
-      />
+      {location.pathname === AppRoute.Root ? null : (
+        <Button
+          onlyIcon
+          icon={<BackIcon className="cursor-pointer" />}
+          onClick={handleBackButtonClick}
+        />
+      )}
 
       <div className="text-white self-center uppercase h-[40px] leading-[40px] text-[30px] align-middle pl-4 flex flex-col justify-center">
         {routeLabel}

@@ -9,3 +9,6 @@ export * from './getTaskInfo';
 export * from './storeMainWallet';
 export * from './taskStartStop';
 export * from './claimReward';
+export * from './getAvailableTasks';
+export * from './fetchAllTasks';
+export * from './getMyTasks';

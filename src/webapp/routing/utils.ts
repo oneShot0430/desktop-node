@@ -4,6 +4,8 @@ export const getRouteViewLabel = (route: AppRoute) => {
   switch (route) {
     case AppRoute.MyNode:
       return 'My Node';
+    case AppRoute.Root:
+      return 'My Node';
     case AppRoute.AddTask:
       return 'Add Task';
     case AppRoute.Notifications:

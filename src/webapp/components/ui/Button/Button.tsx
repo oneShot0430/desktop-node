@@ -9,12 +9,20 @@ type ButtonProps = {
   variant?: ButtonVariants;
   onlyIcon?: boolean;
   className?: string;
+  loading?: boolean;
 } & React.DetailedHTMLProps<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
   HTMLButtonElement
 >;
 
-const Button = ({ label, icon, onlyIcon, className, ...rest }: ButtonProps) => {
+const Button = ({
+  label,
+  icon,
+  onlyIcon,
+  className,
+  loading,
+  ...rest
+}: ButtonProps) => {
   if (onlyIcon) {
     return (
       <button aria-label={label} {...rest}>
@@ -36,7 +44,7 @@ const Button = ({ label, icon, onlyIcon, className, ...rest }: ButtonProps) => {
       {...rest}
     >
       {icon}
-      <span className={'self-center'}>{label}</span>
+      {loading ? 'Loading...' : <span className={'self-center'}>{label}</span>}
     </button>
   );
 };

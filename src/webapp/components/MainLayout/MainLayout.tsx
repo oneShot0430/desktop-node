@@ -18,10 +18,17 @@ const MainLayout = ({ children }: MainLayoutProps): JSX.Element => {
     (state) => state.taskInspector.isShown
   );
   // window.main
-  //   .claimReward({
-  //     taskAccountPubKey: '5iE4xR7nXHUfZ7UimQRrAHYoL8d2aNFiXULhEHrmW3Pp',
+  //   .storeMainWallet({
+  //     walletPath: '/Users/raj/fresh-pull/desktop-node/id.json',
   //   })
-  //   .then(console.log);
+  //   .then(() => {
+  //     window.main
+  //       .claimReward({
+  //         taskAccountPubKey: '5iE4xR7nXHUfZ7UimQRrAHYoL8d2aNFiXULhEHrmW3Pp',
+  //       })
+  //       .then(console.log);
+  //   });
+
   return (
     <div className="">
       <Modal />
