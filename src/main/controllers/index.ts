@@ -1,5 +1,6 @@
 import addTask from './addTask';
 import checkWalletExists from './checkWalletExists';
+import createNodeWallets from './createNodeWallets';
 import delegateStake from './delegateStake';
 import getAvailableTasks from './getAvailableTasks';
 import getEarnedRewardByNode from './getEarnedRewardByNode';
@@ -28,4 +29,5 @@ export default {
   getStakingAccountPubKey,
   getMyTasks,
   getAvailableTasks,
+  createNodeWallets,
 };

@@ -9,7 +9,7 @@ import { CreateNodeWalletsParam, CreateNodeWalletsResponse } from 'models/api';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 
-const createWallet = async (
+const createNodeWallets = async (
   event: Event,
   payload: CreateNodeWalletsParam
 ): Promise<CreateNodeWalletsResponse> => {
@@ -68,4 +68,4 @@ const createWallet = async (
   }
 };
 
-export default mainErrorHandler(createWallet);
+export default mainErrorHandler(createNodeWallets);

@@ -35,6 +35,10 @@ const initHandlers = (): void => {
     config.endpoints.GET_STAKING_ACCOUNT_PUBKEY,
     controllers.getStakingAccountPubKey
   );
+  ipcMain.handle(
+    config.endpoints.CREATE_NODE_WALLETS,
+    controllers.createNodeWallets
+  );
 };
 
 export default errorHandler(initHandlers, 'Init handlers error');
