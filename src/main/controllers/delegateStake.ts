@@ -17,7 +17,6 @@ import sdk from 'services/sdk';
 
 import { DelegateStakeParam, DelegateStakeResponse } from '../../models/api';
 import mainErrorHandler from '../../utils/mainErrorHandler';
-import { namespaceInstance } from '../node/helpers/Namespace';
 
 import getTaskInfo from './getTaskInfo';
 
@@ -42,20 +41,12 @@ const delegateStake = async (
   const { taskAccountPubKey, stakeAmount } = payload;
   //TODO: don't accept mainSystemAccount in param get the location from redis and load that
   // stakingAccKeypair Automatically get by the task_id
-  if (!(await namespaceInstance.storeGet('WALLET_LOCATION'))) {
-    throw Error('WALLET_LOCATION not specified');
-  }
   let mainSystemAccount;
   let stakingAccKeypair;
   try {
     mainSystemAccount = Keypair.fromSecretKey(
       Uint8Array.from(
-        JSON.parse(
-          fsSync.readFileSync(
-            await namespaceInstance.storeGet('WALLET_LOCATION'),
-            'utf-8'
-          )
-        )
+        JSON.parse(fsSync.readFileSync('mainSystemWallet.json', 'utf-8'))
       )
     );
     stakingAccKeypair = Keypair.fromSecretKey(

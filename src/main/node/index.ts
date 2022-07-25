@@ -1,8 +1,9 @@
+import fs from 'fs';
+
 import * as dotenv from 'dotenv';
 
 dotenv.config();
 import executeTasks from './executeTasks';
-import { namespaceInstance } from './helpers/Namespace';
 import initExpressApp from './initExpressApp';
 // import initKohaku from './initKohaku';
 import loadTasks from './loadTasks';
@@ -16,10 +17,6 @@ export default async (): Promise<any> => {
   // );
 
   try {
-    // await namespaceInstance.storeSet(
-    //   'WALLET_LOCATION',
-    //   '{WALLET_PATH_HERE}'
-    // );
     // await startTask(null, {
     //   taskAccountPubKey: 'dGeVfkp1BcLDK13gxoNz5cy4aMMKXVsvSjDAhyLpPCR',
     // });
@@ -30,7 +27,7 @@ export default async (): Promise<any> => {
     //     taskAccountPubKey: 'dGeVfkp1BcLDK13gxoNz5cy4aMMKXVsvSjDAhyLpPCR',
     //   })
     // }, 60000)
-    if (await namespaceInstance.storeGet('WALLET_LOCATION')) {
+    if (fs.existsSync('mainSystemWallet.json')) {
       /* Init Express app */
       const expressApp = await initExpressApp();
       /* Load tasks */
