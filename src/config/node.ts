@@ -13,8 +13,8 @@ export const SERVER_PORT = 8887;
 
 export const GATEWAY_URL = 'https://arweave.net';
 
-//export const k2_NETWORK_URL = 'https://k2-testnet.koii.live';
-export const k2_NETWORK_URL = 'http://localhost:8899';
+export const k2_NETWORK_URL = 'https://k2-testnet.koii.live';
+//export const k2_NETWORK_URL = 'http://localhost:8899';
 
 export const TASK_CONTRACT_ID = 'Koiitask22222222222222222222222222222222222';
 const MINIMUM_ACCEPTED_LENGTH_TASK_CONTRACT = 500;

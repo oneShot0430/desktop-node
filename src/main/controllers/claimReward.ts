@@ -18,22 +18,8 @@ const claimReward = async (
   const { taskAccountPubKey } = payload;
   const taskStateInfoPublicKey = new PublicKey(taskAccountPubKey);
   const connection = sdk.k2Connection;
-  if (!(await namespaceInstance.storeGet('WALLET_LOCATION'))) {
-    throw Error('WALLET_LOCATION not specified');
-  }
-  //let mainSystemAccount;
   let stakingAccKeypair;
   try {
-    // mainSystemAccount = Keypair.fromSecretKey(
-    //   Uint8Array.from(
-    //     JSON.parse(
-    //       fsSync.readFileSync(
-    //         await namespaceInstance.storeGet('WALLET_LOCATION'),
-    //         'utf-8'
-    //       )
-    //     )
-    //   )
-    // );
     stakingAccKeypair = Keypair.fromSecretKey(
       Uint8Array.from(
         JSON.parse(fsSync.readFileSync('namespace/stakingWallet.json', 'utf-8'))
