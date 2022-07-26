@@ -3,6 +3,8 @@ import * as fsSync from 'fs';
 
 import { Keypair } from '@_koi/web3.js';
 
+import { namespaceInstance } from 'main/node/helpers/Namespace';
+
 import mainErrorHandler from '../../utils/mainErrorHandler';
 
 interface rewardWalletPayload {
@@ -17,10 +19,15 @@ const rewardWallet = async (
   //console.log('AVAILABLE_BALANCE', available_balances);
   //console.log('IN THE API');
   let stakingAccKeypair;
+  const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
+  if (!activeAccount) {
+    throw new Error('Please select a Active Account');
+  }
+  const stakingWalletfilePath = `namespace/${activeAccount}_stakingWallet.json`;
   try {
     stakingAccKeypair = Keypair.fromSecretKey(
       Uint8Array.from(
-        JSON.parse(fsSync.readFileSync('namespace/stakingWallet.json', 'utf-8'))
+        JSON.parse(fsSync.readFileSync(stakingWalletfilePath, 'utf-8'))
       )
     );
     const stakingPubkey = stakingAccKeypair.publicKey.toBase58();

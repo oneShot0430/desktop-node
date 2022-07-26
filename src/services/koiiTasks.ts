@@ -55,7 +55,10 @@ class KoiiTasks {
     this.tasks.forEach((e) => {
       if (e.data.isRunning) runningTasks.push(e.publicKey);
     });
-    namespaceInstance.storeSet('runningTasks', JSON.stringify(runningTasks));
+    await namespaceInstance.storeSet(
+      'runningTasks',
+      JSON.stringify(runningTasks)
+    );
     return;
   }
   taskStopped(publicKey: string) {

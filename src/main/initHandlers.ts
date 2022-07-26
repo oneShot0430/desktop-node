@@ -40,6 +40,10 @@ const initHandlers = (): void => {
     config.endpoints.CREATE_NODE_WALLETS,
     controllers.createNodeWallets
   );
+  ipcMain.handle(
+    config.endpoints.SET_ACTIVE_ACCOUNT,
+    controllers.setActiveAccount
+  );
 };
 
 export default errorHandler(initHandlers, 'Init handlers error');

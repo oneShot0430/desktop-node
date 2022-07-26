@@ -1,6 +1,7 @@
 import { Event } from 'electron';
 import fs from 'fs';
 
+import { namespaceInstance } from 'main/node/helpers/Namespace';
 import { CheckWalletExistsResponse } from 'models/api';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
@@ -11,8 +12,12 @@ const checkWallet = async (
   console.log('IN THE API');
   let mainSystemAccount: boolean;
   let stakingWallet: boolean;
-  const stakingWalletfilePath = 'namespace' + '/stakingWallet.json';
-  const mainWalletfilePath = 'mainSystemWallet.json';
+  const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
+  if (!activeAccount) {
+    throw new Error('Please select a Active Account');
+  }
+  const stakingWalletfilePath = `namespace/${activeAccount}_stakingWallet.json`;
+  const mainWalletfilePath = `wallets/${activeAccount}_mainSystemWallet.json`;
 
   try {
     if (fs.existsSync(stakingWalletfilePath)) {

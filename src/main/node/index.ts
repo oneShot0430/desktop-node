@@ -3,6 +3,8 @@ import fs from 'fs';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
+import { namespaceInstance } from 'main/node/helpers/Namespace';
+
 import executeTasks from './executeTasks';
 import initExpressApp from './initExpressApp';
 // import initKohaku from './initKohaku';
@@ -27,7 +29,12 @@ export default async (): Promise<any> => {
     //     taskAccountPubKey: 'dGeVfkp1BcLDK13gxoNz5cy4aMMKXVsvSjDAhyLpPCR',
     //   })
     // }, 60000)
-    if (fs.existsSync('mainSystemWallet.json')) {
+    const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
+    if (!activeAccount) {
+      throw new Error('Please select a Active Account');
+    }
+    const mainWalletfilePath = `wallets/${activeAccount}_mainSystemWallet.json`;
+    if (fs.existsSync(mainWalletfilePath)) {
       /* Init Express app */
       const expressApp = await initExpressApp();
       /* Load tasks */
