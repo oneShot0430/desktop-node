@@ -24,6 +24,9 @@ const createNodeWallets = async (
   try {
     // Creating stakingWallet
     const stakingWalletFilePath = `namespace/${accountName}_stakingWallet.json`;
+    if (fs.existsSync(stakingWalletFilePath)) {
+      throw new Error('Staking wallet with same account name already exists');
+    }
     console.log('WALLET PATH', stakingWalletFilePath);
     const stakingSeed = bip39.mnemonicToSeedSync(mnemonic, '');
     const stakingWalletPath = "m/44'/501'/99'/0'";
@@ -44,6 +47,9 @@ const createNodeWallets = async (
     );
     // Creating MainAccount
     const mainWalletFilePath = `wallets/${accountName}_mainSystemWallet.json`;
+    if (fs.existsSync(mainWalletFilePath)) {
+      throw new Error('Main wallet with same account name already exists');
+    }
     console.log('WALLET PATH', mainWalletFilePath);
     const mainSeed = bip39.mnemonicToSeedSync(mnemonic, '');
     const mainWalletPath = "m/44'/501'/0'/0'";
