@@ -40,7 +40,7 @@ const createNodeWallets = async (
       }
     );
     // Creating MainAccount
-    const mainWalletFilePath = 'mainSystemWallet.json';
+    const mainWalletFilePath = 'wallets/mainSystemWallet.json';
     console.log('WALLET PATH', mainWalletFilePath);
     const mainSeed = bip39.mnemonicToSeedSync(mnemonic, '');
     const mainWalletPath = "m/44'/501'/0'/0'";

@@ -12,7 +12,7 @@ const checkWallet = async (
   let mainSystemAccount: boolean;
   let stakingWallet: boolean;
   const stakingWalletfilePath = 'namespace' + '/stakingWallet.json';
-  const mainWalletfilePath = 'mainSystemWallet.json';
+  const mainWalletfilePath = 'wallets/mainSystemWallet.json';
 
   try {
     if (fs.existsSync(stakingWalletfilePath)) {

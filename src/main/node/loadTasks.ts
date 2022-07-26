@@ -28,7 +28,7 @@ const OPERATION_MODE = 'service';
 const loadTasks = async (expressApp: Express) => {
   const mainSystemAccount = Keypair.fromSecretKey(
     Uint8Array.from(
-      JSON.parse(fsSync.readFileSync('mainSystemWallet.json', 'utf-8'))
+      JSON.parse(fsSync.readFileSync('wallets/mainSystemWallet.json', 'utf-8'))
     )
   );
 

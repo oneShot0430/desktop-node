@@ -27,7 +27,7 @@ export default async (): Promise<any> => {
     //     taskAccountPubKey: 'dGeVfkp1BcLDK13gxoNz5cy4aMMKXVsvSjDAhyLpPCR',
     //   })
     // }, 60000)
-    if (fs.existsSync('mainSystemWallet.json')) {
+    if (fs.existsSync('wallets/mainSystemWallet.json')) {
       /* Init Express app */
       const expressApp = await initExpressApp();
       /* Load tasks */

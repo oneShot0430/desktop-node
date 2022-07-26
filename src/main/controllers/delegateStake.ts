@@ -46,7 +46,9 @@ const delegateStake = async (
   try {
     mainSystemAccount = Keypair.fromSecretKey(
       Uint8Array.from(
-        JSON.parse(fsSync.readFileSync('mainSystemWallet.json', 'utf-8'))
+        JSON.parse(
+          fsSync.readFileSync('wallets/mainSystemWallet.json', 'utf-8')
+        )
       )
     );
     stakingAccKeypair = Keypair.fromSecretKey(
