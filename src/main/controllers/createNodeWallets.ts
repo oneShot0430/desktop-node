@@ -14,13 +14,16 @@ const createNodeWallets = async (
   payload: CreateNodeWalletsParam
 ): Promise<CreateNodeWalletsResponse> => {
   console.log('IN CREATE WALLET  API');
-  const { mnemonic } = payload;
+  const { mnemonic, accountName } = payload;
   if (!mnemonic) {
     throw new Error('Please provide mnemonic to generate wallets');
   }
+  if (!accountName) {
+    throw new Error('Please provide accountName to generate wallets');
+  }
   try {
     // Creating stakingWallet
-    const stakingWalletFilePath = 'namespace/' + 'stakingWallet.json';
+    const stakingWalletFilePath = `namespace/${accountName}_stakingWallet.json`;
     console.log('WALLET PATH', stakingWalletFilePath);
     const stakingSeed = bip39.mnemonicToSeedSync(mnemonic, '');
     const stakingWalletPath = "m/44'/501'/99'/0'";
@@ -40,7 +43,7 @@ const createNodeWallets = async (
       }
     );
     // Creating MainAccount
-    const mainWalletFilePath = 'wallets/mainSystemWallet.json';
+    const mainWalletFilePath = `wallets/${accountName}_mainSystemWallet.json`;
     console.log('WALLET PATH', mainWalletFilePath);
     const mainSeed = bip39.mnemonicToSeedSync(mnemonic, '');
     const mainWalletPath = "m/44'/501'/0'/0'";

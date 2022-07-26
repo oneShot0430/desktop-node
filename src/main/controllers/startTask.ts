@@ -34,7 +34,9 @@ const startTask = async (event: Event, payload: TaskStartStopParam) => {
   const { taskAccountPubKey } = payload;
   const mainSystemAccount = Keypair.fromSecretKey(
     Uint8Array.from(
-      JSON.parse(fsSync.readFileSync('mainSystemWallet.json', 'utf-8'))
+      JSON.parse(
+        fsSync.readFileSync('wallets/mainSystemWallet.json.json', 'utf-8')
+      )
     )
   );
 
