@@ -10,6 +10,7 @@ import {
 } from '@_koi/web3.js';
 
 import config from 'config';
+import { namespaceInstance } from 'main/node/helpers/Namespace';
 import { WithdrawStakeParam } from 'models/api';
 import sdk from 'services/sdk';
 
@@ -32,19 +33,23 @@ const withdrawStake = async (
   payload: WithdrawStakeParam
 ): Promise<string> => {
   const { taskAccountPubKey } = payload;
+  const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
+  if (!activeAccount) {
+    throw new Error('Please select a Active Account');
+  }
+  const stakingWalletfilePath = `namespace/${activeAccount}_stakingWallet.json`;
+  const mainWalletfilePath = `wallets/${activeAccount}_mainSystemWallet.json`;
   let mainSystemAccount;
   let stakingAccKeypair;
   try {
     mainSystemAccount = Keypair.fromSecretKey(
       Uint8Array.from(
-        JSON.parse(
-          fsSync.readFileSync('wallets/mainSystemWallet.json', 'utf-8')
-        )
+        JSON.parse(fsSync.readFileSync(mainWalletfilePath, 'utf-8'))
       )
     );
     stakingAccKeypair = Keypair.fromSecretKey(
       Uint8Array.from(
-        JSON.parse(fsSync.readFileSync('namespace/stakingWallet.json', 'utf-8'))
+        JSON.parse(fsSync.readFileSync(stakingWalletfilePath, 'utf-8'))
       )
     );
   } catch (e) {

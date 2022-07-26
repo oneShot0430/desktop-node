@@ -3,6 +3,7 @@ import * as fsSync from 'fs';
 
 import { Keypair } from '@_koi/web3.js';
 
+import { namespaceInstance } from 'main/node/helpers/Namespace';
 import { GetMainAccountPubKeyResponse } from 'models/api';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
@@ -13,13 +14,15 @@ const mainAccountPubKey = async (
   //console.log('IN THE API');
   let mainSystemAccount;
   let pubkey: string;
-
+  const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
+  if (!activeAccount) {
+    throw new Error('Please select a Active Account');
+  }
+  const mainWalletfilePath = `wallets/${activeAccount}_mainSystemWallet.json`;
   try {
     mainSystemAccount = Keypair.fromSecretKey(
       Uint8Array.from(
-        JSON.parse(
-          fsSync.readFileSync('wallets/mainSystemWallet.json', 'utf-8')
-        )
+        JSON.parse(fsSync.readFileSync(mainWalletfilePath, 'utf-8'))
       )
     );
     pubkey = mainSystemAccount.publicKey.toBase58();
@@ -27,7 +30,7 @@ const mainAccountPubKey = async (
     return pubkey;
   } catch (e) {
     console.error(e);
-    throw Error("System Account or StakingWallet Account doesn't exist");
+    return null;
   }
 };
 

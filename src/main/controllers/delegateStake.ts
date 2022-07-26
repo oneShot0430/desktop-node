@@ -13,6 +13,7 @@ import {
 } from '@_koi/web3.js';
 
 import config from 'config';
+import { namespaceInstance } from 'main/node/helpers/Namespace';
 import sdk from 'services/sdk';
 
 import { DelegateStakeParam, DelegateStakeResponse } from '../../models/api';
@@ -39,21 +40,23 @@ const delegateStake = async (
   payload: DelegateStakeParam
 ): Promise<DelegateStakeResponse> => {
   const { taskAccountPubKey, stakeAmount } = payload;
-  //TODO: don't accept mainSystemAccount in param get the location from redis and load that
-  // stakingAccKeypair Automatically get by the task_id
+  const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
+  if (!activeAccount) {
+    throw new Error('Please select a Active Account');
+  }
+  const stakingWalletfilePath = `namespace/${activeAccount}_stakingWallet.json`;
+  const mainWalletfilePath = `wallets/${activeAccount}_mainSystemWallet.json`;
   let mainSystemAccount;
   let stakingAccKeypair;
   try {
     mainSystemAccount = Keypair.fromSecretKey(
       Uint8Array.from(
-        JSON.parse(
-          fsSync.readFileSync('wallets/mainSystemWallet.json', 'utf-8')
-        )
+        JSON.parse(fsSync.readFileSync(mainWalletfilePath, 'utf-8'))
       )
     );
     stakingAccKeypair = Keypair.fromSecretKey(
       Uint8Array.from(
-        JSON.parse(fsSync.readFileSync('namespace/stakingWallet.json', 'utf-8'))
+        JSON.parse(fsSync.readFileSync(stakingWalletfilePath, 'utf-8'))
       )
     );
   } catch (e) {

@@ -18,7 +18,7 @@ import * as smartweave from 'smartweave';
 import * as nacl from 'tweetnacl';
 
 import config from 'config';
-import { Namespace } from 'main/node/helpers/Namespace';
+import { Namespace, namespaceInstance } from 'main/node/helpers/Namespace';
 import { TaskStartStopParam } from 'models/api';
 import koiiTasks from 'services/koiiTasks';
 
@@ -32,11 +32,14 @@ const OPERATION_MODE = 'service';
 
 const startTask = async (event: Event, payload: TaskStartStopParam) => {
   const { taskAccountPubKey } = payload;
+  const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
+  if (!activeAccount) {
+    throw new Error('Please select a Active Account');
+  }
+  const mainWalletfilePath = `wallets/${activeAccount}_mainSystemWallet.json`;
   const mainSystemAccount = Keypair.fromSecretKey(
     Uint8Array.from(
-      JSON.parse(
-        fsSync.readFileSync('wallets/mainSystemWallet.json.json', 'utf-8')
-      )
+      JSON.parse(fsSync.readFileSync(mainWalletfilePath, 'utf-8'))
     )
   );
 

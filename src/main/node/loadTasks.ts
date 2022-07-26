@@ -17,18 +17,22 @@ import * as nacl from 'tweetnacl';
 
 import config from 'config';
 import errorHandler from 'main/errorHandler';
+import { namespaceInstance, Namespace } from 'main/node/helpers/Namespace';
 import koiiTasks from 'services/koiiTasks';
-
-import { Namespace } from './helpers/Namespace';
 
 // eslint-disable-next-line
 const bufferlayout = require('buffer-layout')
 
 const OPERATION_MODE = 'service';
 const loadTasks = async (expressApp: Express) => {
+  const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
+  if (!activeAccount) {
+    throw new Error('Please select a Active Account');
+  }
+  const mainWalletfilePath = `wallets/${activeAccount}_mainSystemWallet.json`;
   const mainSystemAccount = Keypair.fromSecretKey(
     Uint8Array.from(
-      JSON.parse(fsSync.readFileSync('wallets/mainSystemWallet.json', 'utf-8'))
+      JSON.parse(fsSync.readFileSync(mainWalletfilePath, 'utf-8'))
     )
   );
 

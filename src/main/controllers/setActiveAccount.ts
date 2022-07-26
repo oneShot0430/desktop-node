@@ -12,8 +12,8 @@ const storeWallet = async (
   console.log('IN THE API');
   const { accountName } = payload;
   try {
-    const key = 'ACTIVE_ACCOUNT';
-    namespaceInstance.storeSet(key, accountName);
+    const ACTIVE_ACCOUNT = 'ACTIVE_ACCOUNT';
+    await namespaceInstance.storeSet(ACTIVE_ACCOUNT, accountName);
     return true;
   } catch (err) {
     console.log('ERROR', err);
