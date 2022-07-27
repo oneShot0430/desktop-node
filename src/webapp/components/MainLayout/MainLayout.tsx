@@ -28,7 +28,7 @@ const MainLayout = ({ children }: MainLayoutProps): JSX.Element => {
   //       })
   //       .then(console.log);
   //   });
-
+  window.main.getAllAccounts().then(console.log);
   return (
     <div className="">
       <Modal />

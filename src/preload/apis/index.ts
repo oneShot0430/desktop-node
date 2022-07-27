@@ -2,6 +2,7 @@ import checkWalletExists from './checkWalletExists';
 import claimReward from './claimReward';
 import createNodeWallets from './createNodeWallets';
 import delegateStake from './delegateStake';
+import getAllAccounts from './getAllAccounts';
 import getAvailableTasks from './getAvailableTasks';
 import getEarnedRewardByNode from './getEarnedRewardByNode';
 import getMainAccountPubKey from './getMainAccountPubKey';
@@ -34,4 +35,5 @@ export default {
   claimReward,
   createNodeWallets,
   setActiveAccount,
+  getAllAccounts,
 };
