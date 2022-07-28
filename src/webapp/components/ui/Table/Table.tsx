@@ -2,7 +2,7 @@ import React from 'react';
 
 import { TableHeader } from './TableHeader';
 
-export type PropsType = {
+type PropsType = {
   tableHeaders: string[];
   children: React.ReactNode;
   isLoading?: boolean;
