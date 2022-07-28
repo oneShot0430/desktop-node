@@ -6,7 +6,9 @@ import { fetchMyTasks, QueryKeys } from 'webapp/services';
 import AddTasksTaskRow from './AddTasksTaskRow';
 
 const AddTasksTasksTable = (): JSX.Element => {
-  const { data: tasks } = useQuery(QueryKeys.myTaskList, fetchMyTasks);
+  const { data: tasks } = useQuery(QueryKeys.myTaskList, () =>
+    fetchMyTasks({ offset: 1, limit: 10 })
+  );
 
   return (
     <div className="w-full">
