@@ -9,7 +9,7 @@ const MyNode = (): JSX.Element => {
     isLoading,
     data: tasks,
     error,
-  } = useQuery(QueryKeys.taskList, fetchMyTasks);
+  } = useQuery([QueryKeys.taskList], fetchMyTasks);
 
   return (
     <div className="relative overflow-x-auto">

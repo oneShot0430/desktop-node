@@ -4,13 +4,15 @@ import KeyIconSvg from 'assets/svgs/key-icon-white.svg';
 import CloseIconWhite from 'svgs/close-icons/close-icon-white.svg';
 import PinInput from 'webapp/components/PinInput/PinInput';
 import { Button } from 'webapp/components/ui/Button';
+import { ErrorMessage } from 'webapp/components/ui/ErrorMessage';
+import { createNodeWallets, generateSeedPhrase } from 'webapp/services';
 
 import { ModalContent } from '../../Modal';
-import { Steps } from '../AddKeyModal';
+import { CreateKeyPayload, Steps } from '../AddKeyModal';
 
 type PropsType = Readonly<{
   onClose: () => void;
-  setNextStep: (step: Steps) => void;
+  setNextStep: (step: Steps, payload: CreateKeyPayload) => void;
 }>;
 
 // TODO:
@@ -21,14 +23,28 @@ function validatePin(pin: string) {
 const CreateNewKey = ({ onClose, setNextStep }: PropsType) => {
   const [pin, setPin] = useState('');
   const [error, setError] = useState<string>(null);
+  const [accountName, setAccounttName] = useState('');
 
-  const handleCreateNewKey = () => {
-    if (validatePin(pin)) {
-      // TODO: implement key creation
+  const handleCreateNewKey = async () => {
+    try {
+      if (validatePin(pin)) {
+        const seedPhrase = await generateSeedPhrase();
 
-      setNextStep(Steps.KeyCreated);
-    } else {
-      setError('Your pin is not correct');
+        const { stakingWalletPubKey, mainAccountPubKey } =
+          await createNodeWallets(seedPhrase, accountName);
+
+        setNextStep(Steps.ShowSeedPhrase, {
+          keyes: {
+            task: stakingWalletPubKey,
+            system: mainAccountPubKey,
+          },
+          seedPhrase,
+        });
+      } else {
+        setError('Your pin is not correct');
+      }
+    } catch (error) {
+      setError(error.message);
     }
   };
 
@@ -36,22 +52,36 @@ const CreateNewKey = ({ onClose, setNextStep }: PropsType) => {
     setPin(pin);
   };
 
+  const handleWalletNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAccounttName(e.target.value);
+  };
+
   return (
-    <ModalContent theme="dark" className="w-[800px] h-[400px] text-white">
+    <ModalContent theme="dark" className="w-[800px] h-[520px] text-white">
       <div className="flex justify-between p-3">
         <div className="flex items-center justify-between pl-6">
           <KeyIconSvg />
-          <span className="text-[24px]">Create a new key</span>
+          <span className="text-[24px]">Create a New Account</span>
         </div>
 
         <CloseIconWhite className="w-[32px] h-[32px]" onClick={onClose} />
       </div>
       <div>
         <div className="px-[62px] text-left leading-8 mb-4">
-          We will create both your{' '}
-          <span className="underline text-finnieTeal">System</span> and{' '}
-          <span className="underline text-finnieTeal">Task</span> key to which
-          you’ll have access through one seed phrase.
+          With a new account you’ll get a new set of keys that work together to
+          hold your funds, rewards, and running tasks, all with one secret
+          phrase.
+        </div>
+
+        <div className="px-12 my-8">
+          <div className="px-[20px] text-left leading-8 mb-4">Account name</div>
+          <input
+            className="w-full px-6 py-2 rounded-md bg-finnieBlue-light-tertiary "
+            type="text"
+            value={accountName}
+            onChange={handleWalletNameChange}
+            placeholder="Account name"
+          />
         </div>
 
         <div className="px-12">
@@ -62,6 +92,8 @@ const CreateNewKey = ({ onClose, setNextStep }: PropsType) => {
             <PinInput onChange={handlePinInputChange} />
           </div>
         </div>
+
+        {error && <ErrorMessage errorMessage={error} />}
 
         <div className="flex justify-center mt-8">
           <Button

@@ -50,7 +50,7 @@ const EditStakeAmountModal = ({ onClose }: PropsType) => {
     () => getRewardEarned(task)
   );
 
-  const { data: balance } = useQuery(QueryKeys.mainAccountBalance, () =>
+  const { data: balance } = useQuery([QueryKeys.mainAccountBalance], () =>
     getMainAccountBalance()
   );
 

@@ -3,5 +3,5 @@ export type AccountType = {
   address: string;
   balance: number;
   isDefault?: boolean;
-  isTaskKey?: boolean;
+  type: 'main' | 'staking';
 };

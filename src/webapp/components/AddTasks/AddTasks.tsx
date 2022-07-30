@@ -7,7 +7,7 @@ import AvailableTasksTable from './components/AvailableTasksTable';
 
 const AddTasks = (): JSX.Element => {
   const { data: tasks, isLoading } = useQuery(
-    QueryKeys.availableTaskList,
+    [QueryKeys.availableTaskList],
     fetchAvailableTasks
   );
 

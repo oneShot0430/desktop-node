@@ -41,6 +41,10 @@ const initHandlers = (): void => {
     controllers.createNodeWallets
   );
   ipcMain.handle(
+    config.endpoints.GENERATE_SEED_PHRASE,
+    controllers.generateSeedPhrase
+  );
+  ipcMain.handle(
     config.endpoints.SET_ACTIVE_ACCOUNT,
     controllers.setActiveAccount
   );

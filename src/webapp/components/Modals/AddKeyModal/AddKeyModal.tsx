@@ -4,16 +4,31 @@ import CreateNewKey from './components/CreateNewKey';
 import ImportKey from './components/ImportKey';
 import ImportWithKeyPhrase from './components/ImportWithKeyPhrase';
 import KeyCreated from './components/KeyCreated';
+import ShowSeedPhrase from './components/ShowSeedPhrase';
+
+export type KeysType = { system: string; task: string };
+
+export type CreateKeyPayload = { keyes: KeysType; seedPhrase: string };
 
 export enum Steps {
   ImportKey,
   ImportWithKeyPhrase,
   CreateNewKey,
   KeyCreated,
+  ShowSeedPhrase,
 }
 
 const AddKeyModal = ({ onClose }: { onClose: () => void }) => {
   const [currentStep, setCurrentStep] = useState(Steps.ImportKey);
+  const [newKeys, setNewKeys] = useState<KeysType>(null);
+  const [seedPhrase, setSeedPhrase] = useState(null);
+
+  const handleCreatedNewKeyStep = (step: Steps, payload: CreateKeyPayload) => {
+    console.log('###created new keys', payload);
+    setNewKeys(payload.keyes);
+    setSeedPhrase(payload.seedPhrase);
+    setCurrentStep(step);
+  };
 
   const getCurrentView = (step: Steps) => {
     const views = {
@@ -24,10 +39,21 @@ const AddKeyModal = ({ onClose }: { onClose: () => void }) => {
         <ImportWithKeyPhrase onClose={onClose} setNextStep={setCurrentStep} />
       ),
       [Steps.CreateNewKey]: (
-        <CreateNewKey onClose={onClose} setNextStep={setCurrentStep} />
+        <CreateNewKey onClose={onClose} setNextStep={handleCreatedNewKeyStep} />
       ),
       [Steps.KeyCreated]: (
-        <KeyCreated onClose={onClose} setNextStep={setCurrentStep} />
+        <KeyCreated
+          onClose={onClose}
+          setNextStep={setCurrentStep}
+          newKeys={newKeys}
+        />
+      ),
+      [Steps.ShowSeedPhrase]: (
+        <ShowSeedPhrase
+          onClose={onClose}
+          setNextStep={setCurrentStep}
+          seedPhrase={seedPhrase}
+        />
       ),
     };
 
