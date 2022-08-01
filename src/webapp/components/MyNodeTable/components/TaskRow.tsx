@@ -77,7 +77,7 @@ export const TaskRow = ({ task }: { task: Task }) => {
       <TableCell>{myStake}</TableCell>
       <NodeStatusCell status={nodeStatus} />
       <TableCell>
-        <div className="flex flex-row items-center gap-8 w-[60px]">
+        <div className="flex flex-row items-center gap-4">
           <div>
             <Button
               onClick={() => dispatch(showModal('EDIT_STAKE_AMOUNT', task))}
