@@ -35,7 +35,7 @@ const KeyManagement = () => {
           <div className="w-[540px]">Adress</div>
           <div className="w-[136px]">Koii Balance</div>
         </div>
-        <div className="w-full overflow-y-auto">
+        <div className="h-[38vh] overflow-y-auto">
           {isLoading && (
             <div className="items-center justify-center felx">Loading...</div>
           )}

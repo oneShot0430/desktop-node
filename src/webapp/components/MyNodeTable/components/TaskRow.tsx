@@ -77,20 +77,22 @@ export const TaskRow = ({ task }: { task: Task }) => {
       <TableCell>{myStake}</TableCell>
       <NodeStatusCell status={nodeStatus} />
       <TableCell>
-        <Button
-          onClick={() => dispatch(showModal('EDIT_STAKE_AMOUNT', task))}
-          onlyIcon
-          icon={<AddWithdrawIcon />}
-        />
-      </TableCell>
-      <TableCell>
-        <span title="Output Node logs to console">
-          <Button
-            onClick={() => getLogs(task.publicKey)}
-            onlyIcon
-            icon={<ActionHistoryIcon />}
-          />
-        </span>
+        <div className="flex flex-row items-center gap-8 w-[60px]">
+          <div>
+            <Button
+              onClick={() => dispatch(showModal('EDIT_STAKE_AMOUNT', task))}
+              onlyIcon
+              icon={<AddWithdrawIcon />}
+            />
+          </div>
+          <div title="Output Node logs to console">
+            <Button
+              onClick={() => getLogs(task.publicKey)}
+              onlyIcon
+              icon={<ActionHistoryIcon />}
+            />
+          </div>
+        </div>
       </TableCell>
     </TableRow>
   );

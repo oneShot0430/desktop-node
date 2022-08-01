@@ -20,9 +20,11 @@ export const Table = ({
   if (error) return <div>{error}</div>;
 
   return (
-    <table className="w-full text-[14px] text-left table-auto overflow-hidden">
-      <TableHeader tableHeaders={tableHeaders} />
-      <tbody>{children}</tbody>
-    </table>
+    <div className="h-[67vh] overflow-y-auto overflow-x-auto">
+      <table className="w-full text-[14px] text-left table-auto overflow-y-auto h-[200px] border-separate border-spacing-0">
+        <TableHeader tableHeaders={tableHeaders} />
+        <tbody>{children}</tbody>
+      </table>
+    </div>
   );
 };

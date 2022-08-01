@@ -18,11 +18,11 @@ const MainLayout = ({ children }: MainLayoutProps): JSX.Element => {
   );
 
   return (
-    <div>
+    <div className="flex flex-col h-full">
       <Modal />
       {showTaskInspector && <ModalTaskInspect />}
       <Header />
-      <main className="flex flex-col h-[calc(100vh-62px)] bg-gradient-to-b from-finnieBlue-dark-secondary to-finnieBlue">
+      <main className="flex flex-col h-full bg-gradient-to-b from-finnieBlue-dark-secondary to-finnieBlue">
         <div className="px-4 mx-auto w-[100%] flex justify-between">
           <BackButton />
         </div>
