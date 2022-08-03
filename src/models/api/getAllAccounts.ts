@@ -3,4 +3,6 @@ export type getAllAccountsResponse = Array<{
   stakingPublicKey: string;
   mainPublicKey: string;
   isDefault: boolean;
+  mainPublicKeyBalance: number;
+  stakingPublicKeyBalance: number;
 }>;

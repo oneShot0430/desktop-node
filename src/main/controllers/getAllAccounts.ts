@@ -6,6 +6,7 @@ import { Keypair } from '@_koi/web3.js';
 
 import { namespaceInstance } from 'main/node/helpers/Namespace';
 import { getAllAccountsResponse } from 'models/api';
+import sdk from 'services/sdk';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 
@@ -25,6 +26,7 @@ const getAllAccounts = async (
     .map((item) => item.name);
   const accounts: getAllAccountsResponse = [];
   const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
+  const promisesArr: Array<Promise<number>> = [];
 
   mainWalletfilesInDirectory.forEach((e) => {
     const currentAccountName = e.substring(0, e.lastIndexOf('_'));
@@ -46,8 +48,20 @@ const getAllAccounts = async (
       mainPublicKey: mainSystemWallet.publicKey.toBase58(),
       stakingPublicKey: stakingWallet.publicKey.toBase58(),
       isDefault: activeAccount == currentAccountName,
+      mainPublicKeyBalance: 0,
+      stakingPublicKeyBalance: 0,
     });
+    promisesArr.push(sdk.k2Connection.getBalance(mainSystemWallet.publicKey));
+    promisesArr.push(sdk.k2Connection.getBalance(stakingWallet.publicKey));
   });
+  const resolvedPromises = await Promise.allSettled(promisesArr);
+  const mappedRes = resolvedPromises.map((e) => {
+    return e.status == 'fulfilled' ? e.value : -1;
+  });
+  for (let i = 0; i <= accounts.length; i++) {
+    accounts[i].mainPublicKeyBalance = mappedRes[2 * i];
+    accounts[i].stakingPublicKeyBalance = mappedRes[2 * i + 1];
+  }
   return accounts;
 };
 
