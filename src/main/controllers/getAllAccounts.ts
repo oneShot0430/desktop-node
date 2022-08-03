@@ -58,10 +58,12 @@ const getAllAccounts = async (
   const mappedRes = resolvedPromises.map((e) => {
     return e.status == 'fulfilled' ? e.value : -1;
   });
-  for (let i = 0; i <= accounts.length; i++) {
-    accounts[i].mainPublicKeyBalance = mappedRes[2 * i];
-    accounts[i].stakingPublicKeyBalance = mappedRes[2 * i + 1];
-  }
+
+  accounts.forEach((account, i) => {
+    account.mainPublicKeyBalance = mappedRes[2 * i];
+    account.stakingPublicKeyBalance = mappedRes[2 * i + 1];
+  });
+
   return accounts;
 };
 

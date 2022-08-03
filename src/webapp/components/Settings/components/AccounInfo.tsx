@@ -17,6 +17,7 @@ type PropsType = {
   stakingPublicKey: string;
   mainPublicKey: string;
   isDefault: boolean;
+  stakingPublicKeyBalance: number;
 };
 
 const AccountInfo = ({
@@ -24,6 +25,7 @@ const AccountInfo = ({
   mainPublicKey,
   stakingPublicKey,
   isDefault,
+  stakingPublicKeyBalance,
 }: PropsType) => {
   const [error, setError] = useState();
   const queryCache = useQueryClient();
@@ -98,7 +100,7 @@ const AccountInfo = ({
               </div>
             </div>
             <div className="pr-[24px]">
-              <span className="px-4">{1000} KOII</span>
+              <span className="px-4">{stakingPublicKeyBalance ?? 0} KOII</span>
             </div>
           </div>
         </div>

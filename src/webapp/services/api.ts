@@ -122,6 +122,7 @@ export const getAllAccounts = (): Promise<
     stakingPublicKey: string;
     mainPublicKey: string;
     isDefault: boolean;
+    stakingPublicKeyBalance: number;
   }>
 > => {
   return window.main.getAllAccounts().then((accounts) => {

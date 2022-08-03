@@ -21,11 +21,8 @@ const KeyManagement = () => {
     data: accounts,
     isError,
     isLoading,
+    error,
   } = useQuery(['accounts'], fetchAccounts);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className="flex flex-col justify-between">
@@ -37,17 +34,28 @@ const KeyManagement = () => {
         </div>
         <div className="h-[38vh] overflow-y-auto">
           {isLoading && (
-            <div className="items-center justify-center felx">Loading...</div>
+            <div className="flex items-center justify-center h-full text-2xl text-white">
+              Loading accounts...
+            </div>
           )}
           {isError && (
-            <div className="items-center justify-center felx">
-              <ErrorMessage errorMessage={'Something went wrong'} />
+            <div className="flex items-center justify-center text-2xl">
+              <ErrorMessage
+                errorMessage={(error as { message: string }).message}
+              />
             </div>
           )}
           {(accounts ?? []).map(
-            ({ accountName, mainPublicKey, stakingPublicKey, isDefault }) => {
+            ({
+              accountName,
+              mainPublicKey,
+              stakingPublicKey,
+              isDefault,
+              stakingPublicKeyBalance,
+            }) => {
               return (
                 <AccounInfo
+                  stakingPublicKeyBalance={stakingPublicKeyBalance}
                   key={mainPublicKey}
                   mainPublicKey={mainPublicKey}
                   accountName={accountName}
