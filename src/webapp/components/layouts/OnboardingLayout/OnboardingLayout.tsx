@@ -53,7 +53,7 @@ const OnboardingLayout = ({ children }: PropsType) => {
           />
         </div>
       </div>
-      <div>{children}</div>
+      <div className="flex-grow">{children}</div>
     </div>
   );
 };

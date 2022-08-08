@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useRoutes, Outlet, useNavigate } from 'react-router-dom';
 
 import { OnboardingLayout } from 'webapp/components/layouts/OnboardingLayout';
+import { CreatePin } from 'webapp/components/onboarding';
 
 import { History, MainLayout, Settings, AddTasks, MyNode } from '../components';
 
@@ -56,7 +57,7 @@ const routes = [
     children: [
       {
         path: AppRoute.OnboardingCreatePin,
-        element: <div>CreatePin</div>,
+        element: <CreatePin />,
       },
       {
         path: AppRoute.OnboardingCreateOrImportKey,
