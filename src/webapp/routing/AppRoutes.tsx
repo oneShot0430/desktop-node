@@ -1,5 +1,5 @@
-import React from 'react';
-import { useRoutes, Outlet } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useRoutes, Outlet, useNavigate } from 'react-router-dom';
 
 import { History, MainLayout, Settings, AddTasks, MyNode } from '../components';
 
@@ -13,13 +13,41 @@ export enum AppRoute {
   History = '/history',
 }
 
-const Wrapper = (): JSX.Element => (
-  <MainLayout>
-    <Outlet />
-  </MainLayout>
-);
+function isOnBoardingCompleted() {
+  return false;
+}
+
+const Wrapper = (): JSX.Element => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isOnBoardingCompleted()) {
+      navigate('/onboarding');
+    }
+  }, []);
+
+  return (
+    <MainLayout>
+      <Outlet />
+    </MainLayout>
+  );
+};
 
 const routes = [
+  {
+    path: '/onboarding',
+    element: (
+      <div>
+        <h1>Onboarding</h1>
+      </div>
+    ),
+    children: [
+      {
+        path: 'onboarding/create-pin',
+        element: <div>welcome</div>,
+      },
+    ],
+  },
   {
     path: AppRoute.Root,
     element: <Wrapper />,
