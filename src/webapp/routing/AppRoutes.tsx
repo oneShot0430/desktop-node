@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { useRoutes, Outlet, useNavigate } from 'react-router-dom';
 
+import { OnboardingLayout } from 'webapp/components/layouts/OnboardingLayout';
+
 import { History, MainLayout, Settings, AddTasks, MyNode } from '../components';
 
 export enum AppRoute {
@@ -11,18 +13,32 @@ export enum AppRoute {
   Notifications = '/notifications',
   Settings = '/settings',
   History = '/history',
+  Onboarding = '/onboarding',
+  // onboarding routes
+  OnboardingCreatePin = '/onboarding/create-pin',
+  OnboardingCreateOrImportKey = '/onboarding/create-or-import-key',
+  OnboardingCreateFirstTask = '/onboarding/create-first-task',
+  OnboardingConfirmStake = '/onboarding/confirm-stake',
 }
 
 function isOnBoardingCompleted() {
   return false;
 }
 
+const Onboarding = () => {
+  return (
+    <OnboardingLayout>
+      <Outlet />
+    </OnboardingLayout>
+  );
+};
+
 const Wrapper = (): JSX.Element => {
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!isOnBoardingCompleted()) {
-      navigate('/onboarding');
+      navigate(AppRoute.OnboardingCreatePin);
     }
   }, []);
 
@@ -35,16 +51,24 @@ const Wrapper = (): JSX.Element => {
 
 const routes = [
   {
-    path: '/onboarding',
-    element: (
-      <div>
-        <h1>Onboarding</h1>
-      </div>
-    ),
+    path: AppRoute.Onboarding,
+    element: <Onboarding />,
     children: [
       {
-        path: 'onboarding/create-pin',
-        element: <div>welcome</div>,
+        path: AppRoute.OnboardingCreatePin,
+        element: <div>CreatePin</div>,
+      },
+      {
+        path: AppRoute.OnboardingCreateOrImportKey,
+        element: <div>Create Account</div>,
+      },
+      {
+        path: AppRoute.OnboardingCreateFirstTask,
+        element: <div>First Task</div>,
+      },
+      {
+        path: AppRoute.OnboardingConfirmStake,
+        element: <div>Confirm stake</div>,
       },
     ],
   },
