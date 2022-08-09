@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import { createNodeWallets } from 'webapp/services';
+
 import { Button } from '../ui/Button';
 import { ErrorMessage } from '../ui/ErrorMessage';
 
@@ -35,7 +37,7 @@ const ImportFromSeedPhrase = ({
     return allPhrasesAreProvided;
   };
 
-  const handleImportFromPhrase = () => {
+  const handleImportFromPhrase = async () => {
     const keyPhraseString = phrases.join(' ');
     console.log('### importing from phrase', keyPhraseString);
 
@@ -46,6 +48,7 @@ const ImportFromSeedPhrase = ({
       try {
         console.log('####import');
         onImportSuccess(keyPhraseString);
+        await createNodeWallets(keyPhraseString, 'Main Account');
       } catch (error) {
         onImportFail(error);
       }
