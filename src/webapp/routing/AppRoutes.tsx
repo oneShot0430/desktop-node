@@ -2,7 +2,12 @@ import React, { useEffect } from 'react';
 import { useRoutes, Outlet, useNavigate } from 'react-router-dom';
 
 import { OnboardingLayout } from 'webapp/components/layouts/OnboardingLayout';
-import { CreatePin } from 'webapp/components/onboarding';
+import {
+  CreatePin,
+  FundNewKey,
+  RunFirstTask,
+  ConfirmYourStake,
+} from 'webapp/components/onboarding';
 
 import { History, MainLayout, Settings, AddTasks, MyNode } from '../components';
 
@@ -61,15 +66,15 @@ const routes = [
       },
       {
         path: AppRoute.OnboardingCreateOrImportKey,
-        element: <div>Create Account</div>,
+        element: <FundNewKey />,
       },
       {
         path: AppRoute.OnboardingCreateFirstTask,
-        element: <div>First Task</div>,
+        element: <RunFirstTask />,
       },
       {
         path: AppRoute.OnboardingConfirmStake,
-        element: <div>Confirm stake</div>,
+        element: <ConfirmYourStake />,
       },
     ],
   },
