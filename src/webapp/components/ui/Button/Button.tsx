@@ -32,7 +32,7 @@ const Button = ({
   }
 
   const classes = twMerge(
-    'rounded w-[180px] h-[40px] bg-finnieBlue-light-secondary',
+    'rounded w-[180px] h-[40px] bg-finnieBlue-light-secondary cursor-pointer z-50',
     className
   );
 

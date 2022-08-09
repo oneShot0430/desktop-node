@@ -7,9 +7,11 @@ import TealLinesBottom from 'assets/svgs/onboarding/key-import-teal-lines-bot.sv
 const FundNewKey = () => {
   return (
     <div className="relative h-full overflow-hidden bg-finnieBlue-dark-secondary">
-      <Outlet />
-      <YellowLinesTop className="absolute top-0 right-0" />
-      <TealLinesBottom className="absolute bottom-0 left-[-180px]" />
+      <div className="z-20">
+        <Outlet />
+      </div>
+      <YellowLinesTop className="absolute top-0 right-0 z-10" />
+      <TealLinesBottom className="absolute bottom-0 left-[-180px] z-10 " />
     </div>
   );
 };
