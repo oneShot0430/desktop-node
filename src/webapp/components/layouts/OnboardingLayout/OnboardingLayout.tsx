@@ -1,6 +1,7 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
+import BackIconComponent from 'assets/svgs/back-icon.svg';
 import KoiiLogo from 'assets/svgs/koii-logo-white.svg';
 import ClickIconSvg from 'assets/svgs/onboarding/click-icon.svg';
 import CreateIconSvg from 'assets/svgs/onboarding/create-icon.svg';
@@ -16,10 +17,20 @@ type PropsType = {
 
 const OnboardingLayout = ({ children }: PropsType) => {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+
+  const handleBackButtonClick = () => {
+    navigate(-1);
+  };
 
   return (
     <div className="flex flex-row h-full text-white">
-      <div className="w-[450px] bg-finnieBlue-light-secondary items-center  flex flex-col">
+      <div className="w-[450px] bg-finnieBlue-light-secondary items-center flex flex-col relative">
+        <BackIconComponent
+          data-testid="close-modal-button"
+          onClick={handleBackButtonClick}
+          className="w-[36px] h-[36px] cursor-pointer absolute top-[20px] left-[20px]"
+        />
         <div className="flex flex-col items-center justify-center mb-14">
           <KoiiLogo />
           <div className="text-[40px] w-[75%] text-center">

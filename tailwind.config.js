@@ -34,6 +34,7 @@ module.exports = {
         },
         finnieGray: {
           DEFAULT: '#F2F2F2',
+          light: '#F5F5F5',
           secondary: '#9B9BB2',
           tertiary: '#D6D6D6',
         },

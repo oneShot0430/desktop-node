@@ -9,21 +9,23 @@ type PropsType = Readonly<{
   onChange: (pin: string) => void;
   onComplete?: () => void;
   initialValue?: string | number;
+  showHideButton?: boolean;
 }>;
 
 const PinInputComponent = ({
   onComplete,
   onChange,
   initialValue,
+  showHideButton = true,
 }: PropsType) => {
-  const [showPinInput, setShowPinInput] = useState(true);
+  const [showPinInput, setShowPinInput] = useState(false);
 
   return (
-    <div className="flex items-center">
+    <div className="z-50 flex items-center">
       <PinInput
         length={6}
         initialValue={initialValue}
-        secret={showPinInput}
+        secret={!showPinInput}
         onChange={onChange}
         type="numeric"
         inputMode="number"
@@ -31,11 +33,13 @@ const PinInputComponent = ({
         autoSelect={true}
         regexCriteria={/^[ A-Za-z0-9_@./#&+-]*$/}
       />
-      <Button
-        className="bg-finnieTeal-100 rounded-[50%] w-[24px] h-[24px]"
-        icon={<HideIconSvg />}
-        onClick={() => setShowPinInput(!showPinInput)}
-      />
+      {showHideButton && (
+        <Button
+          className="bg-finnieTeal-100 rounded-[50%] w-[24px] h-[24px] cursor-pointer"
+          icon={<HideIconSvg />}
+          onClick={() => setShowPinInput(!showPinInput)}
+        />
+      )}
     </div>
   );
 };

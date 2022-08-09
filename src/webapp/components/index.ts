@@ -5,3 +5,4 @@ export * from './MyNode';
 export * from './AddTasks';
 export * from './ui/Button';
 export * from './ui/ErrorMessage';
+export * from './PinInput';
