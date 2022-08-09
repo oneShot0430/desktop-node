@@ -25,13 +25,24 @@ export enum AppRoute {
   Onboarding = '/onboarding',
   // onboarding routes
   OnboardingCreatePin = '/onboarding/create-pin',
+
   OnboardingCreateOrImportKey = '/onboarding/create-or-import-key',
   OnboardingCreateNewKey = '/onboarding/create-or-import-key/create-new-key',
   OnboardingPickKeyCreationMethod = '/onboarding/create-or-import-key/pick-key-creation-method',
   OnboardingImportKey = '/onboarding/create-or-import-key/import-key',
+  OnboardingPhraseImportSuccess = '/onboarding/create-or-import-key/import-key/phrase-import-success',
+
   OnboardingCreateFirstTask = '/onboarding/create-first-task',
   OnboardingConfirmStake = '/onboarding/confirm-stake',
 }
+
+export const accountImportRoutes = [
+  AppRoute.OnboardingCreateOrImportKey,
+  AppRoute.OnboardingCreateNewKey,
+  AppRoute.OnboardingPickKeyCreationMethod,
+  AppRoute.OnboardingImportKey,
+  AppRoute.OnboardingPhraseImportSuccess,
+];
 
 function isOnBoardingCompleted() {
   return false;
@@ -82,6 +93,10 @@ const routes = [
           {
             path: AppRoute.OnboardingImportKey,
             element: <ImportKey />,
+          },
+          {
+            path: AppRoute.OnboardingPhraseImportSuccess,
+            element: <div>Success</div>,
           },
         ],
       },

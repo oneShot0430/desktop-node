@@ -1,10 +1,14 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { ImportFromSeedPhrase } from 'webapp/components/ImportFromSeedPhrase';
+import { AppRoute } from 'webapp/routing/AppRoutes';
 
 const ImportKey = () => {
+  const navigate = useNavigate();
   const handleImportSuccess = (seedPhrase: string) => {
     console.log('###seedPhrase', seedPhrase);
+    navigate(AppRoute.OnboardingPhraseImportSuccess);
   };
 
   return (

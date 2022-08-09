@@ -7,7 +7,7 @@ import ClickIconSvg from 'assets/svgs/onboarding/click-icon.svg';
 import CreateIconSvg from 'assets/svgs/onboarding/create-icon.svg';
 import CurrencyIconSvg from 'assets/svgs/onboarding/currency-icon.svg';
 import LockIconSvg from 'assets/svgs/onboarding/lock-icon.svg';
-import { AppRoute } from 'webapp/routing/AppRoutes';
+import { accountImportRoutes, AppRoute } from 'webapp/routing/AppRoutes';
 
 import StepListItem from './components/StepListItem';
 
@@ -48,7 +48,7 @@ const OnboardingLayout = ({ children }: PropsType) => {
             iconSlot={<LockIconSvg />}
           />
           <StepListItem
-            isActive={pathname === AppRoute.OnboardingCreateOrImportKey}
+            isActive={accountImportRoutes.includes(pathname as AppRoute)}
             text="Fund your new key or import one."
             iconSlot={<CurrencyIconSvg />}
           />
