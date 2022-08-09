@@ -8,6 +8,9 @@ import {
   RunFirstTask,
   ConfirmYourStake,
 } from 'webapp/components/onboarding';
+import { CreateNewKey } from 'webapp/components/onboarding/CreateNewkey';
+import KeyCreationMethodPick from 'webapp/components/onboarding/FundNewKey/KeyCreationMethodPick';
+import { ImportKey } from 'webapp/components/onboarding/ImportKey';
 
 import { History, MainLayout, Settings, AddTasks, MyNode } from '../components';
 
@@ -23,6 +26,9 @@ export enum AppRoute {
   // onboarding routes
   OnboardingCreatePin = '/onboarding/create-pin',
   OnboardingCreateOrImportKey = '/onboarding/create-or-import-key',
+  OnboardingCreateNewKey = '/onboarding/create-or-import-key/create-new-key',
+  OnboardingPickKeyCreationMethod = '/onboarding/create-or-import-key/pick-key-creation-method',
+  OnboardingImportKey = '/onboarding/create-or-import-key/import-key',
   OnboardingCreateFirstTask = '/onboarding/create-first-task',
   OnboardingConfirmStake = '/onboarding/confirm-stake',
 }
@@ -67,6 +73,17 @@ const routes = [
       {
         path: AppRoute.OnboardingCreateOrImportKey,
         element: <FundNewKey />,
+        children: [
+          {
+            path: AppRoute.OnboardingPickKeyCreationMethod,
+            element: <KeyCreationMethodPick />,
+          },
+          { path: AppRoute.OnboardingCreateNewKey, element: <CreateNewKey /> },
+          {
+            path: AppRoute.OnboardingImportKey,
+            element: <ImportKey />,
+          },
+        ],
       },
       {
         path: AppRoute.OnboardingCreateFirstTask,

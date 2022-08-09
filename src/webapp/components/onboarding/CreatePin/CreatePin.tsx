@@ -16,7 +16,7 @@ const CreatePin = () => {
   const handlePinCreate = () => {
     console.log('create pin');
     // TODO: save pin to levelDB storage
-    navigate(AppRoute.OnboardingCreateOrImportKey);
+    navigate(AppRoute.OnboardingPickKeyCreationMethod);
   };
 
   const pinIsMatching = useMemo(() => pin === pinConfirm, [pin, pinConfirm]);
