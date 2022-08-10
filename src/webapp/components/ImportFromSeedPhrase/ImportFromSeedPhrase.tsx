@@ -5,9 +5,14 @@ import { createNodeWallets } from 'webapp/services';
 import { Button } from '../ui/Button';
 import { ErrorMessage } from '../ui/ErrorMessage';
 
+export interface AccountsType {
+  stakingAccountPubKey: string;
+  mainAccountPubKey: string;
+}
+
 type PropsType = {
   confirmActionLabel: string;
-  onImportSuccess: (key: string) => void;
+  onImportSuccess: (accounts: any) => void;
   onImportFail?: (error: string) => void;
 };
 
@@ -46,11 +51,21 @@ const ImportFromSeedPhrase = ({
     if (allPhrasesAreProvided) {
       setError(null);
       try {
-        console.log('####import');
-        onImportSuccess(keyPhraseString);
-        await createNodeWallets(keyPhraseString, 'Main Account');
+        const accounts = await createNodeWallets(
+          keyPhraseString,
+          'Main Account Test 2'
+        );
+
+        onImportSuccess({
+          mainAccountPubKey: accounts.mainAccountPubKey,
+          stakingAccountPubKey: accounts.stakingWalletPubKey,
+        });
       } catch (error) {
-        onImportFail(error);
+        console.log('### Error', error);
+        setError(error.message);
+        if (onImportFail) {
+          onImportFail(error);
+        }
       }
     } else {
       setError('Seed phrase is not complete.');

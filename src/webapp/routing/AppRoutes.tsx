@@ -8,9 +8,11 @@ import {
   RunFirstTask,
   ConfirmYourStake,
 } from 'webapp/components/onboarding';
+import { OnboardingProvider } from 'webapp/components/onboarding/context/onboarding-context';
 import { CreateNewKey } from 'webapp/components/onboarding/CreateNewkey';
 import KeyCreationMethodPick from 'webapp/components/onboarding/FundNewKey/KeyCreationMethodPick';
 import { ImportKey } from 'webapp/components/onboarding/ImportKey';
+import { ImportKeySuccess } from 'webapp/components/onboarding/ImportKeySuccess';
 
 import { History, MainLayout, Settings, AddTasks, MyNode } from '../components';
 
@@ -50,9 +52,11 @@ function isOnBoardingCompleted() {
 
 const Onboarding = () => {
   return (
-    <OnboardingLayout>
-      <Outlet />
-    </OnboardingLayout>
+    <OnboardingProvider>
+      <OnboardingLayout>
+        <Outlet />
+      </OnboardingLayout>
+    </OnboardingProvider>
   );
 };
 
@@ -96,7 +100,7 @@ const routes = [
           },
           {
             path: AppRoute.OnboardingPhraseImportSuccess,
-            element: <div>Success</div>,
+            element: <ImportKeySuccess />,
           },
         ],
       },

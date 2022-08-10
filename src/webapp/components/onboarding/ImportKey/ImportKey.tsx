@@ -1,15 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { ImportFromSeedPhrase } from 'webapp/components/ImportFromSeedPhrase';
 import { AppRoute } from 'webapp/routing/AppRoutes';
 
+import { OnboardingContext } from '../context/onboarding-context';
+
 const ImportKey = () => {
   const navigate = useNavigate();
-  const handleImportSuccess = (seedPhrase: string) => {
-    console.log('###seedPhrase', seedPhrase);
-    navigate(AppRoute.OnboardingPhraseImportSuccess);
-  };
+  const { setSystemKey } = useContext(OnboardingContext);
 
   return (
     <div className="mt-[140px] flex flex-col items-start pl-[100px]">
@@ -17,7 +16,10 @@ const ImportKey = () => {
         Type in your secret phrase to import your key.
       </div>
       <ImportFromSeedPhrase
-        onImportSuccess={handleImportSuccess}
+        onImportSuccess={({ mainAccountPubKey }) => {
+          setSystemKey(mainAccountPubKey);
+          navigate(AppRoute.OnboardingPhraseImportSuccess);
+        }}
         confirmActionLabel="Confirm"
       />
     </div>

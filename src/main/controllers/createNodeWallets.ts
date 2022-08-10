@@ -73,7 +73,8 @@ const createNodeWallets = async (
       mainAccountPubKey: mainWallet.publicKey.toBase58(),
     };
   } catch (err) {
-    console.error(err);
+    console.log(err);
+    throw err;
   }
 };
 
