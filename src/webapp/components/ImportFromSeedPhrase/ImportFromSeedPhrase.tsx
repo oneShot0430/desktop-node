@@ -53,7 +53,7 @@ const ImportFromSeedPhrase = ({
       try {
         const accounts = await createNodeWallets(
           keyPhraseString,
-          'Main Account Test 2'
+          'Main Account Test 3'
         );
 
         onImportSuccess({
