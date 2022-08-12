@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
-import { useRoutes, Outlet, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { useRoutes, Outlet } from 'react-router-dom';
 
+import AppBoot from 'webapp/AppBoot';
 import { OnboardingLayout } from 'webapp/components/layouts/OnboardingLayout';
 import {
   CreatePin,
@@ -14,7 +15,7 @@ import KeyCreationMethodPick from 'webapp/components/onboarding/FundNewKey/KeyCr
 import { ImportKey } from 'webapp/components/onboarding/ImportKey';
 import { ImportKeySuccess } from 'webapp/components/onboarding/ImportKeySuccess';
 
-import { History, MainLayout, Settings, AddTasks, MyNode } from '../components';
+import { History, Settings, AddTasks, MyNode } from '../components';
 
 export enum AppRoute {
   Root = '/',
@@ -46,9 +47,9 @@ export const accountImportRoutes = [
   AppRoute.OnboardingPhraseImportSuccess,
 ];
 
-function isOnBoardingCompleted() {
-  return false;
-}
+// function isOnBoardingCompleted() {
+//   return false;
+// }
 
 const Onboarding = () => {
   return (
@@ -60,21 +61,21 @@ const Onboarding = () => {
   );
 };
 
-const Wrapper = (): JSX.Element => {
-  const navigate = useNavigate();
+// const Wrapper = (): JSX.Element => {
+//   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!isOnBoardingCompleted()) {
-      navigate(AppRoute.OnboardingCreatePin);
-    }
-  }, []);
+//   useEffect(() => {
+//     if (!isOnBoardingCompleted()) {
+//       navigate(AppRoute.OnboardingCreatePin);
+//     }
+//   }, []);
 
-  return (
-    <MainLayout>
-      <Outlet />
-    </MainLayout>
-  );
-};
+//   return (
+//     <MainLayout>
+//       <Outlet />
+//     </MainLayout>
+//   );
+// };
 
 const routes = [
   {
@@ -116,7 +117,7 @@ const routes = [
   },
   {
     path: AppRoute.Root,
-    element: <Wrapper />,
+    element: <AppBoot />,
     children: [
       { path: AppRoute.MyNode, element: <MyNode /> },
       {

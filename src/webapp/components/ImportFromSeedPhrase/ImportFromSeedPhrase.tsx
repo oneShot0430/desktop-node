@@ -104,7 +104,6 @@ const ImportFromSeedPhrase = ({
           {error && <ErrorMessage errorMessage={error} />}
         </div>
         <Button
-          onlyIcon
           onClick={handleImportFromPhrase}
           label={confirmActionLabel}
           className="font-semibold bg-finnieGray-light text-finnieBlue-light w-[240px] h-[48px]"

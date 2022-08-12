@@ -26,7 +26,7 @@ const ConfirmYourStake = () => {
   return (
     <div className="relative h-full overflow-hidden bg-finnieBlue-dark-secondary">
       <div className="px-8">
-        <div className="mt-[90px] mb-[50px] text-finnieEmerald-light text-2xl text-center">
+        <div className="mt-[60px] mb-[50px] text-finnieEmerald-light text-2xl text-center">
           You’re choosing to run:
         </div>
 
