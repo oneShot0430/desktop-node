@@ -49,6 +49,10 @@ const initHandlers = (): void => {
     controllers.setActiveAccount
   );
   ipcMain.handle(config.endpoints.GET_ALL_ACCOUNTS, controllers.getAllAccounts);
+  ipcMain.handle(
+    config.endpoints.STORE_USER_CONFIG,
+    controllers.storeUserConfig
+  );
 };
 
 export default errorHandler(initHandlers, 'Init handlers error');

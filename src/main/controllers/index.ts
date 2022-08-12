@@ -17,6 +17,7 @@ import getTaskSource from './getTaskSource';
 import setActiveAccount from './setActiveAccount';
 import startTask from './startTask';
 import stopTask from './stopTask';
+import storeUserConfig from './storeUserConfig';
 
 export default {
   getTasks,
@@ -38,4 +39,5 @@ export default {
   generateSeedPhrase,
   setActiveAccount,
   getAllAccounts,
+  storeUserConfig,
 };
