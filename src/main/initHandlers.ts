@@ -53,6 +53,7 @@ const initHandlers = (): void => {
     config.endpoints.STORE_USER_CONFIG,
     controllers.storeUserConfig
   );
+  ipcMain.handle(config.endpoints.GET_USER_CONFIG, controllers.getUserConfig);
 };
 
 export default errorHandler(initHandlers, 'Init handlers error');
