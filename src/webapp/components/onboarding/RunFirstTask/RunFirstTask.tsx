@@ -1,11 +1,13 @@
 import React from 'react';
 import { useQuery } from 'react-query';
+import { useNavigate } from 'react-router-dom';
 
 import AddIconSvg from 'assets/svgs/onboarding/add-teal-icon.svg';
 import CurrencySvgIcon from 'assets/svgs/onboarding/currency-teal-small-icon.svg';
 import RestoreIconSvg from 'assets/svgs/onboarding/restore-orange-icon.svg';
 import BgShape from 'assets/svgs/onboarding/shape_1.svg';
 import { Button } from 'webapp/components';
+import { AppRoute } from 'webapp/routing/AppRoutes';
 import { QueryKeys, fetchMyTasks } from 'webapp/services';
 
 import TaskItem from './TaskItem';
@@ -16,6 +18,13 @@ const RunFirstTask = () => {
     data: tasks,
     error,
   } = useQuery([QueryKeys.taskList], fetchMyTasks);
+  const navigate = useNavigate();
+
+  const handleRunTasks = () => {
+    console.log('### handleRunTasks');
+
+    navigate(AppRoute.OnboardingConfirmStake);
+  };
 
   /**
    * @todo: mocked, get from the api
@@ -68,6 +77,7 @@ const RunFirstTask = () => {
             <Button
               className="font-semibold bg-finnieGray-light text-finnieBlue-light w-[220px] h-[38px]"
               label="Run Tasks"
+              onClick={handleRunTasks}
             />
             <div className="flex flex-row items-center gap-2 mt-2 text-sm text-finnieEmerald-light">
               <CurrencySvgIcon className="h-[24px]" />

@@ -32,7 +32,7 @@ const Button = ({
   }
 
   const classes = twMerge(
-    'rounded min-w-[180px] h-[40px] bg-finnieBlue-light-secondary cursor-pointer z-50',
+    'rounded w-[180px] h-[40px] bg-finnieBlue-light-secondary cursor-pointer z-50',
     className
   );
 
@@ -43,7 +43,7 @@ const Button = ({
       } flex items-center justify-center`}
       {...rest}
     >
-      <span className="pr-2">{icon}</span>
+      <span className={icon && label ? 'pr-2' : ''}>{icon}</span>
       {loading ? 'Loading...' : <span className={'self-center'}>{label}</span>}
     </button>
   );
