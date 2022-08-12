@@ -1,5 +1,6 @@
 import React from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { twMerge } from 'tailwind-merge';
 
 import { TableHeader } from './TableHeader';
 
@@ -10,6 +11,7 @@ interface PropsType {
   hasMore: boolean;
   isLoading?: boolean;
   error?: string;
+  height?: string;
 }
 
 export const InfiniteScrollTable = ({
@@ -19,13 +21,19 @@ export const InfiniteScrollTable = ({
   hasMore,
   isLoading,
   error,
+  height,
 }: PropsType) => {
+  const tableClasses = twMerge(
+    'h-[74vh] overflow-y-auto overflow-x-auto',
+    height && `h-[${height}]`
+  );
+
   if (isLoading) return <div>Loading...</div>;
 
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="h-max-full">
+    <div className={tableClasses}>
       <InfiniteScroll
         dataLength={children.length}
         next={update}
