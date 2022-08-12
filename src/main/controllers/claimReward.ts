@@ -18,11 +18,16 @@ const claimReward = async (
   const { taskAccountPubKey } = payload;
   const taskStateInfoPublicKey = new PublicKey(taskAccountPubKey);
   const connection = sdk.k2Connection;
+  const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
+  if (!activeAccount) {
+    throw new Error('Please select a Active Account');
+  }
+  const stakingWalletfilePath = `namespace/${activeAccount}_stakingWallet.json`;
   let stakingAccKeypair;
   try {
     stakingAccKeypair = Keypair.fromSecretKey(
       Uint8Array.from(
-        JSON.parse(fsSync.readFileSync('namespace/stakingWallet.json', 'utf-8'))
+        JSON.parse(fsSync.readFileSync(stakingWalletfilePath, 'utf-8'))
       )
     );
   } catch (e) {

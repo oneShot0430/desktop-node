@@ -80,6 +80,15 @@
   background-color: rgba(0, 0, 0, 0.1);
 }
 
+html,
+body {
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;

@@ -1,5 +1,3 @@
-import { AccountType } from './types';
-
 export const logsMock = `
 #!/usr/bin/env node
 require("dotenv").config();
@@ -31,10 +29,3 @@ const { verifyStake, setupWebServer, runPeriodic } = require("./src/service");
 
 const GATEWAY_URL = "https://arweave.net/";
 `;
-
-export const accountsMock: AccountType[] = [
-  { name: 'Name', address: '12345xx', balance: 12345 },
-  { name: 'Name', address: '12345xx', balance: 12345 },
-  { name: 'Name', address: '12345xx', balance: 12345 },
-  { name: 'Name', address: '12345xx', balance: 12345 },
-];

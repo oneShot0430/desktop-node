@@ -53,6 +53,23 @@ export const getMainAccountBalance = (): Promise<number> => {
     });
 };
 
+export const getAccountBalance = (pubKey: string) => {
+  return sdk.k2Connection
+    .getBalance(new PublicKey(pubKey))
+    .then((lamports) => lamports / LAMPORTS_PER_SOL)
+    .then((balance) => {
+      console.log('GETTING MAIN ACCOUNT BALANCE', balance);
+      return balance;
+    });
+};
+
+export const getMainAccountPublicKey = (): Promise<string> => {
+  return window.main.getMainAccountPubKey().then((pubkey) => {
+    console.log('GETTING MAIN ACCOUNT PUBKEY', pubkey);
+    return pubkey;
+  });
+};
+
 export const getStakingAccountPublicKey = (): Promise<string> => {
   return window.main.getStakingAccountPubKey().then((pubkey) => {
     console.log('GETTING STAKING ACCOUNT PUBKEY', pubkey);
@@ -98,8 +115,38 @@ export const getLogs = (taskAccountPubKey: string, noOfLines = 500) => {
     });
 };
 
-export const createStakingWallet = (mnemonic?: string) => {
+export const createNodeWallets = (mnemonic: string, accountName: string) => {
   console.log('CREATING STAKING WALLET');
-  // FIXME: commented out createStakingWallet as we are not using it now
-  // return window.main.createStakingWallet({ mnemonic });
+  return window.main.createNodeWallets({ mnemonic, accountName });
+};
+
+export const generateSeedPhrase = (): Promise<string> => {
+  return window.main.generateSeedPhrase().then((mnemonic) => {
+    console.log('GENERATING SEED PHRASE', mnemonic);
+    return mnemonic;
+  });
+};
+
+export const getAllAccounts = (): Promise<
+  Array<{
+    accountName: string;
+    stakingPublicKey: string;
+    mainPublicKey: string;
+    isDefault: boolean;
+    stakingPublicKeyBalance: number;
+  }>
+> => {
+  return window.main.getAllAccounts().then((accounts) => {
+    console.log('GETTING ALL ACCOUNTS', accounts);
+    return accounts;
+  });
+};
+
+export const setActiveAccount = (accountName: string) => {
+  return window.main
+    .setActiveAccount({ accountName })
+    .then((successFullySet) => {
+      console.log('MAIN ACCOUNT SET', successFullySet);
+      return successFullySet;
+    });
 };

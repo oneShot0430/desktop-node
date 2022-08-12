@@ -11,3 +11,5 @@ export * from './getAvailableTasks';
 export * from './fetchAllTasks';
 export * from './getMyTasks';
 export * from './createNodeWallets';
+export * from './setActiveAccount';
+export * from './getAllAccounts';

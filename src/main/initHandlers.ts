@@ -40,6 +40,15 @@ const initHandlers = (): void => {
     config.endpoints.CREATE_NODE_WALLETS,
     controllers.createNodeWallets
   );
+  ipcMain.handle(
+    config.endpoints.GENERATE_SEED_PHRASE,
+    controllers.generateSeedPhrase
+  );
+  ipcMain.handle(
+    config.endpoints.SET_ACTIVE_ACCOUNT,
+    controllers.setActiveAccount
+  );
+  ipcMain.handle(config.endpoints.GET_ALL_ACCOUNTS, controllers.getAllAccounts);
 };
 
 export default errorHandler(initHandlers, 'Init handlers error');

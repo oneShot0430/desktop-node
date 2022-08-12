@@ -4,5 +4,6 @@ export interface CreateNodeWalletsResponse {
 }
 
 export interface CreateNodeWalletsParam {
-  mnemonic?: string;
+  mnemonic: string;
+  accountName: string;
 }
