@@ -11,10 +11,11 @@ const ImportKeySuccess = () => {
   const navigate = useNavigate();
   const { systemKey } = useContext(OnboardingContext);
 
-  const maskedKey =
-    systemKey.substring(0, 22) +
-    '...' +
-    systemKey.trim().substring(systemKey.length - 5);
+  const maskedKey = systemKey
+    ? systemKey.substring(0, 22) +
+      '...' +
+      systemKey.trim().substring(systemKey.length - 5)
+    : '';
 
   return (
     <div className="flex pl-[105px]">
