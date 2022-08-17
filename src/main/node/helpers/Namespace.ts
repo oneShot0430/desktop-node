@@ -93,10 +93,17 @@ class Namespace {
       // this.loadRedisClient();
     }
     if (!mainSystemAccount) {
-      const wallet = 'WALLET_LOCATION';
-      this.storeGet(wallet).then((walletPath) => {
+      const ACTIVE_ACCOUNT = 'ACTIVE_ACCOUNT';
+      this.storeGet(ACTIVE_ACCOUNT).then((activeAccount) => {
         const mainSystemAccount = Keypair.fromSecretKey(
-          Uint8Array.from(JSON.parse(fs.readFileSync(walletPath, 'utf-8')))
+          Uint8Array.from(
+            JSON.parse(
+              fs.readFileSync(
+                `wallets/${activeAccount}_mainSystemWallet.json`,
+                'utf-8'
+              )
+            )
+          )
         );
         this.#mainSystemAccount = mainSystemAccount;
         this.mainSystemAccountPubKey = mainSystemAccount?.publicKey;
