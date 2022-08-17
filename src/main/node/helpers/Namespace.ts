@@ -157,6 +157,20 @@ class Namespace {
       throw e;
     }
   }
+  /**
+   * Namespace wrapper over getTaskaccount
+   * @returns {Promise<void>}
+   */
+  async getTaskAccount(): Promise<Keypair | null> {
+    const ACTIVE_ACCOUNT = 'ACTIVE_ACCOUNT';
+    const activeAccount = await this.storeGet(ACTIVE_ACCOUNT);
+    const STAKING_WALLET_PATH = `namespace/${activeAccount}_stakingWallet.json`;
+    if (!fs.existsSync(STAKING_WALLET_PATH)) return null;
+    const taskAccount = Keypair.fromSecretKey(
+      Uint8Array.from(JSON.parse(fs.readFileSync(STAKING_WALLET_PATH, 'utf-8')))
+    );
+    return taskAccount;
+  }
   // /**
   //  * Namespace wrapper of storeGetAsync
   //  * @param {string} key // Path to get
