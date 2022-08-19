@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useInfiniteQuery } from 'react-query';
 
-import { QueryKeys } from 'webapp/services';
+import { fetchMyTasks, QueryKeys } from 'webapp/services';
 import { Task } from 'webapp/types';
 
 import { InfiniteScrollTable } from '../ui/Table';
@@ -20,44 +20,14 @@ const tableHeaders = [
 
 const pageSize = 10;
 
-const getMockTask = () => ({
-  publicKey: Math.random().toString(),
-  taskName: 'string',
-  taskManager: 'string',
-  isWhitelisted: true,
-  isActive: true,
-  taskAuditProgram: 'string',
-  stakePotAccount: 'string',
-  totalBountyAmount: 1,
-  bountyAmountPerRound: 1,
-  status: {},
-  currentRound: 1,
-  availableBalances: {},
-  stakeList: {},
-  isRunning: true,
-  cronArray: [1],
-});
-
 export const MyNodeTable = () => {
   const [hasMore, setHasMore] = useState(true);
 
   const { isLoading, data, error, fetchNextPage } = useInfiniteQuery(
     QueryKeys.taskList,
     ({ pageParam = 1 }) => {
-      console.warn('FETCHING PAGE ', pageParam);
-      // return fetchMyTasks({ limit: pageSize, offset: pageParam * pageSize });
-      return [
-        getMockTask(),
-        getMockTask(),
-        getMockTask(),
-        getMockTask(),
-        getMockTask(),
-        getMockTask(),
-        getMockTask(),
-        getMockTask(),
-        getMockTask(),
-        //   getMockTask(),
-      ];
+      console.log('FETCHING PAGE ', pageParam);
+      return fetchMyTasks({ limit: pageSize, offset: pageParam * pageSize });
     },
     {
       getNextPageParam: (lastPageData, allPages) => {

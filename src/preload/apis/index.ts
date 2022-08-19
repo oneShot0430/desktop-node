@@ -13,9 +13,11 @@ import getTaskInfo from './getTaskInfo';
 import getTaskLogs from './getTaskLogs';
 import getTasks from './getTasks';
 import getTaskSource from './getTaskSource';
+import getUserConfig from './getUserConfig';
 import setActiveAccount from './setActiveAccount';
 import startTask from './startTask';
 import stopTask from './stopTask';
+import storeUserConfig from './storeUserConfig';
 import withdrawStake from './withdrawStake';
 
 export default {
@@ -38,4 +40,6 @@ export default {
   generateSeedPhrase,
   setActiveAccount,
   getAllAccounts,
+  storeUserConfig,
+  getUserConfig,
 };
