@@ -1,6 +1,7 @@
-export { Table } from './Table';
-export { TableHeader } from './TableHeader';
-export { TableRow } from './TableRow';
-export { TableCell } from './TableCell';
-export { NodeStatusCell } from './NodeStatusCell';
-export { TaskDetailsCell } from './TaskDetailsCell';
+export * from './Table';
+export * from './TableHeader';
+export * from './TableRow';
+export * from './TableCell';
+export * from './NodeStatusCell';
+export * from './TaskDetailsCell';
+export * from './InfiniteScrollTable';

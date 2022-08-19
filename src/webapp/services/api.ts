@@ -1,24 +1,35 @@
 import { LAMPORTS_PER_SOL, PublicKey } from '@_koi/web3.js';
 
+import {
+  FetchAllTasksParam,
+  GetAvailableTasksParam,
+  GetMyTasksParam,
+} from 'models/api';
 import sdk from 'services/sdk';
 import { Task } from 'webapp/types';
 
 import { TaskService } from './taskService';
 
-export const fetchAllTasks = async (): Promise<Task[]> => {
-  const tasks = await window.main.getTasks();
+export const fetchAllTasks = async (
+  params: FetchAllTasksParam
+): Promise<Task[]> => {
+  const tasks = await window.main.getTasks(params);
   console.log('FETCHING TASKS', tasks);
   return tasks.map(TaskService.parseTask);
 };
 
-export const fetchMyTasks = async (): Promise<Task[]> => {
-  const tasks = await window.main.getTasks();
+export const fetchMyTasks = async (
+  params: GetMyTasksParam
+): Promise<Task[]> => {
+  const tasks = await window.main.getMyTasks(params);
   console.log('FETCHING MY TASKS', tasks);
   return tasks.map(TaskService.parseTask);
 };
 
-export const fetchAvailableTasks = async (): Promise<Task[]> => {
-  const tasks = await window.main.getAvailableTasks();
+export const fetchAvailableTasks = async (
+  params: GetAvailableTasksParam
+): Promise<Task[]> => {
+  const tasks = await window.main.getAvailableTasks(params);
   console.log('FETCHING AVAILABLE TASKS', tasks);
   return tasks.map(TaskService.parseTask);
 };
