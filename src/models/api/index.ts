@@ -13,3 +13,5 @@ export * from './getMyTasks';
 export * from './createNodeWallets';
 export * from './setActiveAccount';
 export * from './getAllAccounts';
+export * from './storeUserConfig';
+export * from './getUserConfig';

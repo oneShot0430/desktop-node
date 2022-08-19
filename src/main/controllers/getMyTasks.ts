@@ -7,7 +7,7 @@ import koiiTasks from 'services/koiiTasks';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 
-const getTasks = (event: Event, payload: GetMyTasksParam): Task[] => {
+const getMyTasks = (event: Event, payload: GetMyTasksParam): Task[] => {
   const { offset, limit } = payload;
   const tasks = koiiTasks.getAllTasks();
   const files = fs.readdirSync('namespace', { withFileTypes: true });
@@ -20,4 +20,4 @@ const getTasks = (event: Event, payload: GetMyTasksParam): Task[] => {
     .slice(offset, offset + limit);
 };
 
-export default mainErrorHandler(getTasks);
+export default mainErrorHandler(getMyTasks);
