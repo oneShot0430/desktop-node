@@ -90,7 +90,9 @@ out/
 
 # folder containing wallets 
 wallets
+
 .idea
+*.iml
 
 namespace/*
 
