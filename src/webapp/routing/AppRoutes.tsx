@@ -47,10 +47,6 @@ export const accountImportRoutes = [
   AppRoute.OnboardingPhraseImportSuccess,
 ];
 
-// function isOnBoardingCompleted() {
-//   return false;
-// }
-
 const Onboarding = () => {
   return (
     <OnboardingProvider>
@@ -60,22 +56,6 @@ const Onboarding = () => {
     </OnboardingProvider>
   );
 };
-
-// const Wrapper = (): JSX.Element => {
-//   const navigate = useNavigate();
-
-//   useEffect(() => {
-//     if (!isOnBoardingCompleted()) {
-//       navigate(AppRoute.OnboardingCreatePin);
-//     }
-//   }, []);
-
-//   return (
-//     <MainLayout>
-//       <Outlet />
-//     </MainLayout>
-//   );
-// };
 
 const routes = [
   {
