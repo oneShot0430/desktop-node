@@ -150,3 +150,19 @@ export const setActiveAccount = (accountName: string) => {
       return successFullySet;
     });
 };
+
+export const getUserConfig = () => {
+  return window.main.getUserConfig().then((config) => {
+    console.log('GETTING USER CONFIG', config);
+    return config;
+  });
+};
+
+export const saveUserConfig = (config: {
+  settings: { onboardingCompleted: boolean };
+}) => {
+  return window.main.storeUserConfig(config).then((res) => {
+    console.log('SAVING USER CONFIG', res);
+    return res;
+  });
+};

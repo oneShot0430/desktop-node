@@ -1,5 +1,3 @@
 export interface getUserConfigResponse {
-  settings: {
-    onboardingCompleted: boolean;
-  };
+  onboardingCompleted: boolean;
 }

@@ -1,5 +1,4 @@
 import React from 'react';
-import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
 import AddIconSvg from 'assets/svgs/onboarding/add-teal-icon.svg';
@@ -8,16 +7,15 @@ import RestoreIconSvg from 'assets/svgs/onboarding/restore-orange-icon.svg';
 import BgShape from 'assets/svgs/onboarding/shape_1.svg';
 import { Button } from 'webapp/components';
 import { AppRoute } from 'webapp/routing/AppRoutes';
-import { QueryKeys, fetchMyTasks } from 'webapp/services';
 
 import TaskItem from './TaskItem';
 
 const RunFirstTask = () => {
-  const {
-    isLoading,
-    data: tasks,
-    error,
-  } = useQuery([QueryKeys.taskList], fetchMyTasks);
+  // const {
+  //   isLoading,
+  //   data: tasks,
+  //   error,
+  // } = useQuery([QueryKeys.taskList], () => {return []});
   const navigate = useNavigate();
 
   const handleRunTasks = () => {

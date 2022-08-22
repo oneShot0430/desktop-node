@@ -7,13 +7,20 @@ import AddIconSvg from 'assets/svgs/onboarding/add-teal-icon.svg';
 import CurrencySvgIcon from 'assets/svgs/onboarding/currency-teal-small-icon.svg';
 import { Button } from 'webapp/components/ui/Button';
 import { AppRoute } from 'webapp/routing/AppRoutes';
+import { saveUserConfig } from 'webapp/services';
 
 const ConfirmYourStake = () => {
   const navigate = useNavigate();
 
   const handleConfirmYourStake = () => {
     console.log('### handleConfirmYourStake');
-    navigate(AppRoute.MyNode);
+    saveUserConfig({ settings: { onboardingCompleted: true } })
+      .then(() => {
+        navigate(AppRoute.MyNode);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   /**
