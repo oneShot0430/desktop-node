@@ -1,15 +1,14 @@
 import React from 'react';
-import { useRoutes, Outlet } from 'react-router-dom';
+import { useRoutes } from 'react-router-dom';
 
-import AppBoot from 'webapp/AppBoot';
-import { OnboardingLayout } from 'webapp/components/layouts/OnboardingLayout';
+import AppLoader from 'webapp/AppLoader';
+import AppBoot from 'webapp/AppWrapper';
 import {
   CreatePin,
   FundNewKey,
   RunFirstTask,
   ConfirmYourStake,
 } from 'webapp/components/onboarding';
-import { OnboardingProvider } from 'webapp/components/onboarding/context/onboarding-context';
 import { CreateNewKey } from 'webapp/components/onboarding/CreateNewkey';
 import KeyCreationMethodPick from 'webapp/components/onboarding/FundNewKey/KeyCreationMethodPick';
 import { ImportKey } from 'webapp/components/onboarding/ImportKey';
@@ -47,54 +46,7 @@ export const accountImportRoutes = [
   AppRoute.OnboardingPhraseImportSuccess,
 ];
 
-const Onboarding = () => {
-  return (
-    <OnboardingProvider>
-      <OnboardingLayout>
-        <Outlet />
-      </OnboardingLayout>
-    </OnboardingProvider>
-  );
-};
-
 const routes = [
-  {
-    path: AppRoute.Onboarding,
-    element: <Onboarding />,
-    children: [
-      {
-        path: AppRoute.OnboardingCreatePin,
-        element: <CreatePin />,
-      },
-      {
-        path: AppRoute.OnboardingCreateOrImportKey,
-        element: <FundNewKey />,
-        children: [
-          {
-            path: AppRoute.OnboardingPickKeyCreationMethod,
-            element: <KeyCreationMethodPick />,
-          },
-          { path: AppRoute.OnboardingCreateNewKey, element: <CreateNewKey /> },
-          {
-            path: AppRoute.OnboardingImportKey,
-            element: <ImportKey />,
-          },
-          {
-            path: AppRoute.OnboardingPhraseImportSuccess,
-            element: <ImportKeySuccess />,
-          },
-        ],
-      },
-      {
-        path: AppRoute.OnboardingCreateFirstTask,
-        element: <RunFirstTask />,
-      },
-      {
-        path: AppRoute.OnboardingConfirmStake,
-        element: <ConfirmYourStake />,
-      },
-    ],
-  },
   {
     path: AppRoute.Root,
     element: <AppBoot />,
@@ -128,7 +80,47 @@ const routes = [
         path: AppRoute.Settings,
         element: <Settings />,
       },
-      { path: AppRoute.Root, element: <MyNode /> },
+      { path: AppRoute.Root, element: <AppLoader /> },
+
+      {
+        path: AppRoute.Onboarding,
+        children: [
+          {
+            path: AppRoute.OnboardingCreatePin,
+            element: <CreatePin />,
+          },
+          {
+            path: AppRoute.OnboardingCreateOrImportKey,
+            element: <FundNewKey />,
+            children: [
+              {
+                path: AppRoute.OnboardingPickKeyCreationMethod,
+                element: <KeyCreationMethodPick />,
+              },
+              {
+                path: AppRoute.OnboardingCreateNewKey,
+                element: <CreateNewKey />,
+              },
+              {
+                path: AppRoute.OnboardingImportKey,
+                element: <ImportKey />,
+              },
+              {
+                path: AppRoute.OnboardingPhraseImportSuccess,
+                element: <ImportKeySuccess />,
+              },
+            ],
+          },
+          {
+            path: AppRoute.OnboardingCreateFirstTask,
+            element: <RunFirstTask />,
+          },
+          {
+            path: AppRoute.OnboardingConfirmStake,
+            element: <ConfirmYourStake />,
+          },
+        ],
+      },
     ],
   },
 ];

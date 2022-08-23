@@ -1,9 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import Header from 'webapp/components/Header';
 import { Modal } from 'webapp/components/Modals';
 import ModalTaskInspect from 'webapp/components/ModalTaskInspector';
 import { useAppSelector } from 'webapp/hooks/reduxHook';
+import { AppRoute } from 'webapp/routing/AppRoutes';
 import { saveUserConfig } from 'webapp/services';
 
 import { BackButton } from '../BackButton';
@@ -18,6 +20,7 @@ const MainLayout = ({ children }: MainLayoutProps): JSX.Element => {
   const showTaskInspector = useAppSelector(
     (state) => state.taskInspector.isShown
   );
+  const navigate = useNavigate();
 
   return (
     <div className="flex flex-col h-full">
@@ -29,9 +32,12 @@ const MainLayout = ({ children }: MainLayoutProps): JSX.Element => {
           <BackButton />
           <Button
             className="mt-4"
-            label="Reset onbooarding"
-            onClick={() => {
-              saveUserConfig({ settings: { onboardingCompleted: false } });
+            label="Reset onboarding"
+            onClick={async () => {
+              await saveUserConfig({
+                settings: { onboardingCompleted: false },
+              });
+              navigate(AppRoute.OnboardingCreatePin);
             }}
           />
         </div>

@@ -6,4 +6,5 @@ export enum QueryKeys {
   mainAccountBalance = 'mainAccountBalance',
   myStake = 'myStake',
   taskSourceCode = 'taskSourceCode',
+  UserSettings = 'UserSettings',
 }
