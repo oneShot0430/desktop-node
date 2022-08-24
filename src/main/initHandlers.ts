@@ -54,6 +54,7 @@ const initHandlers = (): void => {
     controllers.storeUserConfig
   );
   ipcMain.handle(config.endpoints.GET_USER_CONFIG, controllers.getUserConfig);
+  ipcMain.handle(config.endpoints.GET_TASKS_BY_ID, controllers.getTasksById);
 };
 
 export default errorHandler(initHandlers, 'Init handlers error');

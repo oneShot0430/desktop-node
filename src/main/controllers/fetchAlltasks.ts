@@ -16,7 +16,7 @@ async function fetchAllTasks(
   event: Event,
   payload: FetchAllTasksParam
 ): Promise<Task[]> {
-  const { offset, limit } = payload;
+  const { offset, limit } = payload || {};
   let taskAccountInfo = await sdk.k2Connection.getProgramAccounts(
     new PublicKey(config.node.TASK_CONTRACT_ID)
   );

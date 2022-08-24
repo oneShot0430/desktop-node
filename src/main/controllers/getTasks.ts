@@ -1,11 +1,13 @@
 import { Event } from 'electron';
 
 import { Task } from 'models';
-import koiiTasks from 'services/koiiTasks';
+import { FetchAllTasksParam } from 'models/api';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 
-const getTasks = (event: Event, payload: any): Task[] =>
-  koiiTasks.getAllTasks();
+import fetchAlltasks from './fetchAlltasks';
+
+const getTasks = (event: Event, payload: FetchAllTasksParam): Task[] =>
+  fetchAlltasks(event, payload);
 
 export default mainErrorHandler(getTasks);

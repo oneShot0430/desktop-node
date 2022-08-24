@@ -15,3 +15,4 @@ export * from './setActiveAccount';
 export * from './getAllAccounts';
 export * from './storeUserConfig';
 export * from './getUserConfig';
+export * from './getTasksById';
