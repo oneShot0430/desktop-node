@@ -12,6 +12,7 @@ import getStakingAccountPubKey from './getStakingAccountPubKey';
 import getTaskInfo from './getTaskInfo';
 import getTaskLogs from './getTaskLogs';
 import getTasks from './getTasks';
+import getTasksById from './getTasksById';
 import getTaskSource from './getTaskSource';
 import getUserConfig from './getUserConfig';
 import setActiveAccount from './setActiveAccount';
@@ -42,4 +43,5 @@ export default {
   getAllAccounts,
   storeUserConfig,
   getUserConfig,
+  getTasksById,
 };
