@@ -25,7 +25,7 @@ const OnboardingLayout = ({ children }: PropsType) => {
 
   return (
     <div className="flex flex-row h-full text-white">
-      <div className="w-[450px] bg-finnieBlue-light-secondary items-center flex flex-col relative">
+      <div className="w-[650px] bg-finnieBlue-light-secondary items-center flex flex-col relative">
         <BackIconComponent
           data-testid="close-modal-button"
           onClick={handleBackButtonClick}
@@ -64,7 +64,7 @@ const OnboardingLayout = ({ children }: PropsType) => {
           />
         </div>
       </div>
-      <div className="flex-grow">{children}</div>
+      <div className="w-full">{children}</div>
     </div>
   );
 };

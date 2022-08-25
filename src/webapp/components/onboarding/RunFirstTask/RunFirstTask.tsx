@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useQuery } from 'react-query';
+import React, { useMemo, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
 import AddIconSvg from 'assets/svgs/onboarding/add-teal-icon.svg';
@@ -8,28 +8,40 @@ import RestoreIconSvg from 'assets/svgs/onboarding/restore-orange-icon.svg';
 import BgShape from 'assets/svgs/onboarding/shape_1.svg';
 import { Button, ErrorMessage } from 'webapp/components';
 import { AppRoute } from 'webapp/routing/AppRoutes';
-import { getTasksById, QueryKeys } from 'webapp/services';
+import {
+  getTasksById,
+  QueryKeys,
+  startTask,
+  stakeOnTask,
+} from 'webapp/services';
+import { Task } from 'webapp/types';
 
 import TaskItem from './TaskItem';
 
 const defaultTasks = ['7mjiYZJvjmtDXF1TAnV5Cy1rLgXcQMqEpeYJYwEhrRyt'];
 
 const RunFirstTask = () => {
-  const {
-    isLoading,
-    data: tasks,
-    error,
-  } = useQuery(
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [stakePerTask, setStakePerTask] = useState<Record<string, number>>({});
+  const queryClient = useQueryClient();
+
+  const { isLoading, error } = useQuery(
     [
       QueryKeys.taskList,
       {
         tasksIds: defaultTasks,
       },
     ],
-    () => getTasksById(defaultTasks)
+    () => getTasksById(defaultTasks),
+    {
+      onSuccess: (data) => {
+        setTasks(data);
+      },
+      staleTime: Infinity,
+    }
   );
+
   const navigate = useNavigate();
-  const [stakePerTask, setStakePerTask] = useState<Record<string, number>>({});
 
   const handleStakeInputChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -43,18 +55,46 @@ const RunFirstTask = () => {
     });
   };
 
-  const handleRunTasks = () => {
-    console.log('### handleRunTasks');
+  const handleRunTasks = async () => {
+    const stakeOnTasksPromises = Object.entries(stakePerTask).map(
+      ([taskPubKey, stake]) => stakeOnTask(taskPubKey, stake)
+    );
 
-    navigate(AppRoute.OnboardingConfirmStake);
+    /**
+     * @dev staking in each individua task before we continue
+     */
+    await Promise.all(stakeOnTasksPromises);
+
+    const promises = tasks.map(({ publicKey }) => startTask(publicKey));
+
+    await Promise.all(promises);
   };
 
-  console.log('firsd task', tasks);
+  const handleTaskRemove = (taskPubKey: string) => {
+    const newTasks = tasks.filter((task) => task.publicKey !== taskPubKey);
+    setTasks(newTasks);
+  };
 
-  /**
-   * @todo: mocked, get from the api
-   */
-  const totalStaked = 220;
+  const handleRestoreTasks = async () => {
+    setStakePerTask({});
+    queryClient.invalidateQueries([
+      QueryKeys.taskList,
+      {
+        tasksIds: defaultTasks,
+      },
+    ]);
+  };
+
+  const runTasksMutation = useMutation(handleRunTasks, {
+    onSuccess: () => {
+      navigate(AppRoute.OnboardingConfirmStake);
+    },
+  });
+
+  const totalStaked = useMemo(
+    () => Object.values(stakePerTask).reduce((acc, curr) => acc + curr, 0),
+    [stakePerTask]
+  );
 
   return (
     <div className="relative h-full overflow-hidden bg-finnieBlue-dark-secondary">
@@ -71,9 +111,22 @@ const RunFirstTask = () => {
         </div>
 
         <div className="h-[38vh] overflow-auto">
-          {error ? <ErrorMessage errorMessage={error as string} /> : null}
+          <div className="py-2">
+            {error ? (
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              <ErrorMessage errorMessage={error?.message as string} />
+            ) : null}
+            {runTasksMutation.error ? (
+              <ErrorMessage
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                errorMessage={runTasksMutation?.error?.message as string}
+              />
+            ) : null}
+          </div>
           {isLoading ? (
-            <div>loader</div>
+            <div>Loading...</div>
           ) : (
             tasks.map((task, index) => (
               <div className="mb-4" key={index}>
@@ -89,6 +142,7 @@ const RunFirstTask = () => {
                   onStakeInputChange={(e) =>
                     handleStakeInputChange(e, task.publicKey)
                   }
+                  onRemove={() => handleTaskRemove(task.publicKey)}
                 />
               </div>
             ))
@@ -105,6 +159,7 @@ const RunFirstTask = () => {
             label="Restore Original"
             className="bg-transparent text-finnieOrange"
             icon={<RestoreIconSvg />}
+            onClick={handleRestoreTasks}
           />
         </div>
 
@@ -113,7 +168,8 @@ const RunFirstTask = () => {
             <Button
               className="font-semibold bg-finnieGray-light text-finnieBlue-light w-[220px] h-[38px]"
               label="Run Tasks"
-              onClick={handleRunTasks}
+              disabled={runTasksMutation.isLoading}
+              onClick={() => runTasksMutation.mutate()}
             />
             <div className="flex flex-row items-center gap-2 mt-2 text-sm text-finnieEmerald-light">
               <CurrencySvgIcon className="h-[24px]" />
