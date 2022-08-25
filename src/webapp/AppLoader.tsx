@@ -10,14 +10,6 @@ const AppLoader = (): JSX.Element => {
     QueryKeys.UserSettings,
     getUserConfig
   );
-  // const navigate = useNavigate();
-
-  //   useEffect(() => {
-  //     if (settings?.onboardingCompleted) {
-  //       navigate(AppRoute.OnboardingCreatePin);
-  //     }
-  //   });
-  console.log('###AppLoader', settings);
 
   if (isLoading) <div>loading...</div>;
 

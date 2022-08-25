@@ -1,28 +1,55 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
 import AddIconSvg from 'assets/svgs/onboarding/add-teal-icon.svg';
 import CurrencySvgIcon from 'assets/svgs/onboarding/currency-teal-small-icon.svg';
 import RestoreIconSvg from 'assets/svgs/onboarding/restore-orange-icon.svg';
 import BgShape from 'assets/svgs/onboarding/shape_1.svg';
-import { Button } from 'webapp/components';
+import { Button, ErrorMessage } from 'webapp/components';
 import { AppRoute } from 'webapp/routing/AppRoutes';
+import { getTasksById, QueryKeys } from 'webapp/services';
 
 import TaskItem from './TaskItem';
 
+const defaultTasks = ['7mjiYZJvjmtDXF1TAnV5Cy1rLgXcQMqEpeYJYwEhrRyt'];
+
 const RunFirstTask = () => {
-  // const {
-  //   isLoading,
-  //   data: tasks,
-  //   error,
-  // } = useQuery([QueryKeys.taskList], () => {return []});
+  const {
+    isLoading,
+    data: tasks,
+    error,
+  } = useQuery(
+    [
+      QueryKeys.taskList,
+      {
+        tasksIds: defaultTasks,
+      },
+    ],
+    () => getTasksById(defaultTasks)
+  );
   const navigate = useNavigate();
+  const [stakePerTask, setStakePerTask] = useState<Record<string, number>>({});
+
+  const handleStakeInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    taskPubKey: string
+  ) => {
+    const { value } = e.target;
+
+    setStakePerTask({
+      ...stakePerTask,
+      [taskPubKey]: Number(value),
+    });
+  };
 
   const handleRunTasks = () => {
     console.log('### handleRunTasks');
 
     navigate(AppRoute.OnboardingConfirmStake);
   };
+
+  console.log('firsd task', tasks);
 
   /**
    * @todo: mocked, get from the api
@@ -35,7 +62,6 @@ const RunFirstTask = () => {
         <div className="text-lg mt-[90px] mb-[50px]">
           Start running verified tasks with just one click{' '}
         </div>
-        {/* {JSON.stringify(tasks)} */}
 
         <div className="flex flex-row mb-2 text-xs text-finnieTeal">
           <div className="w-[214px] ml-[64px]">Task Name</div>
@@ -45,16 +71,28 @@ const RunFirstTask = () => {
         </div>
 
         <div className="h-[38vh] overflow-auto">
-          {new Array(5).fill(0).map((_, index) => (
-            <div className="mb-4" key={index}>
-              <TaskItem
-                name={'Content collectives'}
-                creator={'Koii Network'}
-                level={'Low'}
-                minStake={'25'}
-              />
-            </div>
-          ))}
+          {error ? <ErrorMessage errorMessage={error as string} /> : null}
+          {isLoading ? (
+            <div>loader</div>
+          ) : (
+            tasks.map((task, index) => (
+              <div className="mb-4" key={index}>
+                <TaskItem
+                  stakeValue={stakePerTask[task.publicKey] ?? 0}
+                  name={task.taskName}
+                  creator={task.taskManager}
+                  /**
+                   * @todo: get difficulty level from API
+                   */
+                  level={'Low'}
+                  minStake={25}
+                  onStakeInputChange={(e) =>
+                    handleStakeInputChange(e, task.publicKey)
+                  }
+                />
+              </div>
+            ))
+          )}
         </div>
 
         <div className="flex flex-row justify-between mt-4">
