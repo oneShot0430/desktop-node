@@ -1,4 +1,4 @@
 export interface FetchAllTasksParam {
-  offset: number;
-  limit: number;
+  offset?: number;
+  limit?: number;
 }

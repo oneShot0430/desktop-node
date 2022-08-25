@@ -94,23 +94,28 @@ class Namespace {
     }
     if (!mainSystemAccount) {
       const ACTIVE_ACCOUNT = 'ACTIVE_ACCOUNT';
+      this.db = leveldbWrapper.levelDb;
+      this.taskData = taskData;
       this.storeGet(ACTIVE_ACCOUNT).then((activeAccount) => {
-        const mainSystemAccount = Keypair.fromSecretKey(
-          Uint8Array.from(
-            JSON.parse(
-              fs.readFileSync(
-                `wallets/${activeAccount}_mainSystemWallet.json`,
-                'utf-8'
+        if (activeAccount != null) {
+          const mainSystemAccount = Keypair.fromSecretKey(
+            Uint8Array.from(
+              JSON.parse(
+                fs.readFileSync(
+                  `wallets/${activeAccount}_mainSystemWallet.json`,
+                  'utf-8'
+                )
               )
             )
-          )
-        );
-        this.#mainSystemAccount = mainSystemAccount;
-        this.mainSystemAccountPubKey = mainSystemAccount?.publicKey;
+          );
+          this.#mainSystemAccount = mainSystemAccount;
+          this.mainSystemAccountPubKey = mainSystemAccount?.publicKey;
+        } else {
+          this.#mainSystemAccount = null;
+          this.mainSystemAccountPubKey = null;
+        }
       });
     }
-    this.taskData = taskData;
-    this.db = leveldbWrapper.levelDb;
   }
 
   /**
