@@ -10,7 +10,7 @@ const CreateNewKey = () => {
 
   return (
     <div className="flex flex-col items-center mt-[180px] px-[105px] w-full">
-      <div className="flex items-center justify-start w-full gap-4 text-2xl ml-[-28px] mb-4">
+      <div className="flex items-center justify-start w-full gap-4 text-2xl ml-[-28px] mb-4 font-semibold">
         <CheckMarkIcon className="text-finnieEmerald-light" />
         New Account Created
       </div>

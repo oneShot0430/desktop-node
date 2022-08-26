@@ -1,12 +1,35 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
 import RewardsSvg from 'assets/svgs/onboarding/rewards-icon.svg';
 import SeedPhraseSvg from 'assets/svgs/onboarding/seed-phrase-icon.svg';
 import { AppRoute } from 'webapp/routing/AppRoutes';
+import { createNodeWallets, generateSeedPhrase } from 'webapp/services';
+
+import { OnboardingContext } from '../context/onboarding-context';
 
 const KeyCreationMethodPick = () => {
   const navigate = useNavigate();
+  const { setNewSeedPhrase, setSystemKey } = useContext(OnboardingContext);
+
+  const createNewKey = async () => {
+    const seedPhrase = await generateSeedPhrase();
+    const resp = await createNodeWallets(seedPhrase, 'Account' + Math.random());
+
+    return {
+      seedPhrase,
+      mainAccountPubKey: resp.mainAccountPubKey,
+    };
+  };
+
+  const seedPhraseGenerateMutation = useMutation(createNewKey, {
+    onSuccess: ({ seedPhrase, mainAccountPubKey }) => {
+      setNewSeedPhrase(seedPhrase);
+      setSystemKey(mainAccountPubKey);
+      navigate(AppRoute.OnboardingCreateNewKey);
+    },
+  });
 
   return (
     <>
@@ -23,7 +46,7 @@ const KeyCreationMethodPick = () => {
           <div className="flex flex-col items-center">
             <div
               className="w-[180px] h-[180px] p-2 border-dashed border-finnieOrange rounded-full border-2 mb-4 cursor-pointer"
-              onClick={() => navigate(AppRoute.OnboardingCreateNewKey)}
+              onClick={() => seedPhraseGenerateMutation.mutate()}
             >
               <div className="flex flex-col items-center justify-center w-full h-full rounded-full bg-finnieBlue-light-secondary">
                 <RewardsSvg />
