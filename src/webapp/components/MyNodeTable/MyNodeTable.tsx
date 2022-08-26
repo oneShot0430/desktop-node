@@ -25,7 +25,7 @@ export const MyNodeTable = () => {
 
   const { isLoading, data, error, fetchNextPage } = useInfiniteQuery(
     QueryKeys.taskList,
-    ({ pageParam = 1 }) => {
+    ({ pageParam = 0 }) => {
       console.log('FETCHING PAGE ', pageParam);
       return fetchMyTasks({ limit: pageSize, offset: pageParam * pageSize });
     },
