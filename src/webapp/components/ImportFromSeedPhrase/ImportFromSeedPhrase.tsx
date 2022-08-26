@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { createNodeWallets } from 'webapp/services';
+import { createNodeWallets, setActiveAccount } from 'webapp/services';
 
 import { Button } from '../ui/Button';
 import { ErrorMessage } from '../ui/ErrorMessage';
@@ -14,12 +14,14 @@ type PropsType = {
   confirmActionLabel: string;
   onImportSuccess: (accounts: any) => void;
   onImportFail?: (error: string) => void;
+  setImportedWalletAsDefault?: boolean;
 };
 
 const ImportFromSeedPhrase = ({
   onImportSuccess,
   onImportFail,
   confirmActionLabel,
+  setImportedWalletAsDefault = false,
 }: PropsType) => {
   const [phrases, setPhrases] = useState(new Array(12).fill(''));
   const [error, setError] = useState<string>();
@@ -59,6 +61,9 @@ const ImportFromSeedPhrase = ({
           `Main Account-${Date.now().toLocaleString()}`
         );
 
+        setImportedWalletAsDefault &&
+          (await setActiveAccount(accounts.mainAccountPubKey));
+
         onImportSuccess({
           mainAccountPubKey: accounts.mainAccountPubKey,
           stakingAccountPubKey: accounts.stakingWalletPubKey,
@@ -80,7 +85,7 @@ const ImportFromSeedPhrase = ({
       <div className="px-[42px]">
         <div className="flex justify-center">
           <div className="columns-2 bg-finnieBlue-light-secondary w-[360px] rounded py-4 px-[30px] select-text">
-            {phrases.map((phrase, index) => {
+            {phrases.map((_, index) => {
               const wordNumber = index + 1;
               return (
                 <div

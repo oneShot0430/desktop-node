@@ -16,6 +16,7 @@ const ImportKey = () => {
         Type in your secret phrase to import your key.
       </div>
       <ImportFromSeedPhrase
+        setImportedWalletAsDefault
         onImportSuccess={({ mainAccountPubKey }) => {
           setSystemKey(mainAccountPubKey);
           navigate(AppRoute.OnboardingPhraseImportSuccess);

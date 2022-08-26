@@ -5,7 +5,11 @@ import { useNavigate } from 'react-router-dom';
 import RewardsSvg from 'assets/svgs/onboarding/rewards-icon.svg';
 import SeedPhraseSvg from 'assets/svgs/onboarding/seed-phrase-icon.svg';
 import { AppRoute } from 'webapp/routing/AppRoutes';
-import { createNodeWallets, generateSeedPhrase } from 'webapp/services';
+import {
+  createNodeWallets,
+  generateSeedPhrase,
+  setActiveAccount,
+} from 'webapp/services';
 
 import { OnboardingContext } from '../context/onboarding-context';
 
@@ -24,7 +28,8 @@ const KeyCreationMethodPick = () => {
   };
 
   const seedPhraseGenerateMutation = useMutation(createNewKey, {
-    onSuccess: ({ seedPhrase, mainAccountPubKey }) => {
+    onSuccess: async ({ seedPhrase, mainAccountPubKey }) => {
+      await setActiveAccount(mainAccountPubKey);
       setNewSeedPhrase(seedPhrase);
       setSystemKey(mainAccountPubKey);
       navigate(AppRoute.OnboardingCreateNewKey);
