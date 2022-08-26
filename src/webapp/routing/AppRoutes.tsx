@@ -11,6 +11,7 @@ import {
   BackupKeyLater,
   BackupKeyNow,
   ConfirmSecretPhrase,
+  PhraseSaveSuccess,
 } from 'webapp/components/onboarding';
 import { CreateNewKey } from 'webapp/components/onboarding/CreateNewkey';
 import KeyCreationMethodPick from 'webapp/components/onboarding/FundNewKey/KeyCreationMethodPick';
@@ -127,6 +128,10 @@ const routes = [
               {
                 path: AppRoute.OnboardingPhraseImportSuccess,
                 element: <ImportKeySuccess />,
+              },
+              {
+                path: AppRoute.OnboardingPhraseSaveSuccess,
+                element: <PhraseSaveSuccess />,
               },
             ],
           },
