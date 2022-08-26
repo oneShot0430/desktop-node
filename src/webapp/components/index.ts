@@ -7,4 +7,3 @@ export * from './ui/Button';
 export * from './ui/ErrorMessage';
 export * from './PinInput';
 export * from './ShowSeedPhrase';
-export * from './SeedPhraseInput';

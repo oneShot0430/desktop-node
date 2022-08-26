@@ -61,8 +61,10 @@ const ImportFromSeedPhrase = ({
           `Main Account-${Date.now().toLocaleString()}`
         );
 
-        setImportedWalletAsDefault &&
-          (await setActiveAccount(accounts.mainAccountPubKey));
+        if (setImportedWalletAsDefault) {
+          console.log('###setting active account', accounts.mainAccountPubKey);
+          await setActiveAccount(accounts.mainAccountPubKey);
+        }
 
         onImportSuccess({
           mainAccountPubKey: accounts.mainAccountPubKey,

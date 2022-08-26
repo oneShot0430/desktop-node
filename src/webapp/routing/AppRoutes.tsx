@@ -39,6 +39,7 @@ export enum AppRoute {
   OnboardingBackupKeyLater = '/onboarding/create-or-import-key/backup-key-later',
   OnboardingConfirmSecretPhrase = '/onboarding/create-or-import-key/confirm-backup-secret-phrase',
   OnboardingPhraseImportSuccess = '/onboarding/create-or-import-key/import-key/phrase-import-success',
+  OnboardingPhraseSaveSuccess = '/onboarding/create-or-import-key/import-key/phrase-save-success',
 
   OnboardingCreateFirstTask = '/onboarding/create-first-task',
   OnboardingConfirmStake = '/onboarding/confirm-stake',
