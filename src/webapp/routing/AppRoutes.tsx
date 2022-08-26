@@ -10,6 +10,7 @@ import {
   ConfirmYourStake,
   BackupKeyLater,
   BackupKeyNow,
+  ConfirmSecretPhrase,
 } from 'webapp/components/onboarding';
 import { CreateNewKey } from 'webapp/components/onboarding/CreateNewkey';
 import KeyCreationMethodPick from 'webapp/components/onboarding/FundNewKey/KeyCreationMethodPick';
@@ -36,6 +37,7 @@ export enum AppRoute {
   OnboardingImportKey = '/onboarding/create-or-import-key/import-key',
   OnboardingBackupKeyNow = '/onboarding/create-or-import-key/backup-key-now',
   OnboardingBackupKeyLater = '/onboarding/create-or-import-key/backup-key-later',
+  OnboardingConfirmSecretPhrase = '/onboarding/create-or-import-key/confirm-backup-secret-phrase',
   OnboardingPhraseImportSuccess = '/onboarding/create-or-import-key/import-key/phrase-import-success',
 
   OnboardingCreateFirstTask = '/onboarding/create-first-task',
@@ -112,6 +114,10 @@ const routes = [
               {
                 path: AppRoute.OnboardingBackupKeyLater,
                 element: <BackupKeyLater />,
+              },
+              {
+                path: AppRoute.OnboardingConfirmSecretPhrase,
+                element: <ConfirmSecretPhrase />,
               },
               {
                 path: AppRoute.OnboardingImportKey,

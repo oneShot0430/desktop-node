@@ -4,20 +4,28 @@ import LockIconSvg from 'assets/svgs/onboarding/lock-icon-lg.svg';
 
 type PropsType = {
   seedPhrase: string;
+  onPhraseReveal?: () => void;
 };
 
-export const ShowSeedPhrase = ({ seedPhrase = '' }: PropsType) => {
+export const ShowSeedPhrase = ({
+  seedPhrase = '',
+  onPhraseReveal,
+}: PropsType) => {
   const [showSeedPhrase, setShowSeedPhrase] = useState(false);
 
   const seedPhraseArray = seedPhrase
     ? seedPhrase.split(' ')
     : Array(12).fill('');
+
   return (
     <div className="relative">
       {!showSeedPhrase && (
         <div
           className="absolute top-0 left-0 w-full h-full backdrop-blur-sm bg-gray/30"
-          onClick={() => setShowSeedPhrase(true)}
+          onClick={() => {
+            setShowSeedPhrase(true);
+            onPhraseReveal && onPhraseReveal();
+          }}
         >
           <div className="flex flex-col items-center justify-center w-full h-full">
             <LockIconSvg />

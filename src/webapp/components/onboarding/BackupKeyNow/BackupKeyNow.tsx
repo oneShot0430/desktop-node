@@ -1,13 +1,30 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import WarningIcon from 'assets/svgs/onboarding/warning-icon.svg';
 import { ShowSeedPhrase } from 'webapp/components/ShowSeedPhrase';
 import { Button } from 'webapp/components/ui/Button';
+import { AppRoute } from 'webapp/routing/AppRoutes';
 
 import { OnboardingContext } from '../context/onboarding-context';
 
 export const BackupKeyNow = () => {
   const { newSeedPhrase } = useContext(OnboardingContext);
+  const navigate = useNavigate();
+  const [phraseRevealed, setPhraseRevealed] = useState(false);
+  const handlePhraseReveal = () => {
+    setPhraseRevealed(true);
+  };
+
+  const handleConfirmClick = () => {
+    const skipThisStep = !phraseRevealed;
+
+    if (skipThisStep) {
+      navigate(AppRoute.MyNode);
+    } else {
+      navigate(AppRoute.OnboardingConfirmSecretPhrase);
+    }
+  };
 
   return (
     <div className="px-[105px] flex flex-col items-center w-full mt-[70px]">
@@ -25,7 +42,10 @@ export const BackupKeyNow = () => {
       </div>
 
       <div className="flex justify-start w-full mb-4">
-        <ShowSeedPhrase seedPhrase={newSeedPhrase} />
+        <ShowSeedPhrase
+          seedPhrase={newSeedPhrase}
+          onPhraseReveal={handlePhraseReveal}
+        />
       </div>
 
       <div className="flex flex-row items-center w-full gap-4 mb-4 text-sm text-finnieOrange">
@@ -37,8 +57,9 @@ export const BackupKeyNow = () => {
       </div>
 
       <Button
-        label="Skip this step"
+        label={phraseRevealed ? "I'm ready" : 'Skip this step'}
         className="font-semibold bg-finnieGray-light text-finnieBlue-light w-[240px] h-[48px]"
+        onClick={handleConfirmClick}
       />
     </div>
   );
