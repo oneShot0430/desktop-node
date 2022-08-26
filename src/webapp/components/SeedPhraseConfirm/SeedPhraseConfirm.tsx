@@ -45,15 +45,6 @@ export const SeedPhraseConfirm = ({
     }
   }, [seedPhraseValue]);
 
-  // const handleConfirm = () => {
-  //   if (phrases.join(' ') === seedPhraseValue) {
-  //     console.log('###match');
-
-  //     navigate(AppRoute.OnboardingPhraseSaveSuccess);
-  //   }
-  //   setError('Seed phrase does not match');
-  // };
-
   return (
     <div className="flex flex-col">
       <div className="columns-2 bg-finnieBlue-light-secondary w-[360px] rounded py-4 px-[30px] select-text mb-4">

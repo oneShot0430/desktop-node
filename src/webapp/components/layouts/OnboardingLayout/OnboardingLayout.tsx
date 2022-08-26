@@ -7,6 +7,7 @@ import ClickIconSvg from 'assets/svgs/onboarding/click-icon.svg';
 import CreateIconSvg from 'assets/svgs/onboarding/create-icon.svg';
 import CurrencyIconSvg from 'assets/svgs/onboarding/currency-icon.svg';
 import LockIconSvg from 'assets/svgs/onboarding/lock-icon.svg';
+import { Button } from 'webapp/components';
 import { accountImportRoutes, AppRoute } from 'webapp/routing/AppRoutes';
 
 import StepListItem from './components/StepListItem';
@@ -62,6 +63,15 @@ const OnboardingLayout = ({ children }: PropsType) => {
             text="Confirm your stake and go!"
             iconSlot={<ClickIconSvg />}
           />
+          <div className="absolute bottom-2 left-2">
+            <Button
+              label="Skip"
+              className="underline text-finnieEmerald-light"
+              onClick={() => {
+                navigate(AppRoute.MyNode);
+              }}
+            />
+          </div>
         </div>
       </div>
       <div className="w-full">{children}</div>
