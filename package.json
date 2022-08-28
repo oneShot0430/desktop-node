@@ -1,6 +1,6 @@
 {
-  "name": "desktop-task-node",
-  "productName": "desktop-task-node",
+  "name": "desktop_task_node",
+  "productName": "desktop_task_node",
   "version": "1.0.0",
   "description": "Desktop Task Node",
   "main": ".webpack/main",
