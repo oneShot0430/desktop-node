@@ -28,9 +28,10 @@ const CreateNewKey = () => {
           onClick={() => navigate(AppRoute.OnboardingBackupKeyNow)}
           className="font-semibold bg-transparent text-white w-[240px] h-[48px] border border-white"
         />
+        {/* TODO: Navigate to 'AppRoute.OnboardingBackupKeyLater' when it's ready */}
         <Button
           label="Back Up Later"
-          onClick={() => navigate(AppRoute.OnboardingBackupKeyLater)}
+          onClick={() => navigate(AppRoute.OnboardingCreateFirstTask)}
           className="font-semibold bg-finnieGray-light text-finnieBlue-light w-[240px] h-[48px]"
         />
       </div>
