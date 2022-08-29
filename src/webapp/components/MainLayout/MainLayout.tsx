@@ -31,7 +31,7 @@ const MainLayout = ({ children }: MainLayoutProps): JSX.Element => {
         <div className="px-4 mx-auto w-[100%] flex justify-between">
           <BackButton />
           <Button
-            className="mt-4"
+            className="mt-4 text-white"
             label="Reset onboarding"
             onClick={async () => {
               await saveUserConfig({
