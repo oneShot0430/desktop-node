@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import ReloadSvg from 'assets/svgs/reload-icon-big.svg';
+import CheckMarkIcon from 'assets/svgs/checkmark-icon.svg';
 import { AppRoute } from 'webapp/routing/AppRoutes';
 
 type PropsType = {
@@ -23,11 +23,11 @@ export const ShowBalance = ({ balance }: PropsType) => {
         <br /> earn rewards.
       </div>
       <div className="w-[180px] h-[180px] p-2 border-dashed border-finnieEmerald-light rounded-full border-2 mb-4 cursor-pointer">
-        <div className="flex flex-col items-center justify-center w-full h-full rounded-full bg-finnieBlue-light-secondary">
-          <ReloadSvg />
+        <div className="flex flex-col items-center justify-center w-full h-full rounded-full text-finnieEmerald bg-finnieBlue-light-secondary">
+          <CheckMarkIcon />
         </div>
       </div>
-      {balance} KOII
+      <span className="text-white">{balance} KOII</span>
     </div>
   );
 };
