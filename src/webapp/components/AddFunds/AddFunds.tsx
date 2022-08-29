@@ -1,9 +1,11 @@
 import QRCode from 'qrcode.react';
 import React from 'react';
+import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
 import CloseIconComponent from 'svgs/close-icons/close-icon-blue.svg';
 import { AppRoute } from 'webapp/routing/AppRoutes';
+import { getMainAccountPublicKey } from 'webapp/services';
 
 import { ModalContent } from '../Modals';
 import { Button } from '../ui/Button';
@@ -15,6 +17,10 @@ type PropsType = {
 
 export const AddFunds = ({ onClose, pubKey }: PropsType) => {
   const navigate = useNavigate();
+  const { data: mainAccountPubKey } = useQuery(
+    ['main-account'],
+    getMainAccountPublicKey
+  );
 
   return (
     <ModalContent className="w-[416px] h-[416px] text-finnieBlue rounded-xl pt-2">
@@ -35,10 +41,9 @@ export const AddFunds = ({ onClose, pubKey }: PropsType) => {
           account.
         </div>
         <QRCode value="https://reactjs.org/" renderAs="canvas" size={240} />
-        <div className="mt-3 mb-2 text-xs">{pubKey}</div>
+        <div className="mt-3 mb-2 text-xs select-text">{mainAccountPubKey}</div>
         <Button
           onClick={() => {
-            console.log('###OnboardingSeeBalance');
             onClose();
             navigate(AppRoute.OnboardingSeeBalance);
           }}

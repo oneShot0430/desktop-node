@@ -37,7 +37,7 @@ const ImportKeySuccess = () => {
         <Button
           label="Next"
           className="font-semibold bg-finnieGray-light text-finnieBlue-light w-[240px] h-[48px]"
-          onClick={() => navigate(AppRoute.OnboardingFundNewKey)}
+          onClick={() => navigate(AppRoute.OnboardingCreateFirstTask)}
         />
       </div>
     </div>

@@ -1,12 +1,18 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import CheckMarkIcon from 'assets/svgs/checkmark-icon.svg';
 import { Button } from 'webapp/components/ui/Button';
 import { AppRoute } from 'webapp/routing/AppRoutes';
+import { showModal } from 'webapp/store/actions/modal';
 
 const CreateNewKey = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const handleOpenQR = () => {
+    dispatch(showModal('ADD_FUNDS_QR'));
+  };
 
   return (
     <div className="flex flex-col items-center pt-[180px] px-[105px] w-full">
@@ -30,9 +36,8 @@ const CreateNewKey = () => {
         />
         {/* TODO: Navigate to 'AppRoute.OnboardingBackupKeyLater' when it's ready */}
         <Button
-          label="Back Up Later"
-          onClick={() => navigate(AppRoute.OnboardingFundNewKey)}
-          // onClick={() => navigate(AppRoute.OnboardingCreateFirstTask)}
+          label="Fund Key"
+          onClick={handleOpenQR}
           className="font-semibold bg-finnieGray-light text-finnieBlue-light w-[240px] h-[48px]"
         />
       </div>
