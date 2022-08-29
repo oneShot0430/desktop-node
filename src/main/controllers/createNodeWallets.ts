@@ -36,7 +36,6 @@ const createNodeWallets = async (
     console.log('Generating Staking wallet from mnemonic');
 
     console.log('WALLET', stakingWallet.publicKey.toBase58());
-    fs.mkdirSync('namespace');
     fs.writeFile(
       stakingWalletFilePath,
       JSON.stringify(Array.from(stakingWallet.secretKey)),
