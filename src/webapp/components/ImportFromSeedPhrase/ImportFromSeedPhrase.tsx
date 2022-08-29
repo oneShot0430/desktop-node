@@ -53,13 +53,7 @@ const ImportFromSeedPhrase = ({
     if (allPhrasesAreProvided) {
       setError(null);
       try {
-        const accounts = await createNodeWallets(
-          keyPhraseString,
-          /**
-           * @todo: just for testing, name should be provided by user
-           */
-          accountName
-        );
+        const accounts = await createNodeWallets(keyPhraseString, accountName);
 
         if (setImportedWalletAsDefault) {
           await setActiveAccount(accountName);
