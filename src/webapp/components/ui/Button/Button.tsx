@@ -38,7 +38,7 @@ const Button = ({
 
   return (
     <button
-      className={`${classes} text-white ${
+      className={`${classes} ${
         rest.disabled && 'opacity-60'
       } flex items-center justify-center`}
       {...rest}

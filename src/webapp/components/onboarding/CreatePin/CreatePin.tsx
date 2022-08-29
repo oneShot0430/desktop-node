@@ -86,7 +86,7 @@ const CreatePin = () => {
             disabled={diableLogin}
             label="Log in"
             onClick={handlePinCreate}
-            className="bg-finnieGray-light text-finnieBlue-dark w-[240px] mt-6"
+            className="bg-finnieGray-light text-finnieBlue w-[240px] mt-6"
           />
         </div>
       </div>
