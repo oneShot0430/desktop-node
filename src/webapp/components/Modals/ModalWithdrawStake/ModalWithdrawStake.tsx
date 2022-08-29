@@ -12,7 +12,7 @@ const ModalWithdrawStake = ({
 }: ModalWithDrawStakeProps): JSX.Element => {
   const [error, setError] = useState<string>(null);
   const { taskName, taskManager, publicKey } = useAppSelector(
-    (state) => state.modal.modalData.task
+    (state) => state.modal.modalData.data
   );
 
   const handleWithdraw = async () => {

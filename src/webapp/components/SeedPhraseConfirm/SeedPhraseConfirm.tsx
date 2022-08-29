@@ -16,7 +16,7 @@ export const SeedPhraseConfirm = ({
   error,
 }: PropsType) => {
   const [phrases, setPhrases] = useState<string[]>(new Array(12).fill(''));
-  const numbers = useMemo(() => pickRandomNumbers(6), []);
+  const numbers = useMemo(() => pickRandomNumbers(3), []);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement>,

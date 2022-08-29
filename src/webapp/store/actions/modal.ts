@@ -1,14 +1,14 @@
-import { Task } from 'webapp/types';
-
 import { ModalType, ModalAction } from '../types/modal';
 
 import { HIDE_MODAL, SHOW_MODAL } from './types';
 
-export const showModal = (modalType: ModalType, task?: Task): ModalAction => ({
+type ModalCallbackActions = Record<string, () => void>;
+
+export const showModal = (modalType: ModalType, data?: any): ModalAction => ({
   type: SHOW_MODAL,
   payload: {
     modalType,
-    task,
+    data,
   },
 });
 

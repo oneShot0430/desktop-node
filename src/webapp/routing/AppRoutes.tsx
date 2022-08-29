@@ -5,18 +5,20 @@ import AppLoader from 'webapp/AppLoader';
 import AppBoot from 'webapp/AppWrapper';
 import {
   CreatePin,
-  FundNewKey,
+  CreateOrImportAccountWrapper,
   RunFirstTask,
   ConfirmYourStake,
   BackupKeyLater,
   BackupKeyNow,
   ConfirmSecretPhrase,
   PhraseSaveSuccess,
+  FundNewKey,
+  SeeBalance,
 } from 'webapp/components/onboarding';
 import { CreateNewKey } from 'webapp/components/onboarding/CreateNewkey';
-import KeyCreationMethodPick from 'webapp/components/onboarding/FundNewKey/KeyCreationMethodPick';
 import { ImportKey } from 'webapp/components/onboarding/ImportKey';
 import { ImportKeySuccess } from 'webapp/components/onboarding/ImportKeySuccess';
+import { KeyCreationMethodPick } from 'webapp/components/onboarding/KeyCreationMethodPick';
 
 import { History, Settings, AddTasks, MyNode } from '../components';
 
@@ -41,6 +43,8 @@ export enum AppRoute {
   OnboardingConfirmSecretPhrase = '/onboarding/create-or-import-key/confirm-backup-secret-phrase',
   OnboardingPhraseImportSuccess = '/onboarding/create-or-import-key/import-key/phrase-import-success',
   OnboardingPhraseSaveSuccess = '/onboarding/create-or-import-key/import-key/phrase-save-success',
+  OnboardingFundNewKey = '/onboarding/create-or-import-key/fund-new-key',
+  OnboardingSeeBalance = '/onboarding/create-or-import-key/see-balance',
   OnboardingCreateFirstTask = '/onboarding/create-first-task',
   OnboardingConfirmStake = '/onboarding/confirm-stake',
 }
@@ -98,7 +102,7 @@ const routes = [
           },
           {
             path: AppRoute.OnboardingCreateOrImportKey,
-            element: <FundNewKey />,
+            element: <CreateOrImportAccountWrapper />,
             children: [
               {
                 path: AppRoute.OnboardingPickKeyCreationMethod,
@@ -123,6 +127,14 @@ const routes = [
               {
                 path: AppRoute.OnboardingImportKey,
                 element: <ImportKey />,
+              },
+              {
+                path: AppRoute.OnboardingFundNewKey,
+                element: <FundNewKey />,
+              },
+              {
+                path: AppRoute.OnboardingSeeBalance,
+                element: <SeeBalance />,
               },
               {
                 path: AppRoute.OnboardingPhraseImportSuccess,

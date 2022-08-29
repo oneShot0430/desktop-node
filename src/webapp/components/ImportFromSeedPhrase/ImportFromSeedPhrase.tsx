@@ -53,7 +53,7 @@ const ImportFromSeedPhrase = ({
     if (allPhrasesAreProvided) {
       setError(null);
       try {
-        const accountName = `Main Account-${new Date().toUTCString()}`;
+        const accountName = 'Main Account Onboarding' + Math.random();
         const accounts = await createNodeWallets(
           keyPhraseString,
           /**
@@ -63,7 +63,7 @@ const ImportFromSeedPhrase = ({
         );
 
         if (setImportedWalletAsDefault) {
-          console.log('###setting active account', accounts.mainAccountPubKey);
+          console.log('###setting active account', accountName);
           await setActiveAccount(accountName);
         }
 

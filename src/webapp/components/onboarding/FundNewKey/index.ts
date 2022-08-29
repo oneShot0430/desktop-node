@@ -1,1 +1,1 @@
-export { default as FundNewKey } from './FundNewKey';
+export { FundNewKey } from './FundNewKey';

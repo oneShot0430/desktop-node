@@ -24,7 +24,6 @@ const AddKeyModal = ({ onClose }: { onClose: () => void }) => {
   const [seedPhrase, setSeedPhrase] = useState(null);
 
   const handleCreatedNewKeyStep = (step: Steps, payload: CreateKeyPayload) => {
-    console.log('###created new keys', payload);
     setNewKeys(payload.keyes);
     setSeedPhrase(payload.seedPhrase);
     setCurrentStep(step);

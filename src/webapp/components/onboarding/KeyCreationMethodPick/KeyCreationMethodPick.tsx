@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { memo, useContext } from 'react';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
@@ -18,7 +18,7 @@ const KeyCreationMethodPick = () => {
   const { setNewSeedPhrase, setSystemKey } = useContext(OnboardingContext);
 
   const createNewKey = async () => {
-    const accountName = `Main Account-${new Date().toUTCString()}`;
+    const accountName = 'Main Account Onboarding' + Math.random();
 
     const seedPhrase = await generateSeedPhrase();
     const resp = await createNodeWallets(seedPhrase, accountName);
@@ -46,7 +46,7 @@ const KeyCreationMethodPick = () => {
           To make sure everyone is playing fairly, each node must
           <br /> stake tokens as collateral.
         </p>
-        <p>Create a new key or import an existing Koii key.</p>
+        <p>Create a new account or import an existing Koii key.</p>
       </div>
 
       <div className="mt-16">
@@ -80,4 +80,4 @@ const KeyCreationMethodPick = () => {
   );
 };
 
-export default KeyCreationMethodPick;
+export default memo(KeyCreationMethodPick);
