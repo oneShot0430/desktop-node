@@ -9,7 +9,7 @@ import CurrencyIconSvg from 'assets/svgs/onboarding/currency-icon.svg';
 import LockIconSvg from 'assets/svgs/onboarding/lock-icon.svg';
 import { Button } from 'webapp/components';
 import { Modal } from 'webapp/components/Modals';
-import { accountImportRoutes, AppRoute } from 'webapp/routing/AppRoutes';
+import { AppRoute } from 'webapp/routing/AppRoutes';
 
 import StepListItem from './components/StepListItem';
 
@@ -50,7 +50,7 @@ const OnboardingLayout = ({ children }: PropsType) => {
             iconSlot={<LockIconSvg />}
           />
           <StepListItem
-            isActive={accountImportRoutes.includes(pathname as AppRoute)}
+            isActive={pathname.includes('create-or-import-key')}
             text="Fund your new key or import one."
             iconSlot={<CurrencyIconSvg />}
           />
