@@ -18,7 +18,7 @@ const KeyCreationMethodPick = () => {
   const { setNewSeedPhrase, setSystemKey } = useContext(OnboardingContext);
 
   const createNewKey = async () => {
-    const accountName = `Main Account-${new Date().toDateString()}`;
+    const accountName = `Main Account-${new Date().toUTCString()}`;
 
     const seedPhrase = await generateSeedPhrase();
     const resp = await createNodeWallets(seedPhrase, accountName);
