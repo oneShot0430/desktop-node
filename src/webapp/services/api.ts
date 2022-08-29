@@ -122,7 +122,7 @@ export const getLogs = (taskAccountPubKey: string, noOfLines = 500) => {
 };
 
 export const createNodeWallets = (mnemonic: string, accountName: string) => {
-  console.log('CREATING STAKING WALLET');
+  console.log('CREATING ACCOUNT WALLETS', accountName);
   return window.main.createNodeWallets({ mnemonic, accountName });
 };
 
@@ -152,7 +152,7 @@ export const setActiveAccount = (accountName: string) => {
   return window.main
     .setActiveAccount({ accountName })
     .then((successFullySet) => {
-      console.log('MAIN ACCOUNT SET', successFullySet);
+      console.log('MAIN ACCOUNT SET', accountName, successFullySet);
       return successFullySet;
     });
 };
