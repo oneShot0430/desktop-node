@@ -53,7 +53,9 @@ const ImportFromSeedPhrase = ({
     if (allPhrasesAreProvided) {
       setError(null);
       try {
-        const accountName = 'Main Account Onboarding' + Math.random();
+        const accountName = `Account_${Math.random()
+          .toString()
+          .substring(2, 8)}`;
         const accounts = await createNodeWallets(
           keyPhraseString,
           /**
