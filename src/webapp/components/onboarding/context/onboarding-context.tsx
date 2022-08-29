@@ -4,6 +4,8 @@ const OnboardingContext = createContext<
   | {
       systemKey: string;
       newSeedPhrase: string;
+      accountName: string;
+      setAccountName: React.Dispatch<React.SetStateAction<string>>;
       setNewSeedPhrase: React.Dispatch<React.SetStateAction<string>>;
       setSystemKey: React.Dispatch<React.SetStateAction<string>>;
     }
@@ -16,9 +18,17 @@ type PropsType = {
 
 function OnboardingProvider({ children }: PropsType) {
   const [systemKey, setSystemKey] = useState<string>(null);
+  const [accountName, setAccountName] = useState<string>(null);
   const [newSeedPhrase, setNewSeedPhrase] = useState<string>(null);
 
-  const value = { systemKey, setSystemKey, newSeedPhrase, setNewSeedPhrase };
+  const value = {
+    systemKey,
+    setSystemKey,
+    newSeedPhrase,
+    setNewSeedPhrase,
+    accountName,
+    setAccountName,
+  };
 
   return (
     <OnboardingContext.Provider value={value}>

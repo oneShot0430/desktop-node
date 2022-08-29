@@ -11,6 +11,7 @@ export interface AccountsType {
 }
 
 type PropsType = {
+  accountName: string;
   confirmActionLabel: string;
   onImportSuccess: (accounts: any) => void;
   onImportFail?: (error: string) => void;
@@ -18,6 +19,7 @@ type PropsType = {
 };
 
 const ImportFromSeedPhrase = ({
+  accountName,
   onImportSuccess,
   onImportFail,
   confirmActionLabel,
@@ -46,16 +48,11 @@ const ImportFromSeedPhrase = ({
 
   const handleImportFromPhrase = async () => {
     const keyPhraseString = phrases.join(' ');
-    console.log('### importing from phrase', keyPhraseString);
-
     const allPhrasesAreProvided = validateKeyPhrase(phrases);
 
     if (allPhrasesAreProvided) {
       setError(null);
       try {
-        const accountName = `Account_${Math.random()
-          .toString()
-          .substring(2, 8)}`;
         const accounts = await createNodeWallets(
           keyPhraseString,
           /**
@@ -65,7 +62,6 @@ const ImportFromSeedPhrase = ({
         );
 
         if (setImportedWalletAsDefault) {
-          console.log('###setting active account', accountName);
           await setActiveAccount(accountName);
         }
 
@@ -74,7 +70,6 @@ const ImportFromSeedPhrase = ({
           stakingAccountPubKey: accounts.stakingWalletPubKey,
         });
       } catch (error) {
-        console.log('### Error', error);
         setError(error.message);
         if (onImportFail) {
           onImportFail(error);

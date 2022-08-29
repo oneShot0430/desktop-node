@@ -27,7 +27,7 @@ export const BackupKeyNow = () => {
   };
 
   return (
-    <div className="px-[105px] flex flex-col items-center w-full mt-[70px]">
+    <div className="px-[105px] flex flex-col items-center w-full pt-[70px]">
       <div className="w-full mb-4 text-2xl font-semibold">
         Back up your Secret Phrase
       </div>

@@ -14,6 +14,9 @@ type PropsType = Readonly<{
 
 const ImportWithKeyPhrase = ({ onClose }: PropsType) => {
   const handleImportSuccess = (key: string) => {
+    /**
+     * @todo: import account
+     */
     console.log('###import success', key);
   };
 
@@ -32,6 +35,10 @@ const ImportWithKeyPhrase = ({ onClose }: PropsType) => {
         </div>
 
         <ImportFromSeedPhrase
+          /**
+           * @todo: add account name from input field
+           */
+          accountName="Test account"
           onImportSuccess={handleImportSuccess}
           confirmActionLabel={'Import Account'}
         />
