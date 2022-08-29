@@ -49,7 +49,7 @@
           "@electron-forge/plugin-webpack",
           {
             "mainConfig": "./webpack.main.config.js",
-            "devContentSecurityPolicy": "connect-src 'self' http://localhost:8899/ https://arweave.net/ 'unsafe-eval'",
+            "devContentSecurityPolicy": "connect-src 'self' http://localhost:8899/ https://arweave.net/ https://*.koii.live/",
             "renderer": {
               "config": "./webpack.renderer.config.js",
               "entryPoints": [
