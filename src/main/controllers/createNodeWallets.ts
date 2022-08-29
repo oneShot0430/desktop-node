@@ -21,6 +21,12 @@ const createNodeWallets = async (
   if (!accountName) {
     throw new Error('Please provide accountName to generate wallets');
   }
+  if (!fs.existsSync('namespace')) fs.mkdirSync('namespace');
+  if (!fs.existsSync('wallets')) fs.mkdirSync('wallets');
+
+  if (!/^[0-9a-zA-Z ... ]+$/.test(accountName)) {
+    throw new Error('Please provide a valid accountName');
+  }
   try {
     // Creating stakingWallet
     const stakingWalletFilePath = `namespace/${accountName}_stakingWallet.json`;
@@ -36,7 +42,6 @@ const createNodeWallets = async (
     console.log('Generating Staking wallet from mnemonic');
 
     console.log('WALLET', stakingWallet.publicKey.toBase58());
-    fs.mkdirSync('namespace');
     fs.writeFile(
       stakingWalletFilePath,
       JSON.stringify(Array.from(stakingWallet.secretKey)),
@@ -66,6 +71,7 @@ const createNodeWallets = async (
       (err) => {
         if (err) {
           console.error(err);
+          throw err;
         }
       }
     );
