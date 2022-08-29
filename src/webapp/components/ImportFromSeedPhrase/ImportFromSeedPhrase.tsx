@@ -53,17 +53,18 @@ const ImportFromSeedPhrase = ({
     if (allPhrasesAreProvided) {
       setError(null);
       try {
+        const accountName = `Main Account-${new Date().toDateString()}`;
         const accounts = await createNodeWallets(
           keyPhraseString,
           /**
            * @todo: just for testing, name should be provided by user
            */
-          `Main Account-${Date.now().toLocaleString()}`
+          accountName
         );
 
         if (setImportedWalletAsDefault) {
           console.log('###setting active account', accounts.mainAccountPubKey);
-          await setActiveAccount(accounts.mainAccountPubKey);
+          await setActiveAccount(accountName);
         }
 
         onImportSuccess({

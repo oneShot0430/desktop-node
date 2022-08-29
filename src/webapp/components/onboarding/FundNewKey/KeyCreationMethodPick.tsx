@@ -18,18 +18,21 @@ const KeyCreationMethodPick = () => {
   const { setNewSeedPhrase, setSystemKey } = useContext(OnboardingContext);
 
   const createNewKey = async () => {
+    const accountName = `Main Account-${new Date().toDateString()}`;
+
     const seedPhrase = await generateSeedPhrase();
-    const resp = await createNodeWallets(seedPhrase, 'Account' + Math.random());
+    const resp = await createNodeWallets(seedPhrase, accountName);
 
     return {
       seedPhrase,
       mainAccountPubKey: resp.mainAccountPubKey,
+      accountName,
     };
   };
 
   const seedPhraseGenerateMutation = useMutation(createNewKey, {
-    onSuccess: async ({ seedPhrase, mainAccountPubKey }) => {
-      await setActiveAccount(mainAccountPubKey);
+    onSuccess: async ({ seedPhrase, mainAccountPubKey, accountName }) => {
+      await setActiveAccount(accountName);
       setNewSeedPhrase(seedPhrase);
       setSystemKey(mainAccountPubKey);
       navigate(AppRoute.OnboardingCreateNewKey);

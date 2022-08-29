@@ -154,6 +154,7 @@ const RunFirstTask = () => {
             label="Customize my tasks"
             className="bg-transparent text-finnieEmerald-light"
             icon={<AddIconSvg />}
+            onClick={() => navigate(AppRoute.AddTask)}
           />
           <Button
             label="Restore Original"
