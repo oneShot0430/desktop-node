@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
+import { AddFunds } from 'webapp/components/AddFunds';
 import { useAppDispatch, useAppSelector } from 'webapp/hooks/reduxHook';
 import { closeModal } from 'webapp/store/actions/modal';
 
@@ -12,7 +13,7 @@ import { TaskDetailsModal } from '../TaskDetailsModal';
 const Modal = (): JSX.Element => {
   const isOpen = useAppSelector((state) => state.modal.isShown);
   const modalType = useAppSelector((state) => state.modal.modalData.modalType);
-  const task = useAppSelector((state) => state.modal.modalData.task);
+  const modalData = useAppSelector((state) => state.modal.modalData.data);
 
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -35,17 +36,15 @@ const Modal = (): JSX.Element => {
     CREATE_TASK: <ModalCreateTask onClose={close} />,
     WITHDRAW_STAKE: <ModalWithdrawStake close={close} />,
     EDIT_STAKE_AMOUNT: <EditStakeAmountModal onClose={close} />,
-    TASK_DETAILS: <TaskDetailsModal onClose={close} task={task} />,
+    TASK_DETAILS: <TaskDetailsModal onClose={close} task={modalData} />,
     ADD_NEW_KEY: <AddKeyModal onClose={close} />,
+    ADD_FUNDS_QR: <AddFunds onClose={close} pubKey={modalData} />,
   };
-
-  // light w-[600px] h-[380px] bg-finnieGray text-center
-  // w-[90vw] h-[80vh] relative rounded-md shadow-lg bg-finnieBlue-light-secondary  text-white
 
   return (
     <>
       {isOpen && (
-        <div className="absolute top-0 left-0 z-30 flex items-center justify-center w-screen h-screen bg-black bg-opacity-40">
+        <div className="absolute top-0 left-0 z-50 flex items-center justify-center w-screen h-screen bg-black bg-opacity-40">
           <div ref={modalRef} className="relative rounded-md shadow-lg">
             {modalByTypes[modalType]}
           </div>

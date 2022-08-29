@@ -1,17 +1,16 @@
 import { Action } from 'redux';
 
-import { Task } from 'webapp/types';
-
 export type ModalType =
   | 'CREATE_TASK'
   | 'WITHDRAW_STAKE'
   | 'EDIT_STAKE_AMOUNT'
   | 'TASK_DETAILS'
-  | 'ADD_NEW_KEY';
+  | 'ADD_NEW_KEY'
+  | 'ADD_FUNDS_QR';
 
 export type ModalPayload = {
   modalType: ModalType | null;
-  task?: Task;
+  data?: any;
 };
 
 export interface IModalState {

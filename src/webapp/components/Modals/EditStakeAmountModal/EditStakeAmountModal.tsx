@@ -38,7 +38,7 @@ const EditStakeAmountModal = ({ onClose }: PropsType) => {
   const [stakeAmount, setStakeAmount] = useState<number>();
   const [withdrawAmount, setWithdrawAmount] = useState<number>();
 
-  const task = useAppSelector((state) => state.modal.modalData.task);
+  const task = useAppSelector((state) => state.modal.modalData.data);
   const { taskName, taskManager, publicKey } = task;
 
   const { data: myStake } = useQuery([QueryKeys.myStake, task.publicKey], () =>

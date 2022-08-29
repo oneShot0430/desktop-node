@@ -11,6 +11,16 @@ module.exports = {
       roboto: ['Roboto', 'ui-sans-serif', 'system-ui'],
     },
     extend: {
+      animation: {
+        'reverse-spin': 'reverse-spin 1s linear infinite',
+      },
+      keyframes: {
+        'reverse-spin': {
+          from: {
+            transform: 'rotate(360deg)',
+          },
+        },
+      },
       colors: {
         finnieBlue: {
           dark: '#030332',
@@ -34,6 +44,7 @@ module.exports = {
         },
         finnieGray: {
           DEFAULT: '#F2F2F2',
+          light: '#F5F5F5',
           secondary: '#9B9BB2',
           tertiary: '#D6D6D6',
         },

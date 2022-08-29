@@ -69,7 +69,7 @@ const KeyManagement = () => {
 
         <Button
           label="New"
-          className="w-auto p-2 mt-10 bg-transparent h-[60px]"
+          className="w-auto p-2 mt-10 bg-transparent h-[60px] text-white"
           icon={<AddIconSvg />}
           onClick={() => dispatch(showModal('ADD_NEW_KEY'))}
         />
