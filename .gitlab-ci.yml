@@ -11,6 +11,8 @@ Build:
   stage: build
   before_script: 
     - npm install -g n
+    - apt -y install dpkg
+    - apt install fakeroot -y
   script:
     - npx yarn
     - npx yarn make
