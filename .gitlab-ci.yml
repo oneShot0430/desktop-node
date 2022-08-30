@@ -9,8 +9,6 @@ stages:
 
 Build:
   stage: build
-  tags:
-    - node
   before_script: 
     - sudo npm install -g n
     - sudo n latest 
