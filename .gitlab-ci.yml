@@ -17,6 +17,7 @@ Build:
   script:
     - npx yarn
     - npx yarn make
+    - ls -ltr 
 
 deploy:
   stage: deploy
