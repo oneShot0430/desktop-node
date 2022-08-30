@@ -11,8 +11,6 @@ Build:
   stage: build
   before_script: 
     - npm install -g n
-    - n latest 
-    - n stable
   script:
     - npx yarn
     - npx yarn make
