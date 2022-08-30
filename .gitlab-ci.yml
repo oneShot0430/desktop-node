@@ -10,9 +10,9 @@ stages:
 Build:
   stage: build
   before_script: 
-    - sudo npm install -g n
-    - sudo n latest 
-    - sudo n stable
+    - npm install -g n
+    - n latest 
+    - n stable
   script:
     - npx yarn
     - npx yarn make
