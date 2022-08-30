@@ -20,7 +20,7 @@ build:
   script:
     - npx yarn
     - npx yarn make
-    - ls -ltr 
+    - ls -ltr out/make/deb/x64/
 
 deploy:
   stage: deploy
