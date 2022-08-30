@@ -1,11 +1,5 @@
 image: node:18.8.0
 
-# And to cache them as well.
-cache:
-  paths:
-    - node_modules/
-    - .yarn
-
 before_script:  
   - apt-get update -qq && apt-get install
 
