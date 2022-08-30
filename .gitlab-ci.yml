@@ -10,7 +10,7 @@ stages:
 services:
   - docker:dind
 
-Build:
+build:
   stage: build
   before_script: 
     - npm install -g n
