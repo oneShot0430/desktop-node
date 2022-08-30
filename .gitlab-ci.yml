@@ -1,0 +1,40 @@
+image: node:18.8.0
+
+# And to cache them as well.
+cache:
+  paths:
+    - node_modules/
+    - .yarn
+
+before_script:  
+  - apt-get update -qq && apt-get install
+
+stages:
+  - build
+  - deploy
+
+Build:
+  stage: build
+  tags:
+    - node
+  before_script: 
+    - sudo npm install -g n
+    - sudo n latest 
+    - sudo n stable
+  script:
+    - npx yarn
+    - npx yarn make
+
+deploy:
+  stage: deploy
+  image:
+    name: amazon/awscli
+  before_script:
+    - |
+      aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+      aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+      aws configure set region $AWS_DEFAULT_REGION
+  
+  script:
+    - aws configure set region $AWS_DEFAULT_REGION
+    - aws s3 cp desktop-task-node_1.0.0_amd64.deb s3://packer-test11
