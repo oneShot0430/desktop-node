@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { ImportFromSeedPhrase } from 'webapp/components/ImportFromSeedPhrase';
 import { AppRoute } from 'webapp/routing/AppRoutes';
 
-import { OnboardingContext } from '../context/onboarding-context';
+import { OnboardingContext } from '../../context/onboarding-context';
 
 type LocationStateType = {
   accountName: string;

@@ -5,7 +5,7 @@ import { SeedPhraseConfirm } from 'webapp/components/SeedPhraseConfirm/SeedPhras
 import { Button } from 'webapp/components/ui/Button';
 import { AppRoute } from 'webapp/routing/AppRoutes';
 
-import { OnboardingContext } from '../context/onboarding-context';
+import { OnboardingContext } from '../../context/onboarding-context';
 
 export const ConfirmSecretPhrase = () => {
   const { newSeedPhrase } = useContext(OnboardingContext);
