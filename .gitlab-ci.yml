@@ -11,6 +11,8 @@ services:
 
 build&deploy:
   stage: build&deploy
+  image:
+    name: docker:latest
   before_script: 
     - |
       npm install -g n
