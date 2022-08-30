@@ -12,7 +12,7 @@ Build:
   before_script: 
     - npm install -g n
     - apt -y install dpkg
-    - apt update && apt upgrade
+    - apt update -y && apt upgrade -y
     - apt install fakeroot -y
   script:
     - npx yarn
