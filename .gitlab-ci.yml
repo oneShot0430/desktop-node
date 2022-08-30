@@ -1,4 +1,4 @@
-image: node:18.8.0
+image: cimg/node:18.8.0
 
 before_script:  
   - apt-get update -qq && apt-get install
