@@ -11,15 +11,13 @@ services:
 
 build&deploy:
   stage: build&deploy
-  image:
-    name: docker:latest
+
   before_script: 
     - |
       npm install -g n
       apt -y install dpkg
       apt update -y && apt upgrade -y
       apt install fakeroot -y
-      apk add --no-cache curl jq python3 py3-pip
       pip install awscli
       aws configure set region $AWS_DEFAULT_REGION
       aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
