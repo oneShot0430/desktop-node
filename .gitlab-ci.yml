@@ -7,6 +7,9 @@ stages:
   - build
   - deploy
 
+services:
+  - docker:dind
+
 Build:
   stage: build
   before_script: 
@@ -32,4 +35,4 @@ deploy:
       aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
   
   script:
-    - aws s3 cp desktop-task-node_1.0.0_amd64.deb s3://packer-test11
+    - aws s3 cp /out/make/deb/x64/desktop-task-node_1.0.0_amd64.deb s3://packer-test11
