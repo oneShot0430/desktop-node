@@ -21,6 +21,11 @@ build:
     - npx yarn
     - npx yarn make
     - ls -ltr out/make/deb/x64/
+build:
+  stage: build
+  image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:v0.3.6
+  script:
+    - aws s3 cp /out/make/deb/x64/desktop-task-node_1.0.0_amd64.deb s3://packer-test11    
 
 deploy:
   stage: deploy
