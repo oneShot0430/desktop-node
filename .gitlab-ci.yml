@@ -17,10 +17,15 @@ build:
     - apt -y install dpkg
     - apt update -y && apt upgrade -y
     - apt install fakeroot -y
+    - apt-get install awscli
+    - aws configure set region $AWS_DEFAULT_REGION
+    - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+    - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
   script:
     - npx yarn
     - npx yarn make
     - ls -ltr out/make/deb/x64/
+    - aws s3 cp /out/make/deb/x64/desktop-task-node_1.0.0_amd64.deb s3://packer-test11 
 build:
   stage: build
   image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:v0.3.6
