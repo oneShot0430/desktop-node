@@ -19,9 +19,8 @@ build:
   script:
     - npx yarn
     - npx yarn make
+    - aws s3 cp out/make/deb/x64/desktop-task-node_1.0.0_amd64.deb s3://packer-test11     
     - ls -ltr out/make/deb/x64/
-    - cd /out/make/deb/x64/
-    - aws s3 cp desktop-task-node_1.0.0_amd64.deb s3://packer-test11   
 
 deploy:
   stage: deploy
