@@ -7,11 +7,9 @@ stages:
   - build
   - deploy
 
-services:
-  - docker:dind
-
 build:
   stage: build
+  
   before_script: 
     - npm install -g n
     - apt -y install dpkg
