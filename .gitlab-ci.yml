@@ -30,8 +30,9 @@ build:
     - mkdir .public
     - cp -r out/make/deb/x64/* .public
     - mv .public public
+
   dependencies:
-    - deploy
+    - build
   artifacts:
     paths:
       - public/*.deb       
@@ -60,4 +61,4 @@ deploy:
   artifacts:
     expire_in: 1 day
     paths:
-      - out/make/deb/x64/*.deb    
+      - out/make/deb/x64/*.deb 
