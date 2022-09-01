@@ -39,7 +39,7 @@ build:
 
 deploy:
   stage: deploy
-  when: manual
+#  when: manual
   image:
     name: docker:latest
   dependencies:
@@ -48,15 +48,16 @@ deploy:
     - |
       apk add --no-cache curl jq python3 py3-pip
       pip install awscli
-      aws configure set region $AWS_DEFAULT_REGION
-      aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-      aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+      aws configure set aws_access_key_id AKIAZDKCDTJQ63F47TNB
+      aws configure set aws_secret_access_key 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
+      aws configure set default_region_name "us-west-2"
+      aws configure set default_output_format "json"
   
   script:
     - cd out/make/deb/x64/
     - npm i
     - npm run pack
-    - aws s3 cp /out/make/deb/x64/desktop-task-node_1.0.0_amd64.deb s3://packer-test11
+    - aws s3 cp /out/make/deb/x64/* s3://packer-test11/ --recursive 
 
   artifacts:
     expire_in: 1 day
