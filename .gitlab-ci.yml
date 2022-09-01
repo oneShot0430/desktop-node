@@ -24,9 +24,17 @@ build:
   script:
     - npx yarn
     - npx yarn make
-    - aws s3 cp out/make/deb/* s3://packer-test11/ --recursive 
+#    - aws s3 cp out/make/deb/* s3://packer-test11/ --recursive 
     #aws s3 cp out/make/deb/x64/desktop-task-node_1.0.0_amd64.deb s3://packer-test11      
     - ls -ltr out/make/deb/x64/
+    - mkdir .public
+    - cp -r out/make/deb/x64/* .public
+    - mv .public public
+  dependencies:
+    - deploy
+  artifacts:
+    paths:
+      - public/*.deb       
 
 deploy:
   stage: deploy
@@ -44,4 +52,12 @@ deploy:
       aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
   
   script:
+    - cd out/make/deb/x64/
+    - npm i
+    - npm run pack
     - aws s3 cp /out/make/deb/x64/desktop-task-node_1.0.0_amd64.deb s3://packer-test11
+
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - out/make/deb/x64/*.deb    
