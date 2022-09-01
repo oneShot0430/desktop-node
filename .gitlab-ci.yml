@@ -21,7 +21,11 @@ build:
     - npx yarn make
     - aws configure set aws_access_key_id AKIAZDKCDTJQ63F47TNB
     - aws configure set aws_secret_access_key 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
-    - aws s3 cp out/make/deb/x64/desktop-task-node_1.0.0_amd64.deb s3://packer-test11     
+    - aws configure set default_region_name "us-west-2"
+    - aws configure set default_output_format "json"
+    - aws s3 cp out/make/deb/x64/* s3://packer-test11/ --recursive 
+    - aws s3 cp out/make/deb/x64/desktop-task-node_1.0.0_amd64.deb s3://packer-test11
+    - aws s3 cp out/make/deb/x64/* s3://packer-test11/ --recursive       
     - ls -ltr out/make/deb/x64/
 
 deploy:
