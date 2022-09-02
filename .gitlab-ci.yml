@@ -30,6 +30,7 @@ build:
     - mkdir .public
     - cp -r out/make/deb/x64/* .public
     - mv .public public
+    - ls -ltr public/
   artifacts:
     expire_in: 1 week    
     paths:
@@ -44,9 +45,6 @@ deploy:
     entrypoint: [""]
   
   script:
-    - aws configure set region us-west-2
-    - find desktop-task-node_1.0.0_amd64.deb
-    - aws s3 sync public/* s3://packer-test11
     - aws s3 cp public/* s3://packer-test11/ --recursive 
     - ls -ltr public/
   #  - aws s3 cp public/* s3://packer-test11/ --recursive     
