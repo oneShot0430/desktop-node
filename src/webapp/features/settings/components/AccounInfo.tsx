@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
 import CopyIconSvg from 'assets/svgs/copy-icon.svg';
@@ -10,7 +10,9 @@ import StarOutlined from 'assets/svgs/star-outlined.svg';
 import Star from 'assets/svgs/star.svg';
 import { Button } from 'webapp/components/ui/Button';
 import { ErrorMessage } from 'webapp/components/ui/ErrorMessage';
-import { getAccountBalance, setActiveAccount } from 'webapp/services';
+import { setActiveAccount } from 'webapp/services';
+
+import { useAccountBalance } from '../hooks/useAccountBalance';
 
 type PropsType = {
   accountName: string;
@@ -29,11 +31,9 @@ const AccountInfo = ({
 }: PropsType) => {
   const [error, setError] = useState();
   const queryCache = useQueryClient();
-  const [mainKeyBalance, setMainKeyBalance] = useState(0);
 
-  useEffect(() => {
-    getAccountBalance(mainPublicKey).then(setMainKeyBalance);
-  }, []);
+  const { acountBalance, acountBalanceLoadingError } =
+    useAccountBalance(mainPublicKey);
 
   const handleSetActive = async () => {
     try {
@@ -85,7 +85,9 @@ const AccountInfo = ({
               />
             </div>
             <div className="flex flex-row items-center">
-              <span className="px-4">{mainKeyBalance} KOII</span>
+              <span className="px-4">
+                {acountBalanceLoadingError ? '-' : acountBalance} KOII
+              </span>
               <Button
                 onClick={() => console.log('delete')}
                 icon={<DeleteIconSvg />}

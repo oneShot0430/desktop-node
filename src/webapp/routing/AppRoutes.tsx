@@ -19,8 +19,9 @@ import { CreateNewKey } from 'webapp/components/onboarding/CreateNewkey';
 import { ImportKey } from 'webapp/components/onboarding/ImportKey';
 import { ImportKeySuccess } from 'webapp/components/onboarding/ImportKeySuccess';
 import { KeyCreationMethodPick } from 'webapp/components/onboarding/KeyCreationMethodPick';
+import { Settings } from 'webapp/features';
 
-import { History, Settings, AddTasks, MyNode } from '../components';
+import { History, AddTasks, MyNode } from '../components';
 
 export enum AppRoute {
   Root = '/',
