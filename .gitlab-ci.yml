@@ -16,8 +16,8 @@ build:
     - apt update -y && apt upgrade -y
     - apt install fakeroot -y
     - apt-get install awscli -y
-    - aws configure set aws_access_key_id AKIAZDKCDTJQ63F47TNB
-    - aws configure set aws_secret_access_key 4Pd7zwfKXI1bjk9SkyG6JMSmBXXACmxuBMTOZ/zc
+    - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+    - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
     - aws configure set default_region_name "us-west-2"
     - aws configure set default_output_format "json"
 
