@@ -9,7 +9,6 @@ stages:
 
 build:
   stage: build
-  when: manual
   
   before_script: 
     - npm install -g n
