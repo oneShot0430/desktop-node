@@ -35,7 +35,8 @@ build:
     - build
   artifacts:
     paths:
-      - public/*.deb       
+      - public/*.deb
+    expire_in: 1 day       
 
 deploy:
   stage: deploy
