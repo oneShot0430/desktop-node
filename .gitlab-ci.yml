@@ -16,10 +16,10 @@ build:
     - apt update -y && apt upgrade -y
     - apt install fakeroot -y
     - apt-get install awscli -y
-    - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-    - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-    - aws configure set default_region_name "us-west-2"
-    - aws configure set default_output_format "json"
+#    - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+#    - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+#    - aws configure set default_region_name "us-west-2"
+#    - aws configure set default_output_format "json"
 
   script:
     - npx yarn
@@ -30,13 +30,11 @@ build:
     - mkdir .public
     - cp -r out/make/deb/x64/* .public
     - mv .public public
-
-  dependencies:
-    - build
   artifacts:
+    expire_in: 1 week    
     paths:
-      - public/*.deb
-    expire_in: 1 day       
+    - desktop-task-node_1.0.0_amd64.deb
+    - public/      
 
 deploy:
   stage: deploy
@@ -47,13 +45,9 @@ deploy:
   
   script:
     - aws configure set region us-west-2
+    - find desktop-task-node_1.0.0_amd64.deb
     - aws s3 sync public/* s3://packer-test11
     - aws s3 cp public/* s3://packer-test11/ --recursive 
     - ls -ltr public/
   #  - aws s3 cp public/* s3://packer-test11/ --recursive     
 #    - aws s3 cp /out/make/deb/x64/*.deb s3://packer-test11/ --recursive 
-
-  artifacts:
-    expire_in: 1 day
-    paths:
-      - out/make/deb/x64/*.deb 
