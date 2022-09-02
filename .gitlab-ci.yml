@@ -29,7 +29,7 @@ build:
     - cp -r out/make/deb/x64/* .public
     - mv .public public
     - ls -ltr public/
-    - aws s3 cp public/* s3://packer-test11
+    - aws s3 cp public/* s3://packer-test11 --acl public-read
   artifacts:
     expire_in: 1 week    
     paths:
