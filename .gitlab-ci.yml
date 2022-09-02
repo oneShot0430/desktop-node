@@ -42,23 +42,12 @@ deploy:
   stage: deploy
 #  when: manual
   image:
-    name: docker:latest
-  dependencies:
-    - build  
-  before_script:
-    - |
-      apk add --no-cache curl jq python3 py3-pip
-      pip install awscli
-      aws configure set aws_access_key_id AKIAZDKCDTJQ63F47TNB
-      aws configure set aws_secret_access_key 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
-      aws configure set default_region_name "us-west-2"
-      aws configure set default_output_format "json"
+    name: banst/awscli
+    entrypoint: [""]
   
   script:
-    - cd out/make/deb/x64/
-    - npm i
-    - npm run pack
-    - aws s3 cp /out/make/deb/x64/* s3://packer-test11/ --recursive 
+    - aws configure set region us-west-2
+    - aws s3 cp /out/make/deb/x64/*.deb s3://packer-test11/ --recursive 
 
   artifacts:
     expire_in: 1 day
