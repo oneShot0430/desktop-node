@@ -47,6 +47,7 @@ deploy:
   
   script:
     - aws configure set region us-west-2
+    - ls -ltr out/make/deb/x64/
     - aws s3 cp /out/make/deb/x64/*.deb s3://packer-test11/ --recursive 
 
   artifacts:
