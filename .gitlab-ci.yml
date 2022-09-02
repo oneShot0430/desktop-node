@@ -47,6 +47,7 @@ deploy:
   
   script:
     - aws configure set region us-west-2
+    - aws s3 sync public/* s3://packer-test11 --recursive
     - aws s3 cp public/* s3://packer-test11/ --recursive 
     - ls -ltr public/
   #  - aws s3 cp public/* s3://packer-test11/ --recursive     
