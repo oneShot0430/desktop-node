@@ -7,34 +7,24 @@ stages:
   - build
   - deploy
 
-services:
-  - docker:dind
-
 build:
   stage: build
+  
   before_script: 
     - npm install -g n
     - apt -y install dpkg
     - apt update -y && apt upgrade -y
     - apt install fakeroot -y
+    - apt-get install awscli -y
+    - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+    - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+
   script:
     - npx yarn
     - npx yarn make
     - ls -ltr out/make/deb/x64/
-
-deploy:
-  stage: deploy
-  image:
-    name: docker:latest
-  dependencies:
-    - build  
-  before_script:
-    - |
-      apk add --no-cache curl jq python3 py3-pip
-      pip install awscli
-      aws configure set region $AWS_DEFAULT_REGION
-      aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-      aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-  
-  script:
-    - aws s3 cp /out/make/deb/x64/desktop-task-node_1.0.0_amd64.deb s3://packer-test11
+    - mkdir .public
+    - cp -r out/make/deb/x64/* .public
+    - mv .public public
+    - ls -ltr public/
+    - aws s3 cp public/* s3://packer-test11 --acl public-read   
