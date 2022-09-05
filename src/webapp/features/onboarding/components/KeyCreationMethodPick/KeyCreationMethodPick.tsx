@@ -11,7 +11,7 @@ import {
   setActiveAccount,
 } from 'webapp/services';
 
-import { OnboardingContext } from '../context/onboarding-context';
+import { OnboardingContext } from '../../context/onboarding-context';
 
 const KeyCreationMethodPick = () => {
   const [inputValue, setInputValue] = useState('');

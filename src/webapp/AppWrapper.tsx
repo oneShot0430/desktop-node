@@ -3,7 +3,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 
 import { MainLayout } from './components';
 import { OnboardingLayout } from './components/layouts/OnboardingLayout';
-import { OnboardingProvider } from './components/onboarding/context/onboarding-context';
+import { OnboardingProvider } from './features/onboarding/context/onboarding-context';
 
 const AppWrapper = (): JSX.Element => {
   const location = useLocation();

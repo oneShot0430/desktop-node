@@ -3,23 +3,22 @@ import { useRoutes } from 'react-router-dom';
 
 import AppLoader from 'webapp/AppLoader';
 import AppBoot from 'webapp/AppWrapper';
+import { Settings } from 'webapp/features';
 import {
   CreatePin,
   CreateOrImportAccountWrapper,
-  RunFirstTask,
-  ConfirmYourStake,
-  BackupKeyLater,
   BackupKeyNow,
   ConfirmSecretPhrase,
-  PhraseSaveSuccess,
   FundNewKey,
   SeeBalance,
-} from 'webapp/components/onboarding';
-import { CreateNewKey } from 'webapp/components/onboarding/CreateNewkey';
-import { ImportKey } from 'webapp/components/onboarding/ImportKey';
-import { ImportKeySuccess } from 'webapp/components/onboarding/ImportKeySuccess';
-import { KeyCreationMethodPick } from 'webapp/components/onboarding/KeyCreationMethodPick';
-import { Settings } from 'webapp/features';
+  PhraseSaveSuccess,
+  RunFirstTask,
+  ConfirmYourStake,
+  KeyCreationMethodPick,
+  CreateNewKey,
+  ImportKey,
+  ImportKeySuccess,
+} from 'webapp/features/onboarding';
 
 import { History, AddTasks, MyNode } from '../components';
 
@@ -40,7 +39,6 @@ export enum AppRoute {
   OnboardingPickKeyCreationMethod = '/onboarding/create-or-import-key/pick-key-creation-method',
   OnboardingImportKey = '/onboarding/create-or-import-key/import-key',
   OnboardingBackupKeyNow = '/onboarding/create-or-import-key/backup-key-now',
-  OnboardingBackupKeyLater = '/onboarding/create-or-import-key/backup-key-later',
   OnboardingConfirmSecretPhrase = '/onboarding/create-or-import-key/confirm-backup-secret-phrase',
   OnboardingPhraseImportSuccess = '/onboarding/create-or-import-key/import-key/phrase-import-success',
   OnboardingPhraseSaveSuccess = '/onboarding/create-or-import-key/import-key/phrase-save-success',
@@ -49,14 +47,6 @@ export enum AppRoute {
   OnboardingCreateFirstTask = '/onboarding/create-first-task',
   OnboardingConfirmStake = '/onboarding/confirm-stake',
 }
-
-export const accountImportRoutes = [
-  AppRoute.OnboardingCreateOrImportKey,
-  AppRoute.OnboardingCreateNewKey,
-  AppRoute.OnboardingPickKeyCreationMethod,
-  AppRoute.OnboardingImportKey,
-  AppRoute.OnboardingPhraseImportSuccess,
-];
 
 const routes = [
   {
@@ -116,10 +106,6 @@ const routes = [
               {
                 path: AppRoute.OnboardingBackupKeyNow,
                 element: <BackupKeyNow />,
-              },
-              {
-                path: AppRoute.OnboardingBackupKeyLater,
-                element: <BackupKeyLater />,
               },
               {
                 path: AppRoute.OnboardingConfirmSecretPhrase,
