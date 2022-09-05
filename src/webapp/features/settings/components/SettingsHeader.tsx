@@ -17,8 +17,8 @@ const SettingsHeader = ({ onTabChange, activeTab }: PropsType) => {
     <div className="flex items-center px-3 py-3 mb-6 text-white bg-finnieTeal bg-opacity-30 gap-7">
       <div className="flex items-center gap-[109px]">
         <div
-          className={`pb-[1px] ${isActiveTab(Tab.KeyManagement)}`}
-          onClick={() => onTabChange(Tab.KeyManagement)}
+          className={`pb-[1px] ${isActiveTab(Tab.AccountsTable)}`}
+          onClick={() => onTabChange(Tab.AccountsTable)}
         >
           Key Management
         </div>

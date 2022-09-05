@@ -1,14 +1,17 @@
-import { useCallback } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery, QueryKey } from 'react-query';
 
 import { getAccountBalance } from 'webapp/services';
 
-export const useAccountBalance = (accountPublicKey: string) => {
-  const fetchAccountBalance = useCallback(
-    () => getAccountBalance(accountPublicKey),
-    [accountPublicKey]
-  );
+const fetchAccountBalance = async ({
+  queryKey: [, publicKey],
+}: {
+  queryKey: QueryKey;
+}) => {
+  const data = await getAccountBalance(publicKey as string);
+  return data;
+};
 
+export const useAccountBalance = (accountPublicKey: string) => {
   const {
     data: acountBalance,
     isLoading: loadingAccountBalance,

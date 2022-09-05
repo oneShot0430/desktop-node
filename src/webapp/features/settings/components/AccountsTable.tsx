@@ -10,7 +10,7 @@ import { useAccounts } from '../hooks';
 
 import AccounInfo from './AccounInfo';
 
-const KeyManagement = () => {
+const AccountsTable = () => {
   const dispatch = useDispatch();
 
   const { accounts, loadingAccounts, errorAccounts } = useAccounts();
@@ -74,4 +74,4 @@ const KeyManagement = () => {
   );
 };
 
-export default memo(KeyManagement);
+export default memo(AccountsTable);
