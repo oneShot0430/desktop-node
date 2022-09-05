@@ -6,7 +6,7 @@ import { ShowSeedPhrase } from 'webapp/components/ShowSeedPhrase';
 import { Button } from 'webapp/components/ui/Button';
 import { AppRoute } from 'webapp/routing/AppRoutes';
 
-import { OnboardingContext } from '../context/onboarding-context';
+import { OnboardingContext } from '../../context/onboarding-context';
 
 export const BackupKeyNow = () => {
   const { newSeedPhrase } = useContext(OnboardingContext);

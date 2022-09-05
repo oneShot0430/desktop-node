@@ -5,7 +5,7 @@ import CheckMarkIcon from 'assets/svgs/checkmark-icon.svg';
 import { Button } from 'webapp/components/ui/Button';
 import { AppRoute } from 'webapp/routing/AppRoutes';
 
-import { OnboardingContext } from '../context/onboarding-context';
+import { OnboardingContext } from '../../context/onboarding-context';
 
 const ImportKeySuccess = () => {
   const navigate = useNavigate();
