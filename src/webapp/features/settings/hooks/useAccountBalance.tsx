@@ -6,10 +6,7 @@ const fetchAccountBalance = async ({
   queryKey: [, publicKey],
 }: {
   queryKey: QueryKey;
-}) => {
-  const data = await getAccountBalance(publicKey as string);
-  return data;
-};
+}) => getAccountBalance(publicKey as string);
 
 export const useAccountBalance = (accountPublicKey: string) => {
   const {
