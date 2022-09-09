@@ -16,3 +16,4 @@ export * from './getAllAccounts';
 export * from './storeUserConfig';
 export * from './getUserConfig';
 export * from './getTasksById';
+export * from './removeAccountByName';

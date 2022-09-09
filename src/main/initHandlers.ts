@@ -55,6 +55,10 @@ const initHandlers = (): void => {
   );
   ipcMain.handle(config.endpoints.GET_USER_CONFIG, controllers.getUserConfig);
   ipcMain.handle(config.endpoints.GET_TASKS_BY_ID, controllers.getTasksById);
+  ipcMain.handle(
+    config.endpoints.REMOVE_ACCOUNT_BY_NAME,
+    controllers.removeAccountByName
+  );
 };
 
 export default errorHandler(initHandlers, 'Init handlers error');
