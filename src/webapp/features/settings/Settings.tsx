@@ -1,22 +1,22 @@
 import React, { memo, useState } from 'react';
 
-import KeyManagementTable from './components/KeyManagementTable';
+import AccountsTable from './components/AccountsTable';
 import NodeLogs from './components/NodeLogs';
 import SettingsHeader from './components/SettingsHeader';
 import { logsMock } from './mocks';
 
 export enum Tab {
-  KeyManagement = 'KeyManagement',
+  AccountsTable = 'AccountsTable',
   NodeLogs = 'NodeLogs',
 }
 
 const Settings = () => {
-  const [selectedTab, setTab] = useState(Tab.KeyManagement);
+  const [selectedTab, setTab] = useState(Tab.AccountsTable);
 
   return (
     <div className="flex flex-col">
       <SettingsHeader onTabChange={setTab} activeTab={selectedTab} />
-      {selectedTab === Tab.KeyManagement && <KeyManagementTable />}
+      {selectedTab === Tab.AccountsTable && <AccountsTable />}
       {selectedTab === Tab.NodeLogs && <NodeLogs logs={logsMock} />}
     </div>
   );

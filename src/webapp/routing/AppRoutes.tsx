@@ -3,6 +3,7 @@ import { useRoutes } from 'react-router-dom';
 
 import AppLoader from 'webapp/AppLoader';
 import AppBoot from 'webapp/AppWrapper';
+import { Settings } from 'webapp/features';
 import {
   CreatePin,
   CreateOrImportAccountWrapper,
@@ -19,7 +20,7 @@ import {
   ImportKeySuccess,
 } from 'webapp/features/onboarding';
 
-import { History, Settings, AddTasks, MyNode } from '../components';
+import { History, AddTasks, MyNode } from '../components';
 
 export enum AppRoute {
   Root = '/',

@@ -1,28 +1,19 @@
 import React, { memo } from 'react';
-import { useQuery } from 'react-query';
 import { useDispatch } from 'react-redux';
 
 import AddIconSvg from 'assets/svgs/add-icon-outlined.svg';
 import { Button } from 'webapp/components/ui/Button';
 import { ErrorMessage } from 'webapp/components/ui/ErrorMessage';
-import { getAllAccounts } from 'webapp/services';
 import { showModal } from 'webapp/store/actions/modal';
+
+import { useAccounts } from '../hooks';
 
 import AccounInfo from './AccounInfo';
 
-const KeyManagement = () => {
+const AccountsTable = () => {
   const dispatch = useDispatch();
 
-  const fetchAccounts = async () => {
-    return await getAllAccounts();
-  };
-
-  const {
-    data: accounts,
-    isError,
-    isLoading,
-    error,
-  } = useQuery(['accounts'], fetchAccounts);
+  const { accounts, loadingAccounts, errorAccounts } = useAccounts();
 
   return (
     <div className="flex flex-col justify-between">
@@ -33,15 +24,15 @@ const KeyManagement = () => {
           <div className="w-[136px]">Koii Balance</div>
         </div>
         <div className="h-[38vh] overflow-y-auto">
-          {isLoading && (
+          {loadingAccounts && (
             <div className="flex items-center justify-center h-full text-2xl text-white">
               Loading accounts...
             </div>
           )}
-          {isError && (
+          {errorAccounts && (
             <div className="flex items-center justify-center text-2xl">
               <ErrorMessage
-                errorMessage={(error as { message: string }).message}
+                errorMessage={(errorAccounts as { message: string }).message}
               />
             </div>
           )}
@@ -83,4 +74,4 @@ const KeyManagement = () => {
   );
 };
 
-export default memo(KeyManagement);
+export default memo(AccountsTable);
