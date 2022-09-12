@@ -1,10 +1,6 @@
-import { useQuery, QueryFunctionContext } from 'react-query';
+import { useQuery } from 'react-query';
 
-import { getAccountBalance } from 'webapp/services';
-
-const fetchAccountBalance = async ({
-  queryKey: [, publicKey],
-}: QueryFunctionContext<string[]>) => getAccountBalance(publicKey);
+import { fetchAccountBalance } from './common';
 
 export const useAccountBalance = (accountPublicKey: string) => {
   const {

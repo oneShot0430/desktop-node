@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
 import AddIconSvg from 'assets/svgs/onboarding/add-teal-icon.svg';
@@ -8,40 +8,17 @@ import RestoreIconSvg from 'assets/svgs/onboarding/restore-orange-icon.svg';
 import BgShape from 'assets/svgs/onboarding/shape_1.svg';
 import { Button, ErrorMessage } from 'webapp/components';
 import { AppRoute } from 'webapp/routing/AppRoutes';
-import {
-  getTasksById,
-  QueryKeys,
-  startTask,
-  stakeOnTask,
-} from 'webapp/services';
-import { Task } from 'webapp/types';
+import { startTask, stakeOnTask } from 'webapp/services';
+
+import { useDefaultTasks } from '../../hooks';
 
 import TaskItem from './TaskItem';
 
-const defaultTasks = ['7mjiYZJvjmtDXF1TAnV5Cy1rLgXcQMqEpeYJYwEhrRyt'];
-
 const RunFirstTask = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [stakePerTask, setStakePerTask] = useState<Record<string, number>>({});
-  const queryClient = useQueryClient();
-
-  const { isLoading, error } = useQuery(
-    [
-      QueryKeys.taskList,
-      {
-        tasksIds: defaultTasks,
-      },
-    ],
-    () => getTasksById(defaultTasks),
-    {
-      onSuccess: (data) => {
-        setTasks(data);
-      },
-      staleTime: Infinity,
-    }
-  );
-
   const navigate = useNavigate();
+  const [selectedTasksKeys, setSelectedTasksKeys] = useState<string[]>([]);
+  const [stakePerTask, setStakePerTask] = useState<Record<string, number>>({});
+  const { defaultTasks, isLoading, error } = useDefaultTasks();
 
   const handleStakeInputChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -64,25 +41,20 @@ const RunFirstTask = () => {
      * @dev staking in each individua task before we continue
      */
     await Promise.all(stakeOnTasksPromises);
-
-    const promises = tasks.map(({ publicKey }) => startTask(publicKey));
-
+    const promises = selectedTasks.map(({ publicKey }) => startTask(publicKey));
     await Promise.all(promises);
   };
 
   const handleTaskRemove = (taskPubKey: string) => {
-    const newTasks = tasks.filter((task) => task.publicKey !== taskPubKey);
-    setTasks(newTasks);
+    const newTasks = selectedTasksKeys.filter(
+      (pubKey) => pubKey !== taskPubKey
+    );
+    setSelectedTasksKeys(newTasks);
   };
 
   const handleRestoreTasks = async () => {
     setStakePerTask({});
-    queryClient.invalidateQueries([
-      QueryKeys.taskList,
-      {
-        tasksIds: defaultTasks,
-      },
-    ]);
+    setSelectedTasksKeys(defaultTasks.map(({ publicKey }) => publicKey));
   };
 
   const runTasksMutation = useMutation(handleRunTasks, {
@@ -96,11 +68,16 @@ const RunFirstTask = () => {
     [stakePerTask]
   );
 
+  const noTasks = selectedTasksKeys.length === 0;
+  const selectedTasks = defaultTasks.filter((task) =>
+    selectedTasksKeys.includes(task.publicKey)
+  );
+
   return (
     <div className="relative h-full overflow-hidden bg-finnieBlue-dark-secondary">
       <div className="px-8">
         <div className="text-lg mt-[90px] mb-[50px]">
-          Start running verified tasks with just one click{' '}
+          Start running verified tasks with just one click
         </div>
 
         <div className="flex flex-row mb-2 text-xs text-finnieTeal">
@@ -128,7 +105,7 @@ const RunFirstTask = () => {
           {isLoading ? (
             <div>Loading...</div>
           ) : (
-            tasks.map((task, index) => (
+            selectedTasks.map((task, index) => (
               <div className="mb-4" key={index}>
                 <TaskItem
                   stakeValue={stakePerTask[task.publicKey] ?? 0}
@@ -169,7 +146,7 @@ const RunFirstTask = () => {
             <Button
               className="font-semibold bg-finnieGray-light text-finnieBlue-light w-[220px] h-[38px]"
               label="Run Tasks"
-              disabled={runTasksMutation.isLoading}
+              disabled={runTasksMutation.isLoading || noTasks}
               onClick={() => runTasksMutation.mutate()}
             />
             <div className="flex flex-row items-center gap-2 mt-2 text-sm text-finnieEmerald-light">

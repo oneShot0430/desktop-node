@@ -20,7 +20,7 @@ export const fetchAllTasks = async (
 export const getTasksById = (tasksIds: string[]) => {
   return window.main.getTasksById({ tasksIds }).then((tasks) => {
     console.log('GETTING TASKS BY ID', tasks);
-    return tasks.map(TaskService.parseTask);
+    return tasks.filter(Boolean).map(TaskService.parseTask);
   });
 };
 
