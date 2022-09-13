@@ -1,1 +1,1 @@
-export { useUserSettings } from './hooks/userSettings';
+export * from './hooks';

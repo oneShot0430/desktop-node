@@ -1,5 +1,4 @@
-import React, { memo, useState } from 'react';
-import { useQueryClient } from 'react-query';
+import React, { memo } from 'react';
 
 import CopyIconSvg from 'assets/svgs/copy-icon.svg';
 import DeleteIconSvg from 'assets/svgs/delete-icon.svg';
@@ -10,8 +9,9 @@ import StarOutlined from 'assets/svgs/star-outlined.svg';
 import Star from 'assets/svgs/star.svg';
 import { Button } from 'webapp/components/ui/Button';
 import { ErrorMessage } from 'webapp/components/ui/ErrorMessage';
-import { setActiveAccount } from 'webapp/services';
+import { useClipboard } from 'webapp/features/common';
 
+import { useAccount } from '../hooks/useAccount';
 import { useAccountBalance } from '../hooks/useAccountBalance';
 
 type PropsType = {
@@ -29,21 +29,22 @@ const AccountInfo = ({
   isDefault,
   stakingPublicKeyBalance,
 }: PropsType) => {
-  const [error, setError] = useState();
-  const queryCache = useQueryClient();
+  const { accountBalance, acountBalanceLoadingError } =
+    useAccountBalance(stakingPublicKey);
+  const { copyToClipboard, copied } = useClipboard();
+  const {
+    deleteAccount,
+    setAccountActive,
+    removingAccountError,
+    setAccountActiveError,
+  } = useAccount(accountName);
 
-  const { acountBalance, acountBalanceLoadingError } =
-    useAccountBalance(mainPublicKey);
-
-  const handleSetActive = async () => {
-    try {
-      await setActiveAccount(accountName);
-      queryCache.invalidateQueries('accounts');
-    } catch (error) {
-      console.warn(error);
-      setError(error);
-    }
+  const copyToClipboardHandler = () => {
+    copyToClipboard(stakingPublicKey);
   };
+
+  const error =
+    (removingAccountError as string) || (setAccountActiveError as string);
 
   return (
     <div className="w-full mb-4 text-white">
@@ -57,13 +58,12 @@ const AccountInfo = ({
           <div className="flex flex-row justify-between">
             <div className="flex flex-row w-[174px]">
               <Button
-                onClick={handleSetActive}
+                onClick={setAccountActive}
                 icon={isDefault ? <Star /> : <StarOutlined />}
                 className="rounded-[50%] w-[24px] h-[24px] bg-transparent"
               />
               <span className="px-4">System Key</span>
               <Button
-                onClick={() => console.log('implement me')}
                 icon={<EditIconSvg />}
                 className="rounded-[50%] w-[24px] h-[24px] bg-finnieTeal-100"
               />
@@ -76,8 +76,15 @@ const AccountInfo = ({
                 {mainPublicKey}
               </span>
               <Button
+                tooltip="Copy"
+                onClick={copyToClipboardHandler}
                 icon={<CopyIconSvg />}
-                className="rounded-[50%] w-[24px] h-[24px] bg-finnieTeal-100"
+                /**
+                 * @todo implement better copy action ux
+                 */
+                className={`rounded-[50%] w-[24px] h-[24px] ${
+                  copied ? 'bg-finnieEmerald' : 'bg-finnieTeal-100'
+                }`}
               />
               <Button
                 icon={<KeyIconSvg className="w-[14px] h-[14px]" />}
@@ -86,10 +93,10 @@ const AccountInfo = ({
             </div>
             <div className="flex flex-row items-center">
               <span className="px-4">
-                {acountBalanceLoadingError ? '-' : acountBalance} KOII
+                {acountBalanceLoadingError ? '-' : accountBalance} KOII
               </span>
               <Button
-                onClick={() => console.log('delete')}
+                onClick={deleteAccount}
                 icon={<DeleteIconSvg />}
                 className="rounded-[50%] w-[24px] h-[24px] bg-finnieRed"
               />

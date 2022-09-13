@@ -172,3 +172,10 @@ export const saveUserConfig = (config: {
     return res;
   });
 };
+
+export const removeAccount = (accountName: string) => {
+  return window.main.removeAccountByName({ accountName }).then((res) => {
+    console.log('REMOVING ACCOUNT', res);
+    return res;
+  });
+};
