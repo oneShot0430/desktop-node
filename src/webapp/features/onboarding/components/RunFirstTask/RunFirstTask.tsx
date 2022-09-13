@@ -69,8 +69,10 @@ const RunFirstTask = () => {
   );
 
   const noTasks = selectedTasksKeys.length === 0;
-  const selectedTasks = defaultTasks.filter((task) =>
-    selectedTasksKeys.includes(task.publicKey)
+  const selectedTasks = useMemo(
+    () =>
+      defaultTasks.filter((task) => selectedTasksKeys.includes(task.publicKey)),
+    [defaultTasks]
   );
 
   return (
