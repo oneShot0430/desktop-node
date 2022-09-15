@@ -8,7 +8,7 @@ import RestoreIconSvg from 'assets/svgs/onboarding/restore-orange-icon.svg';
 import BgShape from 'assets/svgs/onboarding/shape_1.svg';
 import { Button, ErrorMessage } from 'webapp/components';
 import { AppRoute } from 'webapp/routing/AppRoutes';
-import { startTask, stakeOnTask } from 'webapp/services';
+import { stakeOnTask, startTask } from 'webapp/services';
 
 import { useDefaultTasks } from '../../hooks';
 
@@ -16,9 +16,11 @@ import TaskItem from './TaskItem';
 
 const RunFirstTask = () => {
   const navigate = useNavigate();
-  const [selectedTasksKeys, setSelectedTasksKeys] = useState<string[]>([]);
+  const [filteredTasksByKey, setFilteredTasksByKey] = useState<string[]>([]);
   const [stakePerTask, setStakePerTask] = useState<Record<string, number>>({});
-  const { defaultTasks, isLoading, error } = useDefaultTasks();
+  const { verifiedTasks, isLoading, error } = useDefaultTasks();
+
+  console.log('@@@efaultTasks', verifiedTasks);
 
   const handleStakeInputChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -32,6 +34,9 @@ const RunFirstTask = () => {
     });
   };
 
+  /**
+   * @todo: write as mutation
+   */
   const handleRunTasks = async () => {
     const stakeOnTasksPromises = Object.entries(stakePerTask).map(
       ([taskPubKey, stake]) => stakeOnTask(taskPubKey, stake)
@@ -46,15 +51,14 @@ const RunFirstTask = () => {
   };
 
   const handleTaskRemove = (taskPubKey: string) => {
-    const newTasks = selectedTasksKeys.filter(
-      (pubKey) => pubKey !== taskPubKey
-    );
-    setSelectedTasksKeys(newTasks);
+    const filteredKeys = [...filteredTasksByKey, taskPubKey];
+    console.log('@@@filteredKeys', filteredKeys);
+    setFilteredTasksByKey(filteredKeys);
   };
 
   const handleRestoreTasks = async () => {
     setStakePerTask({});
-    setSelectedTasksKeys(defaultTasks.map(({ publicKey }) => publicKey));
+    setFilteredTasksByKey([]);
   };
 
   const runTasksMutation = useMutation(handleRunTasks, {
@@ -68,12 +72,16 @@ const RunFirstTask = () => {
     [stakePerTask]
   );
 
-  const noTasks = selectedTasksKeys.length === 0;
   const selectedTasks = useMemo(
     () =>
-      defaultTasks.filter((task) => selectedTasksKeys.includes(task.publicKey)),
-    [defaultTasks]
+      verifiedTasks.filter((task) => {
+        const shouldFilter = !filteredTasksByKey.includes(task.publicKey);
+        return shouldFilter;
+      }),
+    [filteredTasksByKey, verifiedTasks]
   );
+
+  console.log('@@@selectedTasks', selectedTasks);
 
   return (
     <div className="relative h-full overflow-hidden bg-finnieBlue-dark-secondary">
@@ -148,7 +156,7 @@ const RunFirstTask = () => {
             <Button
               className="font-semibold bg-finnieGray-light text-finnieBlue-light w-[220px] h-[38px]"
               label="Run Tasks"
-              disabled={runTasksMutation.isLoading || noTasks}
+              // disabled={runTasksMutation.isLoading || noTasks}
               onClick={() => runTasksMutation.mutate()}
             />
             <div className="flex flex-row items-center gap-2 mt-2 text-sm text-finnieEmerald-light">

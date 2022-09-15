@@ -2,13 +2,13 @@ import { useQuery } from 'react-query';
 
 import { QueryKeys, getTasksById } from 'webapp/services';
 
-const defaultTasksIds = ['7mjiYZJvjmtDXF1TAnV5Cy1rLgXcQMqEpeYJYwEhrRyt'];
+const defaultTasksIds = ['5AFc85AYGpUz7XyFJEXC6sD94xZzJQ9tgch7ar1eEFQY'];
 
 export const useDefaultTasks = () => {
   const {
     isLoading,
     error,
-    data: defaultTasks = [],
+    data: verifiedTasks = [],
   } = useQuery(
     [
       QueryKeys.taskList,
@@ -19,8 +19,10 @@ export const useDefaultTasks = () => {
     () => getTasksById(defaultTasksIds)
   );
 
+  console.log('###verifiedTasks', verifiedTasks);
+
   return {
-    defaultTasks,
+    verifiedTasks,
     isLoading,
     error,
   };
