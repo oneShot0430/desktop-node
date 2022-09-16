@@ -1,5 +1,4 @@
-import React, { useMemo, useState } from 'react';
-import { useMutation } from 'react-query';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import AddIconSvg from 'assets/svgs/onboarding/add-teal-icon.svg';
@@ -8,80 +7,26 @@ import RestoreIconSvg from 'assets/svgs/onboarding/restore-orange-icon.svg';
 import BgShape from 'assets/svgs/onboarding/shape_1.svg';
 import { Button, ErrorMessage } from 'webapp/components';
 import { AppRoute } from 'webapp/routing/AppRoutes';
-import { stakeOnTask, startTask } from 'webapp/services';
 
-import { useDefaultTasks } from '../../hooks';
-
+import { useRunFirstTasksLogic } from './hooks';
 import TaskItem from './TaskItem';
 
 const RunFirstTask = () => {
   const navigate = useNavigate();
-  const [filteredTasksByKey, setFilteredTasksByKey] = useState<string[]>([]);
-  const [stakePerTask, setStakePerTask] = useState<Record<string, number>>({});
-  const { verifiedTasks, isLoading, error } = useDefaultTasks();
+  const {
+    selectedTasks,
+    loadingVerifiedTasks,
+    stakePerTask,
+    totalStaked,
+    handleStakeInputChange,
+    handleTaskRemove,
+    handleRestoreTasks,
+    runTasks,
+    runTasksLoading,
+    runTasksError,
+  } = useRunFirstTasksLogic();
 
-  console.log('@@@efaultTasks', verifiedTasks);
-
-  const handleStakeInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    taskPubKey: string
-  ) => {
-    const { value } = e.target;
-
-    setStakePerTask({
-      ...stakePerTask,
-      [taskPubKey]: Number(value),
-    });
-  };
-
-  /**
-   * @todo: write as mutation
-   */
-  const handleRunTasks = async () => {
-    const stakeOnTasksPromises = Object.entries(stakePerTask).map(
-      ([taskPubKey, stake]) => stakeOnTask(taskPubKey, stake)
-    );
-
-    /**
-     * @dev staking in each individua task before we continue
-     */
-    await Promise.all(stakeOnTasksPromises);
-    const promises = selectedTasks.map(({ publicKey }) => startTask(publicKey));
-    await Promise.all(promises);
-  };
-
-  const handleTaskRemove = (taskPubKey: string) => {
-    const filteredKeys = [...filteredTasksByKey, taskPubKey];
-    console.log('@@@filteredKeys', filteredKeys);
-    setFilteredTasksByKey(filteredKeys);
-  };
-
-  const handleRestoreTasks = async () => {
-    setStakePerTask({});
-    setFilteredTasksByKey([]);
-  };
-
-  const runTasksMutation = useMutation(handleRunTasks, {
-    onSuccess: () => {
-      navigate(AppRoute.OnboardingConfirmStake);
-    },
-  });
-
-  const totalStaked = useMemo(
-    () => Object.values(stakePerTask).reduce((acc, curr) => acc + curr, 0),
-    [stakePerTask]
-  );
-
-  const selectedTasks = useMemo(
-    () =>
-      verifiedTasks.filter((task) => {
-        const shouldFilter = !filteredTasksByKey.includes(task.publicKey);
-        return shouldFilter;
-      }),
-    [filteredTasksByKey, verifiedTasks]
-  );
-
-  console.log('@@@selectedTasks', selectedTasks);
+  const error: string = runTasksError as string;
 
   return (
     <div className="relative h-full overflow-hidden bg-finnieBlue-dark-secondary">
@@ -104,15 +49,8 @@ const RunFirstTask = () => {
               // @ts-ignore
               <ErrorMessage errorMessage={error?.message as string} />
             ) : null}
-            {runTasksMutation.error ? (
-              <ErrorMessage
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                errorMessage={runTasksMutation?.error?.message as string}
-              />
-            ) : null}
           </div>
-          {isLoading ? (
+          {loadingVerifiedTasks ? (
             <div>Loading...</div>
           ) : (
             selectedTasks.map((task, index) => (
@@ -155,9 +93,9 @@ const RunFirstTask = () => {
           <div className="flex flex-col items-center justify-center">
             <Button
               className="font-semibold bg-finnieGray-light text-finnieBlue-light w-[220px] h-[38px]"
-              label="Run Tasks"
-              // disabled={runTasksMutation.isLoading || noTasks}
-              onClick={() => runTasksMutation.mutate()}
+              label={runTasksLoading ? 'Running tasks...' : 'Run Tasks'}
+              disabled={runTasksLoading}
+              onClick={() => runTasks()}
             />
             <div className="flex flex-row items-center gap-2 mt-2 text-sm text-finnieEmerald-light">
               <CurrencySvgIcon className="h-[24px]" />
