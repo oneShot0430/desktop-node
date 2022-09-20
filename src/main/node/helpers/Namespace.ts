@@ -92,13 +92,13 @@ class Namespace {
     if (operationMode === 'service') {
       // this.loadRedisClient();
     }
+    this.db = leveldbWrapper.levelDb;
+    this.taskData = taskData;
     if (!mainSystemAccount) {
       const ACTIVE_ACCOUNT = 'ACTIVE_ACCOUNT';
-      this.db = leveldbWrapper.levelDb;
-      this.taskData = taskData;
       this.storeGet(ACTIVE_ACCOUNT).then((activeAccount) => {
         if (activeAccount != null) {
-          const mainSystemAccount = Keypair.fromSecretKey(
+          const mainSystemAccountRetrieved = Keypair.fromSecretKey(
             Uint8Array.from(
               JSON.parse(
                 fs.readFileSync(
@@ -108,13 +108,16 @@ class Namespace {
               )
             )
           );
-          this.#mainSystemAccount = mainSystemAccount;
-          this.mainSystemAccountPubKey = mainSystemAccount?.publicKey;
+          this.#mainSystemAccount = mainSystemAccountRetrieved;
+          this.mainSystemAccountPubKey = mainSystemAccountRetrieved?.publicKey;
         } else {
           this.#mainSystemAccount = null;
           this.mainSystemAccountPubKey = null;
         }
       });
+    } else {
+      this.#mainSystemAccount = mainSystemAccount;
+      this.mainSystemAccountPubKey = mainSystemAccount?.publicKey;
     }
   }
 

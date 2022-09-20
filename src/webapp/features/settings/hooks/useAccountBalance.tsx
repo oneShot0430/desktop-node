@@ -4,13 +4,13 @@ import { fetchAccountBalance } from './common';
 
 export const useAccountBalance = (accountPublicKey: string) => {
   const {
-    data: acountBalance,
+    data: accountBalance,
     isLoading: loadingAccountBalance,
     error: acountBalanceLoadingError,
   } = useQuery(['account-balance', accountPublicKey], fetchAccountBalance);
 
   return {
-    acountBalance,
+    accountBalance,
     loadingAccountBalance,
     acountBalanceLoadingError,
   };

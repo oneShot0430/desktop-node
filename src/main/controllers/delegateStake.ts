@@ -119,9 +119,8 @@ const delegateStake = async (
     return response;
   } else {
     console.log(
-      mainSystemAccount.publicKey,
-      stakingAccKeypair.publicKey,
-      stakingAccKeypair.publicKey,
+      mainSystemAccount.publicKey.toBase58(),
+      stakingAccKeypair.publicKey.toBase58(),
       taskState.stakePotAccount
     );
     const createSubmitterAccTransaction = new Transaction().add(

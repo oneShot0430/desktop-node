@@ -10,6 +10,7 @@ type ButtonProps = {
   onlyIcon?: boolean;
   className?: string;
   loading?: boolean;
+  tooltip?: string;
 } & React.DetailedHTMLProps<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
   HTMLButtonElement
@@ -21,6 +22,7 @@ const Button = ({
   onlyIcon,
   className,
   loading,
+  tooltip,
   ...rest
 }: ButtonProps) => {
   if (onlyIcon) {
@@ -38,6 +40,7 @@ const Button = ({
 
   return (
     <button
+      title={tooltip}
       className={`${classes} ${
         rest.disabled && 'opacity-60'
       } flex items-center justify-center`}
