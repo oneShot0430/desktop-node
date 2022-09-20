@@ -29,7 +29,7 @@ export const useRunFirstTasksLogic = () => {
     );
 
     /**
-     * @dev staking in each individua task before we continue
+     * @dev staking in each individual task before we continue
      */
     await Promise.all(stakeOnTasksPromises);
     const promises = selectedTasks.map(({ publicKey }) => startTask(publicKey));

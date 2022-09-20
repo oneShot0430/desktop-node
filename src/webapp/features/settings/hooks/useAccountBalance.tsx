@@ -6,12 +6,12 @@ export const useAccountBalance = (accountPublicKey: string) => {
   const {
     data: accountBalance,
     isLoading: loadingAccountBalance,
-    error: acountBalanceLoadingError,
+    error: accountBalanceLoadingError,
   } = useQuery(['account-balance', accountPublicKey], fetchAccountBalance);
 
   return {
     accountBalance,
     loadingAccountBalance,
-    acountBalanceLoadingError,
+    accountBalanceLoadingError: accountBalanceLoadingError,
   };
 };
