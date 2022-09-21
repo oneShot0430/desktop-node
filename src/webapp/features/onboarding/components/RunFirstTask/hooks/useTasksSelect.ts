@@ -11,15 +11,13 @@ export const useTasksSelect = ({ verifiedTasks = [] }: ParamsType) => {
 
   const handleTaskRemove = (taskPubKey: string) => {
     const filteredKeys = [...filteredTasksByKey, taskPubKey];
-    console.log('@@@filteredKeys', filteredKeys);
     setFilteredTasksByKey(filteredKeys);
   };
 
   const selectedTasks = useMemo(
     () =>
       verifiedTasks.filter((task) => {
-        const shouldFilter = !filteredTasksByKey.includes(task.publicKey);
-        return shouldFilter;
+        return !filteredTasksByKey.includes(task.publicKey);
       }),
     [filteredTasksByKey, verifiedTasks]
   );

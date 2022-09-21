@@ -5,7 +5,7 @@ import AddIconSvg from 'assets/svgs/onboarding/add-teal-icon.svg';
 import CurrencySvgIcon from 'assets/svgs/onboarding/currency-teal-small-icon.svg';
 import RestoreIconSvg from 'assets/svgs/onboarding/restore-orange-icon.svg';
 import BgShape from 'assets/svgs/onboarding/shape_1.svg';
-import { Button, ErrorMessage } from 'webapp/components';
+import { Button } from 'webapp/components';
 import { AppRoute } from 'webapp/routing/AppRoutes';
 
 import { useRunFirstTasksLogic } from './hooks';
@@ -21,12 +21,11 @@ const RunFirstTask = () => {
     handleStakeInputChange,
     handleTaskRemove,
     handleRestoreTasks,
-    runTasks,
-    runTasksLoading,
-    runTasksError,
   } = useRunFirstTasksLogic();
 
-  const error: string = runTasksError as string;
+  const handleContinue = () => {
+    navigate(AppRoute.OnboardingConfirmStake, { state: selectedTasks });
+  };
 
   return (
     <div className="relative h-full overflow-hidden bg-finnieBlue-dark-secondary">
@@ -43,13 +42,7 @@ const RunFirstTask = () => {
         </div>
 
         <div className="h-[38vh] overflow-auto">
-          <div className="py-2">
-            {error ? (
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              <ErrorMessage errorMessage={error?.message as string} />
-            ) : null}
-          </div>
+          <div className="py-2"></div>
           {loadingVerifiedTasks ? (
             <div>Loading...</div>
           ) : (
@@ -93,9 +86,8 @@ const RunFirstTask = () => {
           <div className="flex flex-col items-center justify-center">
             <Button
               className="font-semibold bg-finnieGray-light text-finnieBlue-light w-[220px] h-[38px]"
-              label={runTasksLoading ? 'Running tasks...' : 'Run Tasks'}
-              disabled={runTasksLoading}
-              onClick={() => runTasks()}
+              label={'Run Tasks'}
+              onClick={handleContinue}
             />
             <div className="flex flex-row items-center gap-2 mt-2 text-sm text-finnieEmerald-light">
               <CurrencySvgIcon className="h-[24px]" />

@@ -1,46 +1,32 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 
 import AddIconSvg from 'assets/svgs/onboarding/add-teal-icon.svg';
 import CurrencySvgIcon from 'assets/svgs/onboarding/currency-teal-small-icon.svg';
+import { ErrorMessage } from 'webapp/components';
 import { Button } from 'webapp/components/ui/Button';
+import { useRunMultipleTasks } from 'webapp/features/common';
 import { useMainAccountBalance } from 'webapp/features/settings';
 import { showModal } from 'webapp/store/actions/modal';
+import { TaskWithStake } from 'webapp/types';
 
 import { SelectedTasksSummary } from './SelectedTasksSummary';
 
-export type TaskToRun = {
-  name: string;
-  stakedTokensAmount: number;
-};
-
-type PropsType = {
-  tasksToRun?: TaskToRun[];
-};
-
-const ConfirmYourStake = ({ tasksToRun = [] }: PropsType) => {
-  // const navigate = useNavigate();
+const ConfirmYourStake = () => {
+  const { state: selectedTasks } = useLocation();
+  const tasksToRun = selectedTasks as TaskWithStake[];
   const dispatch = useDispatch();
   const { data: balance, isLoading } = useMainAccountBalance();
+  const { runAllTasks, runTasksLoading, runTasksError } = useRunMultipleTasks({
+    tasksToRun,
+  });
 
   const handleConfirm = () => {
-    dispatch(showModal('NOT_ENOUGH_FUNDS'));
-
-    let skip = false;
     if (balance < 0) {
-      /**
-       * @todo call modal and resolve it with value true/false
-       */
-      skip = true;
-    }
-
-    if (skip) {
-      // fulfill
-      return;
+      dispatch(showModal('NOT_ENOUGH_FUNDS'));
     } else {
-      /**
-       * @todo: Fund account and resolve
-       */
+      runAllTasks();
     }
   };
 
@@ -57,9 +43,13 @@ const ConfirmYourStake = ({ tasksToRun = [] }: PropsType) => {
           <div className="flex flex-col items-center justify-center">
             <Button
               className="font-semibold bg-finnieGray-light text-finnieBlue-light w-[220px] h-[38px]"
-              label="Confirm"
+              label={runTasksLoading ? 'Running tasks...' : 'Confirm'}
+              disabled={runTasksLoading}
               onClick={handleConfirm}
             />
+            {runTasksError ? (
+              <ErrorMessage errorMessage={(runTasksError as any).message} />
+            ) : null}
             <div className="flex flex-row items-center gap-2 mt-2 text-sm text-finnieEmerald-light">
               <CurrencySvgIcon className="h-[24px]" />
               {`Total balance: ${

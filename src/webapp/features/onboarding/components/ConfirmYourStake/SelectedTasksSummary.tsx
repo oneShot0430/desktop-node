@@ -3,9 +3,10 @@ import React, { useMemo } from 'react';
 import CodeIconSvg from 'assets/svgs/code-icon.svg';
 import EditIconSvg from 'assets/svgs/edit-icon.svg';
 import { Button } from 'webapp/components';
+import { TaskWithStake } from 'webapp/types';
 
 type PropsType = {
-  selectedTasks: { name: string; stakedTokensAmount: number }[];
+  selectedTasks: TaskWithStake[];
 };
 
 export const SelectedTasksSummary = ({ selectedTasks }: PropsType) => {
@@ -17,9 +18,9 @@ export const SelectedTasksSummary = ({ selectedTasks }: PropsType) => {
   const totalKoiiStaked = useMemo(
     () =>
       selectedTasks.reduce((acc, item) => {
-        return acc + item.stakedTokensAmount;
+        return acc + item.stake;
       }, 0),
-    []
+    [selectedTasks]
   );
 
   // if (listEmpty) {
@@ -39,15 +40,15 @@ export const SelectedTasksSummary = ({ selectedTasks }: PropsType) => {
             You didn&apos;t select any tasks to run.
           </div>
         ) : (
-          selectedTasks.map(({ name, stakedTokensAmount }) => (
+          selectedTasks.map(({ taskName, stake, publicKey }) => (
             <div
               className="flex flex-row w-full text-md text-finnieEmerald-light px-[48px]"
-              key={name}
+              key={publicKey}
             >
               <div className="w-[50%]">
                 <div className="flex flex-row items-center gap-2">
                   <CodeIconSvg />
-                  <span>{name}</span>
+                  <span>{taskName}</span>
                 </div>
               </div>
               <div className="w-[50%]">
@@ -57,7 +58,7 @@ export const SelectedTasksSummary = ({ selectedTasks }: PropsType) => {
                     icon={<EditIconSvg />}
                     className="rounded-[50%] w-[24px] h-[24px] bg-finnieTeal-100"
                   />
-                  <div>{stakedTokensAmount} KOII</div>
+                  <div>{stake} KOII</div>
                 </div>
               </div>
             </div>
