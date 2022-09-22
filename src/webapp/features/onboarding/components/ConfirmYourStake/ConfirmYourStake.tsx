@@ -1,4 +1,5 @@
-import React from 'react';
+import { sum } from 'lodash';
+import React, { useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 
@@ -22,8 +23,15 @@ const ConfirmYourStake = () => {
     tasksToRun,
   });
 
+  const totalKoiiStaked = useMemo(
+    () => sum(tasksToRun.map((task) => task.stake)),
+    [tasksToRun]
+  );
+
+  const notEnougBalance = balance < totalKoiiStaked;
+
   const handleConfirm = () => {
-    if (balance < 0) {
+    if (notEnougBalance) {
       dispatch(showModal('NOT_ENOUGH_FUNDS'));
     } else {
       runAllTasks();

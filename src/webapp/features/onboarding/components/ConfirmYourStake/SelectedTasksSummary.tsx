@@ -1,3 +1,4 @@
+import { sum } from 'lodash';
 import React, { useMemo } from 'react';
 
 import CodeIconSvg from 'assets/svgs/code-icon.svg';
@@ -14,12 +15,9 @@ export const SelectedTasksSummary = ({ selectedTasks }: PropsType) => {
   /**
    * @todo: calculate fees
    */
-  const taskFees = 0;
+  const taskFees = '~ 0.1';
   const totalKoiiStaked = useMemo(
-    () =>
-      selectedTasks.reduce((acc, item) => {
-        return acc + item.stake;
-      }, 0),
+    () => sum(selectedTasks.map((task) => task.stake)),
     [selectedTasks]
   );
 
