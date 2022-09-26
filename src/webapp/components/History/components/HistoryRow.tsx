@@ -1,19 +1,28 @@
 import React from 'react';
 import { useQuery } from 'react-query';
-import { useDispatch } from 'react-redux';
 
+import { useTaskDetailsModal } from 'webapp/components/MyNodeTable/hooks';
 import {
   TableRow,
   TableCell,
   NodeStatusCell,
 } from 'webapp/components/ui/Table';
 import { TaskDetailsCell } from 'webapp/components/ui/Table/TaskDetailsCell';
-import { QueryKeys, TaskService } from 'webapp/services';
-import { showModal } from 'webapp/store/actions/modal';
+import {
+  getMainAccountPublicKey,
+  QueryKeys,
+  TaskService,
+} from 'webapp/services';
 import { Task } from 'webapp/types';
 
 export const HistoryRow = ({ task }: { task: Task }) => {
-  const dispatch = useDispatch();
+  /**
+   * @todo: abstract it away to the hook
+   */
+  const { data: mainAccountPubKey, isLoading: loadingMainAccount } = useQuery(
+    QueryKeys.MainAccount,
+    () => getMainAccountPublicKey()
+  );
   const { taskName, publicKey } = task;
 
   const nodes = TaskService.getNodesCount(task);
@@ -25,12 +34,19 @@ export const HistoryRow = ({ task }: { task: Task }) => {
     TaskService.getMyStake(task)
   );
 
+  const { showTaskDetailsModal } = useTaskDetailsModal({
+    task,
+    accountPublicKey: mainAccountPubKey,
+  });
+
+  if (loadingMainAccount) return null;
+
   return (
     <TableRow key={publicKey}>
       <TaskDetailsCell
         taskName={taskName}
         createdAt={'DATE STRING'}
-        onClick={() => dispatch(showModal('TASK_DETAILS', task))}
+        onClick={showTaskDetailsModal}
       />
       <TableCell>{'TBD'}</TableCell>
       <NodeStatusCell status={nodeStatus} />

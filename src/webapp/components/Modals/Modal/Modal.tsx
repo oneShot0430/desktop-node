@@ -8,7 +8,6 @@ import AddKeyModal from '../AddKeyModal/AddKeyModal';
 import { EditStakeAmountModal } from '../EditStakeAmountModal';
 import ModalCreateTask from '../ModalCreateTask';
 import ModalWithdrawStake from '../ModalWithdrawStake';
-import { TaskDetailsModal } from '../TaskDetailsModal';
 
 const Modal = (): JSX.Element => {
   const isOpen = useAppSelector((state) => state.modal.isShown);
@@ -36,7 +35,6 @@ const Modal = (): JSX.Element => {
     CREATE_TASK: <ModalCreateTask onClose={close} />,
     WITHDRAW_STAKE: <ModalWithdrawStake close={close} />,
     EDIT_STAKE_AMOUNT: <EditStakeAmountModal onClose={close} />,
-    TASK_DETAILS: <TaskDetailsModal onClose={close} task={modalData} />,
     ADD_NEW_KEY: <AddKeyModal onClose={close} />,
     ADD_FUNDS_QR: <AddFunds onClose={close} pubKey={modalData} />,
   };
