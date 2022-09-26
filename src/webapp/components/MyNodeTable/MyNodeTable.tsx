@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
-import { useInfiniteQuery } from 'react-query';
+import { useInfiniteQuery, useQuery } from 'react-query';
 
-import { fetchMyTasks, QueryKeys } from 'webapp/services';
+import {
+  fetchMyTasks,
+  getMainAccountPublicKey,
+  QueryKeys,
+} from 'webapp/services';
 import { Task } from 'webapp/types';
 
 import { InfiniteScrollTable } from '../ui/Table';
@@ -22,6 +26,11 @@ const pageSize = 10;
 
 export const MyNodeTable = () => {
   const [hasMore, setHasMore] = useState(true);
+
+  const { data: mainAccountPubKey, isLoading: loadingMainAccount } = useQuery(
+    QueryKeys.MainAccount,
+    () => getMainAccountPublicKey()
+  );
 
   const { isLoading, data, error, fetchNextPage } = useInfiniteQuery(
     QueryKeys.taskList,
@@ -44,6 +53,8 @@ export const MyNodeTable = () => {
     return (data?.pages || []).flat();
   };
 
+  if (loadingMainAccount) return null;
+
   return (
     <InfiniteScrollTable
       tableHeaders={tableHeaders}
@@ -53,7 +64,11 @@ export const MyNodeTable = () => {
       update={fetchNextPage}
     >
       {getAllRows().map((task) => (
-        <TaskRow key={task.publicKey} task={task} />
+        <TaskRow
+          key={task.publicKey}
+          task={task}
+          accountPublicKey={mainAccountPubKey}
+        />
       ))}
     </InfiniteScrollTable>
   );

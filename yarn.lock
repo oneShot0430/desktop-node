@@ -1048,6 +1048,11 @@
   resolved "https://registry.npmjs.org/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
+"@ebay/nice-modal-react@^1.2.7":
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/@ebay/nice-modal-react/-/nice-modal-react-1.2.7.tgz#f96412c4134f6a47209c393fef310c02e06b61fc"
+  integrity sha512-/bzOBw16AwjXLjcAd5sZwgszsiaXRfcaEBW+RfkaD0pJzfveWs7yv/CEge8baLCc1KG6fpvETgzjxQ9uhWfsCg==
+
 "@electron-forge/async-ora@6.0.0-beta.64":
   version "6.0.0-beta.64"
   resolved "https://registry.npmjs.org/@electron-forge/async-ora/-/async-ora-6.0.0-beta.64.tgz"

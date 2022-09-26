@@ -1,3 +1,4 @@
+import NiceModal from '@ebay/nice-modal-react';
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
@@ -10,7 +11,9 @@ const App = (): JSX.Element => {
   return (
     <QueryClientProvider client={queryClient}>
       <AppProvider>
-        <AppRoutes />
+        <NiceModal.Provider>
+          <AppRoutes />
+        </NiceModal.Provider>
       </AppProvider>
     </QueryClientProvider>
   );
