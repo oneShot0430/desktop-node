@@ -28,10 +28,8 @@ const ConfirmYourStake = () => {
     [tasksToRun]
   );
 
-  const notEnougBalance = balance < totalKoiiStaked;
-
   const handleConfirm = () => {
-    if (notEnougBalance) {
+    if (balance < totalKoiiStaked) {
       dispatch(showModal('NOT_ENOUGH_FUNDS'));
     } else {
       runAllTasks();
@@ -56,7 +54,9 @@ const ConfirmYourStake = () => {
               onClick={handleConfirm}
             />
             {runTasksError ? (
-              <ErrorMessage errorMessage={(runTasksError as any).message} />
+              <ErrorMessage
+                errorMessage={(runTasksError as { message: string }).message}
+              />
             ) : null}
             <div className="flex flex-row items-center gap-2 mt-2 text-sm text-finnieEmerald-light">
               <CurrencySvgIcon className="h-[24px]" />

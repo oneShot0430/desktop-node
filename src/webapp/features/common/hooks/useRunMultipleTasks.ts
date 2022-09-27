@@ -16,7 +16,7 @@ export const useRunMultipleTasks = ({
     const errorMessages: string[] = [];
     const stakeOnTasksPromises = tasksToRun
       /**
-       * @dev do not inlcude staking action promise if there is no stake
+       * @dev do not include staking action promise if there is no stake
        */
       .filter(({ stake }) => stake > 0)
       .map(({ stake, publicKey }) =>
@@ -25,7 +25,7 @@ export const useRunMultipleTasks = ({
             return startTask(publicKey);
           })
           .catch((error) => {
-            const errorMessage = `Task ${publicKey} can't be debloyed because of error ${error}`;
+            const errorMessage = `Task ${publicKey} can't be deployed because of error ${error}`;
             console.log(errorMessage);
             errorMessages.push(errorMessage);
           })
