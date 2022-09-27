@@ -18,12 +18,20 @@ export type TaskDetailsModalPropsType = {
   task: Task;
   publicKey: string;
 };
-type TabsType = 'TaskDetails' | 'SourceCode';
+
+// type TabsType = TabsType.TaskDetails | TabsType.SourceCode;
+
+enum TabsType {
+  TaskDetails,
+  SourceCode,
+}
 
 export const TaskDetailsModal = create<TaskDetailsModalPropsType>(
   function TaskDetailsModal({ task, publicKey }) {
     const modal = useModal();
-    const [currentView, setCurrentView] = useState<TabsType>('TaskDetails');
+    const [currentView, setCurrentView] = useState<TabsType>(
+      TabsType.TaskDetails
+    );
 
     const { earnedReward } = useEarnedReward({ task, publicKey });
 
@@ -60,17 +68,17 @@ export const TaskDetailsModal = create<TaskDetailsModalPropsType>(
               <div className="flex justify-start gap-6 pl-6 mb-5">
                 <div
                   className={`${
-                    currentView === 'TaskDetails' && activeClasses
+                    currentView === TabsType.TaskDetails && activeClasses
                   } text-semibold`}
-                  onClick={() => setCurrentView('TaskDetails')}
+                  onClick={() => setCurrentView(TabsType.TaskDetails)}
                 >
                   Task Details
                 </div>
                 <div
                   className={`${
-                    currentView === 'SourceCode' && activeClasses
+                    currentView === TabsType.SourceCode && activeClasses
                   } text-semibold`}
-                  onClick={() => setCurrentView('SourceCode')}
+                  onClick={() => setCurrentView(TabsType.SourceCode)}
                 >
                   Source Code
                 </div>
@@ -95,7 +103,7 @@ export const TaskDetailsModal = create<TaskDetailsModalPropsType>(
                 Source Code
               </div>
               {/*TODO: handle open in the browser window */}
-              {currentView === 'SourceCode' && (
+              {currentView === TabsType.SourceCode && (
                 <a
                   className="cursor-pointer"
                   target="_blank"
@@ -108,7 +116,7 @@ export const TaskDetailsModal = create<TaskDetailsModalPropsType>(
             </div>
 
             <div className="overflow-y-auto">
-              {currentView === 'TaskDetails' && (
+              {currentView === TabsType.TaskDetails && (
                 <>
                   <div className="pl-6">
                     <TaskDetails
@@ -133,7 +141,7 @@ export const TaskDetailsModal = create<TaskDetailsModalPropsType>(
                   </div>
                 </>
               )}
-              {currentView === 'SourceCode' && (
+              {currentView === TabsType.SourceCode && (
                 <div className="select-text ">
                   <SourceCode sourceCode={sourceCode} />
                 </div>
