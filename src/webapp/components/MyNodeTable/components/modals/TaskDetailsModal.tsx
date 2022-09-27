@@ -5,13 +5,13 @@ import { useQuery } from 'react-query';
 import ExternalSourceIconSvg from 'assets/svgs/external-source-icon-white.svg';
 import FlagIconTealSvg from 'assets/svgs/flag-teal-icon.svg';
 import CloseIcon from 'svgs/close-icons/close-icon-white.svg';
+import { SourceCode } from 'webapp/components/SourceCode';
 import { Button } from 'webapp/components/ui/Button';
 import { useEarnedReward } from 'webapp/features/common/hooks/useEarnedReward';
 import { Modal, ModalContent } from 'webapp/features/modals';
 import { QueryKeys, TaskService, TaskStatusToLabeMap } from 'webapp/services';
 import { Task } from 'webapp/types';
 
-import SourceCode from './SourceCode';
 import { TaskDetails } from './TaskDetails';
 
 export type TaskDetailsModalPropsType = {

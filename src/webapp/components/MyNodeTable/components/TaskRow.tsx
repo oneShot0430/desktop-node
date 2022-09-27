@@ -68,8 +68,6 @@ export const TaskRow = ({ task, accountPublicKey }: PropsType) => {
         createdAt={'date string'}
         onClick={() => {
           showTaskDetailsModal();
-          // TODO:
-          // dispatch(showModal('TASK_DETAILS', task))
         }}
       />
       <TableCell>
