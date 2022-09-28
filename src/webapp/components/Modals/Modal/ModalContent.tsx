@@ -8,9 +8,9 @@ type PropTypes = {
   className?: string;
 };
 
-const ModalContent = ({ children, onClose, theme, className }: PropTypes) => {
+const ModalContent = ({ children, theme, className }: PropTypes) => {
   const classes = twMerge(
-    'w-[600px] h-[380px] bg-finnieGray text-center',
+    'bg-finnieGray text-center',
     theme === 'dark' && 'bg-finnieBlue-light-secondary',
     className
   );
