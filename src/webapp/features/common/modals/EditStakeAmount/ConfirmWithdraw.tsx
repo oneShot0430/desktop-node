@@ -10,7 +10,7 @@ type PropsType = Readonly<{
   onSuccess: () => void;
 }>;
 
-const ConfirmWithdraw = ({
+export const ConfirmWithdraw = ({
   onConfirmWithdraw,
   withdrawAmount,
   koiiBalance,

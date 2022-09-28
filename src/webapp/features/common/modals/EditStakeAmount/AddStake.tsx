@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { Button } from 'webapp/components/ui/Button';
 
-import KoiiInput from './components/KoiiInput';
+import KoiiInput from './KoiiInput';
 
 export type PropsType = {
   balance: number;

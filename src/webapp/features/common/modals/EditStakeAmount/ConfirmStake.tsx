@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React, { useState } from 'react';
 
 import { Button } from 'webapp/components/ui/Button';
 import { ErrorMessage } from 'webapp/components/ui/ErrorMessage';
@@ -10,7 +10,7 @@ type PropsType = Readonly<{
   onSuccess: () => void;
 }>;
 
-const ConfirmStake = ({
+export const ConfirmStake = ({
   onConfirmAddStake,
   stakeAmount,
   koiiBalance,
@@ -46,5 +46,3 @@ const ConfirmStake = ({
     </div>
   );
 };
-
-export default memo(ConfirmStake);

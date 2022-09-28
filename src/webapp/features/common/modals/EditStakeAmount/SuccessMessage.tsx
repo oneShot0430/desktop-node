@@ -9,7 +9,7 @@ type PropsType = Readonly<{
   stakedAmount?: number;
 }>;
 
-const SuccessMessage = ({
+export const SuccessMessage = ({
   onOkClick,
   stakedAmount,
   successMessage,

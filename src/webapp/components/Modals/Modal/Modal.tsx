@@ -3,11 +3,8 @@ import React, { useEffect, useRef } from 'react';
 import { AddFunds } from 'webapp/components/AddFunds';
 import { NotEnoughFunds } from 'webapp/features/onboarding/components/ConfirmYourStake';
 import { useAppDispatch, useAppSelector } from 'webapp/hooks/reduxHook';
-import { closeModal } from 'webapp/store/actions/modal';
 
 import AddKeyModal from '../AddKeyModal/AddKeyModal';
-import { EditStakeAmountModal } from '../EditStakeAmountModal';
-import ModalWithdrawStake from '../ModalWithdrawStake';
 
 const Modal = (): JSX.Element => {
   const isOpen = useAppSelector((state) => state.modal.isShown);
@@ -17,7 +14,6 @@ const Modal = (): JSX.Element => {
   const modalRef = useRef<HTMLDivElement>(null);
 
   const dispatch = useAppDispatch();
-  const close = () => dispatch(closeModal());
 
   useEffect(() => {
     const handleClickOutSide = (e: Event) => {
@@ -32,8 +28,6 @@ const Modal = (): JSX.Element => {
   }, [close, modalRef]);
 
   const modalByTypes = {
-    WITHDRAW_STAKE: <ModalWithdrawStake close={close} />,
-    EDIT_STAKE_AMOUNT: <EditStakeAmountModal onClose={close} />,
     ADD_NEW_KEY: <AddKeyModal onClose={close} />,
     ADD_FUNDS_QR: <AddFunds onClose={close} pubKey={modalData} />,
     NOT_ENOUGH_FUNDS: <NotEnoughFunds onClose={close} />,
