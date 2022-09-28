@@ -11,6 +11,7 @@ import { useEarnedReward } from 'webapp/features/common/hooks/useEarnedReward';
 import { Modal, ModalContent } from 'webapp/features/modals';
 import { QueryKeys, TaskService, TaskStatusToLabeMap } from 'webapp/services';
 import { Task } from 'webapp/types';
+import { Theme } from 'webapp/types/common';
 
 import { TaskDetails } from './TaskDetails';
 
@@ -19,11 +20,9 @@ export type TaskDetailsModalPropsType = {
   publicKey: string;
 };
 
-// type TabsType = TabsType.TaskDetails | TabsType.SourceCode;
-
 enum TabsType {
-  TaskDetails,
-  SourceCode,
+  TaskDetails = 'TaskDetails',
+  SourceCode = 'SourceCode',
 }
 
 export const TaskDetailsModal = create<TaskDetailsModalPropsType>(
@@ -62,7 +61,10 @@ export const TaskDetailsModal = create<TaskDetailsModalPropsType>(
 
     return (
       <Modal>
-        <ModalContent theme="dark" className="text-white w-[900px] h-[480px]">
+        <ModalContent
+          theme={Theme.Dark}
+          className="text-white w-[900px] h-[480px]"
+        >
           <div className="flex flex-col h-full px-8 py-6">
             <div className="flex justify-between">
               <div className="flex justify-start gap-6 pl-6 mb-5">
