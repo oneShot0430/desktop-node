@@ -1,7 +1,6 @@
 import { Action } from 'redux';
 
 export type ModalType =
-  | 'CREATE_TASK'
   | 'WITHDRAW_STAKE'
   | 'EDIT_STAKE_AMOUNT'
   | 'ADD_NEW_KEY'

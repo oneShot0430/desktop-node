@@ -2,11 +2,10 @@ import React from 'react';
 
 import NewTaskIcon from 'svgs/add-icons/add-icon.svg';
 import ActionButton from 'webapp/components/ActionButton';
-import { useAppDispatch } from 'webapp/hooks/reduxHook';
-import { showModal } from 'webapp/store/actions/modal';
+import { useCreateTaskModal } from 'webapp/features/common/hooks/useCreateTaskModal';
 
 const AddTasksActionCenter = (): JSX.Element => {
-  const dispatch = useAppDispatch();
+  const { showTaskDetailsModal } = useCreateTaskModal();
 
   return (
     <div className="flex">
@@ -21,9 +20,7 @@ const AddTasksActionCenter = (): JSX.Element => {
       <ActionButton
         logo={NewTaskIcon}
         name="New Task"
-        onClick={() => {
-          dispatch(showModal('CREATE_TASK'));
-        }}
+        onClick={showTaskDetailsModal}
         variant="teal"
       />
     </div>

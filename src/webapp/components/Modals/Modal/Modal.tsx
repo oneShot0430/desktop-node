@@ -7,7 +7,6 @@ import { closeModal } from 'webapp/store/actions/modal';
 
 import AddKeyModal from '../AddKeyModal/AddKeyModal';
 import { EditStakeAmountModal } from '../EditStakeAmountModal';
-import ModalCreateTask from '../ModalCreateTask';
 import ModalWithdrawStake from '../ModalWithdrawStake';
 
 const Modal = (): JSX.Element => {
@@ -30,10 +29,9 @@ const Modal = (): JSX.Element => {
     document.addEventListener('mousedown', handleClickOutSide);
 
     return () => document.removeEventListener('mousedown', handleClickOutSide);
-  }, [modalRef]);
+  }, [close, modalRef]);
 
   const modalByTypes = {
-    CREATE_TASK: <ModalCreateTask onClose={close} />,
     WITHDRAW_STAKE: <ModalWithdrawStake close={close} />,
     EDIT_STAKE_AMOUNT: <EditStakeAmountModal onClose={close} />,
     ADD_NEW_KEY: <AddKeyModal onClose={close} />,
