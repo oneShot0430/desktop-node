@@ -2,9 +2,10 @@ import React, { memo } from 'react';
 
 import CloseIconWhite from 'svgs/close-icons/close-icon-white.svg';
 import { Button } from 'webapp/components/ui/Button';
+import { ModalContent } from 'webapp/features/modals';
+import { Theme } from 'webapp/types/common';
 
-import { ModalContent } from '../../Modal';
-import { Steps } from '../AddKeyModal';
+import { Steps } from '../AddNewAccount';
 
 type PropsType = {
   onClose: () => void;
@@ -16,7 +17,7 @@ const ShowSeedPhrase = ({ onClose, setNextStep, seedPhrase }: PropsType) => {
   const phraseWords = seedPhrase.split(' ');
 
   return (
-    <ModalContent theme="dark" className="w-[800px] h-[400px] text-white">
+    <ModalContent theme={Theme.Dark} className="w-[800px] h-[400px] text-white">
       <div className="flex justify-between p-3">
         <div></div>
         <div className="flex items-center justify-between pl-6">

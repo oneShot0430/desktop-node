@@ -1,6 +1,6 @@
 import { Action } from 'redux';
 
-export type ModalType = 'ADD_NEW_KEY' | 'ADD_FUNDS_QR' | 'NOT_ENOUGH_FUNDS';
+export type ModalType = 'ADD_FUNDS_QR' | 'NOT_ENOUGH_FUNDS';
 
 export type ModalPayload = {
   modalType: ModalType | null;

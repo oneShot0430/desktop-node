@@ -1,4 +1,4 @@
-import React, { memo, useRef } from 'react';
+import React, { useRef } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import CopyIconSvg from 'assets/svgs/copy-icon.svg';
@@ -12,7 +12,7 @@ type PropsType = Readonly<{
   address: string;
 }>;
 
-const KeyInfo = ({ keyType, address }: PropsType) => {
+export const AccountInfo = ({ keyType, address }: PropsType) => {
   const addressref = useRef<HTMLSpanElement>(null);
 
   const titleClasses = twMerge(
@@ -50,5 +50,3 @@ const KeyInfo = ({ keyType, address }: PropsType) => {
     </div>
   );
 };
-
-export default memo(KeyInfo);

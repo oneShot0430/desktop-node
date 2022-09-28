@@ -1,17 +1,16 @@
 import React, { memo } from 'react';
-import { useDispatch } from 'react-redux';
 
 import AddIconSvg from 'assets/svgs/add-icon-outlined.svg';
 import { Button } from 'webapp/components/ui/Button';
 import { ErrorMessage } from 'webapp/components/ui/ErrorMessage';
-import { showModal } from 'webapp/store/actions/modal';
+import { useAddNewAccountModal } from 'webapp/features/common/hooks/useAddNewAccountModal';
 
 import { useAccounts } from '../hooks';
 
 import AccounInfo from './AccounInfo';
 
 const AccountsTable = () => {
-  const dispatch = useDispatch();
+  const { showAddNewAccountModal } = useAddNewAccountModal();
 
   const { accounts, loadingAccounts, errorAccounts } = useAccounts();
 
@@ -62,7 +61,7 @@ const AccountsTable = () => {
           label="New"
           className="w-auto p-2 mt-10 bg-transparent h-[60px] text-white"
           icon={<AddIconSvg />}
-          onClick={() => dispatch(showModal('ADD_NEW_KEY'))}
+          onClick={showAddNewAccountModal}
         />
       </div>
 

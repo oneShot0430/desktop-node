@@ -1,12 +1,13 @@
-import React, { memo } from 'react';
+import React from 'react';
 
 import CheckmarkTealSvg from 'svgs/checkmark-teal-icon.svg';
 import CloseIconWhite from 'svgs/close-icons/close-icon-white.svg';
+import { ModalContent } from 'webapp/features/modals';
+import { Theme } from 'webapp/types/common';
 
-import { ModalContent } from '../../Modal';
-import { Steps } from '../AddKeyModal';
+import { Steps } from '../AddNewAccount';
 
-import KeyInfo from './KeyInfo';
+import { AccountInfo } from './AccountInfo';
 
 type PropsType = Readonly<{
   onClose: () => void;
@@ -17,9 +18,9 @@ type PropsType = Readonly<{
   setNextStep: (step: Steps) => void;
 }>;
 
-const CreateNewKey = ({ onClose, newKeys }: PropsType) => {
+export const AccountCreated = ({ onClose, newKeys }: PropsType) => {
   return (
-    <ModalContent theme="dark" className="w-[800px] h-[400px] text-white">
+    <ModalContent theme={Theme.Dark} className="w-[800px] h-[400px] text-white">
       <div className="flex justify-between p-3 ">
         <div className="flex items-center justify-between pl-6">
           <CheckmarkTealSvg />
@@ -37,11 +38,9 @@ const CreateNewKey = ({ onClose, newKeys }: PropsType) => {
       </div>
 
       <div className="flex flex-col items-center justify-center gap-8 px-12 w-[100%]">
-        <KeyInfo keyType="system" address={newKeys?.system ?? ''} />
-        <KeyInfo keyType="task" address={newKeys?.task ?? ''} />
+        <AccountInfo keyType="system" address={newKeys?.system ?? ''} />
+        <AccountInfo keyType="task" address={newKeys?.task ?? ''} />
       </div>
     </ModalContent>
   );
 };
-
-export default memo(CreateNewKey);

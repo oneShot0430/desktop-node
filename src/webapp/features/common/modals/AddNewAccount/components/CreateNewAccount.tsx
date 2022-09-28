@@ -1,26 +1,29 @@
-import React, { memo, useState } from 'react';
+import React, { useState } from 'react';
 
 import KeyIconSvg from 'assets/svgs/key-icon-white.svg';
 import CloseIconWhite from 'svgs/close-icons/close-icon-white.svg';
 import PinInput from 'webapp/components/PinInput/PinInput';
 import { Button } from 'webapp/components/ui/Button';
 import { ErrorMessage } from 'webapp/components/ui/ErrorMessage';
+import { ModalContent } from 'webapp/features/modals';
 import { createNodeWallets, generateSeedPhrase } from 'webapp/services';
+import { Theme } from 'webapp/types/common';
 
-import { ModalContent } from '../../Modal';
-import { CreateKeyPayload, Steps } from '../AddKeyModal';
+import { CreateKeyPayload, Steps } from '../AddNewAccount';
 
 type PropsType = Readonly<{
   onClose: () => void;
   setNextStep: (step: Steps, payload: CreateKeyPayload) => void;
 }>;
 
-// TODO:
+/**
+ * @todo: get pin from settings and compare
+ */
 function validatePin(pin: string) {
   return true;
 }
 
-const CreateNewKey = ({ onClose, setNextStep }: PropsType) => {
+export const CreateNewAccount = ({ onClose, setNextStep }: PropsType) => {
   const [pin, setPin] = useState('');
   const [error, setError] = useState<string>(null);
   const [accountName, setAccounttName] = useState('');
@@ -57,7 +60,7 @@ const CreateNewKey = ({ onClose, setNextStep }: PropsType) => {
   };
 
   return (
-    <ModalContent theme="dark" className="w-[800px] h-[520px] text-white">
+    <ModalContent theme={Theme.Dark} className="w-[800px] h-[520px] text-white">
       <div className="flex justify-between p-3">
         <div className="flex items-center justify-between pl-6">
           <KeyIconSvg />
@@ -106,5 +109,3 @@ const CreateNewKey = ({ onClose, setNextStep }: PropsType) => {
     </ModalContent>
   );
 };
-
-export default memo(CreateNewKey);

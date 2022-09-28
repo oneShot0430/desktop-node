@@ -2,19 +2,19 @@ import React, { memo, useEffect, useRef } from 'react';
 
 import AddIcon from 'assets/svgs/add-icon-outlined.svg';
 import UploadIcon from 'assets/svgs/upload-icon.svg';
+import { ModalContent, ModalTopBar } from 'webapp/features/modals';
+import { Theme } from 'webapp/types/common';
 
-import { ModalContent } from '../../Modal';
-import ModalTopBar from '../../Modal/ModalTopBar';
-import { Steps } from '../AddKeyModal';
+import { Steps } from '../AddNewAccount';
 
-import AddKeyAction from './AddKeyAction';
+import { AddAccountAction } from './AddAccountAction';
 
 type PropsType = Readonly<{
   onClose: () => void;
   setNextStep: (step: Steps) => void;
 }>;
 
-const ImportWithKeyPhrase = ({ onClose, setNextStep }: PropsType) => {
+const ImportAccount = ({ onClose, setNextStep }: PropsType) => {
   const ref = useRef(null);
 
   useEffect(() => {
@@ -24,11 +24,11 @@ const ImportWithKeyPhrase = ({ onClose, setNextStep }: PropsType) => {
   });
 
   return (
-    <ModalContent theme="dark" className="w-[800px] h-[320px]">
+    <ModalContent theme={Theme.Dark} className="w-[800px] h-[320px]">
       <ModalTopBar theme="dark" title={'Key Management'} onClose={onClose} />
       <div className="flex flex-col items-start gap-2 pl-12">
         <div className="text-xl font-semibold text-white">Add New Account</div>
-        <AddKeyAction
+        <AddAccountAction
           onClick={() => setNextStep(Steps.ImportWithKeyPhrase)}
           ref={ref}
           title="Import with a seed phrase"
@@ -36,7 +36,7 @@ const ImportWithKeyPhrase = ({ onClose, setNextStep }: PropsType) => {
           icon={<UploadIcon />}
         />
 
-        <AddKeyAction
+        <AddAccountAction
           onClick={() => setNextStep(Steps.CreateNewKey)}
           title="Get a new key"
           description="Start from the beginning"
@@ -47,4 +47,4 @@ const ImportWithKeyPhrase = ({ onClose, setNextStep }: PropsType) => {
   );
 };
 
-export default memo(ImportWithKeyPhrase);
+export default memo(ImportAccount);

@@ -1,9 +1,12 @@
-import React, { memo, useState } from 'react';
+import { create, useModal } from '@ebay/nice-modal-react';
+import React, { useState } from 'react';
 
-import CreateNewKey from './components/CreateNewKey';
-import ImportKey from './components/ImportKey';
+import { Modal } from 'webapp/features/modals';
+
+import { AccountCreated } from './components/AccountCreated';
+import { CreateNewAccount } from './components/CreateNewAccount';
+import ImportKey from './components/ImportAccount';
 import ImportWithKeyPhrase from './components/ImportWithKeyPhrase';
-import KeyCreated from './components/KeyCreated';
 import ShowSeedPhrase from './components/ShowSeedPhrase';
 
 export type KeysType = { system: string; task: string };
@@ -18,7 +21,8 @@ export enum Steps {
   ShowSeedPhrase,
 }
 
-const AddKeyModal = ({ onClose }: { onClose: () => void }) => {
+export const AddNewAccount = create(function AddNewAccount() {
+  const modal = useModal();
   const [currentStep, setCurrentStep] = useState(Steps.ImportKey);
   const [newKeys, setNewKeys] = useState<KeysType>(null);
   const [seedPhrase, setSeedPhrase] = useState(null);
@@ -29,37 +33,45 @@ const AddKeyModal = ({ onClose }: { onClose: () => void }) => {
     setCurrentStep(step);
   };
 
+  const handleClose = () => {
+    modal.remove();
+  };
+
   const getCurrentView = (step: Steps) => {
     const views = {
       [Steps.ImportKey]: (
-        <ImportKey onClose={onClose} setNextStep={setCurrentStep} />
+        <ImportKey onClose={handleClose} setNextStep={setCurrentStep} />
       ),
       [Steps.ImportWithKeyPhrase]: (
-        <ImportWithKeyPhrase onClose={onClose} setNextStep={setCurrentStep} />
+        <ImportWithKeyPhrase
+          onClose={handleClose}
+          setNextStep={setCurrentStep}
+        />
       ),
       [Steps.CreateNewKey]: (
-        <CreateNewKey onClose={onClose} setNextStep={handleCreatedNewKeyStep} />
+        <CreateNewAccount
+          onClose={handleClose}
+          setNextStep={handleCreatedNewKeyStep}
+        />
       ),
       [Steps.KeyCreated]: (
-        <KeyCreated
-          onClose={onClose}
+        <AccountCreated
+          onClose={handleClose}
           setNextStep={setCurrentStep}
           newKeys={newKeys}
         />
       ),
       [Steps.ShowSeedPhrase]: (
         <ShowSeedPhrase
-          onClose={onClose}
+          onClose={handleClose}
           setNextStep={setCurrentStep}
           seedPhrase={seedPhrase}
         />
       ),
     };
 
-    return views[step];
+    return <Modal>{views[step]}</Modal>;
   };
 
   return getCurrentView(currentStep);
-};
-
-export default memo(AddKeyModal);
+});

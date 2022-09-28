@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useState } from 'react';
+import React, { forwardRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 type PropsType = {
@@ -8,7 +8,7 @@ type PropsType = {
   icon: React.ReactNode;
 };
 
-const AddKeyAction = forwardRef<HTMLDivElement, PropsType>(
+export const AddAccountAction = forwardRef<HTMLDivElement, PropsType>(
   ({ icon, title, description, onClick }, ref) => {
     const [hasFocus, setFocus] = useState(false);
     const classes = twMerge(
@@ -43,6 +43,4 @@ const AddKeyAction = forwardRef<HTMLDivElement, PropsType>(
   }
 );
 
-AddKeyAction.displayName = 'AddKeyAction';
-
-export default memo(AddKeyAction);
+AddAccountAction.displayName = 'AddAccountAction';
