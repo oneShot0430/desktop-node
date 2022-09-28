@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 
 import { AddFunds } from 'webapp/components/AddFunds';
+import { NotEnoughFunds } from 'webapp/features/onboarding/components/ConfirmYourStake';
 import { useAppDispatch, useAppSelector } from 'webapp/hooks/reduxHook';
 import { closeModal } from 'webapp/store/actions/modal';
 
@@ -39,6 +40,7 @@ const Modal = (): JSX.Element => {
     TASK_DETAILS: <TaskDetailsModal onClose={close} task={modalData} />,
     ADD_NEW_KEY: <AddKeyModal onClose={close} />,
     ADD_FUNDS_QR: <AddFunds onClose={close} pubKey={modalData} />,
+    NOT_ENOUGH_FUNDS: <NotEnoughFunds onClose={close} />,
   };
 
   return (

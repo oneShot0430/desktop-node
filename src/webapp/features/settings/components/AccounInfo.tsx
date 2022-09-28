@@ -29,8 +29,8 @@ const AccountInfo = ({
   isDefault,
   stakingPublicKeyBalance,
 }: PropsType) => {
-  const { accountBalance, acountBalanceLoadingError } =
-    useAccountBalance(stakingPublicKey);
+  const { accountBalance, accountBalanceLoadingError } =
+    useAccountBalance(mainPublicKey);
   const { copyToClipboard, copied } = useClipboard();
   const {
     deleteAccount,
@@ -40,7 +40,7 @@ const AccountInfo = ({
   } = useAccount(accountName);
 
   const copyToClipboardHandler = () => {
-    copyToClipboard(stakingPublicKey);
+    copyToClipboard(mainPublicKey);
   };
 
   const error =
@@ -93,7 +93,7 @@ const AccountInfo = ({
             </div>
             <div className="flex flex-row items-center">
               <span className="px-4">
-                {acountBalanceLoadingError ? '-' : accountBalance} KOII
+                {accountBalanceLoadingError ? '-' : accountBalance} KOII
               </span>
               <Button
                 onClick={deleteAccount}
