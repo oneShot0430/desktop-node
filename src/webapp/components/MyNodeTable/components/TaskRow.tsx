@@ -1,5 +1,5 @@
-import React from 'react';
-import { useQuery, useQueryClient } from 'react-query';
+import React, { useMemo } from 'react';
+import { useQueryClient } from 'react-query';
 import { useDispatch } from 'react-redux';
 
 import ActionHistoryIcon from 'assets/svgs/action-history-icon.svg';
@@ -13,32 +13,29 @@ import {
   NodeStatusCell,
   TaskDetailsCell,
 } from 'webapp/components/ui/Table';
-import {
-  QueryKeys,
-  getRewardEarned,
-  stopTask,
-  startTask,
-  TaskService,
-  getLogs,
-} from 'webapp/services';
+import { useMyStake } from 'webapp/features/common';
+import { useEarnedReward } from 'webapp/features/common/hooks/useEarnedReward';
+import { stopTask, startTask, TaskService, getLogs } from 'webapp/services';
 import { showModal } from 'webapp/store/actions/modal';
 import { Task } from 'webapp/types';
 
-export const TaskRow = ({ task }: { task: Task }) => {
+import { useTaskDetailsModal } from '../hooks';
+
+type PropsType = {
+  task: Task;
+  accountPublicKey: string;
+};
+
+export const TaskRow = ({ task, accountPublicKey }: PropsType) => {
+  const { taskName, taskManager, isRunning, publicKey } = task;
   const dispatch = useDispatch();
   const queryCache = useQueryClient();
-  const { taskName, taskManager, isRunning, publicKey } = task;
-
-  const { data: earnedReward } = useQuery(
-    [QueryKeys.taskReward, publicKey],
-    () => getRewardEarned(task)
-  );
-
-  const { data: myStake } = useQuery([QueryKeys.myStake, publicKey], () =>
-    TaskService.getMyStake(task)
-  );
-
-  const nodeStatus = TaskService.getStatus(task);
+  const { earnedReward } = useEarnedReward({ task, publicKey });
+  const { myStake } = useMyStake({ task, publicKey: accountPublicKey });
+  const { showTaskDetailsModal } = useTaskDetailsModal({
+    task,
+    accountPublicKey,
+  });
 
   const handleToggleTask = async () => {
     try {
@@ -50,10 +47,11 @@ export const TaskRow = ({ task }: { task: Task }) => {
     } catch (error) {
       console.warn(error);
     } finally {
-      console.log('####refetch');
       queryCache.invalidateQueries();
     }
   };
+
+  const nodeStatus = useMemo(() => TaskService.getStatus(task), [task]);
 
   return (
     <TableRow key={publicKey}>
@@ -68,7 +66,9 @@ export const TaskRow = ({ task }: { task: Task }) => {
       <TaskDetailsCell
         taskName={taskName}
         createdAt={'date string'}
-        onClick={() => dispatch(showModal('TASK_DETAILS', task))}
+        onClick={() => {
+          showTaskDetailsModal();
+        }}
       />
       <TableCell>
         <span title={taskManager}>{`${taskManager.substring(0, 6)}...`}</span>

@@ -4,7 +4,6 @@ export type ModalType =
   | 'CREATE_TASK'
   | 'WITHDRAW_STAKE'
   | 'EDIT_STAKE_AMOUNT'
-  | 'TASK_DETAILS'
   | 'ADD_NEW_KEY'
   | 'ADD_FUNDS_QR'
   | 'NOT_ENOUGH_FUNDS';

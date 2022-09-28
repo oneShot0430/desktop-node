@@ -1,0 +1,1 @@
+export { useTaskDetailsModal } from './useTaskDetailsModal';

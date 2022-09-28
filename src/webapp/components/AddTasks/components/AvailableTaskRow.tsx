@@ -1,21 +1,39 @@
 import React, { memo, useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
-import { useDispatch } from 'react-redux';
 
 import CodeIcon from 'assets/svgs/code-icon-lg.svg';
 import PlayIcon from 'assets/svgs/play-icon.svg';
 import StopTealIcon from 'assets/svgs/stop-icon-teal.svg';
 import { Button } from 'webapp/components';
+import { useTaskDetailsModal } from 'webapp/components/MyNodeTable/hooks';
 import { TableRow, TableCell } from 'webapp/components/ui/Table';
-import { QueryKeys, startTask, TaskService, stopTask } from 'webapp/services';
-import { showModal } from 'webapp/store/actions/modal';
+import {
+  QueryKeys,
+  startTask,
+  TaskService,
+  stopTask,
+  getMainAccountPublicKey,
+} from 'webapp/services';
 import { Task } from 'webapp/types';
 
 import SetStakeCell from './SetStakeCell';
 
 const AvailableTaskRow = ({ task }: { task: Task }) => {
+  /**
+   * @todo: abstract it away to the hook
+   */
+  const { data: mainAccountPubKey, isLoading: loadingMainAccount } = useQuery(
+    QueryKeys.MainAccount,
+    () => getMainAccountPublicKey()
+  );
+
+  const { showTaskDetailsModal } = useTaskDetailsModal({
+    task,
+    accountPublicKey: mainAccountPubKey,
+  });
+
   const [stake, setStake] = useState('');
-  const dispatch = useDispatch();
+
   const queryCache = useQueryClient();
   const { taskName, publicKey, bountyAmountPerRound, taskManager, isRunning } =
     task;
@@ -56,8 +74,10 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
   };
 
   const handleShowCode = () => {
-    dispatch(showModal('TASK_DETAILS', task));
+    showTaskDetailsModal();
   };
+
+  if (loadingMainAccount) return null;
 
   return (
     <TableRow key={publicKey}>
