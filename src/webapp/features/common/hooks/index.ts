@@ -6,3 +6,4 @@ export { useRunMultipleTasks } from './useRunMultipleTasks';
 // modals
 export { useCreateTaskModal } from './useCreateTaskModal';
 export { useEditStakeAmountModal } from './useEditStakeAmountModal';
+export { useFundNewAccountModal } from './useFundAccountModal';

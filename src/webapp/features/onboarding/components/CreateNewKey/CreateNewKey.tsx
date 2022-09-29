@@ -1,17 +1,19 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import CheckMarkIcon from 'assets/svgs/checkmark-icon.svg';
 import { Button } from 'webapp/components/ui/Button';
+import { useFundNewAccountModal } from 'webapp/features/common';
 import { AppRoute } from 'webapp/routing/AppRoutes';
-import { showModal } from 'webapp/store/actions/modal';
 
 const CreateNewKey = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { showFundNewAccountModal } = useFundNewAccountModal();
+
   const handleOpenQR = () => {
-    dispatch(showModal('ADD_FUNDS_QR'));
+    showFundNewAccountModal().then(() => {
+      navigate(AppRoute.OnboardingSeeBalance);
+    });
   };
 
   return (
