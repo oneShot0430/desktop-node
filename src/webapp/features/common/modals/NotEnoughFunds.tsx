@@ -1,3 +1,4 @@
+import { create, useModal } from '@ebay/nice-modal-react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -5,15 +6,13 @@ import { Button } from 'webapp/components';
 import { ModalContent, ModalTopbar } from 'webapp/components/Modals';
 import { AppRoute } from 'webapp/routing/AppRoutes';
 
-type PropsType = {
-  onClose: () => void;
-};
-
-export const NotEnoughFunds = ({ onClose }: PropsType) => {
+export const NotEnoughFunds = create(function NotEnoughFunds() {
+  const modal = useModal();
   const navigate = useNavigate();
+
   return (
     <ModalContent>
-      <ModalTopbar title={'Not Enough Funds'} onClose={onClose} />
+      <ModalTopbar title={'Not Enough Funds'} onClose={() => modal.remove()} />
 
       <div className="p-8">
         <div className="flex items-center justify-center h-full mb-11">
@@ -28,7 +27,7 @@ export const NotEnoughFunds = ({ onClose }: PropsType) => {
             label="Skip Run Tasks"
             className="border bg-finnieRed text-finnieBlue border-finnieBlue"
             onClick={() => {
-              onClose();
+              modal.remove();
               navigate(AppRoute.MyNode);
             }}
           />
@@ -37,4 +36,4 @@ export const NotEnoughFunds = ({ onClose }: PropsType) => {
       </div>
     </ModalContent>
   );
-};
+});
