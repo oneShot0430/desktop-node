@@ -2,8 +2,7 @@ import { create, useModal } from '@ebay/nice-modal-react';
 import React from 'react';
 
 import Link from 'webapp/components/Link';
-import { ModalContent } from 'webapp/components/Modals';
-import { Modal, ModalTopBar } from 'webapp/features/modals';
+import { Modal, ModalContent, ModalTopBar } from 'webapp/features/modals';
 
 export const CreateTaskModal = create(function CreateTaskModal() {
   const modal = useModal();

@@ -3,8 +3,7 @@ import React, { useCallback, useState } from 'react';
 import { useQuery } from 'react-query';
 
 import { Button } from 'webapp/components';
-import { ModalContent } from 'webapp/components/Modals';
-import { Modal, ModalTopBar } from 'webapp/features/modals';
+import { Modal, ModalContent, ModalTopBar } from 'webapp/features/modals';
 import {
   QueryKeys,
   TaskService,

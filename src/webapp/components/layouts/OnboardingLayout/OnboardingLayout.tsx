@@ -7,8 +7,7 @@ import ClickIconSvg from 'assets/svgs/onboarding/click-icon.svg';
 import CreateIconSvg from 'assets/svgs/onboarding/create-icon.svg';
 import CurrencyIconSvg from 'assets/svgs/onboarding/currency-icon.svg';
 import LockIconSvg from 'assets/svgs/onboarding/lock-icon.svg';
-import { Button } from 'webapp/components';
-import { Modal } from 'webapp/components/Modals';
+import { Button } from 'webapp/components/ui/Button';
 import { AppRoute } from 'webapp/routing/AppRoutes';
 
 import StepListItem from './components/StepListItem';
@@ -75,10 +74,7 @@ const OnboardingLayout = ({ children }: PropsType) => {
           </div>
         </div>
       </div>
-      <div className="w-full">
-        <Modal />
-        {children}
-      </div>
+      <div className="w-full">{children}</div>
     </div>
   );
 };

@@ -4,11 +4,9 @@ import React from 'react';
 import { useQuery } from 'react-query';
 
 import CloseIconComponent from 'svgs/close-icons/close-icon-blue.svg';
-import { Modal } from 'webapp/features/modals';
+import { Button } from 'webapp/components';
+import { Modal, ModalContent } from 'webapp/features/modals';
 import { getMainAccountPublicKey } from 'webapp/services';
-
-import { ModalContent } from '../../../../components/Modals';
-import { Button } from '../../../../components/ui/Button';
 
 export const AddFunds = create(function AddFunds() {
   const modal = useModal();
