@@ -8,8 +8,11 @@ import { Button } from 'webapp/components';
 import { Modal, ModalContent } from 'webapp/features/modals';
 import { getMainAccountPublicKey } from 'webapp/services';
 
+import { useClipboard } from '../../hooks';
+
 export const AddFunds = create(function AddFunds() {
   const modal = useModal();
+  const { copyToClipboard } = useClipboard();
   const { data: mainAccountPubKey } = useQuery(
     ['main-account'],
     getMainAccountPublicKey
@@ -40,6 +43,7 @@ export const AddFunds = create(function AddFunds() {
           </div>
           <Button
             onClick={() => {
+              copyToClipboard(mainAccountPubKey);
               modal.resolve();
               modal.remove();
             }}
