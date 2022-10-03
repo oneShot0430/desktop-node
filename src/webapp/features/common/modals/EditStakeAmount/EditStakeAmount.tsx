@@ -57,7 +57,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
     getMainAccountBalance()
   );
 
-  const hanldeAddStake = async () => {
+  const handleAddStake = async () => {
     await stakeOnTask(publicKey, stakeAmount);
   };
 
@@ -123,7 +123,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
         {view === View.StakeConfirm && (
           <ConfirmStake
             onSuccess={() => setView(View.StakeSuccess)}
-            onConfirmAddStake={hanldeAddStake}
+            onConfirmAddStake={handleAddStake}
             stakeAmount={stakeAmount}
             koiiBalance={balance}
           />
