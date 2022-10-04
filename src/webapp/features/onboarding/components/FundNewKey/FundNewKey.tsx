@@ -1,25 +1,18 @@
 import React from 'react';
-import { useQuery } from 'react-query';
-import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { Button } from 'webapp/components/ui/Button';
+import { useFundNewAccountModal } from 'webapp/features/common';
 import { AppRoute } from 'webapp/routing/AppRoutes';
-import { getMainAccountPublicKey } from 'webapp/services';
-import { showModal } from 'webapp/store/actions/modal';
 
 export const FundNewKey = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data: mainAccountPubKey } = useQuery(
-    ['main-account'],
-    getMainAccountPublicKey
-  );
-
-  console.log('###DATA', mainAccountPubKey);
+  const { showModal } = useFundNewAccountModal();
 
   const handleOpenQR = () => {
-    dispatch(showModal('ADD_FUNDS_QR', mainAccountPubKey));
+    showModal().then(() => {
+      navigate(AppRoute.OnboardingSeeBalance);
+    });
   };
 
   return (

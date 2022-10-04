@@ -1,15 +1,13 @@
 import { sum } from 'lodash';
 import React, { useMemo } from 'react';
-import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 
 import AddIconSvg from 'assets/svgs/onboarding/add-teal-icon.svg';
 import CurrencySvgIcon from 'assets/svgs/onboarding/currency-teal-small-icon.svg';
 import { ErrorMessage } from 'webapp/components';
 import { Button } from 'webapp/components/ui/Button';
-import { useRunMultipleTasks } from 'webapp/features/common';
+import { useNotEnoughFunds, useRunMultipleTasks } from 'webapp/features/common';
 import { useMainAccountBalance } from 'webapp/features/settings';
-import { showModal } from 'webapp/store/actions/modal';
 import { TaskWithStake } from 'webapp/types';
 
 import { SelectedTasksSummary } from './SelectedTasksSummary';
@@ -17,11 +15,12 @@ import { SelectedTasksSummary } from './SelectedTasksSummary';
 const ConfirmYourStake = () => {
   const { state: selectedTasks } = useLocation();
   const tasksToRun = selectedTasks as TaskWithStake[];
-  const dispatch = useDispatch();
+
   const { data: balance, isLoading } = useMainAccountBalance();
   const { runAllTasks, runTasksLoading, runTasksError } = useRunMultipleTasks({
     tasksToRun,
   });
+  const { showNotEnoughFunds } = useNotEnoughFunds();
 
   const totalKoiiStaked = useMemo(
     () => sum(tasksToRun.map((task) => task.stake)),
@@ -30,7 +29,7 @@ const ConfirmYourStake = () => {
 
   const handleConfirm = () => {
     if (balance < totalKoiiStaked) {
-      dispatch(showModal('NOT_ENOUGH_FUNDS'));
+      showNotEnoughFunds();
     } else {
       runAllTasks();
     }

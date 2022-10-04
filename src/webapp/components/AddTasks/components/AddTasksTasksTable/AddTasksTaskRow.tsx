@@ -3,11 +3,8 @@ import React from 'react';
 import { useQuery } from 'react-query';
 
 import LockedIcon from 'svgs/locked-icon.svg';
-import InspectButton from 'webapp/components/InspectButton';
 import RunButton from 'webapp/components/RunButton';
-import { useAppDispatch } from 'webapp/hooks/reduxHook';
 import { QueryKeys, TaskService } from 'webapp/services';
-import { showTaskInspector } from 'webapp/store/actions/taskInspector';
 import { Task } from 'webapp/types';
 
 type TaskRowProps = {
@@ -27,8 +24,6 @@ const TaskRow = ({ task, isOdd, onChange }: TaskRowProps): JSX.Element => {
     TaskService.getMyStake(task)
   );
 
-  const dispatch = useAppDispatch();
-
   return (
     <div
       className={clsx(
@@ -36,12 +31,7 @@ const TaskRow = ({ task, isOdd, onChange }: TaskRowProps): JSX.Element => {
         isRunning && isOdd ? 'bg-neutral-200' : 'bg-white'
       )}
     >
-      <div className="col-span-1 flex items-center">
-        <InspectButton
-          onClick={() => dispatch(showTaskInspector('TASK_INSPECTOR', task))}
-          size="big"
-        />
-      </div>
+      <div className="flex items-center col-span-1"></div>
       <div className="col-span-5 text-left">
         <div className="text-lg tracking-finnieSpacing-wider">{taskName}</div>
         <div className="text-finnieTeal-700 text-2xs tracking-finnieSpacing-wider">
@@ -52,8 +42,8 @@ const TaskRow = ({ task, isOdd, onChange }: TaskRowProps): JSX.Element => {
         {taskManager}
       </div>
 
-      <div className="col-span-5 grid grid-cols-3 gap-x-2 items-center">
-        <div className="col-span-1 text-sm tracking-finnieSpacing-wide px-2">
+      <div className="grid items-center grid-cols-3 col-span-5 gap-x-2">
+        <div className="col-span-1 px-2 text-sm tracking-finnieSpacing-wide">
           {bountyAmountPerRound}
         </div>
         <div className="col-span-1 text-sm tracking-finnieSpacing-wide">
@@ -63,11 +53,11 @@ const TaskRow = ({ task, isOdd, onChange }: TaskRowProps): JSX.Element => {
           {(Math.round(topStake * 100) / 100).toFixed(2)}
         </div>
       </div>
-      <div className="col-span-3 grid grid-cols-5 gap-x-2 items-center">
-        <div className="col-span-3 text-xs tracking-finnieSpacing-wider flex flex-col items-center justify-center">
+      <div className="grid items-center grid-cols-5 col-span-3 gap-x-2">
+        <div className="flex flex-col items-center justify-center col-span-3 text-xs tracking-finnieSpacing-wider">
           {myStake !== 0 ? (
-            <div className="flex justify-end w-24 mb-1 items-center">
-              <div className="tracking-finnieSpacing-wider text-sm text-right mr-2">
+            <div className="flex items-center justify-end w-24 mb-1">
+              <div className="mr-2 text-sm text-right tracking-finnieSpacing-wider">
                 {myStake}
               </div>
               <LockedIcon className="w-3.75 h-5.25" />

@@ -1,14 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import Header from 'webapp/components/Header';
-import { Modal } from 'webapp/components/Modals';
-import ModalTaskInspect from 'webapp/components/ModalTaskInspector';
-import { useAppSelector } from 'webapp/hooks/reduxHook';
 import { AppRoute } from 'webapp/routing/AppRoutes';
 import { saveUserConfig } from 'webapp/services';
 
 import { BackButton } from '../BackButton';
+import Header from '../Header';
 import { Sidebar } from '../Sidebar/Sidebar';
 import { Button } from '../ui/Button';
 
@@ -17,15 +14,10 @@ type MainLayoutProps = {
 };
 
 const MainLayout = ({ children }: MainLayoutProps): JSX.Element => {
-  const showTaskInspector = useAppSelector(
-    (state) => state.taskInspector.isShown
-  );
   const navigate = useNavigate();
 
   return (
     <div className="flex flex-col h-full">
-      <Modal />
-      {showTaskInspector && <ModalTaskInspect />}
       <Header />
       <main className="flex flex-col h-full bg-gradient-to-b from-finnieBlue-dark-secondary to-finnieBlue">
         <div className="px-4 mx-auto w-[100%] flex justify-between">

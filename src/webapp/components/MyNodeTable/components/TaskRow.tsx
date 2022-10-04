@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { useQueryClient } from 'react-query';
-import { useDispatch } from 'react-redux';
 
 import ActionHistoryIcon from 'assets/svgs/action-history-icon.svg';
 import AddWithdrawIcon from 'assets/svgs/add-withdraw-icon.svg';
@@ -13,10 +12,9 @@ import {
   NodeStatusCell,
   TaskDetailsCell,
 } from 'webapp/components/ui/Table';
-import { useMyStake } from 'webapp/features/common';
+import { useEditStakeAmountModal, useMyStake } from 'webapp/features/common';
 import { useEarnedReward } from 'webapp/features/common/hooks/useEarnedReward';
 import { stopTask, startTask, TaskService, getLogs } from 'webapp/services';
-import { showModal } from 'webapp/store/actions/modal';
 import { Task } from 'webapp/types';
 
 import { useTaskDetailsModal } from '../hooks';
@@ -28,14 +26,16 @@ type PropsType = {
 
 export const TaskRow = ({ task, accountPublicKey }: PropsType) => {
   const { taskName, taskManager, isRunning, publicKey } = task;
-  const dispatch = useDispatch();
-  const queryCache = useQueryClient();
-  const { earnedReward } = useEarnedReward({ task, publicKey });
-  const { myStake } = useMyStake({ task, publicKey: accountPublicKey });
-  const { showTaskDetailsModal } = useTaskDetailsModal({
+  const { showModal: showEditStakeAmountModal } = useEditStakeAmountModal({
+    task,
+  });
+  const { showModal: showTaskDetailsModal } = useTaskDetailsModal({
     task,
     accountPublicKey,
   });
+  const queryCache = useQueryClient();
+  const { earnedReward } = useEarnedReward({ task, publicKey });
+  const { myStake } = useMyStake({ task, publicKey: accountPublicKey });
 
   const handleToggleTask = async () => {
     try {
@@ -80,7 +80,7 @@ export const TaskRow = ({ task, accountPublicKey }: PropsType) => {
         <div className="flex flex-row items-center gap-4">
           <div>
             <Button
-              onClick={() => dispatch(showModal('EDIT_STAKE_AMOUNT', task))}
+              onClick={showEditStakeAmountModal}
               onlyIcon
               icon={<AddWithdrawIcon />}
             />

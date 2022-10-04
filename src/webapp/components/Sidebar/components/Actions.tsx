@@ -1,23 +1,20 @@
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import ActionAddIcon from 'assets/svgs/action-add-icon.svg';
 import ActionHistoryIcon from 'assets/svgs/action-history-icon.svg';
 import WebIcon from 'assets/svgs/web-icon-blue.svg';
+import { useCreateTaskModal } from 'webapp/features/common';
 import { AppRoute } from 'webapp/routing/AppRoutes';
-import { showModal } from 'webapp/store/actions/modal';
 
 export const Actions = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const isAddTaskView = location.pathname === AppRoute.AddTask;
+  const { showModal } = useCreateTaskModal();
 
   const handleAddTaskClick = () => {
-    isAddTaskView
-      ? dispatch(showModal('CREATE_TASK'))
-      : navigate(AppRoute.AddTask);
+    isAddTaskView ? showModal() : navigate(AppRoute.AddTask);
   };
 
   const handleHistoryClick = () => {
