@@ -10,7 +10,7 @@ import { useAccounts } from '../hooks';
 import AccounInfo from './AccounInfo';
 
 const AccountsTable = () => {
-  const { showAddNewAccountModal } = useAddNewAccountModal();
+  const { showModal } = useAddNewAccountModal();
 
   const { accounts, loadingAccounts, errorAccounts } = useAccounts();
 
@@ -61,7 +61,7 @@ const AccountsTable = () => {
           label="New"
           className="w-auto p-2 mt-10 bg-transparent h-[60px] text-white"
           icon={<AddIconSvg />}
-          onClick={showAddNewAccountModal}
+          onClick={showModal}
         />
       </div>
 

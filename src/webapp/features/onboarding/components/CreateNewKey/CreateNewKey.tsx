@@ -8,10 +8,10 @@ import { AppRoute } from 'webapp/routing/AppRoutes';
 
 const CreateNewKey = () => {
   const navigate = useNavigate();
-  const { showFundNewAccountModal } = useFundNewAccountModal();
+  const { showModal } = useFundNewAccountModal();
 
   const handleOpenQR = () => {
-    showFundNewAccountModal().then(() => {
+    showModal().then(() => {
       navigate(AppRoute.OnboardingSeeBalance);
     });
   };

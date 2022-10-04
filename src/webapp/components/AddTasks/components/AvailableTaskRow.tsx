@@ -27,7 +27,7 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
     () => getMainAccountPublicKey()
   );
 
-  const { showTaskDetailsModal } = useTaskDetailsModal({
+  const { showModal } = useTaskDetailsModal({
     task,
     accountPublicKey: mainAccountPubKey,
   });
@@ -74,7 +74,7 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
   };
 
   const handleShowCode = () => {
-    showTaskDetailsModal();
+    showModal();
   };
 
   if (loadingMainAccount) return null;

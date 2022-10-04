@@ -11,10 +11,10 @@ export const Actions = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const isAddTaskView = location.pathname === AppRoute.AddTask;
-  const { showTaskDetailsModal } = useCreateTaskModal();
+  const { showModal } = useCreateTaskModal();
 
   const handleAddTaskClick = () => {
-    isAddTaskView ? showTaskDetailsModal() : navigate(AppRoute.AddTask);
+    isAddTaskView ? showModal() : navigate(AppRoute.AddTask);
   };
 
   const handleHistoryClick = () => {

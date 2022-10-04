@@ -34,7 +34,7 @@ export const HistoryRow = ({ task }: { task: Task }) => {
     TaskService.getMyStake(task)
   );
 
-  const { showTaskDetailsModal } = useTaskDetailsModal({
+  const { showModal } = useTaskDetailsModal({
     task,
     accountPublicKey: mainAccountPubKey,
   });
@@ -46,7 +46,7 @@ export const HistoryRow = ({ task }: { task: Task }) => {
       <TaskDetailsCell
         taskName={taskName}
         createdAt={'DATE STRING'}
-        onClick={showTaskDetailsModal}
+        onClick={showModal}
       />
       <TableCell>{'TBD'}</TableCell>
       <NodeStatusCell status={nodeStatus} />

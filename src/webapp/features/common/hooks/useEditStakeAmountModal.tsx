@@ -9,11 +9,11 @@ type ParamsType = {
 };
 
 export const useEditStakeAmountModal = ({ task }: ParamsType) => {
-  const showEditStakeAmountModal = () => {
+  const showModal = () => {
     show(EditStakeAmount, { task });
   };
 
   return {
-    showEditStakeAmountModal,
+    showModal,
   };
 };

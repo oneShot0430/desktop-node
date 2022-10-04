@@ -5,7 +5,7 @@ import ActionButton from 'webapp/components/ActionButton';
 import { useCreateTaskModal } from 'webapp/features/common/hooks/useCreateTaskModal';
 
 const AddTasksActionCenter = (): JSX.Element => {
-  const { showTaskDetailsModal } = useCreateTaskModal();
+  const { showModal } = useCreateTaskModal();
 
   return (
     <div className="flex">
@@ -20,7 +20,7 @@ const AddTasksActionCenter = (): JSX.Element => {
       <ActionButton
         logo={NewTaskIcon}
         name="New Task"
-        onClick={showTaskDetailsModal}
+        onClick={showModal}
         variant="teal"
       />
     </div>

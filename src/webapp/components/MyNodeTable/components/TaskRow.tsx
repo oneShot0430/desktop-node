@@ -26,14 +26,16 @@ type PropsType = {
 
 export const TaskRow = ({ task, accountPublicKey }: PropsType) => {
   const { taskName, taskManager, isRunning, publicKey } = task;
-  const { showEditStakeAmountModal } = useEditStakeAmountModal({ task });
-  const queryCache = useQueryClient();
-  const { earnedReward } = useEarnedReward({ task, publicKey });
-  const { myStake } = useMyStake({ task, publicKey: accountPublicKey });
-  const { showTaskDetailsModal } = useTaskDetailsModal({
+  const { showModal: showEditStakeAmountModal } = useEditStakeAmountModal({
+    task,
+  });
+  const { showModal: showTaskDetailsModal } = useTaskDetailsModal({
     task,
     accountPublicKey,
   });
+  const queryCache = useQueryClient();
+  const { earnedReward } = useEarnedReward({ task, publicKey });
+  const { myStake } = useMyStake({ task, publicKey: accountPublicKey });
 
   const handleToggleTask = async () => {
     try {
