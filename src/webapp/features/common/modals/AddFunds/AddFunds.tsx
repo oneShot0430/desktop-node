@@ -5,10 +5,9 @@ import { useQuery } from 'react-query';
 
 import CloseIconComponent from 'svgs/close-icons/close-icon-blue.svg';
 import { Button } from 'webapp/components';
+import { useClipboard } from 'webapp/features/common';
 import { Modal, ModalContent } from 'webapp/features/modals';
 import { getMainAccountPublicKey } from 'webapp/services';
-
-import { useClipboard } from '../../hooks';
 
 export const AddFunds = create(function AddFunds() {
   const modal = useModal();
