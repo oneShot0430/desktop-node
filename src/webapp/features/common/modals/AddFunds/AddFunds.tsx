@@ -18,6 +18,10 @@ export const AddFunds = create(function AddFunds() {
     getMainAccountPublicKey
   );
 
+  const openFaucet = () => {
+    window.open(`https://faucet.koii.live?key=${mainAccountPubKey}`, '_blank');
+  };
+
   return (
     <Modal>
       <ModalContent className="w-[416px] h-[416px] text-finnieBlue rounded-xl pt-2">
@@ -38,6 +42,7 @@ export const AddFunds = create(function AddFunds() {
           </div>
 
           <Button
+            onClick={openFaucet}
             label={'Get My Free Tokens'}
             className="text-white bg-purple-4 w-[276px] h-[52px] mb-14 rounded-md"
             icon={
