@@ -53,6 +53,11 @@ module.exports = {
           DEFAULT: '#FFA6A6',
           500: '#FF4141',
         },
+        purple: {
+          ...colors.purple,
+          3: '#353570',
+          4: '#4D3D8D',
+        },
       },
       fontSize: {
         '4xs': '7px',
