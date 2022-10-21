@@ -41,20 +41,23 @@ export const AddFunds = create(function AddFunds() {
     ? 'Return to the Faucet to get the rest of your free KOII.'
     : 'Go to the Faucet for some free KOII to get started.';
 
+  const closeModal = () => {
+    modal.resolve();
+    modal.remove();
+  };
+
   const openFaucetAndClose = () => {
     window.open(
       `${FAUCET_URL}${mainAccountPubKey}`,
       '_blank',
       'height=992,width=1512'
     );
-    modal.resolve();
-    modal.remove();
+    closeModal();
   };
 
   const copyToClipboardAndClose = () => {
     copyToClipboard(mainAccountPubKey);
-    modal.resolve();
-    modal.remove();
+    closeModal();
   };
 
   return (
