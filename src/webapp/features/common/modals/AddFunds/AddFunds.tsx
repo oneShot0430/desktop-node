@@ -37,7 +37,7 @@ export const AddFunds = create(function AddFunds() {
   const hasClaimedAllMethods = methodsClaimed === 4;
   const title = hasClaimedAllMethods
     ? 'Scan the QR code or copy the address to send tokens to your node account.'
-    : methodsClaimed === 1
+    : methodsClaimed > 0
     ? 'Return to the Faucet to get the rest of your free KOII.'
     : 'Go to the Faucet for some free KOII to get started.';
 
