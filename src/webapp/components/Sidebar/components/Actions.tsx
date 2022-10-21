@@ -2,23 +2,28 @@ import * as React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import ActionAddIcon from 'assets/svgs/action-add-icon.svg';
-import ActionHistoryIcon from 'assets/svgs/action-history-icon.svg';
+import AddFundsIcon from 'assets/svgs/add-funds-icon.svg';
 import WebIcon from 'assets/svgs/web-icon-blue.svg';
-import { useCreateTaskModal } from 'webapp/features/common';
+import {
+  useCreateTaskModal,
+  useFundNewAccountModal,
+} from 'webapp/features/common';
 import { AppRoute } from 'webapp/routing/AppRoutes';
 
 export const Actions = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { showModal: showFundModal } = useFundNewAccountModal();
+
   const isAddTaskView = location.pathname === AppRoute.AddTask;
-  const { showModal } = useCreateTaskModal();
+  const { showModal: showCreateTaskModal } = useCreateTaskModal();
 
   const handleAddTaskClick = () => {
-    isAddTaskView ? showModal() : navigate(AppRoute.AddTask);
+    isAddTaskView ? showCreateTaskModal() : navigate(AppRoute.AddTask);
   };
 
-  const handleHistoryClick = () => {
-    navigate(AppRoute.History);
+  const handleAddFundsClick = () => {
+    showFundModal();
   };
 
   return (
@@ -46,13 +51,13 @@ export const Actions = () => {
       )}
 
       <button
-        onClick={handleHistoryClick}
+        onClick={handleAddFundsClick}
         className="flex gap-[10px] flex-col items-center justify-center rounded bg-finnieBlue-light-secondary w-[186px] h-[108px]"
       >
         <div>
-          <ActionHistoryIcon />
+          <AddFundsIcon />
         </div>
-        <div className="text-white">History</div>
+        <div className="text-white">Add Funds</div>
       </button>
     </div>
   );
