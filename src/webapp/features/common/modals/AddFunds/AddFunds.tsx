@@ -85,11 +85,7 @@ export const AddFunds = create(function AddFunds() {
                 onClick={openFaucetAndClose}
                 label={'Get My Free Tokens'}
                 className="text-white bg-purple-4 w-[276px] h-[52px] mb-14 rounded-md"
-                icon={
-                  <span className="w-[14px] h-[14px]">
-                    <CurrencyIconSvg className="h-[100%]" />
-                  </span>
-                }
+                icon={<CurrencyIconSvg className="scale-50 mb-0.5" />}
               />
 
               <div className="mb-3">Or send KOII directly to this account.</div>
