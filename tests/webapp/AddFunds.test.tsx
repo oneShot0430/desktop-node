@@ -4,14 +4,14 @@ import { createServer, Server } from 'miragejs';
 import React from 'react';
 
 import { Actions } from 'webapp/components/Sidebar/components/Actions';
-import { FAUCET_API_URL } from 'webapp/constants';
+import { FAUCET_URL, FAUCET_API_URL } from 'webapp/constants';
 import { StatusResponse, ValidationStatus } from 'webapp/types';
 
 import { render } from './utils';
 
 const windowOpenSpy = jest.spyOn(window, 'open');
 const publicKey = 'myPublicKey';
-const faucetUrl = `https://faucet.koii.live/?key=${publicKey}`;
+const faucetUrl = `${FAUCET_URL}${publicKey}`;
 const baseFaucetState: StatusResponse = {
   walletAddress: publicKey,
   discordValidation: ValidationStatus.NOT_CLAIMED,

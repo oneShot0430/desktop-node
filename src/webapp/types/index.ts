@@ -1,2 +1,2 @@
 export * from './task';
-export * from './addFunds';
+export * from './faucet';
