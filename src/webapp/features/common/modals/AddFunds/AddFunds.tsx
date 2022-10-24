@@ -77,7 +77,7 @@ export const AddFunds = create(function AddFunds() {
           <div className="mb-3 text-lg leading-8 text-center">{title}</div>
 
           {hasClaimedAllMethods ? (
-            <QRCode value="https://reactjs.org/" renderAs="canvas" size={240} />
+            <QRCode value={mainAccountPubKey} renderAs="canvas" size={240} />
           ) : (
             <>
               <Button
@@ -89,11 +89,7 @@ export const AddFunds = create(function AddFunds() {
 
               <div className="mb-3">Or send KOII directly to this account.</div>
 
-              <QRCode
-                value="https://reactjs.org/"
-                renderAs="canvas"
-                size={80}
-              />
+              <QRCode value={mainAccountPubKey} renderAs="canvas" size={80} />
             </>
           )}
 
