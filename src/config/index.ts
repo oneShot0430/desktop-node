@@ -1,5 +1,5 @@
 import endpoints from './endpoints';
-import faucet from './faucet';
+import * as faucet from './faucet';
 import node from './node';
 
 export default {
