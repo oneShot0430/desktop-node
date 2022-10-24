@@ -2,8 +2,7 @@ import { shell } from 'electron';
 
 import config from 'config';
 import { OpenFaucetParam } from 'models/api';
-
-import mainErrorHandler from '../../utils/mainErrorHandler';
+import mainErrorHandler from 'utils/mainErrorHandler';
 
 const { FAUCET_URL } = config.faucet;
 
