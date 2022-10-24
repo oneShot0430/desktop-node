@@ -3,12 +3,14 @@ import userEvent from '@testing-library/user-event';
 import { createServer, Server } from 'miragejs';
 import React from 'react';
 
-import { FAUCET_API_URL } from 'webapp/../constants';
+import config from 'config';
 import { Actions } from 'webapp/components/Sidebar/components/Actions';
 import * as services from 'webapp/services';
 import { StatusResponse, ValidationStatus } from 'webapp/types';
 
 import { render } from './utils';
+
+const { FAUCET_API_URL } = config.faucet;
 
 const publicKey = 'myPublicKey';
 

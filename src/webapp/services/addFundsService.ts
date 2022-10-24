@@ -1,7 +1,9 @@
 import axios from 'axios';
 
-import { FAUCET_API_URL } from 'webapp/../constants';
+import config from 'config';
 import { StatusResponse } from 'webapp/types';
+
+const { FAUCET_API_URL } = config.faucet;
 
 export const getFaucetStatus = async (walletAddress: string) => {
   const { data } = await axios.get<StatusResponse>(
