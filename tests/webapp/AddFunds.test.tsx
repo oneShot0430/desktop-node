@@ -3,15 +3,15 @@ import userEvent from '@testing-library/user-event';
 import { createServer, Server } from 'miragejs';
 import React from 'react';
 
+import { FAUCET_API_URL } from 'webapp/../constants';
 import { Actions } from 'webapp/components/Sidebar/components/Actions';
-import { FAUCET_URL, FAUCET_API_URL } from 'webapp/constants';
+import * as services from 'webapp/services';
 import { StatusResponse, ValidationStatus } from 'webapp/types';
 
 import { render } from './utils';
 
-const windowOpenSpy = jest.spyOn(window, 'open');
 const publicKey = 'myPublicKey';
-const faucetUrl = `${FAUCET_URL}${publicKey}`;
+
 const baseFaucetState: StatusResponse = {
   walletAddress: publicKey,
   discordValidation: ValidationStatus.NOT_CLAIMED,
@@ -20,9 +20,16 @@ const baseFaucetState: StatusResponse = {
   twitterValidation: ValidationStatus.NOT_CLAIMED,
 };
 
+jest.mock('webapp/services', () => ({
+  __esModule: true, // necessary to make it work, otherwise it fails trying to set the spy
+  ...jest.requireActual('webapp/services'),
+}));
+const openFaucetSpy = jest.spyOn(services, 'openFaucet');
+
 Object.defineProperty(window, 'main', {
   value: { getMainAccountPubKey: () => Promise.resolve(publicKey) },
 });
+
 // we can't spy on primitive values, so we need to override clipboard.writeText
 const copyToClipboard = jest.fn();
 Object.defineProperty(navigator, 'clipboard', {
@@ -97,7 +104,7 @@ describe('AddFunds', () => {
     expect(copyForAllMethodsCompleted).toBeInTheDocument();
   });
 
-  it('opens the faucet in a new window when clicking on `Get My Free Tokens` button', async () => {
+  it('calls the service that opens the faucet in a new window when clicking on `Get My Free Tokens` button', async () => {
     const faucetState: StatusResponse = {
       ...baseFaucetState,
       twitterValidation: ValidationStatus.CLAIMED,
@@ -112,11 +119,7 @@ describe('AddFunds', () => {
     userEvent.click(getMyFreeTokensButton);
 
     waitFor(() => {
-      expect(windowOpenSpy).toHaveBeenCalledWith(
-        faucetUrl,
-        undefined,
-        'height=992,width=1512'
-      );
+      expect(openFaucetSpy).toHaveBeenCalledWith(publicKey);
     });
   });
 

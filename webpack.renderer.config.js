@@ -4,6 +4,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 plugins.push(new MiniCssExtractPlugin({ filename: 'index.css' }));
+
 rules.push({
   test: /\.css$/,
   use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],

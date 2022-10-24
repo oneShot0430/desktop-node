@@ -6,10 +6,13 @@ import { useQuery } from 'react-query';
 import CurrencyIconSvg from 'assets/svgs/onboarding/currency-icon.svg';
 import CloseIconComponent from 'svgs/close-icons/close-icon-blue.svg';
 import { Button } from 'webapp/components';
-import { FAUCET_URL } from 'webapp/constants';
 import { useClipboard } from 'webapp/features/common';
 import { Modal, ModalContent } from 'webapp/features/modals';
-import { getMainAccountPublicKey, getFaucetStatus } from 'webapp/services';
+import {
+  getMainAccountPublicKey,
+  getFaucetStatus,
+  openFaucet,
+} from 'webapp/services';
 import { ValidationStatus } from 'webapp/types';
 
 export const AddFunds = create(function AddFunds() {
@@ -47,11 +50,7 @@ export const AddFunds = create(function AddFunds() {
   };
 
   const openFaucetAndClose = () => {
-    window.open(
-      `${FAUCET_URL}${mainAccountPubKey}`,
-      '_blank',
-      'height=992,width=1512'
-    );
+    openFaucet(mainAccountPubKey);
     closeModal();
   };
 
