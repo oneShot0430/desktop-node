@@ -1,6 +1,7 @@
 import React, { memo, useState } from 'react';
 import PinInput from 'react-pin-input';
 
+import EyeIconSvg from 'assets/svgs/display-icon-blue.svg';
 import HideIconSvg from 'assets/svgs/hide-icon-blue.svg';
 
 import { Button } from '../ui/Button';
@@ -20,6 +21,8 @@ const PinInputComponent = ({
 }: PropsType) => {
   const [showPinInput, setShowPinInput] = useState(false);
 
+  const ShowInputIcon = showPinInput ? EyeIconSvg : HideIconSvg;
+
   return (
     <div className="z-50 flex items-center">
       <PinInput
@@ -36,7 +39,7 @@ const PinInputComponent = ({
       {showHideButton && (
         <Button
           className="bg-finnieTeal-100 rounded-[50%] w-[24px] h-[24px] cursor-pointer"
-          icon={<HideIconSvg />}
+          icon={<ShowInputIcon />}
           onClick={() => setShowPinInput(!showPinInput)}
         />
       )}
