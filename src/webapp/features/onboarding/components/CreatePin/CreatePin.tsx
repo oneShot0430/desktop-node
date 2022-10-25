@@ -89,7 +89,7 @@ const CreatePin = () => {
           />
         </div>
       </div>
-      <LinesVerticalTeal className="absolute top-0 right-0 z-10" />
+      <LinesVerticalTeal className="absolute top-0 right-0 z-10 h-screen" />
     </div>
   );
 };
