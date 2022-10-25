@@ -1,4 +1,4 @@
-const path = require('path')
+const path = require('path');
 
 module.exports = {
   /**
@@ -16,6 +16,7 @@ module.exports = {
       config: path.resolve(__dirname, 'src/config/'),
       main: path.resolve(__dirname, 'src/main/'),
       services: path.resolve(__dirname, 'src/services/'),
-    }
+      utils: path.resolve(__dirname, 'src/utils/'),
+    },
   },
 };

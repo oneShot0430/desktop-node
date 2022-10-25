@@ -59,6 +59,7 @@ const initHandlers = (): void => {
     config.endpoints.REMOVE_ACCOUNT_BY_NAME,
     controllers.removeAccountByName
   );
+  ipcMain.handle(config.endpoints.OPEN_FAUCET, controllers.openFaucet);
 };
 
 export default errorHandler(initHandlers, 'Init handlers error');

@@ -8,7 +8,12 @@ import CloseIconComponent from 'svgs/close-icons/close-icon-blue.svg';
 import { Button } from 'webapp/components';
 import { useClipboard } from 'webapp/features/common';
 import { Modal, ModalContent } from 'webapp/features/modals';
-import { getMainAccountPublicKey } from 'webapp/services';
+import {
+  getMainAccountPublicKey,
+  getFaucetStatus,
+  openFaucet,
+} from 'webapp/services';
+import { ValidationStatus } from 'webapp/types';
 
 export const AddFunds = create(function AddFunds() {
   const modal = useModal();
@@ -17,9 +22,41 @@ export const AddFunds = create(function AddFunds() {
     ['main-account'],
     getMainAccountPublicKey
   );
+  // give faucetStatus an initial value so we can safely destructure it below
+  const { data: faucetStatus = { walletAddress: '' } } = useQuery(
+    ['faucet-status', mainAccountPubKey],
+    () => getFaucetStatus(mainAccountPubKey)
+  );
 
-  const openFaucet = () => {
-    window.open(`https://faucet.koii.live?key=${mainAccountPubKey}`, '_blank');
+  const { walletAddress: _, ...methods } = faucetStatus;
+  const methodsArray = Object.values(methods);
+  const methodsClaimed = methodsArray.reduce(
+    (accumulator, currentMethodStatus) =>
+      currentMethodStatus === ValidationStatus.CLAIMED
+        ? accumulator + 1
+        : accumulator,
+    0
+  );
+  const hasClaimedAllMethods = methodsClaimed === 4;
+  const title = hasClaimedAllMethods
+    ? 'Scan the QR code or copy the address to send tokens to your node account.'
+    : methodsClaimed > 0
+    ? 'Return to the Faucet to get the rest of your free KOII.'
+    : 'Go to the Faucet for some free KOII to get started.';
+
+  const closeModal = () => {
+    modal.resolve();
+    modal.remove();
+  };
+
+  const openFaucetAndClose = () => {
+    openFaucet(mainAccountPubKey);
+    closeModal();
+  };
+
+  const copyToClipboardAndClose = () => {
+    copyToClipboard(mainAccountPubKey);
+    closeModal();
   };
 
   return (
@@ -37,35 +74,31 @@ export const AddFunds = create(function AddFunds() {
         </div>
 
         <div className="flex flex-col items-center w-full h-full">
-          <div className="mb-3 text-lg leading-8 text-center">
-            Go to the Faucet for some free KOII to get started.
-          </div>
+          <div className="mb-3 text-lg leading-8 text-center">{title}</div>
 
-          <Button
-            onClick={openFaucet}
-            label={'Get My Free Tokens'}
-            className="text-white bg-purple-4 w-[276px] h-[52px] mb-14 rounded-md"
-            icon={
-              <span className="w-[14px] h-[14px]">
-                <CurrencyIconSvg className="h-[100%]" />
-              </span>
-            }
-          />
+          {hasClaimedAllMethods ? (
+            <QRCode value={mainAccountPubKey} renderAs="canvas" size={240} />
+          ) : (
+            <>
+              <Button
+                onClick={openFaucetAndClose}
+                label={'Get My Free Tokens'}
+                className="text-white bg-purple-4 w-[276px] h-[52px] mb-14 rounded-md"
+                icon={<CurrencyIconSvg className="scale-50 mb-0.5" />}
+              />
 
-          <div className="mb-3">Or send KOII directly to this account.</div>
+              <div className="mb-3">Or send KOII directly to this account.</div>
 
-          <QRCode value="https://reactjs.org/" renderAs="canvas" size={80} />
+              <QRCode value={mainAccountPubKey} renderAs="canvas" size={80} />
+            </>
+          )}
 
           <div className="mt-4 mb-2 text-xs select-text">
             {mainAccountPubKey}
           </div>
 
           <Button
-            onClick={() => {
-              copyToClipboard(mainAccountPubKey);
-              modal.resolve();
-              modal.remove();
-            }}
+            onClick={copyToClipboardAndClose}
             label="copy"
             className="w-[72px] h-[24px] rounded-xl text-xs border border-finnieBlue bg-transparent text-finnieBlue-dark"
           />
