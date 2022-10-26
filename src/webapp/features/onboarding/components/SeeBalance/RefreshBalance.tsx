@@ -10,8 +10,9 @@ type PropsType = {
 };
 
 export const RefreshBalance = ({ onBalanceRefresh }: PropsType) => {
-  const [warning, setWarning] = useState(null);
-  const [checkingBalance, setCheckingBalance] = useState(false);
+  const [hasBalanceError, setHasBalanceError] = useState<boolean>(false);
+  const [checkingBalance, setCheckingBalance] = useState<boolean>(false);
+
   const { mutate, data: balance } = useMutation(
     ['main-account-balance'],
     getMainAccountBalance,
@@ -24,8 +25,8 @@ export const RefreshBalance = ({ onBalanceRefresh }: PropsType) => {
           onBalanceRefresh(balance);
         }
       },
-      onError: (error) => {
-        setWarning((error as any).message);
+      onError: () => {
+        setHasBalanceError(true);
       },
       onSettled: () => {
         setCheckingBalance(false);
@@ -53,7 +54,7 @@ export const RefreshBalance = ({ onBalanceRefresh }: PropsType) => {
           ? 'Checking balance...'
           : balance === 0 && 'Your balance is 0, try again'}
       </div>
-      {warning && (
+      {hasBalanceError && (
         <ErrorMessage errorMessage="Cant't fetch balance, try again" />
       )}
     </div>
