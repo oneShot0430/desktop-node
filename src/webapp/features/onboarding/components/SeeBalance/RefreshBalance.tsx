@@ -34,7 +34,7 @@ export const RefreshBalance = ({ onBalanceRefresh }: PropsType) => {
   );
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center h-full pt-[195px]">
       <div className="w-[492px] mb-4">
         Refresh your node balance once the tokens have been sent
         <br /> to your new account.
