@@ -21,13 +21,7 @@ export const RefreshBalance = ({ onBalanceRefresh }: PropsType) => {
         setCheckingBalance(true);
       },
       onSuccess: (balance) => {
-        if (onBalanceRefresh) {
-          onBalanceRefresh(balance);
-
-          setTimeout(() => {
-            setHasBalanceError(true);
-          }, 2000);
-        }
+        onBalanceRefresh?.(balance);
       },
       onError: () => {
         setHasBalanceError(true);
@@ -40,7 +34,7 @@ export const RefreshBalance = ({ onBalanceRefresh }: PropsType) => {
 
   return (
     <div className="flex flex-col items-center h-full pt-48">
-      <div className="w-[492px] mb-4">
+      <div className="w-[492px] mb-10">
         Refresh your node balance once the tokens have been sent
         <br /> to your new account.
       </div>
