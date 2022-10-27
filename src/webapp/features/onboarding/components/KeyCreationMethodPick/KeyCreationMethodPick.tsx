@@ -58,7 +58,7 @@ const KeyCreationMethodPick = () => {
   };
 
   return (
-    <div className="max-w-lg m-auto pt-[100px]">
+    <div className="max-w-lg xl:max-w-2xl m-auto pt-[100px]">
       <div className="flex flex-col text-lg pl-1">
         <p className="mb-4">
           To make sure everyone is playing fairly, each node must stake tokens
@@ -84,7 +84,7 @@ const KeyCreationMethodPick = () => {
       </div>
 
       <div className="mt-16 ">
-        <div className="flex flex-row items-center justify-center gap-16">
+        <div className="flex flex-row items-center justify-evenly">
           <div className="flex flex-col items-center">
             <div
               className="w-[180px] h-[180px] p-2 border-dashed border-finnieOrange rounded-full border-2 mb-4 cursor-pointer"
