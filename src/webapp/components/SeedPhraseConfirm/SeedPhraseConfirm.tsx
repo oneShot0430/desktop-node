@@ -57,7 +57,7 @@ export const SeedPhraseConfirm = ({
               className="flex flex-row items-center justify-between mb-2"
               key={index}
             >
-              <div>{wordNumber}</div>
+              <div>{wordNumber}.</div>
               <input
                 className="w-[120px] bg-transparent focus:border-b focus:border-white focus:outline-none text-sm"
                 onChange={(e) => handleInputChange(e, index)}
@@ -69,7 +69,7 @@ export const SeedPhraseConfirm = ({
               className="flex flex-row items-center justify-start gap-4 mb-2 select-text"
               key={index}
             >
-              <div>{wordNumber}</div>
+              <div>{wordNumber}.</div>
               <div>{phrase}</div>
             </div>
           );
