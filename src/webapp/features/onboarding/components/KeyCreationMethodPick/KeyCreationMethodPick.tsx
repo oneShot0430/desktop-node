@@ -1,4 +1,4 @@
-import React, { memo, useContext, useState } from 'react';
+import React, { memo, useContext, useState, ChangeEventHandler } from 'react';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,7 +14,7 @@ import {
 import { OnboardingContext } from '../../context/onboarding-context';
 
 const KeyCreationMethodPick = () => {
-  const [inputValue, setInputValue] = useState('');
+  const [accountName, setAccountName] = useState<string>('');
   const navigate = useNavigate();
   const { setNewSeedPhrase, setSystemKey } = useContext(OnboardingContext);
 
@@ -38,6 +38,20 @@ const KeyCreationMethodPick = () => {
     },
   });
 
+  const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (e) =>
+    setAccountName(e.target.value);
+
+  const handleClickCreate = () => {
+    if (accountName) seedPhraseGenerateMutation.mutate(accountName);
+  };
+
+  const handleClickImport = () => {
+    if (accountName)
+      navigate(AppRoute.OnboardingImportKey, {
+        state: { accountName },
+      });
+  };
+
   return (
     <div className="max-w-lg m-auto pt-[100px]">
       <div className="flex flex-col text-lg">
@@ -53,8 +67,8 @@ const KeyCreationMethodPick = () => {
         <input
           className="w-full px-6 py-2 rounded-md bg-finnieBlue-light-tertiary"
           type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
+          value={accountName}
+          onChange={handleChangeInput}
           placeholder="Account name"
         />
       </div>
@@ -64,7 +78,7 @@ const KeyCreationMethodPick = () => {
           <div className="flex flex-col items-center">
             <div
               className="w-[180px] h-[180px] p-2 border-dashed border-finnieOrange rounded-full border-2 mb-4 cursor-pointer"
-              onClick={() => seedPhraseGenerateMutation.mutate(inputValue)}
+              onClick={handleClickCreate}
             >
               <div className="flex flex-col items-center justify-center w-full h-full rounded-full bg-finnieBlue-light-secondary">
                 <RewardsSvg />
@@ -76,11 +90,7 @@ const KeyCreationMethodPick = () => {
           <div className="flex flex-col items-center">
             <div
               className="w-[180px] h-[180px] p-2 border-2 border-dashed border-finnieTeal rounded-full mb-4 cursor-pointer z-30"
-              onClick={() =>
-                navigate(AppRoute.OnboardingImportKey, {
-                  state: { accountName: inputValue },
-                })
-              }
+              onClick={handleClickImport}
             >
               <div className="flex flex-col items-center justify-center w-full h-full rounded-full bg-finnieBlue-light-secondary">
                 <SeedPhraseSvg />
