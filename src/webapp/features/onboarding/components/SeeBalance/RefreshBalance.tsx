@@ -10,8 +10,9 @@ type PropsType = {
 };
 
 export const RefreshBalance = ({ onBalanceRefresh }: PropsType) => {
-  const [warning, setWarning] = useState(null);
-  const [checkingBalance, setCheckingBalance] = useState(false);
+  const [hasBalanceError, setHasBalanceError] = useState<boolean>(false);
+  const [checkingBalance, setCheckingBalance] = useState<boolean>(false);
+
   const { mutate, data: balance } = useMutation(
     ['main-account-balance'],
     getMainAccountBalance,
@@ -20,12 +21,10 @@ export const RefreshBalance = ({ onBalanceRefresh }: PropsType) => {
         setCheckingBalance(true);
       },
       onSuccess: (balance) => {
-        if (onBalanceRefresh) {
-          onBalanceRefresh(balance);
-        }
+        onBalanceRefresh?.(balance);
       },
-      onError: (error) => {
-        setWarning((error as any).message);
+      onError: () => {
+        setHasBalanceError(true);
       },
       onSettled: () => {
         setCheckingBalance(false);
@@ -34,8 +33,8 @@ export const RefreshBalance = ({ onBalanceRefresh }: PropsType) => {
   );
 
   return (
-    <div className="flex flex-col items-center">
-      <div className="w-[492px] mb-4">
+    <div className="flex flex-col items-center h-full pt-48">
+      <div className="w-[492px] mb-10">
         Refresh your node balance once the tokens have been sent
         <br /> to your new account.
       </div>
@@ -53,7 +52,7 @@ export const RefreshBalance = ({ onBalanceRefresh }: PropsType) => {
           ? 'Checking balance...'
           : balance === 0 && 'Your balance is 0, try again'}
       </div>
-      {warning && (
+      {hasBalanceError && (
         <ErrorMessage errorMessage="Cant't fetch balance, try again" />
       )}
     </div>
