@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import RewardsSvg from 'assets/svgs/onboarding/rewards-icon.svg';
 import SeedPhraseSvg from 'assets/svgs/onboarding/seed-phrase-icon.svg';
+import { ErrorMessage } from 'webapp/components/ui/ErrorMessage';
 import { AppRoute } from 'webapp/routing/AppRoutes';
 import {
   createNodeWallets,
@@ -15,6 +16,8 @@ import { OnboardingContext } from '../../context/onboarding-context';
 
 const KeyCreationMethodPick = () => {
   const [accountName, setAccountName] = useState<string>('');
+  const [isMissingAccountName, setIsMissingAccountName] =
+    useState<boolean>(false);
   const navigate = useNavigate();
   const { setNewSeedPhrase, setSystemKey } = useContext(OnboardingContext);
 
@@ -43,6 +46,7 @@ const KeyCreationMethodPick = () => {
 
   const handleClickCreate = () => {
     if (accountName) seedPhraseGenerateMutation.mutate(accountName);
+    else setIsMissingAccountName(true);
   };
 
   const handleClickImport = () => {
@@ -50,11 +54,12 @@ const KeyCreationMethodPick = () => {
       navigate(AppRoute.OnboardingImportKey, {
         state: { accountName },
       });
+    else setIsMissingAccountName(true);
   };
 
   return (
     <div className="max-w-lg m-auto pt-[100px]">
-      <div className="flex flex-col text-lg">
+      <div className="flex flex-col text-lg pl-1">
         <p className="mb-4">
           To make sure everyone is playing fairly, each node must stake tokens
           as collateral.
@@ -71,6 +76,11 @@ const KeyCreationMethodPick = () => {
           onChange={handleChangeInput}
           placeholder="Account name"
         />
+        <div className="px-6 h-12 -mb-12">
+          {isMissingAccountName && (
+            <ErrorMessage errorMessage="Please enter an account name" />
+          )}
+        </div>
       </div>
 
       <div className="mt-16 ">
