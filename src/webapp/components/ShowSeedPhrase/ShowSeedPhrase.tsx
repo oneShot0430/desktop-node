@@ -42,7 +42,7 @@ export const ShowSeedPhrase = ({
                 className="flex flex-row items-center justify-start gap-4 mb-2 select-text"
                 key={index}
               >
-                <div>{wordNumber}</div>
+                <div>{wordNumber}.</div>
                 <div>{phrase}</div>
               </div>
             );

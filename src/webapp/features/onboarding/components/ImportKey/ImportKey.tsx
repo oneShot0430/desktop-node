@@ -19,7 +19,9 @@ const ImportKey = () => {
   return (
     <div className="flex flex-col items-start pl-[100px] pt-[140px]">
       <div className="text-lg pl-[42px] mb-10">
-        Type in your secret phrase to import your key.
+        <span>Type in your</span>{' '}
+        <span className="underline">secret phrase</span>{' '}
+        <span>to import your key.</span>
       </div>
       <ImportFromSeedPhrase
         accountName={accountName}

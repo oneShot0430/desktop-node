@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent } from 'react';
 
 import { createNodeWallets, setActiveAccount } from 'webapp/services';
 
@@ -29,7 +29,7 @@ const ImportFromSeedPhrase = ({
   const [error, setError] = useState<string>();
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
+    e: ChangeEvent<HTMLInputElement>,
     phraseIndex: number
   ) => {
     const value = e.target.value;
@@ -86,7 +86,7 @@ const ImportFromSeedPhrase = ({
                   className="flex flex-row items-center justify-between mb-2"
                   key={index}
                 >
-                  <div>{wordNumber}</div>
+                  <div>{wordNumber}.</div>
                   <input
                     className="w-[120px] bg-transparent focus:border-b focus:border-white focus:outline-none text-sm"
                     onChange={(e) => handleInputChange(e, index)}
