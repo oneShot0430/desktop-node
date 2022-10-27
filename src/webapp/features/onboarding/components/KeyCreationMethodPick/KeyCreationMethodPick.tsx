@@ -39,19 +39,19 @@ const KeyCreationMethodPick = () => {
   });
 
   return (
-    <div className="px-[100px] pt-[100px]">
-      <div className="flex flex-col text-lg ">
+    <div className="max-w-lg m-auto pt-[100px]">
+      <div className="flex flex-col text-lg">
         <p className="mb-4">
-          To make sure everyone is playing fairly, each node must
-          <br /> stake tokens as collateral.
+          To make sure everyone is playing fairly, each node must stake tokens
+          as collateral.
         </p>
         <p>Create a new account or import an existing Koii key.</p>
       </div>
 
-      <div className="px-12 my-8">
-        <div className="px-[20px] text-left leading-8 mb-2">Account name</div>
+      <div className="my-6">
+        <div className="px-5 text-left leading-8 mb-2">Account name</div>
         <input
-          className="w-full px-6 py-2 rounded-md bg-finnieBlue-light-tertiary "
+          className="w-full px-6 py-2 rounded-md bg-finnieBlue-light-tertiary"
           type="text"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
