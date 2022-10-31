@@ -28,8 +28,8 @@ export const SelectedTasksSummary = ({ selectedTasks }: PropsType) => {
   return (
     <div className="w-full h-full bg-finnieBlue-light-secondary py-[28px] rounded-md min-h-[330px]">
       <div className="flex flex-row w-full text-lg text-finnieEmerald-light px-[48px]">
-        <div className="w-[50%] pl-10">Task</div>
-        <div className="w-[50%]">Stake</div>
+        <div className="w-[70%] pl-10">Task</div>
+        <div className="w-[30%] pl-10">Stake</div>
       </div>
 
       <div className="my-4 min-h-[160px]">
@@ -43,13 +43,13 @@ export const SelectedTasksSummary = ({ selectedTasks }: PropsType) => {
               className="flex flex-row w-full text-md text-finnieEmerald-light px-[48px]"
               key={publicKey}
             >
-              <div className="w-[50%]">
+              <div className="w-[70%]">
                 <div className="flex flex-row items-center gap-2">
                   <CodeIconSvg />
                   <span>{taskName}</span>
                 </div>
               </div>
-              <div className="w-[50%]">
+              <div className="w-[30%]">
                 <div className="flex flex-row gap-2">
                   <Button
                     onClick={() => console.log('implement me')}
@@ -64,12 +64,12 @@ export const SelectedTasksSummary = ({ selectedTasks }: PropsType) => {
         )}
       </div>
 
-      <div className="flex flex-row w-full text-lg text-finnieEmerald-light px-[48px]">
-        <div className="w-[50%]">
+      <div className="flex flex-row w-full text-lg text-finnieEmerald-light px-12">
+        <div className="w-[70%]">
           <div className="mb-1 font-semibold text-finnieOrange">Task Fees</div>
           <div className="text-white">{taskFees} KOII</div>
         </div>
-        <div className="w-[50%]">
+        <div className="w-[30%]">
           <div className="mb-2 font-semibold text-finnieEmerald-light">
             Total KOII staked
           </div>
