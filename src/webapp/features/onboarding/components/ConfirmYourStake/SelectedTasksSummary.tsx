@@ -29,7 +29,7 @@ export const SelectedTasksSummary = ({ selectedTasks }: PropsType) => {
     <div className="w-full h-full bg-finnieBlue-light-secondary py-[28px] rounded-md min-h-[330px]">
       <div className="flex flex-row w-full text-lg text-finnieEmerald-light px-[48px]">
         <div className="w-[70%] pl-10">Task</div>
-        <div className="w-[30%] pl-10">Stake</div>
+        <div className="w-[30%] pl-8">Stake</div>
       </div>
 
       <div className="my-4 min-h-[160px]">
