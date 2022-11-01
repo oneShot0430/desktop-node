@@ -33,17 +33,19 @@ const RunFirstTask = () => {
         <div className="text-lg mt-20 mb-12">
           Start running verified tasks with just one click
         </div>
-        <table className="mb-2 text-xs text-left border-spacing-1 w-full">
-          <thead className="text-finnieEmerald-light">
-            <th>
-              {/* Takes the space needed to match the Code icon's, as `th`s can't have either padding/margin */}
-              <div className="pb-6" />
-            </th>
-            <th>Task Name</th>
-            <th>Creator</th>
-            <th>Level</th>
-            <th>Stake</th>
-          </thead>
+        <div>
+          <div className="mb-2 text-xs text-left w-full grid grid-cols-first-task">
+            {/* Takes the space needed to match the Code icon's, as `th`s can't have either padding/margin */}
+            <div className="col-span-1" />
+
+            <div className="col-span-4">Task Name</div>
+            <div className="col-span-4">Creator</div>
+            <div className="col-span-2">Level</div>
+            <div className="col-span-1">Stake</div>
+
+            <div className="col-span-1" />
+          </div>
+
           {loadingVerifiedTasks ? (
             <div>Loading...</div>
           ) : (
@@ -65,9 +67,9 @@ const RunFirstTask = () => {
               />
             ))
           )}
-        </table>
+        </div>
 
-        <div className="flex flex-row justify-between pl-4 mt-4">
+        <div className="flex flex-row justify-between pl-2.5 mt-4">
           <Button
             label="Customize my tasks"
             className="bg-transparent text-finnieEmerald-light w-fit"
