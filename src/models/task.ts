@@ -19,5 +19,4 @@ export interface TaskData {
   availableBalances: Record<string, number>;
   stakeList: Record<string, number>;
   isRunning: boolean;
-  cronArray: unknown[];
 }

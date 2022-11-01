@@ -14,9 +14,10 @@ import koiiTasks from 'services/koiiTasks';
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import initExpressApp from '../node/initExpressApp';
 
+import getStakingAccountPublicKey from './getStakingAccountPubKey';
+
 // eslint-disable-next-line
 const bufferlayout = require('buffer-layout');
-const GATEWAY_URL = 'https://arweave.net/';
 const OPERATION_MODE = 'service';
 let LAST_USED_PORT = 10000;
 
@@ -42,12 +43,15 @@ const startTask = async (event: Event, payload: TaskStartStopParam) => {
   }
   const expressApp = await initExpressApp();
   try {
+    console.log('LOADING TASK:', taskInfo.publicKey);
     await loadTask({ ...taskInfo.data, taskId: taskInfo.publicKey });
     const { namespace, child, expressAppPort, secret } = await executeTasks(
       { ...taskInfo.data, taskId: taskInfo.publicKey },
       expressApp,
-      'service'
+      OPERATION_MODE,
+      mainSystemAccount
     );
+    console.log('TASK STARTED:', taskInfo.publicKey);
     await koiiTasks.taskStarted(
       taskAccountPubKey,
       namespace,
@@ -94,7 +98,7 @@ const startTask = async (event: Event, payload: TaskStartStopParam) => {
 async function loadTask(selectedTask: ISelectedTasks) {
   console.log('Selected Tasks', selectedTask);
   const res = await axios.get(
-    config.node.GATEWAY_URL + selectedTask.taskAuditProgram
+    config.node.GATEWAY_URL + '/' + selectedTask.taskAuditProgram
   );
   if (res.data) {
     fsSync.writeFileSync(
@@ -112,26 +116,9 @@ async function loadTask(selectedTask: ISelectedTasks) {
 async function executeTasks(
   selectedTask: ISelectedTasks,
   expressApp: any,
-  operationMode: string
+  operationMode: string,
+  mainSystemAccount: Keypair
 ) {
-  let mainSystemAccount: Keypair;
-  const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
-  if (!activeAccount) {
-    throw new Error('Please select a Active Account');
-  }
-  const mainWalletfilePath = `wallets/${activeAccount}_mainSystemWallet.json`;
-  try {
-    mainSystemAccount = Keypair.fromSecretKey(
-      Uint8Array.from(
-        JSON.parse(fsSync.readFileSync(mainWalletfilePath, 'utf-8'))
-      )
-    );
-  } catch (e) {
-    console.error(e);
-    return null;
-  }
-
-  // TODO::
   const secret = await cryptoRandomString({ length: 20 });
   // Not passing all env to tasks for security reasons (Only passing ones that starts with SECRET)
   const SECRETS_ENV = Object.keys(process.env)
@@ -145,8 +132,9 @@ async function executeTasks(
     env: SECRETS_ENV,
   };
   // TODO: Get the task stake here
-  const STAKE = Number(process.env.TASK_STAKES?.split(',')[i] || 0);
-
+  // const STAKE = Number(process.env.TASK_STAKES?.split(',') || 0);
+  const stakingAccPubkey = getStakingAccountPublicKey();
+  const STAKE = selectedTask.stakeList[stakingAccPubkey];
   const childTaskProcess = fork(
     `executables/${selectedTask.taskAuditProgram}.js`,
     [
@@ -250,6 +238,7 @@ interface ISelectedTasks {
   taskManager?: string;
   stakePotAccount?: string;
   bountyAmountPerRound?: number;
+  stakeList?: any;
 }
 interface IRunningTasks {
   [key: string]: {

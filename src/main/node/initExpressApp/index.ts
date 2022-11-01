@@ -15,7 +15,7 @@ const initExpressApp = async (): Promise<Express> => {
   const expressApp = app();
 
   expressApp.get('/id', (req: Request, res: Response) => {
-    res.send(config.node.KOII_CONTRACT);
+    res.send(config.node.TASK_CONTRACT_ID);
   });
 
   expressApp.get('/tasks', (req: Request, res: Response) => {
