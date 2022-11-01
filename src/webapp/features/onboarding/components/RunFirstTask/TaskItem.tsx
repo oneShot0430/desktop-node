@@ -62,17 +62,13 @@ function TaskItem({
           <div className="text-xs text-finnieEmerald-light leading-3">{`min. stake: ${minStake}`}</div>
         </div>
       </td>
-      {hover && (
-        <td
-          className="cursor-pointer text-finnieRed rounded-r-md"
-          onClick={onRemove}
-          title="Remove task"
-        >
-          <div className="w-6 h-6 mr-2">
-            <CloseIcon />
-          </div>
-        </td>
-      )}
+      <td
+        className="cursor-pointer text-finnieRed rounded-r-md"
+        onClick={onRemove}
+        title="Remove task"
+      >
+        <div className="w-6 h-6 mr-2">{hover && <CloseIcon />}</div>
+      </td>
     </tr>
   );
 }
