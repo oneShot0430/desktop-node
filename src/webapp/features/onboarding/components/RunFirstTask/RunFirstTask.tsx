@@ -29,7 +29,7 @@ const RunFirstTask = () => {
 
   return (
     <div className="relative h-full overflow-hidden bg-finnieBlue-dark-secondary">
-      <div className="px-8 h-full">
+      <div className="px-8 h-full flex flex-col">
         <div className="text-lg mt-20 mb-12">
           Start running verified tasks with just one click
         </div>
@@ -49,21 +49,19 @@ const RunFirstTask = () => {
           {loadingVerifiedTasks ? (
             <div>Loading...</div>
           ) : (
-            selectedTasks.map((task, index) => (
+            selectedTasks.map(({ publicKey, taskName, taskManager }, index) => (
               <TaskItem
                 key={index}
-                stakeValue={stakePerTask[task.publicKey] ?? 0}
-                name={task.taskName}
-                creator={task.taskManager}
+                stakeValue={stakePerTask[publicKey] ?? 0}
+                name={taskName}
+                creator={taskManager}
                 /**
                  * @todo: get difficulty level from API
                  */
                 level={'Low'}
                 minStake={25}
-                onStakeInputChange={(e) =>
-                  handleStakeInputChange(e, task.publicKey)
-                }
-                onRemove={() => handleTaskRemove(task.publicKey)}
+                onStakeInputChange={(e) => handleStakeInputChange(e, publicKey)}
+                onRemove={() => handleTaskRemove(publicKey)}
               />
             ))
           )}
@@ -83,7 +81,7 @@ const RunFirstTask = () => {
             onClick={handleRestoreTasks}
           />
         </div>
-        <div className="flex flex-col items-center justify-center h-full pb-6">
+        <div className="flex flex-col items-center mt-auto mb-6">
           <Button
             className="font-semibold bg-finnieGray-light text-finnieBlue-light w-56 h-[38px]"
             label="Run Tasks"
