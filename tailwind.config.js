@@ -11,6 +11,12 @@ module.exports = {
       roboto: ['Roboto', 'ui-sans-serif', 'system-ui'],
     },
     extend: {
+      height: {
+        13: '3.25rem',
+      },
+      width: {
+        22.5: '5.6rem',
+      },
       animation: {
         'reverse-spin': 'reverse-spin 1s linear infinite',
       },
@@ -63,6 +69,7 @@ module.exports = {
         '4xs': '7px',
         '2xs': '11px',
       },
+      padding: { 0.75: '3px' },
       spacing: {
         sm: '8px',
         md: '16px',

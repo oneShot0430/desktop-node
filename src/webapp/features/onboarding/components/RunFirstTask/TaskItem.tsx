@@ -27,45 +27,53 @@ function TaskItem({
   const handleOnHover = () => {
     setHover(true);
   };
+  const handleUnhover = () => {
+    setHover(false);
+  };
 
   return (
-    <div
-      className="flex flex-row bg-finnieBlue-light-secondary h-[52px] items-center rounded-md px-4 text-sm justify-between"
+    <tr
+      className="bg-finnieBlue-light-secondary h-13 rounded-md text-sm"
       onMouseEnter={handleOnHover}
-      onMouseLeave={() => setHover(false)}
+      onMouseLeave={handleUnhover}
     >
-      <div className="flex flex-row items-center">
-        <div className="mr-4">
-          <CodeIconSvg />
-        </div>
-        <div className="w-[214px] mr-4">{name}</div>
-        <div
-          className="w-[112px] mr-4 text-ellipsis overflow-hidden"
-          title={creator}
-        >
+      <td className="rounded-l-md">
+        <CodeIconSvg className="mx-4" />
+      </td>
+      <td className="text-ellipsis overflow-hidden">
+        <div className="mr-4">{name}</div>
+      </td>
+      <td className="w-fit" title={creator}>
+        <div className="max-w-xs xl:max-w-[420px] text-ellipsis overflow-hidden m-0">
           {creator}
         </div>
-        <div className="w-[60px] mr-4">{level}</div>
-        <div>
+      </td>
+      <td title={level} className="">
+        <div className="mr-4">{level}</div>
+      </td>
+      <td title={String(stakeValue)}>
+        <div className="mr-2 w-22.5 flex flex-col gap-1">
           <input
             value={stakeValue}
             onChange={onStakeInputChange}
             type="number"
-            className="w-[92px] rounded-sm text-right text-finnieBlue-dark p-[3px]"
+            className="rounded-sm text-right text-finnieBlue-dark p-0.75 w-full"
           />
-          <div className="text-xs text-finnieEmerald-light">{`min. stake: ${minStake}`}</div>
+          <div className="text-xs text-finnieEmerald-light leading-3">{`min. stake: ${minStake}`}</div>
         </div>
-      </div>
+      </td>
       {hover && (
-        <div
-          className="w-6 h-6 cursor-pointer text-finnieRed"
+        <td
+          className="cursor-pointer text-finnieRed rounded-r-md"
           onClick={onRemove}
           title="Remove task"
         >
-          <CloseIcon />
-        </div>
+          <div className="w-6 h-6 mr-2">
+            <CloseIcon />
+          </div>
+        </td>
       )}
-    </div>
+    </tr>
   );
 }
 

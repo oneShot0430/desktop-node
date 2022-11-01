@@ -23,56 +23,56 @@ const RunFirstTask = () => {
     handleRestoreTasks,
   } = useRunFirstTasksLogic();
 
-  const handleContinue = () => {
+  const handleContinue = () =>
     navigate(AppRoute.OnboardingConfirmStake, { state: selectedTasks });
-  };
+  const handleCustomizeTasks = () => navigate(AppRoute.AddTask);
 
   return (
     <div className="relative h-full overflow-hidden bg-finnieBlue-dark-secondary">
-      <div className="px-8">
-        <div className="text-lg mt-[90px] mb-[50px]">
+      <div className="px-8 h-full">
+        <div className="text-lg mt-20 mb-12">
           Start running verified tasks with just one click
         </div>
-
-        <div className="flex flex-row mb-2 text-xs text-finnieTeal">
-          <div className="w-[214px] ml-[64px]">Task Name</div>
-          <div className="w-[112px] pl-4">Creator</div>
-          <div className="w-[60px] pl-8">Level</div>
-          <div className="pl-12">Stake</div>
-        </div>
-
-        <div className="h-[38vh] overflow-auto">
-          <div className="py-2"></div>
+        <table className="mb-2 text-xs text-left border-spacing-1 w-full">
+          <thead className="text-finnieEmerald-light">
+            <th>
+              {/* Takes the space needed to match the Code icon's, as `th`s can't have either padding/margin */}
+              <div className="pb-6" />
+            </th>
+            <th>Task Name</th>
+            <th>Creator</th>
+            <th>Level</th>
+            <th>Stake</th>
+          </thead>
           {loadingVerifiedTasks ? (
             <div>Loading...</div>
           ) : (
             selectedTasks.map((task, index) => (
-              <div className="mb-4" key={index}>
-                <TaskItem
-                  stakeValue={stakePerTask[task.publicKey] ?? 0}
-                  name={task.taskName}
-                  creator={task.taskManager}
-                  /**
-                   * @todo: get difficulty level from API
-                   */
-                  level={'Low'}
-                  minStake={25}
-                  onStakeInputChange={(e) =>
-                    handleStakeInputChange(e, task.publicKey)
-                  }
-                  onRemove={() => handleTaskRemove(task.publicKey)}
-                />
-              </div>
+              <TaskItem
+                key={index}
+                stakeValue={stakePerTask[task.publicKey] ?? 0}
+                name={task.taskName}
+                creator={task.taskManager}
+                /**
+                 * @todo: get difficulty level from API
+                 */
+                level={'Low'}
+                minStake={25}
+                onStakeInputChange={(e) =>
+                  handleStakeInputChange(e, task.publicKey)
+                }
+                onRemove={() => handleTaskRemove(task.publicKey)}
+              />
             ))
           )}
-        </div>
+        </table>
 
-        <div className="flex flex-row justify-between mt-4">
+        <div className="flex flex-row justify-between pl-4 mt-4">
           <Button
             label="Customize my tasks"
-            className="bg-transparent text-finnieEmerald-light"
+            className="bg-transparent text-finnieEmerald-light w-fit"
             icon={<AddIconSvg />}
-            onClick={() => navigate(AppRoute.AddTask)}
+            onClick={handleCustomizeTasks}
           />
           <Button
             label="Restore Original"
@@ -81,18 +81,15 @@ const RunFirstTask = () => {
             onClick={handleRestoreTasks}
           />
         </div>
-
-        <div className="flex justify-center mt-[40px]">
-          <div className="flex flex-col items-center justify-center">
-            <Button
-              className="font-semibold bg-finnieGray-light text-finnieBlue-light w-[220px] h-[38px]"
-              label={'Run Tasks'}
-              onClick={handleContinue}
-            />
-            <div className="flex flex-row items-center gap-2 mt-2 text-sm text-finnieEmerald-light">
-              <CurrencySvgIcon className="h-[24px]" />
-              {`Total staked: ${totalStaked} KOII`}
-            </div>
+        <div className="flex flex-col items-center justify-center h-full pb-6">
+          <Button
+            className="font-semibold bg-finnieGray-light text-finnieBlue-light w-56 h-[38px]"
+            label="Run Tasks"
+            onClick={handleContinue}
+          />
+          <div className="flex flex-row items-center gap-2 mt-2 text-sm text-finnieEmerald-light">
+            <CurrencySvgIcon className="h-6" />
+            {`Total staked: ${totalStaked} KOII`}
           </div>
         </div>
       </div>
