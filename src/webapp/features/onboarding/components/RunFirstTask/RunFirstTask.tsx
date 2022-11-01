@@ -33,7 +33,7 @@ const RunFirstTask = () => {
         <div className="text-lg mt-20 mb-12">
           Start running verified tasks with just one click
         </div>
-        <div>
+        <div className="overflow-x-auto">
           <div className="mb-2 text-xs text-left w-full grid grid-cols-first-task">
             {/* Takes the space needed to match the Code icon's, as `th`s can't have either padding/margin */}
             <div className="col-span-1" />
