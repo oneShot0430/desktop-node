@@ -35,15 +35,10 @@ const RunFirstTask = () => {
         </div>
         <div className="overflow-x-auto">
           <div className="mb-2 text-xs text-left w-full grid grid-cols-first-task">
-            {/* Takes the space needed to match the Code icon's, as `th`s can't have either padding/margin */}
-            <div className="col-span-1" />
-
-            <div className="col-span-4">Task Name</div>
+            <div className="col-start-2 col-span-4">Task Name</div>
             <div className="col-span-4">Creator</div>
             <div className="col-span-2">Level</div>
             <div className="col-span-1">Stake</div>
-
-            <div className="col-span-1" />
           </div>
 
           {loadingVerifiedTasks ? (
