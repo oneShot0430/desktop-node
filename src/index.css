@@ -135,3 +135,26 @@ input[type='number'] {
  border: none !important;
  background-color: transparent !important; 
 }
+
+/* Terms CheckBox */
+.terms-checkbox[type=checkbox]::before, .terms-checkbox[type=checkbox]:checked+label::before {
+  content: "";
+  display: block;
+  position: absolute;
+  height: 18px;
+  width: 18px;
+  top: 3px;
+  background-color: #030332;
+  border-radius: 1px;
+  border: 1px solid #ffffff;
+  cursor: pointer;
+}
+
+.terms-checkbox[type=checkbox]:checked+label::after {
+  position: absolute;
+  left: 4px;
+  top: 2px;
+  cursor: pointer; 
+  content: url('data:image/svg+xml; utf8, <svg xmlns="http://www.w3.org/2000/svg" width="11" height="8" viewBox="0 0 11 8" fill="none"> <path d="M4.07115 7.05834C3.91837 7.05834 3.74377 6.99286 3.63464 6.88373L0.513558 3.74083C0.273475 3.50075 0.273475 3.10788 0.513558 2.8678C0.753641 2.62772 1.1465 2.62772 1.38659 2.8678L4.07115 5.59602L9.37481 0.292367C9.61489 0.052284 10.0078 0.052284 10.2478 0.292367C10.4879 0.53245 10.4879 0.925313 10.2478 1.1654L4.50767 6.88373C4.39854 6.99286 4.24576 7.05834 4.07115 7.05834Z" fill="rgb(94, 217, 209)"/></svg>');
+}
+

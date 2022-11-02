@@ -63,19 +63,19 @@ const CreatePin = () => {
         </div>
 
         <div className="flex flex-col items-center pt-14">
-          <div className="flex items-center">
+          <div className="flex items-center relative !inline-block">
             <input
               id="link-checkbox"
               type="checkbox"
-              className="w-4 h-4 bg-transparent focus:ring-finnieTeal focus:ring-2 border-red"
+              className="w-3 h-3 terms-checkbox"
               onChange={(e) => setTermsAccepted(e.target.checked)}
             />
             <label
               htmlFor="link-checkbox"
-              className="ml-2 text-sm font-medium "
+              className="ml-4 text-sm font-medium "
             >
               I agree with the{' '}
-              <a href="#" className="hover:underline text-finnieTeal">
+              <a href="#" className="underline text-finnieTeal">
                 Terms of Service
               </a>
               .
