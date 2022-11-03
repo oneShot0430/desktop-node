@@ -1,10 +1,9 @@
 import { sum } from 'lodash';
 import React, { useMemo } from 'react';
 
-import CodeIconSvg from 'assets/svgs/code-icon.svg';
-import EditIconSvg from 'assets/svgs/edit-icon.svg';
-import { Button } from 'webapp/components';
 import { TaskWithStake } from 'webapp/types';
+
+import { TaskRow } from './TaskRow';
 
 type PropsType = {
   selectedTasks: TaskWithStake[];
@@ -38,28 +37,8 @@ export const SelectedTasksSummary = ({ selectedTasks }: PropsType) => {
             You didn&apos;t select any tasks to run.
           </div>
         ) : (
-          selectedTasks.map(({ taskName, stake, publicKey }) => (
-            <div
-              className="flex flex-row w-full text-md text-finnieEmerald-light px-[48px]"
-              key={publicKey}
-            >
-              <div className="w-[70%]">
-                <div className="flex flex-row items-center gap-2">
-                  <CodeIconSvg />
-                  <span>{taskName}</span>
-                </div>
-              </div>
-              <div className="w-[30%]">
-                <div className="flex flex-row gap-2">
-                  <Button
-                    onClick={() => console.log('implement me')}
-                    icon={<EditIconSvg />}
-                    className="rounded-[50%] w-[24px] h-[24px] bg-finnieTeal-100"
-                  />
-                  <div>{stake} KOII</div>
-                </div>
-              </div>
-            </div>
+          selectedTasks.map((task) => (
+            <TaskRow key={task.publicKey} task={task} />
           ))
         )}
       </div>
