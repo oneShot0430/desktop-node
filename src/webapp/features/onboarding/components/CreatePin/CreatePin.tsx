@@ -75,7 +75,12 @@ const CreatePin = () => {
               className="ml-4 text-sm font-medium "
             >
               I agree with the{' '}
-              <a href="#" className="underline text-finnieTeal">
+              <a
+                href="https://www.koii.network/TOU_June_22_2021.pdf"
+                target="_blank"
+                rel="noreferrer"
+                className="underline text-finnieTeal"
+              >
                 Terms of Service
               </a>
               .
