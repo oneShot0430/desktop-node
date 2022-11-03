@@ -17,10 +17,12 @@ const ConfirmYourStake = () => {
   const navigate = useNavigate();
   const { state: selectedTasks } = useLocation();
   const tasksToRun = selectedTasks as TaskWithStake[];
+  const handleRunTasksSuccess = () => navigate(AppRoute.MyNode);
 
   const { data: balance, isLoading } = useMainAccountBalance();
   const { runAllTasks, runTasksLoading, runTasksError } = useRunMultipleTasks({
     tasksToRun,
+    onRunAllTasksSuccessCallback: handleRunTasksSuccess,
   });
   const { showNotEnoughFunds } = useNotEnoughFunds();
 
