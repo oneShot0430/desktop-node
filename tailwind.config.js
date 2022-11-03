@@ -115,6 +115,9 @@ module.exports = {
         15: 'repeat(15, minmax(0, 1fr))',
         16: 'repeat(16, minmax(0, 1fr))',
       },
+      gridColumnStart: {
+        14: '14',
+      },
       keyframes: {
         slideOut: {
           '0%': { transform: 'translateX(-100%)' },
