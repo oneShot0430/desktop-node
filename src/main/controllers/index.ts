@@ -16,7 +16,7 @@ import getTasks from './getTasks';
 import getTasksById from './getTasksById';
 import getTaskSource from './getTaskSource';
 import getUserConfig from './getUserConfig';
-import openFaucet from './openFaucet';
+import openBrowserWindow from './openBrowserWindow';
 import removeAccountByName from './removeAccountByName';
 import setActiveAccount from './setActiveAccount';
 import startTask from './startTask';
@@ -47,5 +47,5 @@ export default {
   getUserConfig,
   getTasksById,
   removeAccountByName,
-  openFaucet,
+  openBrowserWindow,
 };

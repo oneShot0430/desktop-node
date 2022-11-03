@@ -26,7 +26,7 @@ jest.mock('webapp/services', () => ({
   __esModule: true, // necessary to make it work, otherwise it fails trying to set the spy
   ...jest.requireActual('webapp/services'),
 }));
-const openFaucetSpy = jest.spyOn(services, 'openFaucet');
+const openBrowserWindowSpy = jest.spyOn(services, 'openBrowserWindow');
 
 Object.defineProperty(window, 'main', {
   value: { getMainAccountPubKey: () => Promise.resolve(publicKey) },
@@ -121,7 +121,9 @@ describe('AddFunds', () => {
     userEvent.click(getMyFreeTokensButton);
 
     waitFor(() => {
-      expect(openFaucetSpy).toHaveBeenCalledWith(publicKey);
+      expect(openBrowserWindowSpy).toHaveBeenCalledWith(
+        FAUCET_API_URL + publicKey
+      );
     });
   });
 
