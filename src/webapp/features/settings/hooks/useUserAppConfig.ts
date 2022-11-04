@@ -37,7 +37,6 @@ export const useUserAppConfig = () => {
         },
       };
 
-      console.log('### sets new config', newConfig);
       saveUserConfig(newConfig);
     },
     [userConfig]

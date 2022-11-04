@@ -5,6 +5,7 @@ import LinesVerticalTeal from 'assets/svgs/onboarding/lines-vertical-teal.svg';
 import { Button } from 'webapp/components';
 import { PinInput } from 'webapp/components/PinInput';
 import { useUserAppConfig } from 'webapp/features/settings';
+import { AppRoute } from 'webapp/routing/AppRoutes';
 import { openBrowserWindow } from 'webapp/services';
 
 const CreatePin = () => {
@@ -17,7 +18,7 @@ const CreatePin = () => {
 
   const handlePinCreate = async () => {
     await setUserAppConfig({ settings: { pin } });
-    // navigate(AppRoute.OnboardingPickKeyCreationMethod);
+    navigate(AppRoute.OnboardingPickKeyCreationMethod);
   };
 
   const pinIsMatching = useMemo(() => pin === pinConfirm, [pin, pinConfirm]);
