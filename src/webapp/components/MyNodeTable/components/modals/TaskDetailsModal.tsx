@@ -63,7 +63,7 @@ export const TaskDetailsModal = create<TaskDetailsModalPropsType>(
       <Modal>
         <ModalContent
           theme={Theme.Dark}
-          className="text-white w-[900px] h-[480px]"
+          className="text-white w-[900px] h-[480px] rounded"
         >
           <div className="flex flex-col h-full px-8 py-6">
             <div className="flex justify-between">
@@ -71,15 +71,15 @@ export const TaskDetailsModal = create<TaskDetailsModalPropsType>(
                 <div
                   className={`${
                     currentView === TabsType.TaskDetails && activeClasses
-                  } text-semibold`}
+                  } text-semibold cursor-pointer`}
                   onClick={() => setCurrentView(TabsType.TaskDetails)}
                 >
-                  Task Details
+                  Details
                 </div>
                 <div
                   className={`${
                     currentView === TabsType.SourceCode && activeClasses
-                  } text-semibold`}
+                  } text-semibold cursor-pointer`}
                   onClick={() => setCurrentView(TabsType.SourceCode)}
                 >
                   Source Code
