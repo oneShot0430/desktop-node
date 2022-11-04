@@ -1,13 +1,14 @@
+import startTask from 'main/controllers/startTask';
 import errorHandler from 'main/errorHandler';
+import koiiTasks from 'services/koiiTasks';
 
-const executeTasks = async (executableTasks: any[]): Promise<any> => {
+const executeTasks = async (): Promise<any> => {
+  const executableTasks = koiiTasks.getRunningTasks();
+
   console.log('EXECUTABLE TASKS', executableTasks);
-  await Promise.all(executableTasks.map((task) => task.setup()));
-  await Promise.all(
-    executableTasks.map((task) => {
-      task.execute();
-    })
-  );
+  const taskSrcProms = executableTasks.map(async (task) => {
+    await startTask(null, { taskAccountPubKey: task.publicKey });
+  });
 };
 
 export default errorHandler(executeTasks, 'Execute tasks error');
