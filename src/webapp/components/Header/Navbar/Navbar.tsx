@@ -5,9 +5,9 @@ import { NavLink } from 'react-router-dom';
 const navItems = [
   { name: 'My Node', to: '/my-node' },
   { name: 'Add Tasks', to: '/add-tasks' },
-  { name: 'Rewards', to: '/rewards' },
-  { name: 'History', to: '/history' },
-  { name: 'Notifications', to: '/notifications' },
+  // { name: 'Rewards', to: '/rewards' },
+  // { name: 'History', to: '/history' },
+  // { name: 'Notifications', to: '/notifications' },
   { name: 'Settings', to: '/settings' },
 ];
 
