@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import LinesVerticalTeal from 'assets/svgs/onboarding/lines-vertical-teal.svg';
 import { Button } from 'webapp/components';
 import { PinInput } from 'webapp/components/PinInput';
-import { AppRoute } from 'webapp/routing/AppRoutes';
+import { useUserAppConfig } from 'webapp/features/settings';
 import { openBrowserWindow } from 'webapp/services';
 
 const CreatePin = () => {
@@ -12,11 +12,12 @@ const CreatePin = () => {
   const [pin, setPin] = useState('');
   const [pinConfirm, setPinConfirm] = useState('');
   const navigate = useNavigate();
+  const { userConfig, setUserAppConfig } = useUserAppConfig();
+  console.log('####userConfig', userConfig);
 
-  const handlePinCreate = () => {
-    console.log('create pin');
-    // TODO: save pin to levelDB storage
-    navigate(AppRoute.OnboardingPickKeyCreationMethod);
+  const handlePinCreate = async () => {
+    await setUserAppConfig({ settings: { pin } });
+    // navigate(AppRoute.OnboardingPickKeyCreationMethod);
   };
 
   const pinIsMatching = useMemo(() => pin === pinConfirm, [pin, pinConfirm]);
