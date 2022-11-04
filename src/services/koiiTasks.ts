@@ -79,6 +79,8 @@ class KoiiTasks {
     this.tasks.map((task) => {
       if (task.publicKey == taskAccountPubKey) {
         task.data.isRunning = false;
+        if (!this.RUNNING_TASKS[taskAccountPubKey])
+          throw Error('No such task is running');
         this.RUNNING_TASKS[taskAccountPubKey].child.kill();
         delete this.RUNNING_TASKS[taskAccountPubKey];
       }

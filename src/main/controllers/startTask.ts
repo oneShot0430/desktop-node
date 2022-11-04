@@ -97,9 +97,17 @@ const startTask = async (event: Event, payload: TaskStartStopParam) => {
  */
 async function loadTask(selectedTask: ISelectedTasks) {
   console.log('Selected Tasks', selectedTask);
-  const res = await axios.get(
-    config.node.GATEWAY_URL + '/' + selectedTask.taskAuditProgram
-  );
+  let res;
+  try {
+    res = await axios.get(
+      config.node.GATEWAY_URL + '/' + selectedTask.taskAuditProgram
+    );
+  } catch (err) {
+    console.error(err);
+    throw new Error(
+      'Get task source error TaskAuditProgram:' + selectedTask.taskAuditProgram
+    );
+  }
   if (res.data) {
     fsSync.writeFileSync(
       `executables/${selectedTask.taskAuditProgram}.js`,
@@ -135,6 +143,10 @@ async function executeTasks(
   // const STAKE = Number(process.env.TASK_STAKES?.split(',') || 0);
   const stakingAccPubkey = getStakingAccountPublicKey();
   const STAKE = selectedTask.stakeList[stakingAccPubkey];
+  const log_file = fsSync.createWriteStream(
+    `namespace/${selectedTask.taskId}/task.log`,
+    { flags: 'a+' }
+  );
   const childTaskProcess = fork(
     `executables/${selectedTask.taskAuditProgram}.js`,
     [
@@ -150,6 +162,8 @@ async function executeTasks(
     ],
     options
   );
+  childTaskProcess.stdout.pipe(log_file);
+  childTaskProcess.stderr.pipe(log_file);
   const namespace = new Namespace(
     selectedTask.taskId,
     expressApp,
