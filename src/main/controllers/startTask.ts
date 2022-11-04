@@ -129,6 +129,7 @@ async function executeTasks(
 ) {
   const secret = await cryptoRandomString({ length: 20 });
   // Not passing all env to tasks for security reasons (Only passing ones that starts with SECRET)
+  // TODO: Change the process.env secrets to gettingSecrets from the levelDB in future iteration
   const SECRETS_ENV = Object.keys(process.env)
     .filter((e) => e.includes('SECRET'))
     .reduce((obj, key) => {
