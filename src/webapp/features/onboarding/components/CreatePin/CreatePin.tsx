@@ -5,6 +5,7 @@ import LinesVerticalTeal from 'assets/svgs/onboarding/lines-vertical-teal.svg';
 import { Button } from 'webapp/components';
 import { PinInput } from 'webapp/components/PinInput';
 import { AppRoute } from 'webapp/routing/AppRoutes';
+import { openBrowserWindow } from 'webapp/services';
 
 const CreatePin = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
@@ -32,6 +33,10 @@ const CreatePin = () => {
   }, [pin, pinIsMatching, termsAccepted]);
 
   const diableLogin = !canLogIn();
+
+  const openTermsWindow = () => {
+    openBrowserWindow('https://www.koii.network/TOU_June_22_2021.pdf');
+  };
 
   return (
     <div className="relative h-full overflow-hidden bg-finnieBlue-dark-secondary">
@@ -75,7 +80,11 @@ const CreatePin = () => {
               className="ml-4 text-sm font-medium "
             >
               I agree with the{' '}
-              <a href="#" className="underline text-finnieTeal">
+              <a
+                href="#"
+                className="underline text-finnieTeal"
+                onClick={openTermsWindow}
+              >
                 Terms of Service
               </a>
               .

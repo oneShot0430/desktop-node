@@ -4,6 +4,7 @@ import React from 'react';
 import { useQuery } from 'react-query';
 
 import CurrencyIconSvg from 'assets/svgs/onboarding/currency-icon.svg';
+import config from 'config';
 import CloseIconComponent from 'svgs/close-icons/close-icon-blue.svg';
 import { Button } from 'webapp/components';
 import { useClipboard } from 'webapp/features/common';
@@ -11,7 +12,7 @@ import { Modal, ModalContent } from 'webapp/features/modals';
 import {
   getMainAccountPublicKey,
   getFaucetStatus,
-  openFaucet,
+  openBrowserWindow,
 } from 'webapp/services';
 import { ValidationStatus } from 'webapp/types';
 
@@ -50,7 +51,7 @@ export const AddFunds = create(function AddFunds() {
   };
 
   const openFaucetAndClose = () => {
-    openFaucet(mainAccountPubKey);
+    openBrowserWindow(config.faucet.FAUCET_URL + mainAccountPubKey);
     closeModal();
   };
 

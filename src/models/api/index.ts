@@ -17,4 +17,4 @@ export * from './storeUserConfig';
 export * from './getUserConfig';
 export * from './getTasksById';
 export * from './removeAccountByName';
-export * from './openFaucet';
+export * from './openBrowserWindow';
