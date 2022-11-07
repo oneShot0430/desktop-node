@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import AddIconSvg from 'assets/svgs/onboarding/add-teal-icon.svg';
@@ -12,6 +12,8 @@ import { useRunFirstTasksLogic } from './hooks';
 import TaskItem from './TaskItem';
 
 const RunFirstTask = () => {
+  const [isRunButtonDisabled, setIsRunButtonDisabled] = useState<boolean>(true);
+
   const navigate = useNavigate();
   const {
     selectedTasks,
@@ -44,21 +46,26 @@ const RunFirstTask = () => {
           {loadingVerifiedTasks ? (
             <div>Loading...</div>
           ) : (
-            selectedTasks.map(({ publicKey, taskName, taskManager }, index) => (
-              <TaskItem
-                key={index}
-                stakeValue={stakePerTask[publicKey] ?? 0}
-                name={taskName}
-                creator={taskManager}
-                /**
-                 * @todo: get difficulty level from API
-                 */
-                level={'Low'}
-                minStake={25}
-                onStakeInputChange={(e) => handleStakeInputChange(e, publicKey)}
-                onRemove={() => handleTaskRemove(publicKey)}
-              />
-            ))
+            selectedTasks.map(
+              ({ publicKey, taskName, taskManager, minStake }, index) => (
+                <div className="mb-4" key={index}>
+                  <TaskItem
+                    stakeValue={stakePerTask[publicKey] ?? 0}
+                    name={taskName}
+                    creator={taskManager}
+                    /**
+                     * @todo: get difficulty level from API
+                     */
+                    level={'Low'}
+                    minStake={minStake}
+                    onStakeInputChange={(e) =>
+                      handleStakeInputChange(e, publicKey)
+                    }
+                    onRemove={() => handleTaskRemove(publicKey)}
+                  />
+                </div>
+              )
+            )
           )}
         </div>
 
@@ -80,6 +87,7 @@ const RunFirstTask = () => {
           <Button
             className="font-semibold bg-finnieGray-light text-finnieBlue-light w-56 h-[38px]"
             label="Run Tasks"
+            disabled={isRunButtonDisabled}
             onClick={handleContinue}
           />
           <div className="flex flex-row items-center gap-2 mt-2 text-sm text-finnieEmerald-light">
