@@ -74,11 +74,17 @@ export const AddFunds = create(function AddFunds({ onGoBack }: Props) {
   return (
     <Modal>
       <ModalContent className="w-[416px] h-[416px] text-finnieBlue rounded-xl pt-2">
-        <div className="w-full flex justify-between p-2">
-          <BackIcon
-            onClick={closeAndGoBack}
-            className="w-[18px] h-[18px] cursor-pointer z-20"
-          />
+        <div
+          className={`w-full flex ${
+            onGoBack ? 'justify-between' : 'justify-end'
+          } p-2`}
+        >
+          {onGoBack && (
+            <BackIcon
+              onClick={closeAndGoBack}
+              className="w-[18px] h-[18px] cursor-pointer z-20"
+            />
+          )}
           <CloseIconComponent
             data-testid="close-modal-button"
             onClick={() => {
