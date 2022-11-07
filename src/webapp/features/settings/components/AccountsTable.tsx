@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import React, { memo } from 'react';
 
 import AddIconSvg from 'assets/svgs/add-icon-outlined.svg';
@@ -15,14 +16,14 @@ const AccountsTable = () => {
   const { accounts, loadingAccounts, errorAccounts } = useAccounts();
 
   return (
-    <div className="flex flex-col justify-between">
-      <div>
-        <div className="flex justify-between pb-4 mb-4 font-semibold leading-5 text-white border-b-2 border-white">
-          <div className="w-[220px] pl-12">Account</div>
-          <div className="w-[540px]">Adress</div>
-          <div className="w-[136px]">Koii Balance</div>
+    <div className="flex flex-col justify-between h-[calc(100vh-18rem)]">
+      <div className="h-full flex flex-col">
+        <div className="grid grid-cols-16 pb-4 mb-4 font-semibold leading-5 text-white border-b-2 border-white">
+          <div className="col-start-2 col-span-3">Account</div>
+          <div className="col-start-6 col-span-5">Address</div>
+          <div className="col-start-14 col-span-2">Koii Balance</div>
         </div>
-        <div className="h-[38vh] overflow-y-auto">
+        <div className="overflow-y-auto">
           {loadingAccounts && (
             <div className="flex items-center justify-center h-full text-2xl text-white">
               Loading accounts...
@@ -31,11 +32,11 @@ const AccountsTable = () => {
           {errorAccounts && (
             <div className="flex items-center justify-center text-2xl">
               <ErrorMessage
-                errorMessage={(errorAccounts as { message: string }).message}
+                errorMessage={(errorAccounts as AxiosError).message}
               />
             </div>
           )}
-          {(accounts ?? []).map(
+          {accounts?.map(
             ({
               accountName,
               mainPublicKey,
@@ -59,13 +60,13 @@ const AccountsTable = () => {
 
         <Button
           label="New"
-          className="w-auto p-2 mt-10 bg-transparent h-[60px] text-white"
+          className="w-auto p-2 mr-auto my-6 bg-transparent h-[60px] text-white"
           icon={<AddIconSvg />}
           onClick={showModal}
         />
       </div>
 
-      <div className="text-xs text-finnieOrange">
+      <div className="mt-auto mb-4 text-xs text-finnieOrange">
         Controlling access to your keys is critical to protecting your assets
         stored on the Blockchain.
       </div>
