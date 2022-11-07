@@ -1,5 +1,5 @@
 import { sum } from 'lodash';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import AddIconSvg from 'assets/svgs/onboarding/add-teal-icon.svg';
@@ -19,10 +19,13 @@ const { TASK_FEE } = config.node;
 const ConfirmYourStake = () => {
   const navigate = useNavigate();
   const { state: selectedTasks } = useLocation();
-  const tasksToRun = selectedTasks as TaskWithStake[];
-  const handleRunTasksSuccess = () => navigate(AppRoute.MyNode);
+
+  const [tasksToRun, setTasksToRun] = useState<TaskWithStake[]>(
+    selectedTasks as TaskWithStake[]
+  );
 
   const { data: balance, isLoading } = useMainAccountBalance();
+  const handleRunTasksSuccess = () => navigate(AppRoute.MyNode);
   const { runAllTasks, runTasksLoading, runTasksError } = useRunMultipleTasks({
     tasksToRun,
     onRunAllTasksSuccessCallback: handleRunTasksSuccess,
@@ -46,6 +49,19 @@ const ConfirmYourStake = () => {
 
   const handleSelectMoreTasks = () => navigate(AppRoute.AddTask);
 
+  const updateStake = (publicKey: string, newStake: number) => {
+    const updatedTasks = tasksToRun.map((task) => {
+      const updatedTask = {
+        ...task,
+        ...(task.publicKey === publicKey && { stake: newStake }),
+      };
+
+      return updatedTask;
+    });
+
+    setTasksToRun(updatedTasks);
+  };
+
   return (
     <div className="relative h-full overflow-hidden bg-finnieBlue-dark-secondary">
       <div className="px-8">
@@ -53,7 +69,11 @@ const ConfirmYourStake = () => {
           You&apos;re choosing to run:
         </div>
 
-        <SelectedTasksSummary selectedTasks={tasksToRun} tasksFee={tasksFee} />
+        <SelectedTasksSummary
+          selectedTasks={tasksToRun}
+          tasksFee={tasksFee}
+          updateStake={updateStake}
+        />
 
         <div className="flex justify-center mt-[40px]">
           <div className="flex flex-col items-center justify-center">

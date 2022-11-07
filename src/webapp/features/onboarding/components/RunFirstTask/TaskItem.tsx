@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import CloseIcon from 'assets/svgs/close-icons/close-icon.svg';
 import CodeIconSvg from 'assets/svgs/code-icon.svg';
 
+import { EditStakeInput } from '..';
+
 type PropsType = {
   name: string;
   creator: string;
@@ -49,14 +51,12 @@ function TaskItem({
 
       <div className="my-auto mr-4 col-span-2">{level}</div>
 
-      <div className="mr-2 flex flex-col gap-1 col-span-1">
-        <input
-          value={stakeValue}
+      <div className="mr-2 col-span-1">
+        <EditStakeInput
+          stake={stakeValue}
           onChange={onStakeInputChange}
-          type="number"
-          className="rounded-sm text-right text-finnieBlue-dark p-0.75 w-full"
+          minStake={minStake}
         />
-        <div className="text-xs text-finnieEmerald-light leading-3">{`min. stake: ${minStake}`}</div>
       </div>
 
       <div
