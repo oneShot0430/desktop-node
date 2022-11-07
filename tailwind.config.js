@@ -11,6 +11,12 @@ module.exports = {
       roboto: ['Roboto', 'ui-sans-serif', 'system-ui'],
     },
     extend: {
+      height: {
+        13: '3.25rem',
+      },
+      width: {
+        22.5: '5.6rem',
+      },
       animation: {
         'reverse-spin': 'reverse-spin 1s linear infinite',
       },
@@ -63,6 +69,7 @@ module.exports = {
         '4xs': '7px',
         '2xs': '11px',
       },
+      padding: { 0.75: '3px' },
       spacing: {
         sm: '8px',
         md: '16px',
@@ -114,6 +121,7 @@ module.exports = {
       gridTemplateColumns: {
         15: 'repeat(15, minmax(0, 1fr))',
         16: 'repeat(16, minmax(0, 1fr))',
+        'first-task': '3.4rem repeat(10, minmax(0, 1fr)) minmax(6rem, 1fr) 1fr',
       },
       keyframes: {
         slideOut: {
