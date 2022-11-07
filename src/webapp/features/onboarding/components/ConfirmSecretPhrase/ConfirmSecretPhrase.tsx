@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { SeedPhraseConfirm } from 'webapp/components/SeedPhraseConfirm/SeedPhraseConfirm';
 import { Button } from 'webapp/components/ui/Button';
-import { AppRoute } from 'webapp/routing/AppRoutes';
+import { AppRoute } from 'webapp/types/routes';
 
 import { OnboardingContext } from '../../context/onboarding-context';
 

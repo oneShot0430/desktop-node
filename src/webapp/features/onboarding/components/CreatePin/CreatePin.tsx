@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import LinesVerticalTeal from 'assets/svgs/onboarding/lines-vertical-teal.svg';
 import { Button } from 'webapp/components';
 import { PinInput } from 'webapp/components/PinInput';
-import { AppRoute } from 'webapp/routing/AppRoutes';
 import { openBrowserWindow } from 'webapp/services';
+import { AppRoute } from 'webapp/types/routes';
 
 const CreatePin = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);

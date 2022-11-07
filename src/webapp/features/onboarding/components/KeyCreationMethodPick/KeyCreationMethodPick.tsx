@@ -5,12 +5,12 @@ import { useNavigate } from 'react-router-dom';
 import RewardsSvg from 'assets/svgs/onboarding/rewards-icon.svg';
 import SeedPhraseSvg from 'assets/svgs/onboarding/seed-phrase-icon.svg';
 import { ErrorMessage } from 'webapp/components/ui/ErrorMessage';
-import { AppRoute } from 'webapp/routing/AppRoutes';
 import {
   createNodeWallets,
   generateSeedPhrase,
   setActiveAccount,
 } from 'webapp/services';
+import { AppRoute } from 'webapp/types/routes';
 
 import { OnboardingContext } from '../../context/onboarding-context';
 

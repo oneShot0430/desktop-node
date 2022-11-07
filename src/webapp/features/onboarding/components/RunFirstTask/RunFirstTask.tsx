@@ -6,7 +6,7 @@ import CurrencySvgIcon from 'assets/svgs/onboarding/currency-teal-small-icon.svg
 import RestoreIconSvg from 'assets/svgs/onboarding/restore-orange-icon.svg';
 import BgShape from 'assets/svgs/onboarding/shape_1.svg';
 import { Button } from 'webapp/components';
-import { AppRoute } from 'webapp/routing/AppRoutes';
+import { AppRoute } from 'webapp/types/routes';
 
 import { useRunFirstTasksLogic } from './hooks';
 import TaskItem from './TaskItem';

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import WarningIcon from 'assets/svgs/onboarding/warning-icon.svg';
 import { ShowSeedPhrase } from 'webapp/components/ShowSeedPhrase';
 import { Button } from 'webapp/components/ui/Button';
-import { AppRoute } from 'webapp/routing/AppRoutes';
+import { AppRoute } from 'webapp/types/routes';
 
 import { OnboardingContext } from '../../context/onboarding-context';
 
@@ -16,11 +16,13 @@ export const BackupKeyNow = () => {
     setPhraseRevealed(true);
   };
 
+  console.log('newSeedPhrase`', newSeedPhrase);
+
   const handleConfirmClick = () => {
     const skipThisStep = !phraseRevealed;
 
     if (skipThisStep) {
-      navigate(AppRoute.MyNode);
+      navigate(AppRoute.OnboardingCreateFirstTask);
     } else {
       navigate(AppRoute.OnboardingConfirmSecretPhrase);
     }

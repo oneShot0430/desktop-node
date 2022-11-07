@@ -8,8 +8,8 @@ import { ErrorMessage } from 'webapp/components';
 import { Button } from 'webapp/components/ui/Button';
 import { useNotEnoughFunds, useRunMultipleTasks } from 'webapp/features/common';
 import { useMainAccountBalance } from 'webapp/features/settings';
-import { AppRoute } from 'webapp/routing/AppRoutes';
 import { TaskWithStake } from 'webapp/types';
+import { AppRoute } from 'webapp/types/routes';
 
 import { SelectedTasksSummary } from './SelectedTasksSummary';
 

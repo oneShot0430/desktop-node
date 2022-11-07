@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { Button } from 'webapp/components';
 import { Modal, ModalContent, ModalTopBar } from 'webapp/features/modals';
-import { AppRoute } from 'webapp/routing/AppRoutes';
+import { AppRoute } from 'webapp/types/routes';
 
 export const NotEnoughFunds = create(function NotEnoughFunds() {
   const modal = useModal();

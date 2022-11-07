@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import CheckMarkIcon from 'assets/svgs/checkmark-icon.svg';
-import { AppRoute } from 'webapp/routing/AppRoutes';
+import { AppRoute } from 'webapp/types/routes';
 
 type PropsType = {
   balance: string | number;
@@ -12,13 +12,13 @@ export const ShowBalance = ({ balance }: PropsType) => {
   const navigate = useNavigate();
   useEffect(() => {
     setTimeout(() => {
-      navigate(AppRoute.OnboardingCreateFirstTask);
+      navigate(AppRoute.OnboardingBackupKeyNow);
     }, 5000);
   }, [navigate]);
 
   return (
-    <div className="flex flex-col items-center">
-      <div className="w-[492px] mb-4">
+    <div className="flex flex-col items-center h-full pt-48">
+      <div className="w-[492px] mb-10">
         Success! You can now stake tokens and run tasks to
         <br /> earn rewards.
       </div>

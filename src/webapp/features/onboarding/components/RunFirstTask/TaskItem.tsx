@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import CloseIcon from 'assets/svgs/close-icons/close-icon.svg';
 import CodeIconSvg from 'assets/svgs/code-icon.svg';
@@ -22,49 +22,38 @@ function TaskItem({
   onStakeInputChange,
   onRemove,
 }: PropsType) {
-  const [hover, setHover] = useState(false);
-
-  const handleOnHover = () => {
-    setHover(true);
-  };
-  const handleUnhover = () => {
-    setHover(false);
-  };
-
   return (
-    <div
-      className="bg-finnieBlue-light-secondary h-13 rounded-md text-sm mb-4 text-left w-full grid grid-cols-first-task place-content-center"
-      onMouseEnter={handleOnHover}
-      onMouseLeave={handleUnhover}
-    >
-      <CodeIconSvg className="m-auto col-span-1" />
+    <div className="grid w-full mb-4 text-sm text-left rounded-md bg-finnieBlue-light-secondary h-13 grid-cols-first-task place-content-center">
+      <CodeIconSvg className="col-span-1 m-auto" />
 
-      <div className="text-ellipsis overflow-hidden my-auto mr-4 col-span-4">
+      <div className="col-span-4 my-auto mr-4 overflow-hidden text-ellipsis">
         {name}
       </div>
 
-      <div className="text-ellipsis overflow-hidden  my-auto pr-4 col-span-4">
+      <div className="col-span-4 pr-4 my-auto overflow-hidden text-ellipsis">
         {creator}
       </div>
 
-      <div className="my-auto mr-4 col-span-2">{level}</div>
+      <div className="col-span-2 my-auto mr-4">{level}</div>
 
-      <div className="mr-2 flex flex-col gap-1 col-span-1">
+      <div className="flex flex-col col-span-1 gap-1 mr-2">
         <input
           value={stakeValue}
           onChange={onStakeInputChange}
           type="number"
           className="rounded-sm text-right text-finnieBlue-dark p-0.75 w-full"
         />
-        <div className="text-xs text-finnieEmerald-light leading-3">{`min. stake: ${minStake}`}</div>
+        <div className="text-xs leading-3 text-finnieEmerald-light">{`min. stake: ${minStake}`}</div>
       </div>
 
       <div
-        className="cursor-pointer text-finnieRed col-span-1 m-auto"
+        className="col-span-1 m-auto cursor-pointer text-finnieRed"
         onClick={onRemove}
         title="Remove task"
       >
-        <div className="w-6 h-6 mr-2">{hover && <CloseIcon />}</div>
+        <div className="w-6 h-6 mr-2">
+          <CloseIcon />
+        </div>
       </div>
     </div>
   );
