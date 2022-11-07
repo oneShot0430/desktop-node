@@ -17,11 +17,11 @@ import {
 } from 'webapp/services';
 import { ValidationStatus } from 'webapp/types';
 
-interface Props {
-  onGoBack: () => void;
+interface PropsType {
+  onGoBack?: () => void;
 }
 
-export const AddFunds = create(function AddFunds({ onGoBack }: Props) {
+export const AddFunds = create(function AddFunds({ onGoBack }: PropsType) {
   const modal = useModal();
   const { copyToClipboard } = useClipboard();
   const { data: mainAccountPubKey } = useQuery(

@@ -14,7 +14,7 @@ export const EditStakeInput = ({
   meetsMinimumStake,
   onChange,
 }: PropsType) => {
-  const classes = twMerge(
+  const inputClasses = twMerge(
     'w-[92px] rounded-sm text-right text-finnieBlue-dark p-[3px]',
     !meetsMinimumStake && 'border border-red-500'
   );
@@ -25,7 +25,7 @@ export const EditStakeInput = ({
         value={stake}
         onChange={onChange}
         type="number"
-        className={classes}
+        className={inputClasses}
       />
       <div className="text-xs text-finnieEmerald-light">
         min. stake: {minStake}

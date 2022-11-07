@@ -12,7 +12,9 @@ export const NotEnoughFunds = create(function NotEnoughFunds() {
   const modal = useModal();
   const navigate = useNavigate();
 
-  const { showModal: showFundNewAccountModal } = useFundNewAccountModal();
+  const { showModal: showFundNewAccountModal } = useFundNewAccountModal(
+    modal.show
+  );
 
   const handleFundMyKey = () => {
     modal.remove();
