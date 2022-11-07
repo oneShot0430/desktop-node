@@ -43,7 +43,7 @@ const ModalTopBar = ({
 
   const topBarMergedClasses = twMerge(
     'flex justify-between items-center h-[67px] px-4',
-    theme === 'light' && 'shadow-lg',
+    'shadow-lg',
     wrapperClasses
   );
 
