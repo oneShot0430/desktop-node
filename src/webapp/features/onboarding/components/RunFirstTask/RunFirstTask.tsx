@@ -39,7 +39,6 @@ const RunFirstTask = () => {
           <div className="mb-2 text-xs text-left w-full grid grid-cols-first-task">
             <div className="col-start-2 col-span-4">Task Name</div>
             <div className="col-span-4">Creator</div>
-            <div className="col-span-2">Level</div>
             <div className="col-span-1">Stake</div>
           </div>
 
@@ -56,7 +55,6 @@ const RunFirstTask = () => {
                     /**
                      * @todo: get difficulty level from API
                      */
-                    level={'Low'}
                     minStake={minStake}
                     onStakeInputChange={(e) => {
                       handleStakeInputChange(e, publicKey);

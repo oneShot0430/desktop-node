@@ -8,7 +8,6 @@ import { EditStakeInput } from '..';
 type PropsType = {
   name: string;
   creator: string;
-  level: string;
   minStake: number;
   stakeValue: number;
   onStakeInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -18,7 +17,6 @@ type PropsType = {
 function TaskItem({
   name,
   creator,
-  level,
   minStake,
   stakeValue,
   onStakeInputChange,
@@ -53,8 +51,6 @@ function TaskItem({
       <div className="text-ellipsis overflow-hidden  my-auto pr-4 col-span-4">
         {creator}
       </div>
-
-      <div className="my-auto mr-4 col-span-2">{level}</div>
 
       <div className="mr-2 col-span-1">
         <EditStakeInput
