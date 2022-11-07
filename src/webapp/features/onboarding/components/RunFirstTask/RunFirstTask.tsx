@@ -58,9 +58,10 @@ const RunFirstTask = () => {
                      */
                     level={'Low'}
                     minStake={minStake}
-                    onStakeInputChange={(e) =>
-                      handleStakeInputChange(e, publicKey)
-                    }
+                    onStakeInputChange={(e) => {
+                      handleStakeInputChange(e, publicKey);
+                      setIsRunButtonDisabled(Number(e.target.value) < minStake);
+                    }}
                     onRemove={() => handleTaskRemove(publicKey)}
                   />
                 </div>

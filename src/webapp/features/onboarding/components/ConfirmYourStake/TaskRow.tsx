@@ -1,4 +1,4 @@
-import React, { useState, ChangeEventHandler } from 'react';
+import React, { useState, ChangeEventHandler, useMemo } from 'react';
 import { useQuery } from 'react-query';
 import { twMerge } from 'tailwind-merge';
 
@@ -15,13 +15,20 @@ import { EditStakeInput } from '..';
 interface PropsType {
   task: TaskWithStake;
   updateStake: (taskPublicKey: string, newStake: number) => void;
+  setIsRunButtonDisabled: (isDisabled: boolean) => void;
 }
 
-export const TaskRow = ({ task, updateStake }: PropsType) => {
+export const TaskRow = ({
+  task,
+  updateStake,
+  setIsRunButtonDisabled,
+}: PropsType) => {
   const { publicKey, taskName, stake: originalStake, minStake } = task;
 
   const [stake, setStake] = useState<number>(originalStake);
   const [isEditingStake, setIsEditingStake] = useState<boolean>(false);
+
+  const meetsMinimumStake = useMemo(() => stake >= minStake, [stake, minStake]);
 
   const { data: mainAccountPubKey } = useQuery(QueryKeys.MainAccount, () =>
     getMainAccountPublicKey()
@@ -50,8 +57,13 @@ export const TaskRow = ({ task, updateStake }: PropsType) => {
   );
 
   const disableEditStake = () => {
-    updateStake(task.publicKey, stake);
-    setIsEditingStake(false);
+    if (meetsMinimumStake) {
+      updateStake(task.publicKey, stake);
+      setIsEditingStake(false);
+      setIsRunButtonDisabled(false);
+    } else {
+      setIsRunButtonDisabled(true);
+    }
   };
 
   const enableEditStake = () => setIsEditingStake(true);
@@ -82,6 +94,7 @@ export const TaskRow = ({ task, updateStake }: PropsType) => {
           {isEditingStake ? (
             <EditStakeInput
               stake={stake}
+              meetsMinimumStake={meetsMinimumStake}
               minStake={minStake}
               onChange={handleEditInputChange}
             />

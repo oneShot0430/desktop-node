@@ -23,6 +23,7 @@ const ConfirmYourStake = () => {
   const [tasksToRun, setTasksToRun] = useState<TaskWithStake[]>(
     selectedTasks as TaskWithStake[]
   );
+  const [isRunButtonDisabled, setIsRunButtonDisabled] = useState<boolean>();
 
   const { data: balance, isLoading } = useMainAccountBalance();
   const handleRunTasksSuccess = () => navigate(AppRoute.MyNode);
@@ -73,6 +74,7 @@ const ConfirmYourStake = () => {
           selectedTasks={tasksToRun}
           tasksFee={tasksFee}
           updateStake={updateStake}
+          setIsRunButtonDisabled={setIsRunButtonDisabled}
         />
 
         <div className="flex justify-center mt-[40px]">
@@ -86,7 +88,7 @@ const ConfirmYourStake = () => {
             <Button
               className="font-semibold bg-finnieGray-light text-finnieBlue-light w-[220px] h-[38px]"
               label={runTasksLoading ? 'Running tasks...' : 'Confirm'}
-              disabled={runTasksLoading}
+              disabled={runTasksLoading || isRunButtonDisabled}
               onClick={handleConfirm}
             />
             {runTasksError ? (

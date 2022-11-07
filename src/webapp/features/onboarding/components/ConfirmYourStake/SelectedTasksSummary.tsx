@@ -9,12 +9,14 @@ type PropsType = {
   selectedTasks: TaskWithStake[];
   tasksFee: number;
   updateStake: (taskPublicKey: string, newStake: number) => void;
+  setIsRunButtonDisabled: (isDisabled: boolean) => void;
 };
 
 export const SelectedTasksSummary = ({
   selectedTasks,
   tasksFee,
   updateStake,
+  setIsRunButtonDisabled,
 }: PropsType) => {
   const listEmpty = selectedTasks.length === 0;
   const totalKoiiStaked = useMemo(
@@ -41,6 +43,7 @@ export const SelectedTasksSummary = ({
               key={task.publicKey}
               task={task}
               updateStake={updateStake}
+              setIsRunButtonDisabled={setIsRunButtonDisabled}
             />
           ))
         )}

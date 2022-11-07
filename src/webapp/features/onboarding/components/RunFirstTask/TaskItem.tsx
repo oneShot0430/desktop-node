@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, ChangeEventHandler } from 'react';
 
 import CloseIcon from 'assets/svgs/close-icons/close-icon.svg';
 import CodeIconSvg from 'assets/svgs/code-icon.svg';
@@ -25,12 +25,17 @@ function TaskItem({
   onRemove,
 }: PropsType) {
   const [hover, setHover] = useState(false);
+  const [meetsMinimumStake, setMeetsMinimumStake] = useState<boolean>(false);
 
   const handleOnHover = () => {
     setHover(true);
   };
   const handleUnhover = () => {
     setHover(false);
+  };
+  const handleStakeInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setMeetsMinimumStake(stakeValue >= minStake);
+    onStakeInputChange(e);
   };
 
   return (
@@ -54,7 +59,8 @@ function TaskItem({
       <div className="mr-2 col-span-1">
         <EditStakeInput
           stake={stakeValue}
-          onChange={onStakeInputChange}
+          onChange={handleStakeInputChange}
+          meetsMinimumStake={meetsMinimumStake}
           minStake={minStake}
         />
       </div>
