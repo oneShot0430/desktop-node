@@ -7,8 +7,7 @@ import { namespaceInstance } from 'main/node/helpers/Namespace';
 
 import executeTasks from './executeTasks';
 import initExpressApp from './initExpressApp';
-// import initKohaku from './initKohaku';
-import loadTasks from './loadTasks';
+// import loadTasks from './loadTasks';
 
 export default async (): Promise<any> => {
   // if (!process.env.NODE_MODE) throw new Error('env not found');
@@ -37,11 +36,10 @@ export default async (): Promise<any> => {
     if (fs.existsSync(mainWalletfilePath)) {
       /* Init Express app */
       const expressApp = await initExpressApp();
-      /* Load tasks */
-      const executableTasks = await loadTasks(expressApp);
-      console.log('LOADING TASKS COMPLETED');
-      /* Execute tasks */
-      await executeTasks(executableTasks);
+
+      /* Loading and Executing last running tasks */
+      console.log('Executing TASKS');
+      await executeTasks();
     }
   } catch (e) {
     console.error('ERROR In TASK start', e);

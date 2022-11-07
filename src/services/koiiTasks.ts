@@ -1,10 +1,13 @@
 // import { Task } from 'main/type';
+import { ChildProcess } from 'child_process';
+
 import fetchAllTasks from '../main/controllers/fetchAlltasks';
 import { namespaceInstance } from '../main/node/helpers/Namespace';
-import { Task } from '../main/type/TaskData';
+import { Task, IRunningTasks } from '../main/type/TaskData';
 
 class KoiiTasks {
   private tasks: Task[] = [];
+  public RUNNING_TASKS: IRunningTasks = {};
   // private addedTasks: AddedTask[]
 
   constructor() {
@@ -38,11 +41,22 @@ class KoiiTasks {
     }, 60000);
   }
 
-  async taskStarted(publicKey: string, cronArray: any): Promise<void> {
+  async taskStarted(
+    taskAccountPubKey: string,
+    namespace: any,
+    childTaskProcess: ChildProcess,
+    expressAppPort: number,
+    secret: string
+  ): Promise<void> {
     this.tasks.map((task) => {
-      if (task.publicKey == publicKey) {
+      if (task.publicKey == taskAccountPubKey) {
         task.data.isRunning = true;
-        task.data.cronArray = cronArray;
+        this.RUNNING_TASKS[taskAccountPubKey] = {
+          namespace: namespace,
+          child: childTaskProcess,
+          expressAppPort: expressAppPort,
+          secret: secret,
+        };
       }
       return task;
     });
@@ -61,17 +75,14 @@ class KoiiTasks {
     );
     return;
   }
-  taskStopped(publicKey: string) {
+  taskStopped(taskAccountPubKey: string) {
     this.tasks.map((task) => {
-      if (task.publicKey == publicKey) {
+      if (task.publicKey == taskAccountPubKey) {
         task.data.isRunning = false;
-        task.data.cronArray.map((e: any) => {
-          try {
-            e.stop();
-          } catch (e) {
-            console.error('ERROR in task stop:', e);
-          }
-        });
+        if (!this.RUNNING_TASKS[taskAccountPubKey])
+          throw Error('No such task is running');
+        this.RUNNING_TASKS[taskAccountPubKey].child.kill();
+        delete this.RUNNING_TASKS[taskAccountPubKey];
       }
       return task;
     });

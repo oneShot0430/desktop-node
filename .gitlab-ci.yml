@@ -27,4 +27,4 @@ build:
     - cp -r out/make/deb/x64/* .public
     - mv .public public
     - ls -ltr public/
-    - aws s3 cp public/* s3://packer-test11 --acl public-read   
+    - aws s3 cp public/* s3://cdn.koii.live --acl public-read   

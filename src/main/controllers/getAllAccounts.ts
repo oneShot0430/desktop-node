@@ -38,6 +38,7 @@ const getAllAccounts = async (
     );
     const stakingWalletName =
       stakingWalletNameArr.length > 0 ? stakingWalletNameArr[0] : '';
+    if (stakingWalletName == '') return;
     const stakingWallet = Keypair.fromSecretKey(
       Uint8Array.from(
         JSON.parse(fs.readFileSync(`namespace/${stakingWalletName}`, 'utf-8'))
