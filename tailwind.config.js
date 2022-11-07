@@ -121,7 +121,7 @@ module.exports = {
       gridTemplateColumns: {
         15: 'repeat(15, minmax(0, 1fr))',
         16: 'repeat(16, minmax(0, 1fr))',
-        'first-task': '3.4rem repeat(10, minmax(0, 1fr)) minmax(6rem, 1fr) 1fr',
+        'first-task': '3.4rem repeat(10, minmax(0, 1fr)) minmax(6rem, 3fr) 1fr',
       },
       gridColumnStart: {
         14: '14',

@@ -3,6 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Button } from 'webapp/components';
+import { useFundNewAccountModal } from 'webapp/features/common';
 import { Modal, ModalContent, ModalTopBar } from 'webapp/features/modals';
 import { AppRoute } from 'webapp/routing/AppRoutes';
 import { Theme } from 'webapp/types/common';
@@ -10,6 +11,15 @@ import { Theme } from 'webapp/types/common';
 export const NotEnoughFunds = create(function NotEnoughFunds() {
   const modal = useModal();
   const navigate = useNavigate();
+
+  const { showModal: showFundNewAccountModal } = useFundNewAccountModal(
+    modal.show
+  );
+
+  const handleFundMyKey = () => {
+    modal.remove();
+    showFundNewAccountModal();
+  };
 
   return (
     <Modal>
@@ -37,7 +47,11 @@ export const NotEnoughFunds = create(function NotEnoughFunds() {
                 navigate(AppRoute.MyNode);
               }}
             />
-            <Button label="Fund my Key" className="bg-white" />
+            <Button
+              label="Fund my Key"
+              className="bg-white"
+              onClick={handleFundMyKey}
+            />
           </div>
         </div>
       </ModalContent>
