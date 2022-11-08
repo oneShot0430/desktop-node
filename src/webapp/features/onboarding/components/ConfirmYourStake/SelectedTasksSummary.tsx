@@ -8,11 +8,15 @@ import { TaskRow } from './TaskRow';
 type PropsType = {
   selectedTasks: TaskWithStake[];
   tasksFee: number;
+  updateStake: (taskPublicKey: string, newStake: number) => void;
+  setIsRunButtonDisabled: (isDisabled: boolean) => void;
 };
 
 export const SelectedTasksSummary = ({
   selectedTasks,
   tasksFee,
+  updateStake,
+  setIsRunButtonDisabled,
 }: PropsType) => {
   const listEmpty = selectedTasks.length === 0;
   const totalKoiiStaked = useMemo(
@@ -20,10 +24,6 @@ export const SelectedTasksSummary = ({
     [selectedTasks]
   );
   const tasksFeeToDisplay = `~ ${tasksFee.toFixed(2)}`;
-
-  // if (listEmpty) {
-  //   return null;
-  // }
 
   return (
     <div className="w-full h-full bg-finnieBlue-light-secondary py-[28px] rounded-md min-h-[330px]">
@@ -39,7 +39,12 @@ export const SelectedTasksSummary = ({
           </div>
         ) : (
           selectedTasks.map((task) => (
-            <TaskRow key={task.publicKey} task={task} />
+            <TaskRow
+              key={task.publicKey}
+              task={task}
+              updateStake={updateStake}
+              setIsRunButtonDisabled={setIsRunButtonDisabled}
+            />
           ))
         )}
       </div>

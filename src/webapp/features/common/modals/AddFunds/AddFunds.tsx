@@ -5,6 +5,7 @@ import { useQuery } from 'react-query';
 
 import CurrencyIconSvg from 'assets/svgs/onboarding/currency-icon.svg';
 import config from 'config';
+import BackIcon from 'svgs/back-icon.svg';
 import CloseIconComponent from 'svgs/close-icons/close-icon-blue.svg';
 import { Button } from 'webapp/components';
 import { useClipboard } from 'webapp/features/common';
@@ -16,7 +17,11 @@ import {
 } from 'webapp/services';
 import { ValidationStatus } from 'webapp/types';
 
-export const AddFunds = create(function AddFunds() {
+interface PropsType {
+  onGoBack?: () => void;
+}
+
+export const AddFunds = create(function AddFunds({ onGoBack }: PropsType) {
   const modal = useModal();
   const { copyToClipboard } = useClipboard();
   const { data: mainAccountPubKey } = useQuery(
@@ -60,10 +65,26 @@ export const AddFunds = create(function AddFunds() {
     closeModal();
   };
 
+  const closeAndGoBack = () => {
+    onGoBack?.();
+    modal.resolve();
+    modal.remove();
+  };
+
   return (
     <Modal>
       <ModalContent className="w-[416px] h-[416px] text-finnieBlue rounded-xl pt-2">
-        <div className="flex justify-end pr-2">
+        <div
+          className={`w-full flex ${
+            onGoBack ? 'justify-between' : 'justify-end'
+          } p-2`}
+        >
+          {onGoBack && (
+            <BackIcon
+              onClick={closeAndGoBack}
+              className="w-[18px] h-[18px] cursor-pointer z-20"
+            />
+          )}
           <CloseIconComponent
             data-testid="close-modal-button"
             onClick={() => {

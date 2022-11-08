@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, ChangeEventHandler } from 'react';
 
 import CloseIcon from 'assets/svgs/close-icons/close-icon.svg';
 import CodeIconSvg from 'assets/svgs/code-icon.svg';
 
+import { EditStakeInput } from '..';
+
 type PropsType = {
   name: string;
   creator: string;
-  level: string;
   minStake: number;
   stakeValue: number;
   onStakeInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -16,19 +17,23 @@ type PropsType = {
 function TaskItem({
   name,
   creator,
-  level,
   minStake,
   stakeValue,
   onStakeInputChange,
   onRemove,
 }: PropsType) {
   const [hover, setHover] = useState(false);
+  const [meetsMinimumStake, setMeetsMinimumStake] = useState<boolean>(false);
 
   const handleOnHover = () => {
     setHover(true);
   };
   const handleUnhover = () => {
     setHover(false);
+  };
+  const handleStakeInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setMeetsMinimumStake(stakeValue >= minStake);
+    onStakeInputChange(e);
   };
 
   return (
@@ -47,16 +52,13 @@ function TaskItem({
         {creator}
       </div>
 
-      <div className="my-auto mr-4 col-span-2">{level}</div>
-
-      <div className="mr-2 flex flex-col gap-1 col-span-1">
-        <input
-          value={stakeValue}
-          onChange={onStakeInputChange}
-          type="number"
-          className="rounded-sm text-right text-finnieBlue-dark p-0.75 w-full"
+      <div className="mr-2 col-span-1">
+        <EditStakeInput
+          stake={stakeValue}
+          onChange={handleStakeInputChange}
+          meetsMinimumStake={meetsMinimumStake}
+          minStake={minStake}
         />
-        <div className="text-xs text-finnieEmerald-light leading-3">{`min. stake: ${minStake}`}</div>
       </div>
 
       <div
