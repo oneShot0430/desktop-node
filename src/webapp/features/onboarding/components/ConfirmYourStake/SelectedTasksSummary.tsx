@@ -14,7 +14,7 @@ type PropsType = {
 
 export const SelectedTasksSummary = ({ selectedTasks }: PropsType) => {
   const listEmpty = selectedTasks.length === 0;
-  const taskFees = `~ ${TASK_FEE}`;
+  const taskFees = `~ ${TASK_FEE * selectedTasks.length}`;
   const totalKoiiStaked = useMemo(
     () => sum(selectedTasks.map((task) => task.stake)),
     [selectedTasks]
