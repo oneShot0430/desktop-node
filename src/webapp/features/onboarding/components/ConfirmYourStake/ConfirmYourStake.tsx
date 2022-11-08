@@ -34,10 +34,10 @@ const ConfirmYourStake = () => {
     [tasksToRun]
   );
   const tasksFee = TASK_FEE * tasksToRun.length;
-  const totalKoiiToSpend = totalKoiiStaked + tasksFee;
+  const totalKoiiToUse = totalKoiiStaked + tasksFee;
 
   const handleConfirm = () => {
-    if (balance < totalKoiiToSpend) {
+    if (balance < totalKoiiToUse) {
       showNotEnoughFunds();
     } else {
       runAllTasks();
