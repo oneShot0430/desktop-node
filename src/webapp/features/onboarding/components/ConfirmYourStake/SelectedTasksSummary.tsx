@@ -1,9 +1,12 @@
 import { sum } from 'lodash';
 import React, { useMemo } from 'react';
 
+import config from 'config';
 import { TaskWithStake } from 'webapp/types';
 
 import { TaskRow } from './TaskRow';
+
+const { TASK_FEE } = config.node;
 
 type PropsType = {
   selectedTasks: TaskWithStake[];
@@ -11,10 +14,7 @@ type PropsType = {
 
 export const SelectedTasksSummary = ({ selectedTasks }: PropsType) => {
   const listEmpty = selectedTasks.length === 0;
-  /**
-   * @todo: calculate fees
-   */
-  const taskFees = '~ 0.1';
+  const taskFees = `~ ${TASK_FEE}`;
   const totalKoiiStaked = useMemo(
     () => sum(selectedTasks.map((task) => task.stake)),
     [selectedTasks]
