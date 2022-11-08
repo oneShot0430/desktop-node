@@ -15,7 +15,10 @@ export const k2_NETWORK_URL = 'https://k2-testnet.koii.live';
 //export const k2_NETWORK_URL = 'http://localhost:8899';
 
 export const TASK_CONTRACT_ID = 'Koiitask22222222222222222222222222222222222';
+
 const MINIMUM_ACCEPTED_LENGTH_TASK_CONTRACT = 500;
+
+const TASK_FEE = 0.05;
 
 export default {
   REDIS,
@@ -26,4 +29,5 @@ export default {
   k2_NETWORK_URL,
   TASK_CONTRACT_ID,
   MINIMUM_ACCEPTED_LENGTH_TASK_CONTRACT,
+  TASK_FEE,
 };

@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import AddIconSvg from 'assets/svgs/onboarding/add-teal-icon.svg';
 import CurrencySvgIcon from 'assets/svgs/onboarding/currency-teal-small-icon.svg';
+import config from 'config';
 import { ErrorMessage } from 'webapp/components';
 import { Button } from 'webapp/components/ui/Button';
 import { useNotEnoughFunds, useRunMultipleTasks } from 'webapp/features/common';
@@ -12,6 +13,8 @@ import { AppRoute } from 'webapp/routing/AppRoutes';
 import { TaskWithStake } from 'webapp/types';
 
 import { SelectedTasksSummary } from './SelectedTasksSummary';
+
+const { TASK_FEE } = config.node;
 
 const ConfirmYourStake = () => {
   const navigate = useNavigate();
@@ -30,9 +33,11 @@ const ConfirmYourStake = () => {
     () => sum(tasksToRun.map((task) => task.stake)),
     [tasksToRun]
   );
+  const tasksFee = TASK_FEE * tasksToRun.length;
+  const totalKoiiToUse = totalKoiiStaked + tasksFee;
 
   const handleConfirm = () => {
-    if (balance < totalKoiiStaked) {
+    if (balance < totalKoiiToUse) {
       showNotEnoughFunds();
     } else {
       runAllTasks();
@@ -48,7 +53,7 @@ const ConfirmYourStake = () => {
           You&apos;re choosing to run:
         </div>
 
-        <SelectedTasksSummary selectedTasks={tasksToRun} />
+        <SelectedTasksSummary selectedTasks={tasksToRun} tasksFee={tasksFee} />
 
         <div className="flex justify-center mt-[40px]">
           <div className="flex flex-col items-center justify-center">
