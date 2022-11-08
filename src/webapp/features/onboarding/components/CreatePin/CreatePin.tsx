@@ -13,13 +13,12 @@ const CreatePin = () => {
   const [pin, setPin] = useState('');
   const [pinConfirm, setPinConfirm] = useState('');
   const navigate = useNavigate();
-  const { userConfig, handleSaveUserAppConfig } = useUserAppConfig({
+  const { handleSaveUserAppConfig } = useUserAppConfig({
     onConfigSaveSuccess: () =>
       navigate(AppRoute.OnboardingPickKeyCreationMethod),
   });
-  console.log('####userConfig', userConfig);
 
-  const handlePinCreate = async () => {
+  const handlePinCreate = () => {
     handleSaveUserAppConfig({ settings: { pin } });
   };
 
