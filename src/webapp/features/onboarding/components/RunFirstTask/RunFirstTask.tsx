@@ -52,9 +52,6 @@ const RunFirstTask = () => {
                     stakeValue={stakePerTask[publicKey] ?? 0}
                     name={taskName}
                     creator={taskManager}
-                    /**
-                     * @todo: get difficulty level from API
-                     */
                     minStake={minStake}
                     onStakeInputChange={(e) => {
                       handleStakeInputChange(e, publicKey);
