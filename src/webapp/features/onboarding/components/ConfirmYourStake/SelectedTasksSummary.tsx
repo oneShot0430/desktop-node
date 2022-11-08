@@ -19,7 +19,7 @@ export const SelectedTasksSummary = ({
     () => sum(selectedTasks.map((task) => task.stake)),
     [selectedTasks]
   );
-  const tasksFeeToDisplay = `~ ${tasksFee}`;
+  const tasksFeeToDisplay = `~ ${tasksFee.toFixed(2)}`;
 
   // if (listEmpty) {
   //   return null;
