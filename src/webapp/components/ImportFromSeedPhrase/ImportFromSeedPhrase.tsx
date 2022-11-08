@@ -76,7 +76,7 @@ const ImportFromSeedPhrase = ({
 
   return (
     <div className="relative">
-      <div className="px-[42px]">
+      <div>
         <div className="flex justify-center">
           <div className="columns-2 bg-finnieBlue-light-secondary w-[360px] rounded py-4 px-[30px] select-text">
             {phrases.map((_, index) => {
