@@ -20,9 +20,9 @@ export const SelectedTasksSummary = ({
   setIsRunButtonDisabled,
 }: PropsType) => {
   const listEmpty = selectedTasks.length === 0;
-  const totalKoiiStakedInKoii = useMemo(() => {
-    const totalKoiiStaked = sum(selectedTasks.map((task) => task.stake));
-    return getKoiiFromRoe(totalKoiiStaked);
+  const totalStakedInKoii = useMemo(() => {
+    const totalStakedInRoe = sum(selectedTasks.map((task) => task.stake));
+    return getKoiiFromRoe(totalStakedInRoe);
   }, [selectedTasks]);
   const tasksFeeToDisplay = `~ ${tasksFee.toFixed(2)}`;
 
@@ -59,7 +59,7 @@ export const SelectedTasksSummary = ({
           <div className="mb-2 font-semibold text-finnieEmerald-light">
             Total KOII staked
           </div>
-          <div className="text-white">{totalKoiiStakedInKoii} KOII</div>
+          <div className="text-white">{totalStakedInKoii} KOII</div>
         </div>
       </div>
     </div>
