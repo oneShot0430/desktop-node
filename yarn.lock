@@ -44,6 +44,15 @@
     superstruct "^0.14.2"
     tweetnacl "^1.0.0"
 
+"@_koii/koii-styleguide@^0.2.7-alpha":
+  version "0.2.7-alpha"
+  resolved "https://registry.yarnpkg.com/@_koii/koii-styleguide/-/koii-styleguide-0.2.7-alpha.tgz#fc48e47e0a90da30e67adb6e5268e46ddab2df78"
+  integrity sha512-04fmpL51Tq89pLtjX5oh0uKS1J1E/7i7V2x1Remgb34pSUpyYRSgfOPFFY8zz6mf59DOYnofybJ2/+4PD5vdaQ==
+  dependencies:
+    react "^18.1.0"
+    react-dom "^18.1.0"
+    tailwind-merge "^1.7.0"
+
 "@ampproject/remapping@^2.1.0":
   version "2.2.0"
   resolved "https://registry.npmjs.org/@ampproject/remapping/-/remapping-2.2.0.tgz"
@@ -10515,7 +10524,7 @@ rcedit@^3.0.1:
   dependencies:
     cross-spawn-windows-exe "^1.1.0"
 
-react-dom@^18.2.0:
+react-dom@^18.1.0, react-dom@^18.2.0:
   version "18.2.0"
   resolved "https://registry.npmjs.org/react-dom/-/react-dom-18.2.0.tgz"
   integrity sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==
@@ -10585,7 +10594,7 @@ react-syntax-highlighter@^15.5.0:
     prismjs "^1.27.0"
     refractor "^3.6.0"
 
-react@^18.2.0:
+react@^18.1.0, react@^18.2.0:
   version "18.2.0"
   resolved "https://registry.npmjs.org/react/-/react-18.2.0.tgz"
   integrity sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==
@@ -11825,6 +11834,11 @@ tailwind-merge@^1.3.0:
   integrity sha512-M+DC6DO5eypc3/iOt/oTuqUH68Ip+XCu/Afybg9/ATxUX6KMPk4UGU4z4EMx08BMOBL+iOL93+hx3Jxpb9qNGw==
   dependencies:
     hashlru "^2.3.0"
+
+tailwind-merge@^1.7.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/tailwind-merge/-/tailwind-merge-1.8.0.tgz#41c4730b2a51ca7a905c6beebcbfe237bfb61f30"
+  integrity sha512-tER/2SbYRdfPYg6m4pDWZSlbymLTmDi+dx4iCsJmgmz4UDGzgnVelOvBe3GNtGCw9Bmc4MiObfJJbKeVL+KnMQ==
 
 tailwindcss@^3.1.3:
   version "3.1.4"
