@@ -16,8 +16,7 @@ import { OnboardingContext } from '../../context/onboarding-context';
 
 const KeyCreationMethodPick = () => {
   const [accountName, setAccountName] = useState<string>('');
-  const [isMissingAccountName, setIsMissingAccountName] =
-    useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>();
   const navigate = useNavigate();
   const { setNewSeedPhrase, setSystemKey } = useContext(OnboardingContext);
 
@@ -39,6 +38,9 @@ const KeyCreationMethodPick = () => {
       setSystemKey(mainAccountPubKey);
       navigate(AppRoute.OnboardingCreateNewKey);
     },
+    onError: (error) => {
+      setErrorMessage((error as { message: string }).message);
+    },
   });
 
   const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (e) =>
@@ -46,7 +48,7 @@ const KeyCreationMethodPick = () => {
 
   const handleClickCreate = () => {
     if (accountName) seedPhraseGenerateMutation.mutate(accountName);
-    else setIsMissingAccountName(true);
+    else setErrorMessage("Account name can't be empty");
   };
 
   const handleClickImport = () => {
@@ -54,12 +56,12 @@ const KeyCreationMethodPick = () => {
       navigate(AppRoute.OnboardingImportKey, {
         state: { accountName },
       });
-    else setIsMissingAccountName(true);
+    else setErrorMessage("Account name can't be empty");
   };
 
   return (
     <div className="max-w-lg xl:max-w-2xl m-auto pt-[100px]">
-      <div className="flex flex-col text-lg pl-1">
+      <div className="flex flex-col pl-1 text-lg">
         <p className="mb-4">
           To make sure everyone is playing fairly, each node must stake tokens
           as collateral.
@@ -68,7 +70,7 @@ const KeyCreationMethodPick = () => {
       </div>
 
       <div className="my-6">
-        <div className="px-5 text-left leading-8 mb-2">Account name</div>
+        <div className="px-5 mb-2 leading-8 text-left">Account name</div>
         <input
           className="w-full px-6 py-2 rounded-md bg-finnieBlue-light-tertiary"
           type="text"
@@ -76,10 +78,9 @@ const KeyCreationMethodPick = () => {
           onChange={handleChangeInput}
           placeholder="Account name"
         />
-        <div className="px-6 h-12 -mb-12">
-          {isMissingAccountName && (
-            <ErrorMessage errorMessage="Please enter an account name" />
-          )}
+
+        <div className="h-12 px-6 -mb-12">
+          {errorMessage && <ErrorMessage errorMessage={errorMessage} />}
         </div>
       </div>
 
