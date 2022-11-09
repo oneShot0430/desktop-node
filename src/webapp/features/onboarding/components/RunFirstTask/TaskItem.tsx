@@ -1,4 +1,4 @@
-import React, { useState, ChangeEventHandler } from 'react';
+import React, { useState } from 'react';
 
 import CloseIcon from 'assets/svgs/close-icons/close-icon.svg';
 import CodeIconSvg from 'assets/svgs/code-icon.svg';
@@ -10,7 +10,7 @@ type PropsType = {
   creator: string;
   minStake: number;
   stakeValue: number;
-  onStakeInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onStakeInputChange: (newStake: number) => void;
   onRemove: () => void;
 };
 
@@ -31,9 +31,9 @@ function TaskItem({
   const handleUnhover = () => {
     setHover(false);
   };
-  const handleStakeInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setMeetsMinimumStake(stakeValue >= minStake);
-    onStakeInputChange(e);
+  const handleStakeInputChange = (newStake: number) => {
+    setMeetsMinimumStake(newStake >= minStake);
+    onStakeInputChange(newStake);
   };
 
   return (
