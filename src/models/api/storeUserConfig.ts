@@ -1,5 +1,7 @@
-export interface storeUserConfigParam {
-  settings: {
-    onboardingCompleted: boolean;
-  };
+export interface UserAppConfig {
+  onboardingCompleted?: boolean;
+  pin?: string;
+}
+export interface StoreUserConfigParam {
+  settings: UserAppConfig;
 }

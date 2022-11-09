@@ -1,7 +1,7 @@
 import { Event } from 'electron';
 
 import { namespaceInstance } from 'main/node/helpers/Namespace';
-import { storeUserConfigParam } from 'models/api';
+import { StoreUserConfigParam } from 'models/api';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 
@@ -9,7 +9,7 @@ const USER_CONFIG = 'USER_CONFIG';
 
 const storeUserConfig = async (
   event: Event,
-  payload: storeUserConfigParam
+  payload: StoreUserConfigParam
 ): Promise<boolean> => {
   const { settings } = payload;
   try {

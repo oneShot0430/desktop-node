@@ -4,6 +4,7 @@ import {
   FetchAllTasksParam,
   GetAvailableTasksParam,
   GetMyTasksParam,
+  UserAppConfig,
 } from 'models/api';
 import sdk from 'services/sdk';
 import { Task } from 'webapp/types';
@@ -164,9 +165,7 @@ export const getUserConfig = () => {
   });
 };
 
-export const saveUserConfig = (config: {
-  settings: { onboardingCompleted: boolean };
-}) => {
+export const saveUserConfig = (config: { settings: UserAppConfig }) => {
   return window.main.storeUserConfig(config).then((res) => {
     console.log('SAVING USER CONFIG', res);
     return res;
