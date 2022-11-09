@@ -121,18 +121,17 @@ module.exports = {
       gridTemplateColumns: {
         15: 'repeat(15, minmax(0, 1fr))',
         16: 'repeat(16, minmax(0, 1fr))',
-        'first-task':
-          '3.4rem repeat(8, minmax(0, 1fr)) minmax(6rem, 2.5fr) 1fr',
+        'first-task': '3.4rem repeat(16, minmax(0, 1fr)) 3rem',
       },
       gridColumnStart: {
         14: '14',
+        15: '15',
       },
       keyframes: {
         slideOut: {
           '0%': { transform: 'translateX(-100%)' },
           '100%': { transform: 'translateX(-4px)' },
         },
-
         shrink: {
           '0%': { width: '62.4375rem', transform: 'translateX(12.3125rem)' },
           '100%': { width: '37.8125rem' },

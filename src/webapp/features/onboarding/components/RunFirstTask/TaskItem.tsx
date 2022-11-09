@@ -44,15 +44,15 @@ function TaskItem({
     >
       <CodeIconSvg className="m-auto col-span-1" />
 
-      <div className="text-ellipsis overflow-hidden my-auto mr-4 col-span-4">
+      <div className="text-ellipsis overflow-hidden my-auto mr-4 col-span-5">
         {name}
       </div>
 
-      <div className="text-ellipsis overflow-hidden  my-auto pr-4 col-span-4">
+      <div className="text-ellipsis overflow-hidden  my-auto pr-4 col-span-5">
         {creator}
       </div>
 
-      <div className="mr-2 col-span-1">
+      <div className="col-start-13 col-span-5 2xl:col-start-15 2xl:col-span-3">
         <EditStakeInput
           stake={stakeValue}
           onChange={handleStakeInputChange}
