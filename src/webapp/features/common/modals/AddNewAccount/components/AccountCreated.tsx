@@ -23,7 +23,7 @@ export const AccountCreated = ({ onClose, newKeys }: PropsType) => {
     <ModalContent theme={Theme.Dark} className="w-[800px] h-[400px] text-white">
       <div className="flex justify-between p-3 ">
         <div className="flex items-center justify-between pl-6">
-          <CheckmarkTealSvg />
+          <CheckmarkTealSvg width={96} height={97} />
           <span className="text-[24px] pl-5 text-white">
             New key succesfully created!
           </span>

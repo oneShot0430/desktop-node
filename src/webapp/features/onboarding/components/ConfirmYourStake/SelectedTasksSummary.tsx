@@ -7,22 +7,23 @@ import { TaskRow } from './TaskRow';
 
 type PropsType = {
   selectedTasks: TaskWithStake[];
+  tasksFee: number;
+  updateStake: (taskPublicKey: string, newStake: number) => void;
+  setIsRunButtonDisabled: (isDisabled: boolean) => void;
 };
 
-export const SelectedTasksSummary = ({ selectedTasks }: PropsType) => {
+export const SelectedTasksSummary = ({
+  selectedTasks,
+  tasksFee,
+  updateStake,
+  setIsRunButtonDisabled,
+}: PropsType) => {
   const listEmpty = selectedTasks.length === 0;
-  /**
-   * @todo: calculate fees
-   */
-  const taskFees = '~ 0.1';
   const totalKoiiStaked = useMemo(
     () => sum(selectedTasks.map((task) => task.stake)),
     [selectedTasks]
   );
-
-  // if (listEmpty) {
-  //   return null;
-  // }
+  const tasksFeeToDisplay = `~ ${tasksFee.toFixed(2)}`;
 
   return (
     <div className="w-full h-full bg-finnieBlue-light-secondary py-[28px] rounded-md min-h-[330px]">
@@ -38,7 +39,12 @@ export const SelectedTasksSummary = ({ selectedTasks }: PropsType) => {
           </div>
         ) : (
           selectedTasks.map((task) => (
-            <TaskRow key={task.publicKey} task={task} />
+            <TaskRow
+              key={task.publicKey}
+              task={task}
+              updateStake={updateStake}
+              setIsRunButtonDisabled={setIsRunButtonDisabled}
+            />
           ))
         )}
       </div>
@@ -46,7 +52,7 @@ export const SelectedTasksSummary = ({ selectedTasks }: PropsType) => {
       <div className="flex flex-row w-full text-lg text-finnieEmerald-light px-12">
         <div className="w-[70%]">
           <div className="mb-1 font-semibold text-finnieOrange">Task Fees</div>
-          <div className="text-white">{taskFees} KOII</div>
+          <div className="text-white">{tasksFeeToDisplay} KOII</div>
         </div>
         <div className="w-[30%]">
           <div className="mb-2 font-semibold text-finnieEmerald-light">

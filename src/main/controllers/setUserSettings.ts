@@ -6,12 +6,15 @@ import mainErrorHandler from '../../utils/mainErrorHandler';
 
 const USER_SETTINGS = 'USER_SETTINGS';
 
+export interface UserSettings {
+  onboardingCompleted: boolean;
+  pin: string;
+}
+
 const setUserSettings = async (
   event: Event,
   payload: {
-    settings: {
-      onboardingCompleted: boolean;
-    };
+    settings: UserSettings;
   }
 ): Promise<boolean> => {
   console.log('IN THE API');

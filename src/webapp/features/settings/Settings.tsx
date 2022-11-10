@@ -14,7 +14,7 @@ const Settings = () => {
   const [selectedTab, setTab] = useState(Tab.AccountsTable);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-full">
       <SettingsHeader onTabChange={setTab} activeTab={selectedTab} />
       {selectedTab === Tab.AccountsTable && <AccountsTable />}
       {selectedTab === Tab.NodeLogs && <NodeLogs logs={logsMock} />}

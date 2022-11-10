@@ -3,24 +3,36 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Button } from 'webapp/components';
+import { useFundNewAccountModal } from 'webapp/features/common';
 import { Modal, ModalContent, ModalTopBar } from 'webapp/features/modals';
+import { Theme } from 'webapp/types/common';
 import { AppRoute } from 'webapp/types/routes';
 
 export const NotEnoughFunds = create(function NotEnoughFunds() {
   const modal = useModal();
   const navigate = useNavigate();
 
+  const { showModal: showFundNewAccountModal } = useFundNewAccountModal(
+    modal.show
+  );
+
+  const handleFundMyKey = () => {
+    modal.remove();
+    showFundNewAccountModal();
+  };
+
   return (
     <Modal>
-      <ModalContent>
+      <ModalContent theme={Theme.Dark}>
         <ModalTopBar
-          title={'Not Enough Funds'}
-          onClose={() => modal.remove()}
+          theme="dark"
+          title="Not Enough Funds"
+          onClose={modal.remove}
         />
 
         <div className="p-8">
           <div className="flex items-center justify-center h-full mb-11">
-            <p className="text-xl font-semibold text-finnieBlue">
+            <p className="text-xl font-semibold text-white">
               Do you want to fund your account to
               <br /> run these tasks?
             </p>
@@ -35,7 +47,11 @@ export const NotEnoughFunds = create(function NotEnoughFunds() {
                 navigate(AppRoute.MyNode);
               }}
             />
-            <Button label="Fund my Key" />
+            <Button
+              label="Fund my Key"
+              className="bg-white"
+              onClick={handleFundMyKey}
+            />
           </div>
         </div>
       </ModalContent>

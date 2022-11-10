@@ -1,3 +1,3 @@
-export interface getUserConfigResponse {
-  onboardingCompleted: boolean;
-}
+import { UserAppConfig } from './storeUserConfig';
+
+export type getUserConfigResponse = UserAppConfig;

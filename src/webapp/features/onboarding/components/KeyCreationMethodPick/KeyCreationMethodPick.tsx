@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import RewardsSvg from 'assets/svgs/onboarding/rewards-icon.svg';
 import SeedPhraseSvg from 'assets/svgs/onboarding/seed-phrase-icon.svg';
 import { ErrorMessage } from 'webapp/components/ui/ErrorMessage';
+import { useAccounts } from 'webapp/features/settings';
 import {
   createNodeWallets,
   generateSeedPhrase,
@@ -20,6 +21,17 @@ const KeyCreationMethodPick = () => {
     useState<boolean>(false);
   const navigate = useNavigate();
   const { setNewSeedPhrase, setSystemKey } = useContext(OnboardingContext);
+  const { accounts } = useAccounts();
+
+  const enteredNameIsInvalid = accounts?.some(
+    (account) => account.accountName === accountName
+  );
+
+  const errorMessage = enteredNameIsInvalid
+    ? 'You already have an account registered with that name'
+    : isMissingAccountName
+    ? 'Please enter an account name'
+    : '';
 
   const createNewKey = async (accountName: string) => {
     const seedPhrase = await generateSeedPhrase();
@@ -41,8 +53,10 @@ const KeyCreationMethodPick = () => {
     },
   });
 
-  const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (e) =>
+  const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setIsMissingAccountName(false);
     setAccountName(e.target.value);
+  };
 
   const handleClickCreate = () => {
     if (accountName) seedPhraseGenerateMutation.mutate(accountName);
@@ -59,7 +73,7 @@ const KeyCreationMethodPick = () => {
 
   return (
     <div className="max-w-lg xl:max-w-2xl m-auto pt-[100px]">
-      <div className="flex flex-col text-lg pl-1">
+      <div className="flex flex-col pl-1 text-lg">
         <p className="mb-4">
           To make sure everyone is playing fairly, each node must stake tokens
           as collateral.
@@ -68,7 +82,7 @@ const KeyCreationMethodPick = () => {
       </div>
 
       <div className="my-6">
-        <div className="px-5 text-left leading-8 mb-2">Account name</div>
+        <div className="px-5 mb-2 leading-8 text-left">Account name</div>
         <input
           className="w-full px-6 py-2 rounded-md bg-finnieBlue-light-tertiary"
           type="text"
@@ -76,36 +90,36 @@ const KeyCreationMethodPick = () => {
           onChange={handleChangeInput}
           placeholder="Account name"
         />
-        <div className="px-6 h-12 -mb-12">
-          {isMissingAccountName && (
-            <ErrorMessage errorMessage="Please enter an account name" />
-          )}
+        <div className="h-12 px-6 -mb-12">
+          {errorMessage && <ErrorMessage errorMessage={errorMessage} />}
         </div>
       </div>
 
       <div className="mt-16 ">
         <div className="flex flex-row items-center justify-evenly">
           <div className="flex flex-col items-center">
-            <div
+            <button
               className="w-[180px] h-[180px] p-2 border-dashed border-finnieOrange rounded-full border-2 mb-4 cursor-pointer"
               onClick={handleClickCreate}
+              disabled={enteredNameIsInvalid}
             >
               <div className="flex flex-col items-center justify-center w-full h-full rounded-full bg-finnieBlue-light-secondary">
                 <RewardsSvg />
               </div>
-            </div>
+            </button>
             Create a New Account
           </div>
 
           <div className="flex flex-col items-center">
-            <div
+            <button
               className="w-[180px] h-[180px] p-2 border-2 border-dashed border-finnieTeal rounded-full mb-4 cursor-pointer z-30"
               onClick={handleClickImport}
+              disabled={enteredNameIsInvalid}
             >
               <div className="flex flex-col items-center justify-center w-full h-full rounded-full bg-finnieBlue-light-secondary">
                 <SeedPhraseSvg />
               </div>
-            </div>
+            </button>
             Import Account
           </div>
         </div>

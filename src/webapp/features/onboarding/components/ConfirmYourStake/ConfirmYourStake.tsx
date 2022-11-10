@@ -1,9 +1,10 @@
 import { sum } from 'lodash';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import AddIconSvg from 'assets/svgs/onboarding/add-teal-icon.svg';
 import CurrencySvgIcon from 'assets/svgs/onboarding/currency-teal-small-icon.svg';
+import config from 'config';
 import { ErrorMessage } from 'webapp/components';
 import { Button } from 'webapp/components/ui/Button';
 import { useNotEnoughFunds, useRunMultipleTasks } from 'webapp/features/common';
@@ -13,13 +14,19 @@ import { AppRoute } from 'webapp/types/routes';
 
 import { SelectedTasksSummary } from './SelectedTasksSummary';
 
+const { TASK_FEE } = config.node;
+
 const ConfirmYourStake = () => {
   const navigate = useNavigate();
   const { state: selectedTasks } = useLocation();
-  const tasksToRun = selectedTasks as TaskWithStake[];
-  const handleRunTasksSuccess = () => navigate(AppRoute.MyNode);
+
+  const [tasksToRun, setTasksToRun] = useState<TaskWithStake[]>(
+    selectedTasks as TaskWithStake[]
+  );
+  const [isRunButtonDisabled, setIsRunButtonDisabled] = useState<boolean>();
 
   const { data: balance, isLoading } = useMainAccountBalance();
+  const handleRunTasksSuccess = () => navigate(AppRoute.MyNode);
   const { runAllTasks, runTasksLoading, runTasksError } = useRunMultipleTasks({
     tasksToRun,
     onRunAllTasksSuccessCallback: handleRunTasksSuccess,
@@ -30,9 +37,11 @@ const ConfirmYourStake = () => {
     () => sum(tasksToRun.map((task) => task.stake)),
     [tasksToRun]
   );
+  const tasksFee = TASK_FEE * tasksToRun.length;
+  const totalKoiiToUse = totalKoiiStaked + tasksFee;
 
   const handleConfirm = () => {
-    if (balance < totalKoiiStaked) {
+    if (balance < totalKoiiToUse) {
       showNotEnoughFunds();
     } else {
       runAllTasks();
@@ -41,6 +50,19 @@ const ConfirmYourStake = () => {
 
   const handleSelectMoreTasks = () => navigate(AppRoute.AddTask);
 
+  const updateStake = (publicKey: string, newStake: number) => {
+    const updatedTasks = tasksToRun.map((task) => {
+      const updatedTask = {
+        ...task,
+        ...(task.publicKey === publicKey && { stake: newStake }),
+      };
+
+      return updatedTask;
+    });
+
+    setTasksToRun(updatedTasks);
+  };
+
   return (
     <div className="relative h-full overflow-hidden bg-finnieBlue-dark-secondary">
       <div className="px-8">
@@ -48,7 +70,12 @@ const ConfirmYourStake = () => {
           You&apos;re choosing to run:
         </div>
 
-        <SelectedTasksSummary selectedTasks={tasksToRun} />
+        <SelectedTasksSummary
+          selectedTasks={tasksToRun}
+          tasksFee={tasksFee}
+          updateStake={updateStake}
+          setIsRunButtonDisabled={setIsRunButtonDisabled}
+        />
 
         <div className="flex justify-center mt-[40px]">
           <div className="flex flex-col items-center justify-center">
@@ -61,7 +88,7 @@ const ConfirmYourStake = () => {
             <Button
               className="font-semibold bg-finnieGray-light text-finnieBlue-light w-[220px] h-[38px]"
               label={runTasksLoading ? 'Running tasks...' : 'Confirm'}
-              disabled={runTasksLoading}
+              disabled={runTasksLoading || isRunButtonDisabled}
               onClick={handleConfirm}
             />
             {runTasksError ? (
