@@ -1,8 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { AppRoute } from 'webapp/routing/AppRoutes';
 import { saveUserConfig } from 'webapp/services';
+import { AppRoute } from 'webapp/types/routes';
 
 import { BackButton } from '../BackButton';
 import Header from '../Header';

@@ -22,37 +22,26 @@ function TaskItem({
   onStakeInputChange,
   onRemove,
 }: PropsType) {
-  const [hover, setHover] = useState(false);
   const [meetsMinimumStake, setMeetsMinimumStake] = useState<boolean>(false);
 
-  const handleOnHover = () => {
-    setHover(true);
-  };
-  const handleUnhover = () => {
-    setHover(false);
-  };
   const handleStakeInputChange = (newStake: number) => {
     setMeetsMinimumStake(newStake >= minStake);
     onStakeInputChange(newStake);
   };
 
   return (
-    <div
-      className="bg-finnieBlue-light-secondary h-13 rounded-md text-sm mb-4 text-left w-full grid grid-cols-first-task place-content-center"
-      onMouseEnter={handleOnHover}
-      onMouseLeave={handleUnhover}
-    >
-      <CodeIconSvg className="m-auto col-span-1" />
+    <div className="grid w-full mb-4 text-sm text-left rounded-md bg-finnieBlue-light-secondary h-13 grid-cols-first-task place-content-center">
+      <CodeIconSvg className="col-span-1 m-auto" />
 
-      <div className="text-ellipsis overflow-hidden my-auto mr-4 col-span-5">
+      <div className="col-span-5 my-auto mr-4 overflow-hidden text-ellipsis">
         {name}
       </div>
 
-      <div className="text-ellipsis overflow-hidden  my-auto pr-4 col-span-5">
+      <div className="col-span-5 pr-4 my-auto overflow-hidden text-ellipsis">
         {creator}
       </div>
 
-      <div className="col-start-13 col-span-5 2xl:col-start-15 2xl:col-span-3">
+      <div className="col-span-5 col-start-13 2xl:col-start-15 2xl:col-span-3">
         <EditStakeInput
           stake={stakeValue}
           onChange={handleStakeInputChange}
@@ -62,11 +51,13 @@ function TaskItem({
       </div>
 
       <div
-        className="cursor-pointer text-finnieRed col-span-1 m-auto"
+        className="col-span-1 m-auto cursor-pointer text-finnieRed"
         onClick={onRemove}
         title="Remove task"
       >
-        <div className="w-6 h-6 mr-2">{hover && <CloseIcon />}</div>
+        <div className="w-6 h-6 mr-2">
+          <CloseIcon />
+        </div>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { AppRoute } from './AppRoutes';
+import { AppRoute } from 'webapp/types/routes';
 
 export const getRouteViewLabel = (route: AppRoute) => {
   switch (route) {
