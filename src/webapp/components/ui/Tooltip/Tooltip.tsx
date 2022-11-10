@@ -43,7 +43,9 @@ export const Tooltip = ({
   const wrappingClasses = twMerge(
     'absolute translate-y-full transition-opacity opacity-0 duration-300 invisible',
     isHovered ? 'opacity-100' : 'opacity-0',
-    isHovered ? 'visible' : 'invisible'
+    isHovered ? 'visible' : 'invisible',
+    'after:absolute after:top-[99%] after:left-[10%] after:ml-[5px] after:border-y-[15px] after:border-x-[10px] after:border-solid after:border-transparent',
+    theme === Theme.Dark ? 'after:border-t-finnieBlue' : 'after:border-t-white'
   );
 
   const tooltipClasses = twMerge(
