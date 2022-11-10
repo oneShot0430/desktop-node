@@ -5,6 +5,7 @@ import ActionHistoryIcon from 'assets/svgs/action-history-icon.svg';
 import AddWithdrawIcon from 'assets/svgs/add-withdraw-icon.svg';
 import PauseIcon from 'assets/svgs/pause-icon.svg';
 import PlayIcon from 'assets/svgs/play-icon.svg';
+import { getKoiiFromRoe } from 'utils';
 import { Button } from 'webapp/components/ui/Button';
 import {
   TableRow,
@@ -36,6 +37,10 @@ export const TaskRow = ({ task, accountPublicKey }: PropsType) => {
   const queryCache = useQueryClient();
   const { earnedReward } = useEarnedReward({ task, publicKey });
   const { myStake } = useMyStake({ task, publicKey: accountPublicKey });
+
+  // before comitting: verify this is ok
+  const earnedRewardInKoii = getKoiiFromRoe(earnedReward);
+  const myStakeInKoii = getKoiiFromRoe(myStake);
 
   const handleToggleTask = async () => {
     try {
@@ -73,8 +78,8 @@ export const TaskRow = ({ task, accountPublicKey }: PropsType) => {
       <TableCell>
         <span title={taskManager}>{`${taskManager.substring(0, 6)}...`}</span>
       </TableCell>
-      <TableCell>{earnedReward}</TableCell>
-      <TableCell>{myStake}</TableCell>
+      <TableCell>{earnedRewardInKoii}</TableCell>
+      <TableCell>{myStakeInKoii}</TableCell>
       <NodeStatusCell status={nodeStatus} />
       <TableCell>
         <div className="flex flex-row items-center gap-4">

@@ -18,7 +18,8 @@ export const TASK_CONTRACT_ID = 'Koiitask22222222222222222222222222222222222';
 
 const MINIMUM_ACCEPTED_LENGTH_TASK_CONTRACT = 500;
 
-const TASK_FEE = 0.05;
+// value in ROE
+const TASK_FEE = 50000000;
 
 export default {
   REDIS,

@@ -2,6 +2,7 @@ import { create, useModal } from '@ebay/nice-modal-react';
 import React, { useCallback, useState } from 'react';
 import { useQuery } from 'react-query';
 
+import { getKoiiFromRoe } from 'utils';
 import { Button } from 'webapp/components';
 import { Modal, ModalContent, ModalTopBar } from 'webapp/features/modals';
 import {
@@ -92,6 +93,9 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
 
   const showBackButton = view !== View.SelectAction;
   const title = getTitle();
+  // before comitting: verify this is ok
+  const earnedRewardInKoii = getKoiiFromRoe(earnedReward);
+  const myStakeInKoii = getKoiiFromRoe(myStake);
 
   return (
     <Modal>
@@ -104,7 +108,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
         />
         {view === View.Withdraw && (
           <Withdraw
-            stakedBalance={myStake}
+            stakedBalance={myStakeInKoii}
             onWithdraw={(amount) => {
               setWithdrawAmount(amount);
               setView(View.WithdrawConfirm);
@@ -160,7 +164,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
 
             <div className="flex flex-col justify-center mb-[40px] text-base">
               <p>
-                {`You’ve earned ${earnedReward} KOII by staking ${myStake} tokens on this task.`}
+                {`You’ve earned ${earnedRewardInKoii} KOII by staking ${myStakeInKoii} tokens on this task.`}
               </p>
               <p>You can withdraw your stake or add more now.</p>
             </div>
@@ -171,7 +175,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
                 label="Withdraw Stake"
                 variant="danger"
                 className="bg-finnieRed text-finnieBlue-light-secondary"
-                disabled={myStake === 0}
+                disabled={myStakeInKoii === 0}
               />
               <Button
                 onClick={() => setView(View.Stake)}

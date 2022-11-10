@@ -1,19 +1,25 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useState, ChangeEventHandler } from 'react';
 
+import { getKoiiFromRoe, getRoeFromKoii } from 'utils';
 import { TableCell } from 'webapp/components/ui/Table';
 
 type PropsType = {
-  defaultValue: string;
-  onStakeValueChange: (value: string) => void;
+  defaultValue: number;
+  onStakeValueChange: (value: number) => void;
 };
 
 const SetStakeCell = ({ defaultValue, onStakeValueChange }: PropsType) => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(0);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-    onStakeValueChange(e.target.value);
+  const handleChange: ChangeEventHandler<HTMLInputElement> = ({
+    target: { value: valueInKoii },
+  }) => {
+    const valueInRoe = getRoeFromKoii(Number(valueInKoii));
+    setValue(valueInRoe);
+    onStakeValueChange(valueInRoe);
   };
+
+  const valueInKoii = getKoiiFromRoe(value);
 
   return (
     <TableCell>
@@ -25,7 +31,7 @@ const SetStakeCell = ({ defaultValue, onStakeValueChange }: PropsType) => {
           onChange={handleChange}
           className="w-24 h-8 p-2 bg-gray-200 rounded text-finnieBlue-dark"
           defaultValue={defaultValue}
-          value={value}
+          value={valueInKoii}
         />
       </div>
     </TableCell>

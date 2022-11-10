@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import AddIconSvg from 'assets/svgs/onboarding/add-teal-icon.svg';
 import CurrencySvgIcon from 'assets/svgs/onboarding/currency-teal-small-icon.svg';
 import config from 'config';
+import { getKoiiFromRoe } from 'utils';
 import { ErrorMessage } from 'webapp/components';
 import { Button } from 'webapp/components/ui/Button';
 import { useNotEnoughFunds, useRunMultipleTasks } from 'webapp/features/common';
@@ -38,7 +39,8 @@ const ConfirmYourStake = () => {
     [tasksToRun]
   );
   const tasksFee = TASK_FEE * tasksToRun.length;
-  const totalKoiiToUse = totalKoiiStaked + tasksFee;
+  const tasksFeeInKoii = getKoiiFromRoe(tasksFee);
+  const totalKoiiToUse = totalKoiiStaked + tasksFeeInKoii;
 
   const handleConfirm = () => {
     if (balance < totalKoiiToUse) {
@@ -72,7 +74,7 @@ const ConfirmYourStake = () => {
 
         <SelectedTasksSummary
           selectedTasks={tasksToRun}
-          tasksFee={tasksFee}
+          tasksFee={tasksFeeInKoii}
           updateStake={updateStake}
           setIsRunButtonDisabled={setIsRunButtonDisabled}
         />
