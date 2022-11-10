@@ -24,13 +24,12 @@ import { AppRoute } from 'webapp/types/routes';
 import { History, AddTasks, MyNode, Unlock } from '../components';
 
 const routes = [
+  { path: AppRoute.Unlock, element: <Unlock /> },
   {
     path: AppRoute.Root,
     element: <AppBoot />,
     children: [
       { path: AppRoute.Root, element: <AppLoader /> },
-
-      { path: AppRoute.Unlock, element: <Unlock /> },
       { path: AppRoute.MyNode, element: <MyNode /> },
       {
         path: AppRoute.AddTask,
