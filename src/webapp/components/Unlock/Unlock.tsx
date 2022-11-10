@@ -1,16 +1,32 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import KoiiLogo from 'assets/svgs/koii-logo-white.svg';
 import WelcomeLinesDiagonal from 'assets/svgs/welcome-lines-diagonal.svg';
 import WelcomeWheelBackground from 'assets/svgs/welcome-wheel-background.svg';
 import { PinInput } from 'webapp/components/PinInput';
+import { useUserSettings } from 'webapp/features/common';
+import { AppRoute } from 'webapp/routing/AppRoutes';
 
 export const Unlock = (): JSX.Element => {
+  const {
+    settings: { pin: storedPin },
+  } = useUserSettings();
+
+  const navigate = useNavigate();
+
+  console.log('storedPin: ', storedPin);
+
   const handlePinChange = (pin: string) => {
     const finishedTypingPin = pin.length === 6;
 
     if (finishedTypingPin) {
       console.log('verify pin: ', pin);
+      const pinsMatch = pin === storedPin;
+
+      if (pinsMatch) {
+        navigate(AppRoute.MyNode);
+      }
     }
   };
 
