@@ -1,5 +1,4 @@
 import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
 
 import BackIconComponent from 'assets/svgs/back-icon.svg';
 import KoiiLogo from 'assets/svgs/koii-logo-white.svg';
@@ -8,7 +7,9 @@ import CreateIconSvg from 'assets/svgs/onboarding/create-icon.svg';
 import CurrencyIconSvg from 'assets/svgs/onboarding/currency-icon.svg';
 import LockIconSvg from 'assets/svgs/onboarding/lock-icon.svg';
 import { Button } from 'webapp/components/ui/Button';
-import { AppRoute } from 'webapp/routing/AppRoutes';
+import { AppRoute } from 'webapp/types/routes';
+
+import { useBackButtonHanlder } from '../../hooks/useBackButtonHandler';
 
 import StepListItem from './components/StepListItem';
 
@@ -17,21 +18,23 @@ type PropsType = {
 };
 
 const OnboardingLayout = ({ children }: PropsType) => {
-  const { pathname } = useLocation();
-  const navigate = useNavigate();
-
-  const handleBackButtonClick = () => {
-    navigate(-1);
-  };
+  const {
+    handleBackButtonClick,
+    showOnboardingBackButton,
+    currentPath,
+    navigate,
+  } = useBackButtonHanlder();
 
   return (
     <div className="flex flex-row h-full text-white">
       <div className="w-[650px] bg-finnieBlue-light-secondary items-center flex flex-col relative">
-        <BackIconComponent
-          data-testid="close-modal-button"
-          onClick={handleBackButtonClick}
-          className="w-[36px] h-[36px] cursor-pointer absolute top-[20px] left-[20px]"
-        />
+        {showOnboardingBackButton && (
+          <BackIconComponent
+            data-testid="close-modal-button"
+            onClick={handleBackButtonClick}
+            className="w-[36px] h-[36px] cursor-pointer absolute top-[20px] left-[20px]"
+          />
+        )}
         <div className="flex flex-col items-center justify-center mb-14">
           <KoiiLogo />
           <div className="text-[40px] w-[75%] text-center">
@@ -44,22 +47,22 @@ const OnboardingLayout = ({ children }: PropsType) => {
 
         <div className="flex flex-col gap-3 w-max">
           <StepListItem
-            isActive={pathname === AppRoute.OnboardingCreatePin}
+            isActive={currentPath === AppRoute.OnboardingCreatePin}
             text="Secure your Node with a PIN."
             iconSlot={<LockIconSvg />}
           />
           <StepListItem
-            isActive={pathname.includes('create-or-import-key')}
+            isActive={currentPath.includes('create-or-import-key')}
             text="Fund your new key or import one."
             iconSlot={<CurrencyIconSvg />}
           />
           <StepListItem
-            isActive={pathname === AppRoute.OnboardingCreateFirstTask}
+            isActive={currentPath === AppRoute.OnboardingCreateFirstTask}
             text="Select your first tasks."
             iconSlot={<CreateIconSvg />}
           />
           <StepListItem
-            isActive={pathname === AppRoute.OnboardingConfirmStake}
+            isActive={currentPath === AppRoute.OnboardingConfirmStake}
             text="Confirm your stake and go!"
             iconSlot={<ClickIconSvg />}
           />

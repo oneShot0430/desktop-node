@@ -1,6 +1,7 @@
 import { sum } from 'lodash';
 import React, { useMemo } from 'react';
 
+import { getKoiiFromRoe } from 'utils';
 import { TaskWithStake } from 'webapp/types';
 
 import { TaskRow } from './TaskRow';
@@ -19,10 +20,10 @@ export const SelectedTasksSummary = ({
   setIsRunButtonDisabled,
 }: PropsType) => {
   const listEmpty = selectedTasks.length === 0;
-  const totalKoiiStaked = useMemo(
-    () => sum(selectedTasks.map((task) => task.stake)),
-    [selectedTasks]
-  );
+  const totalStakedInKoii = useMemo(() => {
+    const totalStakedInRoe = sum(selectedTasks.map((task) => task.stake));
+    return getKoiiFromRoe(totalStakedInRoe);
+  }, [selectedTasks]);
   const tasksFeeToDisplay = `~ ${tasksFee.toFixed(2)}`;
 
   return (
@@ -58,7 +59,7 @@ export const SelectedTasksSummary = ({
           <div className="mb-2 font-semibold text-finnieEmerald-light">
             Total KOII staked
           </div>
-          <div className="text-white">{totalKoiiStaked} KOII</div>
+          <div className="text-white">{totalStakedInKoii} KOII</div>
         </div>
       </div>
     </div>

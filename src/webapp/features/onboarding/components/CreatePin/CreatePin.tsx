@@ -5,8 +5,10 @@ import LinesVerticalTeal from 'assets/svgs/onboarding/lines-vertical-teal.svg';
 import { Button } from 'webapp/components';
 import { PinInput } from 'webapp/components/PinInput';
 import { useUserAppConfig } from 'webapp/features/settings';
-import { AppRoute } from 'webapp/routing/AppRoutes';
 import { openBrowserWindow } from 'webapp/services';
+import { AppRoute } from 'webapp/types/routes';
+
+import { ContentRightWrapper } from '../ContentRightWrapper';
 
 const CreatePin = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
@@ -43,11 +45,15 @@ const CreatePin = () => {
 
   return (
     <div className="relative h-full overflow-hidden bg-finnieBlue-dark-secondary">
-      <div className="relative z-50">
-        <div className="pl-24">
-          <div className="mt-[160px] z-50">
-            <div className="mb-5">
-              Create an <span>Access PIN</span> to secure the Node.
+      <ContentRightWrapper>
+        <div>
+          <div className="z-50">
+            <div className="mb-5 text-lg">
+              Create an{' '}
+              <span className="underline underline-offset-4 text-finnieTeal">
+                Access PIN
+              </span>{' '}
+              to secure the Node.
             </div>
             <PinInput onChange={(pin) => setPin(pin)} />
           </div>
@@ -70,7 +76,7 @@ const CreatePin = () => {
           </div>
         </div>
 
-        <div className="flex flex-col items-center pt-14">
+        <div className="flex flex-col items-end pt-14">
           <div className="flex items-center relative !inline-block">
             <input
               id="link-checkbox"
@@ -100,7 +106,7 @@ const CreatePin = () => {
             className="bg-finnieGray-light text-finnieBlue w-[240px] mt-6"
           />
         </div>
-      </div>
+      </ContentRightWrapper>
       <LinesVerticalTeal className="absolute top-0 right-0 z-10 h-screen" />
     </div>
   );

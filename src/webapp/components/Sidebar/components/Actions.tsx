@@ -8,7 +8,7 @@ import {
   useCreateTaskModal,
   useFundNewAccountModal,
 } from 'webapp/features/common';
-import { AppRoute } from 'webapp/routing/AppRoutes';
+import { AppRoute } from 'webapp/types/routes';
 
 export const Actions = () => {
   const navigate = useNavigate();

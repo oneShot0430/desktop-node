@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useMutation } from 'react-query';
+import React, { useCallback, useMemo } from 'react';
+import { useQuery } from 'react-query';
 
 import ReloadSvg from 'assets/svgs/reload-icon-big.svg';
 import { ErrorMessage } from 'webapp/components/ui/ErrorMessage';
@@ -10,27 +10,28 @@ type PropsType = {
 };
 
 export const RefreshBalance = ({ onBalanceRefresh }: PropsType) => {
-  const [hasBalanceError, setHasBalanceError] = useState<boolean>(false);
-  const [checkingBalance, setCheckingBalance] = useState<boolean>(false);
+  const {
+    data: balance,
+    isLoading,
+    isRefetching,
+    refetch,
+    error,
+  } = useQuery(['main-account-balance'], getMainAccountBalance, {
+    onSuccess: (data) => {
+      if (onBalanceRefresh) {
+        onBalanceRefresh(data);
+      }
+    },
+  });
 
-  const { mutate, data: balance } = useMutation(
-    ['main-account-balance'],
-    getMainAccountBalance,
-    {
-      onMutate: () => {
-        setCheckingBalance(true);
-      },
-      onSuccess: (balance) => {
-        onBalanceRefresh?.(balance);
-      },
-      onError: () => {
-        setHasBalanceError(true);
-      },
-      onSettled: () => {
-        setCheckingBalance(false);
-      },
-    }
+  const checkingBalance = useMemo(
+    () => isRefetching || isLoading,
+    [isLoading, isRefetching]
   );
+
+  const handleRefetch = useCallback(() => {
+    refetch();
+  }, [refetch]);
 
   return (
     <div className="flex flex-col items-center h-full pt-48">
@@ -40,7 +41,7 @@ export const RefreshBalance = ({ onBalanceRefresh }: PropsType) => {
       </div>
       <div
         className="w-[180px] h-[180px] p-2 border-dashed border-finnieOrange rounded-full border-2 mb-4 cursor-pointer"
-        onClick={() => mutate()}
+        onClick={handleRefetch}
       >
         <div className="flex flex-col items-center justify-center w-full h-full rounded-full bg-finnieBlue-light-secondary">
           <ReloadSvg />
@@ -52,9 +53,7 @@ export const RefreshBalance = ({ onBalanceRefresh }: PropsType) => {
           ? 'Checking balance...'
           : balance === 0 && 'Your balance is 0, try again'}
       </div>
-      {hasBalanceError && (
-        <ErrorMessage errorMessage="Cant't fetch balance, try again" />
-      )}
+      {error && <ErrorMessage errorMessage="Cant't fetch balance, try again" />}
     </div>
   );
 };

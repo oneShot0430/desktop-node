@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from 'react-query';
 import CodeIcon from 'assets/svgs/code-icon-lg.svg';
 import PlayIcon from 'assets/svgs/play-icon.svg';
 import StopTealIcon from 'assets/svgs/stop-icon-teal.svg';
+import { getKoiiFromRoe } from 'utils';
 import { Button } from 'webapp/components';
 import { useTaskDetailsModal } from 'webapp/components/MyNodeTable/hooks';
 import { TableRow, TableCell } from 'webapp/components/ui/Table';
@@ -32,7 +33,7 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
     accountPublicKey: mainAccountPubKey,
   });
 
-  const [stake, setStake] = useState('');
+  const [stake, setStake] = useState<number>(0);
 
   const queryCache = useQueryClient();
   const { taskName, publicKey, bountyAmountPerRound, taskManager, isRunning } =
@@ -40,14 +41,17 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
   const nodes = TaskService.getNodesCount(task);
   const topStake = TaskService.getTopStake(task);
 
+  const bountyPerRoundInKoii = getKoiiFromRoe(bountyAmountPerRound);
+
   const { data: myStake, isLoading: isLoadingStake } = useQuery(
     [QueryKeys.myStake, publicKey],
     () => TaskService.getMyStake(task)
   );
 
+  const myStakeInKoii = getKoiiFromRoe(myStake);
   const defaultStakeValue = isLoadingStake
-    ? ''
-    : TaskService.formatStake(myStake);
+    ? 0
+    : Number(TaskService.formatStake(myStakeInKoii));
 
   const handleStartTask = async () => {
     try {
@@ -69,7 +73,7 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
     }
   };
 
-  const handleStakeValueChange = (value: string) => {
+  const handleStakeValueChange = (value: number) => {
     setStake(value);
   };
 
@@ -97,7 +101,7 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
       <TableCell>
         <span title={taskManager}>{`${taskManager.substring(0, 6)}...`}</span>
       </TableCell>
-      <TableCell>{bountyAmountPerRound}</TableCell>
+      <TableCell>{bountyPerRoundInKoii}</TableCell>
       <TableCell>{nodes}</TableCell>
       <TableCell>{TaskService.formatStake(topStake)}</TableCell>
       <SetStakeCell

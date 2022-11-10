@@ -1,10 +1,11 @@
-import React, { useState, ChangeEventHandler, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useQuery } from 'react-query';
 import { twMerge } from 'tailwind-merge';
 
 import CheckmarkIconSvg from 'assets/svgs/checkmark-teal-icon.svg';
 import CodeIconSvg from 'assets/svgs/code-icon.svg';
 import EditIconSvg from 'assets/svgs/edit-icon.svg';
+import { getKoiiFromRoe } from 'utils';
 import { Button } from 'webapp/components';
 import { useTaskDetailsModal } from 'webapp/components/MyNodeTable/hooks/useTaskDetailsModal';
 import { getMainAccountPublicKey, QueryKeys } from 'webapp/services';
@@ -28,6 +29,8 @@ export const TaskRow = ({
   const [stake, setStake] = useState<number>(originalStake);
   const [isEditingStake, setIsEditingStake] = useState<boolean>(false);
 
+  const stakeInKoii = useMemo(() => getKoiiFromRoe(stake), [stake]);
+
   const meetsMinimumStake = useMemo(() => stake >= minStake, [stake, minStake]);
 
   const { data: mainAccountPubKey } = useQuery(QueryKeys.MainAccount, () =>
@@ -39,11 +42,7 @@ export const TaskRow = ({
     accountPublicKey: mainAccountPubKey,
   });
 
-  const handleEditInputChange: ChangeEventHandler<HTMLInputElement> = ({
-    target: { value },
-  }) => {
-    setStake(Number(value));
-  };
+  const handleEditInputChange = (newStake: number) => setStake(newStake);
 
   const stakeButtonClasses = twMerge(
     'rounded-full w-6 h-6',
@@ -99,7 +98,7 @@ export const TaskRow = ({
               onChange={handleEditInputChange}
             />
           ) : (
-            <div>{stake} KOII</div>
+            <div>{stakeInKoii} KOII</div>
           )}
         </div>
       </div>

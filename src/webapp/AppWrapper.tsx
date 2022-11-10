@@ -2,7 +2,7 @@ import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
 import { MainLayout } from './components';
-import { OnboardingLayout } from './components/layouts/OnboardingLayout';
+import { OnboardingLayout } from './features/onboarding/components/OnboardingLayout';
 import { OnboardingProvider } from './features/onboarding/context/onboarding-context';
 
 const AppWrapper = (): JSX.Element => {

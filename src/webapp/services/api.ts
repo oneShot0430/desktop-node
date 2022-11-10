@@ -1,4 +1,4 @@
-import { LAMPORTS_PER_SOL, PublicKey } from '@_koi/web3.js';
+import { PublicKey } from '@_koi/web3.js';
 
 import {
   FetchAllTasksParam,
@@ -7,6 +7,7 @@ import {
   UserAppConfig,
 } from 'models/api';
 import sdk from 'services/sdk';
+import { getKoiiFromRoe } from 'utils';
 import { Task } from 'webapp/types';
 
 import { TaskService } from './taskService';
@@ -53,7 +54,7 @@ export const getMainAccountBalance = (): Promise<number> => {
   return window.main
     .getMainAccountPubKey()
     .then((pubkey) => sdk.k2Connection.getBalance(new PublicKey(pubkey)))
-    .then((lamports) => lamports / LAMPORTS_PER_SOL)
+    .then(getKoiiFromRoe)
     .then((balance) => {
       console.log('GETTING MAIN ACCOUNT BALANCE', balance);
       return balance;
@@ -63,7 +64,7 @@ export const getMainAccountBalance = (): Promise<number> => {
 export const getAccountBalance = (pubKey: string) => {
   return sdk.k2Connection
     .getBalance(new PublicKey(pubKey))
-    .then((lamports) => lamports / LAMPORTS_PER_SOL)
+    .then(getKoiiFromRoe)
     .then((balance) => {
       console.log('GETTING MAIN ACCOUNT BALANCE', balance);
       return balance;
