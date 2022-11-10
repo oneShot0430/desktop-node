@@ -1,5 +1,6 @@
 export enum AppRoute {
   Root = '/',
+  Unlock = '/unlock',
   MyNode = '/my-node',
   Rewards = '/rewards',
   AddTask = '/add-tasks',
