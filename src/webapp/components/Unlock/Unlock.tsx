@@ -6,7 +6,7 @@ import WelcomeLinesDiagonal from 'assets/svgs/welcome-lines-diagonal.svg';
 import WelcomeWheelBackground from 'assets/svgs/welcome-wheel-background.svg';
 import { PinInput } from 'webapp/components/PinInput';
 import { useUserSettings } from 'webapp/features/common';
-import { AppRoute } from 'webapp/routing/AppRoutes';
+import { AppRoute } from 'webapp/types/routes';
 
 export const Unlock = (): JSX.Element => {
   const [hasPinError, setHasPinError] = useState<boolean>(false);
