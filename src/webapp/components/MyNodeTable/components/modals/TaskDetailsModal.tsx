@@ -34,7 +34,7 @@ export const TaskDetailsModal = create<TaskDetailsModalPropsType>(
 
     const { earnedReward } = useEarnedReward({ task, publicKey });
 
-    const { data: sourceCode } = useQuery(
+    const { data: sourceCode, isLoading } = useQuery(
       [QueryKeys.taskSourceCode, task.publicKey],
       () => TaskService.getTaskSourceCode(task)
     );
@@ -145,7 +145,11 @@ export const TaskDetailsModal = create<TaskDetailsModalPropsType>(
               )}
               {currentView === TabsType.SourceCode && (
                 <div className="select-text ">
-                  <SourceCode sourceCode={sourceCode} />
+                  {isLoading ? (
+                    <div>Loading...</div>
+                  ) : (
+                    <SourceCode sourceCode={sourceCode} />
+                  )}
                 </div>
               )}
             </div>
