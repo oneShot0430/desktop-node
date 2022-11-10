@@ -17,8 +17,7 @@ import { OnboardingContext } from '../../context/onboarding-context';
 
 const KeyCreationMethodPick = () => {
   const [accountName, setAccountName] = useState<string>('');
-  const [isMissingAccountName, setIsMissingAccountName] =
-    useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>();
   const navigate = useNavigate();
   const { setNewSeedPhrase, setSystemKey } = useContext(OnboardingContext);
   const { accounts } = useAccounts();
@@ -26,12 +25,6 @@ const KeyCreationMethodPick = () => {
   const enteredNameIsInvalid = accounts?.some(
     (account) => account.accountName === accountName
   );
-
-  const errorMessage = enteredNameIsInvalid
-    ? 'You already have an account registered with that name'
-    : isMissingAccountName
-    ? 'Please enter an account name'
-    : '';
 
   const createNewKey = async (accountName: string) => {
     const seedPhrase = await generateSeedPhrase();
@@ -51,16 +44,18 @@ const KeyCreationMethodPick = () => {
       setSystemKey(mainAccountPubKey);
       navigate(AppRoute.OnboardingCreateNewKey);
     },
+    onError: (error) => {
+      setErrorMessage((error as { message: string }).message);
+    },
   });
 
   const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setIsMissingAccountName(false);
     setAccountName(e.target.value);
   };
 
   const handleClickCreate = () => {
     if (accountName) seedPhraseGenerateMutation.mutate(accountName);
-    else setIsMissingAccountName(true);
+    else setErrorMessage("Account name can't be empty");
   };
 
   const handleClickImport = () => {
@@ -68,7 +63,7 @@ const KeyCreationMethodPick = () => {
       navigate(AppRoute.OnboardingImportKey, {
         state: { accountName },
       });
-    else setIsMissingAccountName(true);
+    else setErrorMessage("Account name can't be empty");
   };
 
   return (

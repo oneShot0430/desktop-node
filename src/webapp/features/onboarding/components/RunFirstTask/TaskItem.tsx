@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import CloseIcon from 'assets/svgs/close-icons/close-icon.svg';
 import CodeIconSvg from 'assets/svgs/code-icon.svg';
 
-import { EditStakeInput } from '..';
+import { EditStakeInput } from '../EditStakeInput';
 
 type PropsType = {
   name: string;

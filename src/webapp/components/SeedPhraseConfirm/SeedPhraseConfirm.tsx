@@ -43,7 +43,7 @@ export const SeedPhraseConfirm = ({
         )
       );
     }
-  }, [seedPhraseValue]);
+  }, [numbers, seedPhraseValue, seedPhraseValueArray]);
 
   return (
     <div className="flex flex-col">
@@ -59,14 +59,14 @@ export const SeedPhraseConfirm = ({
             >
               <div>{wordNumber}.</div>
               <input
-                className="w-[120px] bg-transparent focus:border-b focus:border-white focus:outline-none text-sm"
+                className="w-[120px] gap-2 text-base bg-transparent border-b border-transparent focus:border-b focus:border-white focus:outline-none "
                 onChange={(e) => handleInputChange(e, index)}
                 value={phrases[index]}
               />
             </div>
           ) : (
             <div
-              className="flex flex-row items-center justify-start gap-4 mb-2 select-text"
+              className="flex flex-row items-center justify-start gap-2 mb-2 select-text"
               key={index}
             >
               <div>{wordNumber}.</div>

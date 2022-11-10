@@ -14,31 +14,36 @@ export const ConfirmSecretPhrase = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col pl-[105px] pt-[160px]">
-      <div className="w-full mb-4">Confirm your Secret Phrase</div>
-      <div className="w-full mb-4">
-        Type in the missing words to confirm your secret phrase is secured.
-      </div>
-      <SeedPhraseConfirm
-        seedPhraseValue={newSeedPhrase}
-        onPhraseChange={(seedPhrase) => {
-          setPhrase(seedPhrase);
-        }}
-        error={error}
-      />
-
-      <div className="absolute bottom-16 left-56">
-        <Button
-          label="Confirm"
-          className="font-semibold bg-finnieGray-light text-finnieBlue-light w-[240px] h-[48px] mt-4"
-          onClick={() => {
-            console.log('###match', { phrase, newSeedPhrase });
-            if (phrase === newSeedPhrase) {
-              navigate(AppRoute.OnboardingPhraseSaveSuccess);
-            }
-            setError('Seed phrase does not match');
+    <div className="pl-[12vw] pt-[160px]">
+      <div className="flex flex-col items-end w-fit">
+        <div className="w-full mb-4 text-2xl font-semibold">
+          Confirm your Secret Phrase
+        </div>
+        <div className="w-full mb-8">
+          Type in the missing words to confirm your secret
+          <br /> phrase is secured.
+        </div>
+        <SeedPhraseConfirm
+          seedPhraseValue={newSeedPhrase}
+          onPhraseChange={(seedPhrase) => {
+            setPhrase(seedPhrase);
           }}
+          error={error}
         />
+
+        <div className="mt-8">
+          <Button
+            label="Confirm"
+            className="font-semibold bg-finnieGray-light text-finnieBlue-light w-[240px] h-[48px] mt-4"
+            onClick={() => {
+              console.log('###match', { phrase, newSeedPhrase });
+              if (phrase === newSeedPhrase) {
+                navigate(AppRoute.OnboardingPhraseSaveSuccess);
+              }
+              setError('Seed phrase does not match');
+            }}
+          />
+        </div>
       </div>
     </div>
   );
