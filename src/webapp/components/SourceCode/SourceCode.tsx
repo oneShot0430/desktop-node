@@ -11,8 +11,6 @@ const SourceCode = ({ sourceCode }: PropsType) => {
     <SyntaxHighlighter
       showLineNumbers
       language="javascript"
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       style={codeTheme}
       customStyle={{ fontSize: '12px' }}
       lineNumberStyle={{ fontSize: '12px', color: '#D6D6D6' }}
