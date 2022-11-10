@@ -45,7 +45,7 @@ export const Unlock = (): JSX.Element => {
       </p>
 
       <PinInput onChange={handlePinChange} showHideButton={false} />
-      <div className="pt-4 text-xs text-finnieOrange">
+      <div className="text-xs text-finnieOrange h-4">
         {hasPinError && <span>The PINs don’t match. Let’s try again.</span>}
       </div>
 
