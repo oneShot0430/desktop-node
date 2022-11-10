@@ -7,7 +7,11 @@ import { PinInput } from 'webapp/components/PinInput';
 
 export const Unlock = (): JSX.Element => {
   const handlePinChange = (pin: string) => {
-    console.log('pin: ', pin);
+    const finishedTypingPin = pin.length === 6;
+
+    if (finishedTypingPin) {
+      console.log('verify pin: ', pin);
+    }
   };
 
   return (
