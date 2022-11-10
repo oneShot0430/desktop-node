@@ -3,15 +3,10 @@ import { useMemo, useState } from 'react';
 export const useTaskStakeInputLogic = () => {
   const [stakePerTask, setStakePerTask] = useState<Record<string, number>>({});
 
-  const handleStakeInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    taskPubKey: string
-  ) => {
-    const { value } = e.target;
-
+  const handleStakeInputChange = (newStake: number, taskPubKey: string) => {
     setStakePerTask({
       ...stakePerTask,
-      [taskPubKey]: Number(value),
+      [taskPubKey]: newStake,
     });
   };
 

@@ -4,6 +4,7 @@ export type Task = Omit<TS, 'data'> & TaskData;
 
 export interface TaskWithStake extends Task {
   stake: number;
+  minStake: number;
 }
 
 export enum TaskStatus {

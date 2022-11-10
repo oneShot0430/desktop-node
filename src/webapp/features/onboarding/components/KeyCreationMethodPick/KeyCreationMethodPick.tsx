@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import RewardsSvg from 'assets/svgs/onboarding/rewards-icon.svg';
 import SeedPhraseSvg from 'assets/svgs/onboarding/seed-phrase-icon.svg';
 import { ErrorMessage } from 'webapp/components/ui/ErrorMessage';
+import { useAccounts } from 'webapp/features/settings';
 import { AppRoute } from 'webapp/routing/AppRoutes';
 import {
   createNodeWallets,
@@ -19,6 +20,11 @@ const KeyCreationMethodPick = () => {
   const [errorMessage, setErrorMessage] = useState<string>();
   const navigate = useNavigate();
   const { setNewSeedPhrase, setSystemKey } = useContext(OnboardingContext);
+  const { accounts } = useAccounts();
+
+  const enteredNameIsInvalid = accounts?.some(
+    (account) => account.accountName === accountName
+  );
 
   const createNewKey = async (accountName: string) => {
     const seedPhrase = await generateSeedPhrase();
@@ -43,8 +49,9 @@ const KeyCreationMethodPick = () => {
     },
   });
 
-  const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (e) =>
+  const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (e) => {
     setAccountName(e.target.value);
+  };
 
   const handleClickCreate = () => {
     if (accountName) seedPhraseGenerateMutation.mutate(accountName);
@@ -78,7 +85,6 @@ const KeyCreationMethodPick = () => {
           onChange={handleChangeInput}
           placeholder="Account name"
         />
-
         <div className="h-12 px-6 -mb-12">
           {errorMessage && <ErrorMessage errorMessage={errorMessage} />}
         </div>
@@ -87,26 +93,28 @@ const KeyCreationMethodPick = () => {
       <div className="mt-16 ">
         <div className="flex flex-row items-center justify-evenly">
           <div className="flex flex-col items-center">
-            <div
+            <button
               className="w-[180px] h-[180px] p-2 border-dashed border-finnieOrange rounded-full border-2 mb-4 cursor-pointer"
               onClick={handleClickCreate}
+              disabled={enteredNameIsInvalid}
             >
               <div className="flex flex-col items-center justify-center w-full h-full rounded-full bg-finnieBlue-light-secondary">
                 <RewardsSvg />
               </div>
-            </div>
+            </button>
             Create a New Account
           </div>
 
           <div className="flex flex-col items-center">
-            <div
+            <button
               className="w-[180px] h-[180px] p-2 border-2 border-dashed border-finnieTeal rounded-full mb-4 cursor-pointer z-30"
               onClick={handleClickImport}
+              disabled={enteredNameIsInvalid}
             >
               <div className="flex flex-col items-center justify-center w-full h-full rounded-full bg-finnieBlue-light-secondary">
                 <SeedPhraseSvg />
               </div>
-            </div>
+            </button>
             Import Account
           </div>
         </div>

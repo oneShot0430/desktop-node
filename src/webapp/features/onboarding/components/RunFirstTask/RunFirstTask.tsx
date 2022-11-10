@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import AddIconSvg from 'assets/svgs/onboarding/add-teal-icon.svg';
 import CurrencySvgIcon from 'assets/svgs/onboarding/currency-teal-small-icon.svg';
 import RestoreIconSvg from 'assets/svgs/onboarding/restore-orange-icon.svg';
 import BgShape from 'assets/svgs/onboarding/shape_1.svg';
+import { getKoiiFromRoe } from 'utils';
 import { Button } from 'webapp/components';
 import { AppRoute } from 'webapp/routing/AppRoutes';
 
@@ -12,6 +13,8 @@ import { useRunFirstTasksLogic } from './hooks';
 import TaskItem from './TaskItem';
 
 const RunFirstTask = () => {
+  const [isRunButtonDisabled, setIsRunButtonDisabled] = useState<boolean>(true);
+
   const navigate = useNavigate();
   const {
     selectedTasks,
@@ -22,6 +25,8 @@ const RunFirstTask = () => {
     handleTaskRemove,
     handleRestoreTasks,
   } = useRunFirstTasksLogic();
+
+  const totalStakedInKoii = getKoiiFromRoe(totalStaked);
 
   const handleContinue = () =>
     navigate(AppRoute.OnboardingConfirmStake, { state: selectedTasks });
@@ -35,30 +40,33 @@ const RunFirstTask = () => {
         </div>
         <div className="overflow-x-auto">
           <div className="mb-2 text-xs text-left w-full grid grid-cols-first-task">
-            <div className="col-start-2 col-span-4">Task Name</div>
-            <div className="col-span-4">Creator</div>
-            <div className="col-span-2">Level</div>
-            <div className="col-span-1">Stake</div>
+            <div className="col-start-2 col-span-5">Task Name</div>
+            <div className="col-span-6">Creator</div>
+            <div className="col-start-13 col-span-5 2xl:col-start-15 2xl:col-span-3">
+              Stake
+            </div>
           </div>
 
           {loadingVerifiedTasks ? (
             <div>Loading...</div>
           ) : (
-            selectedTasks.map(({ publicKey, taskName, taskManager }, index) => (
-              <TaskItem
-                key={index}
-                stakeValue={stakePerTask[publicKey] ?? 0}
-                name={taskName}
-                creator={taskManager}
-                /**
-                 * @todo: get difficulty level from API
-                 */
-                level={'Low'}
-                minStake={25}
-                onStakeInputChange={(e) => handleStakeInputChange(e, publicKey)}
-                onRemove={() => handleTaskRemove(publicKey)}
-              />
-            ))
+            selectedTasks.map(
+              ({ publicKey, taskName, taskManager, minStake }, index) => (
+                <div className="mb-4" key={index}>
+                  <TaskItem
+                    stakeValue={stakePerTask[publicKey] ?? 0}
+                    name={taskName}
+                    creator={taskManager}
+                    minStake={minStake}
+                    onStakeInputChange={(newStake) => {
+                      handleStakeInputChange(newStake, publicKey);
+                      setIsRunButtonDisabled(newStake < minStake);
+                    }}
+                    onRemove={() => handleTaskRemove(publicKey)}
+                  />
+                </div>
+              )
+            )
           )}
         </div>
 
@@ -80,11 +88,12 @@ const RunFirstTask = () => {
           <Button
             className="font-semibold bg-finnieGray-light text-finnieBlue-light w-56 h-[38px]"
             label="Run Tasks"
+            disabled={isRunButtonDisabled}
             onClick={handleContinue}
           />
           <div className="flex flex-row items-center gap-2 mt-2 text-sm text-finnieEmerald-light">
             <CurrencySvgIcon className="h-6" />
-            {`Total staked: ${totalStaked} KOII`}
+            {`Total staked: ${totalStakedInKoii} KOII`}
           </div>
         </div>
       </div>
