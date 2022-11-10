@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import KoiiLogo from 'assets/svgs/koii-logo-white.svg';
@@ -9,23 +9,25 @@ import { useUserSettings } from 'webapp/features/common';
 import { AppRoute } from 'webapp/routing/AppRoutes';
 
 export const Unlock = (): JSX.Element => {
+  const [hasPinError, setHasPinError] = useState<boolean>(false);
+
   const {
     settings: { pin: storedPin },
   } = useUserSettings();
 
   const navigate = useNavigate();
 
-  console.log('storedPin: ', storedPin);
-
   const handlePinChange = (pin: string) => {
+    setHasPinError(false);
     const finishedTypingPin = pin.length === 6;
 
     if (finishedTypingPin) {
-      console.log('verify pin: ', pin);
       const pinsMatch = pin === storedPin;
 
       if (pinsMatch) {
         navigate(AppRoute.MyNode);
+      } else {
+        setHasPinError(true);
       }
     }
   };
@@ -33,7 +35,8 @@ export const Unlock = (): JSX.Element => {
   return (
     <div className="relative h-full overflow-y-auto flex flex-col justify-center items-center gap-5 h-full bg-gradient-to-b from-finnieBlue-dark-secondary to-finnieBlue text-white">
       <WelcomeWheelBackground className="absolute top-0 left-0 h-[40%]" />
-      <KoiiLogo className="" />
+
+      <KoiiLogo />
       <h1 className="text-[40px] leading-[48px] text-center">
         Welcome to the Koii Node
       </h1>
@@ -42,6 +45,9 @@ export const Unlock = (): JSX.Element => {
       </p>
 
       <PinInput onChange={handlePinChange} showHideButton={false} />
+      <div className="pt-4 text-xs text-finnieOrange">
+        {hasPinError && <span>The PINs don’t match. Let’s try again.</span>}
+      </div>
 
       <WelcomeLinesDiagonal className="absolute bottom-0 right-0 h-full" />
     </div>
