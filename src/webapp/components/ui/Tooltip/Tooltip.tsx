@@ -9,6 +9,7 @@ type PropsType = {
   tooltipContent: React.ReactNode;
   manualClose?: boolean;
   theme?: Theme;
+  placement?: 'top' | 'bottom' | 'left' | 'right';
 };
 
 export const Tooltip = ({
@@ -16,6 +17,7 @@ export const Tooltip = ({
   tooltipContent,
   manualClose = false,
   theme = Theme.Light,
+  placement,
 }: PropsType) => {
   const [isHovered, setIsHovered] = useState(manualClose);
 
