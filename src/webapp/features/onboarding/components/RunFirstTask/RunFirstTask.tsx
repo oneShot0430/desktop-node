@@ -5,6 +5,7 @@ import AddIconSvg from 'assets/svgs/onboarding/add-teal-icon.svg';
 import CurrencySvgIcon from 'assets/svgs/onboarding/currency-teal-small-icon.svg';
 import RestoreIconSvg from 'assets/svgs/onboarding/restore-orange-icon.svg';
 import BgShape from 'assets/svgs/onboarding/shape_1.svg';
+import { getKoiiFromRoe } from 'utils';
 import { Button } from 'webapp/components';
 import { AppRoute } from 'webapp/types/routes';
 
@@ -24,6 +25,8 @@ const RunFirstTask = () => {
     handleTaskRemove,
     handleRestoreTasks,
   } = useRunFirstTasksLogic();
+
+  const totalStakedInKoii = getKoiiFromRoe(totalStaked);
 
   const handleContinue = () =>
     navigate(AppRoute.OnboardingConfirmStake, { state: selectedTasks });
@@ -55,9 +58,9 @@ const RunFirstTask = () => {
                     name={taskName}
                     creator={taskManager}
                     minStake={minStake}
-                    onStakeInputChange={(e) => {
-                      handleStakeInputChange(e, publicKey);
-                      setIsRunButtonDisabled(Number(e.target.value) < minStake);
+                    onStakeInputChange={(newStake) => {
+                      handleStakeInputChange(newStake, publicKey);
+                      setIsRunButtonDisabled(newStake < minStake);
                     }}
                     onRemove={() => handleTaskRemove(publicKey)}
                   />
@@ -90,7 +93,7 @@ const RunFirstTask = () => {
           />
           <div className="flex flex-row items-center gap-2 mt-2 text-sm text-finnieEmerald-light">
             <CurrencySvgIcon className="h-6" />
-            {`Total staked: ${totalStaked} KOII`}
+            {`Total staked: ${totalStakedInKoii} KOII`}
           </div>
         </div>
       </div>
