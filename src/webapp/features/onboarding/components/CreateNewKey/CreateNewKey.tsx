@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import CheckMarkIcon from 'assets/svgs/checkmark-icon.svg';
 import { Button } from 'webapp/components/ui/Button';
 import { useFundNewAccountModal } from 'webapp/features/common';
-import { AppRoute } from 'webapp/routing/AppRoutes';
+import { AppRoute } from 'webapp/types/routes';
 
 import { ContentRightWrapper } from '../ContentRightWrapper';
 

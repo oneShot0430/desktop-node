@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import CheckMarkIcon from 'assets/svgs/checkmark-icon.svg';
 import WarningIndicatorSvg from 'assets/svgs/warning-indicator-icon.svg';
 import { Button } from 'webapp/components/ui/Button';
-import { AppRoute } from 'webapp/routing/AppRoutes';
+import { AppRoute } from 'webapp/types/routes';
 
 export const PhraseSaveSuccess = () => {
   const navigate = useNavigate();

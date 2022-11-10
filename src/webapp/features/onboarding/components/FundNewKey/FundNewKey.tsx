@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { Button } from 'webapp/components/ui/Button';
 import { useFundNewAccountModal } from 'webapp/features/common';
-import { AppRoute } from 'webapp/routing/AppRoutes';
+import { AppRoute } from 'webapp/types/routes';
 
 export const FundNewKey = () => {
   const navigate = useNavigate();

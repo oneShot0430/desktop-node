@@ -5,8 +5,8 @@ import LinesVerticalTeal from 'assets/svgs/onboarding/lines-vertical-teal.svg';
 import { Button } from 'webapp/components';
 import { PinInput } from 'webapp/components/PinInput';
 import { useUserAppConfig } from 'webapp/features/settings';
-import { AppRoute } from 'webapp/routing/AppRoutes';
 import { openBrowserWindow } from 'webapp/services';
+import { AppRoute } from 'webapp/types/routes';
 
 import { ContentRightWrapper } from '../ContentRightWrapper';
 

@@ -22,26 +22,15 @@ function TaskItem({
   onStakeInputChange,
   onRemove,
 }: PropsType) {
-  const [hover, setHover] = useState(false);
   const [meetsMinimumStake, setMeetsMinimumStake] = useState<boolean>(false);
 
-  const handleOnHover = () => {
-    setHover(true);
-  };
-  const handleUnhover = () => {
-    setHover(false);
-  };
   const handleStakeInputChange = (newStake: number) => {
     setMeetsMinimumStake(newStake >= minStake);
     onStakeInputChange(newStake);
   };
 
   return (
-    <div
-      className="grid w-full mb-4 text-sm text-left rounded-md bg-finnieBlue-light-secondary h-13 grid-cols-first-task place-content-center"
-      onMouseEnter={handleOnHover}
-      onMouseLeave={handleUnhover}
-    >
+    <div className="grid w-full mb-4 text-sm text-left rounded-md bg-finnieBlue-light-secondary h-13 grid-cols-first-task place-content-center">
       <CodeIconSvg className="col-span-1 m-auto" />
 
       <div className="col-span-5 my-auto mr-4 overflow-hidden text-ellipsis">
@@ -66,7 +55,9 @@ function TaskItem({
         onClick={onRemove}
         title="Remove task"
       >
-        <div className="w-6 h-6 mr-2">{hover && <CloseIcon />}</div>
+        <div className="w-6 h-6 mr-2">
+          <CloseIcon />
+        </div>
       </div>
     </div>
   );

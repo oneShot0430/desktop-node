@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { ImportFromSeedPhrase } from 'webapp/components/ImportFromSeedPhrase';
-import { AppRoute } from 'webapp/routing/AppRoutes';
+import { AppRoute } from 'webapp/types/routes';
 
 import { OnboardingContext } from '../../context/onboarding-context';
 import { ContentRightWrapper } from '../ContentRightWrapper';

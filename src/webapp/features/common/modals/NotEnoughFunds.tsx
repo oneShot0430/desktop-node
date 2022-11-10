@@ -5,8 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from 'webapp/components';
 import { useFundNewAccountModal } from 'webapp/features/common';
 import { Modal, ModalContent, ModalTopBar } from 'webapp/features/modals';
-import { AppRoute } from 'webapp/routing/AppRoutes';
 import { Theme } from 'webapp/types/common';
+import { AppRoute } from 'webapp/types/routes';
 
 export const NotEnoughFunds = create(function NotEnoughFunds() {
   const modal = useModal();
@@ -32,7 +32,7 @@ export const NotEnoughFunds = create(function NotEnoughFunds() {
 
         <div className="p-8">
           <div className="flex items-center justify-center h-full mb-11">
-            <p className="text-xl text-white font-semibold">
+            <p className="text-xl font-semibold text-white">
               Do you want to fund your account to
               <br /> run these tasks?
             </p>
