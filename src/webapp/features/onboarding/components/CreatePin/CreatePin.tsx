@@ -1,3 +1,4 @@
+import { hash } from 'bcryptjs';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -20,8 +21,13 @@ const CreatePin = () => {
       navigate(AppRoute.OnboardingPickKeyCreationMethod),
   });
 
-  const handlePinCreate = () => {
-    handleSaveUserAppConfig({ settings: { pin } });
+  const handlePinCreate = async () => {
+    // to address before merging: what salt do we wanna use?
+    const saltRounds = 10;
+    const hashedPin = await hash(pin, saltRounds);
+    handleSaveUserAppConfig({
+      settings: { pin: hashedPin },
+    });
   };
 
   const pinIsMatching = useMemo(() => pin === pinConfirm, [pin, pinConfirm]);
