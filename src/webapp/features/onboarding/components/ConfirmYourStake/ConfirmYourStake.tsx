@@ -9,7 +9,10 @@ import { getKoiiFromRoe } from 'utils';
 import { ErrorMessage } from 'webapp/components';
 import { Button } from 'webapp/components/ui/Button';
 import { useNotEnoughFunds, useRunMultipleTasks } from 'webapp/features/common';
-import { useMainAccountBalance } from 'webapp/features/settings';
+import {
+  useMainAccountBalance,
+  useUserAppConfig,
+} from 'webapp/features/settings';
 import { TaskWithStake } from 'webapp/types';
 import { AppRoute } from 'webapp/types/routes';
 
@@ -27,12 +30,17 @@ const ConfirmYourStake = () => {
   const [isRunButtonDisabled, setIsRunButtonDisabled] = useState<boolean>();
 
   const { data: balance, isLoading } = useMainAccountBalance();
-  const handleRunTasksSuccess = () => navigate(AppRoute.MyNode);
+  const handleRunTasksSuccess = () =>
+    handleSaveUserAppConfig({ settings: { onboardingCompleted: true } });
+
   const { runAllTasks, runTasksLoading, runTasksError } = useRunMultipleTasks({
     tasksToRun,
     onRunAllTasksSuccessCallback: handleRunTasksSuccess,
   });
   const { showNotEnoughFunds } = useNotEnoughFunds();
+  const { handleSaveUserAppConfig } = useUserAppConfig({
+    onConfigSaveSuccess: () => navigate(AppRoute.MyNode),
+  });
 
   const totalKoiiStaked = useMemo(
     () => sum(tasksToRun.map((task) => task.stake)),

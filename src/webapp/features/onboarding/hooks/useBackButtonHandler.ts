@@ -15,7 +15,7 @@ const sholdDisplayBackButton = (pathname: string) => {
   }
 };
 
-export const useBackButtonHanlder = () => {
+export const useBackButtonHandler = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 

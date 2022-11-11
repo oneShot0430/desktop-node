@@ -7,9 +7,10 @@ import CreateIconSvg from 'assets/svgs/onboarding/create-icon.svg';
 import CurrencyIconSvg from 'assets/svgs/onboarding/currency-icon.svg';
 import LockIconSvg from 'assets/svgs/onboarding/lock-icon.svg';
 import { Button } from 'webapp/components/ui/Button';
+import { useUserAppConfig } from 'webapp/features/settings';
 import { AppRoute } from 'webapp/types/routes';
 
-import { useBackButtonHanlder } from '../../hooks/useBackButtonHandler';
+import { useBackButtonHandler } from '../../hooks/useBackButtonHandler';
 
 import StepListItem from './components/StepListItem';
 
@@ -23,7 +24,14 @@ const OnboardingLayout = ({ children }: PropsType) => {
     showOnboardingBackButton,
     currentPath,
     navigate,
-  } = useBackButtonHanlder();
+  } = useBackButtonHandler();
+
+  const { handleSaveUserAppConfig } = useUserAppConfig({
+    onConfigSaveSuccess: () => navigate(AppRoute.MyNode),
+  });
+
+  const handleSkipOnboarding = () =>
+    handleSaveUserAppConfig({ settings: { onboardingCompleted: true } });
 
   return (
     <div className="flex flex-row h-full text-white">
@@ -70,9 +78,7 @@ const OnboardingLayout = ({ children }: PropsType) => {
             <Button
               label="Skip"
               className="underline text-finnieEmerald-light"
-              onClick={() => {
-                navigate(AppRoute.MyNode);
-              }}
+              onClick={handleSkipOnboarding}
             />
           </div>
         </div>
