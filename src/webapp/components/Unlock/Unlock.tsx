@@ -1,3 +1,4 @@
+import { compare } from 'bcryptjs';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,19 +13,19 @@ export const Unlock = (): JSX.Element => {
   const [hasPinError, setHasPinError] = useState<boolean>(false);
 
   const {
-    settings: { pin: storedPin },
+    settings: { pin: storedPinHash },
   } = useUserSettings();
 
   const navigate = useNavigate();
 
-  const handlePinChange = (pin: string) => {
+  const handlePinChange = async (pin: string) => {
     setHasPinError(false);
     const finishedTypingPin = pin.length === 6;
 
     if (finishedTypingPin) {
-      const pinsMatch = pin === storedPin;
+      const pinMatchesStoredHash = await compare(pin, storedPinHash);
 
-      if (pinsMatch) {
+      if (pinMatchesStoredHash) {
         navigate(AppRoute.MyNode);
       } else {
         setHasPinError(true);
