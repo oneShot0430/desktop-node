@@ -22,7 +22,6 @@ const CreatePin = () => {
   });
 
   const handlePinCreate = async () => {
-    // to address before merging: what salt do we wanna use?
     const saltRounds = 10;
     const hashedPin = await hash(pin, saltRounds);
     handleSaveUserAppConfig({
