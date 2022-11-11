@@ -7,6 +7,7 @@ import EditIconSvg from 'assets/svgs/edit-icon.svg';
 import KeyIconSvg from 'assets/svgs/key-icon.svg';
 import StarOutlined from 'assets/svgs/star-outlined.svg';
 import Star from 'assets/svgs/star.svg';
+import { LoadingSpinner, LoadingSpinnerSize } from 'webapp/components';
 import { Button } from 'webapp/components/ui/Button';
 import { ErrorMessage } from 'webapp/components/ui/ErrorMessage';
 import { useClipboard } from 'webapp/features/common';
@@ -41,7 +42,8 @@ const AccountInfo = ({
     setAccountActive,
     removingAccountError,
     setAccountActiveError,
-  } = useAccount(accountName);
+    removingAccountLoading,
+  } = useAccount({ accountName, isDefault });
 
   const handleCopyMainPublicKey = () => {
     copyMainKeyToClipboard(mainPublicKey);
@@ -62,18 +64,18 @@ const AccountInfo = ({
           isDefault ? 'bg-finnieTeal-100/[.3]' : 'bg-finnieTeal-100'
         } bg-opacity-5 grid grid-cols-16 gap-y-6 gap-x-2 py-4`}
       >
-        <div className="flex flex-col items-center justify-center py-1 col-span-1 row-span-2">
+        <div className="flex flex-col items-center justify-center col-span-1 row-span-2 py-1">
           <DotsSvg />
         </div>
         <Button
           onClick={setAccountActive}
           icon={isDefault ? <Star /> : <StarOutlined />}
-          className="rounded-full w-6 h-6 bg-transparent col-span-1"
+          className="w-6 h-6 col-span-1 bg-transparent rounded-full"
         />
-        <span className="text-finnieTeal col-span-2">System Key</span>
+        <span className="col-span-2 text-finnieTeal">System Key</span>
         <Button
           icon={<EditIconSvg />}
-          className="rounded-full w-6 h-6 bg-finnieTeal-100 col-span-1"
+          className="w-6 h-6 col-span-1 rounded-full bg-finnieTeal-100"
         />
         <span
           className="col-span-5 text-ellipsis overflow-x-clip"
@@ -81,7 +83,7 @@ const AccountInfo = ({
         >
           {mainPublicKey}
         </span>
-        <div className="flex justify-center gap-4 col-span-2">
+        <div className="flex justify-center col-span-2 gap-4">
           <Button
             tooltip="Copy"
             onClick={handleCopyMainPublicKey}
@@ -95,34 +97,40 @@ const AccountInfo = ({
           />
           <Button
             icon={<KeyIconSvg className="w-3.5 h-3.5" />}
-            className="rounded-full w-6 h-6 bg-finnieEmerald-light"
+            className="w-6 h-6 rounded-full bg-finnieEmerald-light"
           />
         </div>
 
-        <span className="col-start-14 col-span-2">
+        <span className="col-span-2 col-start-14">
           {accountBalanceLoadingError ? '-' : accountBalance} KOII
         </span>
-        <Button
-          onClick={deleteAccount}
-          icon={<DeleteIconSvg />}
-          className="rounded-full w-6 h-6 bg-finnieRed col-span-1"
-        />
+        {!isDefault &&
+          (removingAccountLoading ? (
+            <LoadingSpinner size={LoadingSpinnerSize.Medium} />
+          ) : (
+            <Button
+              disabled={removingAccountLoading}
+              onClick={deleteAccount}
+              icon={<DeleteIconSvg />}
+              className="w-6 h-6 col-span-1 rounded-full bg-finnieRed"
+            />
+          ))}
 
-        <div className="text-finnieOrange col-start-3 col-span-2">
+        <div className="col-span-2 col-start-3 text-finnieOrange">
           Staking Key
         </div>
 
         <Button
           icon={<EditIconSvg />}
-          className="rounded-full w-6 h-6 bg-finnieTeal-100  col-span-1"
+          className="w-6 h-6 col-span-1 rounded-full bg-finnieTeal-100"
         />
         <div
-          className="col-start-6 col-span-5 text-ellipsis overflow-x-clip"
+          className="col-span-5 col-start-6 text-ellipsis overflow-x-clip"
           title={stakingPublicKey}
         >
           {stakingPublicKey}
         </div>
-        <div className="flex justify-center gap-4 col-span-2">
+        <div className="flex justify-center col-span-2 gap-4">
           <Button
             tooltip="Copy"
             onClick={handleCopyStakingPublicKey}
@@ -136,7 +144,7 @@ const AccountInfo = ({
           />
           <Button
             icon={<KeyIconSvg className="w-3.5 h-3.5" />}
-            className="rounded-full w-6 h-6 bg-finnieEmerald-light"
+            className="w-6 h-6 rounded-full bg-finnieEmerald-light"
           />
         </div>
       </div>
