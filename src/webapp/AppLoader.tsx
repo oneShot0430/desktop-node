@@ -8,7 +8,7 @@ import { useUserSettings } from './features/common';
 const AppLoader = (): JSX.Element => {
   const { settings, loadingSettings } = useUserSettings();
 
-  if (loadingSettings) <div>loading...</div>;
+  if (loadingSettings) return <div>loading...</div>;
 
   if (settings?.onboardingCompleted) {
     return <Navigate to={AppRoute.Unlock} />;
