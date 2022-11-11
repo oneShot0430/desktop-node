@@ -3,7 +3,12 @@ import { useQueryClient, useMutation } from 'react-query';
 
 import { QueryKeys, removeAccount, setActiveAccount } from 'webapp/services';
 
-export const useAccount = (accountName: string) => {
+type ParamsType = {
+  accountName: string;
+  isDefault: boolean;
+};
+
+export const useAccount = ({ accountName, isDefault }: ParamsType) => {
   const queryCache = useQueryClient();
 
   const {
@@ -23,8 +28,11 @@ export const useAccount = (accountName: string) => {
   });
 
   const removeAccountHandler = useCallback(() => {
+    if (isDefault) {
+      return;
+    }
     deleteAccount(accountName);
-  }, [deleteAccount, accountName]);
+  }, [deleteAccount, accountName, isDefault]);
 
   const setAccountActiveHandler = useCallback(() => {
     setAccountActive(accountName);
