@@ -10,7 +10,7 @@ import { Button } from 'webapp/components/ui/Button';
 import { useUserAppConfig } from 'webapp/features/settings';
 import { AppRoute } from 'webapp/types/routes';
 
-import { useBackButtonHanlder } from '../../hooks/useBackButtonHandler';
+import { useBackButtonHandler } from '../../hooks/useBackButtonHandler';
 
 import StepListItem from './components/StepListItem';
 
@@ -24,7 +24,7 @@ const OnboardingLayout = ({ children }: PropsType) => {
     showOnboardingBackButton,
     currentPath,
     navigate,
-  } = useBackButtonHanlder();
+  } = useBackButtonHandler();
 
   const { handleSaveUserAppConfig } = useUserAppConfig({
     onConfigSaveSuccess: () => {
