@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from 'webapp/components';
 import { useFundNewAccountModal } from 'webapp/features/common';
 import { Modal, ModalContent, ModalTopBar } from 'webapp/features/modals';
+import { useUserAppConfig } from 'webapp/features/settings';
 import { Theme } from 'webapp/types/common';
 import { AppRoute } from 'webapp/types/routes';
 
@@ -12,6 +13,12 @@ export const NotEnoughFunds = create(function NotEnoughFunds() {
   const modal = useModal();
   const navigate = useNavigate();
 
+  const { handleSaveUserAppConfig } = useUserAppConfig({
+    onConfigSaveSuccess: () => {
+      modal.remove();
+      navigate(AppRoute.MyNode);
+    },
+  });
   const { showModal: showFundNewAccountModal } = useFundNewAccountModal(
     modal.show
   );
@@ -20,6 +27,9 @@ export const NotEnoughFunds = create(function NotEnoughFunds() {
     modal.remove();
     showFundNewAccountModal();
   };
+
+  const handleSkipRunTasks = () =>
+    handleSaveUserAppConfig({ settings: { onboardingCompleted: true } });
 
   return (
     <Modal>
@@ -42,10 +52,7 @@ export const NotEnoughFunds = create(function NotEnoughFunds() {
             <Button
               label="Skip Run Tasks"
               className="border bg-finnieRed text-finnieBlue border-finnieBlue"
-              onClick={() => {
-                modal.remove();
-                navigate(AppRoute.MyNode);
-              }}
+              onClick={handleSkipRunTasks}
             />
             <Button
               label="Fund my Key"
