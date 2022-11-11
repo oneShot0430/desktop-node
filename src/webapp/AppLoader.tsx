@@ -11,7 +11,7 @@ const AppLoader = (): JSX.Element => {
   if (loadingSettings) <div>loading...</div>;
 
   if (settings?.onboardingCompleted) {
-    return <Navigate to={AppRoute.MyNode} />;
+    return <Navigate to={AppRoute.Unlock} />;
   } else {
     return <Navigate to={AppRoute.OnboardingCreatePin} />;
   }
