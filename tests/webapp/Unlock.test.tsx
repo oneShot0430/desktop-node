@@ -43,7 +43,7 @@ describe('Unlock page', () => {
     expect(errorElement).toBeInTheDocument();
   });
 
-  // TO DO: assesst redirection to MyNode instead
+  // TO DO: assess redirection to MyNode instead
   it('does not fail authentication if the pin entered does not match the hash stored', async () => {
     render(<Unlock />);
 
