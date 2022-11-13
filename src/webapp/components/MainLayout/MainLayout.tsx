@@ -16,27 +16,29 @@ type MainLayoutProps = {
 const MainLayout = ({ children }: MainLayoutProps): JSX.Element => {
   const navigate = useNavigate();
 
+  const resetOnboarding = async () => {
+    await saveUserConfig({
+      settings: { onboardingCompleted: false },
+    });
+    navigate(AppRoute.OnboardingCreatePin);
+  };
+
   return (
     <div className="flex flex-col h-full">
       <Header />
       <main className="flex flex-col h-full bg-gradient-to-b from-finnieBlue-dark-secondary to-finnieBlue">
-        <div className="px-4 mx-auto w-[100%] flex justify-between">
+        <div className="px-4 mx-auto w-full flex justify-between">
           <BackButton />
           <Button
             className="mt-4 text-white"
             label="Reset onboarding"
-            onClick={async () => {
-              await saveUserConfig({
-                settings: { onboardingCompleted: false },
-              });
-              navigate(AppRoute.OnboardingCreatePin);
-            }}
+            onClick={resetOnboarding}
           />
         </div>
-        <div className="px-4 mx-auto main-bg h-[100%] pt-3 w-[100%] flex-grow">
-          <div className="flex items-stretch h-[100%] pb-4">
+        <div className="px-4 mx-auto main-bg h-full pt-3 w-full flex-grow">
+          <div className="flex items-stretch h-full pb-4">
             <Sidebar />
-            <div className="w-[100%] ">{children}</div>
+            <div className="w-full">{children}</div>
           </div>
         </div>
       </main>
