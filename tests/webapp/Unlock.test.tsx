@@ -27,18 +27,20 @@ Object.defineProperty(window, 'main', {
 });
 
 describe('Unlock page', () => {
+  const enterPin = async (correctInput: boolean) => {
+    // if we can make it work with forEach/map would be awesome, but I tried a zillion different things and it failed everytime (something related to asynchronicity in those methods during tests unlike with regular for)
+    for (let index = 0; index < 6; index++) {
+      const pinCharacterToEnter = correctInput ? pin[1] : String(index);
+      const pinInput = screen.getAllByLabelText(/pin-input/i)[index];
+      await userEvent.type(pinInput, pinCharacterToEnter);
+    }
+  };
+
   it('fails authentication if the pin entered does not match the hash stored', async () => {
     render(<Unlock />);
 
-    const enterIncorrectPin = async () => {
-      // if we can make it work with forEach/map would be awesome, but I tried a zillion different things and it failed everytime (something related to asynchronicity in those methods during tests unlike with regular for)
-      for (let index = 0; index < 6; index++) {
-        const pinInput = screen.getAllByLabelText(/pin-input/i)[index];
-        await userEvent.type(pinInput, String(index));
-      }
-    };
+    await enterPin(false);
 
-    await enterIncorrectPin();
     const errorElement = await screen.findByText(pinErrorMessage);
     expect(errorElement).toBeInTheDocument();
   });
@@ -47,15 +49,8 @@ describe('Unlock page', () => {
   it('does not fail authentication if the pin entered does not match the hash stored', async () => {
     render(<Unlock />);
 
-    const enterCorrectPin = async () => {
-      for (let index = 0; index < 6; index++) {
-        const pinCharacterToEnter = pin[index];
-        const pinInput = screen.getAllByLabelText(/pin-input/i)[index];
-        await userEvent.type(pinInput, pinCharacterToEnter);
-      }
-    };
+    await enterPin(true);
 
-    await enterCorrectPin();
     const errorElement = screen.queryByText(pinErrorMessage);
     expect(errorElement).not.toBeInTheDocument();
   });
