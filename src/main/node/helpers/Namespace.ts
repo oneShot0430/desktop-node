@@ -130,6 +130,9 @@ class Namespace {
     // }
     // this.#mainSystemAccount = mainSystemAccount;
     // this.mainSystemAccountPubKey = mainSystemAccount.publicKey;
+
+    this.taskData = taskData;
+    this.db = leveldbWrapper.levelDb;
     if (!mainSystemAccount) {
       const ACTIVE_ACCOUNT = 'ACTIVE_ACCOUNT';
       this.storeGet(ACTIVE_ACCOUNT).then((activeAccount) => {
@@ -156,9 +159,6 @@ class Namespace {
       this.mainSystemAccountPubKey = mainSystemAccount?.publicKey;
     }
 
-    this.taskData = taskData;
-    this.db = leveldbWrapper.levelDb;
-
     if (this.taskData?.task_id)
       this.taskStateInfoPublicKey = new PublicKey(this.taskData.task_id);
 
@@ -175,6 +175,26 @@ class Namespace {
   async storeGet(key: string): Promise<string | null> {
     try {
       const response = await this.db.get(this.taskTxId + key, {
+        asBuffer: false,
+      });
+      return response;
+    } catch (e) {
+      if (e.type == 'NotFoundError') {
+        console.error(key, 'Not found');
+      } else {
+        console.error(e);
+      }
+      return null;
+    }
+  }
+  /**
+   * Namespace wrapper of storeGetAsync
+   * @param {string} key // Path to get
+   * @returns {Promise<*>} Promise containing data
+   */
+  async #storeGetRaw(key: string): Promise<string | null> {
+    try {
+      const response = await this.db.get(key, {
         asBuffer: false,
       });
       return response;
@@ -686,14 +706,17 @@ class Namespace {
   async getSubmitterAccount(): Promise<Keypair | null> {
     let submitterAccount: Keypair | null;
     try {
-      const submitterAccountWallet = await namespaceInstance.fsStaking(
-        'readFile',
-        'staking_wallet.json',
-        'utf-8'
-      );
+      const ACTIVE_ACCOUNT = 'ACTIVE_ACCOUNT';
+      const activeAccount = await this.#storeGetRaw(ACTIVE_ACCOUNT);
+      const STAKING_WALLET_PATH = `namespace/${activeAccount}_stakingWallet.json`;
+      console.log({ STAKING_WALLET_PATH });
+      if (!fs.existsSync(STAKING_WALLET_PATH)) return null;
       submitterAccount = Keypair.fromSecretKey(
-        Uint8Array.from(JSON.parse(submitterAccountWallet))
+        Uint8Array.from(
+          JSON.parse(fs.readFileSync(STAKING_WALLET_PATH, 'utf-8'))
+        )
       );
+      console.log({ submitterAccount });
     } catch (e) {
       console.error(
         'Staking wallet not found. Please create a staking wallet and place it in the namespace folder'

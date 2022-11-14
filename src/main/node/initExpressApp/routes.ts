@@ -57,11 +57,6 @@ export default (app: Express) => {
     }
     try {
       const params = args.slice(1);
-      console.log('AZZzzzzzzzzzzzzz');
-      console.log(koiiTasks.RUNNING_TASKS[taskId]);
-      console.log(koiiTasks.RUNNING_TASKS[taskId].namespace);
-      console.log((koiiTasks.RUNNING_TASKS[taskId] as any).namespace[args[0]]);
-
       const response = await (koiiTasks.RUNNING_TASKS[taskId] as any).namespace[
         args[0]
       ](...params);
