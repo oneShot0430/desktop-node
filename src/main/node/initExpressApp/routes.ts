@@ -1,5 +1,7 @@
 import { Request, Response, Express } from 'express';
 
+import koiiTasks from 'services/koiiTasks';
+
 import helpers from '../helpers';
 
 const heartbeat = (req: Request, res: Response): void => {
@@ -40,4 +42,27 @@ export default (app: Express) => {
   app.get('/', heartbeat);
   app.get('/nodes', nodes);
   app.post('/register-node', registerNodes);
+  app.post('/namespace-wrapper', async (req, res) => {
+    if (!req.body.args)
+      return res.status(422).send({ message: 'No args provided' });
+    if (!req.body.taskId)
+      return res.status(422).send({ message: 'No taskId provided' });
+    if (!req.body.secret)
+      return res.status(422).send({ message: 'No secret provided' });
+
+    const args = req.body.args;
+    const taskId = req.body.taskId;
+    if (koiiTasks.RUNNING_TASKS[taskId].secret != req.body.secret) {
+      return res.status(401).send({ message: 'Invalid secret provided' });
+    }
+    try {
+      const params = args.slice(1);
+      const response = await (koiiTasks.RUNNING_TASKS[taskId] as any).namespace[
+        args[0]
+      ](...params);
+      res.status(200).send({ response });
+    } catch (err) {
+      res.status(422).send({ message: err.message });
+    }
+  });
 };

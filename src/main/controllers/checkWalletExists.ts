@@ -9,7 +9,7 @@ import mainErrorHandler from '../../utils/mainErrorHandler';
 const checkWallet = async (
   event: Event
 ): Promise<CheckWalletExistsResponse> => {
-  console.log('IN THE API');
+  console.log('Check Wallet');
   let mainSystemAccount: boolean;
   let stakingWallet: boolean;
   const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');

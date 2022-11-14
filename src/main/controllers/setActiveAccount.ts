@@ -9,8 +9,8 @@ const storeWallet = async (
   event: Event,
   payload: SetActiveAccountParam
 ): Promise<boolean> => {
-  console.log('IN THE API');
   const { accountName } = payload;
+  console.log('Set Active Account', accountName);
   try {
     const ACTIVE_ACCOUNT = 'ACTIVE_ACCOUNT';
     await namespaceInstance.storeSet(ACTIVE_ACCOUNT, accountName);
