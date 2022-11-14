@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { getKoiiFromRoe } from 'utils';
+
 type PropsType = {
   owner: string;
   totalBounty: number;
@@ -31,22 +33,31 @@ export const TaskDetails = ({
   myTotalRewards,
 }: PropsType) => (
   <div>
-    <PropertyRow label="Owner" value={owner.substring(0, 6)} />
-    <PropertyRow label={'Total bounty'} value={`${totalBounty} KOII`} />
+    <PropertyRow label="Owner" value={owner} />
+    <PropertyRow
+      label={'Total bounty'}
+      value={`${getKoiiFromRoe(totalBounty)} KOII`}
+    />
     <PropertyRow
       label={'Nodes participating'}
       value={`${nodesParticipating}`}
     />
     <PropertyRow
       label={'Total KOII staked'}
-      value={`${totalKoiiStaked} KOII`}
+      value={`${getKoiiFromRoe(totalKoiiStaked)} KOII`}
     />
     <PropertyRow
       label={'Current top stake'}
-      value={`${currentTopStake} KOII`}
+      value={`${getKoiiFromRoe(currentTopStake)} KOII`}
     />
-    <PropertyRow label={'My current stake'} value={`${myCurrentStake} KOII`} />
+    <PropertyRow
+      label={'My current stake'}
+      value={`${getKoiiFromRoe(myCurrentStake)} KOII`}
+    />
     <PropertyRow label={'State'} value={state} />
-    <PropertyRow label={'My total rewards'} value={`${myTotalRewards} KOII`} />
+    <PropertyRow
+      label={'My total rewards'}
+      value={`${getKoiiFromRoe(myTotalRewards)} KOII`}
+    />
   </div>
 );

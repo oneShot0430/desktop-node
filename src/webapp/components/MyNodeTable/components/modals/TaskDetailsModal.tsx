@@ -6,7 +6,6 @@ import ExternalSourceIconSvg from 'assets/svgs/external-source-icon-white.svg';
 import FlagIconTealSvg from 'assets/svgs/flag-teal-icon.svg';
 import CloseIcon from 'svgs/close-icons/close-icon-white.svg';
 import { SourceCode } from 'webapp/components/SourceCode';
-import { Button } from 'webapp/components/ui/Button';
 import { useEarnedReward } from 'webapp/features/common/hooks/useEarnedReward';
 import { Modal, ModalContent } from 'webapp/features/modals';
 import { QueryKeys, TaskService, TaskStatusToLabeMap } from 'webapp/services';
@@ -49,9 +48,9 @@ export const TaskDetailsModal = create<TaskDetailsModalPropsType>(
       () => TaskService.getMyStake(task)
     );
 
-    const handleWithdraw = () => {
-      console.log('Wthdraw action');
-    };
+    // const handleWithdraw = () => {
+    //   console.log('Wthdraw action');
+    // };
 
     const handleClose = () => {
       modal.remove();
@@ -76,14 +75,14 @@ export const TaskDetailsModal = create<TaskDetailsModalPropsType>(
                 >
                   Details
                 </div>
-                <div
-                  className={`${
-                    currentView === TabsType.SourceCode && activeClasses
-                  } text-semibold cursor-pointer`}
-                  onClick={() => setCurrentView(TabsType.SourceCode)}
-                >
-                  Source Code
-                </div>
+                {/*<div*/}
+                {/*  className={`${*/}
+                {/*    currentView === TabsType.SourceCode && activeClasses*/}
+                {/*  } text-semibold cursor-pointer`}*/}
+                {/*  onClick={() => setCurrentView(TabsType.SourceCode)}*/}
+                {/*>*/}
+                {/*  Source Code*/}
+                {/*</div>*/}
               </div>
 
               <CloseIcon
@@ -133,14 +132,14 @@ export const TaskDetailsModal = create<TaskDetailsModalPropsType>(
                     />
                   </div>
 
-                  <div className="pl-6 mt-16">
-                    <Button
-                      onClick={handleWithdraw}
-                      label="Withdraw Stake"
-                      variant="danger"
-                      className="bg-finnieGray-secondary text-finnieBlue"
-                    />
-                  </div>
+                  {/*<div className="pl-6 mt-16">*/}
+                  {/*  <Button*/}
+                  {/*    onClick={handleWithdraw}*/}
+                  {/*    label="Withdraw Stake"*/}
+                  {/*    variant="danger"*/}
+                  {/*    className="bg-finnieGray-secondary text-finnieBlue"*/}
+                  {/*  />*/}
+                  {/*</div>*/}
                 </>
               )}
               {currentView === TabsType.SourceCode && (

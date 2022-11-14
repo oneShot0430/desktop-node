@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { saveUserConfig } from 'webapp/services';
@@ -6,8 +6,7 @@ import { AppRoute } from 'webapp/types/routes';
 
 import { BackButton } from '../BackButton';
 import Header from '../Header';
-import { Sidebar } from '../Sidebar/Sidebar';
-import { Button } from '../ui/Button';
+import { Sidebar } from '../Sidebar';
 
 type MainLayoutProps = {
   children: React.ReactNode;
@@ -16,12 +15,16 @@ type MainLayoutProps = {
 const MainLayout = ({ children }: MainLayoutProps): JSX.Element => {
   const navigate = useNavigate();
 
-  const resetOnboarding = async () => {
-    await saveUserConfig({
-      settings: { onboardingCompleted: false },
-    });
-    navigate(AppRoute.OnboardingCreatePin);
-  };
+  // TODO: Remove after release
+  useEffect(() => {
+    (window as typeof window & { resetOnboarding(): void }).resetOnboarding =
+      async () => {
+        await saveUserConfig({
+          settings: { onboardingCompleted: false },
+        });
+        navigate(AppRoute.OnboardingCreatePin);
+      };
+  }, [navigate]);
 
   return (
     <div className="flex flex-col h-full">
@@ -29,11 +32,6 @@ const MainLayout = ({ children }: MainLayoutProps): JSX.Element => {
       <main className="flex flex-col h-full bg-gradient-to-b from-finnieBlue-dark-secondary to-finnieBlue">
         <div className="px-4 mx-auto w-full flex justify-between">
           <BackButton />
-          <Button
-            className="mt-4 text-white"
-            label="Reset onboarding"
-            onClick={resetOnboarding}
-          />
         </div>
         <div className="px-4 mx-auto main-bg h-full pt-3 w-full flex-grow">
           <div className="flex items-stretch h-full pb-4">
