@@ -43,7 +43,7 @@ const ConfirmYourStake = () => {
   });
 
   const totalKoiiStaked = useMemo(
-    () => sum(tasksToRun.map((task) => task.stake)),
+    () => getKoiiFromRoe(sum(tasksToRun.map((task) => task.stake))),
     [tasksToRun]
   );
   const tasksFee = TASK_FEE * tasksToRun.length;
