@@ -14,6 +14,7 @@ import {
   TaskService,
   stopTask,
   getMainAccountPublicKey,
+  stakeOnTask,
 } from 'webapp/services';
 import { Task } from 'webapp/types';
 
@@ -55,6 +56,7 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
 
   const handleStartTask = async () => {
     try {
+      await stakeOnTask(publicKey, getKoiiFromRoe(stake));
       await startTask(publicKey);
     } catch (error) {
       console.warn(error);
@@ -103,7 +105,7 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
       </TableCell>
       <TableCell>{bountyPerRoundInKoii}</TableCell>
       <TableCell>{nodes}</TableCell>
-      <TableCell>{TaskService.formatStake(topStake)}</TableCell>
+      <TableCell>{getKoiiFromRoe(topStake || 0)}</TableCell>
       <SetStakeCell
         defaultValue={defaultStakeValue}
         onStakeValueChange={handleStakeValueChange}
@@ -111,9 +113,8 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
       <TableCell>
         <Button
           onlyIcon
-          icon={isRunning ? <PlayIcon /> : <StopTealIcon />}
+          icon={isRunning ? <StopTealIcon /> : <PlayIcon />}
           title={isRunning ? 'Stop' : 'Start'}
-          //TODO:  should use stake amount as paylaod
           onClick={isRunning ? handleStopTask : handleStartTask}
         />
       </TableCell>
