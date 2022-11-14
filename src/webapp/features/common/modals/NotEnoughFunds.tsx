@@ -16,7 +16,7 @@ export const NotEnoughFunds = create(function NotEnoughFunds() {
   const { handleSaveUserAppConfig } = useUserAppConfig({
     onConfigSaveSuccess: () => {
       modal.remove();
-      navigate(AppRoute.MyNode);
+      navigate(AppRoute.MyNode, { state: { noBackButton: true } });
     },
   });
   const { showModal: showFundNewAccountModal } = useFundNewAccountModal(

@@ -39,7 +39,10 @@ const ConfirmYourStake = () => {
   });
   const { showNotEnoughFunds } = useNotEnoughFunds();
   const { handleSaveUserAppConfig } = useUserAppConfig({
-    onConfigSaveSuccess: () => navigate(AppRoute.MyNode),
+    onConfigSaveSuccess: () =>
+      navigate(AppRoute.MyNode, {
+        state: { noBackButton: true },
+      }),
   });
 
   const totalKoiiStaked = useMemo(

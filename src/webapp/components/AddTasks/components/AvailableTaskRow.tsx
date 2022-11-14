@@ -5,7 +5,7 @@ import CodeIcon from 'assets/svgs/code-icon-lg.svg';
 import PlayIcon from 'assets/svgs/play-icon.svg';
 import StopTealIcon from 'assets/svgs/stop-icon-teal.svg';
 import { getKoiiFromRoe } from 'utils';
-import { Button } from 'webapp/components';
+import { Button, LoadingSpinner, LoadingSpinnerSize } from 'webapp/components';
 import { useTaskDetailsModal } from 'webapp/components/MyNodeTable/hooks';
 import { TableRow, TableCell } from 'webapp/components/ui/Table';
 import { EditStakeInput } from 'webapp/features/onboarding/components/EditStakeInput';
@@ -35,6 +35,7 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
 
   const [stake, setStake] = useState<number>(0);
   const [meetsMinimumStake, setMeetsMinimumStake] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const queryCache = useQueryClient();
   const { taskName, publicKey, bountyAmountPerRound, taskManager, isRunning } =
@@ -66,12 +67,14 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
 
   const handleStartTask = async () => {
     try {
+      setLoading(true);
       await stakeOnTask(publicKey, getKoiiFromRoe(stake));
       await startTask(publicKey);
     } catch (error) {
       console.warn(error);
     } finally {
       queryCache.invalidateQueries();
+      setLoading(false);
     }
   };
 
@@ -126,13 +129,19 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
         />
       </TableCell>
       <TableCell>
-        <Button
-          onlyIcon
-          icon={isRunning ? <StopTealIcon /> : <PlayIcon />}
-          title={isRunning ? 'Stop' : 'Start'}
-          onClick={isRunning ? handleStopTask : handleStartTask}
-          disabled={!meetsMinimumStake}
-        />
+        {loading ? (
+          <div className="pl-2">
+            <LoadingSpinner size={LoadingSpinnerSize.Large} />
+          </div>
+        ) : (
+          <Button
+            onlyIcon
+            icon={isRunning ? <StopTealIcon /> : <PlayIcon />}
+            title={isRunning ? 'Stop' : 'Start'}
+            onClick={isRunning ? handleStopTask : handleStartTask}
+            disabled={!meetsMinimumStake}
+          />
+        )}
       </TableCell>
     </TableRow>
   );

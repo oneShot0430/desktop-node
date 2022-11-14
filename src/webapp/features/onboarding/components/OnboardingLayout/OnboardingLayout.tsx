@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import BackIconComponent from 'assets/svgs/back-icon.svg';
 import KoiiLogo from 'assets/svgs/koii-logo-white.svg';
@@ -26,8 +27,15 @@ const OnboardingLayout = ({ children }: PropsType) => {
     navigate,
   } = useBackButtonHandler();
 
+  const location = useLocation();
+  const displaySkipButton = useMemo(
+    () => location.pathname !== AppRoute.OnboardingCreatePin,
+    [location.pathname]
+  );
+
   const { handleSaveUserAppConfig } = useUserAppConfig({
-    onConfigSaveSuccess: () => navigate(AppRoute.MyNode),
+    onConfigSaveSuccess: () =>
+      navigate(AppRoute.MyNode, { state: { noBackButton: true } }),
   });
 
   const handleSkipOnboarding = () =>
@@ -75,11 +83,13 @@ const OnboardingLayout = ({ children }: PropsType) => {
             iconSlot={<ClickIconSvg />}
           />
           <div className="absolute bottom-2 left-2">
-            <Button
-              label="Skip"
-              className="underline text-finnieEmerald-light"
-              onClick={handleSkipOnboarding}
-            />
+            {displaySkipButton && (
+              <Button
+                label="Skip"
+                className="underline text-finnieEmerald-light"
+                onClick={handleSkipOnboarding}
+              />
+            )}
           </div>
         </div>
       </div>

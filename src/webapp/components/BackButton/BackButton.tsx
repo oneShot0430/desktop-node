@@ -6,10 +6,17 @@ import { Button } from 'webapp/components/ui/Button';
 import { getRouteViewLabel } from 'webapp/routing/utils';
 import { AppRoute } from 'webapp/types/routes';
 
+type RouterState = {
+  noBackButton?: boolean;
+};
+
 export const BackButton = () => {
   const location = useLocation();
+
   const navigate = useNavigate();
   const routeLabel = getRouteViewLabel(location.pathname as AppRoute);
+
+  const noBackButton = (location?.state as RouterState)?.noBackButton;
 
   const handleBackButtonClick = () => {
     navigate(-1);
@@ -17,7 +24,7 @@ export const BackButton = () => {
 
   return (
     <div className="flex items-center pt-[20px] pb-[20px]">
-      {location.pathname === AppRoute.Root ? null : (
+      {location.pathname === AppRoute.Root || noBackButton ? null : (
         <Button
           onlyIcon
           icon={<BackIcon className="cursor-pointer" />}
