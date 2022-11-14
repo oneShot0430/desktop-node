@@ -9,7 +9,7 @@ type PropsType = {
   tooltipContent: React.ReactNode;
   manualClose?: boolean;
   theme?: Theme;
-  placement?: 'top' | 'bottom' | 'left' | 'right';
+  //placement?: 'top' | 'bottom' | 'left' | 'right';
 };
 
 export const Tooltip = ({
@@ -17,7 +17,6 @@ export const Tooltip = ({
   tooltipContent,
   manualClose = false,
   theme = Theme.Light,
-  placement,
 }: PropsType) => {
   const [isHovered, setIsHovered] = useState(manualClose);
   const parentRef = useRef<HTMLDivElement>(null);
@@ -26,7 +25,6 @@ export const Tooltip = ({
   const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     if (!manualClose) {
-      console.log('handleMouseEnter');
       setIsHovered(true);
     }
   };
@@ -34,7 +32,6 @@ export const Tooltip = ({
   const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     if (!manualClose) {
-      console.log('handleMouseEnter');
       setIsHovered(false);
     }
   };
@@ -46,14 +43,13 @@ export const Tooltip = ({
 
   const wrappingClasses = twMerge(
     'absolute transition-opacity opacity-0 duration-300 invisible',
-    isHovered ? 'opacity-100' : 'opacity-0',
-    isHovered ? 'visible' : 'invisible',
+    isHovered ? 'opacity-100 visible' : 'opacity-0 invisible',
     'after:absolute after:top-[99%] after:left-[10%] after:ml-[5px] after:border-y-[15px] after:border-x-[10px] after:border-solid after:border-transparent',
     theme === Theme.Dark ? 'after:border-t-purple-3' : 'after:border-t-white'
   );
 
   const tooltipClasses = twMerge(
-    'max-w-[240px] w-max text-white z-10 inline-block p-2 text-xs font-medium rounded-md shadow-sm bg-purple-3 tooltip leading-5 w-ft',
+    'max-w-[240px] w-max text-white z-10 inline-block p-2 text-xs font-medium rounded-md shadow-sm bg-purple-3 tooltip leading-5 w-fit',
     theme === Theme.Dark ? 'bg-purple-3' : 'bg-white text-finnieBlue'
   );
 

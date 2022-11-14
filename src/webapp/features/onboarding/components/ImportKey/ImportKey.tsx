@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import React, { useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -29,11 +30,10 @@ const ImportKey = () => {
               theme={Theme.Dark}
               tooltipContent={
                 <>
-                  <span>{'Sometimes known as a "seed phrase" '}</span>
-                  <span>{'or a "recovery spanhrase"'}</span>
+                  <span>Sometimes known as a "seed phrase"</span>
+                  <span>or a "recovery phrase"</span>
                 </>
               }
-              // manualClose
             >
               <span className="underline cursor-pointer underline-offset-4">
                 secret phrase
