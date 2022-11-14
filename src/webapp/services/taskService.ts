@@ -35,7 +35,7 @@ export class TaskService {
     (Math.round(stake * 100) / 100).toFixed(2);
 
   static getMinStake(task: Task): number {
-    return min(Object.values(task.stakeList));
+    return min(Object.values(task.stakeList)) || 0;
   }
 
   static getNodesCount(task: Task): number {
