@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
 import ActionHistoryIcon from 'assets/svgs/action-history-icon.svg';
@@ -6,6 +6,7 @@ import AddWithdrawIcon from 'assets/svgs/add-withdraw-icon.svg';
 import PauseIcon from 'assets/svgs/pause-icon.svg';
 import PlayIcon from 'assets/svgs/play-icon.svg';
 import { getKoiiFromRoe } from 'utils';
+import { LoadingSpinner, LoadingSpinnerSize } from 'webapp/components/ui';
 import { Button } from 'webapp/components/ui/Button';
 import {
   TableRow,
@@ -26,6 +27,7 @@ type PropsType = {
 };
 
 export const TaskRow = ({ task, accountPublicKey }: PropsType) => {
+  const [loading, setLoading] = useState<boolean>(false);
   const { taskName, taskManager, isRunning, publicKey } = task;
   const { showModal: showEditStakeAmountModal } = useEditStakeAmountModal({
     task,
@@ -44,6 +46,7 @@ export const TaskRow = ({ task, accountPublicKey }: PropsType) => {
 
   const handleToggleTask = async () => {
     try {
+      setLoading(true);
       if (isRunning) {
         await stopTask(publicKey);
       } else {
@@ -53,6 +56,7 @@ export const TaskRow = ({ task, accountPublicKey }: PropsType) => {
       console.warn(error);
     } finally {
       queryCache.invalidateQueries();
+      setLoading(false);
     }
   };
 
@@ -61,12 +65,18 @@ export const TaskRow = ({ task, accountPublicKey }: PropsType) => {
   return (
     <TableRow key={publicKey}>
       <TableCell>
-        <Button
-          onlyIcon
-          icon={isRunning ? <PauseIcon /> : <PlayIcon />}
-          title={isRunning ? 'Stop' : 'Start'}
-          onClick={handleToggleTask}
-        />
+        {loading ? (
+          <div className="pl-2">
+            <LoadingSpinner size={LoadingSpinnerSize.Large} />
+          </div>
+        ) : (
+          <Button
+            onlyIcon
+            icon={isRunning ? <PauseIcon /> : <PlayIcon />}
+            title={isRunning ? 'Stop' : 'Start'}
+            onClick={handleToggleTask}
+          />
+        )}
       </TableCell>
       <TaskDetailsCell
         taskName={taskName}
