@@ -35,6 +35,7 @@ const PinInputComponent = ({
         onComplete={onComplete}
         autoSelect={true}
         regexCriteria={/^[ A-Za-z0-9_@./#&+-]*$/}
+        ariaLabel="pin-input"
       />
       {showHideButton && (
         <Button

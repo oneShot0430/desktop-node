@@ -47,11 +47,10 @@ const claimReward = async (
   console.log('STATE POT ACCOUNT PUBLIC KEY', statePotPubKey);
 
   const response = await namespaceInstance.claimReward(
-    connection,
-    taskStateInfoPublicKey,
     statePotPubKey,
     stakingPubKey,
-    stakingAccKeypair
+    stakingAccKeypair,
+    taskStateInfoPublicKey
   );
   console.log('RESPONSE FROM CLAIM REWARD FUNCTION', response);
   return response;

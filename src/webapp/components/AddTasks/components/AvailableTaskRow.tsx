@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
 import CodeIcon from 'assets/svgs/code-icon-lg.svg';
@@ -8,6 +8,7 @@ import { getKoiiFromRoe } from 'utils';
 import { Button, LoadingSpinner, LoadingSpinnerSize } from 'webapp/components';
 import { useTaskDetailsModal } from 'webapp/components/MyNodeTable/hooks';
 import { TableRow, TableCell } from 'webapp/components/ui/Table';
+import { EditStakeInput } from 'webapp/features/onboarding/components/EditStakeInput';
 import {
   QueryKeys,
   startTask,
@@ -17,8 +18,6 @@ import {
   stakeOnTask,
 } from 'webapp/services';
 import { Task } from 'webapp/types';
-
-import SetStakeCell from './SetStakeCell';
 
 const AvailableTaskRow = ({ task }: { task: Task }) => {
   /**
@@ -35,6 +34,7 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
   });
 
   const [stake, setStake] = useState<number>(0);
+  const [meetsMinimumStake, setMeetsMinimumStake] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
   const queryCache = useQueryClient();
@@ -50,10 +50,20 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
     () => TaskService.getMyStake(task)
   );
 
+  const { data: minStake } = useQuery([QueryKeys.minStake, publicKey], () =>
+    TaskService.getMinStake(task)
+  );
+
   const myStakeInKoii = getKoiiFromRoe(myStake);
   const defaultStakeValue = isLoadingStake
     ? 0
     : Number(TaskService.formatStake(myStakeInKoii));
+
+  // Use defaultStakeValue by default, but later we continue displaying stake while we modify it
+  useEffect(() => {
+    setStake(defaultStakeValue);
+    setMeetsMinimumStake(defaultStakeValue >= minStake);
+  }, [defaultStakeValue, minStake]);
 
   const handleStartTask = async () => {
     try {
@@ -80,6 +90,7 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
 
   const handleStakeValueChange = (value: number) => {
     setStake(value);
+    setMeetsMinimumStake(value >= minStake);
   };
 
   const handleShowCode = () => {
@@ -109,10 +120,14 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
       <TableCell>{bountyPerRoundInKoii}</TableCell>
       <TableCell>{nodes}</TableCell>
       <TableCell>{getKoiiFromRoe(topStake || 0)}</TableCell>
-      <SetStakeCell
-        defaultValue={defaultStakeValue}
-        onStakeValueChange={handleStakeValueChange}
-      />
+      <TableCell>
+        <EditStakeInput
+          meetsMinimumStake={meetsMinimumStake}
+          stake={stake}
+          minStake={minStake}
+          onChange={handleStakeValueChange}
+        />
+      </TableCell>
       <TableCell>
         {loading ? (
           <div className="pl-2">
@@ -124,6 +139,7 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
             icon={isRunning ? <StopTealIcon /> : <PlayIcon />}
             title={isRunning ? 'Stop' : 'Start'}
             onClick={isRunning ? handleStopTask : handleStartTask}
+            disabled={!meetsMinimumStake}
           />
         )}
       </TableCell>

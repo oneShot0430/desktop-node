@@ -12,18 +12,16 @@ import { AppRoute } from 'webapp/types/routes';
 export const Unlock = (): JSX.Element => {
   const [hasPinError, setHasPinError] = useState<boolean>(false);
 
-  const {
-    settings: { pin: storedPinHash },
-  } = useUserSettings();
+  const { settings } = useUserSettings();
 
   const navigate = useNavigate();
 
-  const handlePinChange = async (pin: string) => {
+  const handlePinChange = async (enteredPin: string) => {
     setHasPinError(false);
-    const finishedTypingPin = pin.length === 6;
+    const finishedTypingPin = enteredPin.length === 6;
 
     if (finishedTypingPin) {
-      const pinMatchesStoredHash = await compare(pin, storedPinHash);
+      const pinMatchesStoredHash = await compare(enteredPin, settings.pin);
 
       if (pinMatchesStoredHash) {
         navigate(AppRoute.MyNode, { state: { noBackButton: true } });
