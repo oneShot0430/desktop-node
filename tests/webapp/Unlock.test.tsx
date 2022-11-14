@@ -26,11 +26,11 @@ Object.defineProperty(window, 'main', {
   },
 });
 
-describe('Unlock page', () => {
-  const enterPin = async (correctInput: boolean) => {
+describe('Unlock', () => {
+  const enterPin = async (isCorrectPin: boolean) => {
     // if we can make it work with forEach/map would be awesome, but I tried a zillion different things and it failed everytime (something related to asynchronicity in those methods during tests unlike with regular for)
     for (let index = 0; index < 6; index++) {
-      const pinCharacterToEnter = correctInput ? pin[1] : String(index);
+      const pinCharacterToEnter = isCorrectPin ? pin[index] : String(index);
       const pinInput = screen.getAllByLabelText(/pin-input/i)[index];
       await userEvent.type(pinInput, pinCharacterToEnter);
     }
