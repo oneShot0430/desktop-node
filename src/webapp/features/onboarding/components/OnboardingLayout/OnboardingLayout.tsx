@@ -35,7 +35,7 @@ const OnboardingLayout = ({ children }: PropsType) => {
 
   const { handleSaveUserAppConfig } = useUserAppConfig({
     onConfigSaveSuccess: () =>
-      navigate(AppRoute.MyNode, { state: { fromOnboarding: true } }),
+      navigate(AppRoute.MyNode, { state: { noBackButton: true } }),
   });
 
   const handleSkipOnboarding = () =>

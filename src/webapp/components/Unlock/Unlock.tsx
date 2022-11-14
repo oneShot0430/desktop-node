@@ -26,7 +26,7 @@ export const Unlock = (): JSX.Element => {
       const pinMatchesStoredHash = await compare(pin, storedPinHash);
 
       if (pinMatchesStoredHash) {
-        navigate(AppRoute.MyNode);
+        navigate(AppRoute.MyNode, { state: { noBackButton: true } });
       } else {
         setHasPinError(true);
       }

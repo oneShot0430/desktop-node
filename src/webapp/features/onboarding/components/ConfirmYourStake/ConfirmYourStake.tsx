@@ -41,7 +41,7 @@ const ConfirmYourStake = () => {
   const { handleSaveUserAppConfig } = useUserAppConfig({
     onConfigSaveSuccess: () =>
       navigate(AppRoute.MyNode, {
-        state: { fromOnboarding: true },
+        state: { noBackButton: true },
       }),
   });
 
