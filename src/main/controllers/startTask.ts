@@ -109,6 +109,7 @@ async function loadTask(selectedTask: ISelectedTasks) {
     );
   }
   if (res.data) {
+    fsSync.mkdirSync('executables', { recursive: true });
     fsSync.writeFileSync(
       `executables/${selectedTask.taskAuditProgram}.js`,
       res.data
@@ -139,11 +140,13 @@ async function executeTasks(
     }, {});
   const options: ForkOptions = {
     env: SECRETS_ENV,
+    silent: true,
   };
   // TODO: Get the task stake here
   // const STAKE = Number(process.env.TASK_STAKES?.split(',') || 0);
   const stakingAccPubkey = getStakingAccountPublicKey();
   const STAKE = selectedTask.stakeList[stakingAccPubkey];
+  fsSync.mkdirSync(`namespace/${selectedTask.taskId}`, { recursive: true });
   const log_file = fsSync.createWriteStream(
     `namespace/${selectedTask.taskId}/task.log`,
     { flags: 'a+' }
