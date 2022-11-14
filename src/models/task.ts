@@ -3,6 +3,9 @@ export interface Task {
   data: TaskData;
 }
 
+type ROE = number;
+type EndTimestamp = number;
+
 export interface TaskData {
   taskName: string;
   taskManager: string;
@@ -10,13 +13,13 @@ export interface TaskData {
   isActive: boolean;
   taskAuditProgram: string;
   stakePotAccount: string;
-  totalBountyAmount: number;
-  bountyAmountPerRound: number;
+  totalBountyAmount: ROE;
+  bountyAmountPerRound: ROE;
   status: Partial<
-    Record<'AcceptingSubmissions' | 'Voting' | 'Completed', number>
+    Record<'AcceptingSubmissions' | 'Voting' | 'Completed', EndTimestamp>
   >;
   currentRound: number;
-  availableBalances: Record<string, number>;
-  stakeList: Record<string, number>;
+  availableBalances: Record<string, ROE>;
+  stakeList: Record<string, ROE>;
   isRunning: boolean;
 }
