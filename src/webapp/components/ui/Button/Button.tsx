@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { twMerge } from 'tailwind-merge';
 
+import { LoadingSpinner } from '../LoadingSpinner';
+
 type ButtonVariants = 'primary' | 'danger' | 'neutral';
 
 type ButtonProps = {
@@ -47,7 +49,11 @@ const Button = ({
       {...rest}
     >
       <span className={icon && label ? 'pr-2' : ''}>{icon}</span>
-      {loading ? 'Loading...' : <span className={'self-center'}>{label}</span>}
+      {loading ? (
+        <LoadingSpinner />
+      ) : (
+        <span className={'self-center'}>{label}</span>
+      )}
     </button>
   );
 };

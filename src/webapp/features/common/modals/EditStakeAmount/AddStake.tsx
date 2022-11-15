@@ -38,7 +38,11 @@ export const AddStake = ({ balance, onAddStake }: PropsType) => {
       </div>
       <div className="py-2 mb-3 text-xs text-finnieTeal-700">{`${balance} KOII available in your balance`}</div>
 
-      <Button label="Add Stake" onClick={handleAddStake} />
+      <Button
+        label="Add Stake"
+        onClick={handleAddStake}
+        className="text-white"
+      />
     </div>
   );
 };

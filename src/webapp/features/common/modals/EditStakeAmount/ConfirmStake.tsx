@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useQueryClient } from 'react-query';
 
 import { Button } from 'webapp/components/ui/Button';
 import { ErrorMessage } from 'webapp/components/ui/ErrorMessage';
+import { QueryKeys } from 'webapp/services';
 
 type PropsType = Readonly<{
   stakeAmount: number;
@@ -18,16 +20,21 @@ export const ConfirmStake = ({
 }: PropsType) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
-
+  const queryCache = useQueryClient();
   const handleConfirmAddStake = async () => {
     try {
       setIsLoading(true);
       await onConfirmAddStake();
-      setIsLoading(false);
+
       onSuccess();
     } catch (e) {
       setError(e.message);
+    } finally {
       setIsLoading(false);
+      queryCache.invalidateQueries([
+        QueryKeys.taskNodeInfo,
+        QueryKeys.taskList,
+      ]);
     }
   };
   return (
@@ -42,6 +49,7 @@ export const ConfirmStake = ({
         label="Confirm Stake"
         onClick={handleConfirmAddStake}
         loading={isLoading}
+        className="text-white"
       />
     </div>
   );
