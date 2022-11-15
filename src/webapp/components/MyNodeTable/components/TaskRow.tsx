@@ -14,7 +14,7 @@ import {
   NodeStatusCell,
   TaskDetailsCell,
 } from 'webapp/components/ui/Table';
-import { useEditStakeAmountModal, useMyStake } from 'webapp/features/common';
+import { useEditStakeAmountModal, useTaskStake } from 'webapp/features/common';
 import { useEarnedReward } from 'webapp/features/common/hooks/useEarnedReward';
 import { stopTask, startTask, TaskService, getLogs } from 'webapp/services';
 import { Task } from 'webapp/types';
@@ -38,11 +38,11 @@ export const TaskRow = ({ task, accountPublicKey }: PropsType) => {
   });
   const queryCache = useQueryClient();
   const { earnedReward } = useEarnedReward({ task, publicKey });
-  const { myStake } = useMyStake({ task, publicKey: accountPublicKey });
+  const { taskStake } = useTaskStake({ task, publicKey: accountPublicKey });
 
   // before comitting: verify this is ok
   const earnedRewardInKoii = getKoiiFromRoe(earnedReward);
-  const myStakeInKoii = getKoiiFromRoe(myStake);
+  const myStakeInKoii = getKoiiFromRoe(taskStake);
 
   const handleToggleTask = async () => {
     try {

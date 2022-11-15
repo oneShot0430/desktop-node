@@ -5,21 +5,21 @@ import { Task } from 'webapp/types';
 
 type UseMyStakeParamsType = {
   task: Task;
-  publicKey: string;
+  publicKey?: string;
 };
 
-export const useMyStake = ({ task, publicKey }: UseMyStakeParamsType) => {
+export const useTaskStake = ({ task }: UseMyStakeParamsType) => {
   const {
-    data: myStake,
+    data: taskStake,
     isLoading,
     error,
-  } = useQuery([QueryKeys.myStake, publicKey], () =>
+  } = useQuery([QueryKeys.TaskStake, task.publicKey], () =>
     TaskService.getMyStake(task)
   );
 
   return {
-    myStake,
-    loadingMyStake: isLoading,
-    loadingMyStakeError: error,
+    taskStake,
+    loadingTaskStake: isLoading,
+    loadingTaskStakeError: error,
   };
 };

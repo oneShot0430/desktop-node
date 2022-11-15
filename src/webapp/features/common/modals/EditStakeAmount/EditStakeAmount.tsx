@@ -1,19 +1,20 @@
 import { create, useModal } from '@ebay/nice-modal-react';
 import React, { useCallback, useState } from 'react';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 
-import { getKoiiFromRoe } from 'utils';
+import { getKoiiFromRoe, getRoeFromKoii } from 'utils';
 import { Button } from 'webapp/components';
 import { Modal, ModalContent, ModalTopBar } from 'webapp/features/modals';
 import {
   QueryKeys,
-  TaskService,
   getRewardEarned,
   getMainAccountBalance,
   stakeOnTask,
   withdrawStake,
 } from 'webapp/services';
 import { Task } from 'webapp/types';
+
+import { useTaskStake } from '../../hooks';
 
 import { AddStake } from './AddStake';
 import { ConfirmStake } from './ConfirmStake';
@@ -35,36 +36,149 @@ type PropsType = {
   task: Task;
 };
 
+type NodeInfoType = {
+  totalKOII: number;
+  totalStaked: number;
+  pendingRewards: number;
+};
+
 export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
   task,
 }) {
+  const { taskName, taskManager, publicKey } = task;
+  const queryClient = useQueryClient();
   const modal = useModal();
   const [view, setView] = useState<View>(View.SelectAction);
   const [stakeAmount, setStakeAmount] = useState<number>();
   const [withdrawAmount, setWithdrawAmount] = useState<number>();
-
-  const { taskName, taskManager, publicKey } = task;
-
-  const { data: myStake } = useQuery([QueryKeys.myStake, task.publicKey], () =>
-    TaskService.getMyStake(task)
-  );
+  const { taskStake } = useTaskStake({ task, publicKey });
 
   const { data: earnedReward } = useQuery(
     [QueryKeys.taskReward, task.publicKey],
     () => getRewardEarned(task)
   );
 
+  const addStakeMutation = useMutation(
+    () => stakeOnTask(publicKey, stakeAmount),
+    {
+      onMutate: async () => {
+        await queryClient.cancelQueries({
+          queryKey: [QueryKeys.TaskStake, publicKey],
+        });
+
+        const previousStakeAmount = queryClient.getQueryData([
+          QueryKeys.TaskStake,
+          publicKey,
+        ]);
+
+        const previousNodeInfo = queryClient.getQueryData([
+          QueryKeys.taskNodeInfo,
+        ]);
+
+        const stakeAmountInRoe = getRoeFromKoii(stakeAmount);
+
+        queryClient.setQueryData(
+          [QueryKeys.TaskStake, publicKey],
+          (oldStakeAmount: number) => {
+            const totalStake = stakeAmountInRoe + oldStakeAmount;
+            return totalStake;
+          }
+        );
+
+        queryClient.setQueryData(
+          [QueryKeys.taskNodeInfo],
+          (oldNodeData: NodeInfoType) => {
+            const newNodeInfodata = {
+              ...oldNodeData,
+              totalStaked: oldNodeData.totalStaked + stakeAmountInRoe,
+            };
+
+            return newNodeInfodata;
+          }
+        );
+
+        return { previousStakeAmount, previousNodeInfo };
+      },
+
+      onError: (err, newData, context) => {
+        queryClient.setQueryData(
+          [QueryKeys.TaskStake, publicKey],
+          context.previousStakeAmount
+        );
+        queryClient.setQueryData(
+          [QueryKeys.taskNodeInfo],
+          context.previousNodeInfo
+        );
+      },
+    }
+  );
+
+  const withdrawStakeMutation = useMutation(
+    () => withdrawStake(publicKey, withdrawAmount),
+    {
+      onMutate: async () => {
+        await queryClient.cancelQueries({
+          queryKey: [QueryKeys.TaskStake, publicKey],
+        });
+
+        const previousStakeAmount = queryClient.getQueryData([
+          QueryKeys.TaskStake,
+          publicKey,
+        ]);
+
+        const previousNodeInfo = queryClient.getQueryData([
+          QueryKeys.taskNodeInfo,
+        ]);
+
+        const stakeAmountInRoe = getRoeFromKoii(stakeAmount);
+
+        queryClient.setQueryData(
+          [QueryKeys.TaskStake, publicKey],
+          (oldStakeAmount: number) => {
+            const totalStake = stakeAmountInRoe - oldStakeAmount;
+            return totalStake;
+          }
+        );
+
+        queryClient.setQueryData(
+          [QueryKeys.taskNodeInfo],
+          (oldNodeData: NodeInfoType) => {
+            const newNodeInfodata = {
+              ...oldNodeData,
+              totalStaked: oldNodeData.totalStaked - stakeAmountInRoe,
+            };
+
+            return newNodeInfodata;
+          }
+        );
+
+        return { previousStakeAmount, previousNodeInfo };
+      },
+
+      onError: (err, newData, context) => {
+        queryClient.setQueryData(
+          [QueryKeys.TaskStake, publicKey],
+          context.previousStakeAmount
+        );
+        queryClient.setQueryData(
+          [QueryKeys.taskNodeInfo],
+          context.previousNodeInfo
+        );
+      },
+    }
+  );
+
+  const handleAddStake = useCallback(async () => {
+    await addStakeMutation.mutateAsync();
+  }, [addStakeMutation]);
+
+  const handleWithdraw = useCallback(async () => {
+    await withdrawStakeMutation.mutateAsync();
+  }, [withdrawStakeMutation]);
+
   const { data: balance } = useQuery([QueryKeys.mainAccountBalance], () =>
     getMainAccountBalance()
   );
-
-  const handleAddStake = async () => {
-    await stakeOnTask(publicKey, stakeAmount);
-  };
-
-  const handleWithdraw = async () => {
-    await withdrawStake(publicKey, withdrawAmount);
-  };
 
   const handleClose = () => {
     modal.remove();
@@ -95,7 +209,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
   const title = getTitle();
   // before comitting: verify this is ok
   const earnedRewardInKoii = getKoiiFromRoe(earnedReward);
-  const myStakeInKoii = getKoiiFromRoe(myStake);
+  const myStakeInKoii = getKoiiFromRoe(taskStake);
 
   return (
     <Modal>
