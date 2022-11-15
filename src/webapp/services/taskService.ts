@@ -28,11 +28,8 @@ export class TaskService {
   }
 
   static getTopStake(task: Task): number {
-    return max(Object.values(task.stakeList));
+    return max(Object.values(task.stakeList)) || 0;
   }
-
-  static formatStake = (stake: number) =>
-    (Math.round(stake * 100) / 100).toFixed(2);
 
   static getMinStake(task: Task): number {
     return min(Object.values(task.stakeList)) || 0;

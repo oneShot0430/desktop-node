@@ -8,6 +8,7 @@ interface PropsType {
   minStake: number;
   meetsMinimumStake: boolean;
   onChange: (newStake: number) => void;
+  disabled?: boolean;
 }
 
 export const EditStakeInput = ({
@@ -15,6 +16,7 @@ export const EditStakeInput = ({
   minStake,
   meetsMinimumStake,
   onChange,
+  disabled = false,
 }: PropsType) => {
   const inputClasses = twMerge(
     'w-[92px] rounded-sm text-right text-finnieBlue-dark p-[3px]',
@@ -37,6 +39,7 @@ export const EditStakeInput = ({
         onChange={handleChange}
         type="number"
         className={inputClasses}
+        disabled={disabled}
       />
       <div className="text-xs text-finnieEmerald-light">
         min. stake: {minStakeInKoii}

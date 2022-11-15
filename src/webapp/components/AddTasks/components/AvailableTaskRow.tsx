@@ -45,7 +45,7 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
 
   const bountyPerRoundInKoii = getKoiiFromRoe(bountyAmountPerRound);
 
-  const { data: myStake, isLoading: isLoadingStake } = useQuery(
+  const { data: myStake = 0, isLoading: isLoadingStake } = useQuery(
     [QueryKeys.myStake, publicKey],
     () => TaskService.getMyStake(task)
   );
@@ -54,21 +54,17 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
     TaskService.getMinStake(task)
   );
 
-  const myStakeInKoii = getKoiiFromRoe(myStake);
-  const defaultStakeValue = isLoadingStake
-    ? 0
-    : Number(TaskService.formatStake(myStakeInKoii));
-
-  // Use defaultStakeValue by default, but later we continue displaying stake while we modify it
   useEffect(() => {
-    setStake(defaultStakeValue);
-    setMeetsMinimumStake(defaultStakeValue >= minStake);
-  }, [defaultStakeValue, minStake]);
+    setStake(myStake);
+    setMeetsMinimumStake(myStake >= minStake);
+  }, [minStake, myStake]);
 
   const handleStartTask = async () => {
     try {
       setLoading(true);
-      await stakeOnTask(publicKey, getKoiiFromRoe(stake));
+      if (myStake === 0) {
+        await stakeOnTask(publicKey, getKoiiFromRoe(stake));
+      }
       await startTask(publicKey);
     } catch (error) {
       console.warn(error);
@@ -119,13 +115,14 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
       </TableCell>
       <TableCell>{bountyPerRoundInKoii}</TableCell>
       <TableCell>{nodes}</TableCell>
-      <TableCell>{getKoiiFromRoe(topStake || 0)}</TableCell>
+      <TableCell>{getKoiiFromRoe(topStake)}</TableCell>
       <TableCell>
         <EditStakeInput
           meetsMinimumStake={meetsMinimumStake}
           stake={stake}
           minStake={minStake}
           onChange={handleStakeValueChange}
+          disabled={myStake !== 0 || isLoadingStake}
         />
       </TableCell>
       <TableCell>
