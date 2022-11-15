@@ -56,7 +56,7 @@ const withdrawStake = async (
     console.error(e);
     throw Error("System Account or StakingWallet Account doesn't exist");
   }
-  const data = encodeData(WITHDRAW_INSTRUCTION_LAYOUT, {});
+  const data = encodeData(WITHDRAW_INSTRUCTION_LAYOUT.Withdraw, {});
 
   const instruction = new TransactionInstruction({
     keys: [
