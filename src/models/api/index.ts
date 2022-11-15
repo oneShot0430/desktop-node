@@ -18,3 +18,5 @@ export * from './getUserConfig';
 export * from './getTasksById';
 export * from './removeAccountByName';
 export * from './openBrowserWindow';
+export * from './getTaskNodeInfo';
+// GetTaskNodeInfoResponse

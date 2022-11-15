@@ -63,6 +63,10 @@ const initHandlers = (): void => {
     config.endpoints.OPEN_BROWSER_WINDOW,
     controllers.openBrowserWindow
   );
+  ipcMain.handle(
+    config.endpoints.GET_TASK_NODE_INFO,
+    controllers.getTaskNodeInfo
+  );
 };
 
 export default errorHandler(initHandlers, 'Init handlers error');

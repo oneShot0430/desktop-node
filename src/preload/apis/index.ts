@@ -11,6 +11,7 @@ import getMyTasks from './getMyTasks';
 import getStakingAccountPubKey from './getStakingAccountPubKey';
 import getTaskInfo from './getTaskInfo';
 import getTaskLogs from './getTaskLogs';
+import getTaskNodeInfo from './getTaskNodeInfo';
 import getTasks from './getTasks';
 import getTasksById from './getTasksById';
 import getTaskSource from './getTaskSource';
@@ -48,4 +49,5 @@ export default {
   getTasksById,
   removeAccountByName,
   openBrowserWindow,
+  getTaskNodeInfo,
 };
