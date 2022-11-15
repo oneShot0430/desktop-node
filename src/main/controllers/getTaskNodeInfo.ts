@@ -19,7 +19,8 @@ const getTaskNodeInfo = async (
   try {
     const tasks: Task[] = await fetchAlltasks();
     const stakingPubKey = await getStakingAccountPubKey();
-    let totalStaked: number, pendingRewards: number;
+    let totalStaked = 0;
+    let pendingRewards = 0;
     // totalKOII = await getMainAccountBalance()
     const totalKOII = await sdk.k2Connection.getBalance(
       new PublicKey(await getMainAccountPubKey())
@@ -28,8 +29,11 @@ const getTaskNodeInfo = async (
       totalStaked += e.data.stakeList[stakingPubKey] || 0;
       pendingRewards += e.data.availableBalances[stakingPubKey] || 0;
     });
-    console.log({ totalKOII, totalStaked, pendingRewards });
-    return { totalKOII, totalStaked, pendingRewards };
+    return {
+      totalKOII,
+      totalStaked: totalStaked || 0,
+      pendingRewards: pendingRewards || 0,
+    };
   } catch (err) {
     console.error(err);
     throw new Error('Get task source error');
