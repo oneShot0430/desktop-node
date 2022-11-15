@@ -179,3 +179,10 @@ export const removeAccount = (accountName: string) => {
     return res;
   });
 };
+
+export const getTaskNodeInfo = () => {
+  return window.main.getTaskNodeInfo().then((res) => {
+    console.log('GETTING TASK NODE INFO', res);
+    return res;
+  });
+};

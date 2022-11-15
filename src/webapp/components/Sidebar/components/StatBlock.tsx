@@ -1,9 +1,9 @@
-import * as React from 'react';
+import React, { ReactNode } from 'react';
 
 type SummaryProps = {
-  value: number;
+  value: ReactNode;
   label: string;
-  iconSlot: React.ReactNode;
+  iconSlot: ReactNode;
 };
 
 export const StatBlock = ({ value, label, iconSlot }: SummaryProps) => {

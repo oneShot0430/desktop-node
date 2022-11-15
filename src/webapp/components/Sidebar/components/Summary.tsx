@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { ReactNode } from 'react';
 
 import FinnieKoiiLogo from 'assets/svgs/finnie-logos/finnie-koii-logo-inverse.svg';
 import TotalStakedIcon from 'assets/svgs/koii-staked-icon.svg';
@@ -7,9 +7,9 @@ import PendingRewardsIcon from 'assets/svgs/pending-rewards-icon.svg';
 import { StatBlock } from './StatBlock';
 
 type SummaryProps = {
-  totalEarned: number;
-  totalStaked: number;
-  pendingRewards: number;
+  totalEarned: ReactNode;
+  totalStaked: ReactNode;
+  pendingRewards: ReactNode;
 };
 
 export const Summary = ({
