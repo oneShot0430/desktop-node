@@ -9,6 +9,7 @@ export enum LoadingSpinnerSize {
 
 type PropsType = {
   size?: LoadingSpinnerSize;
+  className?: string;
 };
 
 const getSizeClasses = (size: LoadingSpinnerSize) => {
@@ -22,12 +23,14 @@ const getSizeClasses = (size: LoadingSpinnerSize) => {
 
 export const LoadingSpinner = ({
   size = LoadingSpinnerSize.Medium,
+  className,
 }: PropsType) => {
   const sizeClasses = getSizeClasses(size);
 
   const classes = twMerge(
     'mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-finnieTeal',
-    sizeClasses
+    sizeClasses,
+    className
   );
 
   return (
