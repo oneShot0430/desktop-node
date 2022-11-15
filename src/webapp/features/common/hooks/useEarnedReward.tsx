@@ -9,7 +9,7 @@ type ParamsType = {
 };
 
 export const useEarnedReward = ({ task, publicKey }: ParamsType) => {
-  const { data: earnedReward } = useQuery(
+  const { data: earnedReward = 0 } = useQuery(
     [QueryKeys.taskReward, task.publicKey, publicKey],
     () => getRewardEarned(task)
   );

@@ -19,10 +19,9 @@ import { AddStake } from './AddStake';
 import { ConfirmStake } from './ConfirmStake';
 import { ConfirmWithdraw } from './ConfirmWithdraw';
 import { SuccessMessage } from './SuccessMessage';
-import { Withdraw } from './Withdraw';
 
 enum View {
-  Withdraw = 'Withdraw',
+  WithdrawAmount = 'WithdrawAmount',
   WithdrawConfirm = 'WithdrawConfirm',
   WithdrawSuccess = 'WithdrawSuccess',
   Stake = 'Stake',
@@ -41,7 +40,6 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
   const modal = useModal();
   const [view, setView] = useState<View>(View.SelectAction);
   const [stakeAmount, setStakeAmount] = useState<number>();
-  const [withdrawAmount, setWithdrawAmount] = useState<number>();
 
   const { taskName, taskManager, publicKey } = task;
 
@@ -63,7 +61,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
   };
 
   const handleWithdraw = async () => {
-    await withdrawStake(publicKey, withdrawAmount);
+    await withdrawStake(publicKey);
   };
 
   const handleClose = () => {
@@ -74,7 +72,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
     switch (view) {
       case View.SelectAction:
         return 'Edit Stake Amount';
-      case View.Withdraw:
+      case View.WithdrawAmount:
         return 'Withdraw Stake';
       case View.Stake:
         return 'Add Stake';
@@ -93,7 +91,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
 
   const showBackButton = view !== View.SelectAction;
   const title = getTitle();
-  // before comitting: verify this is ok
+
   const earnedRewardInKoii = getKoiiFromRoe(earnedReward);
   const myStakeInKoii = getKoiiFromRoe(myStake);
 
@@ -106,15 +104,16 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
           onBackClick={() => setView(View.SelectAction)}
           showBackButton={showBackButton}
         />
-        {view === View.Withdraw && (
-          <Withdraw
-            stakedBalance={myStakeInKoii}
-            onWithdraw={(amount) => {
-              setWithdrawAmount(amount);
-              setView(View.WithdrawConfirm);
-            }}
-          />
-        )}
+        {/* TODO: Currently not supported */}
+        {/*{view === View.WithdrawAmount && (*/}
+        {/*  <WithdrawAmount*/}
+        {/*    stakedBalance={myStakeInKoii}*/}
+        {/*    onWithdraw={(amount) => {*/}
+        {/*      // setWithdrawAmount(amount);*/}
+        {/*      setView(View.WithdrawConfirm);*/}
+        {/*    }}*/}
+        {/*  />*/}
+        {/*)}*/}
         {view === View.Stake && (
           <AddStake
             balance={balance}
@@ -136,7 +135,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
           <ConfirmWithdraw
             onSuccess={() => setView(View.WithdrawSuccess)}
             onConfirmWithdraw={handleWithdraw}
-            withdrawAmount={withdrawAmount}
+            withdrawAmount={myStakeInKoii}
             koiiBalance={balance}
           />
         )}
@@ -171,7 +170,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
 
             <div className="flex justify-center gap-[60px] ">
               <Button
-                onClick={() => setView(View.Withdraw)}
+                onClick={() => setView(View.WithdrawConfirm)}
                 label="Withdraw Stake"
                 variant="danger"
                 className="bg-finnieRed text-finnieBlue-light-secondary"
