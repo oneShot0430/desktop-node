@@ -23,6 +23,7 @@ import setActiveAccount from './setActiveAccount';
 import startTask from './startTask';
 import stopTask from './stopTask';
 import storeUserConfig from './storeUserConfig';
+import withdrawStake from './withdrawStake';
 
 export default {
   getTasks,
@@ -50,4 +51,5 @@ export default {
   removeAccountByName,
   openBrowserWindow,
   getTaskNodeInfo,
+  withdrawStake,
 };
