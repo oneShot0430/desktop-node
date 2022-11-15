@@ -180,6 +180,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
               <Button
                 onClick={() => setView(View.Stake)}
                 label="Add More Stake"
+                className="text-white"
               />
             </div>
           </div>

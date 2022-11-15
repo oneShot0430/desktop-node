@@ -24,7 +24,7 @@ export const SuccessMessage = ({
         {stakedAmount && `${stakedAmount} KOII`}
       </div>
       <div className="mt-[38px]">
-        <Button label="Ok" onClick={onOkClick} />
+        <Button label="Ok" onClick={onOkClick} className="text-white" />
       </div>
     </div>
   );
