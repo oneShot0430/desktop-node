@@ -67,6 +67,7 @@ const initHandlers = (): void => {
     config.endpoints.GET_TASK_NODE_INFO,
     controllers.getTaskNodeInfo
   );
+  ipcMain.handle(config.endpoints.WITHDRAW_STAKE, controllers.withdrawStake);
 };
 
 export default errorHandler(initHandlers, 'Init handlers error');
