@@ -41,6 +41,8 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
   const [view, setView] = useState<View>(View.SelectAction);
   const [stakeAmount, setStakeAmount] = useState<number>();
 
+  const stakeAmountInKoii = getKoiiFromRoe(stakeAmount);
+
   const { taskName, taskManager, publicKey } = task;
 
   const { data: myStake } = useQuery([QueryKeys.myStake, publicKey], () =>
@@ -61,7 +63,8 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
   );
 
   const handleAddStake = async () => {
-    await stakeOnTask(publicKey, stakeAmount);
+    // TO DO: expect amount in ROE instead of KOII from the BE
+    await stakeOnTask(publicKey, stakeAmountInKoii);
   };
 
   const handleWithdraw = async () => {
@@ -149,7 +152,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
           <SuccessMessage
             onOkClick={handleClose}
             successMessage={'You successfully staked'}
-            stakedAmount={stakeAmount}
+            stakedAmount={stakeAmountInKoii}
           />
         )}
         {view === View.WithdrawSuccess && (
