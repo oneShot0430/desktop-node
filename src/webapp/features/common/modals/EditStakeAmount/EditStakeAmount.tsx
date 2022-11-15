@@ -43,8 +43,12 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
 
   const { taskName, taskManager, publicKey } = task;
 
-  const { data: myStake } = useQuery([QueryKeys.myStake, task.publicKey], () =>
+  const { data: myStake } = useQuery([QueryKeys.myStake, publicKey], () =>
     TaskService.getMyStake(task)
+  );
+
+  const { data: minStake } = useQuery([QueryKeys.minStake, publicKey], () =>
+    TaskService.getMinStake(task)
   );
 
   const { data: earnedReward } = useQuery(
@@ -121,6 +125,8 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
               setStakeAmount(amount);
               setView(View.StakeConfirm);
             }}
+            minStake={minStake}
+            currentStake={myStake}
           />
         )}
         {view === View.StakeConfirm && (
