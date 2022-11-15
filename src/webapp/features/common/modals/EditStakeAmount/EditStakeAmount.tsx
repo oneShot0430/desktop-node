@@ -2,6 +2,7 @@ import { create, useModal } from '@ebay/nice-modal-react';
 import React, { useCallback, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
+import { GetTaskNodeInfoResponse } from 'models/api';
 import { getKoiiFromRoe, getRoeFromKoii } from 'utils';
 import { Button } from 'webapp/components';
 import { Modal, ModalContent, ModalTopBar } from 'webapp/features/modals';
@@ -36,11 +37,7 @@ type PropsType = {
   task: Task;
 };
 
-type NodeInfoType = {
-  totalKOII: number;
-  totalStaked: number;
-  pendingRewards: number;
-};
+type NodeInfoType = GetTaskNodeInfoResponse;
 
 export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
   task,
@@ -91,6 +88,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
             const newNodeInfodata = {
               ...oldNodeData,
               totalStaked: oldNodeData.totalStaked + stakeAmountInRoe,
+              totalKoii: oldNodeData.totalKOII + stakeAmountInRoe,
             };
 
             return newNodeInfodata;
@@ -146,6 +144,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
             const newNodeInfodata = {
               ...oldNodeData,
               totalStaked: oldNodeData.totalStaked - stakeAmountInRoe,
+              totalKoii: oldNodeData.totalKOII - stakeAmountInRoe,
             };
 
             return newNodeInfodata;
