@@ -88,7 +88,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
             const newNodeInfodata = {
               ...oldNodeData,
               totalStaked: oldNodeData.totalStaked + stakeAmountInRoe,
-              totalKoii: oldNodeData.totalKOII + stakeAmountInRoe,
+              totalKOII: oldNodeData.totalKOII - stakeAmountInRoe,
             };
 
             return newNodeInfodata;
@@ -144,7 +144,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
             const newNodeInfodata = {
               ...oldNodeData,
               totalStaked: oldNodeData.totalStaked - stakeAmountInRoe,
-              totalKoii: oldNodeData.totalKOII - stakeAmountInRoe,
+              totalKOII: oldNodeData.totalKOII + stakeAmountInRoe,
             };
 
             return newNodeInfodata;
