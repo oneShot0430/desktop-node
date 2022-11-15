@@ -25,7 +25,7 @@ export const AccountCreated = ({ onClose, newKeys }: PropsType) => {
         <div className="flex items-center justify-between pl-6">
           <CheckmarkTealSvg width={96} height={97} />
           <span className="text-[24px] pl-5 text-white">
-            New key succesfully created!
+            New key successfully created!
           </span>
         </div>
 

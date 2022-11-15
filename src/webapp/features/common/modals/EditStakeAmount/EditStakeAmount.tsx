@@ -81,9 +81,9 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
       case View.WithdrawConfirm:
         return 'Withdraw Stake';
       case View.WithdrawSuccess:
-        return 'Token Withdraw Succesful';
+        return 'Token Withdraw Successful';
       case View.StakeSuccess:
-        return 'Staked Succesfully';
+        return 'Staked Successfully';
       default:
         return '';
     }
