@@ -22,7 +22,7 @@ const KoiiInput = ({ disabled, onInputChange }: PropsType) => {
         value={inputValue}
         disabled={disabled}
         onChange={handleInputChange}
-        placeholder="00"
+        placeholder="0"
       />
       <div className="p-2">KOII</div>
     </div>
