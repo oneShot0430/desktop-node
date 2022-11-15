@@ -9,7 +9,7 @@ import { Summary } from './components/Summary';
 
 export const Sidebar = () => {
   const { data, isLoading } = useQuery(
-    [QueryKeys.nodeTaskInfo],
+    [QueryKeys.taskNodeInfo],
     getTaskNodeInfo
   );
 
