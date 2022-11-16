@@ -1,6 +1,6 @@
 import { create, useModal } from '@ebay/nice-modal-react';
 import React, { useCallback, useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 
 import { getKoiiFromRoe } from 'utils';
 import { Button } from 'webapp/components';
@@ -45,6 +45,8 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
 
   const { taskName, taskManager, publicKey } = task;
 
+  const queryCache = useQueryClient();
+
   const { data: myStake } = useQuery([QueryKeys.myStake, publicKey], () =>
     TaskService.getMyStake(task)
   );
@@ -73,6 +75,11 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
 
   const handleClose = () => {
     modal.remove();
+  };
+
+  const handleAddStakeSuccess = () => {
+    setView(View.StakeSuccess);
+    queryCache.invalidateQueries([QueryKeys.taskNodeInfo]);
   };
 
   const getTitle = useCallback(() => {
@@ -134,7 +141,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
         )}
         {view === View.StakeConfirm && (
           <ConfirmStake
-            onSuccess={() => setView(View.StakeSuccess)}
+            onSuccess={handleAddStakeSuccess}
             onConfirmAddStake={handleAddStake}
             stakeAmount={stakeAmount}
             koiiBalance={balance}
