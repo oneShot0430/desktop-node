@@ -14,9 +14,16 @@ export const useAccount = ({ accountName, isDefault }: ParamsType) => {
   const queryCache = useQueryClient();
   const { showModal } = useConfirmModal({
     content: (
-      <div className="py-20">
-        Are you sure you want to remove the{' '}
-        <span className="text-lg text-finnieTeal">{accountName}</span> account?
+      <div className="flex justify-center px-4 py-10">
+        <div className="text-left">
+          <p>
+            Are you sure you want to delete{' '}
+            <span className="text-lg text-finnieTeal">{accountName}</span>?
+          </p>
+          <br></br>
+          If you want to use this account in the future, you will <br /> need to
+          import it again using the secret phrase.
+        </div>
       </div>
     ),
     title: 'Delete Account',
