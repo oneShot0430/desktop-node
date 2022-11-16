@@ -5,22 +5,19 @@ import CloseIconWhite from 'svgs/close-icons/close-icon-white.svg';
 import { ModalContent } from 'webapp/features/modals';
 import { Theme } from 'webapp/types/common';
 
-import { Steps } from '../AddNewAccount';
+import { Steps, KeysType } from '../AddNewAccount';
 
 import { AccountInfo } from './AccountInfo';
 
 type PropsType = Readonly<{
   onClose: () => void;
-  newKeys: {
-    system: string;
-    task: string;
-  };
+  newKeys: KeysType;
   setNextStep: (step: Steps) => void;
 }>;
 
 export const AccountCreated = ({ onClose, newKeys }: PropsType) => {
   return (
-    <ModalContent theme={Theme.Dark} className="w-[800px] h-[400px] text-white">
+    <ModalContent theme={Theme.Dark} className="pb-6 text-white">
       <div className="flex justify-between p-3 ">
         <div className="flex items-center justify-between pl-6">
           <CheckmarkTealSvg width={96} height={97} />

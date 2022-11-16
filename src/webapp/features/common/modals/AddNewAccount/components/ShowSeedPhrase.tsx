@@ -42,7 +42,7 @@ const ShowSeedPhrase = ({ onClose, setNextStep, seedPhrase }: PropsType) => {
       <div className="flex justify-center mt-8">
         <Button
           onClick={() => setNextStep(Steps.KeyCreated)}
-          label="Show Keyes"
+          label="Show Keys"
           className="font-semibold bg-finnieGray-tertiary text-finnieBlue-light w-[220px] h-[48px]"
         />
       </div>
