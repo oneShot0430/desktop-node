@@ -47,7 +47,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
   const modal = useModal();
   const [view, setView] = useState<View>(View.SelectAction);
   const [stakeAmount, setStakeAmount] = useState<number>();
-  const { taskStake } = useTaskStake({ task, publicKey });
+  const { taskStake, loadingTaskStake } = useTaskStake({ task, publicKey });
 
   const stakeAmountInKoii = getKoiiFromRoe(stakeAmount);
 
@@ -145,7 +145,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
           const newNodeInfodata = {
             ...oldNodeData,
             totalStaked: oldNodeData.totalStaked - taskStake,
-            totalKOII: oldNodeData.totalKOII + taskStake,
+            pendingRewards: oldNodeData.pendingRewards + taskStake,
           };
 
           return newNodeInfodata;
