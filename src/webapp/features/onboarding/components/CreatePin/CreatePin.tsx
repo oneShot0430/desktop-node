@@ -60,7 +60,7 @@ const CreatePin = () => {
               </span>{' '}
               to secure the Node.
             </div>
-            <PinInput onChange={(pin) => setPin(pin)} />
+            <PinInput focus onChange={(pin) => setPin(pin)} />
           </div>
 
           <div>
