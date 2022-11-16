@@ -82,6 +82,11 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
     queryCache.invalidateQueries([QueryKeys.taskNodeInfo]);
   };
 
+  const handleWithdrawStakeSuccess = () => {
+    setView(View.WithdrawSuccess);
+    queryCache.invalidateQueries([QueryKeys.taskNodeInfo]);
+  };
+
   const getTitle = useCallback(() => {
     switch (view) {
       case View.SelectAction:
@@ -149,7 +154,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
         )}
         {view === View.WithdrawConfirm && (
           <ConfirmWithdraw
-            onSuccess={() => setView(View.WithdrawSuccess)}
+            onSuccess={handleWithdrawStakeSuccess}
             onConfirmWithdraw={handleWithdraw}
             withdrawAmount={myStakeInKoii}
             koiiBalance={balance}
@@ -158,7 +163,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
         {view === View.StakeSuccess && (
           <SuccessMessage
             onOkClick={handleClose}
-            successMessage={'You successfully staked'}
+            successMessage="You successfully staked"
             stakedAmount={stakeAmountInKoii}
           />
         )}
