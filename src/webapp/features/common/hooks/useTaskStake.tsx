@@ -10,7 +10,7 @@ type UseMyStakeParamsType = {
 
 export const useTaskStake = ({ task }: UseMyStakeParamsType) => {
   const {
-    data: taskStake,
+    data: taskStake = 0,
     isLoading,
     error,
   } = useQuery([QueryKeys.TaskStake, task.publicKey], () =>

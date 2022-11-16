@@ -8,7 +8,7 @@ import {
 } from 'webapp/services';
 import { Task } from 'webapp/types';
 
-import { InfiniteScrollTable } from '../ui/Table';
+import { InfiniteScrollTable } from '../ui';
 
 import { TaskRow } from './components/TaskRow';
 
@@ -34,10 +34,8 @@ export const MyNodeTable = () => {
 
   const { isLoading, data, error, fetchNextPage } = useInfiniteQuery(
     QueryKeys.taskList,
-    ({ pageParam = 0 }) => {
-      console.log('FETCHING PAGE ', pageParam);
-      return fetchMyTasks({ limit: pageSize, offset: pageParam * pageSize });
-    },
+    ({ pageParam = 0 }) =>
+      fetchMyTasks({ limit: pageSize, offset: pageParam * pageSize }),
     {
       getNextPageParam: (lastPageData, allPages) => {
         const checkHasMore = lastPageData.length > 0;

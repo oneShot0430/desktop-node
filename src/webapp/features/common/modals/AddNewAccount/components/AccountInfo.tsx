@@ -13,7 +13,7 @@ type PropsType = Readonly<{
 }>;
 
 export const AccountInfo = ({ keyType, address }: PropsType) => {
-  const addressref = useRef<HTMLSpanElement>(null);
+  const addressRef = useRef<HTMLSpanElement>(null);
 
   const titleClasses = twMerge(
     'font-semibold text-finnieEmerald-light flex justify-start items-center',
@@ -21,7 +21,7 @@ export const AccountInfo = ({ keyType, address }: PropsType) => {
   );
 
   const handleCopyToClipboard = () => {
-    const address = addressref.current.innerHTML;
+    const address = addressRef.current.innerHTML;
     navigator.clipboard.writeText(address);
   };
 
@@ -36,7 +36,7 @@ export const AccountInfo = ({ keyType, address }: PropsType) => {
       <div className="flex justify-start">
         {address && (
           <>
-            <span ref={addressref} className="pr-2">
+            <span ref={addressRef} className="pr-2">
               {address}
             </span>
             <Button

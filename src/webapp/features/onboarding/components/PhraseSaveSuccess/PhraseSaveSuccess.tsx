@@ -16,7 +16,7 @@ export const PhraseSaveSuccess = () => {
           <div className="text-finnieEmerald">
             <CheckMarkIcon />
           </div>
-          You succesfully saved your secret phrase
+          You successfully saved your secret phrase
         </h1>
         <div className="mb-6">
           <p className="mb-6">Never share your secret phrase.</p>

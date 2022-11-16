@@ -12,6 +12,7 @@ import {
   getMainAccountBalance,
   stakeOnTask,
   withdrawStake,
+  TaskService,
 } from 'webapp/services';
 import { Task } from 'webapp/types';
 
@@ -21,10 +22,9 @@ import { AddStake } from './AddStake';
 import { ConfirmStake } from './ConfirmStake';
 import { ConfirmWithdraw } from './ConfirmWithdraw';
 import { SuccessMessage } from './SuccessMessage';
-import { Withdraw } from './Withdraw';
 
 enum View {
-  Withdraw = 'Withdraw',
+  WithdrawAmount = 'WithdrawAmount',
   WithdrawConfirm = 'WithdrawConfirm',
   WithdrawSuccess = 'WithdrawSuccess',
   Stake = 'Stake',
@@ -47,8 +47,13 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
   const modal = useModal();
   const [view, setView] = useState<View>(View.SelectAction);
   const [stakeAmount, setStakeAmount] = useState<number>();
-  const [withdrawAmount, setWithdrawAmount] = useState<number>();
   const { taskStake } = useTaskStake({ task, publicKey });
+
+  const stakeAmountInKoii = getKoiiFromRoe(stakeAmount);
+
+  const { data: minStake } = useQuery([QueryKeys.minStake, publicKey], () =>
+    TaskService.getMinStake(task)
+  );
 
   const { data: earnedReward } = useQuery(
     [QueryKeys.taskReward, task.publicKey],
@@ -98,7 +103,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
         return { previousStakeAmount, previousNodeInfo };
       },
 
-      onError: (err, newData, context) => {
+      onError: (_err, _newData, context) => {
         queryClient.setQueryData(
           [QueryKeys.TaskStake, publicKey],
           context.previousStakeAmount
@@ -111,61 +116,56 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
     }
   );
 
-  const withdrawStakeMutation = useMutation(
-    () => withdrawStake(publicKey, withdrawAmount),
-    {
-      onMutate: async () => {
-        await queryClient.cancelQueries({
-          queryKey: [QueryKeys.TaskStake, publicKey],
-        });
+  const withdrawStakeMutation = useMutation(() => withdrawStake(publicKey), {
+    onMutate: async () => {
+      await queryClient.cancelQueries({
+        queryKey: [QueryKeys.TaskStake, publicKey],
+      });
 
-        const previousStakeAmount = queryClient.getQueryData([
-          QueryKeys.TaskStake,
-          publicKey,
-        ]);
+      const previousStakeAmount = queryClient.getQueryData([
+        QueryKeys.TaskStake,
+        publicKey,
+      ]);
 
-        const previousNodeInfo = queryClient.getQueryData([
-          QueryKeys.taskNodeInfo,
-        ]);
+      const previousNodeInfo = queryClient.getQueryData([
+        QueryKeys.taskNodeInfo,
+      ]);
 
-        const stakeAmountInRoe = getRoeFromKoii(stakeAmount);
+      queryClient.setQueryData([QueryKeys.TaskStake, publicKey], () => {
+        /**
+         * @dev
+         * Trying to withdraw all stake, so the value is always 0 after successful withdraw
+         */
+        return 0;
+      });
 
-        queryClient.setQueryData(
-          [QueryKeys.TaskStake, publicKey],
-          (oldStakeAmount: number) => {
-            const totalStake = stakeAmountInRoe - oldStakeAmount;
-            return totalStake;
-          }
-        );
+      queryClient.setQueryData(
+        [QueryKeys.taskNodeInfo],
+        (oldNodeData: NodeInfoType) => {
+          const newNodeInfodata = {
+            ...oldNodeData,
+            totalStaked: oldNodeData.totalStaked - taskStake,
+            totalKOII: oldNodeData.totalKOII + taskStake,
+          };
 
-        queryClient.setQueryData(
-          [QueryKeys.taskNodeInfo],
-          (oldNodeData: NodeInfoType) => {
-            const newNodeInfodata = {
-              ...oldNodeData,
-              totalStaked: oldNodeData.totalStaked - stakeAmountInRoe,
-              totalKOII: oldNodeData.totalKOII + stakeAmountInRoe,
-            };
+          return newNodeInfodata;
+        }
+      );
 
-            return newNodeInfodata;
-          }
-        );
+      return { previousStakeAmount, previousNodeInfo };
+    },
 
-        return { previousStakeAmount, previousNodeInfo };
-      },
-
-      onError: (err, newData, context) => {
-        queryClient.setQueryData(
-          [QueryKeys.TaskStake, publicKey],
-          context.previousStakeAmount
-        );
-        queryClient.setQueryData(
-          [QueryKeys.taskNodeInfo],
-          context.previousNodeInfo
-        );
-      },
-    }
-  );
+    onError: (err, newData, context) => {
+      queryClient.setQueryData(
+        [QueryKeys.TaskStake, publicKey],
+        context.previousStakeAmount
+      );
+      queryClient.setQueryData(
+        [QueryKeys.taskNodeInfo],
+        context.previousNodeInfo
+      );
+    },
+  });
 
   const handleAddStake = useCallback(async () => {
     await addStakeMutation.mutateAsync();
@@ -187,7 +187,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
     switch (view) {
       case View.SelectAction:
         return 'Edit Stake Amount';
-      case View.Withdraw:
+      case View.WithdrawAmount:
         return 'Withdraw Stake';
       case View.Stake:
         return 'Add Stake';
@@ -196,9 +196,9 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
       case View.WithdrawConfirm:
         return 'Withdraw Stake';
       case View.WithdrawSuccess:
-        return 'Token Withdraw Succesful';
+        return 'Token Withdraw Successful';
       case View.StakeSuccess:
-        return 'Staked Succesfully';
+        return 'Staked Successfully';
       default:
         return '';
     }
@@ -206,7 +206,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
 
   const showBackButton = view !== View.SelectAction;
   const title = getTitle();
-  // before comitting: verify this is ok
+
   const earnedRewardInKoii = getKoiiFromRoe(earnedReward);
   const myStakeInKoii = getKoiiFromRoe(taskStake);
 
@@ -219,15 +219,16 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
           onBackClick={() => setView(View.SelectAction)}
           showBackButton={showBackButton}
         />
-        {view === View.Withdraw && (
-          <Withdraw
-            stakedBalance={myStakeInKoii}
-            onWithdraw={(amount) => {
-              setWithdrawAmount(amount);
-              setView(View.WithdrawConfirm);
-            }}
-          />
-        )}
+        {/* TODO: Currently not supported */}
+        {/*{view === View.WithdrawAmount && (*/}
+        {/*  <WithdrawAmount*/}
+        {/*    stakedBalance={myStakeInKoii}*/}
+        {/*    onWithdraw={(amount) => {*/}
+        {/*      // setWithdrawAmount(amount);*/}
+        {/*      setView(View.WithdrawConfirm);*/}
+        {/*    }}*/}
+        {/*  />*/}
+        {/*)}*/}
         {view === View.Stake && (
           <AddStake
             balance={balance}
@@ -235,6 +236,8 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
               setStakeAmount(amount);
               setView(View.StakeConfirm);
             }}
+            minStake={minStake}
+            currentStake={taskStake}
           />
         )}
         {view === View.StakeConfirm && (
@@ -249,7 +252,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
           <ConfirmWithdraw
             onSuccess={() => setView(View.WithdrawSuccess)}
             onConfirmWithdraw={handleWithdraw}
-            withdrawAmount={withdrawAmount}
+            withdrawAmount={myStakeInKoii}
             koiiBalance={balance}
           />
         )}
@@ -257,7 +260,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
           <SuccessMessage
             onOkClick={handleClose}
             successMessage={'You successfully staked'}
-            stakedAmount={stakeAmount}
+            stakedAmount={stakeAmountInKoii}
           />
         )}
         {view === View.WithdrawSuccess && (
@@ -284,7 +287,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
 
             <div className="flex justify-center gap-[60px] ">
               <Button
-                onClick={() => setView(View.Withdraw)}
+                onClick={() => setView(View.WithdrawConfirm)}
                 label="Withdraw Stake"
                 variant="danger"
                 className="bg-finnieRed text-finnieBlue-light-secondary"
