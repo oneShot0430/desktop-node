@@ -37,7 +37,7 @@ export const CreateNewAccount = ({ onClose, setNextStep }: PropsType) => {
           await createNodeWallets(seedPhrase, accountName);
 
         setNextStep(Steps.ShowSeedPhrase, {
-          keyes: {
+          keys: {
             task: stakingWalletPubKey,
             system: mainAccountPubKey,
           },

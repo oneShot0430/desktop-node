@@ -6,6 +6,7 @@ import ExternalSourceIconSvg from 'assets/svgs/external-source-icon-white.svg';
 import FlagIconTealSvg from 'assets/svgs/flag-teal-icon.svg';
 import CloseIcon from 'svgs/close-icons/close-icon-white.svg';
 import { SourceCode } from 'webapp/components/SourceCode';
+import { useTaskStake } from 'webapp/features/common';
 import { useEarnedReward } from 'webapp/features/common/hooks/useEarnedReward';
 import { Modal, ModalContent } from 'webapp/features/modals';
 import { QueryKeys, TaskService, TaskStatusToLabeMap } from 'webapp/services';
@@ -30,23 +31,17 @@ export const TaskDetailsModal = create<TaskDetailsModalPropsType>(
     const [currentView, setCurrentView] = useState<TabsType>(
       TabsType.TaskDetails
     );
-
     const { earnedReward } = useEarnedReward({ task, publicKey });
-
     const { data: sourceCode, isLoading } = useQuery(
       [QueryKeys.taskSourceCode, task.publicKey],
       () => TaskService.getTaskSourceCode(task)
     );
+    const { taskStake } = useTaskStake({ task, publicKey });
 
     const totalStake = TaskService.getTotalStaked(task);
     const nodes = TaskService.getNodesCount(task);
     const topStake = TaskService.getTopStake(task);
     const state = TaskStatusToLabeMap[TaskService.getStatus(task)];
-
-    const { data: myStake } = useQuery(
-      [QueryKeys.myStake, task.publicKey],
-      () => TaskService.getMyStake(task)
-    );
 
     // const handleWithdraw = () => {
     //   console.log('Wthdraw action');
@@ -126,7 +121,7 @@ export const TaskDetailsModal = create<TaskDetailsModalPropsType>(
                       nodesParticipating={nodes}
                       totalKoiiStaked={totalStake}
                       currentTopStake={topStake}
-                      myCurrentStake={myStake}
+                      myCurrentStake={taskStake}
                       state={state}
                       myTotalRewards={earnedReward}
                     />

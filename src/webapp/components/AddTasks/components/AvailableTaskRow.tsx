@@ -8,6 +8,7 @@ import { getKoiiFromRoe } from 'utils';
 import { Button, LoadingSpinner, LoadingSpinnerSize } from 'webapp/components';
 import { useTaskDetailsModal } from 'webapp/components/MyNodeTable/hooks';
 import { TableRow, TableCell } from 'webapp/components/ui/Table';
+import { useTaskStake } from 'webapp/features/common';
 import { EditStakeInput } from 'webapp/features/onboarding/components/EditStakeInput';
 import {
   QueryKeys,
@@ -45,24 +46,24 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
 
   const bountyPerRoundInKoii = getKoiiFromRoe(bountyAmountPerRound);
 
-  const { data: myStake = 0, isLoading: isLoadingStake } = useQuery(
-    [QueryKeys.myStake, publicKey],
-    () => TaskService.getMyStake(task)
-  );
+  const { taskStake, loadingTaskStake } = useTaskStake({
+    task,
+    publicKey: mainAccountPubKey,
+  });
 
   const { data: minStake } = useQuery([QueryKeys.minStake, publicKey], () =>
     TaskService.getMinStake(task)
   );
 
   useEffect(() => {
-    setStake(myStake);
-    setMeetsMinimumStake(myStake >= minStake);
-  }, [minStake, myStake]);
+    setStake(taskStake);
+    setMeetsMinimumStake(taskStake >= minStake);
+  }, [minStake, taskStake]);
 
   const handleStartTask = async () => {
     try {
       setLoading(true);
-      if (myStake === 0) {
+      if (taskStake === 0) {
         await stakeOnTask(publicKey, getKoiiFromRoe(stake));
       }
       await startTask(publicKey);
@@ -122,7 +123,7 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
           stake={stake}
           minStake={minStake}
           onChange={handleStakeValueChange}
-          disabled={myStake !== 0 || isLoadingStake}
+          disabled={taskStake !== 0 || loadingTaskStake}
         />
       </TableCell>
       <TableCell>

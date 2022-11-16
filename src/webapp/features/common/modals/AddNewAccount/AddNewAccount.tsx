@@ -11,7 +11,7 @@ import ShowSeedPhrase from './components/ShowSeedPhrase';
 
 export type KeysType = { system: string; task: string };
 
-export type CreateKeyPayload = { keyes: KeysType; seedPhrase: string };
+export type CreateKeyPayload = { keys: KeysType; seedPhrase: string };
 
 export enum Steps {
   ImportKey,
@@ -28,7 +28,7 @@ export const AddNewAccount = create(function AddNewAccount() {
   const [seedPhrase, setSeedPhrase] = useState(null);
 
   const handleCreatedNewKeyStep = (step: Steps, payload: CreateKeyPayload) => {
-    setNewKeys(payload.keyes);
+    setNewKeys(payload.keys);
     setSeedPhrase(payload.seedPhrase);
     setCurrentStep(step);
   };

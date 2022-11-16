@@ -16,7 +16,7 @@ const AccountsTable = () => {
   const { accounts, loadingAccounts, errorAccounts } = useAccounts();
 
   return (
-    <div className="flex flex-col justify-between h-[calc(100vh-18rem)]">
+    <div className="flex flex-col justify-between h-[calc(100vh-17rem)]">
       <div className="h-full flex flex-col">
         <div className="grid grid-cols-16 pb-4 mb-4 font-semibold leading-5 text-white border-b-2 border-white">
           <div className="col-start-2 col-span-3">Account</div>
@@ -56,17 +56,17 @@ const AccountsTable = () => {
               );
             }
           )}
-        </div>
 
-        <Button
-          label="New"
-          className="w-auto p-2 mr-auto my-6 bg-transparent h-[60px] text-white"
-          icon={<AddIconSvg />}
-          onClick={showModal}
-        />
+          <Button
+            label="New"
+            className="w-auto p-2 mr-auto my-6 bg-transparent h-[60px] text-white"
+            icon={<AddIconSvg />}
+            onClick={showModal}
+          />
+        </div>
       </div>
 
-      <div className="mt-auto mb-4 text-xs text-finnieOrange">
+      <div className="mt-auto pt-2 text-xs text-finnieOrange">
         Controlling access to your keys is critical to protecting your assets
         stored on the Blockchain.
       </div>
