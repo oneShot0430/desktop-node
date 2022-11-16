@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
 
 import AddIconSvg from 'assets/svgs/add-icon-outlined.svg';
 import { Button } from 'webapp/components/ui/Button';
@@ -15,13 +15,28 @@ const AccountsTable = () => {
 
   const { accounts, loadingAccounts, errorAccounts } = useAccounts();
 
+  // isDefault must be first
+  const accountsSorted = useMemo(
+    () =>
+      (accounts ?? []).sort((a, b) => {
+        if (a.isDefault && !b.isDefault) {
+          return -1;
+        }
+        if (!a.isDefault && b.isDefault) {
+          return 1;
+        }
+        return 0;
+      }),
+    [accounts]
+  );
+
   return (
     <div className="flex flex-col justify-between h-[calc(100vh-17rem)]">
-      <div className="h-full flex flex-col">
-        <div className="grid grid-cols-16 pb-4 mb-4 font-semibold leading-5 text-white border-b-2 border-white">
-          <div className="col-start-2 col-span-3">Account</div>
-          <div className="col-start-6 col-span-5">Address</div>
-          <div className="col-start-14 col-span-2">Koii Balance</div>
+      <div className="flex flex-col h-full">
+        <div className="grid pb-4 mb-4 font-semibold leading-5 text-white border-b-2 border-white grid-cols-16">
+          <div className="col-span-3 col-start-2">Account</div>
+          <div className="col-span-5 col-start-6">Address</div>
+          <div className="col-span-2 col-start-14">Koii Balance</div>
         </div>
         <div className="overflow-y-auto">
           {loadingAccounts && (
@@ -36,7 +51,7 @@ const AccountsTable = () => {
               />
             </div>
           )}
-          {accounts?.map(
+          {accountsSorted?.map(
             ({
               accountName,
               mainPublicKey,
@@ -66,7 +81,7 @@ const AccountsTable = () => {
         </div>
       </div>
 
-      <div className="mt-auto pt-2 text-xs text-finnieOrange">
+      <div className="pt-2 mt-auto text-xs text-finnieOrange">
         Controlling access to your keys is critical to protecting your assets
         stored on the Blockchain.
       </div>
