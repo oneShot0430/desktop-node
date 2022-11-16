@@ -42,12 +42,13 @@ type NodeInfoType = GetTaskNodeInfoResponse;
 export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
   task,
 }) {
+  const queryCache = useQueryClient();
   const { taskName, taskManager, publicKey } = task;
   const queryClient = useQueryClient();
   const modal = useModal();
   const [view, setView] = useState<View>(View.SelectAction);
   const [stakeAmount, setStakeAmount] = useState<number>();
-  const { taskStake, loadingTaskStake } = useTaskStake({ task, publicKey });
+  const { taskStake } = useTaskStake({ task, publicKey });
 
   const stakeAmountInKoii = getKoiiFromRoe(stakeAmount);
 
@@ -183,6 +184,16 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
     modal.remove();
   };
 
+  const handleAddStakeSuccess = () => {
+    setView(View.StakeSuccess);
+    queryCache.invalidateQueries([QueryKeys.taskNodeInfo]);
+  };
+
+  const handleWithdrawStakeSuccess = () => {
+    setView(View.WithdrawSuccess);
+    queryCache.invalidateQueries([QueryKeys.taskNodeInfo]);
+  };
+
   const getTitle = useCallback(() => {
     switch (view) {
       case View.SelectAction:
@@ -242,7 +253,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
         )}
         {view === View.StakeConfirm && (
           <ConfirmStake
-            onSuccess={() => setView(View.StakeSuccess)}
+            onSuccess={handleAddStakeSuccess}
             onConfirmAddStake={handleAddStake}
             stakeAmount={stakeAmount}
             koiiBalance={balance}
@@ -250,7 +261,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
         )}
         {view === View.WithdrawConfirm && (
           <ConfirmWithdraw
-            onSuccess={() => setView(View.WithdrawSuccess)}
+            onSuccess={handleWithdrawStakeSuccess}
             onConfirmWithdraw={handleWithdraw}
             withdrawAmount={myStakeInKoii}
             koiiBalance={balance}
@@ -259,7 +270,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
         {view === View.StakeSuccess && (
           <SuccessMessage
             onOkClick={handleClose}
-            successMessage={'You successfully staked'}
+            successMessage="You successfully staked"
             stakedAmount={stakeAmountInKoii}
           />
         )}
