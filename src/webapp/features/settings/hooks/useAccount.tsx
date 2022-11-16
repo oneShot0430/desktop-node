@@ -1,7 +1,9 @@
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { useQueryClient, useMutation } from 'react-query';
 
 import { QueryKeys, removeAccount, setActiveAccount } from 'webapp/services';
+
+import { useConfirmModal } from '../../common/modals/ConfirmationModal';
 
 type ParamsType = {
   accountName: string;
@@ -10,6 +12,15 @@ type ParamsType = {
 
 export const useAccount = ({ accountName, isDefault }: ParamsType) => {
   const queryCache = useQueryClient();
+  const { showModal } = useConfirmModal({
+    content: (
+      <div className="py-20">
+        Are you sure you want to remove the{' '}
+        <span className="text-lg text-finnieTeal">{accountName}</span> account?
+      </div>
+    ),
+    title: 'Delete Account',
+  });
 
   const {
     mutate: deleteAccount,
@@ -27,12 +38,17 @@ export const useAccount = ({ accountName, isDefault }: ParamsType) => {
     onSuccess: () => queryCache.invalidateQueries(QueryKeys.Accounts),
   });
 
-  const removeAccountHandler = useCallback(() => {
+  const removeAccountHandler = useCallback(async () => {
     if (isDefault) {
       return;
     }
-    deleteAccount(accountName);
-  }, [deleteAccount, accountName, isDefault]);
+
+    const isConfirmed = await showModal();
+
+    if (isConfirmed) {
+      deleteAccount(accountName);
+    }
+  }, [isDefault, showModal, deleteAccount, accountName]);
 
   const setAccountActiveHandler = useCallback(() => {
     setAccountActive(accountName);
