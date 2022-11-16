@@ -41,7 +41,7 @@ export const EditStakeInput = ({
     <div>
       <input
         value={value}
-        placeholder={String(stakeInKoii)}
+        placeholder={'0'}
         onChange={handleChange}
         type="number"
         className={inputClasses}
