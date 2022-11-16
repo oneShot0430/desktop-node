@@ -183,3 +183,7 @@ export const getTaskNodeInfo = () => {
     return res;
   });
 };
+
+export const openBrowserWindow = async (URL: string) => {
+  await window.main.openBrowserWindow({ URL });
+};
