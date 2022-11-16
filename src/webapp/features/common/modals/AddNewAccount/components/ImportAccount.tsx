@@ -26,7 +26,7 @@ const ImportAccount = ({ onClose, setNextStep }: PropsType) => {
   return (
     <ModalContent theme={Theme.Dark} className="w-[800px] h-[320px]">
       <ModalTopBar theme="dark" title={'Key Management'} onClose={onClose} />
-      <div className="flex flex-col items-start gap-2 pl-12">
+      <div className="flex flex-col items-start gap-2 pt-4 pl-12">
         <div className="text-xl font-semibold text-white">Add New Account</div>
         <AddAccountAction
           onClick={() => setNextStep(Steps.ImportWithKeyPhrase)}

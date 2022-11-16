@@ -12,7 +12,7 @@ export const AddAccountAction = forwardRef<HTMLDivElement, PropsType>(
   ({ icon, title, description, onClick }, ref) => {
     const [hasFocus, setFocus] = useState(false);
     const classes = twMerge(
-      'w-[436px] h-[68px] hover:bg-finnieBlue-light-tertiary active:hover:bg-finnieBlue-light-tertiary flex gap-6 rounded-lg text-white items-center px-5',
+      'w-[446px] h-[68px] hover:bg-finnieBlue-light-tertiary active:hover:bg-finnieBlue-light-tertiary flex gap-6 rounded-lg text-white items-center px-5',
       hasFocus && 'bg-finnieBlue-light-tertiary'
     );
 
