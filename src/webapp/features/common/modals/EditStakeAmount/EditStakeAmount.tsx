@@ -41,10 +41,16 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
   const [view, setView] = useState<View>(View.SelectAction);
   const [stakeAmount, setStakeAmount] = useState<number>();
 
+  const stakeAmountInKoii = getKoiiFromRoe(stakeAmount);
+
   const { taskName, taskManager, publicKey } = task;
 
-  const { data: myStake } = useQuery([QueryKeys.myStake, task.publicKey], () =>
+  const { data: myStake } = useQuery([QueryKeys.myStake, publicKey], () =>
     TaskService.getMyStake(task)
+  );
+
+  const { data: minStake } = useQuery([QueryKeys.minStake, publicKey], () =>
+    TaskService.getMinStake(task)
   );
 
   const { data: earnedReward } = useQuery(
@@ -57,7 +63,8 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
   );
 
   const handleAddStake = async () => {
-    await stakeOnTask(publicKey, stakeAmount);
+    // TO DO: expect amount in ROE instead of KOII from the BE
+    await stakeOnTask(publicKey, stakeAmountInKoii);
   };
 
   const handleWithdraw = async () => {
@@ -121,6 +128,8 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
               setStakeAmount(amount);
               setView(View.StakeConfirm);
             }}
+            minStake={minStake}
+            currentStake={myStake}
           />
         )}
         {view === View.StakeConfirm && (
@@ -143,7 +152,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
           <SuccessMessage
             onOkClick={handleClose}
             successMessage={'You successfully staked'}
-            stakedAmount={stakeAmount}
+            stakedAmount={stakeAmountInKoii}
           />
         )}
         {view === View.WithdrawSuccess && (
