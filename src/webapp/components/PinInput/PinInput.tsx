@@ -11,6 +11,7 @@ type PropsType = Readonly<{
   onComplete?: () => void;
   initialValue?: string | number;
   showHideButton?: boolean;
+  focus?: boolean;
 }>;
 
 const PinInputComponent = ({
@@ -18,6 +19,7 @@ const PinInputComponent = ({
   onChange,
   initialValue,
   showHideButton = true,
+  focus = false,
 }: PropsType) => {
   const [showPinInput, setShowPinInput] = useState(false);
 
@@ -26,6 +28,7 @@ const PinInputComponent = ({
   return (
     <div className="z-50 flex items-center">
       <PinInput
+        focus={focus}
         length={6}
         initialValue={initialValue}
         secret={!showPinInput}
