@@ -15,11 +15,17 @@ const getAllAccounts = async (
   event: Event,
   payload: any
 ): Promise<getAllAccountsResponse> => {
-  const mainWalletFiles = fs.readdirSync('wallets', { withFileTypes: true });
+  if (!fs.existsSync(getAppDataPath() + '/namespace'))
+    fs.mkdirSync(getAppDataPath() + '/namespace');
+  if (!fs.existsSync(getAppDataPath() + '/wallets'))
+    fs.mkdirSync(getAppDataPath() + '/wallets');
+  const mainWalletFiles = fs.readdirSync(getAppDataPath() + '/wallets', {
+    withFileTypes: true,
+  });
   const mainWalletfilesInDirectory = mainWalletFiles
     .filter((item) => item.isFile() && path.extname(item.name) === '.json')
     .map((item) => item.name);
-  const stakingWalletFiles = fs.readdirSync('namespace', {
+  const stakingWalletFiles = fs.readdirSync(getAppDataPath() + '/namespace', {
     withFileTypes: true,
   });
   const stakingWalletfilesInDirectory = stakingWalletFiles

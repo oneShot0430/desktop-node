@@ -6,6 +6,7 @@ import { GetAvailableTasksParam } from 'models/api';
 import koiiTasks from 'services/koiiTasks';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
+import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
 const getAvailableTasks = (
   event: Event,
@@ -13,7 +14,9 @@ const getAvailableTasks = (
 ): Task[] => {
   const { offset, limit } = payload;
   const tasks = koiiTasks.getAllTasks();
-  const files = fs.readdirSync('namespace', { withFileTypes: true });
+  const files = fs.readdirSync(getAppDataPath() + '/namespace', {
+    withFileTypes: true,
+  });
   const directoriesInDIrectory = files
     .filter((item) => item.isDirectory())
     .map((item) => item.name);
