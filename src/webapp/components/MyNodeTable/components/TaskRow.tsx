@@ -59,6 +59,7 @@ export const TaskRow = ({ task, accountPublicKey }: PropsType) => {
       setLoading(false);
     }
   };
+  const handleOutputLogsToConsole = () => getLogs(task.publicKey);
 
   const nodeStatus = useMemo(() => TaskService.getStatus(task), [task]);
 
@@ -93,16 +94,16 @@ export const TaskRow = ({ task, accountPublicKey }: PropsType) => {
       <NodeStatusCell status={nodeStatus} />
       <TableCell>
         <div className="flex flex-row items-center gap-4">
-          <div>
+          <div title="Edit stake amount">
             <Button
               onClick={showEditStakeAmountModal}
               onlyIcon
               icon={<AddWithdrawIcon />}
             />
           </div>
-          <div title="Output Node logs to console">
+          <div title="Output logs to console">
             <Button
-              onClick={() => getLogs(task.publicKey)}
+              onClick={handleOutputLogsToConsole}
               onlyIcon
               icon={<ActionHistoryIcon />}
             />
