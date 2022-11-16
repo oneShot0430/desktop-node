@@ -8,6 +8,7 @@ import {
   NodeStatusCell,
 } from 'webapp/components/ui/Table';
 import { TaskDetailsCell } from 'webapp/components/ui/Table/TaskDetailsCell';
+import { useTaskStake } from 'webapp/features/common';
 import {
   getMainAccountPublicKey,
   QueryKeys,
@@ -23,16 +24,13 @@ export const HistoryRow = ({ task }: { task: Task }) => {
     QueryKeys.MainAccount,
     () => getMainAccountPublicKey()
   );
+  const { taskStake } = useTaskStake({ task, publicKey: mainAccountPubKey });
   const { taskName, publicKey } = task;
 
   const nodes = TaskService.getNodesCount(task);
   const topStake = TaskService.getTopStake(task);
 
   const nodeStatus = TaskService.getStatus(task);
-
-  const { data: myStake } = useQuery([QueryKeys.myStake, task.publicKey], () =>
-    TaskService.getMyStake(task)
-  );
 
   const { showModal } = useTaskDetailsModal({
     task,
@@ -52,7 +50,7 @@ export const HistoryRow = ({ task }: { task: Task }) => {
       <NodeStatusCell status={nodeStatus} />
       <TableCell>{nodes}</TableCell>
       <TableCell>{topStake}</TableCell>
-      <TableCell>{myStake}</TableCell>
+      <TableCell>{taskStake}</TableCell>
     </TableRow>
   );
 };

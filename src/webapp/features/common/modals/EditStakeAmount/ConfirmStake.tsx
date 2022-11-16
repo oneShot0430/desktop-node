@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { useQueryClient } from 'react-query';
 
 import { getKoiiFromRoe } from 'utils';
 import { Button } from 'webapp/components/ui/Button';
 import { ErrorMessage } from 'webapp/components/ui/ErrorMessage';
-import { QueryKeys } from 'webapp/services';
 
 type PropsType = Readonly<{
   stakeAmount: number;
@@ -21,7 +19,6 @@ export const ConfirmStake = ({
 }: PropsType) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
-  const queryCache = useQueryClient();
   const stakeAmountInKoii = getKoiiFromRoe(stakeAmount);
   const handleConfirmAddStake = async () => {
     try {
@@ -33,10 +30,6 @@ export const ConfirmStake = ({
       setError(e.message);
     } finally {
       setIsLoading(false);
-      queryCache.invalidateQueries([
-        QueryKeys.taskNodeInfo,
-        QueryKeys.taskList,
-      ]);
     }
   };
   return (

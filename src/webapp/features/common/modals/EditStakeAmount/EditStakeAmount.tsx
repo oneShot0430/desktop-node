@@ -1,19 +1,22 @@
 import { create, useModal } from '@ebay/nice-modal-react';
 import React, { useCallback, useState } from 'react';
-import { useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 
-import { getKoiiFromRoe } from 'utils';
+import { GetTaskNodeInfoResponse } from 'models/api';
+import { getKoiiFromRoe, getRoeFromKoii } from 'utils';
 import { Button } from 'webapp/components';
 import { Modal, ModalContent, ModalTopBar } from 'webapp/features/modals';
 import {
   QueryKeys,
-  TaskService,
   getRewardEarned,
   getMainAccountBalance,
   stakeOnTask,
   withdrawStake,
+  TaskService,
 } from 'webapp/services';
 import { Task } from 'webapp/types';
+
+import { useTaskStake } from '../../hooks';
 
 import { AddStake } from './AddStake';
 import { ConfirmStake } from './ConfirmStake';
@@ -34,22 +37,20 @@ type PropsType = {
   task: Task;
 };
 
+type NodeInfoType = GetTaskNodeInfoResponse;
+
 export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
   task,
 }) {
+  const queryCache = useQueryClient();
+  const { taskName, taskManager, publicKey } = task;
+  const queryClient = useQueryClient();
   const modal = useModal();
   const [view, setView] = useState<View>(View.SelectAction);
   const [stakeAmount, setStakeAmount] = useState<number>();
+  const { taskStake } = useTaskStake({ task, publicKey });
 
   const stakeAmountInKoii = getKoiiFromRoe(stakeAmount);
-
-  const { taskName, taskManager, publicKey } = task;
-
-  const queryCache = useQueryClient();
-
-  const { data: myStake } = useQuery([QueryKeys.myStake, publicKey], () =>
-    TaskService.getMyStake(task)
-  );
 
   const { data: minStake } = useQuery([QueryKeys.minStake, publicKey], () =>
     TaskService.getMinStake(task)
@@ -60,18 +61,124 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
     () => getRewardEarned(task)
   );
 
+  const addStakeMutation = useMutation(
+    () => stakeOnTask(publicKey, stakeAmount),
+    {
+      onMutate: async () => {
+        await queryClient.cancelQueries({
+          queryKey: [QueryKeys.TaskStake, publicKey],
+        });
+
+        const previousStakeAmount = queryClient.getQueryData([
+          QueryKeys.TaskStake,
+          publicKey,
+        ]);
+
+        const previousNodeInfo = queryClient.getQueryData([
+          QueryKeys.taskNodeInfo,
+        ]);
+
+        const stakeAmountInRoe = getRoeFromKoii(stakeAmount);
+
+        queryClient.setQueryData(
+          [QueryKeys.TaskStake, publicKey],
+          (oldStakeAmount: number) => {
+            const totalStake = stakeAmountInRoe + oldStakeAmount;
+            return totalStake;
+          }
+        );
+
+        queryClient.setQueryData(
+          [QueryKeys.taskNodeInfo],
+          (oldNodeData: NodeInfoType) => {
+            const newNodeInfodata = {
+              ...oldNodeData,
+              totalStaked: oldNodeData.totalStaked + stakeAmountInRoe,
+              totalKOII: oldNodeData.totalKOII - stakeAmountInRoe,
+            };
+
+            return newNodeInfodata;
+          }
+        );
+
+        return { previousStakeAmount, previousNodeInfo };
+      },
+
+      onError: (_err, _newData, context) => {
+        queryClient.setQueryData(
+          [QueryKeys.TaskStake, publicKey],
+          context.previousStakeAmount
+        );
+        queryClient.setQueryData(
+          [QueryKeys.taskNodeInfo],
+          context.previousNodeInfo
+        );
+      },
+    }
+  );
+
+  const withdrawStakeMutation = useMutation(() => withdrawStake(publicKey), {
+    onMutate: async () => {
+      await queryClient.cancelQueries({
+        queryKey: [QueryKeys.TaskStake, publicKey],
+      });
+
+      const previousStakeAmount = queryClient.getQueryData([
+        QueryKeys.TaskStake,
+        publicKey,
+      ]);
+
+      const previousNodeInfo = queryClient.getQueryData([
+        QueryKeys.taskNodeInfo,
+      ]);
+
+      queryClient.setQueryData([QueryKeys.TaskStake, publicKey], () => {
+        /**
+         * @dev
+         * Trying to withdraw all stake, so the value is always 0 after successful withdraw
+         */
+        return 0;
+      });
+
+      queryClient.setQueryData(
+        [QueryKeys.taskNodeInfo],
+        (oldNodeData: NodeInfoType) => {
+          const newNodeInfodata = {
+            ...oldNodeData,
+            totalStaked: oldNodeData.totalStaked - taskStake,
+            pendingRewards: oldNodeData.pendingRewards + taskStake,
+          };
+
+          return newNodeInfodata;
+        }
+      );
+
+      return { previousStakeAmount, previousNodeInfo };
+    },
+
+    onError: (err, newData, context) => {
+      queryClient.setQueryData(
+        [QueryKeys.TaskStake, publicKey],
+        context.previousStakeAmount
+      );
+      queryClient.setQueryData(
+        [QueryKeys.taskNodeInfo],
+        context.previousNodeInfo
+      );
+    },
+  });
+
+  const handleAddStake = useCallback(async () => {
+    await addStakeMutation.mutateAsync();
+  }, [addStakeMutation]);
+
+  const handleWithdraw = useCallback(async () => {
+    await withdrawStakeMutation.mutateAsync();
+  }, [withdrawStakeMutation]);
+
   const { data: balance } = useQuery([QueryKeys.mainAccountBalance], () =>
     getMainAccountBalance()
   );
-
-  const handleAddStake = async () => {
-    // TO DO: expect amount in ROE instead of KOII from the BE
-    await stakeOnTask(publicKey, stakeAmountInKoii);
-  };
-
-  const handleWithdraw = async () => {
-    await withdrawStake(publicKey);
-  };
 
   const handleClose = () => {
     modal.remove();
@@ -112,7 +219,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
   const title = getTitle();
 
   const earnedRewardInKoii = getKoiiFromRoe(earnedReward);
-  const myStakeInKoii = getKoiiFromRoe(myStake);
+  const myStakeInKoii = getKoiiFromRoe(taskStake);
 
   return (
     <Modal>
@@ -141,7 +248,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
               setView(View.StakeConfirm);
             }}
             minStake={minStake}
-            currentStake={myStake}
+            currentStake={taskStake}
           />
         )}
         {view === View.StakeConfirm && (
