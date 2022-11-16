@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 
 import CopyIconSvg from 'assets/svgs/copy-icon.svg';
 import DeleteIconSvg from 'assets/svgs/delete-icon.svg';
@@ -11,6 +11,7 @@ import { LoadingSpinner, LoadingSpinnerSize } from 'webapp/components';
 import { Button } from 'webapp/components/ui/Button';
 import { ErrorMessage } from 'webapp/components/ui/ErrorMessage';
 import { useClipboard } from 'webapp/features/common';
+import { useConfirmModal } from 'webapp/features/common/modals/ConfirmationModal';
 
 import { useAccount } from '../hooks/useAccount';
 import { useAccountBalance } from '../hooks/useAccountBalance';
@@ -42,8 +43,35 @@ const AccountInfo = ({
     setAccountActive,
     removingAccountError,
     setAccountActiveError,
-    removingAccountLoading,
+    // removingAccountLoading,
   } = useAccount({ accountName, isDefault });
+
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const { showModal } = useConfirmModal({
+    content: (
+      <div className="flex justify-center px-4 py-10">
+        <div className="text-left">
+          <p>
+            Are you sure you want to delete{' '}
+            <span className="text-lg text-finnieTeal">{accountName}</span>?
+          </p>
+          <br></br>
+          If you want to use this account in the future, you will <br /> need to
+          import it again using the secret phrase.
+        </div>
+      </div>
+    ),
+    title: 'Delete Account',
+  });
+
+  const handleDeleteAccount = async () => {
+    const isConfirmed = await showModal();
+    if (isConfirmed) {
+      setIsDeleting(true);
+      await deleteAccount();
+    }
+  };
 
   const handleCopyMainPublicKey = () => {
     copyMainKeyToClipboard(mainPublicKey);
@@ -105,12 +133,12 @@ const AccountInfo = ({
           {accountBalanceLoadingError ? '-' : accountBalance} KOII
         </span>
         {!isDefault &&
-          (removingAccountLoading ? (
+          (isDeleting ? (
             <LoadingSpinner size={LoadingSpinnerSize.Medium} />
           ) : (
             <Button
-              disabled={removingAccountLoading}
-              onClick={deleteAccount}
+              disabled={isDeleting}
+              onClick={handleDeleteAccount}
               icon={<DeleteIconSvg />}
               className="w-6 h-6 col-span-1 rounded-full bg-finnieRed"
             />

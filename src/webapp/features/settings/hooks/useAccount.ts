@@ -1,9 +1,7 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { useQueryClient, useMutation } from 'react-query';
 
 import { QueryKeys, removeAccount, setActiveAccount } from 'webapp/services';
-
-import { useConfirmModal } from '../../common/modals/ConfirmationModal';
 
 type ParamsType = {
   accountName: string;
@@ -12,29 +10,15 @@ type ParamsType = {
 
 export const useAccount = ({ accountName, isDefault }: ParamsType) => {
   const queryCache = useQueryClient();
-  const { showModal } = useConfirmModal({
-    content: (
-      <div className="flex justify-center px-4 py-10">
-        <div className="text-left">
-          <p>
-            Are you sure you want to delete{' '}
-            <span className="text-lg text-finnieTeal">{accountName}</span>?
-          </p>
-          <br></br>
-          If you want to use this account in the future, you will <br /> need to
-          import it again using the secret phrase.
-        </div>
-      </div>
-    ),
-    title: 'Delete Account',
-  });
 
   const {
-    mutate: deleteAccount,
+    mutateAsync: deleteAccount,
     isLoading: removingAccountLoading,
     error: removingAccountError,
   } = useMutation(removeAccount, {
-    onSuccess: () => queryCache.invalidateQueries(QueryKeys.Accounts),
+    onSuccess: () => {
+      queryCache.invalidateQueries(QueryKeys.Accounts);
+    },
   });
 
   const {
@@ -49,13 +33,8 @@ export const useAccount = ({ accountName, isDefault }: ParamsType) => {
     if (isDefault) {
       return;
     }
-
-    const isConfirmed = await showModal();
-
-    if (isConfirmed) {
-      deleteAccount(accountName);
-    }
-  }, [isDefault, showModal, deleteAccount, accountName]);
+    await deleteAccount(accountName);
+  }, [isDefault, deleteAccount, accountName]);
 
   const setAccountActiveHandler = useCallback(() => {
     setAccountActive(accountName);

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
+import { useQueryClient } from 'react-query';
 
 import KeyIconSvg from 'assets/svgs/key-icon-white.svg';
 import CloseIconWhite from 'svgs/close-icons/close-icon-white.svg';
@@ -6,7 +7,11 @@ import PinInput from 'webapp/components/PinInput/PinInput';
 import { Button } from 'webapp/components/ui/Button';
 import { ErrorMessage } from 'webapp/components/ui/ErrorMessage';
 import { ModalContent } from 'webapp/features/modals';
-import { createNodeWallets, generateSeedPhrase } from 'webapp/services';
+import {
+  createNodeWallets,
+  generateSeedPhrase,
+  QueryKeys,
+} from 'webapp/services';
 import { Theme } from 'webapp/types/common';
 
 import { CreateKeyPayload, Steps } from '../AddNewAccount';
@@ -27,6 +32,7 @@ export const CreateNewAccount = ({ onClose, setNextStep }: PropsType) => {
   const [pin, setPin] = useState('');
   const [error, setError] = useState<string>(null);
   const [accountName, setAccounttName] = useState('');
+  const queryCache = useQueryClient();
 
   const handleCreateNewKey = async () => {
     try {
@@ -48,16 +54,21 @@ export const CreateNewAccount = ({ onClose, setNextStep }: PropsType) => {
       }
     } catch (error) {
       setError(error.message);
+    } finally {
+      queryCache.invalidateQueries(QueryKeys.Accounts);
     }
   };
 
-  const handlePinInputChange = (pin: string) => {
+  const handlePinInputChange = useCallback((pin: string) => {
     setPin(pin);
-  };
+  }, []);
 
-  const handleWalletNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAccounttName(e.target.value);
-  };
+  const handleWalletNameChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setAccounttName(e.target.value);
+    },
+    []
+  );
 
   return (
     <ModalContent theme={Theme.Dark} className="w-[800px] h-[520px] text-white">
