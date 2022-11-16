@@ -17,7 +17,7 @@ type PropsType = Readonly<{
 
 export const AccountCreated = ({ onClose, newKeys }: PropsType) => {
   return (
-    <ModalContent theme={Theme.Dark} className="w-[800px] h-[400px] text-white">
+    <ModalContent theme={Theme.Dark} className="pb-6 text-white">
       <div className="flex justify-between p-3 ">
         <div className="flex items-center justify-between pl-6">
           <CheckmarkTealSvg width={96} height={97} />
