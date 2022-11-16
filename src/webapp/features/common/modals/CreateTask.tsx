@@ -1,8 +1,8 @@
 import { create, useModal } from '@ebay/nice-modal-react';
 import React from 'react';
 
-import Link from 'webapp/components/Link';
 import { Modal, ModalContent, ModalTopBar } from 'webapp/features/modals';
+import { openBrowserWindow } from 'webapp/services';
 
 export const CreateTaskModal = create(function CreateTaskModal() {
   const modal = useModal();
@@ -10,6 +10,17 @@ export const CreateTaskModal = create(function CreateTaskModal() {
   const handleClose = () => {
     modal.remove();
   };
+
+  const linkClassNames =
+    'text-finnieTeal-700 font-semibold underline inline-block cursor-pointer';
+
+  const handleOpenKoiiSDKWindow = () =>
+    openBrowserWindow(
+      'https://docs.koii.network/microservices-and-tasks/task-development-guide'
+    );
+
+  const handleOpenDiscordServerWindow = () =>
+    openBrowserWindow('https://discord.com/invite/koii');
 
   return (
     <Modal>
@@ -27,12 +38,23 @@ export const CreateTaskModal = create(function CreateTaskModal() {
             Are you a developer?
           </div>
           <div className="font-normal mb-2.5">
-            Head over to the <Link to="#" text="Koii SDK" /> to learn how.
+            Head over to the{' '}
+            <span className={linkClassNames} onClick={handleOpenKoiiSDKWindow}>
+              Koii SDK
+            </span>{' '}
+            to learn how.
           </div>
           <div className="mb-1 font-semibold leading-7">Need a developer?</div>
           <div className="font-normal w-128">
-            Check out our <Link to="#" text="Discord server" /> to find
-            developers who are already familiar with Koii and creating Tasks.
+            Check out our{' '}
+            <span
+              className={linkClassNames}
+              onClick={handleOpenDiscordServerWindow}
+            >
+              Discord server
+            </span>{' '}
+            to find developers who are already familiar with Koii and creating
+            Tasks.
           </div>
         </div>
       </ModalContent>
