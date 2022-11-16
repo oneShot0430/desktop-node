@@ -5,16 +5,13 @@ import CloseIconWhite from 'svgs/close-icons/close-icon-white.svg';
 import { ModalContent } from 'webapp/features/modals';
 import { Theme } from 'webapp/types/common';
 
-import { Steps } from '../AddNewAccount';
+import { Steps, KeysType } from '../AddNewAccount';
 
 import { AccountInfo } from './AccountInfo';
 
 type PropsType = Readonly<{
   onClose: () => void;
-  newKeys: {
-    system: string;
-    task: string;
-  };
+  newKeys: KeysType;
   setNextStep: (step: Steps) => void;
 }>;
 
