@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 import { getRoeFromKoii, getKoiiFromRoe } from 'utils';
 import { Button } from 'webapp/components/ui/Button';
+import { ErrorMessage } from 'webapp/components/ui/ErrorMessage';
 
 import KoiiInput from './KoiiInput';
 
@@ -23,16 +24,18 @@ export const AddStake = ({
   const stakeToAddInRoe = getRoeFromKoii(inputValue);
   const minStakeInKoii = getKoiiFromRoe(minStake);
 
-  const meetsMinStake = stakeToAddInRoe + currentStake >= minStake;
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError('');
-    const value = +e.target.value;
-    if (value > balance) {
+    const stakeToAdd = +e.target.value;
+    const stakeToAddInRoe = getRoeFromKoii(stakeToAdd);
+    const meetsMinStake = stakeToAddInRoe + currentStake >= minStake;
+    if (!meetsMinStake) {
+      setError(`Min stake: ${minStakeInKoii} KOII`);
+    } else if (stakeToAdd > balance) {
       setError('Not enough balance');
     }
 
-    setInputValue(value);
+    setInputValue(stakeToAdd);
   };
 
   const handleAddStake = () => {
@@ -46,16 +49,16 @@ export const AddStake = ({
       </div>
       <div className="mb-3">
         <KoiiInput onInputChange={handleInputChange} />
-        {error && <div className="text-finnieRed-500">{error}</div>}
+        {error && <ErrorMessage errorMessage={error} />}
       </div>
-      <div className="py-2 text-sm text-finnieTeal-700">{`Min stake: ${minStakeInKoii} KOII`}</div>
+
       <div className="py-2 mb-3 text-xs text-finnieTeal-700">{`${balance} KOII available in your balance`}</div>
 
       <Button
         label="Add Stake"
         onClick={handleAddStake}
         className="text-white"
-        disabled={!meetsMinStake}
+        disabled={!!error}
       />
     </div>
   );
