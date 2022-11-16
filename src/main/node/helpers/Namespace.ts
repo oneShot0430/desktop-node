@@ -18,6 +18,7 @@ import bs58 from 'bs58';
 import jwt from 'jsonwebtoken';
 import nacl from 'tweetnacl';
 
+import { getAppDataPath } from './getAppDataPath';
 import leveldbWrapper from './leveldb';
 
 // eslint-disable-next-line
@@ -141,7 +142,8 @@ class Namespace {
             Uint8Array.from(
               JSON.parse(
                 fs.readFileSync(
-                  `wallets/${activeAccount}_mainSystemWallet.json`,
+                  getAppDataPath() +
+                    `/wallets/${activeAccount}_mainSystemWallet.json`,
                   'utf-8'
                 )
               )
@@ -355,19 +357,19 @@ class Namespace {
    * @returns {Promise<any>}
    */
   async fs(method: any, path: any, ...args: any) {
-    const basePath = 'namespace/' + this.taskTxId;
+    const basePath = getAppDataPath() + '/namespace/' + this.taskTxId;
     await fsPromises.mkdir(basePath, { recursive: true }).catch(console.error);
     return fsPromises[method](`${basePath}/${path}`, ...args);
   }
 
   async fsStaking(method: any, path: any, ...args: any) {
-    const basePath = 'namespace/';
+    const basePath = getAppDataPath() + '/namespace/';
     await fsPromises.mkdir(basePath, { recursive: true }).catch(console.error);
     return fsPromises[method](`${basePath}/${path}`, ...args);
   }
 
   async fsWriteStream(imagepath: string) {
-    const basePath = 'namespace/' + this.taskTxId;
+    const basePath = getAppDataPath() + '/namespace/' + this.taskTxId;
     await fsPromises.mkdir(basePath, { recursive: true }).catch(console.error);
     const image = basePath + '/' + imagepath;
     const writer = fs.createWriteStream(image);
@@ -375,7 +377,7 @@ class Namespace {
   }
 
   async fsReadStream(imagepath: string) {
-    const basePath = 'namespace/' + this.taskTxId;
+    const basePath = getAppDataPath() + '/namespace/' + this.taskTxId;
     await fsPromises.mkdir(basePath, { recursive: true }).catch(console.error);
     const image = basePath + imagepath;
     const file = fs.readFileSync(image);
@@ -708,7 +710,8 @@ class Namespace {
     try {
       const ACTIVE_ACCOUNT = 'ACTIVE_ACCOUNT';
       const activeAccount = await this.#storeGetRaw(ACTIVE_ACCOUNT);
-      const STAKING_WALLET_PATH = `namespace/${activeAccount}_stakingWallet.json`;
+      const STAKING_WALLET_PATH =
+        getAppDataPath() + `/namespace/${activeAccount}_stakingWallet.json`;
       console.log({ STAKING_WALLET_PATH });
       if (!fs.existsSync(STAKING_WALLET_PATH)) return null;
       submitterAccount = Keypair.fromSecretKey(

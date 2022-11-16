@@ -6,6 +6,7 @@ import { Keypair } from '@_koi/web3.js';
 import { namespaceInstance } from 'main/node/helpers/Namespace';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
+import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
 interface rewardWalletPayload {
   available_balances: any;
@@ -23,7 +24,8 @@ const rewardWallet = async (
   if (!activeAccount) {
     throw new Error('Please select a Active Account');
   }
-  const stakingWalletfilePath = `namespace/${activeAccount}_stakingWallet.json`;
+  const stakingWalletfilePath =
+    getAppDataPath() + `/namespace/${activeAccount}_stakingWallet.json`;
   try {
     stakingAccKeypair = Keypair.fromSecretKey(
       Uint8Array.from(

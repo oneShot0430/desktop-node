@@ -8,6 +8,7 @@ import { derivePath } from 'ed25519-hd-key';
 import { CreateNodeWalletsParam, CreateNodeWalletsResponse } from 'models/api';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
+import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
 const createNodeWallets = async (
   event: Event,
@@ -21,15 +22,18 @@ const createNodeWallets = async (
   if (!accountName) {
     throw new Error('Please provide accountName to generate wallets');
   }
-  if (!fs.existsSync('namespace')) fs.mkdirSync('namespace');
-  if (!fs.existsSync('wallets')) fs.mkdirSync('wallets');
+  if (!fs.existsSync(getAppDataPath() + '/namespace'))
+    fs.mkdirSync(getAppDataPath() + '/namespace');
+  if (!fs.existsSync(getAppDataPath() + '/wallets'))
+    fs.mkdirSync(getAppDataPath() + '/wallets');
 
   if (!/^[0-9a-zA-Z ... ]+$/.test(accountName)) {
     throw new Error('Please provide a valid accountName');
   }
   try {
     // Creating stakingWallet
-    const stakingWalletFilePath = `namespace/${accountName}_stakingWallet.json`;
+    const stakingWalletFilePath =
+      getAppDataPath() + `/namespace/${accountName}_stakingWallet.json`;
     if (fs.existsSync(stakingWalletFilePath)) {
       throw new Error('Staking wallet with same account name already exists');
     }
@@ -52,7 +56,8 @@ const createNodeWallets = async (
       }
     );
     // Creating MainAccount
-    const mainWalletFilePath = `wallets/${accountName}_mainSystemWallet.json`;
+    const mainWalletFilePath =
+      getAppDataPath() + `/wallets/${accountName}_mainSystemWallet.json`;
     if (fs.existsSync(mainWalletFilePath)) {
       throw new Error('Main wallet with same account name already exists');
     }

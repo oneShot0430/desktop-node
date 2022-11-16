@@ -9,6 +9,7 @@ import { getAllAccountsResponse } from 'models/api';
 import sdk from 'services/sdk';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
+import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
 const getAllAccounts = async (
   event: Event,
@@ -31,7 +32,9 @@ const getAllAccounts = async (
   mainWalletfilesInDirectory.forEach((e) => {
     const currentAccountName = e.substring(0, e.lastIndexOf('_'));
     const mainSystemWallet = Keypair.fromSecretKey(
-      Uint8Array.from(JSON.parse(fs.readFileSync(`wallets/${e}`, 'utf-8')))
+      Uint8Array.from(
+        JSON.parse(fs.readFileSync(getAppDataPath() + `/wallets/${e}`, 'utf-8'))
+      )
     );
     const stakingWalletNameArr = stakingWalletfilesInDirectory.filter(
       (x) => x.substring(0, x.lastIndexOf('_')) == currentAccountName
@@ -41,7 +44,12 @@ const getAllAccounts = async (
     if (stakingWalletName == '') return;
     const stakingWallet = Keypair.fromSecretKey(
       Uint8Array.from(
-        JSON.parse(fs.readFileSync(`namespace/${stakingWalletName}`, 'utf-8'))
+        JSON.parse(
+          fs.readFileSync(
+            getAppDataPath() + `/namespace/${stakingWalletName}`,
+            'utf-8'
+          )
+        )
       )
     );
     accounts.push({
