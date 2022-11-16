@@ -11,7 +11,3 @@ export const getFaucetStatus = async (walletAddress: string) => {
   );
   return data;
 };
-
-export const openBrowserWindow = async (URL: string) => {
-  await window.main.openBrowserWindow({ URL });
-};
