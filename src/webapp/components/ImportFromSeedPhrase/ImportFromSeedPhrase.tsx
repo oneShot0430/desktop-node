@@ -81,7 +81,7 @@ const ImportFromSeedPhrase = ({
 
   const classes = twMerge(
     'columns-2 bg-finnieBlue-light-secondary w-[360px] rounded py-4 px-[30px] select-text',
-    className ? className : ''
+    className ?? ''
   );
 
   return (
