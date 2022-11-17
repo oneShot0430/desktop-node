@@ -34,6 +34,7 @@ module.exports = {
           light: '#211C52',
           'light-secondary': '#373765',
           'light-tertiary': '#4A4A73',
+          'light-4': '#54547B',
           DEFAULT: '#171753',
         },
         finnieTeal: {

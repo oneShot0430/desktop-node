@@ -1,4 +1,5 @@
 import React, { useState, ChangeEvent } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 import { createNodeWallets, setActiveAccount } from 'webapp/services';
 
@@ -13,9 +14,10 @@ export interface AccountsType {
 type PropsType = {
   accountName: string;
   confirmActionLabel: string;
-  onImportSuccess: (accounts: any) => void;
+  onImportSuccess: (accounts: AccountsType) => void;
   onImportFail?: (error: string) => void;
   setImportedWalletAsDefault?: boolean;
+  className?: string;
 };
 
 const ImportFromSeedPhrase = ({
@@ -24,6 +26,7 @@ const ImportFromSeedPhrase = ({
   onImportFail,
   confirmActionLabel,
   setImportedWalletAsDefault = false,
+  className,
 }: PropsType) => {
   const [phrases, setPhrases] = useState(new Array(12).fill(''));
   const [error, setError] = useState<string>();
@@ -36,7 +39,6 @@ const ImportFromSeedPhrase = ({
     const newPhrases = Object.assign([], phrases, {
       [phraseIndex]: value,
     });
-    console.log('###newPrases', newPhrases);
     setPhrases(newPhrases);
   };
 
@@ -74,11 +76,16 @@ const ImportFromSeedPhrase = ({
     }
   };
 
+  const classes = twMerge(
+    'columns-2 bg-finnieBlue-light-secondary w-[360px] rounded py-4 px-[30px] select-text',
+    className ?? ''
+  );
+
   return (
     <div className="relative">
       <div>
         <div className="flex justify-center">
-          <div className="columns-2 bg-finnieBlue-light-secondary w-[360px] rounded py-4 px-[30px] select-text">
+          <div className={classes}>
             {phrases.map((_, index) => {
               const wordNumber = index + 1;
               return (
@@ -88,7 +95,7 @@ const ImportFromSeedPhrase = ({
                 >
                   <div>{wordNumber}.</div>
                   <input
-                    className="w-[120px] bg-transparent focus:border-b focus:border-white focus:outline-none text-sm"
+                    className="w-[120px] p-1 rounded-md bg-transparent focus:ring-1 focus:ring-finnieTeal focus:outline-none text-sm focus:bg-finnieBlue-light-secondary"
                     onChange={(e) => handleInputChange(e, index)}
                     value={phrases[index]}
                   />
