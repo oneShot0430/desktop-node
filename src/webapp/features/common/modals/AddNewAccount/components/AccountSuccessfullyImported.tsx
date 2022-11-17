@@ -15,14 +15,17 @@ type PropsType = Readonly<{
   setNextStep: (step: Steps) => void;
 }>;
 
-export const AccountCreated = ({ onClose, newKeys }: PropsType) => {
+export const AccountSuccessfullyImported = ({
+  onClose,
+  newKeys,
+}: PropsType) => {
   return (
     <ModalContent theme={Theme.Dark} className="pb-6 text-white w-[680px]">
       <div className="flex justify-between w-full p-3">
         <div className="flex items-center justify-between pl-6">
           <CheckmarkTealSvg width={96} height={97} />
           <span className="text-[24px] pl-5 text-white">
-            New key successfully created!
+            New key successfully imported!
           </span>
         </div>
 
@@ -30,7 +33,7 @@ export const AccountCreated = ({ onClose, newKeys }: PropsType) => {
       </div>
 
       <div className="px-[62px] text-left leading-8 mb-4">
-        Here are your new keys! You can select which keys to use in the key
+        Here are your imported keys! You can select which keys to use in the key
         management settings.
       </div>
 

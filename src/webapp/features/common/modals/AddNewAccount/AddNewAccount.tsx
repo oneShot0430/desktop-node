@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Modal } from 'webapp/features/modals';
 
 import { AccountCreated } from './components/AccountCreated';
+import { AccountSuccessfullyImported } from './components/AccountSuccessfullyImported';
 import { CreateNewAccount } from './components/CreateNewAccount';
 import ImportKey from './components/ImportAccount';
 import ImportWithKeyPhrase from './components/ImportWithKeyPhrase';
@@ -19,6 +20,7 @@ export enum Steps {
   CreateNewKey,
   KeyCreated,
   ShowSeedPhrase,
+  AccountImported,
 }
 
 export const AddNewAccount = create(function AddNewAccount() {
@@ -50,7 +52,7 @@ export const AddNewAccount = create(function AddNewAccount() {
               task: stakingAccountPubKey,
               system: mainAccountPubKey,
             });
-            setCurrentStep(Steps.KeyCreated);
+            setCurrentStep(Steps.AccountImported);
           }}
         />
       ),
@@ -62,6 +64,13 @@ export const AddNewAccount = create(function AddNewAccount() {
       ),
       [Steps.KeyCreated]: (
         <AccountCreated
+          onClose={handleClose}
+          setNextStep={setCurrentStep}
+          newKeys={newKeys}
+        />
+      ),
+      [Steps.AccountImported]: (
+        <AccountSuccessfullyImported
           onClose={handleClose}
           setNextStep={setCurrentStep}
           newKeys={newKeys}
