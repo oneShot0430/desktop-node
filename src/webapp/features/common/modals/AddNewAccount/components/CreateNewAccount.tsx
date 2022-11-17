@@ -1,3 +1,4 @@
+import { compare } from 'bcryptjs';
 import React, { useCallback, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
@@ -6,6 +7,7 @@ import CloseIconWhite from 'svgs/close-icons/close-icon-white.svg';
 import PinInput from 'webapp/components/PinInput/PinInput';
 import { Button } from 'webapp/components/ui/Button';
 import { ErrorMessage } from 'webapp/components/ui/ErrorMessage';
+import { useUserSettings } from 'webapp/features/common/hooks';
 import { ModalContent } from 'webapp/features/modals';
 import {
   createNodeWallets,
@@ -21,22 +23,31 @@ type PropsType = Readonly<{
   setNextStep: (step: Steps, payload: CreateKeyPayload) => void;
 }>;
 
-/**
- * @todo: get pin from settings and compare
- */
-function validatePin(pin: string) {
-  return true;
-}
-
 export const CreateNewAccount = ({ onClose, setNextStep }: PropsType) => {
   const [pin, setPin] = useState('');
   const [error, setError] = useState<string>(null);
   const [accountName, setAccounttName] = useState('');
   const queryCache = useQueryClient();
+  const { settings } = useUserSettings();
+
+  const validatePin = async (pin: string) => {
+    if (pin.length === 6) {
+      const pinMatchesStoredHash = await compare(pin, settings.pin);
+      return pinMatchesStoredHash;
+    }
+    return false;
+  };
 
   const handleCreateNewKey = async () => {
+    if (accountName.length === 0) {
+      setError("Account name can't be empty");
+      return;
+    }
+
+    const isPinValid = await validatePin(pin);
+
     try {
-      if (validatePin(pin)) {
+      if (isPinValid) {
         const seedPhrase = await generateSeedPhrase();
 
         const { stakingWalletPubKey, mainAccountPubKey } =
@@ -88,9 +99,11 @@ export const CreateNewAccount = ({ onClose, setNextStep }: PropsType) => {
         </div>
 
         <div className="px-12 my-8">
-          <div className="px-[20px] text-left leading-8 mb-4">Account name</div>
+          <div className="px-[20px] text-left leading-8 mb-4">
+            Account name<span className="text-finnieRed-500">*</span>
+          </div>
           <input
-            className="w-full px-6 py-2 rounded-md bg-finnieBlue-light-tertiary "
+            className="w-full px-6 py-2 text-sm rounded-md bg-finnieBlue-light-tertiary focus:ring-2 focus:ring-finnieTeal focus:outline-none focus:bg-finnieBlue-light-secondary "
             type="text"
             value={accountName}
             onChange={handleWalletNameChange}
@@ -107,10 +120,13 @@ export const CreateNewAccount = ({ onClose, setNextStep }: PropsType) => {
           </div>
         </div>
 
-        {error && <ErrorMessage errorMessage={error} />}
+        <div className="flex flex-col items-center h-10 px-4">
+          <ErrorMessage errorMessage={error} />
+        </div>
 
-        <div className="flex justify-center mt-8">
+        <div className="flex justify-center">
           <Button
+            disabled={accountName.length === 0 || pin.length !== 6}
             onClick={handleCreateNewKey}
             label="Create Key"
             className="font-semibold bg-finnieGray-tertiary text-finnieBlue-light w-[220px] h-[48px]"
