@@ -50,7 +50,7 @@ export const AddNewAccount = create(function AddNewAccount() {
               task: stakingAccountPubKey,
               system: mainAccountPubKey,
             });
-            setCurrentStep(Steps.ShowSeedPhrase);
+            setCurrentStep(Steps.KeyCreated);
           }}
         />
       ),
