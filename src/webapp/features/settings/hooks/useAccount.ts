@@ -12,11 +12,13 @@ export const useAccount = ({ accountName, isDefault }: ParamsType) => {
   const queryCache = useQueryClient();
 
   const {
-    mutate: deleteAccount,
+    mutateAsync: deleteAccount,
     isLoading: removingAccountLoading,
     error: removingAccountError,
   } = useMutation(removeAccount, {
-    onSuccess: () => queryCache.invalidateQueries(QueryKeys.Accounts),
+    onSuccess: () => {
+      queryCache.invalidateQueries(QueryKeys.Accounts);
+    },
   });
 
   const {
@@ -27,12 +29,12 @@ export const useAccount = ({ accountName, isDefault }: ParamsType) => {
     onSuccess: () => queryCache.invalidateQueries(QueryKeys.Accounts),
   });
 
-  const removeAccountHandler = useCallback(() => {
+  const removeAccountHandler = useCallback(async () => {
     if (isDefault) {
       return;
     }
-    deleteAccount(accountName);
-  }, [deleteAccount, accountName, isDefault]);
+    await deleteAccount(accountName);
+  }, [isDefault, deleteAccount, accountName]);
 
   const setAccountActiveHandler = useCallback(() => {
     setAccountActive(accountName);
