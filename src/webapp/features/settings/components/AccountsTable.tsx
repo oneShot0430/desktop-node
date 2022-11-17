@@ -18,14 +18,10 @@ const AccountsTable = () => {
   // isDefault must be first
   const accountsSorted = useMemo(
     () =>
-      (accounts ?? []).sort((a, b) => {
-        if (a.isDefault && !b.isDefault) {
+      (accounts ?? []).sort((a) => {
+        if (a.isDefault) {
           return -1;
-        }
-        if (!a.isDefault && b.isDefault) {
-          return 1;
-        }
-        return 0;
+        } else return 0;
       }),
     [accounts]
   );
