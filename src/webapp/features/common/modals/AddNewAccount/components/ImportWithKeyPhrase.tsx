@@ -3,16 +3,16 @@ import { useQueryClient } from 'react-query';
 
 import UploadIcon from 'assets/svgs/upload-icon.svg';
 import CloseIconWhite from 'svgs/close-icons/close-icon-white.svg';
-import { ImportFromSeedPhrase } from 'webapp/components/ImportFromSeedPhrase';
+import {
+  AccountsType,
+  ImportFromSeedPhrase,
+} from 'webapp/components/ImportFromSeedPhrase';
 import { ModalContent } from 'webapp/features/modals';
 import { Theme } from 'webapp/types/common';
 
 type PropsType = Readonly<{
   onClose: () => void;
-  onImportSuccess: (keys: {
-    stakingAccountPubKey: string;
-    mainAccountPubKey: string;
-  }) => void;
+  onImportSuccess: (keys: AccountsType) => void;
 }>;
 
 const ImportWithKeyPhrase = ({ onClose, onImportSuccess }: PropsType) => {

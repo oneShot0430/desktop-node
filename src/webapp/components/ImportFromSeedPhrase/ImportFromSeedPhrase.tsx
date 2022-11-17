@@ -14,10 +14,7 @@ export interface AccountsType {
 type PropsType = {
   accountName: string;
   confirmActionLabel: string;
-  onImportSuccess: (accounts: {
-    mainAccountPubKey: string;
-    stakingAccountPubKey: string;
-  }) => void;
+  onImportSuccess: (accounts: AccountsType) => void;
   onImportFail?: (error: string) => void;
   setImportedWalletAsDefault?: boolean;
   className?: string;
