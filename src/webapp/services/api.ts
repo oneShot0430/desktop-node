@@ -4,7 +4,7 @@ import {
   FetchAllTasksParam,
   GetAvailableTasksParam,
   GetMyTasksParam,
-  UserAppConfig,
+  StoreUserConfigParam,
 } from 'models/api';
 import sdk from 'services/sdk';
 import { getKoiiFromRoe } from 'utils';
@@ -19,6 +19,7 @@ export const fetchAllTasks = async (
   console.log('FETCHING TASKS', tasks);
   return tasks.map(TaskService.parseTask);
 };
+
 export const getTasksById = (tasksIds: string[]) => {
   return window.main.getTasksById({ tasksIds }).then((tasks) => {
     console.log('GETTING TASKS BY ID', tasks);
@@ -43,11 +44,12 @@ export const fetchAvailableTasks = async (
 };
 
 export const getRewardEarned = async (task: Task): Promise<number> => {
-  const result = await window.main.getEarnedRewardByNode({
-    available_balances: task.availableBalances,
-  });
+  const result =
+    (await window.main.getEarnedRewardByNode({
+      available_balances: task.availableBalances,
+    })) || 0;
   console.log('GETTING REWARD', result, task.publicKey);
-  return result || 0;
+  return result;
 };
 
 export const getMainAccountBalance = (): Promise<number> => {
@@ -66,7 +68,7 @@ export const getAccountBalance = (pubKey: string) => {
     .getBalance(new PublicKey(pubKey))
     .then(getKoiiFromRoe)
     .then((balance) => {
-      console.log('GETTING MAIN ACCOUNT BALANCE', balance);
+      console.log('GETTING ACCOUNT BALANCE', pubKey, balance);
       return balance;
     });
 };
@@ -132,15 +134,7 @@ export const generateSeedPhrase = (): Promise<string> => {
   });
 };
 
-export const getAllAccounts = (): Promise<
-  Array<{
-    accountName: string;
-    stakingPublicKey: string;
-    mainPublicKey: string;
-    isDefault: boolean;
-    stakingPublicKeyBalance: number;
-  }>
-> => {
+export const getAllAccounts = () => {
   return window.main.getAllAccounts().then((accounts) => {
     console.log('GETTING ALL ACCOUNTS', accounts);
     return accounts;
@@ -163,7 +157,7 @@ export const getUserConfig = () => {
   });
 };
 
-export const saveUserConfig = (config: { settings: UserAppConfig }) => {
+export const saveUserConfig = (config: StoreUserConfigParam) => {
   return window.main.storeUserConfig(config).then((res) => {
     console.log('SAVING USER CONFIG', res);
     return res;
