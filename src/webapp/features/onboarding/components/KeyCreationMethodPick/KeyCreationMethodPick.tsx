@@ -22,10 +22,6 @@ const KeyCreationMethodPick = () => {
   const { setNewSeedPhrase, setSystemKey } = useContext(OnboardingContext);
   const { accounts } = useAccounts();
 
-  const enteredNameIsInvalid = accounts?.some(
-    (account) => account.accountName === accountName
-  );
-
   const createNewKey = async (accountName: string) => {
     const seedPhrase = await generateSeedPhrase();
     const resp = await createNodeWallets(seedPhrase, accountName);
@@ -49,21 +45,35 @@ const KeyCreationMethodPick = () => {
     },
   });
 
-  const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setAccountName(e.target.value);
+  const handleChangeInput: ChangeEventHandler<HTMLInputElement> = ({
+    target: { value: enteredAccountName },
+  }) => {
+    setErrorMessage('');
+    setAccountName(enteredAccountName);
+    const enteredNameIsInvalid = accounts?.some(
+      (account) => account.accountName === enteredAccountName
+    );
+    if (enteredNameIsInvalid) {
+      setErrorMessage('You already have an account registered with that name');
+    }
   };
 
   const handleClickCreate = () => {
-    if (accountName) seedPhraseGenerateMutation.mutate(accountName);
-    else setErrorMessage("Account name can't be empty");
+    if (accountName) {
+      seedPhraseGenerateMutation.mutate(accountName);
+    } else {
+      setErrorMessage("Account name can't be empty");
+    }
   };
 
   const handleClickImport = () => {
-    if (accountName)
+    if (accountName) {
       navigate(AppRoute.OnboardingImportKey, {
         state: { accountName },
       });
-    else setErrorMessage("Account name can't be empty");
+    } else {
+      setErrorMessage("Account name can't be empty");
+    }
   };
 
   return (
@@ -96,7 +106,7 @@ const KeyCreationMethodPick = () => {
             <button
               className="w-[180px] h-[180px] p-2 border-dashed border-finnieOrange rounded-full border-2 mb-4 cursor-pointer"
               onClick={handleClickCreate}
-              disabled={enteredNameIsInvalid}
+              disabled={!!errorMessage}
             >
               <div className="flex flex-col items-center justify-center w-full h-full rounded-full bg-finnieBlue-light-secondary">
                 <RewardsSvg />
@@ -109,7 +119,7 @@ const KeyCreationMethodPick = () => {
             <button
               className="w-[180px] h-[180px] p-2 border-2 border-dashed border-finnieTeal rounded-full mb-4 cursor-pointer z-30"
               onClick={handleClickImport}
-              disabled={enteredNameIsInvalid}
+              disabled={!!errorMessage}
             >
               <div className="flex flex-col items-center justify-center w-full h-full rounded-full bg-finnieBlue-light-secondary">
                 <SeedPhraseSvg />
