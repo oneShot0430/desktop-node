@@ -45,7 +45,13 @@ export const AddNewAccount = create(function AddNewAccount() {
       [Steps.ImportWithKeyPhrase]: (
         <ImportWithKeyPhrase
           onClose={handleClose}
-          setNextStep={setCurrentStep}
+          onImportSuccess={({ stakingAccountPubKey, mainAccountPubKey }) => {
+            setNewKeys({
+              task: stakingAccountPubKey,
+              system: mainAccountPubKey,
+            });
+            setCurrentStep(Steps.ShowSeedPhrase);
+          }}
         />
       ),
       [Steps.CreateNewKey]: (
