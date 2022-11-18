@@ -18,6 +18,9 @@ import bs58 from 'bs58';
 import jwt from 'jsonwebtoken';
 import nacl from 'tweetnacl';
 
+import { ErrorType } from 'models';
+import { DetailedError } from 'utils';
+
 import { getAppDataPath } from './getAppDataPath';
 import leveldbWrapper from './leveldb';
 
@@ -478,12 +481,22 @@ class Namespace {
       programId: TASK_CONTRACT_ID,
       data: data,
     });
-    const result = await sendAndConfirmTransaction(
-      this.connection,
-      new Transaction().add(instruction),
-      [this.#mainSystemAccount, submitterKeypair]
-    );
-    return result;
+
+    try {
+      const result = await sendAndConfirmTransaction(
+        this.connection,
+        new Transaction().add(instruction),
+        [this.#mainSystemAccount, submitterKeypair]
+      );
+      return result;
+    } catch (e) {
+      throw new DetailedError({
+        detailed: e,
+        summary:
+          'Whoops! Your transaction was not confirmed, please try again.',
+        type: ErrorType.TRANSACTION_TIMEOUT,
+      });
+    }
   }
   /**
    * Wrapper function for the OnChain Voting for Task contract
@@ -517,12 +530,21 @@ class Namespace {
       programId: TASK_CONTRACT_ID,
       data: data,
     });
-    const result = await sendAndConfirmTransaction(
-      this.connection,
-      new Transaction().add(instruction),
-      [this.#mainSystemAccount, voterKeypair]
-    );
-    return result;
+    try {
+      const result = await sendAndConfirmTransaction(
+        this.connection,
+        new Transaction().add(instruction),
+        [this.#mainSystemAccount, voterKeypair]
+      );
+      return result;
+    } catch (e) {
+      throw new DetailedError({
+        detailed: e,
+        summary:
+          'Whoops! Your transaction was not confirmed, please try again.',
+        type: ErrorType.TRANSACTION_TIMEOUT,
+      });
+    }
   }
 
   async stakeOnChain(
@@ -550,12 +572,21 @@ class Namespace {
       programId: TASK_CONTRACT_ID,
       data: data,
     });
-    const response = await sendAndConfirmTransaction(
-      this.connection,
-      new Transaction().add(instruction),
-      [this.#mainSystemAccount, stakingAccKeypair]
-    );
-    return response;
+    try {
+      const response = await sendAndConfirmTransaction(
+        this.connection,
+        new Transaction().add(instruction),
+        [this.#mainSystemAccount, stakingAccKeypair]
+      );
+      return response;
+    } catch (e) {
+      throw new DetailedError({
+        detailed: e,
+        summary:
+          'Whoops! Your transaction was not confirmed, please try again.',
+        type: ErrorType.TRANSACTION_TIMEOUT,
+      });
+    }
   }
 
   async claimReward(
@@ -589,12 +620,22 @@ class Namespace {
       'this.mainSystemAccount',
       this.#mainSystemAccount.publicKey.toBase58()
     );
-    const response = await sendAndConfirmTransaction(
-      this.connection,
-      new Transaction().add(instruction),
-      [this.#mainSystemAccount, claimerKeypair]
-    );
-    return response;
+    try {
+      const response = await sendAndConfirmTransaction(
+        this.connection,
+        new Transaction().add(instruction),
+        [this.#mainSystemAccount, claimerKeypair]
+      );
+      return response;
+    } catch (e) {
+      console.error(e);
+      throw new DetailedError({
+        detailed: e,
+        summary:
+          'Whoops! Your transaction was not confirmed, please try again.',
+        type: ErrorType.TRANSACTION_TIMEOUT,
+      });
+    }
   }
 
   async sendTransaction(
@@ -609,14 +650,24 @@ class Namespace {
         lamports: amount,
       })
     );
-    // Sign transaction, broadcast, and confirm
-    const signature = await sendAndConfirmTransaction(
-      this.connection,
-      transaction,
-      [this.#mainSystemAccount]
-    );
-    console.log('SIGNATURE', signature);
-    return signature;
+    try {
+      // Sign transaction, broadcast, and confirm
+      const signature = await sendAndConfirmTransaction(
+        this.connection,
+        transaction,
+        [this.#mainSystemAccount]
+      );
+      console.log('SIGNATURE', signature);
+      return signature;
+    } catch (e) {
+      console.error(e);
+      throw new DetailedError({
+        detailed: e,
+        summary:
+          'Whoops! Your transaction was not confirmed, please try again.',
+        type: ErrorType.TRANSACTION_TIMEOUT,
+      });
+    }
   }
 
   async bs58Encode(data: any): Promise<string> {
