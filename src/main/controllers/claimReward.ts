@@ -4,6 +4,7 @@ import * as fsSync from 'fs';
 import { Keypair, PublicKey } from '@_koi/web3.js';
 
 import sdk from 'services/sdk';
+import { DetailedError, ErrorType } from 'utils';
 
 import { ClaimRewardParam, ClaimRewardResponse } from '../../models/api';
 import mainErrorHandler from '../../utils/mainErrorHandler';
@@ -21,7 +22,11 @@ const claimReward = async (
   const connection = sdk.k2Connection;
   const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
   if (!activeAccount) {
-    throw new Error('Please select a Active Account');
+    throw new DetailedError({
+      detailed: 'Please select an Active Account',
+      summary: 'Select an account to claim a reward on this Task.',
+      type: ErrorType.NO_ACTIVE_ACCOUNT,
+    });
   }
   const stakingWalletfilePath =
     getAppDataPath() + `/namespace/${activeAccount}_stakingWallet.json`;
@@ -34,7 +39,12 @@ const claimReward = async (
     );
   } catch (e) {
     console.error(e);
-    throw Error("System Account or StakingWallet Account doesn't exist");
+    throw new DetailedError({
+      detailed: "System Account or Staking Wallet Account doesn't exist",
+      summary:
+        "This account doesn't seem to be connected properly. Select another account to continue or see the Settings page to import a new account",
+      type: ErrorType.NO_ACCOUNT_KEY,
+    });
   }
 
   // deriving public key of claimer
@@ -43,7 +53,13 @@ const claimReward = async (
   console.log('STAKING ACCOUNT PUBLIC KEY', stakingPubKey.toBase58());
 
   const taskState = await getTaskInfo(null, { taskAccountPubKey });
-  if (!taskState) throw new Error('Task not found');
+  if (!taskState) {
+    throw new DetailedError({
+      detailed: "Task doesn't exist",
+      summary: "Hmm... We can't find this Task, try a different one.",
+      type: ErrorType.TASK_NOT_FOUND,
+    });
+  }
 
   const statePotPubKey = new PublicKey(taskState.stakePotAccount);
   console.log('STATE POT ACCOUNT PUBLIC KEY', statePotPubKey);
