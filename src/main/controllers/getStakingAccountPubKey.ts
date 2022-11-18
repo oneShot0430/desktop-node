@@ -5,6 +5,7 @@ import fs from 'fs';
 import { Keypair } from '@_koi/web3.js';
 
 import { namespaceInstance } from 'main/node/helpers/Namespace';
+import { DetailedError, ErrorType } from 'utils';
 
 import { GetStakingAccountPubKeyResponse } from '../../models/api';
 import mainErrorHandler from '../../utils/mainErrorHandler';
@@ -16,9 +17,15 @@ const stakingAccountPubKey = async (
   //console.log('IN THE API');
   let stakingAccount;
   let pubkey: string;
-  const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
-  if (!activeAccount) {
-    throw new Error('Please select a Active Account');
+  let activeAccount;
+  try {
+    activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
+  } catch (e) {
+    throw new DetailedError({
+      detailed: e,
+      summary: 'Select an account to get its staking public key.',
+      type: ErrorType.NO_ACTIVE_ACCOUNT,
+    });
   }
   const stakingWalletfilePath =
     getAppDataPath() + `/namespace/${activeAccount}_stakingWallet.json`;

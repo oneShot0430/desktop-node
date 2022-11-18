@@ -3,6 +3,7 @@ import { Event } from 'electron';
 import { PublicKey } from '@_koi/web3.js';
 
 import sdk from 'services/sdk';
+import { DetailedError, ErrorType } from 'utils';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 
@@ -29,13 +30,28 @@ const getTaskInfo = async (
 ): Promise<TaskState> => {
   const { taskAccountPubKey } = payload;
 
-  const accountInfo = await sdk.k2Connection.getAccountInfo(
-    new PublicKey(taskAccountPubKey)
-  );
-
-  if (!accountInfo || !accountInfo.data) throw new Error('Task not found');
+  let accountInfo;
+  try {
+    accountInfo = await sdk.k2Connection.getAccountInfo(
+      new PublicKey(taskAccountPubKey)
+    );
+  } catch (e) {
+    throw new DetailedError({
+      detailed: e,
+      summary: "Hmm... We can't find this Task, try a different one.",
+      type: ErrorType.TASK_NOT_FOUND,
+    });
+  }
   const taskData = JSON.parse(accountInfo.data.toString());
-  if (!taskData) throw new Error('Task not found');
+
+  // before opening PR: verify with Syed whether this is necessary
+  if (!taskData) {
+    throw new DetailedError({
+      detailed: "Task doesn't exist",
+      summary: "Hmm... We can't find this Task, try a different one.",
+      type: ErrorType.TASK_NOT_FOUND,
+    });
+  }
 
   const taskInfo = {
     taskName: taskData.task_name,

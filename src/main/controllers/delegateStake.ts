@@ -42,10 +42,12 @@ const delegateStake = async (
   payload: DelegateStakeParam
 ): Promise<DelegateStakeResponse> => {
   const { taskAccountPubKey, stakeAmount } = payload;
-  const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
-  if (!activeAccount) {
+  let activeAccount;
+  try {
+    activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
+  } catch (e) {
     throw new DetailedError({
-      detailed: 'Please select an Active Account',
+      detailed: e,
       summary: 'Select an account to delegate stake on this Task.',
       type: ErrorType.NO_ACTIVE_ACCOUNT,
     });
@@ -70,7 +72,7 @@ const delegateStake = async (
   } catch (e) {
     console.error(e);
     throw new DetailedError({
-      detailed: "System Account or Staking Wallet Account doesn't exist",
+      detailed: e,
       summary:
         "This account doesn't seem to be connected properly. Select another account to continue or see the Settings page to import a new account",
       type: ErrorType.NO_ACCOUNT_KEY,
@@ -79,10 +81,12 @@ const delegateStake = async (
   const accountInfo = await sdk.k2Connection.getAccountInfo(
     new PublicKey(stakingAccKeypair.publicKey)
   );
-  const taskState = await getTaskInfo(null, { taskAccountPubKey });
-  if (!taskState) {
+  let taskState;
+  try {
+    taskState = await getTaskInfo(null, { taskAccountPubKey });
+  } catch (e) {
     throw new DetailedError({
-      detailed: "Task doesn't exist",
+      detailed: e,
       summary: "Hmm... We can't find this Task, try a different one.",
       type: ErrorType.TASK_NOT_FOUND,
     });

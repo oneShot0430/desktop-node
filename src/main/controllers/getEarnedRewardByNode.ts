@@ -4,6 +4,7 @@ import * as fsSync from 'fs';
 import { Keypair } from '@_koi/web3.js';
 
 import { namespaceInstance } from 'main/node/helpers/Namespace';
+import { DetailedError, ErrorType } from 'utils';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
@@ -20,9 +21,17 @@ const rewardWallet = async (
   //console.log('AVAILABLE_BALANCE', available_balances);
   //console.log('IN THE API');
   let stakingAccKeypair;
-  const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
-  if (!activeAccount) {
-    throw new Error('Please select a Active Account');
+  let activeAccount;
+  try {
+    activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
+  } catch (e) {
+    if (!activeAccount) {
+      throw new DetailedError({
+        detailed: e,
+        summary: 'Select an account to get the earned rewards.',
+        type: ErrorType.NO_ACTIVE_ACCOUNT,
+      });
+    }
   }
   const stakingWalletfilePath =
     getAppDataPath() + `/namespace/${activeAccount}_stakingWallet.json`;
@@ -52,7 +61,12 @@ const rewardWallet = async (
     return reward;
   } catch (e) {
     console.error(e);
-    throw Error("System Account or StakingWallet Account doesn't exist");
+    throw new DetailedError({
+      detailed: e,
+      summary:
+        "This account doesn't seem to be connected properly. Select another account to continue or see the Settings page to import a new account",
+      type: ErrorType.NO_ACCOUNT_KEY,
+    });
   }
 };
 

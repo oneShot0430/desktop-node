@@ -5,33 +5,56 @@ import axios from 'axios';
 
 import config from 'config';
 import sdk from 'services/sdk';
+import { DetailedError, ErrorType } from 'utils';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 
 interface GetTaskSourceParam {
   taskAccountPubKey: string;
 }
+
 const getTaskSource = async (
   event: Event,
   payload: GetTaskSourceParam
 ): Promise<string> => {
   const { taskAccountPubKey } = payload;
 
-  const accountInfo = await sdk.k2Connection.getAccountInfo(
-    new PublicKey(taskAccountPubKey)
-  );
-  if (!accountInfo || !accountInfo.data) throw new Error('Task not found');
+  let accountInfo;
+  try {
+    accountInfo = await sdk.k2Connection.getAccountInfo(
+      new PublicKey(taskAccountPubKey)
+    );
+  } catch (e) {
+    throw new DetailedError({
+      detailed: e,
+      summary: "Hmm... We can't find this Task, try a different one.",
+      type: ErrorType.TASK_NOT_FOUND,
+    });
+  }
   const taskData = JSON.parse(accountInfo.data.toString());
-  if (!taskData) throw new Error('Task not found');
+
+  // before opening PR: verify with Syed whether this is necessary
+  if (!taskData) {
+    throw new DetailedError({
+      detailed: "Task doesn't exist",
+      summary: "Hmm... We can't find this Task, try a different one.",
+      type: ErrorType.TASK_NOT_FOUND,
+    });
+  }
 
   const url = `${config.node.GATEWAY_URL}/${taskData.task_audit_program}`;
 
   try {
     const { data: src } = await axios.get(url);
     return src;
-  } catch (err) {
-    console.error(err);
-    throw new Error('Get task source error');
+  } catch (e) {
+    console.error(e);
+    throw new DetailedError({
+      detailed: e,
+      summary:
+        'There was an error collecting the Task information from Arweave. Try again or let us know about the issue.',
+      type: ErrorType.NO_TASK_SOURCECODE,
+    });
   }
 };
 

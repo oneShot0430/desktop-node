@@ -35,10 +35,12 @@ const withdrawStake = async (
   payload: WithdrawStakeParam
 ): Promise<string> => {
   const { taskAccountPubKey } = payload;
-  const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
-  if (!activeAccount) {
+  let activeAccount;
+  try {
+    activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
+  } catch (e) {
     throw new DetailedError({
-      detailed: 'Please select an Active Account',
+      detailed: e,
       summary: 'Select an account to withdraw from this Task.',
       type: ErrorType.NO_ACTIVE_ACCOUNT,
     });
@@ -63,7 +65,7 @@ const withdrawStake = async (
   } catch (e) {
     console.error(e);
     throw new DetailedError({
-      detailed: "System Account or Staking Wallet Account doesn't exist",
+      detailed: e,
       summary:
         "This account doesn't seem to be connected properly. Select another account to continue or see the Settings page to import a new account",
       type: ErrorType.NO_ACCOUNT_KEY,

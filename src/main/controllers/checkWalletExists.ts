@@ -3,6 +3,7 @@ import fs from 'fs';
 
 import { namespaceInstance } from 'main/node/helpers/Namespace';
 import { CheckWalletExistsResponse } from 'models/api';
+import { DetailedError, ErrorType } from 'utils';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
@@ -13,9 +14,15 @@ const checkWallet = async (
   console.log('Check Wallet');
   let mainSystemAccount: boolean;
   let stakingWallet: boolean;
-  const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
-  if (!activeAccount) {
-    throw new Error('Please select a Active Account');
+  let activeAccount;
+  try {
+    activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
+  } catch (e) {
+    new DetailedError({
+      detailed: e,
+      summary: 'Please select an Active Account',
+      type: ErrorType.NO_ACTIVE_ACCOUNT,
+    });
   }
   const stakingWalletfilePath =
     getAppDataPath() + `/namespace/${activeAccount}_stakingWallet.json`;

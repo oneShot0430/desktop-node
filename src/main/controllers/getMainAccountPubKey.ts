@@ -5,6 +5,7 @@ import { Keypair } from '@_koi/web3.js';
 
 import { namespaceInstance } from 'main/node/helpers/Namespace';
 import { GetMainAccountPubKeyResponse } from 'models/api';
+import { DetailedError, ErrorType } from 'utils';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
@@ -15,9 +16,15 @@ const mainAccountPubKey = async (
   //console.log('IN THE API');
   let mainSystemAccount;
   let pubkey: string;
-  const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
-  if (!activeAccount) {
-    throw new Error('Please select a Active Account');
+  let activeAccount;
+  try {
+    activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
+  } catch (e) {
+    throw new DetailedError({
+      detailed: e,
+      summary: 'Select an account to get its public key.',
+      type: ErrorType.NO_ACTIVE_ACCOUNT,
+    });
   }
   const mainWalletfilePath =
     getAppDataPath() + `/wallets/${activeAccount}_mainSystemWallet.json`;

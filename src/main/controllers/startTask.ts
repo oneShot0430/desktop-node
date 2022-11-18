@@ -25,10 +25,12 @@ let LAST_USED_PORT = 10000;
 
 const startTask = async (event: Event, payload: TaskStartStopParam) => {
   const { taskAccountPubKey } = payload;
-  const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
-  if (!activeAccount) {
+  let activeAccount;
+  try {
+    activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
+  } catch (e) {
     throw new DetailedError({
-      detailed: 'Please select an Active Account',
+      detailed: e,
       summary: 'Select an account to start this Task.',
       type: ErrorType.NO_ACTIVE_ACCOUNT,
     });
@@ -113,11 +115,10 @@ async function loadTask(selectedTask: ISelectedTasks) {
     res = await axios.get(
       config.node.GATEWAY_URL + '/' + selectedTask.taskAuditProgram
     );
-  } catch (err) {
-    console.error(err);
-
+  } catch (e) {
+    console.error(e);
     throw new DetailedError({
-      detailed: 'Get task source error TaskAuditProgram:',
+      detailed: e,
       summary:
         'There was an error collecting the Task information from Arweave. Try again or let us know about the issue.',
       type: ErrorType.NO_TASK_SOURCECODE,

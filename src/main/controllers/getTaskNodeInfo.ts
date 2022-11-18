@@ -3,6 +3,7 @@ import { Event } from 'electron';
 import { PublicKey } from '@_koi/web3.js';
 
 import { GetTaskNodeInfoResponse } from 'models/api';
+import { DetailedError, ErrorType } from 'utils';
 
 import sdk from '../../services/sdk';
 import mainErrorHandler from '../../utils/mainErrorHandler';
@@ -34,9 +35,14 @@ const getTaskNodeInfo = async (
       totalStaked: totalStaked || 0,
       pendingRewards: pendingRewards || 0,
     };
-  } catch (err) {
-    console.error(err);
-    throw new Error('Get task source error');
+  } catch (e) {
+    console.error(e);
+    throw new DetailedError({
+      detailed: e,
+      summary:
+        'There was an error collecting the Task information from Arweave. Try again or let us know about the issue.',
+      type: ErrorType.NO_TASK_SOURCECODE,
+    });
   }
 };
 
