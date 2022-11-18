@@ -10,6 +10,7 @@ import config from 'config';
 import { Namespace, namespaceInstance } from 'main/node/helpers/Namespace';
 import { TaskStartStopParam } from 'models/api';
 import koiiTasks from 'services/koiiTasks';
+import { DetailedError, ErrorType } from 'utils';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
@@ -26,7 +27,11 @@ const startTask = async (event: Event, payload: TaskStartStopParam) => {
   const { taskAccountPubKey } = payload;
   const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
   if (!activeAccount) {
-    throw new Error('Please select a Active Account');
+    throw new DetailedError({
+      detailed: 'Please select an Active Account',
+      summary: 'Select an account to start this Task.',
+      type: ErrorType.NO_ACTIVE_ACCOUNT,
+    });
   }
   const mainWalletfilePath =
     getAppDataPath() + `/wallets/${activeAccount}_mainSystemWallet.json`;
@@ -41,7 +46,11 @@ const startTask = async (event: Event, payload: TaskStartStopParam) => {
   console.log('koiiTasks.getAllTasks()', koiiTasks.getAllTasks());
   if (!taskInfo) {
     console.error("Task doesn't exist");
-    throw Error("Task doesn't exist");
+    throw new DetailedError({
+      detailed: "Task doesn't exist",
+      summary: "Hmm... We can't find this Task, try a different one.",
+      type: ErrorType.TASK_NOT_FOUND,
+    });
   }
   const expressApp = await initExpressApp();
   try {
@@ -106,9 +115,17 @@ async function loadTask(selectedTask: ISelectedTasks) {
     );
   } catch (err) {
     console.error(err);
-    throw new Error(
-      'Get task source error TaskAuditProgram:' + selectedTask.taskAuditProgram
-    );
+
+    throw new DetailedError({
+      detailed: 'Get task source error TaskAuditProgram:',
+      summary:
+        'There was an error collecting the Task information from Arweave. Try again or let us know about the issue.',
+      type: ErrorType.NO_TASK_SOURCECODE,
+    });
+
+    // throw new Error(
+    //   'Get task source error TaskAuditProgram:' + selectedTask.taskAuditProgram
+    // );
   }
   if (res.data) {
     fsSync.mkdirSync(getAppDataPath() + '/executables', { recursive: true });
