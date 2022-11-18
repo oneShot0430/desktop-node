@@ -122,10 +122,6 @@ async function loadTask(selectedTask: ISelectedTasks) {
         'There was an error collecting the Task information from Arweave. Try again or let us know about the issue.',
       type: ErrorType.NO_TASK_SOURCECODE,
     });
-
-    // throw new Error(
-    //   'Get task source error TaskAuditProgram:' + selectedTask.taskAuditProgram
-    // );
   }
   if (res.data) {
     fsSync.mkdirSync(getAppDataPath() + '/executables', { recursive: true });
