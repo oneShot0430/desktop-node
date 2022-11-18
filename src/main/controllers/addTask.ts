@@ -1,7 +1,8 @@
 import { Event } from 'electron';
 
+import { ErrorType } from 'models';
 import koiiState from 'services/koiiState';
-import { DetailedError, ErrorType } from 'utils';
+import { DetailedError } from 'utils';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 

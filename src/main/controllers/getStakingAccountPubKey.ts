@@ -5,7 +5,8 @@ import fs from 'fs';
 import { Keypair } from '@_koi/web3.js';
 
 import { namespaceInstance } from 'main/node/helpers/Namespace';
-import { DetailedError, ErrorType } from 'utils';
+import { ErrorType } from 'models';
+import { DetailedError } from 'utils';
 
 import { GetStakingAccountPubKeyResponse } from '../../models/api';
 import mainErrorHandler from '../../utils/mainErrorHandler';

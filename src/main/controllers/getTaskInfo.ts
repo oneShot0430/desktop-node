@@ -2,8 +2,9 @@ import { Event } from 'electron';
 
 import { PublicKey } from '@_koi/web3.js';
 
+import { ErrorType } from 'models';
 import sdk from 'services/sdk';
-import { DetailedError, ErrorType } from 'utils';
+import { DetailedError } from 'utils';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 

@@ -4,7 +4,8 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 import { namespaceInstance } from 'main/node/helpers/Namespace';
-import { DetailedError, ErrorType } from 'utils';
+import { ErrorType } from 'models';
+import { DetailedError } from 'utils';
 
 import executeTasks from './executeTasks';
 import { getAppDataPath } from './helpers/getAppDataPath';

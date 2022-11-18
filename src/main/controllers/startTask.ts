@@ -8,9 +8,10 @@ import cryptoRandomString from 'crypto-random-string';
 
 import config from 'config';
 import { Namespace, namespaceInstance } from 'main/node/helpers/Namespace';
+import { ErrorType } from 'models';
 import { TaskStartStopParam } from 'models/api';
 import koiiTasks from 'services/koiiTasks';
-import { DetailedError, ErrorType } from 'utils';
+import { DetailedError } from 'utils';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';

@@ -14,8 +14,9 @@ import {
 
 import config from 'config';
 import { namespaceInstance } from 'main/node/helpers/Namespace';
+import { ErrorType } from 'models';
 import sdk from 'services/sdk';
-import { DetailedError, ErrorType } from 'utils';
+import { DetailedError } from 'utils';
 
 import { DelegateStakeParam, DelegateStakeResponse } from '../../models/api';
 import mainErrorHandler from '../../utils/mainErrorHandler';

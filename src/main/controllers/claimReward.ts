@@ -3,8 +3,9 @@ import * as fsSync from 'fs';
 
 import { Keypair, PublicKey } from '@_koi/web3.js';
 
+import { ErrorType } from 'models';
 import sdk from 'services/sdk';
-import { DetailedError, ErrorType } from 'utils';
+import { DetailedError } from 'utils';
 
 import { ClaimRewardParam, ClaimRewardResponse } from '../../models/api';
 import mainErrorHandler from '../../utils/mainErrorHandler';

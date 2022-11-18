@@ -2,8 +2,9 @@ import { Event } from 'electron';
 
 import * as readLastLines from 'read-last-lines';
 
+import { ErrorType } from 'models';
 import { GetTaskLogsParam, GetTaskLogsResponse } from 'models/api';
-import { DetailedError, ErrorType } from 'utils';
+import { DetailedError } from 'utils';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';

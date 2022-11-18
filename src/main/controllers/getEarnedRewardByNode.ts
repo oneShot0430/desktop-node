@@ -4,7 +4,8 @@ import * as fsSync from 'fs';
 import { Keypair } from '@_koi/web3.js';
 
 import { namespaceInstance } from 'main/node/helpers/Namespace';
-import { DetailedError, ErrorType } from 'utils';
+import { ErrorType } from 'models';
+import { DetailedError } from 'utils';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
