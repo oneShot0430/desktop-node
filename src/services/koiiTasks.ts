@@ -1,6 +1,8 @@
 // import { Task } from 'main/type';
 import { ChildProcess } from 'child_process';
 
+import { DetailedError, ErrorType } from 'utils';
+
 import fetchAllTasks from '../main/controllers/fetchAlltasks';
 import { namespaceInstance } from '../main/node/helpers/Namespace';
 import { Task, IRunningTasks } from '../main/type/TaskData';
@@ -80,7 +82,12 @@ class KoiiTasks {
       if (task.publicKey == taskAccountPubKey) {
         task.data.isRunning = false;
         if (!this.RUNNING_TASKS[taskAccountPubKey])
-          throw Error('No such task is running');
+          throw new DetailedError({
+            detailed: 'No such task is running',
+            summary: "All good here, that task isn't running right now.",
+            type: ErrorType.NO_RUNNING_TASK,
+          });
+
         this.RUNNING_TASKS[taskAccountPubKey].child.kill();
         delete this.RUNNING_TASKS[taskAccountPubKey];
       }
