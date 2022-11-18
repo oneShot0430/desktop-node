@@ -1,6 +1,7 @@
 import React, { useState, ChangeEvent } from 'react';
 import { twMerge } from 'tailwind-merge';
 
+import { isDetailedError } from 'utils';
 import { createNodeWallets, setActiveAccount } from 'webapp/services';
 
 import { Button } from '../ui/Button';
@@ -66,7 +67,10 @@ const ImportFromSeedPhrase = ({
           stakingAccountPubKey: accounts.stakingWalletPubKey,
         });
       } catch (error) {
-        setError(error.message);
+        const errorMessage: string = isDetailedError(error)
+          ? error.detailed
+          : error.message;
+        setError(errorMessage);
         if (onImportFail) {
           onImportFail(error);
         }

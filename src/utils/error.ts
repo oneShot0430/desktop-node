@@ -12,3 +12,8 @@ export class DetailedError extends Error {
     this.type = type;
   }
 }
+
+// TO DO: Improve typing, unknown is a primitive and it's not allowed for this type-guard check
+export const isDetailedError = (error: any): error is DetailedErrorType => {
+  return 'detailed' in error;
+};

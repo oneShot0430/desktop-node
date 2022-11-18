@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useInfiniteQuery, useQuery } from 'react-query';
 
+import { DetailedErrorType } from 'models';
 import {
   fetchMyTasks,
   getMainAccountPublicKey,
@@ -32,7 +33,10 @@ export const MyNodeTable = () => {
     () => getMainAccountPublicKey()
   );
 
-  const { isLoading, data, error, fetchNextPage } = useInfiniteQuery(
+  const { isLoading, data, error, fetchNextPage } = useInfiniteQuery<
+    Task[],
+    DetailedErrorType
+  >(
     QueryKeys.taskList,
     ({ pageParam = 0 }) =>
       fetchMyTasks({ limit: pageSize, offset: pageParam * pageSize }),
@@ -57,7 +61,7 @@ export const MyNodeTable = () => {
     <InfiniteScrollTable
       tableHeaders={tableHeaders}
       isLoading={isLoading}
-      error={error as string}
+      error={error.summary}
       hasMore={hasMore}
       update={fetchNextPage}
     >

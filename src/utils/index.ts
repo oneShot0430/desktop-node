@@ -1,5 +1,5 @@
 import { getKoiiFromRoe, getRoeFromKoii } from './currencyConversion';
-import { DetailedError, ErrorType } from './error';
+import { DetailedError, isDetailedError } from './error';
 import mainErrorHandler from './mainErrorHandler';
 
 export {
@@ -7,5 +7,5 @@ export {
   getKoiiFromRoe,
   getRoeFromKoii,
   DetailedError,
-  ErrorType,
+  isDetailedError,
 };

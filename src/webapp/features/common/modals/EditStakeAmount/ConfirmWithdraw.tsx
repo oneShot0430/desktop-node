@@ -1,5 +1,6 @@
 import React, { memo, useState } from 'react';
 
+import { isDetailedError } from 'utils';
 import { Button } from 'webapp/components/ui/Button';
 import { ErrorMessage } from 'webapp/components/ui/ErrorMessage';
 
@@ -25,8 +26,11 @@ export const ConfirmWithdraw = ({
       await onConfirmWithdraw();
       setIsLoading(false);
       onSuccess();
-    } catch (e) {
-      setError(e.message);
+    } catch (error) {
+      const errorMessage: string = isDetailedError(error)
+        ? error.detailed
+        : error.message;
+      setError(errorMessage);
       setIsLoading(false);
     }
   };
