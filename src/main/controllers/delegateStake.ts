@@ -18,6 +18,7 @@ import sdk from 'services/sdk';
 
 import { DelegateStakeParam, DelegateStakeResponse } from '../../models/api';
 import mainErrorHandler from '../../utils/mainErrorHandler';
+import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
 import getTaskInfo from './getTaskInfo';
 
@@ -44,8 +45,10 @@ const delegateStake = async (
   if (!activeAccount) {
     throw new Error('Please select a Active Account');
   }
-  const stakingWalletfilePath = `namespace/${activeAccount}_stakingWallet.json`;
-  const mainWalletfilePath = `wallets/${activeAccount}_mainSystemWallet.json`;
+  const stakingWalletfilePath =
+    getAppDataPath() + `/namespace/${activeAccount}_stakingWallet.json`;
+  const mainWalletfilePath =
+    getAppDataPath() + `/wallets/${activeAccount}_mainSystemWallet.json`;
   let mainSystemAccount;
   let stakingAccKeypair;
   try {

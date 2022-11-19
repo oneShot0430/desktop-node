@@ -7,6 +7,7 @@ import { namespaceInstance } from 'main/node/helpers/Namespace';
 import { GetMainAccountPubKeyResponse } from 'models/api';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
+import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
 const mainAccountPubKey = async (
   event: Event
@@ -18,7 +19,8 @@ const mainAccountPubKey = async (
   if (!activeAccount) {
     throw new Error('Please select a Active Account');
   }
-  const mainWalletfilePath = `wallets/${activeAccount}_mainSystemWallet.json`;
+  const mainWalletfilePath =
+    getAppDataPath() + `/wallets/${activeAccount}_mainSystemWallet.json`;
   try {
     mainSystemAccount = Keypair.fromSecretKey(
       Uint8Array.from(

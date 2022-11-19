@@ -8,6 +8,7 @@ import { namespaceInstance } from 'main/node/helpers/Namespace';
 
 import { GetStakingAccountPubKeyResponse } from '../../models/api';
 import mainErrorHandler from '../../utils/mainErrorHandler';
+import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
 const stakingAccountPubKey = async (
   event: Event
@@ -19,7 +20,8 @@ const stakingAccountPubKey = async (
   if (!activeAccount) {
     throw new Error('Please select a Active Account');
   }
-  const stakingWalletfilePath = `namespace/${activeAccount}_stakingWallet.json`;
+  const stakingWalletfilePath =
+    getAppDataPath() + `/namespace/${activeAccount}_stakingWallet.json`;
   if (fs.existsSync(stakingWalletfilePath)) {
     try {
       stakingAccount = Keypair.fromSecretKey(

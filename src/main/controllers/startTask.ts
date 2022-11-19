@@ -12,6 +12,7 @@ import { TaskStartStopParam } from 'models/api';
 import koiiTasks from 'services/koiiTasks';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
+import { getAppDataPath } from '../node/helpers/getAppDataPath';
 import initExpressApp from '../node/initExpressApp';
 
 import getStakingAccountPublicKey from './getStakingAccountPubKey';
@@ -27,7 +28,8 @@ const startTask = async (event: Event, payload: TaskStartStopParam) => {
   if (!activeAccount) {
     throw new Error('Please select a Active Account');
   }
-  const mainWalletfilePath = `wallets/${activeAccount}_mainSystemWallet.json`;
+  const mainWalletfilePath =
+    getAppDataPath() + `/wallets/${activeAccount}_mainSystemWallet.json`;
   const mainSystemAccount = Keypair.fromSecretKey(
     Uint8Array.from(
       JSON.parse(fsSync.readFileSync(mainWalletfilePath, 'utf-8'))
@@ -109,9 +111,9 @@ async function loadTask(selectedTask: ISelectedTasks) {
     );
   }
   if (res.data) {
-    fsSync.mkdirSync('executables', { recursive: true });
+    fsSync.mkdirSync(getAppDataPath() + '/executables', { recursive: true });
     fsSync.writeFileSync(
-      `executables/${selectedTask.taskAuditProgram}.js`,
+      getAppDataPath() + `/executables/${selectedTask.taskAuditProgram}.js`,
       res.data
     );
   }
@@ -146,13 +148,15 @@ async function executeTasks(
   // const STAKE = Number(process.env.TASK_STAKES?.split(',') || 0);
   const stakingAccPubkey = getStakingAccountPublicKey();
   const STAKE = selectedTask.stakeList[stakingAccPubkey];
-  fsSync.mkdirSync(`namespace/${selectedTask.taskId}`, { recursive: true });
+  fsSync.mkdirSync(getAppDataPath() + `/namespace/${selectedTask.taskId}`, {
+    recursive: true,
+  });
   const log_file = fsSync.createWriteStream(
-    `namespace/${selectedTask.taskId}/task.log`,
+    getAppDataPath() + `/namespace/${selectedTask.taskId}/task.log`,
     { flags: 'a+' }
   );
   const childTaskProcess = fork(
-    `executables/${selectedTask.taskAuditProgram}.js`,
+    getAppDataPath() + `/executables/${selectedTask.taskAuditProgram}.js`,
     [
       `${selectedTask.taskName}`,
       `${selectedTask.taskId}`,

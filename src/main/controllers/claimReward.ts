@@ -7,6 +7,7 @@ import sdk from 'services/sdk';
 
 import { ClaimRewardParam, ClaimRewardResponse } from '../../models/api';
 import mainErrorHandler from '../../utils/mainErrorHandler';
+import { getAppDataPath } from '../node/helpers/getAppDataPath';
 import { namespaceInstance } from '../node/helpers/Namespace';
 
 import getTaskInfo from './getTaskInfo';
@@ -22,7 +23,8 @@ const claimReward = async (
   if (!activeAccount) {
     throw new Error('Please select a Active Account');
   }
-  const stakingWalletfilePath = `namespace/${activeAccount}_stakingWallet.json`;
+  const stakingWalletfilePath =
+    getAppDataPath() + `/namespace/${activeAccount}_stakingWallet.json`;
   let stakingAccKeypair;
   try {
     stakingAccKeypair = Keypair.fromSecretKey(

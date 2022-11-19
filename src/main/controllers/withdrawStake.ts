@@ -15,6 +15,7 @@ import { WithdrawStakeParam } from 'models/api';
 import sdk from 'services/sdk';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
+import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
 // eslint-disable-next-line
 const BufferLayout = require('@solana/buffer-layout');
@@ -37,8 +38,10 @@ const withdrawStake = async (
   if (!activeAccount) {
     throw new Error('Please select a Active Account');
   }
-  const stakingWalletfilePath = `namespace/${activeAccount}_stakingWallet.json`;
-  const mainWalletfilePath = `wallets/${activeAccount}_mainSystemWallet.json`;
+  const stakingWalletfilePath =
+    getAppDataPath() + `/namespace/${activeAccount}_stakingWallet.json`;
+  const mainWalletfilePath =
+    getAppDataPath() + `/wallets/${activeAccount}_mainSystemWallet.json`;
   let mainSystemAccount;
   let stakingAccKeypair;
   try {

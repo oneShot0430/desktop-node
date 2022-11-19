@@ -6,6 +6,7 @@ dotenv.config();
 import { namespaceInstance } from 'main/node/helpers/Namespace';
 
 import executeTasks from './executeTasks';
+import { getAppDataPath } from './helpers/getAppDataPath';
 import initExpressApp from './initExpressApp';
 // import loadTasks from './loadTasks';
 
@@ -32,7 +33,8 @@ export default async (): Promise<any> => {
     if (!activeAccount) {
       throw new Error('Please select a Active Account');
     }
-    const mainWalletfilePath = `wallets/${activeAccount}_mainSystemWallet.json`;
+    const mainWalletfilePath =
+      getAppDataPath() + `/wallets/${activeAccount}_mainSystemWallet.json`;
     if (fs.existsSync(mainWalletfilePath)) {
       /* Init Express app */
       const expressApp = await initExpressApp();
