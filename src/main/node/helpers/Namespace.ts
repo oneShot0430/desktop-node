@@ -976,6 +976,20 @@ class Namespace {
   async getRpcUrl() {
     return await getRpcUrlWrapper();
   }
+  /**
+   * Gets an array of service nodes
+   * @param url URL of the service node to retrieve the array from a known service node
+   * @returns Array of service nodes
+   */
+  async getNodes(url: string): Promise<Array<INode>> {
+    try {
+      const res = await axios.get(url + BUNDLER_NODES);
+      console.log('RESPOSNE FROM GET NODES', res.data);
+      return res.data;
+    } catch (_e) {
+      return [];
+    }
+  }
 }
 const namespaceInstance = new Namespace(
   '',

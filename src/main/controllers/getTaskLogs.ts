@@ -5,6 +5,7 @@ import * as readLastLines from 'read-last-lines';
 import { GetTaskLogsParam, GetTaskLogsResponse } from 'models/api';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
+import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
 const getTaskLogs = async (
   event: Event,
@@ -14,7 +15,7 @@ const getTaskLogs = async (
 
   try {
     const contents = await readLastLines.read(
-      `namespace/${taskAccountPubKey}/task.log`,
+      getAppDataPath() + `/namespace/${taskAccountPubKey}/task.log`,
       noOfLines
     );
     return contents;

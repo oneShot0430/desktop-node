@@ -2,7 +2,7 @@ import { ChildProcess, fork, ForkOptions } from 'child_process';
 import { Event } from 'electron';
 import * as fsSync from 'fs';
 
-import { Keypair } from '@_koi/web3.js';
+import { Keypair, PublicKey } from '@_koi/web3.js';
 import axios from 'axios';
 import cryptoRandomString from 'crypto-random-string';
 
@@ -177,7 +177,14 @@ async function executeTasks(
     expressApp,
     operationMode,
     mainSystemAccount,
-    {}
+    {
+      task_name: selectedTask.taskName,
+      task_id: selectedTask.taskId,
+      task_audit_program: selectedTask.taskAuditProgram,
+      task_manager: new PublicKey(selectedTask.taskManager),
+      stake_pot_account: new PublicKey(selectedTask.stakePotAccount),
+      bounty_amount_per_round: selectedTask.bountyAmountPerRound,
+    }
   );
   LAST_USED_PORT += 1;
   return {
