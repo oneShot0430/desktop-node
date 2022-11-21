@@ -15,16 +15,16 @@ const checkWallet = async (
   console.log('Check Wallet');
   let mainSystemAccount: boolean;
   let stakingWallet: boolean;
-  let activeAccount;
-  try {
-    activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
-  } catch (e) {
-    new DetailedError({
-      detailed: e,
+  const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
+
+  if (!activeAccount) {
+    throw new DetailedError({
+      detailed: 'Please select a Active Account',
       summary: 'Please select an Active Account',
       type: ErrorType.NO_ACTIVE_ACCOUNT,
     });
   }
+
   const stakingWalletfilePath =
     getAppDataPath() + `/namespace/${activeAccount}_stakingWallet.json`;
   const mainWalletfilePath =

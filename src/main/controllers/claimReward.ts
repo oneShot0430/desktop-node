@@ -4,7 +4,6 @@ import * as fsSync from 'fs';
 import { Keypair, PublicKey } from '@_koi/web3.js';
 
 import { ErrorType } from 'models';
-import sdk from 'services/sdk';
 import { DetailedError } from 'utils';
 
 import { ClaimRewardParam, ClaimRewardResponse } from '../../models/api';
@@ -20,17 +19,16 @@ const claimReward = async (
 ): Promise<ClaimRewardResponse> => {
   const { taskAccountPubKey } = payload;
   const taskStateInfoPublicKey = new PublicKey(taskAccountPubKey);
-  const connection = sdk.k2Connection;
-  let activeAccount;
-  try {
-    activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
-  } catch (e) {
+  const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
+
+  if (!activeAccount) {
     throw new DetailedError({
-      detailed: e,
+      detailed: 'Please select a Active Account',
       summary: 'Select an account to claim a reward on this Task.',
       type: ErrorType.NO_ACTIVE_ACCOUNT,
     });
   }
+
   const stakingWalletfilePath =
     getAppDataPath() + `/namespace/${activeAccount}_stakingWallet.json`;
   let stakingAccKeypair;
