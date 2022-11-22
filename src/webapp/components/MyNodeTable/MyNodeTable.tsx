@@ -61,7 +61,7 @@ export const MyNodeTable = () => {
     <InfiniteScrollTable
       tableHeaders={tableHeaders}
       isLoading={isLoading}
-      error={error.summary}
+      error={error?.summary}
       hasMore={hasMore}
       update={fetchNextPage}
     >

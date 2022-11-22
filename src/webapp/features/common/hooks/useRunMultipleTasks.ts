@@ -27,7 +27,7 @@ export const useRunMultipleTasks = ({
           })
           .catch((error) => {
             const errorLog: string = isDetailedError(error)
-              ? error.detailed
+              ? error.summary
               : error.message;
             const errorMessage = `Task ${publicKey} can't be deployed because of error ${errorLog}`;
             console.log(errorMessage);

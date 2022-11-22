@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { getKoiiFromRoe } from 'utils';
+import { getKoiiFromRoe, isDetailedError } from 'utils';
 import { Button } from 'webapp/components/ui/Button';
 import { ErrorMessage } from 'webapp/components/ui/ErrorMessage';
 
@@ -26,8 +26,11 @@ export const ConfirmStake = ({
       await onConfirmAddStake();
 
       onSuccess();
-    } catch (e) {
-      setError(e.message);
+    } catch (error) {
+      const errorMessage: string = isDetailedError(error)
+        ? error.summary
+        : error.message;
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }

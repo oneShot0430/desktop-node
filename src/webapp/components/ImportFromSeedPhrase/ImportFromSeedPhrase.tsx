@@ -68,7 +68,7 @@ const ImportFromSeedPhrase = ({
         });
       } catch (error) {
         const errorMessage: string = isDetailedError(error)
-          ? error.detailed
+          ? error.summary
           : error.message;
         setError(errorMessage);
         if (onImportFail) {
