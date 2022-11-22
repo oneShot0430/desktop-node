@@ -24,7 +24,7 @@ type PropsType = {
   stakingPublicKeyBalance: number;
 };
 
-const AccountInfo = ({
+const AccountItem = ({
   accountName,
   mainPublicKey,
   stakingPublicKey,
@@ -41,6 +41,7 @@ const AccountInfo = ({
   const {
     deleteAccount,
     setAccountActive,
+    setAccountActiveLoading,
     removingAccountError,
     setAccountActiveError,
     // removingAccountLoading,
@@ -95,15 +96,19 @@ const AccountInfo = ({
         <div className="flex flex-col items-center justify-center col-span-1 row-span-2 py-1">
           <DotsSvg />
         </div>
-        <Button
-          onClick={setAccountActive}
-          icon={isDefault ? <Star /> : <StarOutlined />}
-          className="w-6 h-6 col-span-1 bg-transparent rounded-full"
-        />
+        {setAccountActiveLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <Button
+            onClick={setAccountActive}
+            icon={isDefault ? <Star /> : <StarOutlined />}
+            className="w-6 h-6 col-span-1 bg-transparent rounded-full"
+          />
+        )}
         <span className="col-span-2 text-finnieTeal">System Key</span>
         <Button
           icon={<EditIconSvg />}
-          className="w-6 h-6 col-span-1 rounded-full bg-finnieTeal-100"
+          className="invisible w-6 h-6 col-span-1 rounded-full bg-finnieTeal-100"
         />
         <span
           className="col-span-5 text-ellipsis overflow-x-clip"
@@ -125,7 +130,7 @@ const AccountInfo = ({
           />
           <Button
             icon={<KeyIconSvg className="w-3.5 h-3.5" />}
-            className="w-6 h-6 rounded-full bg-finnieEmerald-light"
+            className="invisible w-6 h-6 rounded-full bg-finnieEmerald-light"
           />
         </div>
 
@@ -150,7 +155,7 @@ const AccountInfo = ({
 
         <Button
           icon={<EditIconSvg />}
-          className="w-6 h-6 col-span-1 rounded-full bg-finnieTeal-100"
+          className="invisible w-6 h-6 col-span-1 rounded-full bg-finnieTeal-100"
         />
         <div
           className="col-span-5 col-start-6 text-ellipsis overflow-x-clip"
@@ -172,7 +177,7 @@ const AccountInfo = ({
           />
           <Button
             icon={<KeyIconSvg className="w-3.5 h-3.5" />}
-            className="w-6 h-6 rounded-full bg-finnieEmerald-light"
+            className="invisible w-6 h-6 rounded-full bg-finnieEmerald-light"
           />
         </div>
       </div>
@@ -180,4 +185,4 @@ const AccountInfo = ({
   );
 };
 
-export default memo(AccountInfo);
+export default memo(AccountItem);

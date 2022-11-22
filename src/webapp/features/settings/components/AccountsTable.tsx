@@ -8,7 +8,7 @@ import { useAddNewAccountModal } from 'webapp/features/common/hooks/useAddNewAcc
 
 import { useAccounts } from '../hooks';
 
-import AccountInfo from './AccountInfo';
+import AccountItem from './AccountItem';
 
 const AccountsTable = () => {
   const { showModal } = useAddNewAccountModal();
@@ -56,7 +56,7 @@ const AccountsTable = () => {
               stakingPublicKeyBalance,
             }) => {
               return (
-                <AccountInfo
+                <AccountItem
                   stakingPublicKeyBalance={stakingPublicKeyBalance}
                   key={mainPublicKey}
                   mainPublicKey={mainPublicKey}
