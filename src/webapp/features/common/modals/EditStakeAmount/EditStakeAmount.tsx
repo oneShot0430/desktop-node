@@ -3,7 +3,7 @@ import React, { useCallback, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { GetTaskNodeInfoResponse } from 'models/api';
-import { getKoiiFromRoe, getRoeFromKoii } from 'utils';
+import { getKoiiFromRoe } from 'utils';
 import { Button } from 'webapp/components';
 import { Modal, ModalContent, ModalTopBar } from 'webapp/features/modals';
 import {
@@ -78,12 +78,10 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
           QueryKeys.taskNodeInfo,
         ]);
 
-        const stakeAmountInRoe = getRoeFromKoii(stakeAmount);
-
         queryClient.setQueryData(
           [QueryKeys.TaskStake, publicKey],
           (oldStakeAmount: number) => {
-            const totalStake = stakeAmountInRoe + oldStakeAmount;
+            const totalStake = stakeAmount + oldStakeAmount;
             return totalStake;
           }
         );
@@ -93,8 +91,8 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
           (oldNodeData: NodeInfoType) => {
             const newNodeInfodata = {
               ...oldNodeData,
-              totalStaked: oldNodeData.totalStaked + stakeAmountInRoe,
-              totalKOII: oldNodeData.totalKOII - stakeAmountInRoe,
+              totalStaked: oldNodeData.totalStaked + stakeAmount,
+              totalKOII: oldNodeData.totalKOII - stakeAmount,
             };
 
             return newNodeInfodata;
