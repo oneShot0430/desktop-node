@@ -31,13 +31,11 @@ export default async (): Promise<any> => {
     //     taskAccountPubKey: 'dGeVfkp1BcLDK13gxoNz5cy4aMMKXVsvSjDAhyLpPCR',
     //   })
     // }, 60000)
-    let activeAccount;
-    try {
-      activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
-    } catch (e) {
+    const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
+    if (!activeAccount) {
       throw new DetailedError({
-        detailed: e,
-        summary: 'Select an account.',
+        detailed: 'Please select an active account',
+        summary: 'Select an account',
         type: ErrorType.NO_ACTIVE_ACCOUNT,
       });
     }

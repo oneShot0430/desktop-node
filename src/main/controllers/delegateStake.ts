@@ -43,12 +43,10 @@ const delegateStake = async (
   payload: DelegateStakeParam
 ): Promise<DelegateStakeResponse> => {
   const { taskAccountPubKey, stakeAmount } = payload;
-  let activeAccount;
-  try {
-    activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
-  } catch (e) {
+  const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
+  if (!activeAccount) {
     throw new DetailedError({
-      detailed: e,
+      detailed: 'Please select an active account',
       summary: 'Select an account to delegate stake on this Task.',
       type: ErrorType.NO_ACTIVE_ACCOUNT,
     });
@@ -105,7 +103,6 @@ const delegateStake = async (
         lamports: stakeAmount * LAMPORTS_PER_SOL,
       })
     );
-
     try {
       await sendAndConfirmTransaction(
         sdk.k2Connection,

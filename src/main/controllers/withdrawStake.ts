@@ -36,12 +36,10 @@ const withdrawStake = async (
   payload: WithdrawStakeParam
 ): Promise<string> => {
   const { taskAccountPubKey } = payload;
-  let activeAccount;
-  try {
-    activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
-  } catch (e) {
+  const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
+  if (!activeAccount) {
     throw new DetailedError({
-      detailed: e,
+      detailed: 'Please select an active account',
       summary: 'Select an account to withdraw from this Task.',
       type: ErrorType.NO_ACTIVE_ACCOUNT,
     });

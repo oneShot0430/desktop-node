@@ -18,12 +18,11 @@ const stakingAccountPubKey = async (
   //console.log('IN THE API');
   let stakingAccount;
   let pubkey: string;
-  let activeAccount;
-  try {
-    activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
-  } catch (e) {
+
+  const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
+  if (!activeAccount) {
     throw new DetailedError({
-      detailed: e,
+      detailed: 'Please select an active account',
       summary: 'Select an account to get its staking public key.',
       type: ErrorType.NO_ACTIVE_ACCOUNT,
     });

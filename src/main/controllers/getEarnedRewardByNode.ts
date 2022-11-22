@@ -22,17 +22,13 @@ const rewardWallet = async (
   //console.log('AVAILABLE_BALANCE', available_balances);
   //console.log('IN THE API');
   let stakingAccKeypair;
-  let activeAccount;
-  try {
-    activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
-  } catch (e) {
-    if (!activeAccount) {
-      throw new DetailedError({
-        detailed: e,
-        summary: 'Select an account to get the earned rewards.',
-        type: ErrorType.NO_ACTIVE_ACCOUNT,
-      });
-    }
+  const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
+  if (!activeAccount) {
+    throw new DetailedError({
+      detailed: 'Please select an active account',
+      summary: 'Select an account to get the earned rewards.',
+      type: ErrorType.NO_ACTIVE_ACCOUNT,
+    });
   }
   const stakingWalletfilePath =
     getAppDataPath() + `/namespace/${activeAccount}_stakingWallet.json`;

@@ -23,7 +23,7 @@ const claimReward = async (
 
   if (!activeAccount) {
     throw new DetailedError({
-      detailed: 'Please select a Active Account',
+      detailed: 'Please select an active account',
       summary: 'Select an account to claim a reward on this Task.',
       type: ErrorType.NO_ACTIVE_ACCOUNT,
     });

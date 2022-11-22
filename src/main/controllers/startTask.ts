@@ -26,12 +26,10 @@ let LAST_USED_PORT = 10000;
 
 const startTask = async (event: Event, payload: TaskStartStopParam) => {
   const { taskAccountPubKey } = payload;
-  let activeAccount;
-  try {
-    activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
-  } catch (e) {
+  const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
+  if (!activeAccount) {
     throw new DetailedError({
-      detailed: e,
+      detailed: 'Please select an active account',
       summary: 'Select an account to start this Task.',
       type: ErrorType.NO_ACTIVE_ACCOUNT,
     });

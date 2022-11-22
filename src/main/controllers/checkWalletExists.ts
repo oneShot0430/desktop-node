@@ -19,8 +19,8 @@ const checkWallet = async (
 
   if (!activeAccount) {
     throw new DetailedError({
-      detailed: 'Please select a Active Account',
-      summary: 'Please select an Active Account',
+      detailed: 'Please select an active account',
+      summary: 'Please select an account',
       type: ErrorType.NO_ACTIVE_ACCOUNT,
     });
   }
