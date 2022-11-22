@@ -40,9 +40,8 @@ const getTaskNodeInfo = async (
     console.error(e);
     throw new DetailedError({
       detailed: e,
-      summary:
-        'There was an error collecting the Task information from Arweave. Try again or let us know about the issue.',
-      type: ErrorType.NO_TASK_SOURCECODE,
+      summary: 'Something went wrong. Please try again',
+      type: ErrorType.GENERIC,
     });
   }
 };

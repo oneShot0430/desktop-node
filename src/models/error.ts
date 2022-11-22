@@ -8,6 +8,7 @@ export enum ErrorType {
   TRANSACTION_TIMEOUT = 'TRANSACTION_TIMEOUT',
   NO_MNEMONIC = 'NO_MNEMONIC',
   NO_VALID_ACCOUNT_NAME = 'NO_VALID_ACCOUNT_NAME',
+  GENERIC = 'GENERIC',
 }
 
 export interface DetailedErrorType {
