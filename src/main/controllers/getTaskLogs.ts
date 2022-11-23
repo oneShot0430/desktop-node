@@ -4,7 +4,7 @@ import * as readLastLines from 'read-last-lines';
 
 import { ErrorType } from 'models';
 import { GetTaskLogsParam, GetTaskLogsResponse } from 'models/api';
-import { DetailedError } from 'utils';
+import { throwDetailedError } from 'utils';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
@@ -23,10 +23,8 @@ const getTaskLogs = async (
     return contents;
   } catch (e) {
     console.error(e);
-    throw new DetailedError({
+    return throwDetailedError({
       detailed: e,
-      summary:
-        'There was an error collecting the Task information from Arweave. Try again or let us know about the issue.',
       type: ErrorType.NO_TASK_SOURCECODE,
     });
   }

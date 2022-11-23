@@ -2,7 +2,7 @@ import { Event } from 'electron';
 
 import { ErrorType } from 'models';
 import koiiState from 'services/koiiState';
-import { DetailedError } from 'utils';
+import { throwDetailedError } from 'utils';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 
@@ -14,9 +14,7 @@ const addTask = (event: Event, payload: AddTaskPayload) => {
   const { contractId } = payload;
 
   if (!contractId) {
-    throw new DetailedError({
-      detailed: 'ContractId not found',
-      summary: 'Something went wrong. Please try again',
+    return throwDetailedError({
       type: ErrorType.CONTRACT_ID_NOT_FOUND,
     });
   }

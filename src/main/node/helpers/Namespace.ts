@@ -19,7 +19,7 @@ import jwt from 'jsonwebtoken';
 import nacl from 'tweetnacl';
 
 import { ErrorType } from 'models';
-import { DetailedError } from 'utils';
+import { throwDetailedError } from 'utils';
 
 import { getAppDataPath } from './getAppDataPath';
 import leveldbWrapper from './leveldb';
@@ -490,10 +490,8 @@ class Namespace {
       );
       return result;
     } catch (e) {
-      throw new DetailedError({
+      return throwDetailedError({
         detailed: e,
-        summary:
-          'Whoops! Your transaction was not confirmed, please try again.',
         type: ErrorType.TRANSACTION_TIMEOUT,
       });
     }
@@ -538,10 +536,8 @@ class Namespace {
       );
       return result;
     } catch (e) {
-      throw new DetailedError({
+      return throwDetailedError({
         detailed: e,
-        summary:
-          'Whoops! Your transaction was not confirmed, please try again.',
         type: ErrorType.TRANSACTION_TIMEOUT,
       });
     }
@@ -580,10 +576,8 @@ class Namespace {
       );
       return response;
     } catch (e) {
-      throw new DetailedError({
+      return throwDetailedError({
         detailed: e,
-        summary:
-          'Whoops! Your transaction was not confirmed, please try again.',
         type: ErrorType.TRANSACTION_TIMEOUT,
       });
     }
@@ -629,10 +623,8 @@ class Namespace {
       return response;
     } catch (e) {
       console.error(e);
-      throw new DetailedError({
+      return throwDetailedError({
         detailed: e,
-        summary:
-          'Whoops! Your transaction was not confirmed, please try again.',
         type: ErrorType.TRANSACTION_TIMEOUT,
       });
     }
@@ -661,10 +653,8 @@ class Namespace {
       return signature;
     } catch (e) {
       console.error(e);
-      throw new DetailedError({
+      return throwDetailedError({
         detailed: e,
-        summary:
-          'Whoops! Your transaction was not confirmed, please try again.',
         type: ErrorType.TRANSACTION_TIMEOUT,
       });
     }

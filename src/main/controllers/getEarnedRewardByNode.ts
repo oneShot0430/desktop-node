@@ -5,7 +5,7 @@ import { Keypair } from '@_koi/web3.js';
 
 import { namespaceInstance } from 'main/node/helpers/Namespace';
 import { ErrorType } from 'models';
-import { DetailedError } from 'utils';
+import { throwDetailedError } from 'utils';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
@@ -24,9 +24,7 @@ const rewardWallet = async (
   let stakingAccKeypair;
   const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
   if (!activeAccount) {
-    throw new DetailedError({
-      detailed: 'Please select an active account',
-      summary: 'Select an account to get the earned rewards.',
+    return throwDetailedError({
       type: ErrorType.NO_ACTIVE_ACCOUNT,
     });
   }
@@ -58,10 +56,8 @@ const rewardWallet = async (
     return reward;
   } catch (e) {
     console.error(e);
-    throw new DetailedError({
+    return throwDetailedError({
       detailed: e,
-      summary:
-        "This account doesn't seem to be connected properly. Select another account to continue or see the Settings page to import a new account",
       type: ErrorType.NO_ACCOUNT_KEY,
     });
   }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { getKoiiFromRoe, isDetailedError } from 'utils';
+import { getKoiiFromRoe, getErrorToDisplay } from 'utils';
 import { Button } from 'webapp/components/ui/Button';
 import { ErrorMessage } from 'webapp/components/ui/ErrorMessage';
 
@@ -18,7 +18,7 @@ export const ConfirmStake = ({
   onSuccess,
 }: PropsType) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | undefined>();
+  const [error, setError] = useState('');
   const stakeAmountInKoii = getKoiiFromRoe(stakeAmount);
   const handleConfirmAddStake = async () => {
     try {
@@ -27,9 +27,7 @@ export const ConfirmStake = ({
 
       onSuccess();
     } catch (error) {
-      const errorMessage: string = isDetailedError(error)
-        ? error.summary
-        : error.message;
+      const errorMessage = getErrorToDisplay(error);
       setError(errorMessage);
     } finally {
       setIsLoading(false);

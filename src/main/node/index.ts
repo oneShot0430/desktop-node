@@ -5,7 +5,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 import { namespaceInstance } from 'main/node/helpers/Namespace';
 import { ErrorType } from 'models';
-import { DetailedError } from 'utils';
+import { throwDetailedError } from 'utils';
 
 import executeTasks from './executeTasks';
 import { getAppDataPath } from './helpers/getAppDataPath';
@@ -33,9 +33,7 @@ export default async (): Promise<any> => {
     // }, 60000)
     const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
     if (!activeAccount) {
-      throw new DetailedError({
-        detailed: 'Please select an active account',
-        summary: 'Select an account',
+      return throwDetailedError({
         type: ErrorType.NO_ACTIVE_ACCOUNT,
       });
     }

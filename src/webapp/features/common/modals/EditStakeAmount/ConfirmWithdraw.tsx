@@ -1,6 +1,6 @@
 import React, { memo, useState } from 'react';
 
-import { isDetailedError } from 'utils';
+import { getErrorToDisplay } from 'utils';
 import { Button } from 'webapp/components/ui/Button';
 import { ErrorMessage } from 'webapp/components/ui/ErrorMessage';
 
@@ -27,9 +27,7 @@ export const ConfirmWithdraw = ({
       setIsLoading(false);
       onSuccess();
     } catch (error) {
-      const errorMessage: string = isDetailedError(error)
-        ? error.summary
-        : error.message;
+      const errorMessage = getErrorToDisplay(error);
       setError(errorMessage);
       setIsLoading(false);
     }

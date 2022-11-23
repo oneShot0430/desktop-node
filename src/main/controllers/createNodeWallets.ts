@@ -7,7 +7,7 @@ import { derivePath } from 'ed25519-hd-key';
 
 import { ErrorType } from 'models';
 import { CreateNodeWalletsParam, CreateNodeWalletsResponse } from 'models/api';
-import { DetailedError } from 'utils';
+import { throwDetailedError } from 'utils';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
@@ -19,16 +19,13 @@ const createNodeWallets = async (
   console.log('IN CREATE WALLET  API');
   const { mnemonic, accountName } = payload;
   if (!mnemonic) {
-    throw new DetailedError({
-      detailed: `Please provide mnemonic to generate wallets, got ${mnemonic}`,
-      summary: 'Please provide mnemonic to generate wallets',
+    return throwDetailedError({
       type: ErrorType.NO_MNEMONIC,
     });
   }
   if (!accountName) {
-    throw new DetailedError({
-      detailed: `Please provide accountName to generate wallets, got ${accountName}`,
-      summary: 'Please provide accountName to generate wallets',
+    return throwDetailedError({
+      detailed: 'Please provide an account name to generate wallets',
       type: ErrorType.NO_VALID_ACCOUNT_NAME,
     });
   }
@@ -38,9 +35,8 @@ const createNodeWallets = async (
     fs.mkdirSync(getAppDataPath() + '/wallets');
 
   if (!/^[0-9a-zA-Z ... ]+$/.test(accountName)) {
-    throw new DetailedError({
-      detailed: `Please provide a valid accountName, got ${accountName}`,
-      summary: 'Please provide a valid accountName',
+    return throwDetailedError({
+      detailed: `Please provide a valid account name, got "${accountName}"`,
       type: ErrorType.NO_VALID_ACCOUNT_NAME,
     });
   }
@@ -49,9 +45,8 @@ const createNodeWallets = async (
     const stakingWalletFilePath =
       getAppDataPath() + `/namespace/${accountName}_stakingWallet.json`;
     if (fs.existsSync(stakingWalletFilePath)) {
-      throw new DetailedError({
-        detailed: `Staking wallet with same account name ("${accountName}") already exists`,
-        summary: 'Staking wallet with same account name already exists',
+      return throwDetailedError({
+        detailed: `Staking wallet with same account name "${accountName}" already exists`,
         type: ErrorType.NO_VALID_ACCOUNT_NAME,
       });
     }
@@ -77,9 +72,8 @@ const createNodeWallets = async (
     const mainWalletFilePath =
       getAppDataPath() + `/wallets/${accountName}_mainSystemWallet.json`;
     if (fs.existsSync(mainWalletFilePath)) {
-      throw new DetailedError({
-        detailed: `Main wallet with same account name ("${accountName}") already exists`,
-        summary: 'Main wallet with same account name already exists',
+      return throwDetailedError({
+        detailed: `Main wallet with same account name "${accountName}" already exists`,
         type: ErrorType.NO_VALID_ACCOUNT_NAME,
       });
     }

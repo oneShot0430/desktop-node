@@ -4,9 +4,9 @@ import * as fsSync from 'fs';
 import { Keypair } from '@_koi/web3.js';
 
 import { namespaceInstance } from 'main/node/helpers/Namespace';
-import { ErrorType } from 'models';
+import { ErrorType, ErrorContext } from 'models';
 import { GetMainAccountPubKeyResponse } from 'models/api';
-import { DetailedError } from 'utils';
+import { throwDetailedError } from 'utils';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
@@ -19,10 +19,9 @@ const mainAccountPubKey = async (
   let pubkey: string;
   const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
   if (!activeAccount) {
-    throw new DetailedError({
-      detailed: 'Please select an active account',
-      summary: 'Select an account to get its public key.',
+    return throwDetailedError({
       type: ErrorType.NO_ACTIVE_ACCOUNT,
+      context: ErrorContext.GET_PUBLIC_KEY,
     });
   }
   const mainWalletfilePath =

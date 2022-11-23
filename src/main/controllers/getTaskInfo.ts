@@ -4,7 +4,7 @@ import { PublicKey } from '@_koi/web3.js';
 
 import { ErrorType } from 'models';
 import sdk from 'services/sdk';
-import { DetailedError } from 'utils';
+import { throwDetailedError } from 'utils';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 
@@ -37,19 +37,16 @@ const getTaskInfo = async (
       new PublicKey(taskAccountPubKey)
     );
   } catch (e) {
-    throw new DetailedError({
+    return throwDetailedError({
       detailed: e,
-      summary: "Hmm... We can't find this Task, try a different one.",
       type: ErrorType.TASK_NOT_FOUND,
     });
   }
   const taskData = JSON.parse(accountInfo.data.toString());
 
-  // before opening PR: verify with Syed whether this is necessary
   if (!taskData) {
-    throw new DetailedError({
+    return throwDetailedError({
       detailed: "Task doesn't exist",
-      summary: "Hmm... We can't find this Task, try a different one.",
       type: ErrorType.TASK_NOT_FOUND,
     });
   }

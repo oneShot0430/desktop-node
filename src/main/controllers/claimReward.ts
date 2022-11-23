@@ -3,8 +3,8 @@ import * as fsSync from 'fs';
 
 import { Keypair, PublicKey } from '@_koi/web3.js';
 
-import { ErrorType } from 'models';
-import { DetailedError } from 'utils';
+import { ErrorType, ErrorContext } from 'models';
+import { throwDetailedError } from 'utils';
 
 import { ClaimRewardParam, ClaimRewardResponse } from '../../models/api';
 import mainErrorHandler from '../../utils/mainErrorHandler';
@@ -22,10 +22,9 @@ const claimReward = async (
   const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
 
   if (!activeAccount) {
-    throw new DetailedError({
-      detailed: 'Please select an active account',
-      summary: 'Select an account to claim a reward on this Task.',
+    return throwDetailedError({
       type: ErrorType.NO_ACTIVE_ACCOUNT,
+      context: ErrorContext.CLAIM_REWARD,
     });
   }
 
@@ -40,10 +39,8 @@ const claimReward = async (
     );
   } catch (e) {
     console.error(e);
-    throw new DetailedError({
+    return throwDetailedError({
       detailed: e,
-      summary:
-        "This account doesn't seem to be connected properly. Select another account to continue or see the Settings page to import a new account",
       type: ErrorType.NO_ACCOUNT_KEY,
     });
   }
@@ -57,9 +54,8 @@ const claimReward = async (
   try {
     taskState = await getTaskInfo(null, { taskAccountPubKey });
   } catch (e) {
-    throw new DetailedError({
+    return throwDetailedError({
       detailed: e,
-      summary: "Hmm... We can't find this Task, try a different one.",
       type: ErrorType.TASK_NOT_FOUND,
     });
   }

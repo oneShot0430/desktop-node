@@ -1,3 +1,9 @@
+export interface DetailedError {
+  detailed?: string;
+  type: ErrorType;
+  context?: ErrorContext;
+}
+
 export enum ErrorType {
   CONTRACT_ID_NOT_FOUND = 'CONTRACT_ID_NOT_FOUND',
   NO_ACTIVE_ACCOUNT = 'NO_ACTIVE_ACCOUNT',
@@ -11,8 +17,12 @@ export enum ErrorType {
   GENERIC = 'GENERIC',
 }
 
-export interface DetailedErrorType {
-  detailed: string;
-  summary: string;
-  type: ErrorType;
+export enum ErrorContext {
+  CLAIM_REWARD = 'CLAIM_REWARD',
+  DELEGATE_STAKE = 'DELEGATE_STAKE',
+  GET_EARNED_REWARDS = 'GET_EARNED_REWARDS',
+  GET_PUBLIC_KEY = 'GET_PUBLIC_KEY',
+  GET_STAKING_PUBLIC_KEY = 'GET_STAKING_PUBLIC_KEY',
+  START_TASK = 'START_TASK',
+  WITHDRAW_STAKE = 'WITHDRAW_STAKE',
 }

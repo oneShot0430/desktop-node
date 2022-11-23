@@ -11,10 +11,10 @@ import {
 
 import config from 'config';
 import { namespaceInstance } from 'main/node/helpers/Namespace';
-import { ErrorType } from 'models';
+import { ErrorType, ErrorContext } from 'models';
 import { WithdrawStakeParam } from 'models/api';
 import sdk from 'services/sdk';
-import { DetailedError } from 'utils';
+import { throwDetailedError } from 'utils';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
@@ -38,10 +38,9 @@ const withdrawStake = async (
   const { taskAccountPubKey } = payload;
   const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
   if (!activeAccount) {
-    throw new DetailedError({
-      detailed: 'Please select an active account',
-      summary: 'Select an account to withdraw from this Task.',
+    return throwDetailedError({
       type: ErrorType.NO_ACTIVE_ACCOUNT,
+      context: ErrorContext.WITHDRAW_STAKE,
     });
   }
   const stakingWalletfilePath =
@@ -63,10 +62,8 @@ const withdrawStake = async (
     );
   } catch (e) {
     console.error(e);
-    throw new DetailedError({
+    return throwDetailedError({
       detailed: e,
-      summary:
-        "This account doesn't seem to be connected properly. Select another account to continue or see the Settings page to import a new account",
       type: ErrorType.NO_ACCOUNT_KEY,
     });
   }
@@ -93,9 +90,8 @@ const withdrawStake = async (
     return res;
   } catch (e) {
     console.error(e);
-    throw new DetailedError({
+    return throwDetailedError({
       detailed: e,
-      summary: 'Whoops! Your transaction was not confirmed, please try again.',
       type: ErrorType.TRANSACTION_TIMEOUT,
     });
   }

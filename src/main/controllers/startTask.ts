@@ -8,10 +8,10 @@ import cryptoRandomString from 'crypto-random-string';
 
 import config from 'config';
 import { Namespace, namespaceInstance } from 'main/node/helpers/Namespace';
-import { ErrorType } from 'models';
+import { ErrorType, ErrorContext } from 'models';
 import { TaskStartStopParam } from 'models/api';
 import koiiTasks from 'services/koiiTasks';
-import { DetailedError } from 'utils';
+import { throwDetailedError } from 'utils';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
@@ -28,10 +28,9 @@ const startTask = async (event: Event, payload: TaskStartStopParam) => {
   const { taskAccountPubKey } = payload;
   const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
   if (!activeAccount) {
-    throw new DetailedError({
-      detailed: 'Please select an active account',
-      summary: 'Select an account to start this Task.',
+    return throwDetailedError({
       type: ErrorType.NO_ACTIVE_ACCOUNT,
+      context: ErrorContext.START_TASK,
     });
   }
   const mainWalletfilePath =
@@ -47,9 +46,8 @@ const startTask = async (event: Event, payload: TaskStartStopParam) => {
   console.log('koiiTasks.getAllTasks()', koiiTasks.getAllTasks());
   if (!taskInfo) {
     console.error("Task doesn't exist");
-    throw new DetailedError({
+    return throwDetailedError({
       detailed: "Task doesn't exist",
-      summary: "Hmm... We can't find this Task, try a different one.",
       type: ErrorType.TASK_NOT_FOUND,
     });
   }
@@ -116,10 +114,8 @@ async function loadTask(selectedTask: ISelectedTasks) {
     );
   } catch (e) {
     console.error(e);
-    throw new DetailedError({
+    return throwDetailedError({
       detailed: e,
-      summary:
-        'There was an error collecting the Task information from Arweave. Try again or let us know about the issue.',
       type: ErrorType.NO_TASK_SOURCECODE,
     });
   }

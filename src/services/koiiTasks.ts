@@ -2,7 +2,7 @@
 import { ChildProcess } from 'child_process';
 
 import { ErrorType } from 'models';
-import { DetailedError } from 'utils';
+import { throwDetailedError } from 'utils';
 
 import fetchAllTasks from '../main/controllers/fetchAlltasks';
 import { namespaceInstance } from '../main/node/helpers/Namespace';
@@ -83,9 +83,7 @@ class KoiiTasks {
       if (task.publicKey == taskAccountPubKey) {
         task.data.isRunning = false;
         if (!this.RUNNING_TASKS[taskAccountPubKey])
-          throw new DetailedError({
-            detailed: 'No such task is running',
-            summary: "All good here, that task isn't running right now.",
+          return throwDetailedError({
             type: ErrorType.NO_RUNNING_TASK,
           });
 

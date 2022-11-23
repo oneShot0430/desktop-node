@@ -4,7 +4,7 @@ import { PublicKey } from '@_koi/web3.js';
 
 import { ErrorType } from 'models';
 import { GetTaskNodeInfoResponse } from 'models/api';
-import { DetailedError } from 'utils';
+import { throwDetailedError } from 'utils';
 
 import sdk from '../../services/sdk';
 import mainErrorHandler from '../../utils/mainErrorHandler';
@@ -38,9 +38,8 @@ const getTaskNodeInfo = async (
     };
   } catch (e) {
     console.error(e);
-    throw new DetailedError({
+    return throwDetailedError({
       detailed: e,
-      summary: 'Something went wrong. Please try again',
       type: ErrorType.GENERIC,
     });
   }

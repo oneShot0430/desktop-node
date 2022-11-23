@@ -1,6 +1,6 @@
 import { useMutation } from 'react-query';
 
-import { isDetailedError } from 'utils';
+import { getErrorToDisplay } from 'utils';
 import { stakeOnTask, startTask } from 'webapp/services';
 import { TaskWithStake } from 'webapp/types';
 
@@ -26,11 +26,8 @@ export const useRunMultipleTasks = ({
             return startTask(publicKey);
           })
           .catch((error) => {
-            const errorLog: string = isDetailedError(error)
-              ? error.summary
-              : error.message;
-            const errorMessage = `Task ${publicKey} can't be deployed because of error ${errorLog}`;
-            console.log(errorMessage);
+            const errorMessage = getErrorToDisplay(error);
+            console.error(errorMessage);
             errorMessages.push(errorMessage);
           })
       );

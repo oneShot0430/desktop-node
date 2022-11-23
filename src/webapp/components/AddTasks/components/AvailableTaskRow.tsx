@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from 'react-query';
 import CodeIcon from 'assets/svgs/code-icon-lg.svg';
 import PlayIcon from 'assets/svgs/play-icon.svg';
 import StopTealIcon from 'assets/svgs/stop-icon-teal.svg';
-import { getKoiiFromRoe } from 'utils';
+import { getKoiiFromRoe, getErrorToDisplay } from 'utils';
 import { Button, LoadingSpinner, LoadingSpinnerSize } from 'webapp/components';
 import { useTaskDetailsModal } from 'webapp/components/MyNodeTable/hooks';
 import { TableRow, TableCell } from 'webapp/components/ui/Table';
@@ -68,7 +68,8 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
       }
       await startTask(publicKey);
     } catch (error) {
-      console.warn(error);
+      const errorMessage = getErrorToDisplay(error);
+      console.error('my error', errorMessage);
     } finally {
       queryCache.invalidateQueries();
       setLoading(false);

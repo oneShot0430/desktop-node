@@ -14,9 +14,9 @@ import {
 
 import config from 'config';
 import { namespaceInstance } from 'main/node/helpers/Namespace';
-import { ErrorType } from 'models';
+import { ErrorType, ErrorContext } from 'models';
 import sdk from 'services/sdk';
-import { DetailedError } from 'utils';
+import { throwDetailedError } from 'utils';
 
 import { DelegateStakeParam, DelegateStakeResponse } from '../../models/api';
 import mainErrorHandler from '../../utils/mainErrorHandler';
@@ -45,10 +45,9 @@ const delegateStake = async (
   const { taskAccountPubKey, stakeAmount } = payload;
   const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
   if (!activeAccount) {
-    throw new DetailedError({
-      detailed: 'Please select an active account',
-      summary: 'Select an account to delegate stake on this Task.',
+    return throwDetailedError({
       type: ErrorType.NO_ACTIVE_ACCOUNT,
+      context: ErrorContext.DELEGATE_STAKE,
     });
   }
   const stakingWalletfilePath =
@@ -70,10 +69,8 @@ const delegateStake = async (
     );
   } catch (e) {
     console.error(e);
-    throw new DetailedError({
+    return throwDetailedError({
       detailed: e,
-      summary:
-        "This account doesn't seem to be connected properly. Select another account to continue or see the Settings page to import a new account",
       type: ErrorType.NO_ACCOUNT_KEY,
     });
   }
@@ -84,9 +81,8 @@ const delegateStake = async (
   try {
     taskState = await getTaskInfo(null, { taskAccountPubKey });
   } catch (e) {
-    throw new DetailedError({
+    return throwDetailedError({
       detailed: e,
-      summary: "Hmm... We can't find this Task, try a different one.",
       type: ErrorType.TASK_NOT_FOUND,
     });
   }
@@ -111,10 +107,8 @@ const delegateStake = async (
       );
     } catch (e) {
       console.error(e);
-      throw new DetailedError({
+      return throwDetailedError({
         detailed: e,
-        summary:
-          'Whoops! Your transaction was not confirmed, please try again.',
         type: ErrorType.TRANSACTION_TIMEOUT,
       });
     }
@@ -152,10 +146,8 @@ const delegateStake = async (
       return response;
     } catch (e) {
       console.error(e);
-      throw new DetailedError({
+      return throwDetailedError({
         detailed: e,
-        summary:
-          'Whoops! Your transaction was not confirmed, please try again.',
         type: ErrorType.TRANSACTION_TIMEOUT,
       });
     }
@@ -186,10 +178,8 @@ const delegateStake = async (
       console.log('Stake account created');
     } catch (e) {
       console.error(e);
-      throw new DetailedError({
+      return throwDetailedError({
         detailed: e,
-        summary:
-          'Whoops! Your transaction was not confirmed, please try again.',
         type: ErrorType.TRANSACTION_TIMEOUT,
       });
     }
@@ -230,10 +220,8 @@ const delegateStake = async (
       return response;
     } catch (e) {
       console.error(e);
-      throw new DetailedError({
+      return throwDetailedError({
         detailed: e,
-        summary:
-          'Whoops! Your transaction was not confirmed, please try again.',
         type: ErrorType.TRANSACTION_TIMEOUT,
       });
     }
