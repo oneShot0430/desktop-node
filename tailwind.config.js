@@ -37,6 +37,10 @@ module.exports = {
           'light-4': '#54547B',
           DEFAULT: '#171753',
         },
+        blue: {
+          1: '#0E0E44',
+          2: '#030332',
+        },
         finnieTeal: {
           100: '#BEF0ED',
           DEFAULT: '#5ED9D1',
@@ -48,6 +52,11 @@ module.exports = {
         finnieEmerald: {
           DEFAULT: '#49CE8B',
           light: '#9BE7C4',
+        },
+        green: {
+          dark: '#087980',
+          1: '#49CE8B',
+          2: '#9BE7C4',
         },
         finnieGray: {
           DEFAULT: '#F2F2F2',
