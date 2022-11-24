@@ -20,6 +20,7 @@ const createNodeWallets = async (
   const { mnemonic, accountName } = payload;
   if (!mnemonic) {
     return throwDetailedError({
+      detailed: 'Please provide a mnemonic to generate wallets',
       type: ErrorType.NO_MNEMONIC,
     });
   }

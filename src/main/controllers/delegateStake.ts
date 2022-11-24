@@ -46,6 +46,7 @@ const delegateStake = async (
   const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
   if (!activeAccount) {
     return throwDetailedError({
+      detailed: 'Please select an active account',
       type: ErrorType.NO_ACTIVE_ACCOUNT,
     });
   }
@@ -78,6 +79,7 @@ const delegateStake = async (
   );
   if (!accountInfo || !accountInfo.data)
     return throwDetailedError({
+      detailed: 'Task not found',
       type: ErrorType.TASK_NOT_FOUND,
     });
 
@@ -111,9 +113,14 @@ const delegateStake = async (
       );
     } catch (e) {
       console.error(e);
+      const errorType = e
+        .toLowerCase()
+        .includes('transaction was not confirmed')
+        ? ErrorType.TRANSACTION_TIMEOUT
+        : ErrorType.GENERIC;
       return throwDetailedError({
         detailed: e,
-        type: ErrorType.TRANSACTION_TIMEOUT,
+        type: errorType,
       });
     }
     const data = encodeData(STAKE_INSTRUCTION_LAYOUT, {
@@ -150,9 +157,14 @@ const delegateStake = async (
       return response;
     } catch (e) {
       console.error(e);
+      const errorType = e
+        .toLowerCase()
+        .includes('transaction was not confirmed')
+        ? ErrorType.TRANSACTION_TIMEOUT
+        : ErrorType.GENERIC;
       return throwDetailedError({
         detailed: e,
-        type: ErrorType.TRANSACTION_TIMEOUT,
+        type: errorType,
       });
     }
   } else {
@@ -182,9 +194,14 @@ const delegateStake = async (
       console.log('Stake account created');
     } catch (e) {
       console.error(e);
+      const errorType = e
+        .toLowerCase()
+        .includes('transaction was not confirmed')
+        ? ErrorType.TRANSACTION_TIMEOUT
+        : ErrorType.GENERIC;
       return throwDetailedError({
         detailed: e,
-        type: ErrorType.TRANSACTION_TIMEOUT,
+        type: errorType,
       });
     }
 
@@ -224,9 +241,14 @@ const delegateStake = async (
       return response;
     } catch (e) {
       console.error(e);
+      const errorType = e
+        .toLowerCase()
+        .includes('transaction was not confirmed')
+        ? ErrorType.TRANSACTION_TIMEOUT
+        : ErrorType.GENERIC;
       return throwDetailedError({
         detailed: e,
-        type: ErrorType.TRANSACTION_TIMEOUT,
+        type: errorType,
       });
     }
   }

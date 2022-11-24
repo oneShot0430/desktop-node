@@ -24,7 +24,6 @@ export const getErrorToDisplay = (
     const parsedError: DetailedError = JSON.parse(serializedError);
     const errorContent = errorTypeToContent[parsedError.type];
     const hasContext = typeof errorContent !== 'string';
-
     const errorMessage = hasContext
       ? `${errorContent.mainMessage}${errorContent.contextToSuffix[context]}`
       : `${errorContent || parsedError.detailed}`;

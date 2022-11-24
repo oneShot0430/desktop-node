@@ -37,6 +37,7 @@ const getTaskInfo = async (
 
   if (!accountInfo || !accountInfo.data)
     return throwDetailedError({
+      detailed: 'Task not found',
       type: ErrorType.TASK_NOT_FOUND,
     });
 
@@ -44,6 +45,7 @@ const getTaskInfo = async (
 
   if (!taskData) {
     return throwDetailedError({
+      detailed: 'Task not found',
       type: ErrorType.TASK_NOT_FOUND,
     });
   }

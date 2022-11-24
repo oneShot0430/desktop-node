@@ -29,6 +29,7 @@ const startTask = async (event: Event, payload: TaskStartStopParam) => {
   const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
   if (!activeAccount) {
     return throwDetailedError({
+      detailed: 'Please select an active account',
       type: ErrorType.NO_ACTIVE_ACCOUNT,
     });
   }
@@ -46,7 +47,7 @@ const startTask = async (event: Event, payload: TaskStartStopParam) => {
   if (!taskInfo) {
     console.error("Task doesn't exist");
     return throwDetailedError({
-      detailed: "Task doesn't exist",
+      detailed: 'Task not found',
       type: ErrorType.TASK_NOT_FOUND,
     });
   }

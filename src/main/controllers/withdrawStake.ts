@@ -39,6 +39,7 @@ const withdrawStake = async (
   const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
   if (!activeAccount) {
     return throwDetailedError({
+      detailed: 'Please select an active account',
       type: ErrorType.NO_ACTIVE_ACCOUNT,
     });
   }
@@ -89,9 +90,12 @@ const withdrawStake = async (
     return res;
   } catch (e) {
     console.error(e);
+    const errorType = e.toLowerCase().includes('transaction was not confirmed')
+      ? ErrorType.TRANSACTION_TIMEOUT
+      : ErrorType.GENERIC;
     return throwDetailedError({
       detailed: e,
-      type: ErrorType.TRANSACTION_TIMEOUT,
+      type: errorType,
     });
   }
 };

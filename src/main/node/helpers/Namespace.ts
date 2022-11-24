@@ -490,9 +490,14 @@ class Namespace {
       );
       return result;
     } catch (e) {
+      const errorType = e
+        .toLowerCase()
+        .includes('transaction was not confirmed')
+        ? ErrorType.TRANSACTION_TIMEOUT
+        : ErrorType.GENERIC;
       return throwDetailedError({
         detailed: e,
-        type: ErrorType.TRANSACTION_TIMEOUT,
+        type: errorType,
       });
     }
   }
@@ -536,9 +541,14 @@ class Namespace {
       );
       return result;
     } catch (e) {
+      const errorType = e
+        .toLowerCase()
+        .includes('transaction was not confirmed')
+        ? ErrorType.TRANSACTION_TIMEOUT
+        : ErrorType.GENERIC;
       return throwDetailedError({
         detailed: e,
-        type: ErrorType.TRANSACTION_TIMEOUT,
+        type: errorType,
       });
     }
   }
@@ -576,9 +586,14 @@ class Namespace {
       );
       return response;
     } catch (e) {
+      const errorType = e
+        .toLowerCase()
+        .includes('transaction was not confirmed')
+        ? ErrorType.TRANSACTION_TIMEOUT
+        : ErrorType.GENERIC;
       return throwDetailedError({
         detailed: e,
-        type: ErrorType.TRANSACTION_TIMEOUT,
+        type: errorType,
       });
     }
   }
@@ -623,9 +638,14 @@ class Namespace {
       return response;
     } catch (e) {
       console.error(e);
+      const errorType = e
+        .toLowerCase()
+        .includes('transaction was not confirmed')
+        ? ErrorType.TRANSACTION_TIMEOUT
+        : ErrorType.GENERIC;
       return throwDetailedError({
         detailed: e,
-        type: ErrorType.TRANSACTION_TIMEOUT,
+        type: errorType,
       });
     }
   }
@@ -653,9 +673,14 @@ class Namespace {
       return signature;
     } catch (e) {
       console.error(e);
+      const errorType = e
+        .toLowerCase()
+        .includes('transaction was not confirmed')
+        ? ErrorType.TRANSACTION_TIMEOUT
+        : ErrorType.GENERIC;
       return throwDetailedError({
         detailed: e,
-        type: ErrorType.TRANSACTION_TIMEOUT,
+        type: errorType,
       });
     }
   }

@@ -22,6 +22,7 @@ const stakingAccountPubKey = async (
   const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
   if (!activeAccount) {
     return throwDetailedError({
+      detailed: 'Please select an active account',
       type: ErrorType.NO_ACTIVE_ACCOUNT,
     });
   }

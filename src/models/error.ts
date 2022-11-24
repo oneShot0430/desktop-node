@@ -1,5 +1,5 @@
 export interface DetailedError {
-  detailed?: string;
+  detailed: string;
   type: ErrorType;
 }
 

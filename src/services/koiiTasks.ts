@@ -84,6 +84,7 @@ class KoiiTasks {
         task.data.isRunning = false;
         if (!this.RUNNING_TASKS[taskAccountPubKey])
           return throwDetailedError({
+            detailed: 'No such task is running',
             type: ErrorType.NO_RUNNING_TASK,
           });
 

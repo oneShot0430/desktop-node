@@ -15,6 +15,7 @@ const addTask = (event: Event, payload: AddTaskPayload) => {
 
   if (!contractId) {
     return throwDetailedError({
+      detailed: 'ContractId not found',
       type: ErrorType.CONTRACT_ID_NOT_FOUND,
     });
   }
