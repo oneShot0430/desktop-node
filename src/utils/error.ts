@@ -60,29 +60,3 @@ export const errorContextToContextSuffix = {
   [ErrorContext.START_TASK]: ' to start this Task',
   [ErrorContext.WITHDRAW_STAKE]: ' to withdraw from this Task',
 };
-
-// export class DetailedError extends Error {
-//   detailed: string;
-//   // summary: string;
-//   type: ErrorType;
-//   context?: ErrorContext;
-
-//   constructor({ detailed, context, type }: DetailedError) {
-//     super(detailed);
-//     this.detailed = detailed;
-//     this.type = type;
-//     this.context = context;
-//   }
-// }
-
-// export const getErrorToDisplay = (error: Error | DetailedError) => {
-//   if (!error) return undefined;
-
-//   if (isDetailedError(error)) {
-//     return `${errorTypeToMessage[error.type]}${
-//       errorContextToContextSuffix[error.context]
-//     }.`;
-//   } else {
-//     return error?.message;
-//   }
-// };
