@@ -8,7 +8,7 @@ import cryptoRandomString from 'crypto-random-string';
 
 import config from 'config';
 import { Namespace, namespaceInstance } from 'main/node/helpers/Namespace';
-import { ErrorType, ErrorContext } from 'models';
+import { ErrorType } from 'models';
 import { TaskStartStopParam } from 'models/api';
 import koiiTasks from 'services/koiiTasks';
 import { throwDetailedError } from 'utils';
@@ -30,7 +30,6 @@ const startTask = async (event: Event, payload: TaskStartStopParam) => {
   if (!activeAccount) {
     return throwDetailedError({
       type: ErrorType.NO_ACTIVE_ACCOUNT,
-      context: ErrorContext.START_TASK,
     });
   }
   const mainWalletfilePath =

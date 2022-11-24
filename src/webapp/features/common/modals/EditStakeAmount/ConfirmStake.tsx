@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+import { ErrorContext } from 'models';
 import { getKoiiFromRoe } from 'utils';
 import { ErrorMessage, Button } from 'webapp/components';
 
@@ -37,7 +38,9 @@ export const ConfirmStake = ({
       <div className="text-4xl text-center text-finnieBlue-dark">
         {stakeAmountInKoii} KOII
       </div>
-      {error && <ErrorMessage error={error} />}
+      {error && (
+        <ErrorMessage error={error} context={ErrorContext.DELEGATE_STAKE} />
+      )}
       <div className="py-2 mb-3 text-xs text-finnieTeal-700">{`${koiiBalance} KOII available in your balance`}</div>
       <Button
         label="Confirm Stake"

@@ -1,5 +1,6 @@
 import React, { memo, useState } from 'react';
 
+import { ErrorContext } from 'models';
 import { ErrorMessage, Button } from 'webapp/components';
 
 type PropsType = Readonly<{
@@ -35,7 +36,9 @@ export const ConfirmWithdraw = ({
       <div className="text-4xl text-center text-finnieBlue-dark">
         {withdrawAmount} KOII
       </div>
-      {error && <ErrorMessage error={error} />}
+      {error && (
+        <ErrorMessage error={error} context={ErrorContext.WITHDRAW_STAKE} />
+      )}
       <div className="py-2 mb-3 text-xs text-finnieTeal-700">{`${koiiBalance} KOII available in your balance`}</div>
       <Button
         label="Confirm Withdraw"

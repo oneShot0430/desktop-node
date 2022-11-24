@@ -4,7 +4,7 @@ import * as fsSync from 'fs';
 import { Keypair } from '@_koi/web3.js';
 
 import { namespaceInstance } from 'main/node/helpers/Namespace';
-import { ErrorType, ErrorContext } from 'models';
+import { ErrorType } from 'models';
 import { GetMainAccountPubKeyResponse } from 'models/api';
 import { throwDetailedError } from 'utils';
 
@@ -21,7 +21,6 @@ const mainAccountPubKey = async (
   if (!activeAccount) {
     return throwDetailedError({
       type: ErrorType.NO_ACTIVE_ACCOUNT,
-      context: ErrorContext.GET_PUBLIC_KEY,
     });
   }
   const mainWalletfilePath =

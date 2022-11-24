@@ -11,7 +11,7 @@ import {
 
 import config from 'config';
 import { namespaceInstance } from 'main/node/helpers/Namespace';
-import { ErrorType, ErrorContext } from 'models';
+import { ErrorType } from 'models';
 import { WithdrawStakeParam } from 'models/api';
 import sdk from 'services/sdk';
 import { throwDetailedError } from 'utils';
@@ -40,7 +40,6 @@ const withdrawStake = async (
   if (!activeAccount) {
     return throwDetailedError({
       type: ErrorType.NO_ACTIVE_ACCOUNT,
-      context: ErrorContext.WITHDRAW_STAKE,
     });
   }
   const stakingWalletfilePath =
