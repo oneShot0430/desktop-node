@@ -24,9 +24,10 @@ export const getErrorToDisplay = (error: Error | string) => {
   if (isDetailedError) {
     const serializedError = error.message.substring(error.message.indexOf('{'));
     const parsedError: DetailedError = JSON.parse(serializedError);
-    const errorMessage = `${
-      errorTypeToMessage[parsedError.type] || parsedError.detailed
-    }${errorContextToContextSuffix[parsedError.context] || ''}.`;
+    const mainMessage =
+      errorTypeToMessage[parsedError.type] || parsedError.detailed;
+    const contextSuffix = errorContextToSuffix[parsedError.context] || '';
+    const errorMessage = `${mainMessage}${contextSuffix}.`;
 
     return errorMessage;
   } else {
@@ -52,7 +53,7 @@ export const errorTypeToMessage = {
   [ErrorType.NO_VALID_ACCOUNT_NAME]: false,
 };
 
-export const errorContextToContextSuffix = {
+export const errorContextToSuffix = {
   [ErrorContext.CLAIM_REWARD]: ' to claim a reward on this Task',
   [ErrorContext.DELEGATE_STAKE]: ' to delegate stake on this Task',
   [ErrorContext.GET_EARNED_REWARDS]: ' to get the earned rewards',
