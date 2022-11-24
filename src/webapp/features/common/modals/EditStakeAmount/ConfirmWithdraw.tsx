@@ -16,7 +16,7 @@ export const ConfirmWithdraw = ({
   onSuccess,
 }: PropsType) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error>();
+  const [error, setError] = useState<Error>(null);
 
   const handleConfirmWithdrawStake = async () => {
     try {

@@ -1,5 +1,20 @@
 import { DetailedError, ErrorType, ErrorContext } from 'models';
 
+// Due to Electron automatically serializing any error thrown from the BE, we stringify our custom error object and parse it later to retrieve it (see `getErrorToDisplay`)
+export const throwDetailedError = ({
+  detailed,
+  type,
+  context,
+}: DetailedError) => {
+  throw new Error(
+    JSON.stringify({
+      detailed,
+      type,
+      context,
+    })
+  );
+};
+
 export const getErrorToDisplay = (error: Error | string) => {
   if (!error) return undefined;
   if (typeof error === 'string') return error;
@@ -17,20 +32,6 @@ export const getErrorToDisplay = (error: Error | string) => {
   } else {
     return error?.message;
   }
-};
-
-export const throwDetailedError = ({
-  detailed,
-  type,
-  context,
-}: DetailedError) => {
-  throw new Error(
-    JSON.stringify({
-      detailed,
-      type,
-      context,
-    })
-  );
 };
 
 export const errorTypeToMessage = {
