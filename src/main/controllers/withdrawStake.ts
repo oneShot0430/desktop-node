@@ -11,8 +11,10 @@ import {
 
 import config from 'config';
 import { namespaceInstance } from 'main/node/helpers/Namespace';
+import { ErrorType } from 'models';
 import { WithdrawStakeParam } from 'models/api';
 import sdk from 'services/sdk';
+import { throwDetailedError } from 'utils';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
@@ -36,7 +38,10 @@ const withdrawStake = async (
   const { taskAccountPubKey } = payload;
   const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
   if (!activeAccount) {
-    throw new Error('Please select a Active Account');
+    return throwDetailedError({
+      detailed: 'Please select an active account',
+      type: ErrorType.NO_ACTIVE_ACCOUNT,
+    });
   }
   const stakingWalletfilePath =
     getAppDataPath() + `/namespace/${activeAccount}_stakingWallet.json`;
@@ -57,7 +62,10 @@ const withdrawStake = async (
     );
   } catch (e) {
     console.error(e);
-    throw Error("System Account or StakingWallet Account doesn't exist");
+    return throwDetailedError({
+      detailed: e,
+      type: ErrorType.NO_ACCOUNT_KEY,
+    });
   }
   const data = encodeData(WITHDRAW_INSTRUCTION_LAYOUT.Withdraw, {});
 
@@ -73,12 +81,23 @@ const withdrawStake = async (
     programId: TASK_CONTRACT_ID,
     data: data,
   });
-  const res = await sendAndConfirmTransaction(
-    sdk.k2Connection,
-    new Transaction().add(instruction),
-    [mainSystemAccount, stakingAccKeypair]
-  );
-  return res;
+  try {
+    const res = await sendAndConfirmTransaction(
+      sdk.k2Connection,
+      new Transaction().add(instruction),
+      [mainSystemAccount, stakingAccKeypair]
+    );
+    return res;
+  } catch (e) {
+    console.error(e);
+    const errorType = e.toLowerCase().includes('transaction was not confirmed')
+      ? ErrorType.TRANSACTION_TIMEOUT
+      : ErrorType.GENERIC;
+    return throwDetailedError({
+      detailed: e,
+      type: errorType,
+    });
+  }
 };
 
 const encodeData = (type: any, fields: any) => {

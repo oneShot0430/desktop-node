@@ -2,7 +2,9 @@ import { Event } from 'electron';
 
 import * as readLastLines from 'read-last-lines';
 
+import { ErrorType } from 'models';
 import { GetTaskLogsParam, GetTaskLogsResponse } from 'models/api';
+import { throwDetailedError } from 'utils';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
@@ -19,9 +21,12 @@ const getTaskLogs = async (
       noOfLines
     );
     return contents;
-  } catch (err) {
-    console.error(err);
-    throw new Error('Get task source error');
+  } catch (e) {
+    console.error(e);
+    return throwDetailedError({
+      detailed: e,
+      type: ErrorType.NO_TASK_SOURCECODE,
+    });
   }
 };
 

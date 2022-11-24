@@ -1,6 +1,8 @@
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
+import { ErrorMessage } from 'webapp/components';
+
 import { TableHeader } from './TableHeader';
 
 type PropsType = {
@@ -22,9 +24,10 @@ export const Table = ({
     'h-[74vh] overflow-y-auto overflow-x-auto',
     height && `h-[${height}]`
   );
+
   if (isLoading) return <div>Loading...</div>;
 
-  if (error) return <div>{error}</div>;
+  if (error) return <ErrorMessage error={error} />;
 
   return (
     <div className={tableClasses}>

@@ -6,8 +6,7 @@ import AddIconSvg from 'assets/svgs/onboarding/add-teal-icon.svg';
 import CurrencySvgIcon from 'assets/svgs/onboarding/currency-teal-small-icon.svg';
 import config from 'config';
 import { getKoiiFromRoe } from 'utils';
-import { ErrorMessage } from 'webapp/components';
-import { Button } from 'webapp/components/ui/Button';
+import { ErrorMessage, Button } from 'webapp/components';
 import { useNotEnoughFunds, useRunMultipleTasks } from 'webapp/features/common';
 import {
   useMainAccountBalance,
@@ -15,6 +14,7 @@ import {
 } from 'webapp/features/settings';
 import { TaskWithStake } from 'webapp/types';
 import { AppRoute } from 'webapp/types/routes';
+import { ErrorContext } from 'webapp/utils';
 
 import { SelectedTasksSummary } from './SelectedTasksSummary';
 
@@ -104,11 +104,13 @@ const ConfirmYourStake = () => {
               disabled={runTasksLoading || isRunButtonDisabled}
               onClick={handleConfirm}
             />
-            {runTasksError ? (
+            {runTasksError?.map((error, index) => (
               <ErrorMessage
-                errorMessage={(runTasksError as { message: string }).message}
+                key={index}
+                error={error}
+                context={ErrorContext.START_TASK}
               />
-            ) : null}
+            ))}
           </div>
         </div>
       </div>

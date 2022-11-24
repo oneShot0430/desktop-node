@@ -1,7 +1,7 @@
 import React, { memo, useState } from 'react';
 
-import { Button } from 'webapp/components/ui/Button';
-import { ErrorMessage } from 'webapp/components/ui/ErrorMessage';
+import { ErrorMessage, Button } from 'webapp/components';
+import { ErrorContext } from 'webapp/utils';
 
 type PropsType = Readonly<{
   withdrawAmount: number;
@@ -17,7 +17,7 @@ export const ConfirmWithdraw = ({
   onSuccess,
 }: PropsType) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | undefined>();
+  const [error, setError] = useState<Error>(null);
 
   const handleConfirmWithdrawStake = async () => {
     try {
@@ -25,8 +25,8 @@ export const ConfirmWithdraw = ({
       await onConfirmWithdraw();
       setIsLoading(false);
       onSuccess();
-    } catch (e) {
-      setError(e.message);
+    } catch (error) {
+      setError(error);
       setIsLoading(false);
     }
   };
@@ -36,7 +36,9 @@ export const ConfirmWithdraw = ({
       <div className="text-4xl text-center text-finnieBlue-dark">
         {withdrawAmount} KOII
       </div>
-      {error && <ErrorMessage errorMessage={error} />}
+      {error && (
+        <ErrorMessage error={error} context={ErrorContext.WITHDRAW_STAKE} />
+      )}
       <div className="py-2 mb-3 text-xs text-finnieTeal-700">{`${koiiBalance} KOII available in your balance`}</div>
       <Button
         label="Confirm Withdraw"

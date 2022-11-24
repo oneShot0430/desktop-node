@@ -1,5 +1,6 @@
 import { useQuery } from 'react-query';
 
+import { getAllAccountsResponse } from 'models/api';
 import { getAllAccounts, QueryKeys } from 'webapp/services';
 
 export const useAccounts = () => {
@@ -7,7 +8,10 @@ export const useAccounts = () => {
     data: accounts,
     isLoading,
     error,
-  } = useQuery([QueryKeys.Accounts], getAllAccounts);
+  } = useQuery<getAllAccountsResponse, Error>(
+    [QueryKeys.Accounts],
+    getAllAccounts
+  );
 
-  return { accounts, loadingAccounts: isLoading, errorAccounts: error };
+  return { accounts, loadingAccounts: isLoading, accountsError: error };
 };

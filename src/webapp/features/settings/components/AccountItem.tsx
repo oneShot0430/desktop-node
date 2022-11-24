@@ -7,9 +7,12 @@ import EditIconSvg from 'assets/svgs/edit-icon.svg';
 import KeyIconSvg from 'assets/svgs/key-icon.svg';
 import StarOutlined from 'assets/svgs/star-outlined.svg';
 import Star from 'assets/svgs/star.svg';
-import { LoadingSpinner, LoadingSpinnerSize } from 'webapp/components';
-import { Button } from 'webapp/components/ui/Button';
-import { ErrorMessage } from 'webapp/components/ui/ErrorMessage';
+import {
+  LoadingSpinner,
+  LoadingSpinnerSize,
+  ErrorMessage,
+  Button,
+} from 'webapp/components';
 import { useClipboard } from 'webapp/features/common';
 import { useConfirmModal } from 'webapp/features/common/modals/ConfirmationModal';
 
@@ -81,13 +84,12 @@ const AccountItem = ({
     copyStakingKeyToClipboard(stakingPublicKey);
   };
 
-  const error =
-    (removingAccountError as string) || (setAccountActiveError as string);
+  const error = removingAccountError || setAccountActiveError;
 
   return (
     <div className="w-full mb-4 text-white">
       <div className="pb-2 pl-12 text-xl font-semibold">{accountName}</div>
-      {error && <ErrorMessage errorMessage={error} />}
+      {error && <ErrorMessage error={error} />}
       <div
         className={`rounded ${
           isDefault ? 'bg-finnieTeal-100/[.3]' : 'bg-finnieTeal-100'

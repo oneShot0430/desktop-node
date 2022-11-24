@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 
 import { getRoeFromKoii, getKoiiFromRoe } from 'utils';
-import { Button } from 'webapp/components/ui/Button';
-import { ErrorMessage } from 'webapp/components/ui/ErrorMessage';
+import { ErrorMessage, Button } from 'webapp/components';
 
 import KoiiInput from './KoiiInput';
 
@@ -49,7 +48,7 @@ export const AddStake = ({
       </div>
       <div className="mb-3">
         <KoiiInput onInputChange={handleInputChange} />
-        {error && <ErrorMessage errorMessage={error} />}
+        {error && <ErrorMessage error={error} />}
       </div>
 
       <div className="py-2 mb-3 text-xs text-finnieTeal-700">{`${balance} KOII available in your balance`}</div>

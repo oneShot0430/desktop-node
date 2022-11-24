@@ -8,8 +8,10 @@ import cryptoRandomString from 'crypto-random-string';
 
 import config from 'config';
 import { Namespace, namespaceInstance } from 'main/node/helpers/Namespace';
+import { ErrorType } from 'models';
 import { TaskStartStopParam } from 'models/api';
 import koiiTasks from 'services/koiiTasks';
+import { throwDetailedError } from 'utils';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
@@ -26,7 +28,10 @@ const startTask = async (event: Event, payload: TaskStartStopParam) => {
   const { taskAccountPubKey } = payload;
   const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
   if (!activeAccount) {
-    throw new Error('Please select a Active Account');
+    return throwDetailedError({
+      detailed: 'Please select an active account',
+      type: ErrorType.NO_ACTIVE_ACCOUNT,
+    });
   }
   const mainWalletfilePath =
     getAppDataPath() + `/wallets/${activeAccount}_mainSystemWallet.json`;
@@ -41,7 +46,10 @@ const startTask = async (event: Event, payload: TaskStartStopParam) => {
   console.log('koiiTasks.getAllTasks()', koiiTasks.getAllTasks());
   if (!taskInfo) {
     console.error("Task doesn't exist");
-    throw Error("Task doesn't exist");
+    return throwDetailedError({
+      detailed: 'Task not found',
+      type: ErrorType.TASK_NOT_FOUND,
+    });
   }
   const expressApp = await initExpressApp();
   try {
@@ -104,11 +112,12 @@ async function loadTask(selectedTask: ISelectedTasks) {
     res = await axios.get(
       config.node.GATEWAY_URL + '/' + selectedTask.taskAuditProgram
     );
-  } catch (err) {
-    console.error(err);
-    throw new Error(
-      'Get task source error TaskAuditProgram:' + selectedTask.taskAuditProgram
-    );
+  } catch (e) {
+    console.error(e);
+    return throwDetailedError({
+      detailed: e,
+      type: ErrorType.NO_TASK_SOURCECODE,
+    });
   }
   if (res.data) {
     fsSync.mkdirSync(getAppDataPath() + '/executables', { recursive: true });

@@ -68,7 +68,7 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
       }
       await startTask(publicKey);
     } catch (error) {
-      console.warn(error);
+      console.error(error);
     } finally {
       queryCache.invalidateQueries();
       setLoading(false);
@@ -79,7 +79,7 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
     try {
       await stopTask(publicKey);
     } catch (error) {
-      console.warn(error);
+      console.error(error);
     } finally {
       queryCache.invalidateQueries();
     }

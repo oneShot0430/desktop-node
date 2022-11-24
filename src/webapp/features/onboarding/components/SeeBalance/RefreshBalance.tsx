@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import { useQuery } from 'react-query';
 
 import ReloadSvg from 'assets/svgs/reload-icon-big.svg';
-import { ErrorMessage } from 'webapp/components/ui/ErrorMessage';
+import { ErrorMessage } from 'webapp/components';
 import { useFundNewAccountModal } from 'webapp/features/common';
 import { getMainAccountBalance } from 'webapp/services';
 
@@ -56,7 +56,7 @@ export const RefreshBalance = ({ onBalanceRefresh }: PropsType) => {
           ? 'Checking balance...'
           : balance === 0 && 'Your balance is 0, try again'}
       </div>
-      {error && <ErrorMessage errorMessage="Cant't fetch balance, try again" />}
+      {error && <ErrorMessage error="Cant't fetch balance, try again" />}
       <div
         className="mt-2 text-finnieTeal underline inline-block cursor-pointer"
         onClick={showFundAccountModal}

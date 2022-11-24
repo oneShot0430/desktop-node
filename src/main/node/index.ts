@@ -4,6 +4,8 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 import { namespaceInstance } from 'main/node/helpers/Namespace';
+import { ErrorType } from 'models';
+import { throwDetailedError } from 'utils';
 
 import executeTasks from './executeTasks';
 import { getAppDataPath } from './helpers/getAppDataPath';
@@ -31,7 +33,10 @@ export default async (): Promise<any> => {
     // }, 60000)
     const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
     if (!activeAccount) {
-      throw new Error('Please select a Active Account');
+      return throwDetailedError({
+        detailed: 'Please select an active account',
+        type: ErrorType.NO_ACTIVE_ACCOUNT,
+      });
     }
     const mainWalletfilePath =
       getAppDataPath() + `/wallets/${activeAccount}_mainSystemWallet.json`;

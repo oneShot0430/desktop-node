@@ -2,7 +2,9 @@ import { Event } from 'electron';
 
 import { PublicKey } from '@_koi/web3.js';
 
+import { ErrorType } from 'models';
 import { GetTaskNodeInfoResponse } from 'models/api';
+import { throwDetailedError } from 'utils';
 
 import sdk from '../../services/sdk';
 import mainErrorHandler from '../../utils/mainErrorHandler';
@@ -34,9 +36,12 @@ const getTaskNodeInfo = async (
       totalStaked: totalStaked || 0,
       pendingRewards: pendingRewards || 0,
     };
-  } catch (err) {
-    console.error(err);
-    throw new Error('Get task source error');
+  } catch (e) {
+    console.error(e);
+    return throwDetailedError({
+      detailed: e,
+      type: ErrorType.GENERIC,
+    });
   }
 };
 
