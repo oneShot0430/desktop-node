@@ -1,7 +1,6 @@
 export interface DetailedError {
   detailed?: string;
   type: ErrorType;
-  context?: ErrorContext;
 }
 
 export enum ErrorType {
@@ -15,14 +14,4 @@ export enum ErrorType {
   NO_MNEMONIC = 'NO_MNEMONIC',
   NO_VALID_ACCOUNT_NAME = 'NO_VALID_ACCOUNT_NAME',
   GENERIC = 'GENERIC',
-}
-
-export enum ErrorContext {
-  CLAIM_REWARD = 'CLAIM_REWARD',
-  DELEGATE_STAKE = 'DELEGATE_STAKE',
-  GET_EARNED_REWARDS = 'GET_EARNED_REWARDS',
-  GET_PUBLIC_KEY = 'GET_PUBLIC_KEY',
-  GET_STAKING_PUBLIC_KEY = 'GET_STAKING_PUBLIC_KEY',
-  START_TASK = 'START_TASK',
-  WITHDRAW_STAKE = 'WITHDRAW_STAKE',
 }

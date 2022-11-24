@@ -1,7 +1,7 @@
 import React, { memo, useState } from 'react';
 
-import { ErrorContext } from 'models';
 import { ErrorMessage, Button } from 'webapp/components';
+import { ErrorContext } from 'webapp/utils';
 
 type PropsType = Readonly<{
   withdrawAmount: number;

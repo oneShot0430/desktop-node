@@ -1,8 +1,8 @@
 import { useMutation } from 'react-query';
 
-import { getErrorToDisplay } from 'utils';
 import { stakeOnTask, startTask } from 'webapp/services';
 import { TaskWithStake } from 'webapp/types';
+import { getErrorToDisplay } from 'webapp/utils';
 
 type UseRunMultipleTasksParams = {
   tasksToRun: TaskWithStake[];

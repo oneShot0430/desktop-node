@@ -3,7 +3,7 @@ import * as fsSync from 'fs';
 
 import { Keypair, PublicKey } from '@_koi/web3.js';
 
-import { ErrorType, ErrorContext } from 'models';
+import { ErrorType } from 'models';
 import { throwDetailedError } from 'utils';
 
 import { ClaimRewardParam, ClaimRewardResponse } from '../../models/api';
@@ -24,7 +24,6 @@ const claimReward = async (
   if (!activeAccount) {
     return throwDetailedError({
       type: ErrorType.NO_ACTIVE_ACCOUNT,
-      context: ErrorContext.CLAIM_REWARD,
     });
   }
 

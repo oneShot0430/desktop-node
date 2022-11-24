@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
-import { ErrorContext } from 'models';
 import { getKoiiFromRoe } from 'utils';
 import { ErrorMessage, Button } from 'webapp/components';
+import { ErrorContext } from 'webapp/utils';
 
 type PropsType = Readonly<{
   stakeAmount: number;

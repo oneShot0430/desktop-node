@@ -5,7 +5,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import AddIconSvg from 'assets/svgs/onboarding/add-teal-icon.svg';
 import CurrencySvgIcon from 'assets/svgs/onboarding/currency-teal-small-icon.svg';
 import config from 'config';
-import { ErrorContext } from 'models';
 import { getKoiiFromRoe } from 'utils';
 import { ErrorMessage, Button } from 'webapp/components';
 import { useNotEnoughFunds, useRunMultipleTasks } from 'webapp/features/common';
@@ -15,6 +14,7 @@ import {
 } from 'webapp/features/settings';
 import { TaskWithStake } from 'webapp/types';
 import { AppRoute } from 'webapp/types/routes';
+import { ErrorContext } from 'webapp/utils';
 
 import { SelectedTasksSummary } from './SelectedTasksSummary';
 

@@ -1,7 +1,6 @@
 import React, { FunctionComponent } from 'react';
 
-import { ErrorContext } from 'models';
-import { getErrorToDisplay } from 'utils';
+import { getErrorToDisplay, ErrorContext } from 'webapp/utils';
 
 interface PropsType {
   error: Error | string;
