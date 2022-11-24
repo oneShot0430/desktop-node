@@ -20,22 +20,19 @@ const getTaskSource = async (
 ): Promise<string> => {
   const { taskAccountPubKey } = payload;
 
-  let accountInfo;
-  try {
-    accountInfo = await sdk.k2Connection.getAccountInfo(
-      new PublicKey(taskAccountPubKey)
-    );
-  } catch (e) {
+  const accountInfo = await sdk.k2Connection.getAccountInfo(
+    new PublicKey(taskAccountPubKey)
+  );
+
+  if (!accountInfo || !accountInfo.data)
     return throwDetailedError({
-      detailed: e,
       type: ErrorType.TASK_NOT_FOUND,
     });
-  }
+
   const taskData = JSON.parse(accountInfo.data.toString());
 
   if (!taskData) {
     return throwDetailedError({
-      detailed: "Task doesn't exist",
       type: ErrorType.TASK_NOT_FOUND,
     });
   }
