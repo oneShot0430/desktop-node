@@ -27,7 +27,7 @@ export const AddNewAccount = create(function AddNewAccount() {
   const modal = useModal();
   const [currentStep, setCurrentStep] = useState(Steps.ImportKey);
   const [newKeys, setNewKeys] = useState<KeysType>(null);
-  const [seedPhrase, setSeedPhrase] = useState(null);
+  const [seedPhrase, setSeedPhrase] = useState('');
 
   const handleCreatedNewKeyStep = (step: Steps, payload: CreateKeyPayload) => {
     setNewKeys(payload.keys);

@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 
-import { getKoiiFromRoe, getErrorToDisplay } from 'utils';
-import { Button } from 'webapp/components/ui/Button';
-import { ErrorMessage } from 'webapp/components/ui/ErrorMessage';
+import { getKoiiFromRoe } from 'utils';
+import { ErrorMessage, Button } from 'webapp/components';
 
 type PropsType = Readonly<{
   stakeAmount: number;
@@ -18,7 +17,7 @@ export const ConfirmStake = ({
   onSuccess,
 }: PropsType) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState<Error>(null);
   const stakeAmountInKoii = getKoiiFromRoe(stakeAmount);
   const handleConfirmAddStake = async () => {
     try {
@@ -27,8 +26,7 @@ export const ConfirmStake = ({
 
       onSuccess();
     } catch (error) {
-      const errorMessage = getErrorToDisplay(error);
-      setError(errorMessage);
+      setError(error);
     } finally {
       setIsLoading(false);
     }
@@ -39,7 +37,7 @@ export const ConfirmStake = ({
       <div className="text-4xl text-center text-finnieBlue-dark">
         {stakeAmountInKoii} KOII
       </div>
-      {error && <ErrorMessage errorMessage={error} />}
+      {error && <ErrorMessage error={error} />}
       <div className="py-2 mb-3 text-xs text-finnieTeal-700">{`${koiiBalance} KOII available in your balance`}</div>
       <Button
         label="Confirm Stake"

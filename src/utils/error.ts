@@ -1,27 +1,19 @@
 import { DetailedError, ErrorType, ErrorContext } from 'models';
 
-export const isDetailedError = (
-  error: Error | DetailedError
-): error is DetailedError => {
-  return 'type' in error;
-};
-
-export const getErrorToDisplay = (error: Error) => {
+export const getErrorToDisplay = (error: Error | string) => {
   if (!error) return undefined;
+  if (typeof error === 'string') return error;
 
-  const relevantErrorDataStringified = error.message.substring(
-    error.message.indexOf('{')
-  );
+  const isDetailedError = error.message.includes('"type":');
 
-  const parsedError: Error | DetailedError = JSON.parse(
-    relevantErrorDataStringified
-  );
-  console.log('parsedError: ', parsedError);
+  if (isDetailedError) {
+    const serializedError = error.message.substring(error.message.indexOf('{'));
+    const parsedError: DetailedError = JSON.parse(serializedError);
+    const errorMessage = `${
+      errorTypeToMessage[parsedError.type] || parsedError.detailed
+    }${errorContextToContextSuffix[parsedError.context] || ''}.`;
 
-  if (isDetailedError(parsedError)) {
-    return `${errorTypeToMessage[parsedError.type] || parsedError.detailed}${
-      errorContextToContextSuffix[parsedError.context]
-    }.`;
+    return errorMessage;
   } else {
     return error?.message;
   }
@@ -47,13 +39,13 @@ export const errorTypeToMessage = {
   [ErrorType.NO_ACCOUNT_KEY]:
     "This account doesn't seem to be connected properly. Select another account to continue or see the Settings page to import a new account",
   [ErrorType.TASK_NOT_FOUND]:
-    "Hmm... We can't find this Task, try a different one.",
+    "Hmm... We can't find this Task, try a different one",
   [ErrorType.NO_TASK_SOURCECODE]:
-    'There was an error collecting the Task information from Arweave. Try again or let us know about the issue.',
+    'There was an error collecting the Task information from Arweave. Try again or let us know about the issue',
   [ErrorType.NO_RUNNING_TASK]:
-    "All good here, that task isn't running right now.",
+    "All good here, that task isn't running right now",
   [ErrorType.TRANSACTION_TIMEOUT]:
-    'Whoops! Your transaction was not confirmed, please try again.',
+    'Whoops! Your transaction was not confirmed, please try again',
   [ErrorType.GENERIC]: 'Something went wrong. Please try again',
   [ErrorType.NO_MNEMONIC]: 'Please provide a mnemonic to generate wallets',
   [ErrorType.NO_VALID_ACCOUNT_NAME]: false,

@@ -15,7 +15,7 @@ export const useAccount = ({ accountName, isDefault }: ParamsType) => {
     mutateAsync: deleteAccount,
     isLoading: removingAccountLoading,
     error: removingAccountError,
-  } = useMutation(removeAccount, {
+  } = useMutation<boolean, Error, string>(removeAccount, {
     onSuccess: () => {
       queryCache.invalidateQueries(QueryKeys.Accounts);
     },
@@ -25,7 +25,7 @@ export const useAccount = ({ accountName, isDefault }: ParamsType) => {
     mutate: setAccountActive,
     isLoading: setAccountActiveLoading,
     error: setAccountActiveError,
-  } = useMutation(setActiveAccount, {
+  } = useMutation<boolean, Error, string>(setActiveAccount, {
     onSuccess: () => queryCache.invalidateQueries(QueryKeys.Accounts),
   });
 

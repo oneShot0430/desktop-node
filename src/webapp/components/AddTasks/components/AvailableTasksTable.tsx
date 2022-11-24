@@ -23,7 +23,10 @@ const pageSize = 10;
 const AvailableTasksTable = () => {
   const [hasMore, setHasMore] = useState(true);
 
-  const { data, isLoading, error, fetchNextPage } = useInfiniteQuery(
+  const { data, isLoading, error, fetchNextPage } = useInfiniteQuery<
+    Task[],
+    Error
+  >(
     QueryKeys.availableTaskList,
     ({ pageParam = 0 }) =>
       fetchAvailableTasks({ limit: pageSize, offset: pageParam * pageSize }),
@@ -46,7 +49,7 @@ const AvailableTasksTable = () => {
     <InfiniteScrollTable
       tableHeaders={tableHeaders}
       isLoading={isLoading}
-      error={error as string}
+      error={error}
       hasMore={hasMore}
       update={fetchNextPage}
     >

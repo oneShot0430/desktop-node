@@ -26,7 +26,8 @@ export const useRunMultipleTasks = ({
             return startTask(publicKey);
           })
           .catch((error) => {
-            const errorMessage = getErrorToDisplay(error);
+            const errorLog = getErrorToDisplay(error);
+            const errorMessage = `Task ${publicKey} can't be deployed because of error: ${errorLog}`;
             console.error(errorMessage);
             errorMessages.push(errorMessage);
           })
@@ -43,7 +44,7 @@ export const useRunMultipleTasks = ({
     mutate: runAllTasks,
     isLoading: runTasksLoading,
     error: runTasksError,
-  } = useMutation(handleRunTasks, {
+  } = useMutation<void, string[]>(handleRunTasks, {
     onSuccess: () => {
       if (onRunAllTasksSuccessCallback) {
         onRunAllTasksSuccessCallback();

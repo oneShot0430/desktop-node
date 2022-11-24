@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import RewardsSvg from 'assets/svgs/onboarding/rewards-icon.svg';
 import SeedPhraseSvg from 'assets/svgs/onboarding/seed-phrase-icon.svg';
-import { ErrorMessage } from 'webapp/components/ui/ErrorMessage';
+import { ErrorMessage } from 'webapp/components';
 import { useAccounts } from 'webapp/features/settings';
 import {
   createNodeWallets,
@@ -17,7 +17,7 @@ import { OnboardingContext } from '../../context/onboarding-context';
 
 const KeyCreationMethodPick = () => {
   const [accountName, setAccountName] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState<string>();
+  const [error, setError] = useState<Error | string>('');
   const navigate = useNavigate();
   const { setNewSeedPhrase, setSystemKey } = useContext(OnboardingContext);
   const { accounts } = useAccounts();
@@ -41,29 +41,25 @@ const KeyCreationMethodPick = () => {
       navigate(AppRoute.OnboardingCreateNewKey);
     },
     onError: (error) => {
-      setErrorMessage((error as { message: string }).message);
+      setError(error as Error);
     },
   });
 
   const handleChangeInput: ChangeEventHandler<HTMLInputElement> = ({
     target: { value: enteredAccountName },
   }) => {
-    setErrorMessage('');
+    setError('');
     setAccountName(enteredAccountName);
-    const enteredNameIsInvalid = accounts?.some(
+    const enteredNameIsDuplicate = accounts?.some(
       (account) => account.accountName === enteredAccountName
     );
-    if (enteredNameIsInvalid) {
-      setErrorMessage('You already have an account registered with that name');
+    if (enteredNameIsDuplicate) {
+      setError('You already have an account registered with that name');
     }
   };
 
   const handleClickCreate = () => {
-    if (accountName) {
-      seedPhraseGenerateMutation.mutate(accountName);
-    } else {
-      setErrorMessage("Account name can't be empty");
-    }
+    seedPhraseGenerateMutation.mutate(accountName);
   };
 
   const handleClickImport = () => {
@@ -72,7 +68,7 @@ const KeyCreationMethodPick = () => {
         state: { accountName },
       });
     } else {
-      setErrorMessage("Account name can't be empty");
+      setError('Please provide an account name to generate wallets');
     }
   };
 
@@ -96,7 +92,7 @@ const KeyCreationMethodPick = () => {
           placeholder="Account name"
         />
         <div className="h-12 px-6 -mb-12">
-          {errorMessage && <ErrorMessage errorMessage={errorMessage} />}
+          {error && <ErrorMessage error={error} />}
         </div>
       </div>
 
@@ -106,7 +102,7 @@ const KeyCreationMethodPick = () => {
             <button
               className="w-[180px] h-[180px] p-2 border-dashed border-finnieOrange rounded-full border-2 mb-4 cursor-pointer"
               onClick={handleClickCreate}
-              disabled={!!errorMessage}
+              disabled={!!error}
             >
               <div className="flex flex-col items-center justify-center w-full h-full rounded-full bg-finnieBlue-light-secondary">
                 <RewardsSvg />
@@ -119,7 +115,7 @@ const KeyCreationMethodPick = () => {
             <button
               className="w-[180px] h-[180px] p-2 border-2 border-dashed border-finnieTeal rounded-full mb-4 cursor-pointer z-30"
               onClick={handleClickImport}
-              disabled={!!errorMessage}
+              disabled={!!error}
             >
               <div className="flex flex-col items-center justify-center w-full h-full rounded-full bg-finnieBlue-light-secondary">
                 <SeedPhraseSvg />

@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { twMerge } from 'tailwind-merge';
 
+import { ErrorMessage } from 'webapp/components';
+
 import { TableHeader } from './TableHeader';
 
 interface PropsType {
@@ -10,7 +12,7 @@ interface PropsType {
   update: () => void;
   hasMore: boolean;
   isLoading?: boolean;
-  error?: string;
+  error?: Error;
   height?: string;
 }
 
@@ -38,7 +40,7 @@ export const InfiniteScrollTable = ({
 
   if (isLoading) return <div>Loading...</div>;
 
-  if (error) return <div>{error}</div>;
+  if (error) return <ErrorMessage error={error} />;
 
   return (
     <div className={tableClasses} id={tableWrapperId}>
