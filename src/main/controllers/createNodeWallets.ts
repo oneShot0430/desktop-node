@@ -57,18 +57,7 @@ const createNodeWallets = async (
     const stakingWallet = Keypair.fromSeed(
       derivePath(stakingWalletPath, stakingSeed.toString('hex')).key
     );
-    console.log('Generating Staking wallet from mnemonic');
 
-    console.log('WALLET', stakingWallet.publicKey.toBase58());
-    fs.writeFile(
-      stakingWalletFilePath,
-      JSON.stringify(Array.from(stakingWallet.secretKey)),
-      (err) => {
-        if (err) {
-          console.error(err);
-        }
-      }
-    );
     // Creating MainAccount
     const mainWalletFilePath =
       getAppDataPath() + `/wallets/${accountName}_mainSystemWallet.json`;
@@ -84,9 +73,44 @@ const createNodeWallets = async (
     const mainWallet = Keypair.fromSeed(
       derivePath(mainWalletPath, mainSeed.toString('hex')).key
     );
-    console.log('Generating Staking wallet from mnemonic');
 
-    console.log('WALLET', mainWallet.publicKey.toBase58());
+    // Verify a wallet created from the same mnemonic doesn't exist
+    const mainWalletFileContent = JSON.stringify(
+      Array.from(mainWallet.secretKey)
+    );
+    const walletFiles = fs.readdirSync(getAppDataPath() + '/wallets');
+    walletFiles.forEach((file) => {
+      const fileContent = fs.readFileSync(
+        getAppDataPath() + '/wallets/' + file
+      );
+      const walletAlreadyExists = fileContent.equals(
+        Buffer.from(mainWalletFileContent)
+      );
+      if (walletAlreadyExists) {
+        return throwDetailedError({
+          detailed: 'A wallet with the same mnemonic already exists',
+          type: ErrorType.DUPLICATE_ACCOUNT,
+        });
+      }
+    });
+
+    console.log(
+      'Generating Staking wallet from mnemonic',
+      stakingWallet.publicKey.toBase58()
+    );
+    console.log(
+      'Generating Main wallet from mnemonic',
+      mainWallet.publicKey.toBase58()
+    );
+    fs.writeFile(
+      stakingWalletFilePath,
+      JSON.stringify(Array.from(stakingWallet.secretKey)),
+      (err) => {
+        if (err) {
+          console.error(err);
+        }
+      }
+    );
     fs.writeFile(
       mainWalletFilePath,
       JSON.stringify(Array.from(mainWallet.secretKey)),
