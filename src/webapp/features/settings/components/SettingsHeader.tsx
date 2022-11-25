@@ -17,14 +17,14 @@ const SettingsHeader = ({ onTabChange, activeTab }: PropsType) => {
     <div className="flex items-center px-3 py-3 mb-6 text-white bg-finnieTeal bg-opacity-30 gap-7">
       <div className="flex items-center gap-[109px]">
         <div
-          className={`pb-[1px] ${isActiveTab(Tab.AccountsTable)}`}
+          className={`pb-px cursor-pointer ${isActiveTab(Tab.AccountsTable)}`}
           onClick={() => onTabChange(Tab.AccountsTable)}
         >
           Key Management
         </div>
         <div
           onClick={() => onTabChange(Tab.NodeLogs)}
-          className={`pb-[1px] ${isActiveTab(Tab.NodeLogs)}`}
+          className={`pb-px cursor-pointer ${isActiveTab(Tab.NodeLogs)}`}
         >
           Node Logs
         </div>

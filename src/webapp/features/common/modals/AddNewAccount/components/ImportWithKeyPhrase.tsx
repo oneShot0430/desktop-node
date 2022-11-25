@@ -31,7 +31,7 @@ const ImportWithKeyPhrase = ({ onClose, onImportSuccess }: PropsType) => {
             </span>
           </div>
 
-          <CloseIconWhite className="w-[32px] h-[32px]" onClick={onClose} />
+          <CloseIconWhite className="w-8 h-8" onClick={onClose} />
         </div>
 
         <div className="flex items-center justify-center w-full p-4">
@@ -55,7 +55,7 @@ const ImportWithKeyPhrase = ({ onClose, onImportSuccess }: PropsType) => {
             onImportSuccess({ stakingAccountPubKey, mainAccountPubKey });
           }}
           confirmActionLabel={'Import Account'}
-          className="px-[30px] bg-finnieBlue-light-4"
+          className="px-8 bg-finnieBlue-light-4"
         />
       </div>
     </ModalContent>
