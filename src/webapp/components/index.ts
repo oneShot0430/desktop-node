@@ -6,5 +6,5 @@ export * from './ui';
 export * from './PinInput';
 export * from './ShowSeedPhrase';
 export * from './Unlock';
-export * from './NotificationBanner';
+export * from '../features/notifications/NotificationBanner';
 export * from './AppTopBar';

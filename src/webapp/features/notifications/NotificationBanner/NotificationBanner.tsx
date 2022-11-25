@@ -8,8 +8,7 @@ import {
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { BackButton } from '../BackButton';
-// import { Button } from '../ui';
+import { BackButton } from '../../../components/BackButton';
 
 export enum AppNotification {
   FirstNodeReward = 'FirstNodeReward',
@@ -17,9 +16,10 @@ export enum AppNotification {
 
 type PropsType = {
   variant: AppNotification;
+  onRemove: () => void;
 };
 
-export const NotificationBanner = ({ variant }: PropsType) => {
+export const NotificationBanner = ({ variant, onRemove }: PropsType) => {
   const action = {
     [AppNotification.FirstNodeReward]: {
       label: 'See task',
@@ -48,10 +48,9 @@ export const NotificationBanner = ({ variant }: PropsType) => {
             variant={ButtonVariant.SecondaryDark}
             size={ButtonSize.SM}
             labelClassesOverrides="font-semibold w-max"
-            // className="px-4 font-semibold bg-transparent border-2 border-finnieBlue text-finnieBlue w-fit"
           />
         )}
-        <div className="cursor-pointer">
+        <div className="cursor-pointer" title="close" onClick={onRemove}>
           <Icon size={46} source={CloseXLine} />
         </div>
       </div>
