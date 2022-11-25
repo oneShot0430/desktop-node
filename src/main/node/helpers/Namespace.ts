@@ -490,7 +490,8 @@ class Namespace {
       );
       return result;
     } catch (e) {
-      const errorType = e
+      console.error(e);
+      const errorType = e.message
         .toLowerCase()
         .includes('transaction was not confirmed')
         ? ErrorType.TRANSACTION_TIMEOUT
@@ -541,7 +542,8 @@ class Namespace {
       );
       return result;
     } catch (e) {
-      const errorType = e
+      console.error(e);
+      const errorType = e.message
         .toLowerCase()
         .includes('transaction was not confirmed')
         ? ErrorType.TRANSACTION_TIMEOUT
@@ -586,7 +588,8 @@ class Namespace {
       );
       return response;
     } catch (e) {
-      const errorType = e
+      console.error(e);
+      const errorType = e.message
         .toLowerCase()
         .includes('transaction was not confirmed')
         ? ErrorType.TRANSACTION_TIMEOUT
@@ -638,7 +641,7 @@ class Namespace {
       return response;
     } catch (e) {
       console.error(e);
-      const errorType = e
+      const errorType = e.message
         .toLowerCase()
         .includes('transaction was not confirmed')
         ? ErrorType.TRANSACTION_TIMEOUT
@@ -673,7 +676,7 @@ class Namespace {
       return signature;
     } catch (e) {
       console.error(e);
-      const errorType = e
+      const errorType = e.message
         .toLowerCase()
         .includes('transaction was not confirmed')
         ? ErrorType.TRANSACTION_TIMEOUT

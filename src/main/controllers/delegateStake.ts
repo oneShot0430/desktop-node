@@ -113,7 +113,7 @@ const delegateStake = async (
       );
     } catch (e) {
       console.error(e);
-      const errorType = e
+      const errorType = e.message
         .toLowerCase()
         .includes('transaction was not confirmed')
         ? ErrorType.TRANSACTION_TIMEOUT
@@ -157,7 +157,7 @@ const delegateStake = async (
       return response;
     } catch (e) {
       console.error(e);
-      const errorType = e
+      const errorType = e.message
         .toLowerCase()
         .includes('transaction was not confirmed')
         ? ErrorType.TRANSACTION_TIMEOUT
@@ -194,7 +194,7 @@ const delegateStake = async (
       console.log('Stake account created');
     } catch (e) {
       console.error(e);
-      const errorType = e
+      const errorType = e.message
         .toLowerCase()
         .includes('transaction was not confirmed')
         ? ErrorType.TRANSACTION_TIMEOUT
@@ -241,7 +241,7 @@ const delegateStake = async (
       return response;
     } catch (e) {
       console.error(e);
-      const errorType = e
+      const errorType = e.message
         .toLowerCase()
         .includes('transaction was not confirmed')
         ? ErrorType.TRANSACTION_TIMEOUT
