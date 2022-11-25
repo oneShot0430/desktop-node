@@ -26,7 +26,10 @@ export const useAccount = ({ accountName, isDefault }: ParamsType) => {
     isLoading: setAccountActiveLoading,
     error: setAccountActiveError,
   } = useMutation<boolean, Error, string>(setActiveAccount, {
-    onSuccess: () => queryCache.invalidateQueries(QueryKeys.Accounts),
+    onSuccess: () => {
+      queryCache.invalidateQueries(QueryKeys.Accounts);
+      queryCache.invalidateQueries(QueryKeys.taskNodeInfo);
+    },
   });
 
   const removeAccountHandler = useCallback(async () => {
