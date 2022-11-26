@@ -75,11 +75,14 @@ const createNodeWallets = async (
     );
 
     // Verify a wallet created from the same mnemonic doesn't exist
+    const stakingWalletFileContent = JSON.stringify(
+      Array.from(stakingWallet.secretKey)
+    );
     const mainWalletFileContent = JSON.stringify(
       Array.from(mainWallet.secretKey)
     );
-    const walletFiles = fs.readdirSync(getAppDataPath() + '/wallets');
-    walletFiles.forEach((file) => {
+    const existingWalletFiles = fs.readdirSync(getAppDataPath() + '/wallets');
+    existingWalletFiles.forEach((file) => {
       const fileContent = fs.readFileSync(
         getAppDataPath() + '/wallets/' + file
       );
@@ -102,25 +105,17 @@ const createNodeWallets = async (
       'Generating Main wallet from mnemonic',
       mainWallet.publicKey.toBase58()
     );
-    fs.writeFile(
-      stakingWalletFilePath,
-      JSON.stringify(Array.from(stakingWallet.secretKey)),
-      (err) => {
-        if (err) {
-          console.error(err);
-        }
+    fs.writeFile(stakingWalletFilePath, stakingWalletFileContent, (err) => {
+      if (err) {
+        console.error(err);
       }
-    );
-    fs.writeFile(
-      mainWalletFilePath,
-      JSON.stringify(Array.from(mainWallet.secretKey)),
-      (err) => {
-        if (err) {
-          console.error(err);
-          throw err;
-        }
+    });
+    fs.writeFile(mainWalletFilePath, mainWalletFileContent, (err) => {
+      if (err) {
+        console.error(err);
+        throw err;
       }
-    );
+    });
     return {
       stakingWalletPubKey: stakingWallet.publicKey.toBase58(),
       mainAccountPubKey: mainWallet.publicKey.toBase58(),
