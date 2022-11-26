@@ -82,20 +82,18 @@ const createNodeWallets = async (
       Array.from(mainWallet.secretKey)
     );
     const existingWalletFiles = fs.readdirSync(getAppDataPath() + '/wallets');
-    existingWalletFiles.forEach((file) => {
+    const walletAlreadyExists = existingWalletFiles.some((file) => {
       const fileContent = fs.readFileSync(
         getAppDataPath() + '/wallets/' + file
       );
-      const walletAlreadyExists = fileContent.equals(
-        Buffer.from(mainWalletFileContent)
-      );
-      if (walletAlreadyExists) {
-        return throwDetailedError({
-          detailed: 'A wallet with the same mnemonic already exists',
-          type: ErrorType.DUPLICATE_ACCOUNT,
-        });
-      }
+      return fileContent.equals(Buffer.from(mainWalletFileContent));
     });
+    if (walletAlreadyExists) {
+      return throwDetailedError({
+        detailed: 'A wallet with the same mnemonic already exists',
+        type: ErrorType.DUPLICATE_ACCOUNT,
+      });
+    }
 
     console.log(
       'Generating Staking wallet from mnemonic',
