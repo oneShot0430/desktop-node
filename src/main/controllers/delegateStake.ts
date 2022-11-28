@@ -77,11 +77,6 @@ const delegateStake = async (
   const accountInfo = await sdk.k2Connection.getAccountInfo(
     new PublicKey(stakingAccKeypair.publicKey)
   );
-  if (!accountInfo || !accountInfo.data)
-    return throwDetailedError({
-      detailed: 'Task not found',
-      type: ErrorType.TASK_NOT_FOUND,
-    });
 
   let taskState;
   try {
