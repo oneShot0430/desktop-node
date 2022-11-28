@@ -5,10 +5,14 @@ import {
   ButtonVariant,
   ButtonSize,
 } from '@_koii/koii-styleguide';
-import React from 'react';
+import React, { useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 
+import { AppRoute } from 'webapp/types/routes';
+
 import { BackButton } from '../../../components/BackButton';
+import { useNotificationsContext } from '../context';
 
 export enum AppNotification {
   FirstNodeReward = 'FirstNodeReward',
@@ -20,12 +24,18 @@ type PropsType = {
 };
 
 export const NotificationBanner = ({ variant, onRemove }: PropsType) => {
+  const navigate = useNavigate();
+  const { removeNotification } = useNotificationsContext();
+
+  const handleSeeTasksAction = useCallback(() => {
+    removeNotification();
+    navigate(AppRoute.AddTask);
+  }, [navigate, removeNotification]);
+
   const action = {
     [AppNotification.FirstNodeReward]: {
-      label: 'See task',
-      onClick: () => {
-        console.log('See task');
-      },
+      label: 'See tasks',
+      onClick: handleSeeTasksAction,
       message:
         "You've earned your first node reward! Run more tasks to easily increase your rewards.",
     },
