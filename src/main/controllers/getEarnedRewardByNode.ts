@@ -4,8 +4,11 @@ import * as fsSync from 'fs';
 import { Keypair } from '@_koi/web3.js';
 
 import { namespaceInstance } from 'main/node/helpers/Namespace';
+import { ErrorType } from 'models';
+import { throwDetailedError } from 'utils';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
+import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
 interface rewardWalletPayload {
   available_balances: any;
@@ -21,9 +24,13 @@ const rewardWallet = async (
   let stakingAccKeypair;
   const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
   if (!activeAccount) {
-    throw new Error('Please select a Active Account');
+    return throwDetailedError({
+      detailed: 'Please select an active account',
+      type: ErrorType.NO_ACTIVE_ACCOUNT,
+    });
   }
-  const stakingWalletfilePath = `namespace/${activeAccount}_stakingWallet.json`;
+  const stakingWalletfilePath =
+    getAppDataPath() + `/namespace/${activeAccount}_stakingWallet.json`;
   try {
     stakingAccKeypair = Keypair.fromSecretKey(
       Uint8Array.from(
@@ -50,7 +57,10 @@ const rewardWallet = async (
     return reward;
   } catch (e) {
     console.error(e);
-    throw Error("System Account or StakingWallet Account doesn't exist");
+    return throwDetailedError({
+      detailed: e,
+      type: ErrorType.NO_ACCOUNT_KEY,
+    });
   }
 };
 

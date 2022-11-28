@@ -32,7 +32,10 @@ export const MyNodeTable = () => {
     () => getMainAccountPublicKey()
   );
 
-  const { isLoading, data, error, fetchNextPage } = useInfiniteQuery(
+  const { isLoading, data, error, fetchNextPage } = useInfiniteQuery<
+    Task[],
+    Error
+  >(
     QueryKeys.taskList,
     ({ pageParam = 0 }) =>
       fetchMyTasks({ limit: pageSize, offset: pageParam * pageSize }),
@@ -57,7 +60,7 @@ export const MyNodeTable = () => {
     <InfiniteScrollTable
       tableHeaders={tableHeaders}
       isLoading={isLoading}
-      error={error as string}
+      error={error}
       hasMore={hasMore}
       update={fetchNextPage}
     >

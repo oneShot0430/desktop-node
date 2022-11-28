@@ -10,7 +10,7 @@ import { OnboardingContext } from '../../context/onboarding-context';
 export const ConfirmSecretPhrase = () => {
   const { newSeedPhrase } = useContext(OnboardingContext);
   const [phrase, setPhrase] = useState('');
-  const [error, setError] = useState<string>(null);
+  const [error, setError] = useState<string>('');
   const navigate = useNavigate();
 
   return (

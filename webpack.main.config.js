@@ -17,6 +17,7 @@ module.exports = {
       main: path.resolve(__dirname, 'src/main/'),
       services: path.resolve(__dirname, 'src/services/'),
       utils: path.resolve(__dirname, 'src/utils/'),
+      models: path.resolve(__dirname, 'src/models/'),
     },
   },
 };

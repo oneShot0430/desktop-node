@@ -4,6 +4,7 @@ import fs from 'fs';
 import { RemoveAccountByNameParam } from 'models/api';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
+import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
 const removeAccountByName = async (
   event: Event,
@@ -11,8 +12,12 @@ const removeAccountByName = async (
 ): Promise<boolean> => {
   const { accountName } = payload;
   try {
-    fs.unlinkSync(`namespace/${accountName}_stakingWallet.json`);
-    fs.unlinkSync(`wallets/${accountName}_mainSystemWallet.json`);
+    fs.unlinkSync(
+      getAppDataPath() + `/namespace/${accountName}_stakingWallet.json`
+    );
+    fs.unlinkSync(
+      getAppDataPath() + `/wallets/${accountName}_mainSystemWallet.json`
+    );
     return true;
   } catch (err) {
     console.log('ERROR', err);

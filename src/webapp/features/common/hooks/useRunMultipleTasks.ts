@@ -2,6 +2,7 @@ import { useMutation } from 'react-query';
 
 import { stakeOnTask, startTask } from 'webapp/services';
 import { TaskWithStake } from 'webapp/types';
+import { getErrorToDisplay } from 'webapp/utils';
 
 type UseRunMultipleTasksParams = {
   tasksToRun: TaskWithStake[];
@@ -25,8 +26,9 @@ export const useRunMultipleTasks = ({
             return startTask(publicKey);
           })
           .catch((error) => {
-            const errorMessage = `Task ${publicKey} can't be deployed because of error ${error}`;
-            console.log(errorMessage);
+            const errorLog = getErrorToDisplay(error);
+            const errorMessage = `Task ${publicKey} can't be deployed because of error: ${errorLog}`;
+            console.error(errorMessage);
             errorMessages.push(errorMessage);
           })
       );
@@ -42,7 +44,7 @@ export const useRunMultipleTasks = ({
     mutate: runAllTasks,
     isLoading: runTasksLoading,
     error: runTasksError,
-  } = useMutation(handleRunTasks, {
+  } = useMutation<void, string[]>(handleRunTasks, {
     onSuccess: () => {
       if (onRunAllTasksSuccessCallback) {
         onRunAllTasksSuccessCallback();

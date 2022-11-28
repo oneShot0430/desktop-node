@@ -64,11 +64,11 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
     try {
       setLoading(true);
       if (taskStake === 0) {
-        await stakeOnTask(publicKey, getKoiiFromRoe(stake));
+        await stakeOnTask(publicKey, stake);
       }
       await startTask(publicKey);
     } catch (error) {
-      console.warn(error);
+      console.error(error);
     } finally {
       queryCache.invalidateQueries();
       setLoading(false);
@@ -79,7 +79,7 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
     try {
       await stopTask(publicKey);
     } catch (error) {
-      console.warn(error);
+      console.error(error);
     } finally {
       queryCache.invalidateQueries();
     }

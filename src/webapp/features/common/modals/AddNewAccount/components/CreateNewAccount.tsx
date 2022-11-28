@@ -4,9 +4,7 @@ import { useQueryClient } from 'react-query';
 
 import KeyIconSvg from 'assets/svgs/key-icon-white.svg';
 import CloseIconWhite from 'svgs/close-icons/close-icon-white.svg';
-import PinInput from 'webapp/components/PinInput/PinInput';
-import { Button } from 'webapp/components/ui/Button';
-import { ErrorMessage } from 'webapp/components/ui/ErrorMessage';
+import { ErrorMessage, PinInput, Button } from 'webapp/components';
 import { useUserSettings } from 'webapp/features/common/hooks';
 import { ModalContent } from 'webapp/features/modals';
 import {
@@ -25,7 +23,7 @@ type PropsType = Readonly<{
 
 export const CreateNewAccount = ({ onClose, setNextStep }: PropsType) => {
   const [pin, setPin] = useState('');
-  const [error, setError] = useState<string>(null);
+  const [error, setError] = useState<Error | string>('');
   const [accountName, setAccounttName] = useState('');
   const queryCache = useQueryClient();
   const { settings } = useUserSettings();
@@ -39,11 +37,6 @@ export const CreateNewAccount = ({ onClose, setNextStep }: PropsType) => {
   };
 
   const handleCreateNewKey = async () => {
-    if (accountName.length === 0) {
-      setError("Account name can't be empty");
-      return;
-    }
-
     const isPinValid = await validatePin(pin);
 
     try {
@@ -64,7 +57,7 @@ export const CreateNewAccount = ({ onClose, setNextStep }: PropsType) => {
         setError('Your pin is not correct');
       }
     } catch (error) {
-      setError(error.message);
+      setError(error);
     } finally {
       queryCache.invalidateQueries(QueryKeys.Accounts);
     }
@@ -121,7 +114,7 @@ export const CreateNewAccount = ({ onClose, setNextStep }: PropsType) => {
         </div>
 
         <div className="flex flex-col items-center h-10 px-4">
-          <ErrorMessage errorMessage={error} />
+          <ErrorMessage error={error} />
         </div>
 
         <div className="flex justify-center">

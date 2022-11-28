@@ -1,9 +1,7 @@
-import { AxiosError } from 'axios';
 import React, { memo, useMemo } from 'react';
 
 import AddIconSvg from 'assets/svgs/add-icon-outlined.svg';
-import { Button } from 'webapp/components/ui/Button';
-import { ErrorMessage } from 'webapp/components/ui/ErrorMessage';
+import { ErrorMessage, Button } from 'webapp/components';
 import { useAddNewAccountModal } from 'webapp/features/common/hooks/useAddNewAccountModal';
 
 import { useAccounts } from '../hooks';
@@ -13,7 +11,7 @@ import AccountItem from './AccountItem';
 const AccountsTable = () => {
   const { showModal } = useAddNewAccountModal();
 
-  const { accounts, loadingAccounts, errorAccounts } = useAccounts();
+  const { accounts, loadingAccounts, accountsError } = useAccounts();
 
   // isDefault must be first
   const accountsSorted = useMemo(
@@ -40,11 +38,9 @@ const AccountsTable = () => {
               Loading accounts...
             </div>
           )}
-          {errorAccounts && (
+          {accountsError && (
             <div className="flex items-center justify-center text-2xl">
-              <ErrorMessage
-                errorMessage={(errorAccounts as AxiosError).message}
-              />
+              <ErrorMessage error={accountsError} />
             </div>
           )}
           {accountsSorted?.map(

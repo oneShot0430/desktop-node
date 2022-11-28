@@ -14,10 +14,13 @@ import {
 
 import config from 'config';
 import { namespaceInstance } from 'main/node/helpers/Namespace';
+import { ErrorType } from 'models';
 import sdk from 'services/sdk';
+import { throwDetailedError } from 'utils';
 
 import { DelegateStakeParam, DelegateStakeResponse } from '../../models/api';
 import mainErrorHandler from '../../utils/mainErrorHandler';
+import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
 import getTaskInfo from './getTaskInfo';
 
@@ -42,10 +45,15 @@ const delegateStake = async (
   const { taskAccountPubKey, stakeAmount } = payload;
   const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
   if (!activeAccount) {
-    throw new Error('Please select a Active Account');
+    return throwDetailedError({
+      detailed: 'Please select an active account',
+      type: ErrorType.NO_ACTIVE_ACCOUNT,
+    });
   }
-  const stakingWalletfilePath = `namespace/${activeAccount}_stakingWallet.json`;
-  const mainWalletfilePath = `wallets/${activeAccount}_mainSystemWallet.json`;
+  const stakingWalletfilePath =
+    getAppDataPath() + `/namespace/${activeAccount}_stakingWallet.json`;
+  const mainWalletfilePath =
+    getAppDataPath() + `/wallets/${activeAccount}_mainSystemWallet.json`;
   let mainSystemAccount;
   let stakingAccKeypair;
   try {
@@ -61,13 +69,24 @@ const delegateStake = async (
     );
   } catch (e) {
     console.error(e);
-    throw Error("System Account or StakingWallet Account doesn't exist");
+    return throwDetailedError({
+      detailed: e,
+      type: ErrorType.NO_ACCOUNT_KEY,
+    });
   }
   const accountInfo = await sdk.k2Connection.getAccountInfo(
     new PublicKey(stakingAccKeypair.publicKey)
   );
-  const taskState = await getTaskInfo(null, { taskAccountPubKey });
-  if (!taskState) throw new Error('Task not found');
+
+  let taskState;
+  try {
+    taskState = await getTaskInfo(null, { taskAccountPubKey });
+  } catch (e) {
+    return throwDetailedError({
+      detailed: e,
+      type: ErrorType.TASK_NOT_FOUND,
+    });
+  }
   console.log('ACCOUNT OWNER', accountInfo?.owner?.toBase58());
   if (
     accountInfo?.owner?.toBase58() ==
@@ -81,11 +100,24 @@ const delegateStake = async (
         lamports: stakeAmount * LAMPORTS_PER_SOL,
       })
     );
-    await sendAndConfirmTransaction(
-      sdk.k2Connection,
-      createSubmitterAccTransaction,
-      [mainSystemAccount]
-    );
+    try {
+      await sendAndConfirmTransaction(
+        sdk.k2Connection,
+        createSubmitterAccTransaction,
+        [mainSystemAccount]
+      );
+    } catch (e) {
+      console.error(e);
+      const errorType = e
+        .toLowerCase()
+        .includes('transaction was not confirmed')
+        ? ErrorType.TRANSACTION_TIMEOUT
+        : ErrorType.GENERIC;
+      return throwDetailedError({
+        detailed: e,
+        type: errorType,
+      });
+    }
     const data = encodeData(STAKE_INSTRUCTION_LAYOUT, {
       stakeAmount: stakeAmount * LAMPORTS_PER_SOL,
     });
@@ -111,12 +143,25 @@ const delegateStake = async (
       programId: TASK_CONTRACT_ID,
       data: data,
     });
-    const response = await sendAndConfirmTransaction(
-      sdk.k2Connection,
-      new Transaction().add(instruction),
-      [mainSystemAccount, stakingAccKeypair]
-    );
-    return response;
+    try {
+      const response = await sendAndConfirmTransaction(
+        sdk.k2Connection,
+        new Transaction().add(instruction),
+        [mainSystemAccount, stakingAccKeypair]
+      );
+      return response;
+    } catch (e) {
+      console.error(e);
+      const errorType = e
+        .toLowerCase()
+        .includes('transaction was not confirmed')
+        ? ErrorType.TRANSACTION_TIMEOUT
+        : ErrorType.GENERIC;
+      return throwDetailedError({
+        detailed: e,
+        type: errorType,
+      });
+    }
   } else {
     console.log(
       mainSystemAccount.publicKey.toBase58(),
@@ -135,12 +180,25 @@ const delegateStake = async (
         programId: TASK_CONTRACT_ID,
       })
     );
-    await sendAndConfirmTransaction(
-      sdk.k2Connection,
-      createSubmitterAccTransaction,
-      [mainSystemAccount, stakingAccKeypair]
-    );
-    console.log('Stake account created');
+    try {
+      await sendAndConfirmTransaction(
+        sdk.k2Connection,
+        createSubmitterAccTransaction,
+        [mainSystemAccount, stakingAccKeypair]
+      );
+      console.log('Stake account created');
+    } catch (e) {
+      console.error(e);
+      const errorType = e
+        .toLowerCase()
+        .includes('transaction was not confirmed')
+        ? ErrorType.TRANSACTION_TIMEOUT
+        : ErrorType.GENERIC;
+      return throwDetailedError({
+        detailed: e,
+        type: errorType,
+      });
+    }
 
     const data = encodeData(STAKE_INSTRUCTION_LAYOUT, {
       stakeAmount: stakeAmount * LAMPORTS_PER_SOL,
@@ -167,14 +225,27 @@ const delegateStake = async (
       programId: TASK_CONTRACT_ID,
       data: data,
     });
-    const response = await sendAndConfirmTransaction(
-      sdk.k2Connection,
-      new Transaction().add(instruction),
-      [mainSystemAccount, stakingAccKeypair]
-    );
-    console.log('Staking complete');
+    try {
+      const response = await sendAndConfirmTransaction(
+        sdk.k2Connection,
+        new Transaction().add(instruction),
+        [mainSystemAccount, stakingAccKeypair]
+      );
+      console.log('Staking complete');
 
-    return response;
+      return response;
+    } catch (e) {
+      console.error(e);
+      const errorType = e
+        .toLowerCase()
+        .includes('transaction was not confirmed')
+        ? ErrorType.TRANSACTION_TIMEOUT
+        : ErrorType.GENERIC;
+      return throwDetailedError({
+        detailed: e,
+        type: errorType,
+      });
+    }
   }
 };
 

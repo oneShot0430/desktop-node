@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
-import { ErrorMessage } from '../ui/ErrorMessage';
+import { ErrorMessage } from 'webapp/components';
 
 import { pickRandomNumbers } from './pickRandomNumbers';
 
@@ -75,7 +75,7 @@ export const SeedPhraseConfirm = ({
           );
         })}
       </div>
-      {error && <ErrorMessage errorMessage={error} />}
+      {error && <ErrorMessage error={error} />}
     </div>
   );
 };

@@ -18,6 +18,10 @@ import bs58 from 'bs58';
 import jwt from 'jsonwebtoken';
 import nacl from 'tweetnacl';
 
+import { ErrorType } from 'models';
+import { throwDetailedError } from 'utils';
+
+import { getAppDataPath } from './getAppDataPath';
 import leveldbWrapper from './leveldb';
 
 // eslint-disable-next-line
@@ -141,7 +145,8 @@ class Namespace {
             Uint8Array.from(
               JSON.parse(
                 fs.readFileSync(
-                  `wallets/${activeAccount}_mainSystemWallet.json`,
+                  getAppDataPath() +
+                    `/wallets/${activeAccount}_mainSystemWallet.json`,
                   'utf-8'
                 )
               )
@@ -355,19 +360,19 @@ class Namespace {
    * @returns {Promise<any>}
    */
   async fs(method: any, path: any, ...args: any) {
-    const basePath = 'namespace/' + this.taskTxId;
+    const basePath = getAppDataPath() + '/namespace/' + this.taskTxId;
     await fsPromises.mkdir(basePath, { recursive: true }).catch(console.error);
     return fsPromises[method](`${basePath}/${path}`, ...args);
   }
 
   async fsStaking(method: any, path: any, ...args: any) {
-    const basePath = 'namespace/';
+    const basePath = getAppDataPath() + '/namespace/';
     await fsPromises.mkdir(basePath, { recursive: true }).catch(console.error);
     return fsPromises[method](`${basePath}/${path}`, ...args);
   }
 
   async fsWriteStream(imagepath: string) {
-    const basePath = 'namespace/' + this.taskTxId;
+    const basePath = getAppDataPath() + '/namespace/' + this.taskTxId;
     await fsPromises.mkdir(basePath, { recursive: true }).catch(console.error);
     const image = basePath + '/' + imagepath;
     const writer = fs.createWriteStream(image);
@@ -375,7 +380,7 @@ class Namespace {
   }
 
   async fsReadStream(imagepath: string) {
-    const basePath = 'namespace/' + this.taskTxId;
+    const basePath = getAppDataPath() + '/namespace/' + this.taskTxId;
     await fsPromises.mkdir(basePath, { recursive: true }).catch(console.error);
     const image = basePath + imagepath;
     const file = fs.readFileSync(image);
@@ -476,12 +481,25 @@ class Namespace {
       programId: TASK_CONTRACT_ID,
       data: data,
     });
-    const result = await sendAndConfirmTransaction(
-      this.connection,
-      new Transaction().add(instruction),
-      [this.#mainSystemAccount, submitterKeypair]
-    );
-    return result;
+
+    try {
+      const result = await sendAndConfirmTransaction(
+        this.connection,
+        new Transaction().add(instruction),
+        [this.#mainSystemAccount, submitterKeypair]
+      );
+      return result;
+    } catch (e) {
+      const errorType = e
+        .toLowerCase()
+        .includes('transaction was not confirmed')
+        ? ErrorType.TRANSACTION_TIMEOUT
+        : ErrorType.GENERIC;
+      return throwDetailedError({
+        detailed: e,
+        type: errorType,
+      });
+    }
   }
   /**
    * Wrapper function for the OnChain Voting for Task contract
@@ -515,12 +533,24 @@ class Namespace {
       programId: TASK_CONTRACT_ID,
       data: data,
     });
-    const result = await sendAndConfirmTransaction(
-      this.connection,
-      new Transaction().add(instruction),
-      [this.#mainSystemAccount, voterKeypair]
-    );
-    return result;
+    try {
+      const result = await sendAndConfirmTransaction(
+        this.connection,
+        new Transaction().add(instruction),
+        [this.#mainSystemAccount, voterKeypair]
+      );
+      return result;
+    } catch (e) {
+      const errorType = e
+        .toLowerCase()
+        .includes('transaction was not confirmed')
+        ? ErrorType.TRANSACTION_TIMEOUT
+        : ErrorType.GENERIC;
+      return throwDetailedError({
+        detailed: e,
+        type: errorType,
+      });
+    }
   }
 
   async stakeOnChain(
@@ -548,12 +578,24 @@ class Namespace {
       programId: TASK_CONTRACT_ID,
       data: data,
     });
-    const response = await sendAndConfirmTransaction(
-      this.connection,
-      new Transaction().add(instruction),
-      [this.#mainSystemAccount, stakingAccKeypair]
-    );
-    return response;
+    try {
+      const response = await sendAndConfirmTransaction(
+        this.connection,
+        new Transaction().add(instruction),
+        [this.#mainSystemAccount, stakingAccKeypair]
+      );
+      return response;
+    } catch (e) {
+      const errorType = e
+        .toLowerCase()
+        .includes('transaction was not confirmed')
+        ? ErrorType.TRANSACTION_TIMEOUT
+        : ErrorType.GENERIC;
+      return throwDetailedError({
+        detailed: e,
+        type: errorType,
+      });
+    }
   }
 
   async claimReward(
@@ -587,12 +629,25 @@ class Namespace {
       'this.mainSystemAccount',
       this.#mainSystemAccount.publicKey.toBase58()
     );
-    const response = await sendAndConfirmTransaction(
-      this.connection,
-      new Transaction().add(instruction),
-      [this.#mainSystemAccount, claimerKeypair]
-    );
-    return response;
+    try {
+      const response = await sendAndConfirmTransaction(
+        this.connection,
+        new Transaction().add(instruction),
+        [this.#mainSystemAccount, claimerKeypair]
+      );
+      return response;
+    } catch (e) {
+      console.error(e);
+      const errorType = e
+        .toLowerCase()
+        .includes('transaction was not confirmed')
+        ? ErrorType.TRANSACTION_TIMEOUT
+        : ErrorType.GENERIC;
+      return throwDetailedError({
+        detailed: e,
+        type: errorType,
+      });
+    }
   }
 
   async sendTransaction(
@@ -607,14 +662,27 @@ class Namespace {
         lamports: amount,
       })
     );
-    // Sign transaction, broadcast, and confirm
-    const signature = await sendAndConfirmTransaction(
-      this.connection,
-      transaction,
-      [this.#mainSystemAccount]
-    );
-    console.log('SIGNATURE', signature);
-    return signature;
+    try {
+      // Sign transaction, broadcast, and confirm
+      const signature = await sendAndConfirmTransaction(
+        this.connection,
+        transaction,
+        [this.#mainSystemAccount]
+      );
+      console.log('SIGNATURE', signature);
+      return signature;
+    } catch (e) {
+      console.error(e);
+      const errorType = e
+        .toLowerCase()
+        .includes('transaction was not confirmed')
+        ? ErrorType.TRANSACTION_TIMEOUT
+        : ErrorType.GENERIC;
+      return throwDetailedError({
+        detailed: e,
+        type: errorType,
+      });
+    }
   }
 
   async bs58Encode(data: any): Promise<string> {
@@ -708,7 +776,8 @@ class Namespace {
     try {
       const ACTIVE_ACCOUNT = 'ACTIVE_ACCOUNT';
       const activeAccount = await this.#storeGetRaw(ACTIVE_ACCOUNT);
-      const STAKING_WALLET_PATH = `namespace/${activeAccount}_stakingWallet.json`;
+      const STAKING_WALLET_PATH =
+        getAppDataPath() + `/namespace/${activeAccount}_stakingWallet.json`;
       console.log({ STAKING_WALLET_PATH });
       if (!fs.existsSync(STAKING_WALLET_PATH)) return null;
       submitterAccount = Keypair.fromSecretKey(
@@ -972,6 +1041,20 @@ class Namespace {
    */
   async getRpcUrl() {
     return await getRpcUrlWrapper();
+  }
+  /**
+   * Gets an array of service nodes
+   * @param url URL of the service node to retrieve the array from a known service node
+   * @returns Array of service nodes
+   */
+  async getNodes(url: string): Promise<Array<INode>> {
+    try {
+      const res = await axios.get(url + BUNDLER_NODES);
+      console.log('RESPOSNE FROM GET NODES', res.data);
+      return res.data;
+    } catch (_e) {
+      return [];
+    }
   }
 }
 const namespaceInstance = new Namespace(

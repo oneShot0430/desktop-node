@@ -2,16 +2,19 @@ import { ChildProcess, fork, ForkOptions } from 'child_process';
 import { Event } from 'electron';
 import * as fsSync from 'fs';
 
-import { Keypair } from '@_koi/web3.js';
+import { Keypair, PublicKey } from '@_koi/web3.js';
 import axios from 'axios';
 import cryptoRandomString from 'crypto-random-string';
 
 import config from 'config';
 import { Namespace, namespaceInstance } from 'main/node/helpers/Namespace';
+import { ErrorType } from 'models';
 import { TaskStartStopParam } from 'models/api';
 import koiiTasks from 'services/koiiTasks';
+import { throwDetailedError } from 'utils';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
+import { getAppDataPath } from '../node/helpers/getAppDataPath';
 import initExpressApp from '../node/initExpressApp';
 
 import getStakingAccountPublicKey from './getStakingAccountPubKey';
@@ -25,9 +28,13 @@ const startTask = async (event: Event, payload: TaskStartStopParam) => {
   const { taskAccountPubKey } = payload;
   const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
   if (!activeAccount) {
-    throw new Error('Please select a Active Account');
+    return throwDetailedError({
+      detailed: 'Please select an active account',
+      type: ErrorType.NO_ACTIVE_ACCOUNT,
+    });
   }
-  const mainWalletfilePath = `wallets/${activeAccount}_mainSystemWallet.json`;
+  const mainWalletfilePath =
+    getAppDataPath() + `/wallets/${activeAccount}_mainSystemWallet.json`;
   const mainSystemAccount = Keypair.fromSecretKey(
     Uint8Array.from(
       JSON.parse(fsSync.readFileSync(mainWalletfilePath, 'utf-8'))
@@ -39,7 +46,10 @@ const startTask = async (event: Event, payload: TaskStartStopParam) => {
   console.log('koiiTasks.getAllTasks()', koiiTasks.getAllTasks());
   if (!taskInfo) {
     console.error("Task doesn't exist");
-    throw Error("Task doesn't exist");
+    return throwDetailedError({
+      detailed: 'Task not found',
+      type: ErrorType.TASK_NOT_FOUND,
+    });
   }
   const expressApp = await initExpressApp();
   try {
@@ -102,16 +112,17 @@ async function loadTask(selectedTask: ISelectedTasks) {
     res = await axios.get(
       config.node.GATEWAY_URL + '/' + selectedTask.taskAuditProgram
     );
-  } catch (err) {
-    console.error(err);
-    throw new Error(
-      'Get task source error TaskAuditProgram:' + selectedTask.taskAuditProgram
-    );
+  } catch (e) {
+    console.error(e);
+    return throwDetailedError({
+      detailed: e,
+      type: ErrorType.NO_TASK_SOURCECODE,
+    });
   }
   if (res.data) {
-    fsSync.mkdirSync('executables', { recursive: true });
+    fsSync.mkdirSync(getAppDataPath() + '/executables', { recursive: true });
     fsSync.writeFileSync(
-      `executables/${selectedTask.taskAuditProgram}.js`,
+      getAppDataPath() + `/executables/${selectedTask.taskAuditProgram}.js`,
       res.data
     );
   }
@@ -146,13 +157,15 @@ async function executeTasks(
   // const STAKE = Number(process.env.TASK_STAKES?.split(',') || 0);
   const stakingAccPubkey = getStakingAccountPublicKey();
   const STAKE = selectedTask.stakeList[stakingAccPubkey];
-  fsSync.mkdirSync(`namespace/${selectedTask.taskId}`, { recursive: true });
+  fsSync.mkdirSync(getAppDataPath() + `/namespace/${selectedTask.taskId}`, {
+    recursive: true,
+  });
   const log_file = fsSync.createWriteStream(
-    `namespace/${selectedTask.taskId}/task.log`,
+    getAppDataPath() + `/namespace/${selectedTask.taskId}/task.log`,
     { flags: 'a+' }
   );
   const childTaskProcess = fork(
-    `executables/${selectedTask.taskAuditProgram}.js`,
+    getAppDataPath() + `/executables/${selectedTask.taskAuditProgram}.js`,
     [
       `${selectedTask.taskName}`,
       `${selectedTask.taskId}`,
@@ -173,7 +186,14 @@ async function executeTasks(
     expressApp,
     operationMode,
     mainSystemAccount,
-    {}
+    {
+      task_name: selectedTask.taskName,
+      task_id: selectedTask.taskId,
+      task_audit_program: selectedTask.taskAuditProgram,
+      task_manager: new PublicKey(selectedTask.taskManager),
+      stake_pot_account: new PublicKey(selectedTask.stakePotAccount),
+      bounty_amount_per_round: selectedTask.bountyAmountPerRound,
+    }
   );
   LAST_USED_PORT += 1;
   return {

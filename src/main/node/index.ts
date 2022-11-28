@@ -4,9 +4,11 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 import { namespaceInstance } from 'main/node/helpers/Namespace';
+import { ErrorType } from 'models';
+import { throwDetailedError } from 'utils';
 
 import executeTasks from './executeTasks';
-import initExpressApp from './initExpressApp';
+import { getAppDataPath } from './helpers/getAppDataPath';
 // import loadTasks from './loadTasks';
 
 export default async (): Promise<any> => {
@@ -30,16 +32,19 @@ export default async (): Promise<any> => {
     // }, 60000)
     const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
     if (!activeAccount) {
-      throw new Error('Please select a Active Account');
+      return throwDetailedError({
+        detailed: 'Please select an active account',
+        type: ErrorType.NO_ACTIVE_ACCOUNT,
+      });
     }
-    const mainWalletfilePath = `wallets/${activeAccount}_mainSystemWallet.json`;
+    const mainWalletfilePath =
+      getAppDataPath() + `/wallets/${activeAccount}_mainSystemWallet.json`;
     if (fs.existsSync(mainWalletfilePath)) {
-      /* Init Express app */
-      const expressApp = await initExpressApp();
-
       /* Loading and Executing last running tasks */
-      console.log('Executing TASKS');
-      await executeTasks();
+      setTimeout(() => {
+        console.log('Executing TASKS');
+        executeTasks();
+      }, 5000);
     }
   } catch (e) {
     console.error('ERROR In TASK start', e);

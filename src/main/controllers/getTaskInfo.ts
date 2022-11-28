@@ -2,7 +2,9 @@ import { Event } from 'electron';
 
 import { PublicKey } from '@_koi/web3.js';
 
+import { ErrorType } from 'models';
 import sdk from 'services/sdk';
+import { throwDetailedError } from 'utils';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 
@@ -33,9 +35,20 @@ const getTaskInfo = async (
     new PublicKey(taskAccountPubKey)
   );
 
-  if (!accountInfo || !accountInfo.data) throw new Error('Task not found');
+  if (!accountInfo || !accountInfo.data)
+    return throwDetailedError({
+      detailed: 'Task not found',
+      type: ErrorType.TASK_NOT_FOUND,
+    });
+
   const taskData = JSON.parse(accountInfo.data.toString());
-  if (!taskData) throw new Error('Task not found');
+
+  if (!taskData) {
+    return throwDetailedError({
+      detailed: 'Task not found',
+      type: ErrorType.TASK_NOT_FOUND,
+    });
+  }
 
   const taskInfo = {
     taskName: taskData.task_name,

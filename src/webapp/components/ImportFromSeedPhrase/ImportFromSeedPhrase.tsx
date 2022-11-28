@@ -3,8 +3,7 @@ import { twMerge } from 'tailwind-merge';
 
 import { createNodeWallets, setActiveAccount } from 'webapp/services';
 
-import { Button } from '../ui/Button';
-import { ErrorMessage } from '../ui/ErrorMessage';
+import { ErrorMessage, Button } from '..';
 
 export interface AccountsType {
   stakingAccountPubKey: string;
@@ -29,12 +28,13 @@ const ImportFromSeedPhrase = ({
   className,
 }: PropsType) => {
   const [phrases, setPhrases] = useState(new Array(12).fill(''));
-  const [error, setError] = useState<string>();
+  const [error, setError] = useState<Error | string>('');
 
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement>,
     phraseIndex: number
   ) => {
+    setError('');
     const value = e.target.value;
     const newPhrases = Object.assign([], phrases, {
       [phraseIndex]: value,
@@ -53,7 +53,7 @@ const ImportFromSeedPhrase = ({
     const allPhrasesAreProvided = validateKeyPhrase(phrases);
 
     if (allPhrasesAreProvided) {
-      setError(null);
+      setError('');
       try {
         const accounts = await createNodeWallets(keyPhraseString, accountName);
 
@@ -66,7 +66,7 @@ const ImportFromSeedPhrase = ({
           stakingAccountPubKey: accounts.stakingWalletPubKey,
         });
       } catch (error) {
-        setError(error.message);
+        setError(error);
         if (onImportFail) {
           onImportFail(error);
         }
@@ -106,9 +106,7 @@ const ImportFromSeedPhrase = ({
         </div>
       </div>
       <div className="flex flex-col items-center justify-center mt-6">
-        <div className="mb-2">
-          {error && <ErrorMessage errorMessage={error} />}
-        </div>
+        <div className="mb-2">{error && <ErrorMessage error={error} />}</div>
         <Button
           onClick={handleImportFromPhrase}
           label={confirmActionLabel}

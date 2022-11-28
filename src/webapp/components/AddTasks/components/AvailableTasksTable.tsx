@@ -1,15 +1,11 @@
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
+import { useInfiniteQuery } from 'react-query';
 
-import { Table } from 'webapp/components/ui/Table';
+import { InfiniteScrollTable } from 'webapp/components/ui';
+import { fetchAvailableTasks, QueryKeys } from 'webapp/services';
 import { Task } from 'webapp/types';
 
 import AvailableTaskRow from './AvailableTaskRow';
-
-type PropsType = {
-  tasks: Task[];
-  isLoading?: boolean;
-  error?: string;
-};
 
 const tableHeaders = [
   'Code',
@@ -22,13 +18,45 @@ const tableHeaders = [
   'Run Task',
 ];
 
-const AvailableTasksTable = ({ tasks = [], isLoading, error }: PropsType) => {
+const pageSize = 10;
+
+const AvailableTasksTable = () => {
+  const [hasMore, setHasMore] = useState(true);
+
+  const { data, isLoading, error, fetchNextPage } = useInfiniteQuery<
+    Task[],
+    Error
+  >(
+    QueryKeys.availableTaskList,
+    ({ pageParam = 0 }) =>
+      fetchAvailableTasks({ limit: pageSize, offset: pageParam * pageSize }),
+    {
+      getNextPageParam: (lastPageData, allPages) => {
+        const checkHasMore = lastPageData.length > 0;
+        if (hasMore !== checkHasMore) {
+          setHasMore(checkHasMore);
+        }
+        return checkHasMore ? allPages.length + 1 : undefined;
+      },
+    }
+  );
+
+  const getAllRows = (): Task[] => {
+    return (data?.pages || []).flat();
+  };
+
   return (
-    <Table tableHeaders={tableHeaders} isLoading={isLoading} error={error}>
-      {tasks.map((task) => (
+    <InfiniteScrollTable
+      tableHeaders={tableHeaders}
+      isLoading={isLoading}
+      error={error}
+      hasMore={hasMore}
+      update={fetchNextPage}
+    >
+      {getAllRows().map((task) => (
         <AvailableTaskRow key={task.publicKey} task={task} />
       ))}
-    </Table>
+    </InfiniteScrollTable>
   );
 };
 
