@@ -106,12 +106,20 @@ const createNodeWallets = async (
     fs.writeFile(stakingWalletFilePath, stakingWalletFileContent, (err) => {
       if (err) {
         console.error(err);
+        return throwDetailedError({
+          detailed:
+            'There was an error trying to write the staking wallet file',
+          type: ErrorType.GENERIC,
+        });
       }
     });
     fs.writeFile(mainWalletFilePath, mainWalletFileContent, (err) => {
       if (err) {
         console.error(err);
-        throw err;
+        return throwDetailedError({
+          detailed: 'There was an error trying to write the main wallet file',
+          type: ErrorType.GENERIC,
+        });
       }
     });
     return {
