@@ -18,7 +18,7 @@ import bs58 from 'bs58';
 import jwt from 'jsonwebtoken';
 import nacl from 'tweetnacl';
 
-import { ErrorType } from 'models';
+import { ErrorType, NetworkErrors } from 'models';
 import { throwDetailedError } from 'utils';
 
 import { getAppDataPath } from './getAppDataPath';
@@ -490,9 +490,10 @@ class Namespace {
       );
       return result;
     } catch (e) {
-      const errorType = e
+      console.error(e);
+      const errorType = e.message
         .toLowerCase()
-        .includes('transaction was not confirmed')
+        .includes(NetworkErrors.TRANSACTION_TIMEOUT)
         ? ErrorType.TRANSACTION_TIMEOUT
         : ErrorType.GENERIC;
       return throwDetailedError({
@@ -541,9 +542,10 @@ class Namespace {
       );
       return result;
     } catch (e) {
-      const errorType = e
+      console.error(e);
+      const errorType = e.message
         .toLowerCase()
-        .includes('transaction was not confirmed')
+        .includes(NetworkErrors.TRANSACTION_TIMEOUT)
         ? ErrorType.TRANSACTION_TIMEOUT
         : ErrorType.GENERIC;
       return throwDetailedError({
@@ -586,9 +588,10 @@ class Namespace {
       );
       return response;
     } catch (e) {
-      const errorType = e
+      console.error(e);
+      const errorType = e.message
         .toLowerCase()
-        .includes('transaction was not confirmed')
+        .includes(NetworkErrors.TRANSACTION_TIMEOUT)
         ? ErrorType.TRANSACTION_TIMEOUT
         : ErrorType.GENERIC;
       return throwDetailedError({
@@ -638,9 +641,9 @@ class Namespace {
       return response;
     } catch (e) {
       console.error(e);
-      const errorType = e
+      const errorType = e.message
         .toLowerCase()
-        .includes('transaction was not confirmed')
+        .includes(NetworkErrors.TRANSACTION_TIMEOUT)
         ? ErrorType.TRANSACTION_TIMEOUT
         : ErrorType.GENERIC;
       return throwDetailedError({
@@ -673,9 +676,9 @@ class Namespace {
       return signature;
     } catch (e) {
       console.error(e);
-      const errorType = e
+      const errorType = e.message
         .toLowerCase()
-        .includes('transaction was not confirmed')
+        .includes(NetworkErrors.TRANSACTION_TIMEOUT)
         ? ErrorType.TRANSACTION_TIMEOUT
         : ErrorType.GENERIC;
       return throwDetailedError({

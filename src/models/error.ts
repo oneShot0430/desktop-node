@@ -16,3 +16,7 @@ export enum ErrorType {
   GENERIC = 'GENERIC',
   DUPLICATE_ACCOUNT = 'DUPLICATE_ACCOUNT',
 }
+
+export enum NetworkErrors {
+  TRANSACTION_TIMEOUT = 'transaction was not confirmed',
+}
