@@ -107,8 +107,7 @@ const createNodeWallets = async (
       if (err) {
         console.error(err);
         return throwDetailedError({
-          detailed:
-            'There was an error trying to write the staking wallet file',
+          detailed: err.message,
           type: ErrorType.GENERIC,
         });
       }
@@ -117,7 +116,7 @@ const createNodeWallets = async (
       if (err) {
         console.error(err);
         return throwDetailedError({
-          detailed: 'There was an error trying to write the main wallet file',
+          detailed: err.message,
           type: ErrorType.GENERIC,
         });
       }
