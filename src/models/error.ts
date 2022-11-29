@@ -15,3 +15,7 @@ export enum ErrorType {
   NO_VALID_ACCOUNT_NAME = 'NO_VALID_ACCOUNT_NAME',
   GENERIC = 'GENERIC',
 }
+
+export enum NetworkErrors {
+  TRANSACTION_TIMEOUT = 'transaction was not confirmed',
+}

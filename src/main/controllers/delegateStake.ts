@@ -14,7 +14,7 @@ import {
 
 import config from 'config';
 import { namespaceInstance } from 'main/node/helpers/Namespace';
-import { ErrorType } from 'models';
+import { ErrorType, NetworkErrors } from 'models';
 import sdk from 'services/sdk';
 import { throwDetailedError } from 'utils';
 
@@ -115,7 +115,7 @@ const delegateStake = async (
       console.error(e);
       const errorType = e.message
         .toLowerCase()
-        .includes('transaction was not confirmed')
+        .includes(NetworkErrors.TRANSACTION_TIMEOUT)
         ? ErrorType.TRANSACTION_TIMEOUT
         : ErrorType.GENERIC;
       return throwDetailedError({
@@ -159,7 +159,7 @@ const delegateStake = async (
       console.error(e);
       const errorType = e.message
         .toLowerCase()
-        .includes('transaction was not confirmed')
+        .includes(NetworkErrors.TRANSACTION_TIMEOUT)
         ? ErrorType.TRANSACTION_TIMEOUT
         : ErrorType.GENERIC;
       return throwDetailedError({
@@ -196,7 +196,7 @@ const delegateStake = async (
       console.error(e);
       const errorType = e.message
         .toLowerCase()
-        .includes('transaction was not confirmed')
+        .includes(NetworkErrors.TRANSACTION_TIMEOUT)
         ? ErrorType.TRANSACTION_TIMEOUT
         : ErrorType.GENERIC;
       return throwDetailedError({
@@ -243,7 +243,7 @@ const delegateStake = async (
       console.error(e);
       const errorType = e.message
         .toLowerCase()
-        .includes('transaction was not confirmed')
+        .includes(NetworkErrors.TRANSACTION_TIMEOUT)
         ? ErrorType.TRANSACTION_TIMEOUT
         : ErrorType.GENERIC;
       return throwDetailedError({
