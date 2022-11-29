@@ -54,7 +54,7 @@ const AccountsTable = () => {
               return (
                 <AccountItem
                   stakingPublicKeyBalance={stakingPublicKeyBalance}
-                  key={mainPublicKey}
+                  key={accountName}
                   mainPublicKey={mainPublicKey}
                   accountName={accountName}
                   stakingPublicKey={stakingPublicKey}

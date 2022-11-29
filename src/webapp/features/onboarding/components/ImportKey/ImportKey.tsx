@@ -2,8 +2,11 @@
 import React, { useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { ImportFromSeedPhrase } from 'webapp/components/ImportFromSeedPhrase';
-import { Tooltip } from 'webapp/components/ui/Tooltip/Tooltip';
+import { Tooltip } from 'webapp/components';
+import {
+  ImportFromSeedPhrase,
+  AccountsType,
+} from 'webapp/components/ImportFromSeedPhrase';
 import { Theme } from 'webapp/types/common';
 import { AppRoute } from 'webapp/types/routes';
 
@@ -19,6 +22,11 @@ const ImportKey = () => {
   const { setSystemKey } = useContext(OnboardingContext);
   const location = useLocation();
   const { accountName } = location.state as LocationStateType;
+
+  const handleImportSuccess = ({ mainAccountPubKey }: AccountsType) => {
+    setSystemKey(mainAccountPubKey);
+    navigate(AppRoute.OnboardingPhraseImportSuccess);
+  };
 
   return (
     <div className="flex flex-col items-start">
@@ -44,10 +52,7 @@ const ImportKey = () => {
           <ImportFromSeedPhrase
             accountName={accountName}
             setImportedWalletAsDefault
-            onImportSuccess={({ mainAccountPubKey }) => {
-              setSystemKey(mainAccountPubKey);
-              navigate(AppRoute.OnboardingPhraseImportSuccess);
-            }}
+            onImportSuccess={handleImportSuccess}
             confirmActionLabel="Confirm"
           />
         </div>

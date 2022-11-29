@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useQueryClient, useMutation } from 'react-query';
 
-import { QueryKeys, removeAccount, setActiveAccount } from 'webapp/services';
+import { removeAccount, setActiveAccount } from 'webapp/services';
 
 type ParamsType = {
   accountName: string;
@@ -16,9 +16,7 @@ export const useAccount = ({ accountName, isDefault }: ParamsType) => {
     isLoading: removingAccountLoading,
     error: removingAccountError,
   } = useMutation<boolean, Error, string>(removeAccount, {
-    onSuccess: () => {
-      queryCache.invalidateQueries(QueryKeys.Accounts);
-    },
+    onSuccess: () => queryCache.invalidateQueries(),
   });
 
   const {
@@ -26,7 +24,7 @@ export const useAccount = ({ accountName, isDefault }: ParamsType) => {
     isLoading: setAccountActiveLoading,
     error: setAccountActiveError,
   } = useMutation<boolean, Error, string>(setActiveAccount, {
-    onSuccess: () => queryCache.invalidateQueries(QueryKeys.Accounts),
+    onSuccess: () => queryCache.invalidateQueries(),
   });
 
   const removeAccountHandler = useCallback(async () => {
