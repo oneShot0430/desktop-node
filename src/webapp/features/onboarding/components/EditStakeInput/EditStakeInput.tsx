@@ -26,7 +26,7 @@ export const EditStakeInput = ({
   );
   const stakeInKoii = getKoiiFromRoe(stake);
   const minStakeInKoii = getKoiiFromRoe(minStake);
-  const value = hasEnteredAValue ? stakeInKoii : '';
+  const value = hasEnteredAValue && stakeInKoii !== 0 ? stakeInKoii : '';
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = ({
     target: { value: newStakeInKoii },
@@ -41,7 +41,7 @@ export const EditStakeInput = ({
     <div>
       <input
         value={value}
-        placeholder={'0'}
+        placeholder="0"
         onChange={handleChange}
         type="number"
         className={inputClasses}
