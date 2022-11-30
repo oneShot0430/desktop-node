@@ -1,16 +1,15 @@
 import React from 'react';
 
 import {
-  AppNotification,
-  NotificationBanner,
   useNotificationsContext,
-} from 'webapp/features/notifications';
+  NotificationBanner,
+  AppNotification,
+} from 'features/notifications';
 
 import { BackButton } from '../BackButton';
 
 export const AppTopBar = () => {
-  const { pendingNotifications, addNotification, removeNotification } =
-    useNotificationsContext();
+  const { pendingNotifications } = useNotificationsContext();
 
   const displayedNotification = pendingNotifications[0];
 
@@ -18,23 +17,12 @@ export const AppTopBar = () => {
     <>
       <div className="flex justify-between w-full mx-auto h-[80px] py-2">
         {displayedNotification ? (
-          <NotificationBanner
-            variant={AppNotification.FirstNodeReward}
-            onRemove={() => removeNotification()}
-          />
+          <NotificationBanner variant={AppNotification.FirstNodeReward} />
         ) : (
           <div className="flex items-center justify-between w-full gap-4 px-4 mx-auto">
             <BackButton />
           </div>
         )}
-      </div>
-      <div className="text-white">
-        <button
-          onClick={() => addNotification(AppNotification.FirstNodeReward)}
-        >
-          Add
-        </button>
-        <button onClick={() => removeNotification()}>Remove</button>
       </div>
     </>
   );

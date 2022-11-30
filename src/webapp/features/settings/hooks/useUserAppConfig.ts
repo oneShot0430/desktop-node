@@ -4,11 +4,9 @@ import { useMutation, useQuery } from 'react-query';
 import { StoreUserConfigParam } from 'models/api';
 import { getUserConfig, QueryKeys, saveUserConfig } from 'webapp/services';
 
-type ParamsType =
-  | {
-      onConfigSaveSuccess?: () => void;
-    }
-  | undefined;
+type ParamsType = {
+  onConfigSaveSuccess?: () => void;
+};
 
 export const useUserAppConfig = ({ onConfigSaveSuccess }: ParamsType) => {
   const {

@@ -16,7 +16,7 @@ export const Sidebar = () => {
   const { addNotification } = useNotificationsContext();
   const { userConfig, handleSaveUserAppConfig } = useUserAppConfig({});
   const firstRewardNotificationDisplayed =
-    userConfig?.firstRewardNotificationDisplayed ?? false;
+    !!userConfig?.firstRewardNotificationDisplayed;
 
   const { data, isLoading } = useQuery(
     [QueryKeys.taskNodeInfo],

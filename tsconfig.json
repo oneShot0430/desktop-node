@@ -12,7 +12,8 @@
     "jsx": "react",
     "baseUrl": "./src",
     "paths": {
-      "svgs/*": ["assets/svgs/*"]
+      "svgs/*": ["assets/svgs/*"],
+      "features/*": ["webapp/features/*"]
     },
     "target": "ES6"
   },

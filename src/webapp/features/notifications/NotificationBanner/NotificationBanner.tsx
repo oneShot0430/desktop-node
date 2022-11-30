@@ -20,10 +20,9 @@ export enum AppNotification {
 
 type PropsType = {
   variant: AppNotification;
-  onRemove: () => void;
 };
 
-export const NotificationBanner = ({ variant, onRemove }: PropsType) => {
+export const NotificationBanner = ({ variant }: PropsType) => {
   const navigate = useNavigate();
   const { removeNotification } = useNotificationsContext();
 
@@ -49,7 +48,7 @@ export const NotificationBanner = ({ variant, onRemove }: PropsType) => {
   return (
     <div className={classNames}>
       <BackButton color="blue" />
-      <div className="max-w-[65%]">{action?.message ?? ''}</div>
+      <div className="max-w-[65%]">{action.message}</div>
       <div className="flex items-center gap-4 w-max">
         {action && (
           <Button
@@ -60,7 +59,11 @@ export const NotificationBanner = ({ variant, onRemove }: PropsType) => {
             labelClassesOverrides="font-semibold w-max"
           />
         )}
-        <div className="cursor-pointer" title="close" onClick={onRemove}>
+        <div
+          className="cursor-pointer"
+          title="close"
+          onClick={removeNotification}
+        >
           <Icon size={46} source={CloseXLine} />
         </div>
       </div>
