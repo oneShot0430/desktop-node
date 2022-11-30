@@ -5,7 +5,12 @@ import CodeIcon from 'assets/svgs/code-icon-lg.svg';
 import PlayIcon from 'assets/svgs/play-icon.svg';
 import StopTealIcon from 'assets/svgs/stop-icon-teal.svg';
 import { getKoiiFromRoe } from 'utils';
-import { Button, LoadingSpinner, LoadingSpinnerSize } from 'webapp/components';
+import {
+  Button,
+  LoadingSpinner,
+  LoadingSpinnerSize,
+  Tooltip,
+} from 'webapp/components';
 import { useTaskDetailsModal } from 'webapp/components/MyNodeTable/hooks';
 import { TableRow, TableCell } from 'webapp/components/ui/Table';
 import { useTaskStake } from 'webapp/features/common';
@@ -99,10 +104,12 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
   return (
     <TableRow key={publicKey}>
       <TableCell>
-        <div className="flex flex-col items-center justify-start w-[40px]">
-          <Button icon={<CodeIcon />} onlyIcon onClick={handleShowCode} />
-          <div className="text-[6px]">INSPECT</div>
-        </div>
+        <Tooltip tooltipContent="Inspect task details">
+          <div className="flex flex-col items-center justify-start w-[40px]">
+            <Button icon={<CodeIcon />} onlyIcon onClick={handleShowCode} />
+            <div className="text-[6px]">INSPECT</div>
+          </div>
+        </Tooltip>
       </TableCell>
       <TableCell>
         <div className="text-xs">
@@ -132,13 +139,17 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
             <LoadingSpinner size={LoadingSpinnerSize.Large} />
           </div>
         ) : (
-          <Button
-            onlyIcon
-            icon={isRunning ? <StopTealIcon /> : <PlayIcon />}
-            title={isRunning ? 'Stop' : 'Start'}
-            onClick={isRunning ? handleStopTask : handleStartTask}
-            disabled={!meetsMinimumStake}
-          />
+          <Tooltip
+            placement="top-left"
+            tooltipContent={`${isRunning ? 'Stop' : 'Start'} task`}
+          >
+            <Button
+              onlyIcon
+              icon={isRunning ? <StopTealIcon /> : <PlayIcon />}
+              onClick={isRunning ? handleStopTask : handleStartTask}
+              disabled={!meetsMinimumStake}
+            />
+          </Tooltip>
         )}
       </TableCell>
     </TableRow>

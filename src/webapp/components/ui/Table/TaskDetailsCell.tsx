@@ -1,6 +1,7 @@
 import React from 'react';
 
 import CodeIcon from 'assets/svgs/code-icon.svg';
+import { Tooltip } from 'webapp/components';
 
 import { TableCell } from './TableCell';
 
@@ -21,7 +22,9 @@ export const TaskDetailsCell = ({
         className="flex items-center justify-start gap-1 cursor-pointer"
         onClick={onClick}
       >
-        <CodeIcon />
+        <Tooltip tooltipContent="Inspect task details">
+          <CodeIcon />
+        </Tooltip>
         <div className="text-xs">
           <div>{taskName ?? ''}</div>
           <div className="text-finnieTeal">{createdAt}</div>

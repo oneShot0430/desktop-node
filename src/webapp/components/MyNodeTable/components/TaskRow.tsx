@@ -6,8 +6,12 @@ import AddWithdrawIcon from 'assets/svgs/add-withdraw-icon.svg';
 import PauseIcon from 'assets/svgs/pause-icon.svg';
 import PlayIcon from 'assets/svgs/play-icon.svg';
 import { getKoiiFromRoe } from 'utils';
-import { LoadingSpinner, LoadingSpinnerSize } from 'webapp/components/ui';
-import { Button } from 'webapp/components/ui/Button';
+import {
+  Button,
+  Tooltip,
+  LoadingSpinner,
+  LoadingSpinnerSize,
+} from 'webapp/components';
 import {
   TableRow,
   TableCell,
@@ -71,12 +75,13 @@ export const TaskRow = ({ task, accountPublicKey }: PropsType) => {
             <LoadingSpinner size={LoadingSpinnerSize.Large} />
           </div>
         ) : (
-          <Button
-            onlyIcon
-            icon={isRunning ? <PauseIcon /> : <PlayIcon />}
-            title={isRunning ? 'Stop' : 'Start'}
-            onClick={handleToggleTask}
-          />
+          <Tooltip tooltipContent={`${isRunning ? 'Stop' : 'Start'} task`}>
+            <Button
+              onlyIcon
+              icon={isRunning ? <PauseIcon /> : <PlayIcon />}
+              onClick={handleToggleTask}
+            />
+          </Tooltip>
         )}
       </TableCell>
       <TaskDetailsCell
@@ -94,20 +99,21 @@ export const TaskRow = ({ task, accountPublicKey }: PropsType) => {
       <NodeStatusCell status={nodeStatus} />
       <TableCell>
         <div className="flex flex-row items-center gap-4">
-          <div title="Edit stake amount">
+          <Tooltip placement="top-left" tooltipContent="Edit stake amount">
             <Button
               onClick={showEditStakeAmountModal}
               onlyIcon
               icon={<AddWithdrawIcon />}
             />
-          </div>
-          <div title="Output logs to console">
+          </Tooltip>
+
+          <Tooltip placement="top-left" tooltipContent="Output logs to console">
             <Button
               onClick={handleOutputLogsToConsole}
               onlyIcon
               icon={<ActionHistoryIcon />}
             />
-          </div>
+          </Tooltip>
         </div>
       </TableCell>
     </TableRow>

@@ -9,7 +9,7 @@ import AvailableTaskRow from './AvailableTaskRow';
 
 const tableHeaders = [
   'Code',
-  'TaskName ',
+  'Task Name ',
   'Creator',
   'Bounty',
   'Nodes',
