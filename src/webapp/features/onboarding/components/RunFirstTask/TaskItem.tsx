@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 import CloseIcon from 'assets/svgs/close-icons/close-icon.svg';
 import CodeIconSvg from 'assets/svgs/code-icon.svg';
+import { Tooltip } from 'webapp/components';
 
 import { EditStakeInput } from '../EditStakeInput';
 
@@ -50,14 +51,12 @@ function TaskItem({
         />
       </div>
 
-      <div
-        className="col-span-1 m-auto cursor-pointer text-finnieRed"
-        onClick={onRemove}
-        title="Remove task"
-      >
-        <div className="w-6 h-6 mr-2">
-          <CloseIcon />
-        </div>
+      <div className="m-auto cursor-pointer text-finnieRed" onClick={onRemove}>
+        <Tooltip placement="top-left" tooltipContent="Remove task">
+          <div className="w-6 mr-2">
+            <CloseIcon />
+          </div>
+        </Tooltip>
       </div>
     </div>
   );

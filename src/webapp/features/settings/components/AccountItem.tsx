@@ -12,6 +12,7 @@ import {
   LoadingSpinnerSize,
   ErrorMessage,
   Button,
+  Tooltip,
 } from 'webapp/components';
 import { useClipboard } from 'webapp/features/common';
 import { useConfirmModal } from 'webapp/features/common/modals/ConfirmationModal';
@@ -101,11 +102,13 @@ const AccountItem = ({
         {setAccountActiveLoading ? (
           <LoadingSpinner />
         ) : (
-          <Button
-            onClick={setAccountActive}
-            icon={isDefault ? <Star /> : <StarOutlined />}
-            className="w-6 h-6 col-span-1 bg-transparent rounded-full"
-          />
+          <Tooltip tooltipContent="Select as active account">
+            <Button
+              onClick={setAccountActive}
+              icon={isDefault ? <Star /> : <StarOutlined />}
+              className="w-6 h-6 col-span-1 bg-transparent rounded-full"
+            />
+          </Tooltip>
         )}
         <span className="col-span-2 text-finnieTeal">System Key</span>
         <Button
@@ -119,17 +122,16 @@ const AccountItem = ({
           {mainPublicKey}
         </span>
         <div className="flex justify-center col-span-2 gap-4">
-          <Button
-            tooltip="Copy"
-            onClick={handleCopyMainPublicKey}
-            icon={<CopyIconSvg />}
-            /**
-             * @todo implement better copy action ux
-             */
-            className={`rounded-full w-6 h-6 ${
-              copiedMainKey ? 'bg-finnieEmerald' : 'bg-finnieTeal-100'
-            }`}
-          />
+          <Tooltip
+            tooltipContent={copiedMainKey ? 'Copied' : 'Copy'}
+            forceDisplaying={copiedMainKey}
+          >
+            <Button
+              onClick={handleCopyMainPublicKey}
+              icon={<CopyIconSvg />}
+              className="rounded-full w-6 h-6 bg-finnieTeal-100"
+            />
+          </Tooltip>
           <Button
             icon={<KeyIconSvg className="w-3.5 h-3.5" />}
             className="invisible w-6 h-6 rounded-full bg-finnieEmerald-light"
@@ -143,12 +145,16 @@ const AccountItem = ({
           (isDeleting ? (
             <LoadingSpinner size={LoadingSpinnerSize.Medium} />
           ) : (
-            <Button
-              disabled={isDeleting}
-              onClick={handleDeleteAccount}
-              icon={<DeleteIconSvg />}
-              className="w-6 h-6 col-span-1 rounded-full bg-finnieRed"
-            />
+            <div className="mr-4">
+              <Tooltip placement="top-left" tooltipContent="Delete account">
+                <Button
+                  disabled={isDeleting}
+                  onClick={handleDeleteAccount}
+                  icon={<DeleteIconSvg />}
+                  className="w-6 h-6 col-span-1 rounded-full bg-finnieRed mr-0"
+                />
+              </Tooltip>
+            </div>
           ))}
 
         <div className="col-span-2 col-start-3 text-finnieOrange">
@@ -166,17 +172,16 @@ const AccountItem = ({
           {stakingPublicKey}
         </div>
         <div className="flex justify-center col-span-2 gap-4">
-          <Button
-            tooltip="Copy"
-            onClick={handleCopyStakingPublicKey}
-            icon={<CopyIconSvg />}
-            /**
-             * @todo implement better copy action ux
-             */
-            className={`rounded-full w-6 h-6 ${
-              copiedStakingKey ? 'bg-finnieEmerald' : 'bg-finnieTeal-100'
-            }`}
-          />
+          <Tooltip
+            tooltipContent={copiedStakingKey ? 'Copied' : 'Copy'}
+            forceDisplaying={copiedStakingKey}
+          >
+            <Button
+              onClick={handleCopyStakingPublicKey}
+              icon={<CopyIconSvg />}
+              className="rounded-full w-6 h-6  bg-finnieTeal-100"
+            />
+          </Tooltip>
           <Button
             icon={<KeyIconSvg className="w-3.5 h-3.5" />}
             className="invisible w-6 h-6 rounded-full bg-finnieEmerald-light"
