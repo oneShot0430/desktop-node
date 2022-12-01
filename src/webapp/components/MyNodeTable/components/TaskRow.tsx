@@ -87,9 +87,7 @@ export const TaskRow = ({ task, accountPublicKey }: PropsType) => {
       <TaskDetailsCell
         taskName={taskName}
         createdAt={'date string'}
-        onClick={() => {
-          showTaskDetailsModal();
-        }}
+        onClick={showTaskDetailsModal}
       />
       <TableCell>
         <span title={taskManager}>{`${taskManager.substring(0, 6)}...`}</span>

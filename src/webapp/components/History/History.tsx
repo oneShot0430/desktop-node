@@ -9,12 +9,12 @@ import { HistoryRow } from './components/HistoryRow';
 const historyRows = [] as { publicKey: string; task: Task }[];
 
 const tableHeaders = [
-  'TaskName & Start Time',
-  'Task Type',
-  'Status',
-  'Nodes',
-  'Top Stake',
-  'Set Stake',
+  { title: 'TaskName & Start Time' },
+  { title: 'Task Type' },
+  { title: 'Status' },
+  { title: 'Nodes' },
+  { title: 'Top Stake' },
+  { title: 'Set Stake' },
 ];
 
 export const History = () => {

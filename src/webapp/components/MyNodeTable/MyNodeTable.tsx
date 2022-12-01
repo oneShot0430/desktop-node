@@ -13,13 +13,13 @@ import { InfiniteScrollTable } from '../ui';
 import { TaskRow } from './components/TaskRow';
 
 const tableHeaders = [
-  'Start/Stop',
-  'TaskName & Start Time',
-  'Creator',
-  'Earned',
-  'Stake',
-  'Status',
-  'Actions',
+  { title: 'Start/Stop' },
+  { title: 'Task Name & Start Time' },
+  { title: 'Creator' },
+  { title: 'Earned', tooltip: 'Total KOII earned for running this Task' },
+  { title: 'Stake' },
+  { title: 'Status' },
+  { title: 'Actions' },
 ];
 
 const pageSize = 10;

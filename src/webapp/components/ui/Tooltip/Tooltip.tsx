@@ -21,7 +21,7 @@ type PropsType = {
 export const Tooltip = ({
   children,
   tooltipContent,
-  theme = Theme.Light,
+  theme = Theme.Dark,
   placement = 'top-right',
   manualClose = false,
   forceDisplaying = false,
