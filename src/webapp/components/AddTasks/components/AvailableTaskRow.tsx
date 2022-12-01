@@ -1,5 +1,6 @@
 import React, { memo, useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
+import { twMerge } from 'tailwind-merge';
 
 import CodeIcon from 'assets/svgs/code-icon-lg.svg';
 import PlayIcon from 'assets/svgs/play-icon.svg';
@@ -145,7 +146,17 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
           >
             <Button
               onlyIcon
-              icon={isRunning ? <StopTealIcon /> : <PlayIcon />}
+              icon={
+                isRunning ? (
+                  <StopTealIcon />
+                ) : (
+                  <PlayIcon
+                    className={twMerge(
+                      !meetsMinimumStake && 'filter grayscale'
+                    )}
+                  />
+                )
+              }
               onClick={isRunning ? handleStopTask : handleStartTask}
               disabled={!meetsMinimumStake}
             />
