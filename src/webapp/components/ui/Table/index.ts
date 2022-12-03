@@ -1,5 +1,5 @@
 export * from './Table';
-export * from './TableHeader';
+export * from './TableHeaders';
 export * from './TableRow';
 export * from './TableCell';
 export * from './NodeStatusCell';

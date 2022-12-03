@@ -3,10 +3,10 @@ import { twMerge } from 'tailwind-merge';
 
 import { ErrorMessage } from 'webapp/components';
 
-import { TableHeader } from './TableHeader';
+import { TableHeaders, TableHeader } from './TableHeaders';
 
 type PropsType = {
-  tableHeaders: string[];
+  tableHeaders: TableHeader[];
   children: React.ReactNode;
   isLoading?: boolean;
   error?: string;
@@ -32,7 +32,7 @@ export const Table = ({
   return (
     <div className={tableClasses}>
       <table className="w-full text-[14px] text-left table-auto overflow-y-auto h-[200px] border-separate border-spacing-0">
-        <TableHeader tableHeaders={tableHeaders} />
+        <TableHeaders headers={tableHeaders} />
         <tbody>{children}</tbody>
       </table>
     </div>

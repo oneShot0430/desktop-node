@@ -4,10 +4,10 @@ import { twMerge } from 'tailwind-merge';
 
 import { ErrorMessage } from 'webapp/components';
 
-import { TableHeader } from './TableHeader';
+import { TableHeaders, TableHeader } from './TableHeaders';
 
 interface PropsType {
-  tableHeaders: string[];
+  tableHeaders: TableHeader[];
   children: React.ReactNode[];
   update: () => void;
   hasMore: boolean;
@@ -52,7 +52,7 @@ export const InfiniteScrollTable = ({
         scrollableTarget={tableWrapperId}
       >
         <table className="w-full text-[14px] text-left table-auto">
-          <TableHeader tableHeaders={tableHeaders} />
+          <TableHeaders headers={tableHeaders} />
           <tbody>{children}</tbody>
         </table>
       </InfiniteScroll>

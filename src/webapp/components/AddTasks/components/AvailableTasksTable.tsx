@@ -8,14 +8,14 @@ import { Task } from 'webapp/types';
 import AvailableTaskRow from './AvailableTaskRow';
 
 const tableHeaders = [
-  'Code',
-  'Task Name ',
-  'Creator',
-  'Bounty',
-  'Nodes',
-  'Top Stake',
-  'Set Stake',
-  'Run Task',
+  { title: 'Code' },
+  { title: 'Task Name' },
+  { title: 'Creator' },
+  { title: 'Bounty' },
+  { title: 'Nodes' },
+  { title: 'Top Stake' },
+  { title: 'Set Stake' },
+  { title: 'Run Task' },
 ];
 
 const pageSize = 10;
