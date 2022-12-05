@@ -41,6 +41,9 @@ module.exports = {
           1: '#0E0E44',
           2: '#030332',
         },
+        finniePurple: {
+          DEFAULT: '#8989C7',
+        },
         finnieTeal: {
           100: '#BEF0ED',
           DEFAULT: '#5ED9D1',

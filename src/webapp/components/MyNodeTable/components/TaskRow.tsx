@@ -44,7 +44,6 @@ export const TaskRow = ({ task, accountPublicKey }: PropsType) => {
   const { earnedReward } = useEarnedReward({ task, publicKey });
   const { taskStake } = useTaskStake({ task, publicKey: accountPublicKey });
 
-  // before comitting: verify this is ok
   const earnedRewardInKoii = getKoiiFromRoe(earnedReward);
   const myStakeInKoii = getKoiiFromRoe(taskStake);
 

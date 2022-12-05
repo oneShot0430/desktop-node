@@ -19,4 +19,5 @@ export enum ErrorType {
 
 export enum NetworkErrors {
   TRANSACTION_TIMEOUT = 'transaction was not confirmed',
+  NO_REWARD_PENDING_ON_TASK = "The provided claimer account doesn't have any balance on task state",
 }

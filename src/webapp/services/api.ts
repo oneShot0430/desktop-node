@@ -1,5 +1,6 @@
 import { PublicKey } from '@_koi/web3.js';
 
+import { NetworkErrors } from 'models';
 import {
   FetchAllTasksParam,
   GetAvailableTasksParam,
@@ -185,4 +186,31 @@ export const getTaskNodeInfo = () => {
 
 export const openBrowserWindow = async (URL: string) => {
   await window.main.openBrowserWindow({ URL });
+};
+
+export const claimRewards = async () => {
+  const tasks = await fetchMyTasks({ limit: Infinity, offset: 0 });
+  const errors: Error[] = [];
+  const promisesToClaimRewards = tasks.map(async ({ publicKey }) => {
+    try {
+      await window.main.claimReward({
+        taskAccountPubKey: publicKey,
+      });
+    } catch (error) {
+      if (!error.message.includes(NetworkErrors.NO_REWARD_PENDING_ON_TASK)) {
+        errors.push(error);
+      }
+    }
+  });
+  await Promise.all(promisesToClaimRewards);
+  // if we confirm we DON'T wanna do anything with partial errors, simplify the code below:
+  const onlySomeTasksFailed = errors.length > 0 && errors.length < tasks.length;
+  const allTasksFailed = errors.length === tasks.length;
+  if (onlySomeTasksFailed) {
+    return errors;
+  } else if (allTasksFailed) {
+    throw errors;
+  } else {
+    return;
+  }
 };

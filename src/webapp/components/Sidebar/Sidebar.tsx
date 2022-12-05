@@ -42,7 +42,7 @@ export const Sidebar = () => {
   const pendingRewardsInKoii = getKoiiFromRoe(data?.pendingRewards);
 
   return (
-    <div className="flex flex-col pr-[22px] gap-[26px]">
+    <div className="flex flex-col pr-[22px] gap-4">
       <Summary
         totalEarned={totalEarnedInKoii}
         totalStaked={totalStakedInKoii}
