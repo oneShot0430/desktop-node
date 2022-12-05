@@ -6,7 +6,7 @@ import { useQueryClient, useMutation } from 'react-query';
 import loadingDotsAnimation from 'assets/animations/loading-dots.json';
 import CheckMarkIcon from 'assets/svgs/checkmark-icon-no-borders.svg';
 import CloseIcon from 'assets/svgs/close-icons/close-icon-no-borders.svg';
-// import { GetTaskNodeInfoResponse } from 'models/api';
+import { GetTaskNodeInfoResponse } from 'models/api';
 import { QueryKeys, claimRewards } from 'webapp/services';
 
 interface PropsType {
@@ -27,31 +27,27 @@ export const ClaimRewards = ({ displayConfetti }: PropsType) => {
       setIsClaimingRewards(true);
     },
     onSuccess: async (partialErrors?: Error[]) => {
-      if (partialErrors) {
-        // if we confirm we wanna do something with partial errors, handle it here
-      }
-      setTimeout(() => {
-        // Mock for testing purposes while reviewing PR, will be deleted before merging:
-
-        // queryClient.setQueryData(
-        //   [QueryKeys.taskNodeInfo],
-        //   (oldNodeData: GetTaskNodeInfoResponse) => {
-        //     const newNodeInfodata = {
-        //       ...oldNodeData,
-        //       totalKOII: oldNodeData.totalKOII + oldNodeData.pendingRewards,
-        //       pendingRewards: 0,
-        //     };
-
-        //     return newNodeInfodata;
-        //   }
-        // );
-
+      const runSuccessEffects = () => {
         displayConfetti?.();
         setHasClickedClaim(false);
         setIsClaimingRewards(false);
-      }, 3000);
-
-      queryClient.invalidateQueries(QueryKeys.taskNodeInfo);
+      };
+      if (partialErrors) {
+        setTimeout(() => {
+          runSuccessEffects();
+        }, 3000);
+        queryClient.invalidateQueries(QueryKeys.taskNodeInfo);
+      } else {
+        runSuccessEffects();
+        queryClient.setQueryData(
+          [QueryKeys.taskNodeInfo],
+          (oldNodeData: GetTaskNodeInfoResponse) => ({
+            ...oldNodeData,
+            totalKOII: oldNodeData.totalKOII + oldNodeData.pendingRewards,
+            pendingRewards: 0,
+          })
+        );
+      }
     },
   });
 
