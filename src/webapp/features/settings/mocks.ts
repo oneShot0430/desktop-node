@@ -16,7 +16,8 @@ const PARSE_ARGS = [
   "TRUSTED_SERVICE_URL",
   "SERVER_PORT",
   "TASKS",
-  "RESTORE_KOHAKU"
+  "RESTORE_KOHAKU",
+  "WEB3_STORAGE_API_KEY"
 ];
 let yargs = require("yargs");
 for (const arg of PARSE_ARGS) yargs = yargs.option(arg, { type: "string" });
