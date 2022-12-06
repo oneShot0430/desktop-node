@@ -1,7 +1,11 @@
+import Lottie from 'lottie-react';
 import React, { ReactNode } from 'react';
+import CountUp from 'react-countup';
 
+import confettiAnimation from 'assets/animations/confetti.json';
 import ShareIcon from 'assets/svgs/share-icon.svg';
 import { LoadingSpinner, Tooltip } from 'webapp/components';
+import { usePrevious } from 'webapp/features/common';
 import { Theme } from 'webapp/types/common';
 
 import { ClaimRewards } from './ClaimRewards';
@@ -12,6 +16,7 @@ type SummaryProps = {
   iconSlot: ReactNode;
   isLoading: boolean;
   displayConfetti?: () => void;
+  shouldAnimate?: boolean;
 };
 
 export const StatBlock = ({
@@ -20,10 +25,24 @@ export const StatBlock = ({
   iconSlot,
   isLoading,
   displayConfetti,
+  shouldAnimate,
 }: SummaryProps) => {
-  const statValue = isLoading ? <LoadingSpinner className="ml-auto" /> : value;
+  const previousValue = usePrevious(value);
 
   const isPendingRewardsBlock = label === 'Pending Rewards';
+  const decimalsAmount = +String(value).split('.')[1]?.length;
+  const statValue = isLoading ? (
+    <LoadingSpinner className="ml-auto" />
+  ) : shouldAnimate ? (
+    <CountUp
+      decimals={decimalsAmount}
+      start={previousValue}
+      end={value}
+      duration={0.5}
+    />
+  ) : (
+    value
+  );
 
   return (
     <div
@@ -53,6 +72,13 @@ export const StatBlock = ({
             </div>
           </Tooltip>
         ))}
+      {shouldAnimate && (
+        <Lottie
+          animationData={confettiAnimation}
+          loop={false}
+          className="absolute -top-14 -right-6 w-40 h-40"
+        />
+      )}
     </div>
   );
 };

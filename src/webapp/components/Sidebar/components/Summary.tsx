@@ -1,9 +1,7 @@
 // import { Button, ButtonSize } from '@_koii/koii-styleguide';
-import Lottie from 'lottie-react';
 import React, { useState } from 'react';
 // import { useQueryClient } from 'react-query';
 
-import confettiAnimation from 'assets/animations/confetti.json';
 import FinnieKoiiLogo from 'assets/svgs/finnie-logos/finnie-koii-logo-inverse.svg';
 import TotalStakedIcon from 'assets/svgs/koii-staked-icon.svg';
 import PendingRewardsIcon from 'assets/svgs/pending-rewards-icon.svg';
@@ -31,7 +29,6 @@ export const Summary = ({
 
   const displayConfetti = () => {
     setShouldAnimate(true);
-
     setTimeout(() => {
       setShouldAnimate(false);
     }, 3000);
@@ -44,6 +41,7 @@ export const Summary = ({
         label="Total KOII"
         iconSlot={<FinnieKoiiLogo />}
         isLoading={isLoading}
+        shouldAnimate={shouldAnimate}
       />
       <StatBlock
         value={totalStaked}
@@ -57,6 +55,7 @@ export const Summary = ({
         iconSlot={<PendingRewardsIcon />}
         isLoading={isLoading}
         displayConfetti={displayConfetti}
+        shouldAnimate={shouldAnimate}
       />
       {/* Mock for testing purposes while reviewing PR, will be deleted before merging  */}
 
@@ -80,14 +79,6 @@ export const Summary = ({
           }}
         />
       </div> */}
-
-      {shouldAnimate && (
-        <Lottie
-          animationData={confettiAnimation}
-          loop={false}
-          className="absolute -top-14 -right-6 w-40 h-40"
-        />
-      )}
     </div>
   );
 };
