@@ -7,7 +7,9 @@ import loadingDotsAnimation from 'assets/animations/loading-dots.json';
 import CheckMarkIcon from 'assets/svgs/checkmark-icon-no-borders.svg';
 import CloseIcon from 'assets/svgs/close-icons/close-icon-no-borders.svg';
 import { GetTaskNodeInfoResponse } from 'models/api';
+import { Tooltip } from 'webapp/components';
 import { QueryKeys, claimRewards } from 'webapp/services';
+import { Theme } from 'webapp/types/common';
 
 interface PropsType {
   displayConfetti?: () => void;
@@ -65,25 +67,40 @@ export const ClaimRewards = ({ displayConfetti }: PropsType) => {
           />
         ) : (
           <div className="flex justify-center gap-8 mt-1 -ml-3">
-            <CloseIcon
-              className={`${buttonsBaseClasses} bg-finnieRed hover:bg-finnieRed-500`}
-              onClick={handleGoBack}
-            />
-            <CheckMarkIcon
-              className={`${buttonsBaseClasses} bg-finnieEmerald-light hover:bg-finnieEmerald `}
-              onClick={() => claimPendingRewards()}
-            />
+            <Tooltip
+              theme={Theme.Light}
+              tooltipContent="Go back. Your rewards will not be transferred."
+            >
+              <CloseIcon
+                className={`${buttonsBaseClasses} bg-finnieRed hover:bg-finnieRed-500`}
+                onClick={handleGoBack}
+              />
+            </Tooltip>
+            <Tooltip
+              theme={Theme.Light}
+              tooltipContent="Confirm. Rewards will transfer to your account."
+            >
+              <CheckMarkIcon
+                className={`${buttonsBaseClasses} bg-finnieEmerald-light hover:bg-finnieEmerald `}
+                onClick={() => claimPendingRewards()}
+              />
+            </Tooltip>
           </div>
         )
       ) : (
-        <Button
-          onClick={handleClickClaim}
-          variant={ButtonVariant.Secondary}
-          size={ButtonSize.SM}
-          label="Claim Rewards"
-          labelClassesOverrides="text-sm"
-          buttonClassesOverrides="!p-4 !border-white !text-white"
-        />
+        <Tooltip
+          theme={Theme.Light}
+          tooltipContent="Click here to claim all pending Task rewards."
+        >
+          <Button
+            onClick={handleClickClaim}
+            variant={ButtonVariant.Secondary}
+            size={ButtonSize.SM}
+            label="Claim Rewards"
+            labelClassesOverrides="text-sm"
+            buttonClassesOverrides="!p-4 !border-white !text-white"
+          />
+        </Tooltip>
       )}
     </div>
   );

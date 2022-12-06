@@ -1,7 +1,8 @@
 import React, { ReactNode } from 'react';
 
 import ShareIcon from 'assets/svgs/share-icon.svg';
-import { LoadingSpinner } from 'webapp/components';
+import { LoadingSpinner, Tooltip } from 'webapp/components';
+import { Theme } from 'webapp/types/common';
 
 import { ClaimRewards } from './ClaimRewards';
 
@@ -43,9 +44,14 @@ export const StatBlock = ({
         (value ? (
           <ClaimRewards displayConfetti={displayConfetti} />
         ) : (
-          <div className="w-full m-2 mt-6 flex text-white items-center text-sm">
-            Add a Task to Earn <ShareIcon className="w-8 h-8" />
-          </div>
+          <Tooltip
+            theme={Theme.Light}
+            tooltipContent="Run a few Tasks to earn rewards. Rewards are paid out after a Task is complete."
+          >
+            <div className="w-full m-2 mt-6 flex text-white items-center text-sm">
+              Add a Task to Earn <ShareIcon className="w-8 h-8" />
+            </div>
+          </Tooltip>
         ))}
     </div>
   );
