@@ -218,7 +218,7 @@ class Namespace {
    * @param {*} value Data to set
    * @returns {Promise<void>}
    */
-  async storeSet(key: string, value: string): Promise<any> {
+  async storeSet<T>(key: string, value: string): Promise<T> {
     try {
       const response = await this.db.put(this.taskTxId + key, value);
       return response;
