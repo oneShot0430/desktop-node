@@ -51,6 +51,7 @@ export const ClaimRewards = ({ displayConfetti }: PropsType) => {
         );
       }
     },
+    onError: () => setIsClaimingRewards(false),
   });
 
   const buttonsBaseClasses =
