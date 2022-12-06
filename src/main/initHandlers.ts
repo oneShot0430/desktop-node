@@ -2,7 +2,7 @@ import { ipcMain } from 'electron';
 
 import config from 'config';
 
-import controllers from './controllers';
+import * as controllers from './controllers';
 import errorHandler from './errorHandler';
 
 const initHandlers = (): void => {
@@ -68,6 +68,8 @@ const initHandlers = (): void => {
     controllers.getTaskNodeInfo
   );
   ipcMain.handle(config.endpoints.WITHDRAW_STAKE, controllers.withdrawStake);
+  ipcMain.handle(config.endpoints.GET_SECRETS, controllers.getSecrets);
+  ipcMain.handle(config.endpoints.STORE_SECRETS, controllers.storeSecrets);
 };
 
 export default errorHandler(initHandlers, 'Init handlers error');
