@@ -175,7 +175,6 @@ async function executeTasks(
       `${secret}`,
       `${process.env.K2_NODE_URL || 'https://k2-testnet.koii.live'}`,
       `${process.env.SERVICE_URL}`,
-      `${process.env.WEB3_STORAGE_API_KEY}`,
       `${STAKE}`,
     ],
     options

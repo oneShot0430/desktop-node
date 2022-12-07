@@ -1082,19 +1082,6 @@ async function getRpcUrlWrapper() {
   }
 }
 /**
- * @description Defing the WEB3_STORAGE_API_KEY
- *! Need test and check
- * @param task return the API Key of the selected task
- */
-async function getAPIKey(task: string) {
-  if (task) {
-    return process.env.WEB3_STORAGE_API_API;
-  } else {
-    console.warn('No API Key selected');
-  }
-}
-
-/**
  * @description Sleep utility function
  *
  * TODO remove this function after testing.
