@@ -8,6 +8,7 @@ import getAvailableTasks from './getAvailableTasks';
 import getEarnedRewardByNode from './getEarnedRewardByNode';
 import getMainAccountPubKey from './getMainAccountPubKey';
 import getMyTasks from './getMyTasks';
+import getSecret from './getSecret';
 import getStakingAccountPubKey from './getStakingAccountPubKey';
 import getTaskInfo from './getTaskInfo';
 import getTaskLogs from './getTaskLogs';
@@ -38,6 +39,7 @@ export default {
   getStakingAccountPubKey,
   withdrawStake,
   getMyTasks,
+  getSecret,
   getAvailableTasks,
   claimReward,
   createNodeWallets,
