@@ -6,21 +6,32 @@ import { useQueryClient, useMutation } from 'react-query';
 import loadingDotsAnimation from 'assets/animations/loading-dots.json';
 import CheckMarkIcon from 'assets/svgs/checkmark-icon-no-borders.svg';
 import CloseIcon from 'assets/svgs/close-icons/close-icon-no-borders.svg';
+import ShareIcon from 'assets/svgs/share-icon.svg';
+import { ErrorType } from 'models';
 import { GetTaskNodeInfoResponse } from 'models/api';
-import { Tooltip } from 'webapp/components';
+import { Tooltip, ErrorMessage } from 'webapp/components';
 import { QueryKeys, claimRewards } from 'webapp/services';
 import { Theme } from 'webapp/types/common';
 
 interface PropsType {
+  value: number;
   displayConfetti?: () => void;
 }
 
-export const ClaimRewards = ({ displayConfetti }: PropsType) => {
+export const ClaimRewards = ({ value, displayConfetti }: PropsType) => {
   const [hasClickedClaim, setHasClickedClaim] = useState<boolean>(false);
   const [isClaimingRewards, setIsClaimingRewards] = useState<boolean>(false);
+  const [hasErrorClaimingRewards, setHasErrorClaimingRewards] =
+    useState<boolean>(false);
 
   const handleClickClaim = () => setHasClickedClaim(true);
   const handleGoBack = () => setHasClickedClaim(false);
+  const displayErrorTemporarily = () => {
+    setHasErrorClaimingRewards(true);
+    setTimeout(() => {
+      setHasErrorClaimingRewards(false);
+    }, 4000);
+  };
 
   const queryClient = useQueryClient();
 
@@ -28,31 +39,29 @@ export const ClaimRewards = ({ displayConfetti }: PropsType) => {
     onMutate: () => {
       setIsClaimingRewards(true);
     },
-    onSuccess: async (partialErrors?: Error[]) => {
-      const runSuccessEffects = () => {
-        displayConfetti?.();
-        setHasClickedClaim(false);
-        setIsClaimingRewards(false);
-      };
-      if (partialErrors) {
-        setTimeout(() => {
-          runSuccessEffects();
-        }, 3000);
-        queryClient.invalidateQueries(QueryKeys.taskNodeInfo);
-      } else {
-        runSuccessEffects();
-        queryClient.setQueryData(
-          [QueryKeys.taskNodeInfo],
-          (oldNodeData: GetTaskNodeInfoResponse) => ({
-            ...oldNodeData,
-            totalKOII: oldNodeData.totalKOII + oldNodeData.pendingRewards,
-            pendingRewards: 0,
-          })
-        );
+    onSuccess: (rewardsNotClaimed) => {
+      queryClient.setQueryData(
+        [QueryKeys.taskNodeInfo],
+        (oldNodeData: GetTaskNodeInfoResponse) => ({
+          ...oldNodeData,
+          totalKOII:
+            oldNodeData.totalKOII +
+            oldNodeData.pendingRewards -
+            rewardsNotClaimed,
+          pendingRewards: rewardsNotClaimed,
+        })
+      );
+      displayConfetti?.();
+      if (rewardsNotClaimed) {
+        displayErrorTemporarily();
       }
     },
     onError: () => {
+      displayErrorTemporarily();
+    },
+    onSettled: () => {
       setIsClaimingRewards(false);
+      setHasClickedClaim(false);
     },
   });
 
@@ -60,16 +69,21 @@ export const ClaimRewards = ({ displayConfetti }: PropsType) => {
     'w-9 h-9 cursor-pointer hover:text-white active:bg-finniePurple active:text-white rounded-full transition transition-300';
 
   return (
-    <div className="w-full m-2 mt-3">
-      {hasClickedClaim ? (
+    <div className="w-full ml-0.5 mb-1 flex justify-center mt-auto">
+      {hasErrorClaimingRewards ? (
+        <ErrorMessage
+          error={ErrorType.GENERIC}
+          className="text-xs text-finnieRed text-center"
+        />
+      ) : hasClickedClaim ? (
         isClaimingRewards ? (
           <Lottie
             animationData={loadingDotsAnimation}
             loop
-            className="mx-auto -mt-4 h-20"
+            className="mx-auto h-20"
           />
         ) : (
-          <div className="flex justify-center gap-8 mt-1 -ml-3">
+          <div className="flex justify-center gap-8">
             <Tooltip
               theme={Theme.Light}
               tooltipContent="Go back. Your rewards will not be transferred."
@@ -90,7 +104,7 @@ export const ClaimRewards = ({ displayConfetti }: PropsType) => {
             </Tooltip>
           </div>
         )
-      ) : (
+      ) : value ? (
         <Tooltip
           theme={Theme.Light}
           tooltipContent="Click here to claim all pending Task rewards."
@@ -103,6 +117,15 @@ export const ClaimRewards = ({ displayConfetti }: PropsType) => {
             labelClassesOverrides="text-sm"
             buttonClassesOverrides="!p-4 !border-white !text-white"
           />
+        </Tooltip>
+      ) : (
+        <Tooltip
+          theme={Theme.Light}
+          tooltipContent="Run a few Tasks to earn rewards. Rewards are paid out after a Task is complete."
+        >
+          <div className="w-full ml-1 -mb-1 flex text-white items-center text-sm">
+            Add a Task to Earn <ShareIcon className="w-8 h-8" />
+          </div>
         </Tooltip>
       )}
     </div>

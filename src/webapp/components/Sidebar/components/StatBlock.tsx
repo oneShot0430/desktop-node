@@ -3,10 +3,8 @@ import React, { ReactNode } from 'react';
 import CountUp from 'react-countup';
 
 import confettiAnimation from 'assets/animations/confetti.json';
-import ShareIcon from 'assets/svgs/share-icon.svg';
-import { LoadingSpinner, Tooltip } from 'webapp/components';
+import { LoadingSpinner } from 'webapp/components';
 import { usePrevious } from 'webapp/features/common';
-import { Theme } from 'webapp/types/common';
 
 import { ClaimRewards } from './ClaimRewards';
 
@@ -59,19 +57,9 @@ export const StatBlock = ({
           </div>
         </div>
       </div>
-      {isPendingRewardsBlock &&
-        (value ? (
-          <ClaimRewards displayConfetti={displayConfetti} />
-        ) : (
-          <Tooltip
-            theme={Theme.Light}
-            tooltipContent="Run a few Tasks to earn rewards. Rewards are paid out after a Task is complete."
-          >
-            <div className="w-full m-2 mt-6 flex text-white items-center text-sm">
-              Add a Task to Earn <ShareIcon className="w-8 h-8" />
-            </div>
-          </Tooltip>
-        ))}
+      {isPendingRewardsBlock && (
+        <ClaimRewards value={value} displayConfetti={displayConfetti} />
+      )}
       {shouldAnimate && (
         <Lottie
           animationData={confettiAnimation}

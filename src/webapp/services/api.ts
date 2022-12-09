@@ -1,6 +1,5 @@
 import { PublicKey } from '@_koi/web3.js';
 
-import { NetworkErrors } from 'models';
 import {
   FetchAllTasksParam,
   GetAvailableTasksParam,
@@ -189,28 +188,36 @@ export const openBrowserWindow = async (URL: string) => {
 };
 
 export const claimRewards = async () => {
+  const getPendingRewardsByTask = (task: Task) =>
+    Object.values(task.availableBalances).reduce(
+      (reward, accumulator) => reward + accumulator,
+      0
+    );
+  // we keep it as an array for now to have handy not only the rewards themselves but also the number of tasks
+  const rewardsNotClaimedByTask: number[] = [];
   const tasks = await fetchMyTasks({ limit: Infinity, offset: 0 });
-  const errors: Error[] = [];
-  const promisesToClaimRewards = tasks.map(async ({ publicKey }) => {
+  const tasksWithClaimableRewards = tasks.filter(getPendingRewardsByTask);
+  const promisesToClaimRewards = tasksWithClaimableRewards.map(async (task) => {
     try {
       await window.main.claimReward({
-        taskAccountPubKey: publicKey,
+        taskAccountPubKey: task.publicKey,
       });
     } catch (error) {
-      if (!error.message.includes(NetworkErrors.NO_REWARD_PENDING_ON_TASK)) {
-        errors.push(error);
-      }
+      console.error('rewardsNotClaimed: ', rewardsNotClaimedByTask);
+      const pendingReward = getPendingRewardsByTask(task);
+      rewardsNotClaimedByTask.push(pendingReward);
     }
   });
   await Promise.all(promisesToClaimRewards);
-  // if we confirm we DON'T wanna do anything with partial errors, simplify the code below:
-  const onlySomeTasksFailed = errors.length > 0 && errors.length < tasks.length;
-  const allTasksFailed = errors.length === tasks.length;
-  if (onlySomeTasksFailed) {
-    return errors;
-  } else if (allTasksFailed) {
-    throw errors;
+  const allTasksFailed = rewardsNotClaimedByTask.length === tasks.length;
+  const rewardsNotClaimed = rewardsNotClaimedByTask.reduce(
+    (reward, accumulator) => reward + accumulator,
+    0
+  );
+
+  if (allTasksFailed) {
+    throw rewardsNotClaimedByTask;
   } else {
-    return;
+    return rewardsNotClaimed;
   }
 };

@@ -10,12 +10,23 @@ export enum ErrorContext {
   WITHDRAW_STAKE = 'WITHDRAW_STAKE',
 }
 
+const isErrorType = (error: string): error is ErrorType =>
+  Object.keys(ErrorType).includes(error);
+
 export const getErrorToDisplay = (
   error: Error | string,
   context?: ErrorContext
 ) => {
   if (!error) return undefined;
-  if (typeof error === 'string') return error;
+  if (typeof error === 'string') {
+    const errorMessage =
+      isErrorType(error) && typeof errorTypeToContent[error] === 'string'
+        ? // apparently TS is not smart enough to recognize it's a string even after the check above, so this is a safe casting
+          (errorTypeToContent[error] as string)
+        : error;
+
+    return errorMessage;
+  }
 
   const isDetailedError = error.message.includes('"type":');
 

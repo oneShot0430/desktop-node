@@ -1,8 +1,12 @@
+import { Button, ButtonSize } from '@_koii/koii-styleguide';
 import React, { useState } from 'react';
+import { useQueryClient } from 'react-query';
 
 import FinnieKoiiLogo from 'assets/svgs/finnie-logos/finnie-koii-logo-inverse.svg';
 import TotalStakedIcon from 'assets/svgs/koii-staked-icon.svg';
 import PendingRewardsIcon from 'assets/svgs/pending-rewards-icon.svg';
+import { GetTaskNodeInfoResponse } from 'models/api';
+import { QueryKeys } from 'webapp/services';
 
 import { StatBlock } from './StatBlock';
 
@@ -20,6 +24,8 @@ export const Summary = ({
   isLoading,
 }: SummaryProps) => {
   const [shouldAnimate, setShouldAnimate] = useState<boolean>(false);
+
+  const queryClient = useQueryClient();
 
   const displayConfetti = () => {
     setShouldAnimate(true);
@@ -51,6 +57,28 @@ export const Summary = ({
         displayConfetti={displayConfetti}
         shouldAnimate={shouldAnimate}
       />
+      {/* Mock for testing purposes while reviewing PR, will be deleted before merging  */}
+
+      <div className="absolute left-[130%] -top-1/4 w-fit">
+        <Button
+          label="Simulate pending rewards"
+          size={ButtonSize.SM}
+          buttonClassesOverrides="!p-6"
+          onClick={() => {
+            queryClient.setQueryData(
+              [QueryKeys.taskNodeInfo],
+              (oldNodeData: GetTaskNodeInfoResponse) => {
+                const newNodeInfodata = {
+                  ...oldNodeData,
+                  pendingRewards: 193144078140,
+                };
+
+                return newNodeInfodata;
+              }
+            );
+          }}
+        />
+      </div>
     </div>
   );
 };
