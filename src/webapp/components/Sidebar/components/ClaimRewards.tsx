@@ -20,7 +20,6 @@ interface PropsType {
 
 export const ClaimRewards = ({ value, displayConfetti }: PropsType) => {
   const [hasClickedClaim, setHasClickedClaim] = useState<boolean>(false);
-  const [isClaimingRewards, setIsClaimingRewards] = useState<boolean>(false);
   const [hasErrorClaimingRewards, setHasErrorClaimingRewards] =
     useState<boolean>(false);
 
@@ -35,35 +34,32 @@ export const ClaimRewards = ({ value, displayConfetti }: PropsType) => {
 
   const queryClient = useQueryClient();
 
-  const { mutate: claimPendingRewards } = useMutation(claimRewards, {
-    onMutate: () => {
-      setIsClaimingRewards(true);
-    },
-    onSuccess: (rewardsNotClaimed) => {
-      queryClient.setQueryData(
-        [QueryKeys.taskNodeInfo],
-        (oldNodeData: GetTaskNodeInfoResponse) => ({
-          ...oldNodeData,
-          totalKOII:
-            oldNodeData.totalKOII +
-            oldNodeData.pendingRewards -
-            rewardsNotClaimed,
-          pendingRewards: rewardsNotClaimed,
-        })
-      );
-      displayConfetti?.();
-      if (rewardsNotClaimed) {
+  const { mutate: claimPendingRewards, isLoading: isClaimingRewards } =
+    useMutation(claimRewards, {
+      onSuccess: (rewardsNotClaimed) => {
+        queryClient.setQueryData(
+          [QueryKeys.taskNodeInfo],
+          (oldNodeData: GetTaskNodeInfoResponse) => ({
+            ...oldNodeData,
+            totalKOII:
+              oldNodeData.totalKOII +
+              oldNodeData.pendingRewards -
+              rewardsNotClaimed,
+            pendingRewards: rewardsNotClaimed,
+          })
+        );
+        displayConfetti?.();
+        if (rewardsNotClaimed) {
+          displayErrorTemporarily();
+        }
+      },
+      onError: () => {
         displayErrorTemporarily();
-      }
-    },
-    onError: () => {
-      displayErrorTemporarily();
-    },
-    onSettled: () => {
-      setIsClaimingRewards(false);
-      setHasClickedClaim(false);
-    },
-  });
+      },
+      onSettled: () => {
+        setHasClickedClaim(false);
+      },
+    });
 
   const buttonsBaseClasses =
     'w-9 h-9 cursor-pointer hover:text-white active:bg-finniePurple active:text-white rounded-full transition transition-300';
