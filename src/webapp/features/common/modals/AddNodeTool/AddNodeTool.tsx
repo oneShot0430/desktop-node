@@ -7,6 +7,9 @@ import { Button, ErrorMessage } from 'webapp/components';
 import { Modal, ModalContent } from 'webapp/features/modals';
 import { Theme } from 'webapp/types/common';
 
+const baseInputClassName =
+  'px-6 py-2 text-sm rounded-md bg-finnieBlue-light-tertiary focus:ring-2 focus:ring-finnieTeal focus:outline-none focus:bg-finnieBlue-light-secondary';
+
 export const AddNodeTool = create(function ConfirmAccountDelete() {
   const [label, setLabel] = useState<string>('');
   const [labelError, setLabelError] = useState<string>('');
@@ -49,7 +52,7 @@ export const AddNodeTool = create(function ConfirmAccountDelete() {
           <span>Add a Node Tool</span>
 
           <CloseIconWhite
-            className="w-[32px] h-[32px] -mr-8 ml-auto cursor-pointer"
+            className="w-8 h-8 -mr-8 ml-auto cursor-pointer"
             onClick={modal.remove}
           />
         </div>
@@ -63,7 +66,7 @@ export const AddNodeTool = create(function ConfirmAccountDelete() {
         <div className="flex flex-col">
           <label className="mb-0.5 text-left">TOOL LABEL</label>
           <input
-            className="w-56 px-6 py-2 text-sm rounded-md bg-finnieBlue-light-tertiary focus:ring-2 focus:ring-finnieTeal focus:outline-none focus:bg-finnieBlue-light-secondary"
+            className={`${baseInputClassName} w-56`}
             type="text"
             value={label}
             onChange={handleLabelChange}
@@ -79,7 +82,7 @@ export const AddNodeTool = create(function ConfirmAccountDelete() {
         <div className="flex flex-col">
           <label className="mb-0.5 text-left">TOOL KEY</label>
           <input
-            className="w-full px-6 py-2 text-sm rounded-md bg-finnieBlue-light-tertiary focus:ring-2 focus:ring-finnieTeal focus:outline-none focus:bg-finnieBlue-light-secondary "
+            className={`${baseInputClassName} w-full`}
             type="text"
             value={toolKey}
             onChange={handleToolKeyChange}
