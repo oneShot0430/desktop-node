@@ -70,7 +70,9 @@ export const AddNodeTool = create(function ConfirmAccountDelete() {
             placeholder="Add Label"
           />
           <div className="h-12 -mb-10 -mt-2">
-            {labelError && <ErrorMessage error={labelError} />}
+            {labelError && (
+              <ErrorMessage error={labelError} className="text-xs" />
+            )}
           </div>
         </div>
 

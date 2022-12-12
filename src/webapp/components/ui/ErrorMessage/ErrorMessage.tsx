@@ -16,7 +16,7 @@ export const ErrorMessage: FunctionComponent<PropsType> = ({
   const errorMessage = getErrorToDisplay(error, context);
 
   return (
-    <div className={`py-3 text-sm text-finnieRed-500 ${className}`}>
+    <div className={`py-3 text-sm text-finnieRed ${className}`}>
       {errorMessage}
     </div>
   );
