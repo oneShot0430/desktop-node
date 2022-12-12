@@ -16,6 +16,7 @@ import {
 import axios from 'axios';
 import bs58 from 'bs58';
 import jwt from 'jsonwebtoken';
+import levelup from 'levelup';
 import nacl from 'tweetnacl';
 
 import { ErrorType, NetworkErrors } from 'models';
@@ -94,11 +95,14 @@ class Namespace {
    */
   taskTxId: string;
   app: any;
+  /**
+   * @todo: All redis dependencies should be removed
+   */
   redisClient?: any;
   taskData: TaskData;
   #mainSystemAccount: Keypair;
   mainSystemAccountPubKey: PublicKey;
-  db: any;
+  db: levelup.LevelUp;
 
   programId: PublicKey;
   taskAccountInfo: AccountInfo<Buffer> | null;
@@ -177,12 +181,17 @@ class Namespace {
    * @param {string} key // Path to get
    * @returns {Promise<*>} Promise containing data
    */
-  async storeGet(key: string): Promise<string | null> {
+
+  /**
+   * @todo: and generic return type
+   */
+
+  async storeGet<T>(key: string): Promise<T | null> {
     try {
       const response = await this.db.get(this.taskTxId + key, {
         asBuffer: false,
       });
-      return response;
+      return response as T;
     } catch (e) {
       if (e.type == 'NotFoundError') {
         console.error(key, 'Not found');
@@ -218,10 +227,9 @@ class Namespace {
    * @param {*} value Data to set
    * @returns {Promise<void>}
    */
-  async storeSet<T>(key: string, value: string): Promise<T> {
+  async storeSet(key: string, value: any): Promise<void> {
     try {
-      const response = await this.db.put(this.taskTxId + key, value);
-      return response;
+      await this.db.put(this.taskTxId + key, value);
     } catch (e) {
       console.error(e);
       throw e;

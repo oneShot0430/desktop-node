@@ -69,7 +69,7 @@ const initHandlers = (): void => {
   );
   ipcMain.handle(config.endpoints.WITHDRAW_STAKE, controllers.withdrawStake);
   ipcMain.handle(config.endpoints.GET_SECRETS, controllers.getSecrets);
-  ipcMain.handle(config.endpoints.STORE_SECRETS, controllers.storeSecrets);
+  ipcMain.handle(config.endpoints.STORE_SECRETS, controllers.storeSecret);
 };
 
 export default errorHandler(initHandlers, 'Init handlers error');
