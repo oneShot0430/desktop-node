@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { twMerge } from 'tailwind-merge';
 
-import BackIcon from 'svgs/back-icon-white.svg';
+import BackIconComponent from 'assets/svgs/back-icon.svg';
 import { Button } from 'webapp/components/ui/Button';
 import { getRouteViewLabel } from 'webapp/routing/utils';
 import { AppRoute } from 'webapp/types/routes';
@@ -10,7 +11,11 @@ type RouterState = {
   noBackButton?: boolean;
 };
 
-export const BackButton = () => {
+type PropsType = {
+  color?: 'white' | 'blue';
+};
+
+export const BackButton = ({ color }: PropsType) => {
   const location = useLocation();
 
   const navigate = useNavigate();
@@ -22,19 +27,27 @@ export const BackButton = () => {
     navigate(-1);
   };
 
+  const labelClasses = twMerge(
+    'text-white self-center uppercase h-10 text-3xl align-middle pl-4 flex flex-col justify-center w-max',
+    color === 'blue' && 'text-blue-1'
+  );
+
+  const wrapperClasses = twMerge(
+    'flex items-center py-5 text-white',
+    color === 'blue' && 'text-blue-1'
+  );
+
   return (
-    <div className="flex items-center pt-[20px] pb-[20px]">
+    <div className={wrapperClasses}>
       {location.pathname === AppRoute.Root || noBackButton ? null : (
         <Button
           onlyIcon
-          icon={<BackIcon className="cursor-pointer" />}
+          icon={<BackIconComponent className="cursor-pointer w-9 h-9" />}
           onClick={handleBackButtonClick}
         />
       )}
 
-      <div className="text-white self-center uppercase h-[40px] leading-[40px] text-[30px] align-middle pl-4 flex flex-col justify-center">
-        {routeLabel}
-      </div>
+      <div className={labelClasses}>{routeLabel}</div>
     </div>
   );
 };

@@ -48,7 +48,7 @@ const OnboardingLayout = ({ children }: PropsType) => {
           <BackIconComponent
             data-testid="close-modal-button"
             onClick={handleBackButtonClick}
-            className="w-[36px] h-[36px] cursor-pointer absolute top-[20px] left-[20px]"
+            className="w-9 h-9 cursor-pointer absolute top-[20px] left-[20px]"
           />
         )}
         <div className="flex flex-col items-center justify-center mb-14">

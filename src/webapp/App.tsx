@@ -6,6 +6,7 @@ import '@_koii/koii-styleguide/dist/style.css';
 
 const queryClient = new QueryClient();
 
+import { NotificationsProvider } from './features/notifications/context/notifications-context';
 import AppProvider from './Providers/AppProvider';
 import AppRoutes from './routing/AppRoutes';
 
@@ -14,7 +15,9 @@ const App = (): JSX.Element => {
     <QueryClientProvider client={queryClient}>
       <AppProvider>
         <NiceModal.Provider>
-          <AppRoutes />
+          <NotificationsProvider>
+            <AppRoutes />
+          </NotificationsProvider>
         </NiceModal.Provider>
       </AppProvider>
     </QueryClientProvider>
