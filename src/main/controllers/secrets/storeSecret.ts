@@ -33,9 +33,16 @@ export const storeSecret = async (
     });
   }
   const secretId = randomUUID();
+
   const newSecrets = {
     ...secrets,
     [secretId]: payload,
   };
-  await namespaceInstance.storeSet(PersistentStoreKeys.UserSecrets, newSecrets);
+
+  const strigifiedSecret = JSON.stringify(newSecrets);
+
+  await namespaceInstance.storeSet(
+    PersistentStoreKeys.UserSecrets,
+    strigifiedSecret
+  );
 };

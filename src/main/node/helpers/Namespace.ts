@@ -186,12 +186,12 @@ class Namespace {
    * @todo: and generic return type
    */
 
-  async storeGet<T>(key: string): Promise<T | null> {
+  async storeGet(key: string): Promise<string | null> {
     try {
       const response = await this.db.get(this.taskTxId + key, {
         asBuffer: false,
       });
-      return response as T;
+      return response;
     } catch (e) {
       if (e.type == 'NotFoundError') {
         console.error(key, 'Not found');

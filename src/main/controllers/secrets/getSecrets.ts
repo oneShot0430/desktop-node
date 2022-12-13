@@ -4,8 +4,11 @@ import { UserSecretsReturnType } from 'models/api/secrets/getSecrets';
 import { PersistentStoreKeys } from '../types';
 
 export const getSecrets = async (): Promise<UserSecretsReturnType> => {
-  const secrets = await namespaceInstance.storeGet<UserSecretsReturnType>(
+  const secrets = await namespaceInstance.storeGet(
     PersistentStoreKeys.UserSecrets
   );
-  return secrets;
+
+  const parsedData = JSON.parse(secrets);
+
+  return parsedData as UserSecretsReturnType;
 };

@@ -1,3 +1,3 @@
 export enum PersistentStoreKeys {
-  UserSecrets = 'USER_SECRETS',
+  UserSecrets = 'SECRETS',
 }
