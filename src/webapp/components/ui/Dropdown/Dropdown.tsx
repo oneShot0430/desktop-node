@@ -38,7 +38,7 @@ export const Dropdown = ({
   );
 
   return (
-    <div className="fixed top-16 w-72">
+    <div className="w-72">
       <Listbox value={selected} onChange={handleItemSelect}>
         <div className="relative mt-1">
           <Listbox.Button
