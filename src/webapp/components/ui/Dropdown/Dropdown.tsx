@@ -1,6 +1,7 @@
-import { ChevronArrowFill } from '@_koii/koii-styleguide';
 import { Listbox, Transition } from '@headlessui/react';
 import React, { Fragment, useCallback, useState } from 'react';
+
+import ChevronDownIcon from 'assets/svgs/chevron-down.svg';
 
 export type DropdownItem = {
   label: string;
@@ -14,6 +15,10 @@ export type DropdownProps = {
   defaultValue?: DropdownItem;
 };
 
+/**
+ * @todo:
+ * This component shoudl finally be moved to the @_koii/koii-styleguide
+ */
 export const Dropdown = ({
   items = [],
   onSelect,
@@ -37,7 +42,7 @@ export const Dropdown = ({
         <div className="relative mt-1">
           <Listbox.Button
             placeholder={placeholderText}
-            className="relative w-full py-2 pl-3 pr-10 text-sm text-left rounded-lg shadow-md cursor-default text-gray bg-purple-5 focus:outline-none focus-visible:ring-2 sm:text-sm"
+            className="relative w-full py-2 pl-3 pr-10 text-sm text-left rounded-lg shadow-md cursor-default text-gray bg-purple-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-finnieTeal sm:text-sm"
           >
             {selected ? (
               <span className="block text-white truncate">
@@ -47,10 +52,7 @@ export const Dropdown = ({
               <span>{placeholderText}</span>
             )}
             <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-              <ChevronArrowFill
-                className="w-5 h-5 text-gray-400"
-                aria-hidden="true"
-              />
+              <ChevronDownIcon aria-hidden="true" />
             </span>
           </Listbox.Button>
           <Transition
@@ -74,10 +76,10 @@ export const Dropdown = ({
                   {({ selected }) => (
                     <>
                       <span
-                        className={`block truncate py-2 pl-10 pr-4  ${
+                        className={`block truncate py-1 pl-10 pr-4  ${
                           selected
                             ? 'border-2 border-purple-1 font-semibold rounded-lg text-finnieTeal-100'
-                            : 'font-normal text-white'
+                            : 'font-normal text-white border-2 border-transparent'
                         }`}
                       >
                         {item?.label}
