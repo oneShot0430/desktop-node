@@ -53,6 +53,9 @@ module.exports = {
           DEFAULT: '#49CE8B',
           light: '#9BE7C4',
         },
+        gray: {
+          DEFAULT: '#D6D6D6',
+        },
         green: {
           dark: '#087980',
           1: '#49CE8B',
@@ -71,8 +74,10 @@ module.exports = {
         },
         purple: {
           ...colors.purple,
+          1: '#8989C7',
           3: '#353570',
           4: '#4D3D8D',
+          5: '#454580',
         },
       },
       fontSize: {
