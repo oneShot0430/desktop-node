@@ -11,14 +11,16 @@ export type DropdownProps = {
   items: DropdownItem[];
   placeholderText?: string;
   onSelect?: (item: DropdownItem) => void;
+  defaultValue?: DropdownItem;
 };
 
 export const Dropdown = ({
   items = [],
   onSelect,
   placeholderText = 'Select item',
+  defaultValue,
 }: DropdownProps) => {
-  const [selected, setSelected] = useState<DropdownItem>();
+  const [selected, setSelected] = useState<DropdownItem>(defaultValue ?? null);
   const handleItemSelect = useCallback(
     (item: DropdownItem) => {
       setSelected(item);
