@@ -5,6 +5,7 @@ import ChevronDownIcon from 'assets/svgs/chevron-down.svg';
 
 export type DropdownItem = {
   label: string;
+  id: string;
   disabled?: boolean;
 };
 
@@ -64,7 +65,7 @@ export const Dropdown = ({
             <Listbox.Options className="absolute z-50 w-full py-1 mt-1 overflow-auto text-base text-white rounded-md shadow-lg bg-purple-5 max-h-60 focus:outline-none sm:text-sm">
               {items.map((item, itemIndex) => (
                 <Listbox.Option
-                  key={itemIndex}
+                  key={item?.id ?? itemIndex}
                   className={({ active }) =>
                     `relative cursor-default select-none ${
                       active && 'bg-purple-1 text-finnieTeal-100'

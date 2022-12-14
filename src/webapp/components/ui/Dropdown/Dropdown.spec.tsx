@@ -4,9 +4,9 @@ import React from 'react';
 import { Dropdown } from './Dropdown';
 
 const items = [
-  { label: 'First item', disabled: false },
-  { label: 'Second item', disabled: true },
-  { label: 'Third item', disabled: false },
+  { label: 'First item', disabled: false, id: '1' },
+  { label: 'Second item', disabled: true, id: '2' },
+  { label: 'Third item', disabled: false, id: '3' },
 ];
 
 describe('Dropdown', () => {
