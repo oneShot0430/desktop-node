@@ -19,5 +19,5 @@ export * from './getTasksById';
 export * from './removeAccountByName';
 export * from './openBrowserWindow';
 export * from './getTaskNodeInfo';
-export * from './getSecret';
+export * from './getSecrets';
 // GetTaskNodeInfoResponse

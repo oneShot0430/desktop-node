@@ -9,7 +9,7 @@ import getAvailableTasks from './getAvailableTasks';
 import getEarnedRewardByNode from './getEarnedRewardByNode';
 import getMainAccountPubKey from './getMainAccountPubKey';
 import getMyTasks from './getMyTasks';
-import getSecret from './getSecret';
+import getSecrets from './getSecrets';
 import getStakingAccountPubKey from './getStakingAccountPubKey';
 import getTaskInfo from './getTaskInfo';
 import getTaskLogs from './getTaskLogs';
@@ -53,5 +53,5 @@ export default {
   openBrowserWindow,
   getTaskNodeInfo,
   withdrawStake,
-  getSecret,
+  getSecrets,
 };
