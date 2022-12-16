@@ -1,4 +1,5 @@
 import { PublicKey } from '@_koi/web3.js';
+import { sum } from 'lodash';
 
 import {
   FetchAllTasksParam,
@@ -189,10 +190,7 @@ export const openBrowserWindow = async (URL: string) => {
 
 export const claimRewards = async () => {
   const getPendingRewardsByTask = (task: Task) =>
-    Object.values(task.availableBalances).reduce(
-      (reward, accumulator) => reward + accumulator,
-      0
-    );
+    sum(Object.values(task.availableBalances));
   // we keep it as an array for now to have handy not only the rewards themselves but also the number of tasks
   const rewardsNotClaimedByTask: number[] = [];
   const tasks = await fetchMyTasks({ limit: Infinity, offset: 0 });
@@ -203,7 +201,6 @@ export const claimRewards = async () => {
         taskAccountPubKey: task.publicKey,
       });
     } catch (error) {
-      console.error('rewardsNotClaimed: ', rewardsNotClaimedByTask);
       const pendingReward = getPendingRewardsByTask(task);
       rewardsNotClaimedByTask.push(pendingReward);
     }
