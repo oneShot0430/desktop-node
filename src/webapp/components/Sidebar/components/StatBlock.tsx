@@ -1,17 +1,34 @@
 import Lottie from 'lottie-react';
-import React, { ReactNode } from 'react';
+import React from 'react';
 import CountUp from 'react-countup';
 
 import confettiAnimation from 'assets/animations/confetti.json';
+import FinnieKoiiLogo from 'assets/svgs/finnie-logos/finnie-koii-logo-inverse.svg';
+import TotalStakedIcon from 'assets/svgs/koii-staked-icon.svg';
+import PendingRewardsIcon from 'assets/svgs/pending-rewards-icon.svg';
 import { LoadingSpinner } from 'webapp/components';
 import { usePrevious } from 'webapp/features/common';
 
 import { ClaimRewards } from './ClaimRewards';
 
-type SummaryProps = {
+const statContentByType = {
+  totalKoii: {
+    label: 'Total KOII',
+    IconComponent: FinnieKoiiLogo,
+  },
+  totalStaked: {
+    label: 'Total Staked',
+    IconComponent: TotalStakedIcon,
+  },
+  pendingRewards: {
+    label: 'Pending Rewards',
+    IconComponent: PendingRewardsIcon,
+  },
+};
+
+type StatProps = {
   value: number;
-  label: string;
-  iconSlot: ReactNode;
+  type: 'totalKoii' | 'totalStaked' | 'pendingRewards';
   isLoading: boolean;
   displayConfetti?: () => void;
   shouldAnimate?: boolean;
@@ -19,15 +36,15 @@ type SummaryProps = {
 
 export const StatBlock = ({
   value,
-  label,
-  iconSlot,
+  type,
   isLoading,
   displayConfetti,
   shouldAnimate,
-}: SummaryProps) => {
+}: StatProps) => {
   const previousValue = usePrevious(value);
 
-  const isPendingRewardsBlock = label === 'Pending Rewards';
+  const { label, IconComponent } = statContentByType[type];
+  const isPendingRewardsBlock = type === 'pendingRewards';
   const decimalsAmount = +String(value).split('.')[1]?.length;
   const statValue = isLoading ? (
     <LoadingSpinner className="ml-auto" />
@@ -49,7 +66,8 @@ export const StatBlock = ({
       }`}
     >
       <div className="flex justify-between items-center">
-        <div>{iconSlot}</div>
+        <IconComponent />
+
         <div>
           <div className="text-right text-white">{statValue}</div>
           <div className="text-[14px] text-finnieTeal w-fit ml-auto">

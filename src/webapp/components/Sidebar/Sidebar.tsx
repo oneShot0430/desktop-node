@@ -37,14 +37,14 @@ export const Sidebar = () => {
     }
   );
 
-  const totalEarnedInKoii = getKoiiFromRoe(data?.totalKOII);
+  const totalBalanceInKoii = getKoiiFromRoe(data?.totalKOII);
   const totalStakedInKoii = getKoiiFromRoe(data?.totalStaked);
   const pendingRewardsInKoii = getKoiiFromRoe(data?.pendingRewards);
 
   return (
     <div className="flex flex-col pr-[22px] gap-4">
       <Summary
-        totalEarned={totalEarnedInKoii}
+        totalKoii={totalBalanceInKoii}
         totalStaked={totalStakedInKoii}
         pendingRewards={pendingRewardsInKoii}
         isLoading={isLoading}
