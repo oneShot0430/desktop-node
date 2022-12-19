@@ -69,12 +69,12 @@ const initHandlers = (): void => {
   );
   ipcMain.handle(config.endpoints.WITHDRAW_STAKE, controllers.withdrawStake);
   ipcMain.handle(
-    config.endpoints.GET_TASK_VARIABLES,
-    controllers.getTaskVariables
+    config.endpoints.GET_TASK_VARIABLES_NAMES,
+    controllers.getTaskVariablesNames
   );
   ipcMain.handle(
-    config.endpoints.STORE_TASK_VARIABLE,
-    controllers.storeTaskVariable
+    config.endpoints.GET_TASK_VARIABLES,
+    controllers.getTaskVariables
   );
 };
 
