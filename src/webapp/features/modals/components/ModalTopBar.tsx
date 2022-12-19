@@ -55,21 +55,21 @@ const ModalTopBar = ({
 
   return (
     <div className={topBarMergedClasses}>
-      <div className="w-[36px] h-[36px]">
+      <div className="w-9 h-9">
         {showBackButton && onBackClick && (
           <BackIconComponent
             data-testid="close-modal-button"
             onClick={onBackClick}
-            className="w-[36px] h-[36px] cursor-pointer"
+            className="cursor-pointer w-9 h-9"
           />
         )}
       </div>
       <div className={titleMergedClasses}>{title}</div>
-      <div className="w-[36px] h-[36px]">
+      <div className="w-9 h-9">
         <CloseIconComponent
           data-testid="close-modal-button"
           onClick={onClose}
-          className="w-[36px] h-[36px] cursor-pointer"
+          className="cursor-pointer w-9 h-9"
         />
       </div>
     </div>
