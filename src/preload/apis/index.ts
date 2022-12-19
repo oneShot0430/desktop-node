@@ -18,11 +18,11 @@ import getTaskSource from './getTaskSource';
 import getUserConfig from './getUserConfig';
 import openBrowserWindow from './openBrowserWindow';
 import removeAccountByName from './removeAccountByName';
-import { getSecrets, storeSecret } from './secrets/';
 import setActiveAccount from './setActiveAccount';
 import startTask from './startTask';
 import stopTask from './stopTask';
 import storeUserConfig from './storeUserConfig';
+import { getTaskVariables, storeTaskVariable } from './taskVariables';
 import withdrawStake from './withdrawStake';
 
 export default {
@@ -51,6 +51,6 @@ export default {
   removeAccountByName,
   openBrowserWindow,
   getTaskNodeInfo,
-  getSecrets,
-  storeSecret,
+  getTaskVariables,
+  storeTaskVariable,
 };

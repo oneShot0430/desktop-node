@@ -1,3 +1,3 @@
 export enum PersistentStoreKeys {
-  UserSecrets = 'SECRETS',
+  TaskVariables = 'TASK_VARIABLES',
 }

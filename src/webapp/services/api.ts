@@ -4,7 +4,7 @@ import {
   FetchAllTasksParam,
   GetAvailableTasksParam,
   GetMyTasksParam,
-  SecretData,
+  TaskVariableData,
   StoreUserConfigParam,
 } from 'models/api';
 import sdk from 'services/sdk';
@@ -188,10 +188,10 @@ export const openBrowserWindow = async (URL: string) => {
   await window.main.openBrowserWindow({ URL });
 };
 
-export const storeSecret = async ({ label, value }: SecretData) => {
-  await window.main.storeSecret({ label, value });
+export const storeTaskVariable = async ({ label, value }: TaskVariableData) => {
+  await window.main.storeTaskVariable({ label, value });
 };
 
-export const getSecrets = async () => {
-  return await window.main.getSecrets();
+export const getTaskVariables = async () => {
+  return await window.main.getTaskVariables();
 };
