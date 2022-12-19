@@ -1,4 +1,5 @@
 import { PublicKey } from '@_koi/web3.js';
+import { sum } from 'lodash';
 
 import {
   FetchAllTasksParam,
@@ -194,4 +195,35 @@ export const storeTaskVariable = async ({ label, value }: TaskVariableData) => {
 
 export const getTaskVariables = async () => {
   return await window.main.getTaskVariables();
+};
+
+export const claimRewards = async () => {
+  const getPendingRewardsByTask = (task: Task) =>
+    sum(Object.values(task.availableBalances));
+  // we keep it as an array for now to have handy not only the rewards themselves but also the number of tasks
+  const rewardsNotClaimedByTask: number[] = [];
+  const tasks = await fetchMyTasks({ limit: Infinity, offset: 0 });
+  const tasksWithClaimableRewards = tasks.filter(getPendingRewardsByTask);
+  const promisesToClaimRewards = tasksWithClaimableRewards.map(async (task) => {
+    try {
+      await window.main.claimReward({
+        taskAccountPubKey: task.publicKey,
+      });
+    } catch (error) {
+      const pendingReward = getPendingRewardsByTask(task);
+      rewardsNotClaimedByTask.push(pendingReward);
+    }
+  });
+  await Promise.all(promisesToClaimRewards);
+  const allTasksFailed = rewardsNotClaimedByTask.length === tasks.length;
+  const rewardsNotClaimed = rewardsNotClaimedByTask.reduce(
+    (reward, accumulator) => reward + accumulator,
+    0
+  );
+
+  if (allTasksFailed) {
+    throw rewardsNotClaimedByTask;
+  } else {
+    return rewardsNotClaimed;
+  }
 };
