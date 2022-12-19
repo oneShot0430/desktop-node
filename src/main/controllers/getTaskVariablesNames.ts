@@ -8,21 +8,23 @@ import mainErrorHandler from '../../utils/mainErrorHandler';
 
 import getTaskSource from './getTaskSource';
 
+const TASK_VARIABLES_PREFIX = 'process.env.';
+
 const getTaskVariablesNames = async (
   _: Event,
   { taskPublicKey }: GetTaskVariablesNamesParam
 ): Promise<string[]> => {
   const taskSourceCode = await getTaskSource(taskPublicKey);
-  const taskVariablesRegex = /process.env\.[A-Za-z0-9_]+/g;
+  const taskVariablesRegex = /process\.env\.[A-Za-z0-9_]+/g;
   const taskVariablesMatches: string[] =
     taskSourceCode.match(taskVariablesRegex);
 
-  const taskVariablesnames = taskVariablesMatches.map((match) => {
-    const taskVariablesname = match.substring(12);
-    return taskVariablesname;
+  const taskVariablesNames = taskVariablesMatches.map((match) => {
+    const taskVariablesName = match.substring(TASK_VARIABLES_PREFIX.length);
+    return taskVariablesName;
   });
 
-  return uniq(taskVariablesnames);
+  return uniq(taskVariablesNames);
 };
 
 export default mainErrorHandler(getTaskVariablesNames);
