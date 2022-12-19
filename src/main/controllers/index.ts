@@ -9,7 +9,6 @@ import getAvailableTasks from './getAvailableTasks';
 import getEarnedRewardByNode from './getEarnedRewardByNode';
 import getMainAccountPubKey from './getMainAccountPubKey';
 import getMyTasks from './getMyTasks';
-import getSecrets from './getSecrets';
 import getStakingAccountPubKey from './getStakingAccountPubKey';
 import getTaskInfo from './getTaskInfo';
 import getTaskLogs from './getTaskLogs';
@@ -17,6 +16,7 @@ import getTaskNodeInfo from './getTaskNodeInfo';
 import getTasks from './getTasks';
 import getTasksById from './getTasksById';
 import getTaskSource from './getTaskSource';
+import getTaskVariablesNames from './getTaskVariablesNames';
 import getUserConfig from './getUserConfig';
 import openBrowserWindow from './openBrowserWindow';
 import removeAccountByName from './removeAccountByName';
@@ -53,5 +53,5 @@ export default {
   openBrowserWindow,
   getTaskNodeInfo,
   withdrawStake,
-  getSecrets,
+  getTaskVariablesNames,
 };
