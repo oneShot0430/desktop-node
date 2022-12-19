@@ -15,6 +15,7 @@ import getTaskNodeInfo from './getTaskNodeInfo';
 import getTasks from './getTasks';
 import getTasksById from './getTasksById';
 import getTaskSource from './getTaskSource';
+import getTaskVariablesNames from './getTaskVariablesNames';
 import getUserConfig from './getUserConfig';
 import openBrowserWindow from './openBrowserWindow';
 import removeAccountByName from './removeAccountByName';
@@ -38,6 +39,7 @@ export default {
   getStakingAccountPubKey,
   withdrawStake,
   getMyTasks,
+  getTaskVariablesNames,
   getAvailableTasks,
   claimReward,
   createNodeWallets,
