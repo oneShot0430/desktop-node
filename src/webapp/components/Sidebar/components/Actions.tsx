@@ -27,7 +27,7 @@ export const Actions = () => {
   };
 
   return (
-    <div className="flex flex-col gap-[26px]">
+    <div className="flex flex-col gap-4">
       {isAddTaskView ? (
         <button
           onClick={handleAddTaskClick}

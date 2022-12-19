@@ -1,43 +1,44 @@
-import React from 'react';
-
-import FinnieKoiiLogo from 'assets/svgs/finnie-logos/finnie-koii-logo-inverse.svg';
-import TotalStakedIcon from 'assets/svgs/koii-staked-icon.svg';
-import PendingRewardsIcon from 'assets/svgs/pending-rewards-icon.svg';
+import React, { useState } from 'react';
 
 import { StatBlock } from './StatBlock';
 
 type SummaryProps = {
-  totalEarned: number;
+  totalKoii: number;
   totalStaked: number;
   pendingRewards: number;
   isLoading: boolean;
 };
 
 export const Summary = ({
-  totalEarned,
+  totalKoii,
   totalStaked,
   pendingRewards,
   isLoading,
 }: SummaryProps) => {
+  const [shouldAnimate, setShouldAnimate] = useState<boolean>(false);
+
+  const displayConfetti = () => {
+    setShouldAnimate(true);
+    setTimeout(() => {
+      setShouldAnimate(false);
+    }, 3000);
+  };
+
   return (
-    <div className="flex flex-col gap-[26px]">
+    <div className="flex flex-col gap-4 relative">
       <StatBlock
-        value={totalEarned}
-        label={'Total KOII'}
-        iconSlot={<FinnieKoiiLogo />}
+        value={totalKoii}
+        type="totalKoii"
         isLoading={isLoading}
+        shouldAnimate={shouldAnimate}
       />
-      <StatBlock
-        value={totalStaked}
-        label={'Total Staked'}
-        iconSlot={<TotalStakedIcon />}
-        isLoading={isLoading}
-      />
+      <StatBlock value={totalStaked} type="totalStaked" isLoading={isLoading} />
       <StatBlock
         value={pendingRewards}
-        label={'Pending Rewards'}
-        iconSlot={<PendingRewardsIcon />}
+        type="pendingRewards"
         isLoading={isLoading}
+        displayConfetti={displayConfetti}
+        shouldAnimate={shouldAnimate}
       />
     </div>
   );
