@@ -8,7 +8,11 @@ export const getTaskVariables = async (): Promise<TaskVariablesReturnType> => {
     PersistentStoreKeys.TaskVariables
   );
 
-  const parsedData = JSON.parse(taskVariables);
+  const parsedData = JSON.parse(taskVariables) as TaskVariablesReturnType;
 
-  return parsedData as TaskVariablesReturnType;
+  if (!parsedData) {
+    return {};
+  }
+
+  return parsedData;
 };
