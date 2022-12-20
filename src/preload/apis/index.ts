@@ -23,7 +23,7 @@ import setActiveAccount from './setActiveAccount';
 import startTask from './startTask';
 import stopTask from './stopTask';
 import storeUserConfig from './storeUserConfig';
-import { getTaskVariables, storeTaskVariable } from './taskVariables';
+import { getStoredTaskVariables, storeTaskVariable } from './taskVariables';
 import withdrawStake from './withdrawStake';
 
 export default {
@@ -53,6 +53,6 @@ export default {
   removeAccountByName,
   openBrowserWindow,
   getTaskNodeInfo,
-  getTaskVariables,
+  getStoredTaskVariables,
   storeTaskVariable,
 };

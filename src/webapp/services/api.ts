@@ -193,8 +193,8 @@ export const storeTaskVariable = async ({ label, value }: TaskVariableData) => {
   await window.main.storeTaskVariable({ label, value });
 };
 
-export const getTaskVariables = async () => {
-  return await window.main.getTaskVariables();
+export const getStoredTaskVariables = async () => {
+  return await window.main.getStoredTaskVariables();
 };
 
 export const claimRewards = async () => {

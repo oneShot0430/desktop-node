@@ -7,13 +7,13 @@ import { throwDetailedError } from 'utils';
 
 import { PersistentStoreKeys } from '../types';
 
-import { getTaskVariables } from './getTaskVariables';
+import { getStoredTaskVariables } from './getStoredTaskVariables';
 
 export const storeTaskVariable = async (
   _event: Event,
   payload: TaskVariableData
 ): Promise<void> => {
-  const taskVariables = await getTaskVariables();
+  const taskVariables = await getStoredTaskVariables();
   // throw error if payload is not valid
   if (!payload || !payload.label || !payload.value) {
     throw throwDetailedError({

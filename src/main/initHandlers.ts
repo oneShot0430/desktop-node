@@ -74,7 +74,7 @@ const initHandlers = (): void => {
   );
   ipcMain.handle(
     config.endpoints.GET_STORED_TASK_VARIABLES,
-    controllers.getTaskVariables
+    controllers.getStoredTaskVariables
   );
 };
 

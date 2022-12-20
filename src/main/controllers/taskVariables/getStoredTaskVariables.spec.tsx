@@ -1,6 +1,6 @@
 import { namespaceInstance } from 'main/node/helpers/Namespace';
 
-import { getTaskVariables } from './getTaskVariables';
+import { getStoredTaskVariables } from './getStoredTaskVariables';
 
 jest.mock('main/node/helpers/Namespace', () => {
   return {
@@ -10,12 +10,12 @@ jest.mock('main/node/helpers/Namespace', () => {
   };
 });
 
-describe('getTaskVariables', () => {
+describe('getStoredTaskVariables', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
   it('should return an empty object if the task variables are not set', async () => {
-    const result = await getTaskVariables();
+    const result = await getStoredTaskVariables();
 
     expect(result).toEqual({});
   });
@@ -25,7 +25,7 @@ describe('getTaskVariables', () => {
       '{"foo": "bar"}'
     );
 
-    const result = await getTaskVariables();
+    const result = await getStoredTaskVariables();
 
     expect(result).toEqual({ foo: 'bar' });
   });
@@ -35,7 +35,7 @@ describe('getTaskVariables', () => {
       '{"foo": "bar"'
     );
 
-    const result = await getTaskVariables();
+    const result = await getStoredTaskVariables();
 
     expect(result).toEqual({});
   });

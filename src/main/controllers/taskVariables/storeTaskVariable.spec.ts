@@ -4,7 +4,7 @@ import { namespaceInstance } from 'main/node/helpers/Namespace';
 
 import { PersistentStoreKeys } from '../types';
 
-import { getTaskVariables } from './getTaskVariables';
+import { getStoredTaskVariables } from './getStoredTaskVariables';
 import { storeTaskVariable } from './storeTaskVariable';
 
 jest.mock('main/node/helpers/Namespace', () => {
@@ -15,9 +15,9 @@ jest.mock('main/node/helpers/Namespace', () => {
   };
 });
 
-jest.mock('./getTaskVariables', () => {
+jest.mock('./getStoredTaskVariables', () => {
   return {
-    getTaskVariables: jest.fn(),
+    getStoredTaskVariables: jest.fn(),
   };
 });
 
@@ -33,7 +33,7 @@ describe('storeTaskVariable', () => {
   });
 
   it('throws an error if the payload is not valid', async () => {
-    (getTaskVariables as jest.Mock).mockResolvedValue({});
+    (getStoredTaskVariables as jest.Mock).mockResolvedValue({});
 
     const invalidPayload = {};
 
@@ -43,7 +43,7 @@ describe('storeTaskVariable', () => {
   });
 
   it('throws an error if the label already exists', async () => {
-    (getTaskVariables as jest.Mock).mockResolvedValue({
+    (getStoredTaskVariables as jest.Mock).mockResolvedValue({
       'some-id': { label: 'existing label', value: 'some value' },
     });
 
@@ -60,7 +60,7 @@ describe('storeTaskVariable', () => {
   it('stores the task variable if the payload is valid and the label does not exist', async () => {
     const MOCKED_ID = 'some-id';
 
-    (getTaskVariables as jest.Mock).mockResolvedValue({
+    (getStoredTaskVariables as jest.Mock).mockResolvedValue({
       'already-existing-id': {
         label: 'existing label',
         value: 'some existing value',

@@ -1,2 +1,2 @@
-export * from './getTaskVariables';
+export * from './getStoredTaskVariables';
 export * from './storeTaskVariable';
