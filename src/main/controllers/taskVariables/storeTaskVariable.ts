@@ -32,6 +32,7 @@ export const storeTaskVariable = async (
       type: ErrorType.GENERIC,
     });
   }
+
   const id = randomUUID();
 
   const newTaskVariables: TaskVariables = {
