@@ -15,6 +15,8 @@ describe('getStoredTaskVariables', () => {
     jest.clearAllMocks();
   });
   it('should return an empty object if the task variables are not set', async () => {
+    (namespaceInstance.storeGet as jest.Mock).mockReturnValueOnce(undefined);
+
     const result = await getStoredTaskVariables();
 
     expect(result).toEqual({});
