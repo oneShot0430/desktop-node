@@ -132,27 +132,16 @@ module.exports = {
         finnie: '4px',
       },
       gridTemplateColumns: {
-        15: 'repeat(15, minmax(0, 1fr))',
-        16: 'repeat(16, minmax(0, 1fr))',
         'first-task': '3.4rem repeat(16, minmax(0, 1fr)) 3rem',
+        'my-node': '1.5fr 0.5fr 6fr 5fr 1.5fr 1.5fr 1.5fr 3fr',
+        'available-tasks': '1fr 3fr 3fr 1fr 1fr 1.5fr 2fr 1.5fr',
+        'accounts-headers': '1fr 4fr 7fr 4fr',
+        accounts: '1fr 1fr 3fr 5fr 2fr 3fr 1fr',
       },
       gridColumnStart: {
-        14: '14',
+        2: '2',
+        13: '13',
         15: '15',
-      },
-      keyframes: {
-        slideOut: {
-          '0%': { transform: 'translateX(-100%)' },
-          '100%': { transform: 'translateX(-4px)' },
-        },
-        shrink: {
-          '0%': { width: '62.4375rem', transform: 'translateX(12.3125rem)' },
-          '100%': { width: '37.8125rem' },
-        },
-      },
-      animation: {
-        slideOut: 'slideOut 0.5s ease-in-out',
-        shrink: 'shrink 0.25s linear',
       },
     },
   },

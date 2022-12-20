@@ -1,61 +1,59 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, ReactNode } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { twMerge } from 'tailwind-merge';
 
-import { ErrorMessage } from 'webapp/components';
+import { Table } from 'webapp/components';
 
-import { TableHeaders, TableHeader } from './TableHeaders';
+import { LoadingSpinner } from '../LoadingSpinner';
+
+import { TableHeader, ColumnsLayout } from './TableHeaders';
 
 interface PropsType {
-  tableHeaders: TableHeader[];
-  children: React.ReactNode[];
+  headers: TableHeader[];
+  columnsLayout: ColumnsLayout;
+  children: ReactNode[];
   update: () => void;
   hasMore: boolean;
   isLoading?: boolean;
   error?: Error;
-  height?: string;
 }
 
+const tableWrapperId = 'infiniteTableWrapper';
+
 export const InfiniteScrollTable = ({
+  headers,
+  columnsLayout,
   children,
-  tableHeaders,
   update,
   hasMore,
   isLoading,
   error,
-  height,
 }: PropsType) => {
-  const tableWrapperId = 'infiniteTableWrapper';
-  const tableClasses = twMerge(
-    'h-[74vh] overflow-y-auto overflow-x-auto',
-    height && `h-[${height}]`
-  );
-
   useEffect(() => {
     const root = document.getElementById(tableWrapperId);
     if (!isLoading && hasMore && root.scrollHeight <= root.clientHeight) {
       update();
     }
-  }, [isLoading, hasMore]);
-
-  if (isLoading) return <div>Loading...</div>;
-
-  if (error) return <ErrorMessage error={error} />;
+  }, [isLoading, hasMore, update]);
 
   return (
-    <div className={tableClasses} id={tableWrapperId}>
-      <InfiniteScroll
-        dataLength={children.length}
-        next={update}
-        hasMore={hasMore}
-        loader={<h4>Loading...</h4>}
-        scrollableTarget={tableWrapperId}
-      >
-        <table className="w-full text-[14px] text-left table-auto">
-          <TableHeaders headers={tableHeaders} />
-          <tbody>{children}</tbody>
-        </table>
-      </InfiniteScroll>
-    </div>
+    <Table
+      headers={headers}
+      columnsLayout={columnsLayout}
+      isLoading={isLoading}
+      error={error}
+    >
+      <div id={tableWrapperId}>
+        <InfiniteScroll
+          className="!overflow-hidden"
+          dataLength={children.length}
+          next={update}
+          hasMore={hasMore}
+          loader={<LoadingSpinner />}
+          scrollableTarget={tableWrapperId}
+        >
+          {children}
+        </InfiniteScroll>
+      </div>
+    </Table>
   );
 };

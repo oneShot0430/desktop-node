@@ -11,10 +11,10 @@ import {
   LoadingSpinner,
   LoadingSpinnerSize,
   Tooltip,
+  TableRow,
+  ColumnsLayout,
 } from 'webapp/components';
-import { useTaskDetailsModal } from 'webapp/components/MyNodeTable/hooks';
-import { TableRow, TableCell } from 'webapp/components/ui/Table';
-import { useTaskStake } from 'webapp/features/common';
+import { useTaskStake, useTaskDetailsModal } from 'webapp/features/common';
 import { EditStakeInput } from 'webapp/features/onboarding/components/EditStakeInput';
 import {
   QueryKeys,
@@ -26,7 +26,13 @@ import {
 } from 'webapp/services';
 import { Task } from 'webapp/types';
 
-const AvailableTaskRow = ({ task }: { task: Task }) => {
+interface Props {
+  task: Task;
+  index: number;
+  columnsLayout: ColumnsLayout;
+}
+
+const TaskItem = ({ task, index, columnsLayout }: Props) => {
   /**
    * @todo: abstract it away to the hook
    */
@@ -49,8 +55,8 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
     task;
   const nodes = TaskService.getNodesCount(task);
   const topStake = TaskService.getTopStake(task);
-
   const bountyPerRoundInKoii = getKoiiFromRoe(bountyAmountPerRound);
+  const isFirstRowInTable = index === 0;
 
   const { taskStake, loadingTaskStake } = useTaskStake({
     task,
@@ -103,29 +109,27 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
   if (loadingMainAccount) return null;
 
   return (
-    <TableRow key={publicKey}>
-      <TableCell>
-        <Tooltip tooltipContent="Inspect task details">
-          <div className="flex flex-col items-center justify-start w-[40px]">
-            <Button icon={<CodeIcon />} onlyIcon onClick={handleShowCode} />
-            <div className="text-[6px]">INSPECT</div>
-          </div>
-        </Tooltip>
-      </TableCell>
-      <TableCell>
-        <div className="text-xs">
-          <div>{taskName ?? ''}</div>
-          <div className="text-finnieTeal">{'datestring'}</div>
+    <TableRow columnsLayout={columnsLayout}>
+      <Tooltip
+        placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
+        tooltipContent="Inspect task details"
+      >
+        <div className="flex flex-col items-center justify-start w-[40px]">
+          <Button icon={<CodeIcon />} onlyIcon onClick={handleShowCode} />
+          <div className="text-[6px] -mt-2">INSPECT</div>
         </div>
-      </TableCell>
-
-      <TableCell>
-        <span title={taskManager}>{`${taskManager.substring(0, 6)}...`}</span>
-      </TableCell>
-      <TableCell>{bountyPerRoundInKoii}</TableCell>
-      <TableCell>{nodes}</TableCell>
-      <TableCell>{getKoiiFromRoe(topStake)}</TableCell>
-      <TableCell>
+      </Tooltip>
+      <div className="text-xs flex flex-col gap-1">
+        <div>{taskName}</div>
+        <div className="text-finnieTeal">datestring</div>
+      </div>
+      <div className="overflow-hidden text-ellipsis pr-8" title={taskManager}>
+        {taskManager}
+      </div>
+      <div>{bountyPerRoundInKoii}</div>
+      <div>{nodes}</div>
+      <div>{getKoiiFromRoe(topStake)}</div>
+      <div>
         <EditStakeInput
           meetsMinimumStake={meetsMinimumStake}
           stake={stake}
@@ -133,15 +137,15 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
           onChange={handleStakeValueChange}
           disabled={taskStake !== 0 || loadingTaskStake}
         />
-      </TableCell>
-      <TableCell>
+      </div>
+      <div>
         {loading ? (
           <div className="pl-2">
             <LoadingSpinner size={LoadingSpinnerSize.Large} />
           </div>
         ) : (
           <Tooltip
-            placement="top-left"
+            placement={`${isFirstRowInTable ? 'bottom' : 'top'}-left`}
             tooltipContent={`${isRunning ? 'Stop' : 'Start'} task`}
           >
             <Button
@@ -162,9 +166,9 @@ const AvailableTaskRow = ({ task }: { task: Task }) => {
             />
           </Tooltip>
         )}
-      </TableCell>
+      </div>
     </TableRow>
   );
 };
 
-export default memo(AvailableTaskRow);
+export default memo(TaskItem);

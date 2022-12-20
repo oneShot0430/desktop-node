@@ -7,7 +7,7 @@ import { Theme } from 'webapp/types/common';
 type VerticalPlacement = 'top' | 'bottom';
 type HorizontalPlacement = 'left' | 'right';
 type CombinedPlacement = `${VerticalPlacement}-${HorizontalPlacement}`;
-type Placement = HorizontalPlacement | CombinedPlacement;
+export type Placement = HorizontalPlacement | CombinedPlacement;
 
 type PropsType = {
   children: React.ReactNode;

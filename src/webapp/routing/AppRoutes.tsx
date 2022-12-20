@@ -21,7 +21,7 @@ import {
 } from 'webapp/features/onboarding';
 import { AppRoute } from 'webapp/types/routes';
 
-import { History, AddTasks, MyNode, Unlock } from '../components';
+import { History, AvailableTasks, MyNode, Unlock } from '../components';
 
 const routes = [
   { path: AppRoute.Unlock, element: <Unlock /> },
@@ -33,7 +33,7 @@ const routes = [
       { path: AppRoute.MyNode, element: <MyNode /> },
       {
         path: AppRoute.AddTask,
-        element: <AddTasks />,
+        element: <AvailableTasks />,
       },
       {
         path: AppRoute.Rewards,

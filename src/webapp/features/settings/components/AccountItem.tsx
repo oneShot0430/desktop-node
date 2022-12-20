@@ -3,8 +3,6 @@ import React, { memo, useState } from 'react';
 import CopyIconSvg from 'assets/svgs/copy-icon.svg';
 import DeleteIconSvg from 'assets/svgs/delete-icon.svg';
 import DotsSvg from 'assets/svgs/dots.svg';
-import EditIconSvg from 'assets/svgs/edit-icon.svg';
-import KeyIconSvg from 'assets/svgs/key-icon.svg';
 import StarOutlined from 'assets/svgs/star-outlined.svg';
 import Star from 'assets/svgs/star.svg';
 import {
@@ -13,6 +11,8 @@ import {
   ErrorMessage,
   Button,
   Tooltip,
+  TableRow,
+  ColumnsLayout,
 } from 'webapp/components';
 import { useClipboard } from 'webapp/features/common';
 import { useConfirmModal } from 'webapp/features/common/modals/ConfirmationModal';
@@ -26,6 +26,7 @@ type PropsType = {
   mainPublicKey: string;
   isDefault: boolean;
   stakingPublicKeyBalance: number;
+  columnsLayout: ColumnsLayout;
 };
 
 const AccountItem = ({
@@ -33,15 +34,21 @@ const AccountItem = ({
   mainPublicKey,
   stakingPublicKey,
   isDefault,
+  columnsLayout,
 }: PropsType) => {
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const { accountBalance, accountBalanceLoadingError } =
     useAccountBalance(mainPublicKey);
+
   const { copyToClipboard: copyMainKeyToClipboard, copied: copiedMainKey } =
     useClipboard();
+
   const {
     copyToClipboard: copyStakingKeyToClipboard,
     copied: copiedStakingKey,
   } = useClipboard();
+
   const {
     deleteAccount,
     setAccountActive,
@@ -50,8 +57,6 @@ const AccountItem = ({
     setAccountActiveError,
     // removingAccountLoading,
   } = useAccount({ accountName, isDefault });
-
-  const [isDeleting, setIsDeleting] = useState(false);
 
   const { showModal } = useConfirmModal({
     content: (
@@ -81,22 +86,23 @@ const AccountItem = ({
   const handleCopyMainPublicKey = () => {
     copyMainKeyToClipboard(mainPublicKey);
   };
+
   const handleCopyStakingPublicKey = () => {
     copyStakingKeyToClipboard(stakingPublicKey);
   };
 
   const error = removingAccountError || setAccountActiveError;
+  const rowClasses = `rounded ${
+    isDefault ? 'bg-finnieTeal-100/[.3]' : 'bg-finnieTeal-100'
+  } bg-opacity-5 grid grid-cols-accounts gap-y-6 gap-x-2 !py-4 border-none`;
 
   return (
-    <div className="w-full mb-4 text-white">
-      <div className="pb-2 pl-12 text-xl font-semibold">{accountName}</div>
+    <div className="w-full mb-4 pr-2 text-white">
+      <div className="pb-2 pl-[7%] text-xl font-semibold">{accountName}</div>
       {error && <ErrorMessage error={error} />}
-      <div
-        className={`rounded ${
-          isDefault ? 'bg-finnieTeal-100/[.3]' : 'bg-finnieTeal-100'
-        } bg-opacity-5 grid grid-cols-16 gap-y-6 gap-x-2 py-4`}
-      >
-        <div className="flex flex-col items-center justify-center col-span-1 row-span-2 py-1">
+
+      <TableRow columnsLayout={columnsLayout} className={rowClasses}>
+        <div className="flex flex-col items-center justify-center row-span-2 py-1">
           <DotsSvg />
         </div>
         {setAccountActiveLoading ? (
@@ -106,22 +112,19 @@ const AccountItem = ({
             <Button
               onClick={setAccountActive}
               icon={isDefault ? <Star /> : <StarOutlined />}
-              className="w-6 h-6 col-span-1 bg-transparent rounded-full"
+              className="w-6 h-6 bg-transparent rounded-full"
             />
           </Tooltip>
         )}
-        <span className="col-span-2 text-finnieTeal">System Key</span>
-        <Button
+        <span className="text-finnieTeal">System Key</span>
+        {/* <Button
           icon={<EditIconSvg />}
-          className="invisible w-6 h-6 col-span-1 rounded-full bg-finnieTeal-100"
-        />
-        <span
-          className="col-span-5 text-ellipsis overflow-x-clip"
-          title={mainPublicKey}
-        >
+          className="invisible w-6 h-6 rounded-full bg-finnieTeal-100"
+        /> */}
+        <span className="overflow-hidden text-ellipsis" title={mainPublicKey}>
           {mainPublicKey}
         </span>
-        <div className="flex justify-center col-span-2 gap-4">
+        <div className="flex justify-center gap-4">
           <Tooltip
             tooltipContent={copiedMainKey ? 'Copied' : 'Copy'}
             forceDisplaying={copiedMainKey}
@@ -132,46 +135,40 @@ const AccountItem = ({
               className="rounded-full w-6 h-6 bg-finnieTeal-100"
             />
           </Tooltip>
-          <Button
+          {/* <Button
             icon={<KeyIconSvg className="w-3.5 h-3.5" />}
             className="invisible w-6 h-6 rounded-full bg-finnieEmerald-light"
-          />
+          /> */}
         </div>
 
-        <span className="col-span-2 col-start-14">
-          {accountBalanceLoadingError ? '-' : accountBalance} KOII
-        </span>
-        {!isDefault &&
-          (isDeleting ? (
-            <LoadingSpinner size={LoadingSpinnerSize.Medium} />
-          ) : (
-            <div className="mr-4">
+        <span>{accountBalanceLoadingError ? '-' : accountBalance} KOII</span>
+
+        <div className="mr-4 ml-auto">
+          {!isDefault &&
+            (isDeleting ? (
+              <LoadingSpinner size={LoadingSpinnerSize.Medium} />
+            ) : (
               <Tooltip placement="top-left" tooltipContent="Delete account">
                 <Button
                   disabled={isDeleting}
                   onClick={handleDeleteAccount}
                   icon={<DeleteIconSvg />}
-                  className="w-6 h-6 col-span-1 rounded-full bg-finnieRed mr-0"
+                  className="w-6 h-6 rounded-full bg-finnieRed mr-0"
                 />
               </Tooltip>
-            </div>
-          ))}
-
-        <div className="col-span-2 col-start-3 text-finnieOrange">
-          Staking Key
+            ))}
         </div>
+        <div></div>
+        <div className="text-finnieOrange">Staking Key</div>
 
-        <Button
+        {/* <Button
           icon={<EditIconSvg />}
-          className="invisible w-6 h-6 col-span-1 rounded-full bg-finnieTeal-100"
-        />
-        <div
-          className="col-span-5 col-start-6 text-ellipsis overflow-x-clip"
-          title={stakingPublicKey}
-        >
+          className="invisible w-6 h-6 rounded-full bg-finnieTeal-100"
+        /> */}
+        <div className="overflow-hidden text-ellipsis" title={stakingPublicKey}>
           {stakingPublicKey}
         </div>
-        <div className="flex justify-center col-span-2 gap-4">
+        <div className="flex justify-center gap-4">
           <Tooltip
             tooltipContent={copiedStakingKey ? 'Copied' : 'Copy'}
             forceDisplaying={copiedStakingKey}
@@ -179,15 +176,15 @@ const AccountItem = ({
             <Button
               onClick={handleCopyStakingPublicKey}
               icon={<CopyIconSvg />}
-              className="rounded-full w-6 h-6  bg-finnieTeal-100"
+              className="rounded-full w-6 h-6 bg-finnieTeal-100"
             />
           </Tooltip>
-          <Button
+          {/* <Button
             icon={<KeyIconSvg className="w-3.5 h-3.5" />}
             className="invisible w-6 h-6 rounded-full bg-finnieEmerald-light"
-          />
+          /> */}
         </div>
-      </div>
+      </TableRow>
     </div>
   );
 };
