@@ -2,7 +2,7 @@ import { randomUUID } from 'crypto';
 import { Event } from 'electron';
 
 import { namespaceInstance } from 'main/node/helpers/Namespace';
-import { ErrorType, TaskVariableData } from 'models';
+import { ErrorType, TaskVariableData, TaskVariables } from 'models';
 import { throwDetailedError } from 'utils';
 
 import { PersistentStoreKeys } from '../types';
@@ -13,7 +13,7 @@ export const storeTaskVariable = async (
   _event: Event,
   payload: TaskVariableData
 ): Promise<void> => {
-  const taskVariables = (await getTaskVariables()) ?? {};
+  const taskVariables = await getTaskVariables();
   // throw error if payload is not valid
   if (!payload || !payload.label || !payload.value) {
     throw throwDetailedError({
@@ -34,7 +34,7 @@ export const storeTaskVariable = async (
   }
   const id = randomUUID();
 
-  const newTaskVariables = {
+  const newTaskVariables: TaskVariables = {
     ...taskVariables,
     [id]: payload,
   };
