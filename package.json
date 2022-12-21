@@ -127,6 +127,7 @@
     "@_koii/koii-styleguide": "^0.2.7-alpha",
     "@ebay/nice-modal-react": "^1.2.7",
     "@electron-forge/maker-dmg": "^6.0.0-beta.64",
+    "@headlessui/react": "^1.7.5",
     "@solana/buffer-layout": "^4.0.0",
     "@types/cookie-parser": "^1.4.3",
     "@types/cors": "^2.8.12",
