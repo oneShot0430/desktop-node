@@ -11,4 +11,5 @@ export enum QueryKeys {
   MainAccount = 'MainAccount',
   Accounts = 'Accounts',
   TaskStake = 'TaskStake',
+  TaskVariables = 'TaskVariables',
 }

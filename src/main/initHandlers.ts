@@ -76,6 +76,10 @@ const initHandlers = (): void => {
     config.endpoints.GET_STORED_TASK_VARIABLES,
     controllers.getStoredTaskVariables
   );
+  ipcMain.handle(
+    config.endpoints.STORE_TASK_VARIABLE,
+    controllers.storeTaskVariable
+  );
 };
 
 export default errorHandler(initHandlers, 'Init handlers error');
