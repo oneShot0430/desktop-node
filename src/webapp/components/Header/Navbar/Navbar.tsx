@@ -2,13 +2,16 @@ import clsx from 'clsx';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
+import { AppRoute } from 'webapp/types/routes';
+
 const navItems = [
-  { name: 'My Node', to: '/my-node' },
-  { name: 'Add Tasks', to: '/add-tasks' },
+  { name: 'My Node', to: AppRoute.MyNode },
+  { name: 'Add Tasks', to: AppRoute.AddTask },
   // { name: 'Rewards', to: '/rewards' },
   // { name: 'History', to: '/history' },
   // { name: 'Notifications', to: '/notifications' },
-  { name: 'Settings', to: '/settings' },
+  { name: 'Secrets', to: AppRoute.Secrets },
+  { name: 'Settings', to: AppRoute.Settings },
 ];
 
 const Navbar = (): JSX.Element => {

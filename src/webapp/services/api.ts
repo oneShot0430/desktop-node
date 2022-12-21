@@ -5,6 +5,7 @@ import {
   FetchAllTasksParam,
   GetAvailableTasksParam,
   GetMyTasksParam,
+  TaskVariableData,
   StoreUserConfigParam,
 } from 'models/api';
 import sdk from 'services/sdk';
@@ -186,6 +187,14 @@ export const getTaskNodeInfo = () => {
 
 export const openBrowserWindow = async (URL: string) => {
   await window.main.openBrowserWindow({ URL });
+};
+
+export const storeTaskVariable = async ({ label, value }: TaskVariableData) => {
+  await window.main.storeTaskVariable({ label, value });
+};
+
+export const getStoredTaskVariables = async () => {
+  return await window.main.getStoredTaskVariables();
 };
 
 export const claimRewards = async () => {

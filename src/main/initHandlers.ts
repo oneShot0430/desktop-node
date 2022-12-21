@@ -2,7 +2,7 @@ import { ipcMain } from 'electron';
 
 import config from 'config';
 
-import controllers from './controllers';
+import * as controllers from './controllers';
 import errorHandler from './errorHandler';
 
 const initHandlers = (): void => {
@@ -71,6 +71,10 @@ const initHandlers = (): void => {
   ipcMain.handle(
     config.endpoints.GET_TASK_VARIABLES_NAMES,
     controllers.getTaskVariablesNames
+  );
+  ipcMain.handle(
+    config.endpoints.GET_STORED_TASK_VARIABLES,
+    controllers.getStoredTaskVariables
   );
 };
 
