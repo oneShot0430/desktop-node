@@ -44,7 +44,7 @@ export const InfiniteScrollTable = ({
     >
       <div id={tableWrapperId}>
         <InfiniteScroll
-          className="!overflow-hidden"
+          className="!overflow-hidden min-h-table"
           dataLength={children.length}
           next={update}
           hasMore={hasMore}

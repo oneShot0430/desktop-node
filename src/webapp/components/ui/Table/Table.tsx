@@ -35,7 +35,7 @@ export const Table = ({
   return (
     <div className="flex flex-col flex-grow h-full min-h-0">
       <TableHeaders headers={headers} columnsLayout={columnsLayout} />
-      <div className="overflow-y-auto">{children}</div>
+      <div className="overflow-y-auto min-h-table">{children}</div>
     </div>
   );
 };
