@@ -24,21 +24,19 @@ export const Dropdown = ({
   items = [],
   onSelect,
   placeholderText = 'Select item',
-  defaultValue,
+  defaultValue = null,
 }: DropdownProps) => {
-  const [selected, setSelected] = useState<DropdownItem>(defaultValue ?? null);
+  const [selected, setSelected] = useState<DropdownItem>(defaultValue);
   const handleItemSelect = useCallback(
     (item: DropdownItem) => {
       setSelected(item);
-      if (onSelect && typeof onSelect === 'function') {
-        onSelect(item);
-      }
+      onSelect?.(item);
     },
     [onSelect]
   );
 
   return (
-    <div className="w-72">
+    <div className="w-72" data-testid="koii_dropdown_test_id">
       <Listbox value={selected} onChange={handleItemSelect}>
         <div className="relative mt-1">
           <Listbox.Button
@@ -75,17 +73,15 @@ export const Dropdown = ({
                   disabled={item?.disabled}
                 >
                   {({ selected }) => (
-                    <>
-                      <span
-                        className={`block truncate py-1 pl-10 pr-4  ${
-                          selected
-                            ? 'border-2 border-purple-1 font-semibold rounded-lg text-finnieTeal-100'
-                            : 'font-normal text-white border-2 border-transparent'
-                        }`}
-                      >
-                        {item?.label}
-                      </span>
-                    </>
+                    <span
+                      className={`block truncate py-1 pl-10 pr-4  ${
+                        selected
+                          ? 'border-2 border-purple-1 font-semibold rounded-lg text-finnieTeal-100'
+                          : 'font-normal text-white border-2 border-transparent'
+                      }`}
+                    >
+                      {item?.label}
+                    </span>
                   )}
                 </Listbox.Option>
               ))}

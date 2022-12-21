@@ -1,4 +1,4 @@
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, screen } from '@testing-library/react';
 import React from 'react';
 
 import { Dropdown } from './Dropdown';
@@ -11,32 +11,31 @@ const items = [
 
 describe('Dropdown', () => {
   it('should render without crashing', () => {
-    const { container } = render(<Dropdown items={items} />);
-    expect(container).toBeTruthy();
+    render(<Dropdown items={items} />);
+    expect(screen.getByTestId('koii_dropdown_test_id')).toBeInTheDocument();
   });
 
   it('should display placeholder text when no item is selected', () => {
-    const { getByText } = render(<Dropdown items={items} />);
-    expect(getByText('Select item')).toBeInTheDocument();
+    render(<Dropdown items={items} />);
+    expect(screen.getByText('Select item')).toBeInTheDocument();
   });
 
   it('should display the selected item text', () => {
-    const { getByText } = render(<Dropdown items={items} />);
-    fireEvent.click(getByText('Select item'));
-    fireEvent.click(getByText('First item'));
-    expect(getByText('First item')).toBeInTheDocument();
+    render(<Dropdown items={items} />);
+    fireEvent.click(screen.getByText('Select item'));
+    fireEvent.click(screen.getByText('First item'));
+    expect(screen.getByText('First item')).toBeInTheDocument();
   });
 
   it('should call the onSelect callback when an item is selected', () => {
     const onSelect = jest.fn();
-    const { getByText } = render(
-      <Dropdown items={items} onSelect={onSelect} />
-    );
-    fireEvent.click(getByText('Select item'));
-    fireEvent.click(getByText('First item'));
+    render(<Dropdown items={items} onSelect={onSelect} />);
+    fireEvent.click(screen.getByText('Select item'));
+    fireEvent.click(screen.getByText('First item'));
     expect(onSelect).toHaveBeenCalledWith({
       label: 'First item',
       disabled: false,
+      id: '1',
     });
   });
 });
