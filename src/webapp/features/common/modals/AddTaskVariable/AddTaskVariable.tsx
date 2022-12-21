@@ -17,10 +17,12 @@ import { Theme } from 'webapp/types/common';
 const baseInputClassName =
   'px-6 py-2 text-sm rounded-md bg-finnieBlue-light-tertiary focus:ring-2 focus:ring-finnieTeal focus:outline-none focus:bg-finnieBlue-light-secondary';
 
-export const AddNodeTool = create(function AddNodeTool() {
+export const AddTaskVariable = create(function AddTaskVariable() {
   const [label, setLabel] = useState<string>('');
+  const [value, setValue] = useState<string>('');
   const [labelError, setLabelError] = useState<string>('');
-  const [toolKey, setToolKey] = useState<string>('');
+
+  const modal = useModal();
 
   const { data: storedTaskVariables } = useQuery(
     QueryKeys.TaskVariables,
@@ -34,10 +36,8 @@ export const AddNodeTool = create(function AddNodeTool() {
       },
     });
 
-  const modal = useModal();
-
-  const handleAdd = async () => {
-    storeTaskVariable({ label, value: toolKey });
+  const handleAddTaskVariable = async () => {
+    storeTaskVariable({ label, value });
   };
 
   const handleLabelChange: ChangeEventHandler<HTMLInputElement> = ({
@@ -55,17 +55,16 @@ export const AddNodeTool = create(function AddNodeTool() {
       setLabelError('You already have a tool registered with that label');
     }
   };
+
   const handleToolKeyChange: ChangeEventHandler<HTMLInputElement> = ({
-    target: { value: key },
-  }) => {
-    setToolKey(key);
-  };
+    target: { value },
+  }) => setValue(value);
 
   return (
     <Modal>
       <ModalContent
         theme={Theme.Dark}
-        className="text-left px-12 pt-3 pb-6 w-fit h-fit rounded text-white flex flex-col gap-6"
+        className="text-left px-12 pt-3 pb-6 w-max h-fit rounded text-white flex flex-col gap-6"
       >
         <div className="w-full flex justify-center items-center gap-4 text-2xl  font-semibold">
           <BrowserIcon width={48} height={48} />
@@ -104,7 +103,7 @@ export const AddNodeTool = create(function AddNodeTool() {
           <input
             className={`${baseInputClassName} w-full`}
             type="text"
-            value={toolKey}
+            value={value}
             onChange={handleToolKeyChange}
             placeholder="Paste Tool here"
           />
@@ -121,8 +120,8 @@ export const AddNodeTool = create(function AddNodeTool() {
 
         <Button
           label="Add Node Tool"
-          onClick={handleAdd}
-          disabled={!!labelError || !label || !toolKey}
+          onClick={handleAddTaskVariable}
+          disabled={!!labelError || !label || !value}
           className="m-auto font-semibold bg-finnieGray-tertiary text-finnieBlue-light w-56 h-12"
         />
       </ModalContent>
