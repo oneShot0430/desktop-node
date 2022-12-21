@@ -15,7 +15,6 @@ import {
   ColumnsLayout,
 } from 'webapp/components';
 import { useTaskStake, useTaskDetailsModal } from 'webapp/features/common';
-import { EditStakeInput } from 'webapp/features/onboarding/components/EditStakeInput';
 import {
   QueryKeys,
   startTask,
@@ -26,6 +25,8 @@ import {
 } from 'webapp/services';
 import { Task } from 'webapp/types';
 
+import { TaskSettings } from './TaskSettings';
+
 interface Props {
   task: Task;
   index: number;
@@ -33,6 +34,7 @@ interface Props {
 }
 
 const TaskItem = ({ task, index, columnsLayout }: Props) => {
+  const [showSettings, setShowSettings] = useState<boolean>(false);
   /**
    * @todo: abstract it away to the hook
    */
@@ -45,6 +47,10 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
     task,
     accountPublicKey: mainAccountPubKey,
   });
+
+  const handleToggleSettings = () => {
+    setShowSettings(!showSettings);
+  };
 
   const [stake, setStake] = useState<number>(0);
   const [meetsMinimumStake, setMeetsMinimumStake] = useState<boolean>(false);
@@ -119,25 +125,35 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
           <div className="text-[6px] -mt-2">INSPECT</div>
         </div>
       </Tooltip>
-      <div className="text-xs flex flex-col gap-1">
+
+      <div className="flex flex-col gap-1 text-xs">
         <div>{taskName}</div>
         <div className="text-finnieTeal">datestring</div>
       </div>
-      <div className="overflow-hidden text-ellipsis pr-8" title={taskManager}>
+
+      <div className="pr-8 overflow-hidden text-ellipsis" title={taskManager}>
         {taskManager}
       </div>
+
       <div>{bountyPerRoundInKoii}</div>
+
       <div>{nodes}</div>
+
       <div>{getKoiiFromRoe(topStake)}</div>
+
       <div>
-        <EditStakeInput
+        {/* <EditStakeInput
           meetsMinimumStake={meetsMinimumStake}
           stake={stake}
           minStake={minStake}
           onChange={handleStakeValueChange}
           disabled={taskStake !== 0 || loadingTaskStake}
-        />
+        /> */}
+        <div>
+          <button onClick={handleToggleSettings}>Settings</button>
+        </div>
       </div>
+
       <div>
         {loading ? (
           <div className="pl-2">
@@ -166,6 +182,14 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
             />
           </Tooltip>
         )}
+      </div>
+
+      <div
+        className={`w-full col-span-8 ${
+          showSettings ? 'flex' : 'hidden'
+        } transition-all duration-500 ease-in-out`}
+      >
+        <TaskSettings />
       </div>
     </TableRow>
   );
