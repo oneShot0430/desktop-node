@@ -12,6 +12,7 @@ const storeUserConfig = async (
   payload: StoreUserConfigParam
 ): Promise<boolean> => {
   const { settings } = payload;
+
   try {
     await namespaceInstance.storeSet(USER_CONFIG, JSON.stringify(settings));
     return true;
