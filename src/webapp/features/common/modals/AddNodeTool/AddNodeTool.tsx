@@ -1,12 +1,17 @@
 import { create, useModal } from '@ebay/nice-modal-react';
 import React, { ChangeEventHandler, useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery, useMutation } from 'react-query';
 
 import BrowserIcon from 'assets/svgs/browser-icon.svg';
 import CloseIconWhite from 'assets/svgs/close-icons/close-icon-white.svg';
+import { TaskVariableData } from 'models';
 import { Button, ErrorMessage } from 'webapp/components';
 import { Modal, ModalContent } from 'webapp/features/modals';
-import { getStoredTaskVariables, QueryKeys } from 'webapp/services';
+import {
+  getStoredTaskVariables,
+  storeTaskVariable as storeTaskVariableService,
+  QueryKeys,
+} from 'webapp/services';
 import { Theme } from 'webapp/types/common';
 
 const baseInputClassName =
@@ -22,11 +27,17 @@ export const AddNodeTool = create(function AddNodeTool() {
     getStoredTaskVariables
   );
 
+  const { mutate: storeTaskVariable, error: errorStoringTaskVariable } =
+    useMutation<void, Error, TaskVariableData>(storeTaskVariableService, {
+      onSuccess: () => {
+        modal.remove();
+      },
+    });
+
   const modal = useModal();
 
   const handleAdd = async () => {
-    //  TO DO: put here logic to add a new tool
-    modal.remove();
+    storeTaskVariable({ label, value: toolKey });
   };
 
   const handleLabelChange: ChangeEventHandler<HTMLInputElement> = ({
@@ -97,6 +108,15 @@ export const AddNodeTool = create(function AddNodeTool() {
             onChange={handleToolKeyChange}
             placeholder="Paste Tool here"
           />
+        </div>
+
+        <div className="h-6 -mt-4 -mb-3 text-center">
+          {errorStoringTaskVariable && (
+            <ErrorMessage
+              error={errorStoringTaskVariable}
+              className="text-xs"
+            />
+          )}
         </div>
 
         <Button
