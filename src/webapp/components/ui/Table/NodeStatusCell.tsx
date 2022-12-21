@@ -4,9 +4,8 @@ import StatusAcceptingSubmissionIcon from 'assets/svgs/status-accepting-icon.svg
 import StatusCompletedIcon from 'assets/svgs/status-completed-icon.svg';
 import StatusVotingIcon from 'assets/svgs/status-voting-icon.svg';
 import { Tooltip } from 'webapp/components';
+import { Placement } from 'webapp/components/ui/Tooltip';
 import { TaskStatus } from 'webapp/types';
-
-import { TableCell } from './TableCell';
 
 const statuses = {
   [TaskStatus.ACCEPTING_SUBMISSIONS]: {
@@ -25,16 +24,18 @@ const statuses = {
 
 type PropsType = {
   status: TaskStatus;
+  isFirstRowInTable?: boolean;
 };
 
-export const NodeStatusCell = ({ status }: PropsType) => {
+export const NodeStatusCell = ({ status, isFirstRowInTable }: PropsType) => {
   const { component: StatusComponent, title } = statuses[status];
+  const tooltipPlacement: Placement = `${
+    isFirstRowInTable ? 'bottom' : 'top'
+  }-left`;
 
   return (
-    <TableCell>
-      <Tooltip tooltipContent={`Status: ${title}`}>
-        <StatusComponent />
-      </Tooltip>
-    </TableCell>
+    <Tooltip tooltipContent={`Status: ${title}`} placement={tooltipPlacement}>
+      <StatusComponent />
+    </Tooltip>
   );
 };

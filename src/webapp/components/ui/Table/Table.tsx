@@ -1,40 +1,41 @@
-import React from 'react';
-import { twMerge } from 'tailwind-merge';
+import React, { ReactNode } from 'react';
 
-import { ErrorMessage } from 'webapp/components';
+import {
+  ErrorMessage,
+  LoadingSpinner,
+  LoadingSpinnerSize,
+} from 'webapp/components';
 
-import { TableHeaders, TableHeader } from './TableHeaders';
+import { TableHeaders, TableHeader, ColumnsLayout } from './TableHeaders';
 
 type PropsType = {
-  tableHeaders: TableHeader[];
-  children: React.ReactNode;
+  headers: TableHeader[];
+  columnsLayout: ColumnsLayout;
+  children: ReactNode;
   isLoading?: boolean;
-  error?: string;
-  height?: string;
+  error?: string | Error;
 };
 
 export const Table = ({
+  headers,
+  columnsLayout,
   children,
-  tableHeaders,
   isLoading,
   error,
-  height,
 }: PropsType) => {
-  const tableClasses = twMerge(
-    'h-[74vh] overflow-y-auto overflow-x-auto',
-    height && `h-[${height}]`
-  );
-
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading)
+    return (
+      <div className="grid place-items-center h-full">
+        <LoadingSpinner size={LoadingSpinnerSize.Large} />
+      </div>
+    );
 
   if (error) return <ErrorMessage error={error} />;
 
   return (
-    <div className={tableClasses}>
-      <table className="w-full text-[14px] text-left table-auto overflow-y-auto h-[200px] border-separate border-spacing-0">
-        <TableHeaders headers={tableHeaders} />
-        <tbody>{children}</tbody>
-      </table>
+    <div className="flex flex-col flex-grow h-full min-h-0">
+      <TableHeaders headers={headers} columnsLayout={columnsLayout} />
+      <div className="overflow-y-auto min-h-table">{children}</div>
     </div>
   );
 };

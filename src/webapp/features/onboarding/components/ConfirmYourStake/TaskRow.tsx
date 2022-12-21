@@ -7,7 +7,7 @@ import CodeIconSvg from 'assets/svgs/code-icon.svg';
 import EditIconSvg from 'assets/svgs/edit-icon.svg';
 import { getKoiiFromRoe } from 'utils';
 import { Button } from 'webapp/components';
-import { useTaskDetailsModal } from 'webapp/components/MyNodeTable/hooks/useTaskDetailsModal';
+import { useTaskDetailsModal } from 'webapp/features/common';
 import { getMainAccountPublicKey, QueryKeys } from 'webapp/services';
 import { TaskWithStake } from 'webapp/types';
 

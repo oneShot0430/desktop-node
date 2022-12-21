@@ -7,27 +7,29 @@ export interface TableHeader {
   tooltip?: string;
 }
 
+export type ColumnsLayout = `grid-cols-${string}`;
+
 interface PropsType {
   headers: TableHeader[];
+  columnsLayout: ColumnsLayout;
 }
 
-export const TableHeaders = ({ headers }: PropsType) => (
-  <thead className="sticky top-0 z-10 w-full pb-8 font-semibold">
-    <tr className="border-b-2 border-gray-500">
+export const TableHeaders = ({ headers, columnsLayout }: PropsType) => {
+  const containerClasses = `grid mb-4 pb-2 font-semibold leading-5 text-sm text-white border-b-2 border-white gap-4 ${columnsLayout}`;
+
+  return (
+    <div className={containerClasses}>
       {headers.map(({ title, tooltip }) => (
-        <th
-          key={title}
-          className="font-semibold leading-5 text-white racking-[0.03em] pb-4 border-b-2 border-gray-500"
-        >
+        <div key={title} className="font-semibold text-white">
           {tooltip ? (
-            <Tooltip placement="bottom-right" tooltipContent={tooltip}>
+            <Tooltip placement="top-right" tooltipContent={tooltip}>
               {title}
             </Tooltip>
           ) : (
             title
           )}
-        </th>
+        </div>
       ))}
-    </tr>
-  </thead>
-);
+    </div>
+  );
+};

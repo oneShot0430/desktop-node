@@ -1,14 +1,8 @@
 import React from 'react';
 import { useQuery } from 'react-query';
 
-import { useTaskDetailsModal } from 'webapp/components/MyNodeTable/hooks';
-import {
-  TableRow,
-  TableCell,
-  NodeStatusCell,
-} from 'webapp/components/ui/Table';
-import { TaskDetailsCell } from 'webapp/components/ui/Table/TaskDetailsCell';
-import { useTaskStake } from 'webapp/features/common';
+import { TableRow, NodeStatusCell } from 'webapp/components';
+import { useTaskStake, useTaskDetailsModal } from 'webapp/features/common';
 import {
   getMainAccountPublicKey,
   QueryKeys,
@@ -39,18 +33,21 @@ export const HistoryRow = ({ task }: { task: Task }) => {
 
   if (loadingMainAccount) return null;
 
+  /**
+   * @todo: update this to use the new Table when we need to re-include the History feature
+   */
+
   return (
-    <TableRow key={publicKey}>
-      <TaskDetailsCell
-        taskName={taskName}
-        createdAt={'DATE STRING'}
-        onClick={showModal}
-      />
-      <TableCell>{'TBD'}</TableCell>
+    <TableRow key={publicKey} columnsLayout="grid-cols-history">
+      <div className="text-xs flex flex-col gap-1">
+        <div>{taskName}</div>
+        <div className="text-finnieTeal">date string</div>
+      </div>
+      <div>{'TBD'}</div>
       <NodeStatusCell status={nodeStatus} />
-      <TableCell>{nodes}</TableCell>
-      <TableCell>{topStake}</TableCell>
-      <TableCell>{taskStake}</TableCell>
+      <div>{nodes}</div>
+      <div>{topStake}</div>
+      <div>{taskStake}</div>
     </TableRow>
   );
 };

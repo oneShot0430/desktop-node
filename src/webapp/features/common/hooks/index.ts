@@ -9,3 +9,4 @@ export { useCreateTaskModal } from './useCreateTaskModal';
 export { useEditStakeAmountModal } from './useEditStakeAmountModal';
 export { useFundNewAccountModal } from './useFundAccountModal';
 export { useNotEnoughFunds } from './useNotEnoughFunds';
+export { useTaskDetailsModal } from './useTaskDetailsModal';

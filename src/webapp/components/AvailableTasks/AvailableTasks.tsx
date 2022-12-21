@@ -1,11 +1,11 @@
-import React, { memo, useState } from 'react';
+import React, { useState } from 'react';
 import { useInfiniteQuery } from 'react-query';
 
-import { InfiniteScrollTable } from 'webapp/components/ui';
+import { InfiniteScrollTable } from 'webapp/components';
 import { fetchAvailableTasks, QueryKeys } from 'webapp/services';
 import { Task } from 'webapp/types';
 
-import AvailableTaskRow from './AvailableTaskRow';
+import TaskItem from './components/TaskItem';
 
 const tableHeaders = [
   { title: 'Code' },
@@ -18,9 +18,10 @@ const tableHeaders = [
   { title: 'Run Task' },
 ];
 
+const columnsLayout = 'grid-cols-available-tasks';
 const pageSize = 10;
 
-const AvailableTasksTable = () => {
+export const AvailableTasks = () => {
   const [hasMore, setHasMore] = useState(true);
 
   const { data, isLoading, error, fetchNextPage } = useInfiniteQuery<
@@ -41,23 +42,25 @@ const AvailableTasksTable = () => {
     }
   );
 
-  const getAllRows = (): Task[] => {
-    return (data?.pages || []).flat();
-  };
+  const allRows = (data?.pages || []).flat();
 
   return (
     <InfiniteScrollTable
-      tableHeaders={tableHeaders}
+      columnsLayout={columnsLayout}
+      headers={tableHeaders}
       isLoading={isLoading}
       error={error}
       hasMore={hasMore}
       update={fetchNextPage}
     >
-      {getAllRows().map((task) => (
-        <AvailableTaskRow key={task.publicKey} task={task} />
+      {allRows.map((task, index) => (
+        <TaskItem
+          columnsLayout={columnsLayout}
+          key={task.publicKey}
+          index={index}
+          task={task}
+        />
       ))}
     </InfiniteScrollTable>
   );
 };
-
-export default memo(AvailableTasksTable);

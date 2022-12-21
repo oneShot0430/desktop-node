@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { AppTopBar } from 'webapp/components';
 import { saveUserConfig } from 'webapp/services';
 import { AppRoute } from 'webapp/types/routes';
 
-import { AppTopBar } from '../AppTopBar';
 import Header from '../Header';
 import { Sidebar } from '../Sidebar';
 
@@ -27,17 +27,13 @@ const MainLayout = ({ children }: MainLayoutProps): JSX.Element => {
   }, [navigate]);
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col flex-grow bg-gradient-to-b from-finnieBlue-dark-secondary to-finnieBlue h-screen min-h-0">
       <Header />
-      <main className="flex flex-col h-full bg-gradient-to-b from-finnieBlue-dark-secondary to-finnieBlue">
-        <AppTopBar />
-        <div className="flex-grow w-full h-full px-4 pt-3 mx-auto main-bg">
-          <div className="flex items-stretch h-full pb-4">
-            <Sidebar />
-            <div className="w-full">{children}</div>
-          </div>
-        </div>
-      </main>
+      <AppTopBar />
+      <div className="flex flex-grow min-h-0 px-4">
+        <Sidebar />
+        <div className="flex flex-col flex-grow min-h-0 pb-4">{children}</div>
+      </div>
     </div>
   );
 };

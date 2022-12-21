@@ -1,8 +1,7 @@
 import React, { memo } from 'react';
 
+import { Table } from 'webapp/components';
 import { Task } from 'webapp/types';
-
-import { Table } from '../ui/Table';
 
 import { HistoryRow } from './components/HistoryRow';
 
@@ -19,7 +18,11 @@ const tableHeaders = [
 
 export const History = () => {
   return (
-    <Table tableHeaders={tableHeaders}>
+    /**
+     * @todo: update this to use the new Table when we need to re-include the History feature
+     */
+
+    <Table headers={tableHeaders} columnsLayout="grid-cols-history">
       {historyRows.map(({ publicKey, task }) => (
         <HistoryRow key={publicKey} task={task} />
       ))}
