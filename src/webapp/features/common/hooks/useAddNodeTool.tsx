@@ -4,7 +4,7 @@ import { AddNodeTool } from '../modals/AddNodeTool';
 
 export const useAddNodeTool = () => {
   const showModal = () => {
-    return show(AddNodeTool);
+    show(AddNodeTool);
   };
 
   return {

@@ -1,35 +1,44 @@
 import { create, useModal } from '@ebay/nice-modal-react';
 import React, { ChangeEventHandler, useState } from 'react';
+import { useQuery } from 'react-query';
 
 import BrowserIcon from 'assets/svgs/browser-icon.svg';
 import CloseIconWhite from 'assets/svgs/close-icons/close-icon-white.svg';
 import { Button, ErrorMessage } from 'webapp/components';
 import { Modal, ModalContent } from 'webapp/features/modals';
+import { getStoredTaskVariables, QueryKeys } from 'webapp/services';
 import { Theme } from 'webapp/types/common';
 
 const baseInputClassName =
   'px-6 py-2 text-sm rounded-md bg-finnieBlue-light-tertiary focus:ring-2 focus:ring-finnieTeal focus:outline-none focus:bg-finnieBlue-light-secondary';
 
-export const AddNodeTool = create(function ConfirmAccountDelete() {
+export const AddNodeTool = create(function AddNodeTool() {
   const [label, setLabel] = useState<string>('');
   const [labelError, setLabelError] = useState<string>('');
   const [toolKey, setToolKey] = useState<string>('');
 
-  const existingTools = [{ label: '123', key: '123' }]; // TO DO: replace with query to get existing tools
+  const { data: storedTaskVariables } = useQuery(
+    QueryKeys.TaskVariables,
+    getStoredTaskVariables
+  );
 
   const modal = useModal();
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     //  TO DO: put here logic to add a new tool
     modal.remove();
   };
+
   const handleLabelChange: ChangeEventHandler<HTMLInputElement> = ({
     target: { value: label },
   }) => {
     setLabelError('');
     setLabel(label);
-    const enteredLabelIsDuplicate = existingTools?.some(
-      (tool) => tool.label === label
+    const storedTaskVariablesLabels = Object.values(storedTaskVariables).map(
+      ({ label }) => label
+    );
+    const enteredLabelIsDuplicate = storedTaskVariablesLabels?.some(
+      (storedLabel) => storedLabel === label
     );
     if (enteredLabelIsDuplicate) {
       setLabelError('You already have a tool registered with that label');
