@@ -197,6 +197,10 @@ export const getStoredTaskVariables = async () => {
   return await window.main.getStoredTaskVariables();
 };
 
+export const getTaskVariablesNames = async (taskPublicKey: string) => {
+  return await window.main.getTaskVariablesNames({ taskPublicKey });
+};
+
 export const claimRewards = async () => {
   const getPendingRewardsByTask = (task: Task) =>
     sum(Object.values(task.availableBalances));
