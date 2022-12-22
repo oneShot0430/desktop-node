@@ -26,7 +26,7 @@ export function getAppDataPath() {
   }
 }`;
 
-// This sample contains all the risky delimiters mentioned in https://gitlab.com/koii-network/desktop-node/-/issues/108#note_1193556643
+// This sample source code contains all the risky delimiters mentioned in https://gitlab.com/koii-network/desktop-node/-/issues/108#note_1193556643 🙌🏻
 const sourceCodeWithVariableTasks = `import path from 'path';
 
 export function getAppDataPath() {
