@@ -1,4 +1,4 @@
-import { CloseXFill, Icon } from '@_koii/koii-styleguide';
+import { CloseFill, Icon } from '@_koii/koii-styleguide';
 import React, { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
@@ -90,12 +90,7 @@ export const Tooltip = ({
         </div>
         {manualClose && (
           <span onClick={handleClose}>
-            <Icon
-              source={CloseXFill}
-              size={32}
-              color="#5ED9D1"
-              className="z-50"
-            />
+            <Icon source={CloseFill} className="z-50 h-8 w-8 text-finnieTeal" />
           </span>
         )}
       </div>

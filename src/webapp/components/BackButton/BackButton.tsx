@@ -1,8 +1,8 @@
+import { ChevronArrowLine, Icon } from '@_koii/koii-styleguide';
 import * as React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 
-import BackIconComponent from 'assets/svgs/back-icon.svg';
 import { Button } from 'webapp/components/ui/Button';
 import { getRouteViewLabel } from 'webapp/routing/utils';
 import { AppRoute } from 'webapp/types/routes';
@@ -42,7 +42,12 @@ export const BackButton = ({ color }: PropsType) => {
       {location.pathname === AppRoute.Root || noBackButton ? null : (
         <Button
           onlyIcon
-          icon={<BackIconComponent className="cursor-pointer w-9 h-9" />}
+          icon={
+            <Icon
+              source={ChevronArrowLine}
+              className="cursor-pointer w-9 h-9 -rotate-90"
+            />
+          }
           onClick={handleBackButtonClick}
         />
       )}

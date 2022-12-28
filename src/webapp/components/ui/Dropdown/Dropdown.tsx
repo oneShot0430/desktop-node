@@ -1,7 +1,6 @@
+import { ChevronArrowLine, Icon } from '@_koii/koii-styleguide';
 import { Listbox, Transition } from '@headlessui/react';
 import React, { Fragment, useCallback, useState } from 'react';
-
-import ChevronDownIcon from 'assets/svgs/chevron-down.svg';
 
 export type DropdownItem = {
   label: string;
@@ -51,7 +50,11 @@ export const Dropdown = ({
               <span>{placeholderText}</span>
             )}
             <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-              <ChevronDownIcon aria-hidden="true" />
+              <Icon
+                source={ChevronArrowLine}
+                className="rotate-180 h-4 w-4 m-1"
+                aria-hidden="true"
+              />
             </span>
           </Listbox.Button>
           <Transition

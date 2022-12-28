@@ -1,12 +1,15 @@
+import {
+  CurrencyMoneyLine,
+  ClickXlLine,
+  WebCursorXlLine,
+  LockLine,
+  Icon,
+} from '@_koii/koii-styleguide';
 import React, { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import BackIconComponent from 'assets/svgs/back-icon.svg';
 import KoiiLogo from 'assets/svgs/koii-logo-white.svg';
-import ClickIconSvg from 'assets/svgs/onboarding/click-icon.svg';
-import CreateIconSvg from 'assets/svgs/onboarding/create-icon.svg';
-import CurrencyIconSvg from 'assets/svgs/onboarding/currency-icon.svg';
-import LockIconSvg from 'assets/svgs/onboarding/lock-icon.svg';
 import { Button } from 'webapp/components/ui/Button';
 import { useUserAppConfig } from 'webapp/features/settings';
 import { AppRoute } from 'webapp/types/routes';
@@ -65,22 +68,24 @@ const OnboardingLayout = ({ children }: PropsType) => {
           <StepListItem
             isActive={currentPath === AppRoute.OnboardingCreatePin}
             text="Secure your Node with a PIN."
-            iconSlot={<LockIconSvg />}
+            iconSlot={<Icon source={LockLine} className="h-9 w-9 m-1" />}
           />
           <StepListItem
             isActive={currentPath.includes('create-or-import-key')}
             text="Fund your new key or import one."
-            iconSlot={<CurrencyIconSvg />}
+            iconSlot={
+              <Icon source={CurrencyMoneyLine} className="h-9 w-9 m-1" />
+            }
           />
           <StepListItem
             isActive={currentPath === AppRoute.OnboardingCreateFirstTask}
             text="Select your first tasks."
-            iconSlot={<CreateIconSvg />}
+            iconSlot={<Icon source={WebCursorXlLine} className="h-9 w-9 m-1" />}
           />
           <StepListItem
             isActive={currentPath === AppRoute.OnboardingConfirmStake}
             text="Confirm your stake and go!"
-            iconSlot={<ClickIconSvg />}
+            iconSlot={<Icon source={ClickXlLine} className="h-9 w-9 m-1" />}
           />
           <div className="absolute bottom-2 left-2">
             {displaySkipButton && (

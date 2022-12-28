@@ -28,7 +28,7 @@ const Button = ({
 }: ButtonProps) => {
   if (onlyIcon) {
     return (
-      <button aria-label={label} {...rest}>
+      <button className={className} aria-label={label} {...rest}>
         <span>{icon}</span>
       </button>
     );

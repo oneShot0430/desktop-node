@@ -1,10 +1,13 @@
+import {
+  PauseFill,
+  PlayFill,
+  EmbedCodeFill,
+  Icon,
+} from '@_koii/koii-styleguide';
 import React, { memo, useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 import { twMerge } from 'tailwind-merge';
 
-import CodeIcon from 'assets/svgs/code-icon-lg.svg';
-import PlayIcon from 'assets/svgs/play-icon.svg';
-import StopTealIcon from 'assets/svgs/stop-icon-teal.svg';
 import { getKoiiFromRoe } from 'utils';
 import {
   Button,
@@ -114,9 +117,18 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
         placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
         tooltipContent="Inspect task details"
       >
-        <div className="flex flex-col items-center justify-start w-[40px]">
-          <Button icon={<CodeIcon />} onlyIcon onClick={handleShowCode} />
-          <div className="text-[6px] -mt-2">INSPECT</div>
+        <div className="flex flex-col items-center justify-start w-[40px] gap-2">
+          <Button
+            icon={
+              <Icon
+                source={EmbedCodeFill}
+                className="h-[34px] w-[34px] text-finnieTeal-100"
+              />
+            }
+            onlyIcon
+            onClick={handleShowCode}
+          />
+          <div className="text-[7px] -mt-2">INSPECT</div>
         </div>
       </Tooltip>
       <div className="text-xs flex flex-col gap-1">
@@ -151,16 +163,20 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
             <Button
               onlyIcon
               icon={
-                isRunning ? (
-                  <StopTealIcon />
-                ) : (
-                  <PlayIcon
-                    className={twMerge(
-                      !meetsMinimumStake && 'filter grayscale'
-                    )}
-                  />
-                )
+                <Icon
+                  source={isRunning ? PauseFill : PlayFill}
+                  color="black"
+                  className={twMerge(!meetsMinimumStake && 'filter grayscale')}
+                  size={15}
+                />
               }
+              className={`${
+                isRunning
+                  ? 'bg-finnieRed'
+                  : !meetsMinimumStake
+                  ? 'bg-gray-300'
+                  : 'bg-finnieTeal'
+              } rounded-full w-8 h-8 mb-2`}
               onClick={isRunning ? handleStopTask : handleStartTask}
               disabled={!meetsMinimumStake}
             />
