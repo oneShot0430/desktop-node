@@ -9,7 +9,7 @@ import {
 export const useStoredTaskVariables = () => {
   const storedTaskVariablesQuery = useQuery(
     [QueryKeys.StoredTaskVariables],
-    () => getStoredTaskVariables
+    getStoredTaskVariables
   );
 
   const storeTaskVariableMutation = useMutation(storeTaskVariable);

@@ -3,6 +3,8 @@ import React, { Fragment, useCallback, useState } from 'react';
 
 import ChevronDownIcon from 'assets/svgs/chevron-down.svg';
 
+import { ErrorMessage } from '../ErrorMessage';
+
 export type DropdownItem = {
   label: string;
   id: string;
@@ -14,6 +16,7 @@ export type DropdownProps = {
   placeholderText?: string;
   onSelect?: (item: DropdownItem) => void;
   defaultValue?: DropdownItem;
+  validationError?: string;
 };
 
 /**
@@ -25,6 +28,7 @@ export const Dropdown = ({
   onSelect,
   placeholderText = 'Select item',
   defaultValue = null,
+  validationError,
 }: DropdownProps) => {
   const [selected, setSelected] = useState<DropdownItem>(defaultValue);
   const handleItemSelect = useCallback(
@@ -36,9 +40,9 @@ export const Dropdown = ({
   );
 
   return (
-    <div className="w-72" data-testid="koii_dropdown_test_id">
+    <div className="h-full w-72" data-testid="koii_dropdown_test_id">
       <Listbox value={selected} onChange={handleItemSelect}>
-        <div className="relative mt-1">
+        <div className="relative">
           <Listbox.Button
             placeholder={placeholderText}
             className="relative w-full py-2 pl-3 pr-10 text-sm text-left rounded-lg shadow-md cursor-default text-gray bg-purple-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-finnieTeal sm:text-sm"
@@ -54,13 +58,16 @@ export const Dropdown = ({
               <ChevronDownIcon aria-hidden="true" />
             </span>
           </Listbox.Button>
+          {validationError && (
+            <ErrorMessage error={validationError} className="pt-1 text-xs" />
+          )}
           <Transition
             as={Fragment}
             leave="transition ease-in duration-100"
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Listbox.Options className="absolute z-50 w-full py-1 mt-1 overflow-auto text-base text-white rounded-md shadow-lg bg-purple-5 max-h-60 focus:outline-none sm:text-sm">
+            <Listbox.Options className="absolute z-50 w-full py-1 mt-1 overflow-auto text-base text-white rounded-md shadow-lg top-9 bg-purple-5 max-h-60 focus:outline-none sm:text-sm">
               {items.map((item, itemIndex) => (
                 <Listbox.Option
                   key={item?.id ?? itemIndex}

@@ -44,6 +44,9 @@ module.exports = {
           1: '#0E0E44',
           2: '#030332',
         },
+        orange: {
+          2: '#FFC78F',
+        },
         finniePurple: {
           DEFAULT: '#8989C7',
         },

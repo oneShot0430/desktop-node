@@ -1,11 +1,15 @@
 import React from 'react';
 
-const nodeToolsMock = [];
+import { NodeTool } from './NodeTool';
+
+const nodeToolsMock = ['Web3_Storage_key', 'IPFS_key', 'Pinata_key'];
 
 export const NodeTools = () => {
   return (
-    <div>
-      <h1>Node Tools</h1>
+    <div className="w-full">
+      {nodeToolsMock.map((tool) => (
+        <NodeTool tool={tool} key={tool} getSecretLink="https://google.com" />
+      ))}
     </div>
   );
 };
