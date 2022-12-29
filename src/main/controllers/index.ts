@@ -24,7 +24,6 @@ export { default as startTask } from './startTask';
 export { default as stopTask } from './stopTask';
 export { default as storeUserConfig } from './storeUserConfig';
 export { default as withdrawStake } from './withdrawStake';
-export { default as getTaskVariablesNames } from './getTaskVariablesNames';
 export * from './taskVariables';
 
 export * from './types';
