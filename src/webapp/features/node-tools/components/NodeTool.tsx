@@ -1,47 +1,40 @@
-import {
-  Button,
-  ButtonSize,
-  ButtonVariant,
-  CheckSuccessLine,
-  Icon,
-} from '@_koii/koii-styleguide';
-import React from 'react';
+import React, { useMemo } from 'react';
 
-import { Dropdown } from 'webapp/components';
+import { Dropdown, DropdownItem } from 'webapp/components';
 
 import { useStoredTaskVariables } from '../hooks';
 
 type PropsType = {
   tool: string;
   getSecretLink?: string;
+  onSecretSelected?: (item: DropdownItem) => void;
 };
 
-export const NodeTool = ({ tool, getSecretLink }: PropsType) => {
+export const NodeTool = ({
+  tool,
+  getSecretLink,
+  onSecretSelected,
+}: PropsType) => {
+  // eslint-disable-next-line import/no-named-as-default-member
   const { storedTaskVariablesQuery } = useStoredTaskVariables();
-  const { data: taskVariables, isLoading, isError } = storedTaskVariablesQuery;
+  const { data: taskVariables, isLoading } = storedTaskVariablesQuery;
 
-  // const transformedTaskVariables = Object.keys(taskVariables).reduce(
-  //   (acc, key) => {
-  //     const value = taskVariables[key];
-  //     if (value) {
-  //       acc.push({ label: key, id: key });
-  //     } else {
-  //       acc.push({ label: key, id: key, disabled: true });
-  //     }
-  //     return acc;
-  //   },
-  //   []
-  // );
+  const handleSecretSelected = (item: DropdownItem) => {
+    onSecretSelected?.(item);
+  };
 
-  // console.log('@@@taskVariables', transformedTaskVariables);
+  const transformedTaskVariables = useMemo(() => {
+    if (!taskVariables) return [];
 
-  const items = [
-    { label: 'First item', disabled: false, id: '1' },
-    { label: 'Second item', disabled: true, id: '2' },
-    { label: 'Third item', disabled: false, id: '3' },
-  ];
+    return Object.entries(taskVariables).map(([id, taskVariableItem]) => ({
+      id,
+      ...taskVariableItem,
+    }));
+  }, [taskVariables]);
 
-  console.log('###taskVariables', taskVariables);
+  if (isLoading) return <div>Loading...</div>;
+
+  console.log('###taskVariables', transformedTaskVariables);
 
   return (
     <div className="flex justify-between w-full">
@@ -60,12 +53,10 @@ export const NodeTool = ({ tool, getSecretLink }: PropsType) => {
         )}
       </div>
       <div className="flex items-start gap-3 pt-[2px]">
-        <Dropdown items={items} validationError="wrong tool" />
-        <Button
-          variant={ButtonVariant.Primary}
-          size={ButtonSize.SM}
-          label="I'm Done"
-          iconLeft={<Icon source={CheckSuccessLine} />}
+        <Dropdown
+          items={transformedTaskVariables}
+          validationError="wrong tool"
+          onSelect={handleSecretSelected}
         />
       </div>
     </div>

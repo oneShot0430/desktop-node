@@ -33,8 +33,8 @@ export const Dropdown = ({
   const [selected, setSelected] = useState<DropdownItem>(defaultValue);
   const handleItemSelect = useCallback(
     (item: DropdownItem) => {
-      setSelected(item);
       onSelect?.(item);
+      setSelected(item);
     },
     [onSelect]
   );

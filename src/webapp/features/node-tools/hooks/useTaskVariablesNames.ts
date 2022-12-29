@@ -3,17 +3,17 @@ import { useQuery } from 'react-query';
 import { QueryKeys, getTaskVariablesNames } from 'webapp/services';
 
 type UseTaskVariablesParams = {
-  taskPublicKey: string;
+  taskPubKey: string;
 };
 
 export const useTaskVariablesNames = ({
-  taskPublicKey,
+  taskPubKey,
 }: UseTaskVariablesParams) => {
   const taskVariablesNamesQuery = useQuery(
-    [QueryKeys.TaskVariablesNames, taskPublicKey],
-    () => getTaskVariablesNames(taskPublicKey),
+    [QueryKeys.TaskVariablesNames, taskPubKey],
+    () => getTaskVariablesNames(taskPubKey),
     {
-      enabled: !!taskPublicKey,
+      enabled: !!taskPubKey,
     }
   );
 

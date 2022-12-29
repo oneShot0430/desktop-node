@@ -189,7 +189,7 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
           showSettings ? 'flex' : 'hidden'
         } transition-all duration-500 ease-in-out`}
       >
-        <TaskSettings />
+        <TaskSettings taskPubKey={task.publicKey} />
       </div>
     </TableRow>
   );
