@@ -15,8 +15,6 @@ type PropsType = {
   taskPubKey: string;
 };
 
-const nodeToolsMock = ['Web3_Storage_key', 'IPFS_key', 'Pinata_key'];
-
 const confirmTaskVariables = () => {
   /**
    * @todo: Implement this function
@@ -33,14 +31,14 @@ export const NodeTools = ({ taskPubKey }: PropsType) => {
     // isError,
   } = taskVariablesNamesQuery;
 
-  console.log('###taskVariablesNames', taskVariablesNames);
+  const variableNames = taskVariablesNames && taskVariablesNames.slice(0, 3);
 
   return (
     <div className="w-full pb-4 pr-4">
       {isLoading && <div>Loading...</div>}
       {!isLoading && (
         <>
-          {nodeToolsMock.map((tool) => (
+          {variableNames.map((tool) => (
             <NodeTool
               tool={tool}
               key={tool}

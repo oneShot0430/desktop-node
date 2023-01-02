@@ -1,10 +1,15 @@
-import React, { memo, useState, useEffect } from 'react';
+import {
+  CloseXLine,
+  Icon,
+  SettingsFill,
+  PlayFill,
+} from '@_koii/koii-styleguide';
+import React, { memo, useState, useCallback, useMemo, useEffect } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
-import { twMerge } from 'tailwind-merge';
 
-import CodeIcon from 'assets/svgs/code-icon-lg.svg';
 import PlayIcon from 'assets/svgs/play-icon.svg';
 import StopTealIcon from 'assets/svgs/stop-icon-teal.svg';
+import { EditStakeInput } from 'features/index';
 import { getKoiiFromRoe } from 'utils';
 import {
   Button,
@@ -35,6 +40,7 @@ interface Props {
 
 const TaskItem = ({ task, index, columnsLayout }: Props) => {
   const [showSettings, setShowSettings] = useState<boolean>(false);
+  const [isTaskValidToRun, setIsTaskValidToRun] = useState<boolean>(false);
   /**
    * @todo: abstract it away to the hook
    */
@@ -59,10 +65,13 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
   const queryCache = useQueryClient();
   const { taskName, publicKey, bountyAmountPerRound, taskManager, isRunning } =
     task;
-  const nodes = TaskService.getNodesCount(task);
-  const topStake = TaskService.getTopStake(task);
-  const bountyPerRoundInKoii = getKoiiFromRoe(bountyAmountPerRound);
   const isFirstRowInTable = index === 0;
+  const nodes = useMemo(() => TaskService.getNodesCount(task), [task]);
+  const topStake = useMemo(() => TaskService.getTopStake(task), [task]);
+  const bountyPerRoundInKoii = useMemo(
+    () => getKoiiFromRoe(bountyAmountPerRound),
+    [bountyAmountPerRound]
+  );
 
   const { taskStake, loadingTaskStake } = useTaskStake({
     task,
@@ -72,6 +81,13 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
   const { data: minStake } = useQuery([QueryKeys.minStake, publicKey], () =>
     TaskService.getMinStake(task)
   );
+
+  // const validateTask = useCallback(() => {
+  //   const hasMinimumStake = taskStake >= minStake;
+  //   const hasAllRequiredTaskVariables = false;
+
+  //   setIsTaskValidToRun(hasMinimumStake && hasAllRequiredTaskVariables);
+  // }, [minStake, taskStake]);
 
   useEffect(() => {
     setStake(taskStake);
@@ -112,45 +128,81 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
     showModal();
   };
 
+  const getTaskPlayButtonIcon = useCallback(() => {
+    if (isRunning) {
+      return <StopTealIcon />;
+    }
+    return isTaskValidToRun ? (
+      <PlayIcon />
+    ) : (
+      <Icon source={PlayFill} size={48} color={'#D6D6D6'} />
+    );
+  }, [isRunning, isTaskValidToRun]);
+
   if (loadingMainAccount) return null;
 
   return (
     <TableRow columnsLayout={columnsLayout}>
-      <Tooltip
-        placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
-        tooltipContent="Inspect task details"
-      >
-        <div className="flex flex-col items-center justify-start w-[40px]">
-          <Button icon={<CodeIcon />} onlyIcon onClick={handleShowCode} />
-          <div className="text-[6px] -mt-2">INSPECT</div>
-        </div>
-      </Tooltip>
+      <div>
+        <Tooltip
+          placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
+          tooltipContent="Inspect task details"
+        >
+          <div className="flex flex-col items-center justify-start w-[40px]">
+            <Button
+              icon={<Icon source={CloseXLine} size={48} />}
+              onlyIcon
+              onClick={handleShowCode}
+            />
+          </div>
+        </Tooltip>
+      </div>
 
-      <div className="flex flex-col gap-1 text-xs">
+      <div className="flex flex-col gap-2 text-xs">
         <div>{taskName}</div>
         <div className="text-finnieTeal">datestring</div>
       </div>
 
-      <div className="pr-8 overflow-hidden text-ellipsis" title={taskManager}>
-        {taskManager}
+      <div
+        className="flex flex-col gap-2 text-xs min-w-[160px]"
+        title={taskManager}
+      >
+        <div className="truncate">{`Creator: ${task.taskName}`}</div>
+        <div className="truncate">{`Bounty: ${task.totalBountyAmount}`}</div>
       </div>
 
-      <div>{bountyPerRoundInKoii}</div>
-
-      <div>{nodes}</div>
-
-      <div>{getKoiiFromRoe(topStake)}</div>
+      <div
+        className="flex flex-col gap-2 pr-8 overflow-hidden text-xs"
+        title={taskManager}
+      >
+        <div>{`Nodes: ${nodes}`}</div>
+        <div>{`Top Stake: ${getKoiiFromRoe(topStake)}`}</div>
+      </div>
 
       <div>
-        {/* <EditStakeInput
+        <EditStakeInput
           meetsMinimumStake={meetsMinimumStake}
           stake={stake}
           minStake={minStake}
           onChange={handleStakeValueChange}
           disabled={taskStake !== 0 || loadingTaskStake}
-        /> */}
+        />
+      </div>
+
+      <div>
         <div>
-          <button onClick={handleToggleSettings}>Settings</button>
+          <Tooltip
+            placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
+            tooltipContent="Inspect task details"
+          >
+            <div className="flex flex-col items-center justify-start w-[40px]">
+              <Button
+                onClick={handleToggleSettings}
+                icon={<Icon source={SettingsFill} size={48} color="#FFC78F" />}
+                onlyIcon
+              />
+            </div>
+          </Tooltip>
         </div>
       </div>
 
@@ -166,17 +218,7 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
           >
             <Button
               onlyIcon
-              icon={
-                isRunning ? (
-                  <StopTealIcon />
-                ) : (
-                  <PlayIcon
-                    className={twMerge(
-                      !meetsMinimumStake && 'filter grayscale'
-                    )}
-                  />
-                )
-              }
+              icon={getTaskPlayButtonIcon()}
               onClick={isRunning ? handleStopTask : handleStartTask}
               disabled={!meetsMinimumStake}
             />
@@ -185,7 +227,7 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
       </div>
 
       <div
-        className={`w-full col-span-8 ${
+        className={`w-full col-span-7 ${
           showSettings ? 'flex' : 'hidden'
         } transition-all duration-500 ease-in-out`}
       >
