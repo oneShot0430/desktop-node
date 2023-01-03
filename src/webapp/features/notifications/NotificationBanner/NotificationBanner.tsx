@@ -1,6 +1,6 @@
 import {
   Icon,
-  CloseXLine,
+  CloseLine,
   Button,
   ButtonVariant,
   ButtonSize,
@@ -64,7 +64,7 @@ export const NotificationBanner = ({ variant }: PropsType) => {
           title="close"
           onClick={removeNotification}
         >
-          <Icon size={46} source={CloseXLine} />
+          <Icon source={CloseLine} className="h-12 w-12" />
         </div>
       </div>
     </div>

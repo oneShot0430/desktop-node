@@ -1,6 +1,6 @@
+import { AddLine, Icon } from '@_koii/koii-styleguide';
 import React, { memo, useMemo } from 'react';
 
-import AddIconSvg from 'assets/svgs/add-icon-outlined.svg';
 import { Button, Table } from 'webapp/components';
 import { useAddNewAccountModal } from 'webapp/features/common/hooks/useAddNewAccountModal';
 
@@ -62,7 +62,7 @@ const AccountsTable = () => {
         <Button
           label="New"
           className="w-auto p-2 mr-auto my-6 bg-transparent h-[60px] text-white"
-          icon={<AddIconSvg />}
+          icon={<Icon source={AddLine} className="h-[34px] w-[34px] mr-2" />}
           onClick={showModal}
         />
       </Table>

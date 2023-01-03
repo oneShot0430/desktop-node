@@ -1,9 +1,9 @@
+import { SeedSecretPhraseXlLine, Icon } from '@_koii/koii-styleguide';
 import React, { memo, useContext, useState, ChangeEventHandler } from 'react';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
 import RewardsSvg from 'assets/svgs/onboarding/rewards-icon.svg';
-import SeedPhraseSvg from 'assets/svgs/onboarding/seed-phrase-icon.svg';
 import { ErrorMessage } from 'webapp/components';
 import { useAccounts } from 'webapp/features/settings';
 import {
@@ -105,7 +105,7 @@ const KeyCreationMethodPick = () => {
               disabled={!!error}
             >
               <div className="flex flex-col items-center justify-center w-full h-full rounded-full bg-finnieBlue-light-secondary">
-                <RewardsSvg />
+                <Icon source={RewardsSvg} className="h-20 w-20 -ml-3 -mt-1" />
               </div>
             </button>
             Create a New Account
@@ -118,7 +118,7 @@ const KeyCreationMethodPick = () => {
               disabled={!!error}
             >
               <div className="flex flex-col items-center justify-center w-full h-full rounded-full bg-finnieBlue-light-secondary">
-                <SeedPhraseSvg />
+                <Icon source={SeedSecretPhraseXlLine} className="h-20 w-20" />
               </div>
             </button>
             Import Account
