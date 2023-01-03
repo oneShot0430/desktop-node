@@ -107,6 +107,7 @@
     "fork-ts-checker-webpack-plugin": "^7.2.11",
     "husky": "^8.0.1",
     "jest": "^28.1.1",
+    "jest-canvas-mock": "^2.4.0",
     "jest-environment-jsdom": "^29.2.1",
     "lint-staged": ">=13",
     "mini-css-extract-plugin": "^2.6.1",
