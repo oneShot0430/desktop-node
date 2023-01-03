@@ -44,10 +44,10 @@
     superstruct "^0.14.2"
     tweetnacl "^1.0.0"
 
-"@_koii/koii-styleguide@^0.2.7-alpha":
-  version "0.2.7-alpha"
-  resolved "https://registry.yarnpkg.com/@_koii/koii-styleguide/-/koii-styleguide-0.2.7-alpha.tgz#fc48e47e0a90da30e67adb6e5268e46ddab2df78"
-  integrity sha512-04fmpL51Tq89pLtjX5oh0uKS1J1E/7i7V2x1Remgb34pSUpyYRSgfOPFFY8zz6mf59DOYnofybJ2/+4PD5vdaQ==
+"@_koii/koii-styleguide@^0.2.13-alpha":
+  version "0.2.13-alpha"
+  resolved "https://registry.yarnpkg.com/@_koii/koii-styleguide/-/koii-styleguide-0.2.13-alpha.tgz#23f745f149b0bc56002f286351bd5c31df23c3d7"
+  integrity sha512-nGCblUgkXZG1jB6vxHwSaHQIIFL+BhQzkZZDcFm5Uh8K7vFvUROwaAI0CGJ5SPSewOwH6zzn7cb65Q+Zoo/dXw==
   dependencies:
     react "^18.1.0"
     react-dom "^18.1.0"
