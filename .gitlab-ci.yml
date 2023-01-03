@@ -1,14 +1,15 @@
 image: node:18.8.0
 
 stages:
-  - install
-  - lint
-  - build_deploy
+  - prerequisites
+  - checks
+  - deploy
 
 install:
-  stage: install
+  stage: prerequisites
   script:
     - yarn install --cache-folder .yarn
+
   artifacts:
     name: 'artifacts'
     untracked: true
@@ -18,15 +19,45 @@ install:
       - node_modules/
 
 lint:
-  stage: lint
+  stage: checks
+  needs: ['install']
+
   script:
     - yarn run lint
+
+test:
+  stage: checks
+  needs: ['install']
+
+  script:
+    - yarn run test:unit-webapp
   dependencies:
     - install
 
-build_deploy:
-  stage: build_deploy
+build:
+  stage: checks
+  needs: ['install']
 
+  before_script:
+    - apt-get update -qq && apt-get install
+    - apt -y install dpkg
+    - apt update -y && apt upgrade -y
+    - apt install fakeroot -y
+
+  script:
+    - yarn make
+  artifacts:
+    name: 'artifacts'
+    untracked: true
+    expire_in: 30 mins
+    paths:
+      - out
+  dependencies:
+    - install
+
+deploy:
+  stage: deploy
+  needs: ['build']
   only:
     - main
   
@@ -40,7 +71,6 @@ build_deploy:
     - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
 
   script:
-    - yarn make
     - ls -ltr out/make/deb/x64/
     - mkdir .public
     - cp -r out/make/deb/x64/* .public
