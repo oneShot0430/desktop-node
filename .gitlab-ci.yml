@@ -3,7 +3,9 @@ image: node:18.8.0
 stages:
   - install
   - lint
-  - build_deploy
+  - test
+  - build
+  - deploy
 
 install:
   stage: install
@@ -24,8 +26,28 @@ lint:
   dependencies:
     - install
 
-build_deploy:
-  stage: build_deploy
+test:
+  stage: test
+  script:
+    - yarn run test:unit-webapp
+  dependencies:
+    - install
+
+build:
+  stage: build
+  script:
+    - yarn make
+  artifacts:
+    name: 'artifacts'
+    untracked: true
+    expire_in: 30 mins
+    paths:
+      - out
+  dependencies:
+    - install
+
+deploy:
+  stage: deploy
 
   only:
     - main
@@ -40,7 +62,6 @@ build_deploy:
     - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
 
   script:
-    - yarn make
     - ls -ltr out/make/deb/x64/
     - mkdir .public
     - cp -r out/make/deb/x64/* .public
