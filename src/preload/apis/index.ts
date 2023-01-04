@@ -23,7 +23,11 @@ import setActiveAccount from './setActiveAccount';
 import startTask from './startTask';
 import stopTask from './stopTask';
 import storeUserConfig from './storeUserConfig';
-import { getStoredTaskVariables, storeTaskVariable } from './taskVariables';
+import {
+  getStoredTaskVariables,
+  storeTaskVariable,
+  editTaskVariable,
+} from './taskVariables';
 import withdrawStake from './withdrawStake';
 
 export default {
@@ -55,4 +59,5 @@ export default {
   getTaskNodeInfo,
   getStoredTaskVariables,
   storeTaskVariable,
+  editTaskVariable,
 };
