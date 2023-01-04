@@ -2,7 +2,7 @@ import { namespaceInstance } from 'main/node/helpers/Namespace';
 
 import { PersistentStoreKeys } from '../types';
 
-import { editTaskVariable } from './editTaskVariable';
+import { deleteTaskVariable } from './deleteTaskVariable';
 import { getStoredTaskVariables } from './getStoredTaskVariables';
 
 jest.mock('main/node/helpers/Namespace', () => {
@@ -19,18 +19,28 @@ jest.mock('./getStoredTaskVariables', () => {
   };
 });
 
-describe('editTaskVariable', () => {
+describe('deleteTaskVariable', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('throws an error if the payload is not valid', async () => {
+  it('throws an error if the payload is not valid - undefined', async () => {
     (getStoredTaskVariables as jest.Mock).mockResolvedValue({});
 
-    const invalidPayload = {};
+    const invalidPayload: unknown = undefined;
 
     await expect(
-      editTaskVariable(null, invalidPayload as unknown as never)
+      deleteTaskVariable(null, invalidPayload as unknown as never)
+    ).rejects.toThrowError();
+  });
+
+  it('throws an error if the payload is not valid - number', async () => {
+    (getStoredTaskVariables as jest.Mock).mockResolvedValue({});
+
+    const invalidPayload = 123;
+
+    await expect(
+      deleteTaskVariable(null, invalidPayload as unknown as never)
     ).rejects.toThrowError();
   });
 
@@ -39,33 +49,33 @@ describe('editTaskVariable', () => {
       'some-id': { label: 'label', value: 'some value' },
     });
 
-    const nonExistingLabelPayload = {
-      label: 'another label',
-      value: 'some value',
-    };
+    const nonExistingLabelPayload = 'nope label';
 
     await expect(
-      editTaskVariable(null, nonExistingLabelPayload)
+      deleteTaskVariable(null, nonExistingLabelPayload)
     ).rejects.toThrowError();
   });
 
-  it('changes the task variable if the payload is valid and the label does exist', async () => {
+  it('deletes the task variable if the payload is valid and the label does exist', async () => {
+    const labelForDeletion = 'existing-label';
     (getStoredTaskVariables as jest.Mock).mockResolvedValue({
       'already-existing-id': {
-        label: 'existing label',
+        label: labelForDeletion,
         value: 'some existing value',
+      },
+      'already-existing-id-2': {
+        label: 'another-label',
+        value: 'some another existing value',
       },
     });
 
-    const validPayload = { label: 'existing label', value: 'some new value' };
-
     await expect(
-      editTaskVariable(null, validPayload)
+      deleteTaskVariable(null, labelForDeletion)
     ).resolves.not.toThrowError();
 
     expect(namespaceInstance.storeSet).toHaveBeenCalledWith(
       PersistentStoreKeys.TaskVariables,
-      '{"already-existing-id":{"label":"existing label","value":"some new value"}}'
+      '{"already-existing-id-2":{"label":"another-label","value":"some another existing value"}}'
     );
   });
 });

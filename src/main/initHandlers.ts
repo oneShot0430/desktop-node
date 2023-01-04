@@ -81,8 +81,8 @@ const initHandlers = (): void => {
     controllers.storeTaskVariable
   );
   ipcMain.handle(
-    config.endpoints.EDIT_TASK_VARIABLE,
-    controllers.editTaskVariable
+    config.endpoints.DELETE_TASK_VARIABLE,
+    controllers.deleteTaskVariable
   );
 };
 
