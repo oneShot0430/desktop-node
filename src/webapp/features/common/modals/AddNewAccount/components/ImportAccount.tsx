@@ -1,7 +1,6 @@
+import { AddLine, UploadLine, Icon } from '@_koii/koii-styleguide';
 import React, { memo, useEffect, useRef } from 'react';
 
-import AddIcon from 'assets/svgs/add-icon-outlined.svg';
-import UploadIcon from 'assets/svgs/upload-icon.svg';
 import { ModalContent, ModalTopBar } from 'webapp/features/modals';
 import { Theme } from 'webapp/types/common';
 
@@ -24,8 +23,8 @@ const ImportAccount = ({ onClose, setNextStep }: PropsType) => {
   });
 
   return (
-    <ModalContent theme={Theme.Dark} className="w-[800px] h-[320px]">
-      <ModalTopBar theme="dark" title={'Key Management'} onClose={onClose} />
+    <ModalContent theme={Theme.Dark} className="w-[800px] h-80">
+      <ModalTopBar theme="dark" title="Key Management" onClose={onClose} />
       <div className="flex flex-col items-start gap-2 pt-4 pl-12">
         <div className="text-xl font-semibold text-white">Add New Account</div>
         <AddAccountAction
@@ -33,14 +32,14 @@ const ImportAccount = ({ onClose, setNextStep }: PropsType) => {
           ref={ref}
           title="Import with a seed phrase"
           description="Import an existing wallet using a 12-word seed phrase"
-          icon={<UploadIcon />}
+          icon={<Icon source={UploadLine} className="w-7 h-7" />}
         />
 
         <AddAccountAction
           onClick={() => setNextStep(Steps.CreateNewKey)}
           title="Get a new key"
           description="Start from the beginning"
-          icon={<AddIcon />}
+          icon={<Icon source={AddLine} className="h-8 w-8" />}
         />
       </div>
     </ModalContent>

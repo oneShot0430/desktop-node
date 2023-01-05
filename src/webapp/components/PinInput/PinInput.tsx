@@ -1,8 +1,6 @@
+import { HideEyeLine, ViewShowLine, Icon } from '@_koii/koii-styleguide';
 import React, { memo, useState } from 'react';
 import PinInput from 'react-pin-input';
-
-import HideIconSvg from 'assets/svgs/hide-icon-blue.svg';
-import ShowIconSvg from 'assets/svgs/show-icon-blue.svg';
 
 import { Button } from '../ui/Button';
 
@@ -23,7 +21,7 @@ const PinInputComponent = ({
 }: PropsType) => {
   const [showPinInput, setShowPinInput] = useState(false);
 
-  const ShowOrHideInputIcon = showPinInput ? ShowIconSvg : HideIconSvg;
+  const ShowOrHideInputIcon = showPinInput ? ViewShowLine : HideEyeLine;
 
   return (
     <div className="z-50 flex items-center">
@@ -43,7 +41,9 @@ const PinInputComponent = ({
       {showHideButton && (
         <Button
           className="bg-finnieTeal-100 rounded-[50%] w-[24px] h-[24px] cursor-pointer"
-          icon={<ShowOrHideInputIcon />}
+          icon={
+            <Icon source={ShowOrHideInputIcon} className="text-black w-5 h-5" /> // not sure
+          }
           onClick={() => setShowPinInput(!showPinInput)}
         />
       )}

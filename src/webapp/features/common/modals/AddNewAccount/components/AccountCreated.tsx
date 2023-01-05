@@ -1,7 +1,6 @@
+import { CheckSuccessLine, CloseLine, Icon } from '@_koii/koii-styleguide';
 import React from 'react';
 
-import CheckmarkTealSvg from 'svgs/checkmark-teal-icon.svg';
-import CloseIconWhite from 'svgs/close-icons/close-icon-white.svg';
 import { ModalContent } from 'webapp/features/modals';
 import { Theme } from 'webapp/types/common';
 
@@ -20,13 +19,20 @@ export const AccountCreated = ({ onClose, newKeys }: PropsType) => {
     <ModalContent theme={Theme.Dark} className="pb-6 text-white w-[680px]">
       <div className="flex justify-between w-full p-3">
         <div className="flex items-center justify-between pl-6">
-          <CheckmarkTealSvg width={96} height={97} />
+          <Icon
+            source={CheckSuccessLine}
+            className="w-16 h-16 m-2 text-finnieEmerald-light"
+          />
           <span className="text-[24px] pl-5 text-white">
             New key successfully created!
           </span>
         </div>
-
-        <CloseIconWhite className="w-[32px] h-[32px]" onClick={onClose} />
+        <Icon
+          source={CloseLine}
+          className="w-8 h-8 cursor-pointer"
+          onClick={onClose}
+        />
+        {/*  not sure */}
       </div>
 
       <div className="px-[62px] text-left leading-8 mb-4">

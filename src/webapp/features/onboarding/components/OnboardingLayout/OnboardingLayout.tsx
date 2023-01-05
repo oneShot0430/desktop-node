@@ -1,14 +1,14 @@
 import {
+  Icon,
   CurrencyMoneyLine,
   ClickXlLine,
   WebCursorXlLine,
   LockLine,
-  Icon,
+  ChevronArrowLine,
 } from '@_koii/koii-styleguide';
 import React, { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import BackIconComponent from 'assets/svgs/back-icon.svg';
 import KoiiLogo from 'assets/svgs/koii-logo-white.svg';
 import { Button } from 'webapp/components/ui/Button';
 import { useUserAppConfig } from 'webapp/features/settings';
@@ -48,14 +48,14 @@ const OnboardingLayout = ({ children }: PropsType) => {
     <div className="flex flex-row h-full text-white">
       <div className="w-[650px] bg-finnieBlue-light-secondary items-center flex flex-col relative">
         {showOnboardingBackButton && (
-          <BackIconComponent
-            data-testid="close-modal-button"
+          <Icon
+            source={ChevronArrowLine}
+            className="w-9 h-9 cursor-pointer -rotate-90 absolute top-5 left-5"
             onClick={handleBackButtonClick}
-            className="w-9 h-9 cursor-pointer absolute top-[20px] left-[20px]"
           />
         )}
         <div className="flex flex-col items-center justify-center mb-14">
-          <KoiiLogo />
+          <Icon source={KoiiLogo} className="h-[156px] w-[156px]" />
           <div className="text-[40px] w-[75%] text-center">
             Welcome to the Koii Node
           </div>
