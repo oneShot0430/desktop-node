@@ -11,3 +11,4 @@ export { useFundNewAccountModal } from './useFundAccountModal';
 export { useNotEnoughFunds } from './useNotEnoughFunds';
 export { useTaskDetailsModal } from './useTaskDetailsModal';
 export { useAddTaskVariableModal } from './useAddTaskVariableModal';
+export { useTaskVariable } from './useTaskVariable';
