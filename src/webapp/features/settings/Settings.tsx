@@ -1,8 +1,6 @@
 import React, { memo, useState } from 'react';
 
-import AccountsTable from './components/AccountsTable';
-import NodeLogs from './components/NodeLogs';
-import SettingsHeader from './components/SettingsHeader';
+import { AccountsTable, NodeLogs, SettingsHeader } from './components';
 import { logsMock } from './mocks';
 
 export enum Tab {
