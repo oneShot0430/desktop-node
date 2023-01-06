@@ -23,6 +23,12 @@ export const SettingsHeader = ({ onTabChange, activeTab }: PropsType) => {
           Key Management
         </div>
         <div
+          className={`pb-px cursor-pointer ${isActiveTab(Tab.TaskSettings)}`}
+          onClick={() => onTabChange(Tab.TaskSettings)}
+        >
+          Task Settings
+        </div>
+        <div
           onClick={() => onTabChange(Tab.NodeLogs)}
           className={`pb-px cursor-pointer ${isActiveTab(Tab.NodeLogs)}`}
         >

@@ -1,12 +1,13 @@
 import React, { memo, useState } from 'react';
 
-import { AccountsTable, NodeLogs, SettingsHeader } from './components';
+import {
+  AccountsTable,
+  NodeLogs,
+  SettingsHeader,
+  TaskSettings,
+} from './components';
 import { logsMock } from './mocks';
-
-export enum Tab {
-  AccountsTable = 'AccountsTable',
-  NodeLogs = 'NodeLogs',
-}
+import { Tab } from './types';
 
 const Settings = () => {
   const [selectedTab, setTab] = useState(Tab.AccountsTable);
@@ -15,6 +16,7 @@ const Settings = () => {
     <div className="flex flex-col h-full">
       <SettingsHeader onTabChange={setTab} activeTab={selectedTab} />
       {selectedTab === Tab.AccountsTable && <AccountsTable />}
+      {selectedTab === Tab.TaskSettings && <TaskSettings />}
       {selectedTab === Tab.NodeLogs && <NodeLogs logs={logsMock} />}
     </div>
   );
