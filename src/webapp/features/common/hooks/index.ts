@@ -14,3 +14,4 @@ export { useTaskDetailsModal } from './useTaskDetailsModal';
 export { useAddTaskVariableModal } from './useAddTaskVariableModal';
 export { useEditTaskVariable } from './useEditTaskVariable';
 export { useDeleteTaskVariable } from './useDeleteTaskVariable';
+export { useInspectTaskVariable } from './useInspectTaskVariable';

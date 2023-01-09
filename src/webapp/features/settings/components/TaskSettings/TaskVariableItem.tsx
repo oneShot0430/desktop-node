@@ -11,6 +11,7 @@ import { TaskVariableData } from 'models/api';
 import {
   useDeleteTaskVariable,
   useEditTaskVariable,
+  useInspectTaskVariable,
 } from 'webapp/features/common/hooks';
 
 interface Props {
@@ -21,6 +22,7 @@ export const TaskVariableItem = ({ taskVariable }: Props) => {
   const { label } = taskVariable;
   const { showModal: showDeleteModal } = useDeleteTaskVariable(label);
   const { showModal: showEditModal } = useEditTaskVariable(taskVariable);
+  const { showModal: showInspectModal } = useInspectTaskVariable(taskVariable);
 
   return (
     <div className="flex items-center">
@@ -29,7 +31,11 @@ export const TaskVariableItem = ({ taskVariable }: Props) => {
         {label}
       </div>
 
-      <Icon source={ViewShowLine} className="h-3.5 mx-2 cursor-pointer" />
+      <Icon
+        source={ViewShowLine}
+        className="h-3.5 mx-2 cursor-pointer"
+        onClick={showInspectModal}
+      />
       <Icon
         source={EditPencilLine}
         className="h-4 mx-2 cursor-pointer"

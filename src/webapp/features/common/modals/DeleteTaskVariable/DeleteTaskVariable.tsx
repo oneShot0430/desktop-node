@@ -58,7 +58,7 @@ export const DeleteTaskVariable = create<Params>(function DeleteTaskVariable({
           />
         </div>
 
-        <div className="pr-8 py-10 text-left text-sm leading-8">
+        <div className="pr-14 py-10 text-left leading-8">
           <span> Are you sure you want to delete Task Setting </span>
           <span className="font-black">{taskVariableLabel}</span>? This
           procedure cannot be undone and it will cause the tasks that are
