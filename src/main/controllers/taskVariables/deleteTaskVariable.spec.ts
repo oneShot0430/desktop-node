@@ -27,10 +27,10 @@ describe('deleteTaskVariable', () => {
   it('throws an error if the payload is not valid - undefined', async () => {
     (getStoredTaskVariables as jest.Mock).mockResolvedValue({});
 
-    const invalidPayload: unknown = undefined;
+    let invalidPayload: undefined;
 
     await expect(
-      deleteTaskVariable(null, invalidPayload as unknown as never)
+      deleteTaskVariable(null, invalidPayload)
     ).rejects.toThrowError();
   });
 
@@ -40,7 +40,7 @@ describe('deleteTaskVariable', () => {
     const invalidPayload = 123;
 
     await expect(
-      deleteTaskVariable(null, invalidPayload as unknown as never)
+      deleteTaskVariable(null, invalidPayload as never)
     ).rejects.toThrowError();
   });
 

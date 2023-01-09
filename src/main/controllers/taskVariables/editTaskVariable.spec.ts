@@ -30,7 +30,7 @@ describe('editTaskVariable', () => {
     const invalidPayload = {};
 
     await expect(
-      editTaskVariable(null, invalidPayload as unknown as never)
+      editTaskVariable(null, invalidPayload as never)
     ).rejects.toThrowError();
   });
 
