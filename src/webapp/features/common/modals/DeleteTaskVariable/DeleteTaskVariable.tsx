@@ -1,11 +1,11 @@
-import { Icon, SettingsLine } from '@_koii/koii-styleguide';
+import { Icon, SettingsLine, CloseLine } from '@_koii/koii-styleguide';
 import { create, useModal } from '@ebay/nice-modal-react';
 import React from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 
 import { TaskVariableData } from 'models/api';
 import { Button } from 'webapp/components';
-import { Modal, ModalContent, ModalTopBar } from 'webapp/features/modals';
+import { Modal, ModalContent } from 'webapp/features/modals';
 import {
   deleteTaskVariable as deleteTaskVariableService,
   QueryKeys,
@@ -46,21 +46,19 @@ export const DeleteTaskVariable = create<Params>(function DeleteTaskVariable({
     <Modal>
       <ModalContent
         theme={Theme.Dark}
-        className="pt-1 pb-3.5 pl-8 pr-1 w-fit h-fit text-white rounded min-w-[620px]"
+        className="p-5 pl-10 w-fit h-fit text-white rounded min-w-[740px]"
       >
-        <ModalTopBar
-          theme="dark"
-          title={
-            <div className="flex items-center justify-start gap-4 -ml-6">
-              <Icon source={SettingsLine} className="h-8 w-8" />
-              Delete Task Setting
-            </div>
-          }
-          titleClasses="w-full"
-          onClose={handleClose}
-        />
+        <div className="w-full flex justify-center items-center gap-4 text-2xl font-semibold pt-2">
+          <Icon source={SettingsLine} className="h-8 w-8" />
+          <span>Delete Task Setting</span>
+          <Icon
+            source={CloseLine}
+            className="h-8 w-8 ml-auto cursor-pointer"
+            onClick={modal.remove}
+          />
+        </div>
 
-        <div className="px-4 pb-10 text-left text-sm leading-10">
+        <div className="pr-8 py-10 text-left text-sm leading-8">
           <span> Are you sure you want to delete Task Setting </span>
           <span className="font-black">{taskVariableLabel}</span>? This
           procedure cannot be undone and it will cause the tasks that are
