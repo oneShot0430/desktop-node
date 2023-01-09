@@ -20,8 +20,7 @@ import {
 import { useClipboard } from 'webapp/features/common';
 import { useConfirmModal } from 'webapp/features/common/modals/ConfirmationModal';
 
-import { useAccount } from '../hooks/useAccount';
-import { useAccountBalance } from '../hooks/useAccountBalance';
+import { useAccount, useAccountBalance } from '../../hooks';
 
 type PropsType = {
   accountName: string;
@@ -107,7 +106,7 @@ export const AccountItem = memo(
 
         <TableRow columnsLayout={columnsLayout} className={rowClasses}>
           <div className="flex flex-col items-center justify-center row-span-2 py-1">
-            <DotsSvg />
+            <DotsSvg height={48} width={11} />
           </div>
           {setAccountActiveLoading ? (
             <LoadingSpinner />

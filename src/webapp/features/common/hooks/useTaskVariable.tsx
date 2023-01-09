@@ -12,14 +12,14 @@ interface Params {
   onAddSuccess?: () => void;
 }
 
-export const useTaskVariable = ({ onAddSuccess }: Params) => {
+export const useTaskVariable = ({ onAddSuccess }: Params = {}) => {
   const [label, setLabel] = useState<string>('');
   const [value, setValue] = useState<string>('');
   const [labelError, setLabelError] = useState<string>('');
 
   const queryClient = useQueryClient();
 
-  const { data: storedTaskVariables } = useQuery(
+  const { data: storedTaskVariables = {} } = useQuery(
     QueryKeys.TaskVariables,
     getStoredTaskVariables
   );
@@ -73,5 +73,6 @@ export const useTaskVariable = ({ onAddSuccess }: Params) => {
     value,
     labelError,
     errorStoringTaskVariable,
+    storedTaskVariables,
   };
 };

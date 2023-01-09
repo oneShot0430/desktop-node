@@ -4,7 +4,7 @@ import React, { memo, useMemo } from 'react';
 import { Button, Table } from 'webapp/components';
 import { useAddNewAccountModal } from 'webapp/features/common/hooks/useAddNewAccountModal';
 
-import { useAccounts } from '../hooks';
+import { useAccounts } from '../../hooks';
 
 import { AccountItem } from './AccountItem';
 
