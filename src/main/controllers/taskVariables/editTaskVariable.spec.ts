@@ -1,4 +1,5 @@
 import { namespaceInstance } from 'main/node/helpers/Namespace';
+import { EditTaskVariableParamType } from 'models';
 
 import { PersistentStoreKeys } from '../types';
 
@@ -34,22 +35,25 @@ describe('editTaskVariable', () => {
     ).rejects.toThrowError();
   });
 
-  it('throws an error if variable is not found by label', async () => {
+  it('throws an error if variable is not found by id', async () => {
     (getStoredTaskVariables as jest.Mock).mockResolvedValue({
       'some-id': { label: 'label', value: 'some value' },
     });
 
-    const nonExistingLabelPayload = {
-      label: 'another label',
-      value: 'some value',
+    const nonExistingIdPayload: EditTaskVariableParamType = {
+      variableId: 'some-other-id',
+      variableData: {
+        label: 'another label',
+        value: 'some value',
+      },
     };
 
     await expect(
-      editTaskVariable(null, nonExistingLabelPayload)
+      editTaskVariable(null, nonExistingIdPayload)
     ).rejects.toThrowError();
   });
 
-  it('changes the task variable if the payload is valid and the label does exist', async () => {
+  it('changes the task variable if the payload is valid and the ID does exist', async () => {
     (getStoredTaskVariables as jest.Mock).mockResolvedValue({
       'already-existing-id': {
         label: 'existing label',
@@ -57,7 +61,10 @@ describe('editTaskVariable', () => {
       },
     });
 
-    const validPayload = { label: 'existing label', value: 'some new value' };
+    const validPayload: EditTaskVariableParamType = {
+      variableId: 'already-existing-id',
+      variableData: { label: 'existing label', value: 'some new value' },
+    };
 
     await expect(
       editTaskVariable(null, validPayload)

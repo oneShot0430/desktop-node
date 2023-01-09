@@ -44,23 +44,23 @@ describe('deleteTaskVariable', () => {
     ).rejects.toThrowError();
   });
 
-  it('throws an error if variable is not found by label', async () => {
+  it('throws an error if variable is not found by ID', async () => {
     (getStoredTaskVariables as jest.Mock).mockResolvedValue({
       'some-id': { label: 'label', value: 'some value' },
     });
 
-    const nonExistingLabelPayload = 'nope label';
+    const nonExistingIdPayload = 'some-other-id';
 
     await expect(
-      deleteTaskVariable(null, nonExistingLabelPayload)
+      deleteTaskVariable(null, nonExistingIdPayload)
     ).rejects.toThrowError();
   });
 
-  it('deletes the task variable if the payload is valid and the label does exist', async () => {
-    const labelForDeletion = 'existing-label';
+  it('deletes the task variable if the payload is valid and the ID does exist', async () => {
+    const idForDeletion = 'already-existing-id';
     (getStoredTaskVariables as jest.Mock).mockResolvedValue({
-      'already-existing-id': {
-        label: labelForDeletion,
+      [idForDeletion]: {
+        label: 'label',
         value: 'some existing value',
       },
       'already-existing-id-2': {
@@ -70,7 +70,7 @@ describe('deleteTaskVariable', () => {
     });
 
     await expect(
-      deleteTaskVariable(null, labelForDeletion)
+      deleteTaskVariable(null, idForDeletion)
     ).resolves.not.toThrowError();
 
     expect(namespaceInstance.storeSet).toHaveBeenCalledWith(

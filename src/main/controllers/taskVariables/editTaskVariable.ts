@@ -1,7 +1,7 @@
 import { Event } from 'electron';
 
 import { namespaceInstance } from 'main/node/helpers/Namespace';
-import { ErrorType, TaskVariableData, TaskVariables } from 'models';
+import { EditTaskVariableParamType, ErrorType, TaskVariables } from 'models';
 import { throwDetailedError } from 'utils';
 
 import { PersistentStoreKeys } from '../types';
@@ -10,31 +10,35 @@ import { getStoredTaskVariables } from './getStoredTaskVariables';
 
 export const editTaskVariable = async (
   _event: Event,
-  payload: TaskVariableData
+  payload: EditTaskVariableParamType
 ): Promise<void> => {
   const taskVariables = await getStoredTaskVariables();
   // throw error if payload is not valid
-  if (!payload || !payload.label || !payload.value) {
+  if (
+    !payload?.variableId ||
+    !payload?.variableData?.value ||
+    !payload?.variableData?.label
+  ) {
     throw throwDetailedError({
-      detailed: 'taskVariables payload is not valid',
+      detailed: 'Edit Task Variable payload is not valid',
       type: ErrorType.GENERIC,
     });
   }
 
-  const existingVariableId = Object.entries(taskVariables).find(
-    ([, taskVariable]) => taskVariable.label === payload.label
-  )?.[0];
+  const idExistingVariableId = Object.keys(taskVariables).includes(
+    payload.variableId
+  );
 
-  if (!existingVariableId) {
+  if (!idExistingVariableId) {
     throw throwDetailedError({
-      detailed: `task variable with label "${payload.label}" was not found`,
+      detailed: `task variable with ID "${payload.variableId}" was not found`,
       type: ErrorType.GENERIC,
     });
   }
 
   const newTaskVariables: TaskVariables = {
     ...taskVariables,
-    [existingVariableId]: payload,
+    [payload.variableId]: payload.variableData,
   };
 
   const strigifiedTaskVariableValue = JSON.stringify(newTaskVariables);

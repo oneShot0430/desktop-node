@@ -197,12 +197,18 @@ export const getStoredTaskVariables = async () => {
   return await window.main.getStoredTaskVariables();
 };
 
-export const editTaskVariable = async ({ label, value }: TaskVariableData) => {
-  await window.main.editTaskVariable({ label, value });
+export const editTaskVariable = async (
+  id: string,
+  { label, value }: TaskVariableData
+) => {
+  await window.main.editTaskVariable({
+    variableId: id,
+    variableData: { label, value },
+  });
 };
 
-export const deleteTaskVariable = async (label: TaskVariableData['label']) => {
-  await window.main.deleteTaskVariable(label);
+export const deleteTaskVariable = async (id: string) => {
+  await window.main.deleteTaskVariable(id);
 };
 
 export const claimRewards = async () => {
