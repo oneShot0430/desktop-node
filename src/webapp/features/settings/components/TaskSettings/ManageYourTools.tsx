@@ -7,7 +7,9 @@ import { TaskVariableItem } from './TaskVariableItem';
 export const ManageYourTools = () => {
   const { storedTaskVariables } = useTaskVariable();
 
-  const arrayOfStoredVariables = Object.values(storedTaskVariables);
+  const arrayOfStoredVariables = Object.entries(storedTaskVariables).map(
+    ([id, { label, value }]) => ({ id, label, value })
+  );
 
   return (
     <div className="flex flex-col gap-4 text-sm flex-grow min-h-0 ">

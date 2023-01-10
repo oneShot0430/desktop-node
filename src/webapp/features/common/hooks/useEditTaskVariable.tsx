@@ -1,10 +1,10 @@
 import { show } from '@ebay/nice-modal-react';
 
-import { TaskVariableData } from 'models/api';
+import { TaskVariableDataWithId } from 'models/api';
 
 import { EditTaskVariable } from '../modals/EditTaskVariable';
 
-export const useEditTaskVariable = (taskVariable: TaskVariableData) => {
+export const useEditTaskVariable = (taskVariable: TaskVariableDataWithId) => {
   const showModal = () => {
     show(EditTaskVariable, { taskVariable });
   };

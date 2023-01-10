@@ -3,7 +3,7 @@ import { create, useModal } from '@ebay/nice-modal-react';
 import React from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 
-import { TaskVariableData } from 'models/api';
+import { TaskVariableDataWithId } from 'models/api';
 import { Button } from 'webapp/components';
 import { Modal, ModalContent } from 'webapp/features/modals';
 import {
@@ -13,11 +13,11 @@ import {
 import { Theme } from 'webapp/types/common';
 
 interface Params {
-  taskVariableLabel: TaskVariableData['label'];
+  taskVariable: TaskVariableDataWithId;
 }
 
 export const DeleteTaskVariable = create<Params>(function DeleteTaskVariable({
-  taskVariableLabel,
+  taskVariable: { id, label },
 }) {
   const queryClient = useQueryClient();
 
@@ -38,7 +38,7 @@ export const DeleteTaskVariable = create<Params>(function DeleteTaskVariable({
   };
 
   const handleConfirm = () => {
-    deleteTaskVariable(taskVariableLabel);
+    deleteTaskVariable(id);
     handleClose();
   };
 
@@ -60,9 +60,9 @@ export const DeleteTaskVariable = create<Params>(function DeleteTaskVariable({
 
         <div className="pr-14 py-10 text-left leading-8">
           <span> Are you sure you want to delete Task Setting </span>
-          <span className="font-black">{taskVariableLabel}</span>? This
-          procedure cannot be undone and it will cause the tasks that are
-          running on this tool to stop.
+          <span className="font-black">{label}</span>? This procedure cannot be
+          undone and it will cause the tasks that are running on this tool to
+          stop.
         </div>
         <div className="flex items-center justify-center gap-6 text-finnieBlue-light-secondary">
           <Button label="Keep" onClick={handleClose} className="bg-white" />

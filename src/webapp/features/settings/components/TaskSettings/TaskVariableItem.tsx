@@ -7,7 +7,7 @@ import {
 import React from 'react';
 
 import DotsSvg from 'assets/svgs/dots.svg';
-import { TaskVariableData } from 'models/api';
+import { TaskVariableDataWithId } from 'models/api';
 import {
   useDeleteTaskVariable,
   useEditTaskVariable,
@@ -15,12 +15,12 @@ import {
 } from 'webapp/features/common/hooks';
 
 interface Props {
-  taskVariable: TaskVariableData;
+  taskVariable: TaskVariableDataWithId;
 }
 
 export const TaskVariableItem = ({ taskVariable }: Props) => {
   const { label } = taskVariable;
-  const { showModal: showDeleteModal } = useDeleteTaskVariable(label);
+  const { showModal: showDeleteModal } = useDeleteTaskVariable(taskVariable);
   const { showModal: showEditModal } = useEditTaskVariable(taskVariable);
   const { showModal: showInspectModal } = useInspectTaskVariable(taskVariable);
 

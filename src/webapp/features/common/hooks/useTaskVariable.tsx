@@ -1,7 +1,7 @@
 import { ChangeEventHandler, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 
-import { TaskVariableData } from 'models';
+import { TaskVariableData, TaskVariableDataWithId } from 'models/api';
 import {
   getStoredTaskVariables,
   storeTaskVariable as storeTaskVariableService,
@@ -11,7 +11,7 @@ import {
 
 interface Params {
   onSuccess?: () => void;
-  taskVariable?: TaskVariableData;
+  taskVariable?: TaskVariableDataWithId;
 }
 
 export const useTaskVariable = ({ onSuccess, taskVariable }: Params = {}) => {
@@ -44,13 +44,14 @@ export const useTaskVariable = ({ onSuccess, taskVariable }: Params = {}) => {
     });
 
   const { mutate: editTaskVariable, error: errorEditingTaskVariable } =
-    useMutation<void, Error, TaskVariableData>(editTaskVariableService, {
+    useMutation<void, Error, TaskVariableDataWithId>(editTaskVariableService, {
       onSuccess: handleSuccess,
     });
 
   const handleAddTaskVariable = () => storeTaskVariable({ label, value });
 
-  const handleEditTaskVariable = () => editTaskVariable({ label, value });
+  const handleEditTaskVariable = () =>
+    editTaskVariable({ id: taskVariable.id, label, value });
 
   const handleLabelChange: ChangeEventHandler<HTMLInputElement> = ({
     target: { value: label },
