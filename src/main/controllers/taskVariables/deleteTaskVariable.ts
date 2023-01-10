@@ -1,44 +1,44 @@
-import { randomUUID } from 'crypto';
 import { Event } from 'electron';
 
+import { isString } from 'lodash';
+
 import { namespaceInstance } from 'main/node/helpers/Namespace';
-import { ErrorType, StoreTaskVariableParamsType, TaskVariables } from 'models';
+import { DeleteTaskVariableParamType, ErrorType, TaskVariables } from 'models';
 import { throwDetailedError } from 'utils';
 
 import { PersistentStoreKeys } from '../types';
 
 import { getStoredTaskVariables } from './getStoredTaskVariables';
 
-export const storeTaskVariable = async (
+export const deleteTaskVariable = async (
   _event: Event,
-  payload: StoreTaskVariableParamsType
+  idForDeletion: DeleteTaskVariableParamType
 ): Promise<void> => {
   const taskVariables = await getStoredTaskVariables();
   // throw error if payload is not valid
-  if (!payload || !payload.label || !payload.value) {
+  if (!idForDeletion || !isString(idForDeletion)) {
     throw throwDetailedError({
-      detailed: 'taskVariables payload is not valid',
+      detailed: 'deleteTaskVariable payload is not valid',
       type: ErrorType.GENERIC,
     });
   }
 
-  const labelExists = Object.values(taskVariables).some(
-    (taskVariable) => taskVariable.label === payload.label
-  );
+  const isExistingVariableId =
+    Object.keys(taskVariables).includes(idForDeletion);
 
-  if (labelExists) {
+  if (!isExistingVariableId) {
     throw throwDetailedError({
-      detailed: 'taskVariables label already exists',
+      detailed: `task variable with ID "${idForDeletion}" was not found`,
       type: ErrorType.GENERIC,
     });
   }
 
-  const id = randomUUID();
+  console.log(`Deleting Task Variable with ID "${idForDeletion}"`);
 
   const newTaskVariables: TaskVariables = {
     ...taskVariables,
-    [id]: payload,
   };
+  delete newTaskVariables[idForDeletion];
 
   const strigifiedTaskVariableValue = JSON.stringify(newTaskVariables);
 
