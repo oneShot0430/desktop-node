@@ -54,16 +54,16 @@ describe('editTaskVariable', () => {
   });
 
   it('throws an error if variable is found by ID but there is other variable with given label', async () => {
-    const exitingLabel = 'label';
+    const existingLabel = 'label';
     (getStoredTaskVariables as jest.Mock).mockResolvedValue({
       'some-id': { label: 'label to change', value: 'some value' },
-      'some-other-id': { label: exitingLabel, value: 'some value' },
+      'some-other-id': { label: existingLabel, value: 'some value' },
     });
 
     const nonExistingIdPayload: EditTaskVariableParamType = {
       variableId: 'some-other-id',
       variableData: {
-        label: exitingLabel,
+        label: existingLabel,
         value: 'some other value',
       },
     };
