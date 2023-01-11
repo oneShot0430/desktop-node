@@ -17,14 +17,14 @@ const config = {
       moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
       testMatch: ['<rootDir>/**/*.(spec|test).(ts|tsx)'],
       moduleNameMapper: {
-        '^.+\\.svg$': '<rootDir>/tests/webapp/mocks/svgMocker.js',
+        '^.+\\.svg$': '<rootDir>/src/webapp/tests/mocks/svgMocker.js',
         uuid: require.resolve('uuid'),
       },
       transform: {
         '\\.(jpg|jpeg|png|gif|eot|otf|webp|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
-          '<rootDir>/tests/webapp/mocks/fileTransformer.js',
+          '<rootDir>/src/webapp/tests/mocks/fileTransformer.js',
       },
-      setupFilesAfterEnv: ['<rootDir>/tests/webapp/jest.setup.ts'],
+      setupFilesAfterEnv: ['<rootDir>/src/webapp/tests/jest.setup.ts'],
     },
   ],
 };

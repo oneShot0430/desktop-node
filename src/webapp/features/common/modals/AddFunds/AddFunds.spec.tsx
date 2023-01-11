@@ -6,9 +6,8 @@ import React from 'react';
 import config from 'config';
 import { Actions } from 'webapp/components/Sidebar/components/Actions';
 import * as services from 'webapp/services';
+import { render } from 'webapp/tests/utils';
 import { StatusResponse, ValidationStatus } from 'webapp/types';
-
-import { render } from './utils';
 
 const { FAUCET_API_URL } = config.faucet;
 

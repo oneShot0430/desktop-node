@@ -3,8 +3,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { Unlock } from 'webapp/components/Unlock';
-
-import { render } from './utils';
+import { render } from 'webapp/tests/utils';
 
 jest.mock('webapp/services', () => ({
   __esModule: true,
