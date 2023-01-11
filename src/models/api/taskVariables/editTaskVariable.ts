@@ -1,6 +1,8 @@
+import { AtLeastOne } from 'types/utils';
+
 import { TaskVariableData } from './types';
 
 export type EditTaskVariableParamType = {
   variableId: string;
-  variableData: TaskVariableData;
+  variableData: AtLeastOne<TaskVariableData>;
 };

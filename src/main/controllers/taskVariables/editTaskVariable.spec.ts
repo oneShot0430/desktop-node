@@ -53,17 +53,37 @@ describe('editTaskVariable', () => {
     ).rejects.toThrowError();
   });
 
-  it('changes the task variable if the payload is valid and the ID does exist', async () => {
+  it('throws an error if variable is found by ID but there is other variable with given label', async () => {
+    const exitingLabel = 'label';
+    (getStoredTaskVariables as jest.Mock).mockResolvedValue({
+      'some-id': { label: 'label to change', value: 'some value' },
+      'some-other-id': { label: exitingLabel, value: 'some value' },
+    });
+
+    const nonExistingIdPayload: EditTaskVariableParamType = {
+      variableId: 'some-other-id',
+      variableData: {
+        label: exitingLabel,
+        value: 'some other value',
+      },
+    };
+
+    await expect(
+      editTaskVariable(null, nonExistingIdPayload)
+    ).rejects.toThrowError();
+  });
+
+  it('changes the task variable label and value if the payload is valid and the ID does exist', async () => {
     (getStoredTaskVariables as jest.Mock).mockResolvedValue({
       'already-existing-id': {
-        label: 'existing label',
-        value: 'some existing value',
+        label: 'old label',
+        value: 'old value',
       },
     });
 
     const validPayload: EditTaskVariableParamType = {
       variableId: 'already-existing-id',
-      variableData: { label: 'existing label', value: 'some new value' },
+      variableData: { label: 'new label', value: 'new value' },
     };
 
     await expect(
@@ -72,7 +92,53 @@ describe('editTaskVariable', () => {
 
     expect(namespaceInstance.storeSet).toHaveBeenCalledWith(
       PersistentStoreKeys.TaskVariables,
-      '{"already-existing-id":{"label":"existing label","value":"some new value"}}'
+      '{"already-existing-id":{"label":"new label","value":"new value"}}'
+    );
+  });
+
+  it('changes the task variable label if the payload is valid and the ID does exist', async () => {
+    (getStoredTaskVariables as jest.Mock).mockResolvedValue({
+      'already-existing-id': {
+        label: 'old label',
+        value: 'old value',
+      },
+    });
+
+    const validPayload: EditTaskVariableParamType = {
+      variableId: 'already-existing-id',
+      variableData: { label: 'new label' },
+    };
+
+    await expect(
+      editTaskVariable(null, validPayload)
+    ).resolves.not.toThrowError();
+
+    expect(namespaceInstance.storeSet).toHaveBeenCalledWith(
+      PersistentStoreKeys.TaskVariables,
+      '{"already-existing-id":{"label":"new label","value":"old value"}}'
+    );
+  });
+
+  it('changes the task variable value if the payload is valid and the ID does exist', async () => {
+    (getStoredTaskVariables as jest.Mock).mockResolvedValue({
+      'already-existing-id': {
+        label: 'old label',
+        value: 'old value',
+      },
+    });
+
+    const validPayload: EditTaskVariableParamType = {
+      variableId: 'already-existing-id',
+      variableData: { value: 'new value' },
+    };
+
+    await expect(
+      editTaskVariable(null, validPayload)
+    ).resolves.not.toThrowError();
+
+    expect(namespaceInstance.storeSet).toHaveBeenCalledWith(
+      PersistentStoreKeys.TaskVariables,
+      '{"already-existing-id":{"label":"old label","value":"new value"}}'
     );
   });
 });

@@ -16,8 +16,7 @@ export const editTaskVariable = async (
   // throw error if payload is not valid
   if (
     !payload?.variableId ||
-    !payload?.variableData?.value ||
-    !payload?.variableData?.label
+    (!payload?.variableData?.value && !payload?.variableData?.label)
   ) {
     throw throwDetailedError({
       detailed: 'Edit Task Variable payload is not valid',
@@ -25,20 +24,37 @@ export const editTaskVariable = async (
     });
   }
 
-  const idExistingVariableId = Object.keys(taskVariables).includes(
-    payload.variableId
-  );
+  let isExistingVariableId = false;
+  let isLabelDuplicated = false;
+  Object.entries(taskVariables).forEach(([id, { label }]) => {
+    if (id === payload.variableId) {
+      isExistingVariableId = true;
+    }
+    if (label === payload.variableData.label) {
+      isLabelDuplicated = true;
+    }
+  });
 
-  if (!idExistingVariableId) {
+  if (!isExistingVariableId) {
     throw throwDetailedError({
       detailed: `task variable with ID "${payload.variableId}" was not found`,
       type: ErrorType.GENERIC,
     });
   }
 
+  if (isLabelDuplicated) {
+    throw throwDetailedError({
+      detailed: `task variable with label "${payload.variableId}" already exist`,
+      type: ErrorType.GENERIC,
+    });
+  }
+
   const newTaskVariables: TaskVariables = {
     ...taskVariables,
-    [payload.variableId]: payload.variableData,
+    [payload.variableId]: {
+      ...taskVariables[payload.variableId],
+      ...payload.variableData,
+    },
   };
 
   const strigifiedTaskVariableValue = JSON.stringify(newTaskVariables);
