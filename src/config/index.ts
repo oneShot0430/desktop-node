@@ -1,4 +1,4 @@
-import { endpoints } from './endpoints';
+import endpoints from './endpoints';
 import * as faucet from './faucet';
 import node from './node';
 
