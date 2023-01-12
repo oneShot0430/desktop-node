@@ -3,6 +3,7 @@ import {
   Icon,
   SettingsFill,
   PlayFill,
+  WarningCircleLine,
 } from '@_koii/koii-styleguide';
 import React, { memo, useState, useCallback, useMemo, useEffect } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
@@ -30,6 +31,7 @@ import {
 } from 'webapp/services';
 import { Task } from 'webapp/types';
 
+import { TaskInfo } from './TaskInfo';
 import { TaskSettings } from './TaskSettings';
 
 interface Props {
@@ -41,6 +43,7 @@ interface Props {
 const TaskItem = ({ task, index, columnsLayout }: Props) => {
   const [showSettings, setShowSettings] = useState<boolean>(false);
   const [isTaskValidToRun, setIsTaskValidToRun] = useState<boolean>(false);
+  const [showInfo, setShowInfo] = useState<boolean>(false);
   /**
    * @todo: abstract it away to the hook
    */
@@ -49,13 +52,17 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
     () => getMainAccountPublicKey()
   );
 
-  const { showModal } = useTaskDetailsModal({
+  const { showModal: showCodeModal } = useTaskDetailsModal({
     task,
     accountPublicKey: mainAccountPubKey,
   });
 
   const handleToggleSettings = () => {
     setShowSettings(!showSettings);
+  };
+
+  const handleToggleInfo = () => {
+    setShowInfo(!showInfo);
   };
 
   const [stake, setStake] = useState<number>(0);
@@ -124,10 +131,6 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
     setMeetsMinimumStake(value >= minStake);
   };
 
-  const handleShowCode = () => {
-    showModal();
-  };
-
   const getTaskPlayButtonIcon = useCallback(() => {
     if (isRunning) {
       return <StopTealIcon />;
@@ -139,10 +142,20 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
     );
   }, [isRunning, isTaskValidToRun]);
 
+  const getTaskDetailsComponent = useCallback(() => {
+    if (showInfo) {
+      return <TaskInfo task={task} onShowCodeClick={showCodeModal} />;
+    }
+
+    if (showSettings) {
+      return <TaskSettings taskPubKey={task.publicKey} />;
+    }
+  }, [showInfo, showSettings, task, showCodeModal]);
+
   if (loadingMainAccount) return null;
 
   return (
-    <TableRow columnsLayout={columnsLayout}>
+    <TableRow columnsLayout={columnsLayout} className="py-2">
       <div>
         <Tooltip
           placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
@@ -150,9 +163,14 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
         >
           <div className="flex flex-col items-center justify-start w-[40px]">
             <Button
-              icon={<Icon source={CloseXLine} size={48} />}
+              icon={
+                <Icon
+                  source={showInfo ? CloseXLine : WarningCircleLine}
+                  size={48}
+                />
+              }
               onlyIcon
-              onClick={handleShowCode}
+              onClick={handleToggleInfo}
             />
           </div>
         </Tooltip>
@@ -228,10 +246,10 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
 
       <div
         className={`w-full col-span-7 ${
-          showSettings ? 'flex' : 'hidden'
+          showSettings || showInfo ? 'flex' : 'hidden'
         } transition-all duration-500 ease-in-out`}
       >
-        <TaskSettings taskPubKey={task.publicKey} />
+        {getTaskDetailsComponent()}
       </div>
     </TableRow>
   );

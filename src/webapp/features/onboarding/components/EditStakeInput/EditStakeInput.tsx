@@ -38,7 +38,7 @@ export const EditStakeInput = ({
   };
 
   return (
-    <div>
+    <div className="flex flex-col items-center w-fit">
       <input
         value={value}
         placeholder="0"
@@ -47,8 +47,8 @@ export const EditStakeInput = ({
         className={inputClasses}
         disabled={disabled}
       />
-      <div className="text-xs text-finnieEmerald-light">
-        min. stake: {minStakeInKoii}
+      <div className="text-xs text-center text-finnieEmerald-light">
+        minimum: {minStakeInKoii}
       </div>
     </div>
   );

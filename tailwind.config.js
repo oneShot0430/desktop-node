@@ -145,7 +145,7 @@ module.exports = {
       gridTemplateColumns: {
         'first-task': '3.4rem repeat(16, minmax(0, 1fr)) 3rem',
         'my-node': '1.5fr 0.5fr 6fr 5fr 1.5fr 1.5fr 1.5fr 3fr',
-        'available-tasks': '1fr 3fr 2.5fr 2.5fr 2fr 1fr 1fr',
+        'available-tasks': '1fr 2.5fr 2fr 2fr 2fr 1fr 1fr',
         'accounts-headers': '1fr 4fr 7fr 4fr',
         accounts: '1fr 1fr 3fr 5fr 2fr 3fr 1fr',
       },
