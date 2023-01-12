@@ -35,16 +35,19 @@ export const TaskVariableItem = ({ taskVariable }: Props) => {
         source={ViewShowLine}
         className="h-3.5 mx-2 cursor-pointer"
         onClick={showInspectModal}
+        data-testid="inspect-task-variable"
       />
       <Icon
         source={EditPencilLine}
         className="h-4 mx-2 cursor-pointer"
         onClick={showEditModal}
+        data-testid="edit-task-variable"
       />
       <Icon
         source={DeleteTrashXlLine}
         className="h-5 mx-2 text-finnieRed cursor-pointer"
         onClick={showDeleteModal}
+        data-testid="delete-task-variable"
       />
     </div>
   );
