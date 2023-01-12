@@ -60,6 +60,13 @@ jest.mock('webapp/services', () => {
   };
 });
 
+const inspectModalDescription =
+  'This is placeholder for information about the tool, website, function, etc.';
+const editModalDescription = 'Edit information about your Task Setting';
+const deleteModalDescription = 'Are you sure you want to delete Task Setting';
+const duplicatedLabelErrorMessage =
+  'You already have a tool registered with that label';
+
 const existingTaskVariablesData = [
   {
     label: 'my label',
@@ -90,9 +97,8 @@ describe('TaskSettings', () => {
         ).getByTestId(/inspect-task-variable/i);
         await user.click(inspectItemButton);
 
-        const inspectModal = screen.getByText(
-          /This is placeholder for information about the tool, website, function, etc./i
-        ).parentElement.parentElement;
+        const inspectModal = screen.getByText(inspectModalDescription)
+          .parentElement.parentElement;
         const label = within(inspectModal).getByText(
           existingTaskVariableData.label
         );
@@ -112,9 +118,7 @@ describe('TaskSettings', () => {
       const variableLabelInput = screen.getByPlaceholderText(/Add Label/i);
       await user.type(variableLabelInput, 'my label');
 
-      const labelError = await screen.findByText(
-        /You already have a tool registered with that label/i
-      );
+      const labelError = await screen.findByText(duplicatedLabelErrorMessage);
       const addButton = screen.getByRole('button', { name: /Add/i });
 
       expect(labelError).toBeInTheDocument();
@@ -171,9 +175,8 @@ describe('TaskSettings', () => {
       );
       await user.click(deleteItemButton);
 
-      const deleteModal = screen.getByText(
-        /Are you sure you want to delete Task Setting/i
-      ).parentElement.parentElement;
+      const deleteModal = screen.getByText(deleteModalDescription).parentElement
+        .parentElement;
       const keepButton = within(deleteModal).getByRole('button', {
         name: /Keep/i,
       });
@@ -193,9 +196,8 @@ describe('TaskSettings', () => {
       );
       await user.click(deleteItemButton);
 
-      const deleteModal = screen.getByText(
-        /Are you sure you want to delete Task Setting/i
-      ).parentElement.parentElement;
+      const deleteModal = screen.getByText(deleteModalDescription).parentElement
+        .parentElement;
       const deleteButton = within(deleteModal).getByRole('button', {
         name: /Delete/i,
       });
@@ -215,9 +217,8 @@ describe('TaskSettings', () => {
         );
         await user.click(editItemButton);
 
-        const editModal = screen.getByText(
-          /Edit information about your Task Setting/i
-        ).parentElement.parentElement;
+        const editModal =
+          screen.getByText(editModalDescription).parentElement.parentElement;
         const variableLabelInput = within(editModal).getByDisplayValue(
           existingTaskVariableData.label
         );
@@ -226,9 +227,7 @@ describe('TaskSettings', () => {
         await user.clear(variableLabelInput);
         await user.type(variableLabelInput, 'my label');
 
-        const labelError = await screen.findByText(
-          /You already have a tool registered with that label/i
-        );
+        const labelError = await screen.findByText(duplicatedLabelErrorMessage);
 
         expect(labelError).toBeInTheDocument();
         expect(saveButton).toBeDisabled();
@@ -244,9 +243,8 @@ describe('TaskSettings', () => {
         );
         await user.click(editItemButton);
 
-        const editModal = screen.getByText(
-          /Edit information about your Task Setting/i
-        ).parentElement.parentElement;
+        const editModal =
+          screen.getByText(editModalDescription).parentElement.parentElement;
         const variableLabelInput = within(editModal).getByDisplayValue(
           existingTaskVariableData.label
         );
@@ -278,9 +276,8 @@ describe('TaskSettings', () => {
         );
         await user.click(editItemButton);
 
-        const editModal = screen.getByText(
-          /Edit information about your Task Setting/i
-        ).parentElement.parentElement;
+        const editModal =
+          screen.getByText(editModalDescription).parentElement.parentElement;
         const variableLabelInput =
           within(editModal).getByPlaceholderText(/Add Label/i);
         await user.clear(variableLabelInput);
@@ -301,9 +298,8 @@ describe('TaskSettings', () => {
           /inspect-task-variable/i
         );
         await user.click(inspectItemButton);
-        const inspectModal = screen.getByText(
-          /This is placeholder for information about the tool, website, function, etc./i
-        ).parentElement.parentElement;
+        const inspectModal = screen.getByText(inspectModalDescription)
+          .parentElement.parentElement;
 
         const label = within(inspectModal).getByText(newTaskVariableData.label);
         const key = within(inspectModal).getByText(newTaskVariableData.value);
