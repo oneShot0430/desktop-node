@@ -95,6 +95,10 @@ const initHandlers = (): void => {
     config.endpoints.PAIR_TASK_VARIABLE,
     mainErrorHandler(controllers.pairTaskVariable)
   );
+  ipcMain.handle(
+    config.endpoints.UNPAIR_TASK_VARIABLE,
+    mainErrorHandler(controllers.unpairTaskVariable)
+  );
 };
 
 export default errorHandler(initHandlers, 'Init handlers error');

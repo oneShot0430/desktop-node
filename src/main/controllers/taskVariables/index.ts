@@ -5,3 +5,4 @@ export * from './editTaskVariable';
 export * from './deleteTaskVariable';
 export * from './getStoredPairedTaskVariables';
 export * from './pairTaskVariable';
+export * from './unpairTaskVariable';
