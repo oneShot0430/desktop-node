@@ -28,7 +28,7 @@ export const pairTaskVariable = async (
     !payload?.desktopVariableId
   ) {
     throw throwDetailedError({
-      detailed: 'Pair Task Variable payload is not valid',
+      detailed: 'Variable Pairing error: payload is not valid',
       type: ErrorType.GENERIC,
     });
   }
@@ -45,7 +45,12 @@ export const pairTaskVariable = async (
       type: ErrorType.TASK_NOT_FOUND,
     });
 
-  const taskData = JSON.parse(accountInfo.data.toString());
+  let taskData;
+  try {
+    taskData = JSON.parse(accountInfo.data.toString());
+  } catch {
+    //
+  }
 
   if (!taskData) {
     return throwDetailedError({

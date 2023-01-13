@@ -55,7 +55,7 @@ describe('pairTaskVariable', () => {
 
     await expect(
       pairTaskVariable(null, invalidPayload as PairTaskVariableParamType)
-    ).rejects.toThrowError();
+    ).rejects.toThrowError(/payload is not valid/i);
   });
 
   it('throws an error if no Task on K2', async () => {
@@ -67,7 +67,9 @@ describe('pairTaskVariable', () => {
       desktopVariableId: 'test1',
     };
 
-    await expect(pairTaskVariable(null, validPayload)).rejects.toThrowError();
+    await expect(pairTaskVariable(null, validPayload)).rejects.toThrowError(
+      /task not found/i
+    );
   });
 
   it('throws an error if there is Task on K2 but with invalid data', async () => {
@@ -81,7 +83,9 @@ describe('pairTaskVariable', () => {
       desktopVariableId: 'test1',
     };
 
-    await expect(pairTaskVariable(null, validPayload)).rejects.toThrowError();
+    await expect(pairTaskVariable(null, validPayload)).rejects.toThrowError(
+      /task not found/i
+    );
   });
 
   it('throws an error if there is Task on K2 but not using given variable', async () => {
@@ -91,9 +95,7 @@ describe('pairTaskVariable', () => {
 
     const notUsedVariableName = 'variableName';
 
-    (getTaskVariablesNames as jest.Mock).mockResolvedValue([
-      notUsedVariableName,
-    ]);
+    (getTaskVariablesNames as jest.Mock).mockResolvedValue(['otherName']);
 
     const validPayload: PairTaskVariableParamType = {
       taskAccountPubKey: k2PublicKeyExample,
@@ -101,7 +103,9 @@ describe('pairTaskVariable', () => {
       desktopVariableId: 'test1',
     };
 
-    await expect(pairTaskVariable(null, validPayload)).rejects.toThrowError();
+    await expect(pairTaskVariable(null, validPayload)).rejects.toThrowError(
+      /variable Name in the task not found/i
+    );
   });
 
   it('throws an error if there is no variable stored with given ID', async () => {
@@ -123,7 +127,9 @@ describe('pairTaskVariable', () => {
       desktopVariableId: 'test1',
     };
 
-    await expect(pairTaskVariable(null, validPayload)).rejects.toThrowError();
+    await expect(pairTaskVariable(null, validPayload)).rejects.toThrowError(
+      /desktop variable ID in the task not found/i
+    );
   });
 
   it('pairs the task variable if the payload is valid - first pairing of the given task', async () => {
