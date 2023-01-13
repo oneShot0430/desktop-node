@@ -18,11 +18,12 @@ export const EditStakeInput = ({
   onChange,
   disabled = false,
 }: PropsType) => {
+  const [isPristine, setIsPristine] = useState<boolean>(true);
   const [hasEnteredAValue, setHasEnteredAValue] = useState<boolean>(false);
 
   const inputClasses = twMerge(
     'w-[92px] rounded-sm text-right text-finnieBlue-dark p-[3px]',
-    !meetsMinimumStake && 'border border-red-500'
+    !meetsMinimumStake && !isPristine && 'border border-red-500'
   );
   const stakeInKoii = getKoiiFromRoe(stake);
   const minStakeInKoii = getKoiiFromRoe(minStake);
@@ -40,6 +41,7 @@ export const EditStakeInput = ({
   return (
     <div className="flex flex-col items-center w-fit">
       <input
+        onBlur={() => setIsPristine(false)}
         value={value}
         placeholder="0"
         onChange={handleChange}

@@ -178,7 +178,9 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
 
       <div className="flex flex-col gap-2 text-xs">
         <div>{taskName}</div>
-        <div className="text-finnieTeal">datestring</div>
+        <div className="text-finnieTeal">
+          {task?.metadata?.createdAt ?? 'N/A'}
+        </div>
       </div>
 
       <div
