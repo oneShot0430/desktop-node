@@ -1,9 +1,14 @@
 import { namespaceInstance } from 'main/node/helpers/Namespace';
 
+import {
+  GetTasksPairedWithVariableReturnType,
+  TaskVariablesReturnType,
+} from '../../../models';
 import { PersistentStoreKeys } from '../types';
 
 import { deleteTaskVariable } from './deleteTaskVariable';
 import { getStoredTaskVariables } from './getStoredTaskVariables';
+import { getTasksPairedWithVariable } from './getTasksPairedWithVariable';
 
 jest.mock('main/node/helpers/Namespace', () => {
   return {
@@ -19,7 +24,18 @@ jest.mock('./getStoredTaskVariables', () => {
   };
 });
 
-const getStoredTaskVariablesMock = getStoredTaskVariables as jest.Mock;
+jest.mock('./getTasksPairedWithVariable', () => {
+  return {
+    getTasksPairedWithVariable: jest.fn(),
+  };
+});
+
+const getStoredTaskVariablesMock = getStoredTaskVariables as jest.Mock<
+  Promise<TaskVariablesReturnType>
+>;
+const getTasksPairedWithVariableMock = getTasksPairedWithVariable as jest.Mock<
+  Promise<GetTasksPairedWithVariableReturnType>
+>;
 
 describe('deleteTaskVariable', () => {
   beforeEach(() => {
@@ -31,9 +47,9 @@ describe('deleteTaskVariable', () => {
 
     let invalidPayload: undefined;
 
-    await expect(
-      deleteTaskVariable(null, invalidPayload)
-    ).rejects.toThrowError();
+    await expect(deleteTaskVariable(null, invalidPayload)).rejects.toThrowError(
+      /payload is not valid/i
+    );
   });
 
   it('throws an error if the payload is not valid - number', async () => {
@@ -43,7 +59,7 @@ describe('deleteTaskVariable', () => {
 
     await expect(
       deleteTaskVariable(null, invalidPayload as never)
-    ).rejects.toThrowError();
+    ).rejects.toThrowError(/payload is not valid/i);
   });
 
   it('throws an error if variable is not found by ID', async () => {
@@ -55,7 +71,7 @@ describe('deleteTaskVariable', () => {
 
     await expect(
       deleteTaskVariable(null, nonExistingIdPayload)
-    ).rejects.toThrowError();
+    ).rejects.toThrowError(/task variable with ID .+ was not found/i);
   });
 
   it('deletes the task variable if the payload is valid and the ID does exist', async () => {
@@ -70,6 +86,8 @@ describe('deleteTaskVariable', () => {
         value: 'some another existing value',
       },
     });
+
+    getTasksPairedWithVariableMock.mockResolvedValue([]);
 
     await expect(
       deleteTaskVariable(null, idForDeletion)
