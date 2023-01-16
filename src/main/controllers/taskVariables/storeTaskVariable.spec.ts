@@ -27,13 +27,16 @@ jest.mock('crypto', () => {
   };
 });
 
+const getStoredTaskVariablesMock = getStoredTaskVariables as jest.Mock;
+const randomUUIDMock = randomUUID as jest.Mock;
+
 describe('storeTaskVariable', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   it('throws an error if the payload is not valid', async () => {
-    (getStoredTaskVariables as jest.Mock).mockResolvedValue({});
+    getStoredTaskVariablesMock.mockResolvedValue({});
 
     const invalidPayload = {};
 
@@ -43,7 +46,7 @@ describe('storeTaskVariable', () => {
   });
 
   it('throws an error if the label already exists', async () => {
-    (getStoredTaskVariables as jest.Mock).mockResolvedValue({
+    getStoredTaskVariablesMock.mockResolvedValue({
       'some-id': { label: 'existing label', value: 'some value' },
     });
 
@@ -60,14 +63,14 @@ describe('storeTaskVariable', () => {
   it('stores the task variable if the payload is valid and the label does not exist', async () => {
     const MOCKED_ID = 'some-id';
 
-    (getStoredTaskVariables as jest.Mock).mockResolvedValue({
+    getStoredTaskVariablesMock.mockResolvedValue({
       'already-existing-id': {
         label: 'existing label',
         value: 'some existing value',
       },
     });
 
-    (randomUUID as jest.Mock).mockReturnValue(MOCKED_ID);
+    randomUUIDMock.mockReturnValue(MOCKED_ID);
 
     const validPayload = { label: 'new label', value: 'some new value' };
 

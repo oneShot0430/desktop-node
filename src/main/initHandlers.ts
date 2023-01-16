@@ -70,6 +70,7 @@ const initHandlers = (): void => {
     controllers.getTaskNodeInfo
   );
   ipcMain.handle(config.endpoints.WITHDRAW_STAKE, controllers.withdrawStake);
+
   ipcMain.handle(
     config.endpoints.GET_TASK_VARIABLES_NAMES,
     mainErrorHandler(controllers.getTaskVariablesNames)
@@ -89,6 +90,14 @@ const initHandlers = (): void => {
   ipcMain.handle(
     config.endpoints.EDIT_TASK_VARIABLE,
     mainErrorHandler(controllers.editTaskVariable)
+  );
+  ipcMain.handle(
+    config.endpoints.PAIR_TASK_VARIABLE,
+    mainErrorHandler(controllers.pairTaskVariable)
+  );
+  ipcMain.handle(
+    config.endpoints.UNPAIR_TASK_VARIABLE,
+    mainErrorHandler(controllers.unpairTaskVariable)
   );
 };
 

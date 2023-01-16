@@ -19,13 +19,15 @@ jest.mock('./getStoredTaskVariables', () => {
   };
 });
 
+const getStoredTaskVariablesMock = getStoredTaskVariables as jest.Mock;
+
 describe('deleteTaskVariable', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   it('throws an error if the payload is not valid - undefined', async () => {
-    (getStoredTaskVariables as jest.Mock).mockResolvedValue({});
+    getStoredTaskVariablesMock.mockResolvedValue({});
 
     let invalidPayload: undefined;
 
@@ -35,7 +37,7 @@ describe('deleteTaskVariable', () => {
   });
 
   it('throws an error if the payload is not valid - number', async () => {
-    (getStoredTaskVariables as jest.Mock).mockResolvedValue({});
+    getStoredTaskVariablesMock.mockResolvedValue({});
 
     const invalidPayload = 123;
 
@@ -45,7 +47,7 @@ describe('deleteTaskVariable', () => {
   });
 
   it('throws an error if variable is not found by ID', async () => {
-    (getStoredTaskVariables as jest.Mock).mockResolvedValue({
+    getStoredTaskVariablesMock.mockResolvedValue({
       'some-id': { label: 'label', value: 'some value' },
     });
 
@@ -58,7 +60,7 @@ describe('deleteTaskVariable', () => {
 
   it('deletes the task variable if the payload is valid and the ID does exist', async () => {
     const idForDeletion = 'already-existing-id';
-    (getStoredTaskVariables as jest.Mock).mockResolvedValue({
+    getStoredTaskVariablesMock.mockResolvedValue({
       [idForDeletion]: {
         label: 'label',
         value: 'some existing value',
