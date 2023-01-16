@@ -13,10 +13,11 @@ export const getStoredPairedTaskVariables =
     );
 
     try {
-      const parsedData = JSON.parse(taskVariables) as PairedTaskVariables;
+      const parsedData: PairedTaskVariables = JSON.parse(taskVariables);
 
       return parsedData || {};
     } catch (error) {
+      console.log('Get Stored Paired Task Variables: JSON parse error', error);
       return {};
     }
   };

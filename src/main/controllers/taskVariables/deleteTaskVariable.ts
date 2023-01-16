@@ -40,10 +40,10 @@ export const deleteTaskVariable = async (
   };
   delete newTaskVariables[idForDeletion];
 
-  const strigifiedTaskVariableValue = JSON.stringify(newTaskVariables);
+  const stringifiedTaskVariableValue = JSON.stringify(newTaskVariables);
 
   await namespaceInstance.storeSet(
     PersistentStoreKeys.TaskVariables,
-    strigifiedTaskVariableValue
+    stringifiedTaskVariableValue
   );
 };

@@ -65,11 +65,11 @@ export const pairTaskVariable = async (
     taskPublicKey: payload.taskAccountPubKey,
   });
 
-  const doesTaskUseProvidesVariableName = taskVariablesNames.includes(
+  const doesTaskUseProvidedVariableName = taskVariablesNames.includes(
     payload.variableInTaskName
   );
 
-  if (!doesTaskUseProvidesVariableName) {
+  if (!doesTaskUseProvidedVariableName) {
     return throwDetailedError({
       detailed: 'Variable Pairing error: Variable Name in the Task not found',
       type: ErrorType.GENERIC,

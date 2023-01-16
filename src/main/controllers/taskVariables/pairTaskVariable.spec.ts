@@ -43,6 +43,13 @@ jest.mock('./getTaskVariablesNames', () => {
   };
 });
 
+const k2ConnectionGetAccountInfoMock = sdk.k2Connection
+  .getAccountInfo as jest.Mock;
+const getTaskVariableNamesMock = getTaskVariablesNames as jest.Mock;
+const getStoredTaskVariablesMock = getStoredTaskVariables as jest.Mock;
+const getStoredPairedTaskVariablesMock =
+  getStoredPairedTaskVariables as jest.Mock;
+
 const k2PublicKeyExample = '7Ds4GdPPGb2DNEwT6is31i1KkR2WqusttB55T4QgGUvg';
 
 describe('pairTaskVariable', () => {
@@ -59,7 +66,7 @@ describe('pairTaskVariable', () => {
   });
 
   it('throws an error if no Task on K2', async () => {
-    (sdk.k2Connection.getAccountInfo as jest.Mock).mockResolvedValue(undefined);
+    k2ConnectionGetAccountInfoMock.mockResolvedValue(undefined);
 
     const validPayload: PairTaskVariableParamType = {
       taskAccountPubKey: k2PublicKeyExample,
@@ -73,7 +80,7 @@ describe('pairTaskVariable', () => {
   });
 
   it('throws an error if there is Task on K2 but with invalid data', async () => {
-    (sdk.k2Connection.getAccountInfo as jest.Mock).mockResolvedValue({
+    k2ConnectionGetAccountInfoMock.mockResolvedValue({
       data: { toString: () => 'not parsable string' },
     });
 
@@ -89,13 +96,13 @@ describe('pairTaskVariable', () => {
   });
 
   it('throws an error if there is Task on K2 but not using given variable', async () => {
-    (sdk.k2Connection.getAccountInfo as jest.Mock).mockResolvedValue({
+    k2ConnectionGetAccountInfoMock.mockResolvedValue({
       data: { toString: () => '{}' },
     });
 
     const notUsedVariableName = 'variableName';
 
-    (getTaskVariablesNames as jest.Mock).mockResolvedValue(['otherName']);
+    getTaskVariableNamesMock.mockResolvedValue(['otherName']);
 
     const validPayload: PairTaskVariableParamType = {
       taskAccountPubKey: k2PublicKeyExample,
@@ -109,15 +116,15 @@ describe('pairTaskVariable', () => {
   });
 
   it('throws an error if there is no variable stored with given ID', async () => {
-    (sdk.k2Connection.getAccountInfo as jest.Mock).mockResolvedValue({
+    k2ConnectionGetAccountInfoMock.mockResolvedValue({
       data: { toString: () => '{}' },
     });
 
     const usedVariablename = 'variableName';
 
-    (getTaskVariablesNames as jest.Mock).mockResolvedValue([usedVariablename]);
+    getTaskVariableNamesMock.mockResolvedValue([usedVariablename]);
 
-    (getStoredTaskVariables as jest.Mock).mockResolvedValue({
+    getStoredTaskVariablesMock.mockResolvedValue({
       otherId: { label: 'label', value: 'value' },
     });
 
@@ -133,20 +140,20 @@ describe('pairTaskVariable', () => {
   });
 
   it('pairs the task variable if the payload is valid - first pairing of the given task', async () => {
-    (sdk.k2Connection.getAccountInfo as jest.Mock).mockResolvedValue({
+    k2ConnectionGetAccountInfoMock.mockResolvedValue({
       data: { toString: () => '{}' },
     });
 
     const usedVariableName = 'variableName';
 
-    (getTaskVariablesNames as jest.Mock).mockResolvedValue([usedVariableName]);
+    getTaskVariableNamesMock.mockResolvedValue([usedVariableName]);
 
     const usedStoredVariableId = 'someId';
-    (getStoredTaskVariables as jest.Mock).mockResolvedValue({
+    getStoredTaskVariablesMock.mockResolvedValue({
       [usedStoredVariableId]: { label: 'label', value: 'value' },
     });
 
-    (getStoredPairedTaskVariables as jest.Mock).mockResolvedValue({});
+    getStoredPairedTaskVariablesMock.mockResolvedValue({});
 
     const validPayload: PairTaskVariableParamType = {
       taskAccountPubKey: k2PublicKeyExample,
@@ -165,20 +172,20 @@ describe('pairTaskVariable', () => {
   });
 
   it('pairs the task variable if the payload is valid - not first pairing of the given task', async () => {
-    (sdk.k2Connection.getAccountInfo as jest.Mock).mockResolvedValue({
+    k2ConnectionGetAccountInfoMock.mockResolvedValue({
       data: { toString: () => '{}' },
     });
 
     const usedVariableName = 'variableName';
 
-    (getTaskVariablesNames as jest.Mock).mockResolvedValue([usedVariableName]);
+    getTaskVariableNamesMock.mockResolvedValue([usedVariableName]);
 
     const usedStoredVariableId = 'someId';
-    (getStoredTaskVariables as jest.Mock).mockResolvedValue({
+    getStoredTaskVariablesMock.mockResolvedValue({
       [usedStoredVariableId]: { label: 'label', value: 'value' },
     });
 
-    (getStoredPairedTaskVariables as jest.Mock).mockResolvedValue({
+    getStoredPairedTaskVariablesMock.mockResolvedValue({
       [k2PublicKeyExample]: { secretVar: 'anotherVariableId' },
     });
 

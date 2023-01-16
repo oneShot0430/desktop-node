@@ -20,6 +20,9 @@ jest.mock('./getStoredPairedTaskVariables', () => {
   };
 });
 
+const getStoredPairedTaskVariablesMock =
+  getStoredPairedTaskVariables as jest.Mock;
+
 const k2PublicKeyExample = '7Ds4GdPPGb2DNEwT6is31i1KkR2WqusttB55T4QgGUvg';
 
 describe('unpairTaskVariable', () => {
@@ -44,7 +47,7 @@ describe('unpairTaskVariable', () => {
   });
 
   it('throws an error if there is no pairings for provided Task', async () => {
-    (getStoredPairedTaskVariables as jest.Mock).mockResolvedValue({
+    getStoredPairedTaskVariablesMock.mockResolvedValue({
       otherId: {},
     });
 
@@ -59,7 +62,7 @@ describe('unpairTaskVariable', () => {
   });
 
   it('throws an error if there is Task on K2 but not using given variable', async () => {
-    (getStoredPairedTaskVariables as jest.Mock).mockResolvedValue({
+    getStoredPairedTaskVariablesMock.mockResolvedValue({
       [k2PublicKeyExample]: { name: 'other-task-variable-id' },
     });
 
@@ -74,7 +77,7 @@ describe('unpairTaskVariable', () => {
   });
 
   it('unpairs the task variable if the payload is valid - unpair of more that one pairings', async () => {
-    (getStoredPairedTaskVariables as jest.Mock).mockResolvedValue({
+    getStoredPairedTaskVariablesMock.mockResolvedValue({
       [k2PublicKeyExample]: { name1: 'test1', name2: 'test2' },
     });
 
@@ -94,7 +97,7 @@ describe('unpairTaskVariable', () => {
   });
 
   it('pairs the task variable if the payload is valid - unpair of single pairing', async () => {
-    (getStoredPairedTaskVariables as jest.Mock).mockResolvedValue({
+    getStoredPairedTaskVariablesMock.mockResolvedValue({
       [k2PublicKeyExample]: { name1: 'test1' },
     });
 

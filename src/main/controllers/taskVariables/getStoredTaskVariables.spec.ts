@@ -10,12 +10,14 @@ jest.mock('main/node/helpers/Namespace', () => {
   };
 });
 
+const namespaceStoreGetMock = namespaceInstance.storeGet as jest.Mock;
+
 describe('getStoredTaskVariables', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
   it('should return an empty object if the task variables are not set', async () => {
-    (namespaceInstance.storeGet as jest.Mock).mockReturnValueOnce(undefined);
+    namespaceStoreGetMock.mockReturnValueOnce(undefined);
 
     const result = await getStoredTaskVariables();
 
@@ -23,9 +25,7 @@ describe('getStoredTaskVariables', () => {
   });
 
   it('should return the task variables if they are set', async () => {
-    (namespaceInstance.storeGet as jest.Mock).mockReturnValueOnce(
-      '{"foo": "bar"}'
-    );
+    namespaceStoreGetMock.mockReturnValueOnce('{"foo": "bar"}');
 
     const result = await getStoredTaskVariables();
 
@@ -33,9 +33,7 @@ describe('getStoredTaskVariables', () => {
   });
 
   it('should return an empty object if the task variables are invalid', async () => {
-    (namespaceInstance.storeGet as jest.Mock).mockReturnValueOnce(
-      '{"foo": "bar"'
-    );
+    namespaceStoreGetMock.mockReturnValueOnce('{"foo": "bar"');
 
     const result = await getStoredTaskVariables();
 

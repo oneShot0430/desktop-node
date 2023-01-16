@@ -57,10 +57,10 @@ export const editTaskVariable = async (
     },
   };
 
-  const strigifiedTaskVariableValue = JSON.stringify(newTaskVariables);
+  const stringifiedTaskVariableValue = JSON.stringify(newTaskVariables);
 
   await namespaceInstance.storeSet(
     PersistentStoreKeys.TaskVariables,
-    strigifiedTaskVariableValue
+    stringifiedTaskVariableValue
   );
 };

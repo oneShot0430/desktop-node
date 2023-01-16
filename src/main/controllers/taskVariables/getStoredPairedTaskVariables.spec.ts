@@ -11,12 +11,14 @@ jest.mock('main/node/helpers/Namespace', () => {
   };
 });
 
+const namespaceStoreGetMock = namespaceInstance.storeGet as jest.Mock;
+
 describe('getStoredPairedTaskVariables', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
   it('should return an empty object if the task variables pairs are not set', async () => {
-    (namespaceInstance.storeGet as jest.Mock).mockReturnValueOnce(undefined);
+    namespaceStoreGetMock.mockReturnValueOnce(undefined);
 
     const result = await getStoredPairedTaskVariables();
 
@@ -27,9 +29,7 @@ describe('getStoredPairedTaskVariables', () => {
     const pairs: PairedTaskVariables = {
       'task-id': { variable: 'variable-id' },
     };
-    (namespaceInstance.storeGet as jest.Mock).mockReturnValueOnce(
-      JSON.stringify(pairs)
-    );
+    namespaceStoreGetMock.mockReturnValueOnce(JSON.stringify(pairs));
 
     const result = await getStoredPairedTaskVariables();
 
@@ -37,7 +37,7 @@ describe('getStoredPairedTaskVariables', () => {
   });
 
   it('should return an empty object if the task variables pairs are invalid', async () => {
-    (namespaceInstance.storeGet as jest.Mock).mockReturnValueOnce(
+    namespaceStoreGetMock.mockReturnValueOnce(
       '{"task-id":{"variable":"variable-id"'
     );
 
