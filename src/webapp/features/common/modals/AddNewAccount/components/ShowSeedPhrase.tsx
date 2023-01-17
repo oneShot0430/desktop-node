@@ -1,6 +1,6 @@
+import { Icon, CloseLine } from '@_koii/koii-styleguide';
 import React, { memo } from 'react';
 
-import CloseIconWhite from 'svgs/close-icons/close-icon-white.svg';
 import { Button } from 'webapp/components/ui/Button';
 import { ModalContent } from 'webapp/features/modals';
 import { Theme } from 'webapp/types/common';
@@ -23,7 +23,12 @@ const ShowSeedPhrase = ({ onClose, setNextStep, seedPhrase }: PropsType) => {
         <div className="flex items-center justify-between pl-6">
           <span className="text-[24px]">Seed Phrase</span>
         </div>
-        <CloseIconWhite className="w-[32px] h-[32px]" onClick={onClose} />
+        <Icon
+          source={CloseLine}
+          className="w-8 h-8 cursor-pointer"
+          onClick={onClose}
+        />
+        {/*  not sure */}
       </div>
       <div className="flex justify-center">
         <div className="selection-text columns-2 bg-finnieBlue-light-tertiary w-[360px] rounded py-4 px-[30px] select-text">

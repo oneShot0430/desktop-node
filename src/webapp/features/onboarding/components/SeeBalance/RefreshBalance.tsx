@@ -1,3 +1,4 @@
+import { Icon } from '@_koii/koii-styleguide';
 import React, { useCallback, useMemo } from 'react';
 import { useQuery } from 'react-query';
 
@@ -47,7 +48,7 @@ export const RefreshBalance = ({ onBalanceRefresh }: PropsType) => {
         onClick={handleRefetch}
       >
         <div className="flex flex-col items-center justify-center w-full h-full rounded-full bg-finnieBlue-light-secondary">
-          <ReloadSvg />
+          <Icon source={ReloadSvg} className="h-24 w-24" />
         </div>
       </div>
       <div className="mb-2">Refresh Balance</div>

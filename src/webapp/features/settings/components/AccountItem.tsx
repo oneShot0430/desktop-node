@@ -2,11 +2,11 @@ import {
   FavoriteStarFill,
   FavoriteStarLine,
   CopyLine,
+  DeleteTrashXlLine,
   Icon,
 } from '@_koii/koii-styleguide';
 import React, { memo, useState } from 'react';
 
-import DeleteIconSvg from 'assets/svgs/delete-icon.svg';
 import DotsSvg from 'assets/svgs/dots.svg';
 import {
   LoadingSpinner,
@@ -160,8 +160,13 @@ const AccountItem = ({
                 <Button
                   disabled={isDeleting}
                   onClick={handleDeleteAccount}
-                  icon={<Icon source={DeleteIconSvg} />}
-                  className="w-6 h-6 rounded-full bg-finnieRed mr-0"
+                  icon={
+                    <Icon
+                      source={DeleteTrashXlLine}
+                      className="w-5 h-5 text-black"
+                    /> // not sure
+                  }
+                  className="w-6.5 h-6.5 rounded-full bg-finnieRed mr-0"
                 />
               </Tooltip>
             ))}

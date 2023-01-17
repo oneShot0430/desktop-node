@@ -9,8 +9,8 @@ import React, { useState } from 'react';
 import { useQueryClient, useMutation } from 'react-query';
 
 import loadingDotsAnimation from 'assets/animations/loading-dots.json';
-import CheckMarkIcon from 'assets/svgs/checkmark-icon-no-borders.svg';
-import CloseIcon from 'assets/svgs/close-icons/close-icon-no-borders.svg';
+import NoBordersCheckMarkIcon from 'assets/svgs/checkmark-icon-no-borders.svg';
+import NoBordersCloseIcon from 'assets/svgs/close-icons/close-icon-no-borders.svg';
 import ShareIcon from 'assets/svgs/share-icon.svg';
 import { ErrorType } from 'models';
 import { GetTaskNodeInfoResponse } from 'models/api';
@@ -90,7 +90,7 @@ export const ClaimRewards = ({ value, displayConfetti }: PropsType) => {
               tooltipContent="Go back. Your rewards will not be transferred."
             >
               <Icon
-                source={CloseIcon}
+                source={NoBordersCloseIcon}
                 className={`${buttonsBaseClasses} bg-finnieRed hover:bg-finnieRed-500`}
                 onClick={handleGoBack}
               />
@@ -100,7 +100,7 @@ export const ClaimRewards = ({ value, displayConfetti }: PropsType) => {
               tooltipContent="Confirm. Rewards will transfer to your account."
             >
               <Icon
-                source={CheckMarkIcon}
+                source={NoBordersCheckMarkIcon}
                 className={`${buttonsBaseClasses} bg-finnieEmerald-light hover:bg-finnieEmerald`}
                 onClick={() => claimPendingRewards()}
               />
@@ -127,7 +127,7 @@ export const ClaimRewards = ({ value, displayConfetti }: PropsType) => {
           tooltipContent="Run a few Tasks to earn rewards. Rewards are paid out after a Task is complete."
         >
           <div className="w-full ml-1 -mb-1 flex text-white items-center text-sm">
-            Add a Task to Earn <Icon className="w-8 h-8" source={ShareIcon} />
+            Add a Task to Earn <Icon source={ShareIcon} className="w-8 h-8" />
           </div>
         </Tooltip>
       )}

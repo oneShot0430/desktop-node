@@ -1,10 +1,13 @@
+import {
+  Icon,
+  CloseLine,
+  FlagReportLine,
+  ExportGoToLine1,
+} from '@_koii/koii-styleguide';
 import { create, useModal } from '@ebay/nice-modal-react';
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 
-import ExternalSourceIconSvg from 'assets/svgs/external-source-icon-white.svg';
-import FlagIconTealSvg from 'assets/svgs/flag-teal-icon.svg';
-import CloseIcon from 'svgs/close-icons/close-icon-white.svg';
 import { SourceCode } from 'webapp/components/SourceCode';
 import { useTaskStake } from 'webapp/features/common';
 import { useEarnedReward } from 'webapp/features/common/hooks/useEarnedReward';
@@ -43,10 +46,6 @@ export const TaskDetailsModal = create<TaskDetailsModalPropsType>(
     const topStake = TaskService.getTopStake(task);
     const state = TaskStatusToLabeMap[TaskService.getStatus(task)];
 
-    // const handleWithdraw = () => {
-    //   console.log('Wthdraw action');
-    // };
-
     const handleClose = () => {
       modal.remove();
     };
@@ -79,18 +78,19 @@ export const TaskDetailsModal = create<TaskDetailsModalPropsType>(
                 {/*  Source Code*/}
                 {/*</div>*/}
               </div>
-
-              <CloseIcon
-                data-testid="close-modal-button"
+              <Icon
+                source={CloseLine}
+                className="w-8 h-8 cursor-pointer"
                 onClick={handleClose}
-                className="w-[24px] h-[24px] cursor-pointer"
               />
+              {/*  not sure */}
             </div>
 
-            <div className="flex items-center mb-5 w-[100%]">
-              <div className="cursor-pointer">
-                <FlagIconTealSvg />
-              </div>
+            <div className="flex items-center mb-5 w-full">
+              <Icon
+                source={FlagReportLine}
+                className="w-3 h-5 text-[#ECFFFE]"
+              />
               <div className="pl-[14px] pr-[14px]">
                 Inspect{' '}
                 <span className="text-finnieEmerald-light">
@@ -106,7 +106,10 @@ export const TaskDetailsModal = create<TaskDetailsModalPropsType>(
                   href={`https://viewblock.io/arweave/tx/${task.taskAuditProgram}`}
                   rel="noreferrer"
                 >
-                  <ExternalSourceIconSvg />
+                  <Icon
+                    source={ExportGoToLine1}
+                    className="w-4 h-4 cursor-pointer mb-1"
+                  />
                 </a>
               )}
             </div>
