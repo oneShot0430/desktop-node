@@ -1,6 +1,5 @@
+import { LockLine, Icon } from '@_koii/koii-styleguide';
 import React, { useState } from 'react';
-
-import LockIconSvg from 'assets/svgs/onboarding/lock-icon-lg.svg';
 
 type PropsType = {
   seedPhrase: string;
@@ -28,7 +27,7 @@ export const ShowSeedPhrase = ({
           }}
         >
           <div className="flex flex-col items-center justify-center w-full h-full">
-            <LockIconSvg />
+            <Icon source={LockLine} className="h-16 w-16 mb-4" />
             <p> Tap to unlock</p>
           </div>
         </div>

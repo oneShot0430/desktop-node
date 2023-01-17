@@ -1,8 +1,7 @@
+import { Icon, AddFill, CurrencyMoneyLine } from '@_koii/koii-styleguide';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import AddIconSvg from 'assets/svgs/onboarding/add-teal-icon.svg';
-import CurrencySvgIcon from 'assets/svgs/onboarding/currency-teal-small-icon.svg';
 import RestoreIconSvg from 'assets/svgs/onboarding/restore-orange-icon.svg';
 import BgShape from 'assets/svgs/onboarding/shape_1.svg';
 import { getKoiiFromRoe } from 'utils';
@@ -74,13 +73,13 @@ const RunFirstTask = () => {
           <Button
             label="Customize my tasks"
             className="bg-transparent text-finnieEmerald-light w-fit"
-            icon={<AddIconSvg />}
+            icon={<Icon source={AddFill} />}
             onClick={handleCustomizeTasks}
           />
           <Button
             label="Restore Original"
             className="bg-transparent text-finnieOrange"
-            icon={<RestoreIconSvg />}
+            icon={<Icon source={RestoreIconSvg} />}
             onClick={handleRestoreTasks}
           />
         </div>
@@ -92,7 +91,7 @@ const RunFirstTask = () => {
             onClick={handleContinue}
           />
           <div className="flex flex-row items-center gap-2 mt-2 text-sm text-finnieEmerald-light">
-            <CurrencySvgIcon className="h-6" />
+            <Icon source={CurrencyMoneyLine} />
             {`Total staked: ${totalStakedInKoii} KOII`}
           </div>
         </div>

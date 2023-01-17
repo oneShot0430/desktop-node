@@ -1,5 +1,5 @@
 import {
-  CloseXLine,
+  CloseLine,
   Icon,
   SettingsFill,
   PlayFill,
@@ -138,7 +138,7 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
     return isTaskValidToRun ? (
       <PlayIcon />
     ) : (
-      <Icon source={PlayFill} size={48} color={'#D6D6D6'} />
+      <Icon source={PlayFill} size={32} color={'#D6D6D6'} />
     );
   }, [isRunning, isTaskValidToRun]);
 
@@ -165,8 +165,8 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
             <Button
               icon={
                 <Icon
-                  source={showInfo ? CloseXLine : WarningCircleLine}
-                  size={48}
+                  source={showInfo ? CloseLine : WarningCircleLine}
+                  size={36}
                 />
               }
               onlyIcon
@@ -218,7 +218,7 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
             <div className="flex flex-col items-center justify-start w-[40px]">
               <Button
                 onClick={handleToggleSettings}
-                icon={<Icon source={SettingsFill} size={48} color="#FFC78F" />}
+                icon={<Icon source={SettingsFill} size={36} color="#FFC78F" />}
                 onlyIcon
               />
             </div>

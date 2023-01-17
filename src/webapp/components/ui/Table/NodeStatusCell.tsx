@@ -1,23 +1,29 @@
+import {
+  WaitingPendingLine,
+  ProgressLine,
+  CheckSuccessLine,
+  Icon,
+} from '@_koii/koii-styleguide';
 import React from 'react';
 
-import StatusAcceptingSubmissionIcon from 'assets/svgs/status-accepting-icon.svg';
-import StatusCompletedIcon from 'assets/svgs/status-completed-icon.svg';
-import StatusVotingIcon from 'assets/svgs/status-voting-icon.svg';
 import { Tooltip } from 'webapp/components';
 import { Placement } from 'webapp/components/ui/Tooltip';
 import { TaskStatus } from 'webapp/types';
 
 const statuses = {
   [TaskStatus.ACCEPTING_SUBMISSIONS]: {
-    component: StatusAcceptingSubmissionIcon,
+    icon: WaitingPendingLine,
+    iconColor: 'text-finnieRed',
     title: 'Accepting Submissions',
   },
   [TaskStatus.COMPLETED]: {
-    component: StatusCompletedIcon,
+    icon: CheckSuccessLine,
+    iconColor: 'text-finnieTeal-100',
     title: 'Completed',
   },
   [TaskStatus.VOTING]: {
-    component: StatusVotingIcon,
+    icon: ProgressLine,
+    iconColor: 'text-finnieOrange',
     title: 'Voting',
   },
 };
@@ -28,14 +34,14 @@ type PropsType = {
 };
 
 export const NodeStatusCell = ({ status, isFirstRowInTable }: PropsType) => {
-  const { component: StatusComponent, title } = statuses[status];
+  const { icon: StatusIcon, title, iconColor } = statuses[status];
   const tooltipPlacement: Placement = `${
     isFirstRowInTable ? 'bottom' : 'top'
   }-left`;
 
   return (
     <Tooltip tooltipContent={`Status: ${title}`} placement={tooltipPlacement}>
-      <StatusComponent />
+      <Icon source={StatusIcon} className={`h-8 w-8 mb-2 ${iconColor}`} />
     </Tooltip>
   );
 };

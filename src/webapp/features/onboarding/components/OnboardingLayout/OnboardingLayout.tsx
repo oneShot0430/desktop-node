@@ -1,12 +1,15 @@
+import {
+  Icon,
+  CurrencyMoneyLine,
+  ClickXlLine,
+  WebCursorXlLine,
+  LockLine,
+  ChevronArrowLine,
+} from '@_koii/koii-styleguide';
 import React, { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import BackIconComponent from 'assets/svgs/back-icon.svg';
 import KoiiLogo from 'assets/svgs/koii-logo-white.svg';
-import ClickIconSvg from 'assets/svgs/onboarding/click-icon.svg';
-import CreateIconSvg from 'assets/svgs/onboarding/create-icon.svg';
-import CurrencyIconSvg from 'assets/svgs/onboarding/currency-icon.svg';
-import LockIconSvg from 'assets/svgs/onboarding/lock-icon.svg';
 import { Button } from 'webapp/components/ui/Button';
 import { useUserAppConfig } from 'webapp/features/settings';
 import { AppRoute } from 'webapp/types/routes';
@@ -45,14 +48,14 @@ const OnboardingLayout = ({ children }: PropsType) => {
     <div className="flex flex-row h-full text-white">
       <div className="w-[650px] bg-finnieBlue-light-secondary items-center flex flex-col relative">
         {showOnboardingBackButton && (
-          <BackIconComponent
-            data-testid="close-modal-button"
+          <Icon
+            source={ChevronArrowLine}
+            className="w-9 h-9 cursor-pointer -rotate-90 absolute top-5 left-5"
             onClick={handleBackButtonClick}
-            className="w-9 h-9 cursor-pointer absolute top-[20px] left-[20px]"
           />
         )}
         <div className="flex flex-col items-center justify-center mb-14">
-          <KoiiLogo />
+          <Icon source={KoiiLogo} className="h-[156px] w-[156px]" />
           <div className="text-[40px] w-[75%] text-center">
             Welcome to the Koii Node
           </div>
@@ -65,22 +68,24 @@ const OnboardingLayout = ({ children }: PropsType) => {
           <StepListItem
             isActive={currentPath === AppRoute.OnboardingCreatePin}
             text="Secure your Node with a PIN."
-            iconSlot={<LockIconSvg />}
+            iconSlot={<Icon source={LockLine} className="h-9 w-9 m-1" />}
           />
           <StepListItem
             isActive={currentPath.includes('create-or-import-key')}
             text="Fund your new key or import one."
-            iconSlot={<CurrencyIconSvg />}
+            iconSlot={
+              <Icon source={CurrencyMoneyLine} className="h-9 w-9 m-1" />
+            }
           />
           <StepListItem
             isActive={currentPath === AppRoute.OnboardingCreateFirstTask}
             text="Select your first tasks."
-            iconSlot={<CreateIconSvg />}
+            iconSlot={<Icon source={WebCursorXlLine} className="h-9 w-9 m-1" />}
           />
           <StepListItem
             isActive={currentPath === AppRoute.OnboardingConfirmStake}
             text="Confirm your stake and go!"
-            iconSlot={<ClickIconSvg />}
+            iconSlot={<Icon source={ClickXlLine} className="h-9 w-9 m-1" />}
           />
           <div className="absolute bottom-2 left-2">
             {displaySkipButton && (

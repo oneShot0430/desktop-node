@@ -1,11 +1,16 @@
-import { Button, ButtonVariant, ButtonSize } from '@_koii/koii-styleguide';
+import {
+  Button,
+  ButtonVariant,
+  ButtonSize,
+  Icon,
+} from '@_koii/koii-styleguide';
 import Lottie from 'lottie-react';
 import React, { useState } from 'react';
 import { useQueryClient, useMutation } from 'react-query';
 
 import loadingDotsAnimation from 'assets/animations/loading-dots.json';
-import CheckMarkIcon from 'assets/svgs/checkmark-icon-no-borders.svg';
-import CloseIcon from 'assets/svgs/close-icons/close-icon-no-borders.svg';
+import NoBordersCheckMarkIcon from 'assets/svgs/checkmark-icon-no-borders.svg';
+import NoBordersCloseIcon from 'assets/svgs/close-icons/close-icon-no-borders.svg';
 import ShareIcon from 'assets/svgs/share-icon.svg';
 import { ErrorType } from 'models';
 import { GetTaskNodeInfoResponse } from 'models/api';
@@ -84,7 +89,8 @@ export const ClaimRewards = ({ value, displayConfetti }: PropsType) => {
               theme={Theme.Light}
               tooltipContent="Go back. Your rewards will not be transferred."
             >
-              <CloseIcon
+              <Icon
+                source={NoBordersCloseIcon}
                 className={`${buttonsBaseClasses} bg-finnieRed hover:bg-finnieRed-500`}
                 onClick={handleGoBack}
               />
@@ -93,8 +99,9 @@ export const ClaimRewards = ({ value, displayConfetti }: PropsType) => {
               theme={Theme.Light}
               tooltipContent="Confirm. Rewards will transfer to your account."
             >
-              <CheckMarkIcon
-                className={`${buttonsBaseClasses} bg-finnieEmerald-light hover:bg-finnieEmerald `}
+              <Icon
+                source={NoBordersCheckMarkIcon}
+                className={`${buttonsBaseClasses} bg-finnieEmerald-light hover:bg-finnieEmerald`}
                 onClick={() => claimPendingRewards()}
               />
             </Tooltip>
@@ -120,7 +127,7 @@ export const ClaimRewards = ({ value, displayConfetti }: PropsType) => {
           tooltipContent="Run a few Tasks to earn rewards. Rewards are paid out after a Task is complete."
         >
           <div className="w-full ml-1 -mb-1 flex text-white items-center text-sm">
-            Add a Task to Earn <ShareIcon className="w-8 h-8" />
+            Add a Task to Earn <Icon source={ShareIcon} className="w-8 h-8" />
           </div>
         </Tooltip>
       )}

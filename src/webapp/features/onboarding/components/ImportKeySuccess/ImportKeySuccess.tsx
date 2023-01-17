@@ -1,7 +1,7 @@
+import { Icon, CheckSuccessLine } from '@_koii/koii-styleguide';
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import CheckMarkIcon from 'assets/svgs/checkmark-icon.svg';
 import { Button } from 'webapp/components/ui/Button';
 import { AppRoute } from 'webapp/types/routes';
 
@@ -23,7 +23,7 @@ const ImportKeySuccess = () => {
         <div className="w-[348px] h-[172px] bg-finnieBlue-light-secondary rounded-sm mb-10 p-4">
           <div className="flex flex-row items-center">
             <div className="text-finnieEmerald">
-              <CheckMarkIcon />
+              <Icon source={CheckSuccessLine} className="h-16 w-16 m-3" />
             </div>
             Your account was successfully imported!
           </div>

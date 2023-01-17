@@ -2,7 +2,7 @@ import { randomUUID } from 'crypto';
 import { Event } from 'electron';
 
 import { namespaceInstance } from 'main/node/helpers/Namespace';
-import { ErrorType, TaskVariableData, TaskVariables } from 'models';
+import { ErrorType, StoreTaskVariableParamsType, TaskVariables } from 'models';
 import { throwDetailedError } from 'utils';
 
 import { PersistentStoreKeys } from '../types';
@@ -11,7 +11,7 @@ import { getStoredTaskVariables } from './getStoredTaskVariables';
 
 export const storeTaskVariable = async (
   _event: Event,
-  payload: TaskVariableData
+  payload: StoreTaskVariableParamsType
 ): Promise<void> => {
   const taskVariables = await getStoredTaskVariables();
   // throw error if payload is not valid
@@ -40,10 +40,10 @@ export const storeTaskVariable = async (
     [id]: payload,
   };
 
-  const strigifiedTaskVariableValue = JSON.stringify(newTaskVariables);
+  const stringifiedTaskVariableValue = JSON.stringify(newTaskVariables);
 
   await namespaceInstance.storeSet(
     PersistentStoreKeys.TaskVariables,
-    strigifiedTaskVariableValue
+    stringifiedTaskVariableValue
   );
 };

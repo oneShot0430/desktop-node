@@ -201,6 +201,20 @@ export const getTaskVariablesNames = async (taskPublicKey: string) => {
   return await window.main.getTaskVariablesNames({ taskPublicKey });
 };
 
+export const editTaskVariable = async (
+  id: string,
+  { label, value }: TaskVariableData
+) => {
+  await window.main.editTaskVariable({
+    variableId: id,
+    variableData: { label, value },
+  });
+};
+
+export const deleteTaskVariable = async (id: string) => {
+  await window.main.deleteTaskVariable(id);
+};
+
 export const claimRewards = async () => {
   const getPendingRewardsByTask = (task: Task) =>
     sum(Object.values(task.availableBalances));

@@ -1,9 +1,6 @@
+import { Icon, ChevronArrowLine, CloseLine } from '@_koii/koii-styleguide';
 import React, { memo } from 'react';
 import { twMerge } from 'tailwind-merge';
-
-import BackIconBlue from 'svgs/back-icon.svg';
-import CloseIconBlue from 'svgs/close-icons/close-icon-blue.svg';
-import CloseIconWhite from 'svgs/close-icons/close-icon-white.svg';
 
 type PropsType = Readonly<{
   title: React.ReactNode;
@@ -15,20 +12,6 @@ type PropsType = Readonly<{
   wrapperClasses?: string;
 }>;
 
-const getCloseIcon = (theme: 'dark' | 'light') => {
-  return {
-    dark: CloseIconWhite,
-    light: CloseIconBlue,
-  }[theme];
-};
-
-const getBackIcon = (theme: 'dark' | 'light') => {
-  return {
-    dark: BackIconBlue,
-    light: BackIconBlue,
-  }[theme];
-};
-
 const ModalTopBar = ({
   title,
   onClose,
@@ -38,9 +21,6 @@ const ModalTopBar = ({
   titleClasses = '',
   wrapperClasses = '',
 }: PropsType) => {
-  const BackIconComponent = getBackIcon(theme);
-  const CloseIconComponent = getCloseIcon(theme);
-
   const topBarMergedClasses = twMerge(
     'flex justify-between items-center h-[67px] px-4',
     wrapperClasses
@@ -52,25 +32,28 @@ const ModalTopBar = ({
     titleClasses
   );
 
+  const iconMergedClasses = twMerge(
+    'w-9 h-9 cursor-pointer',
+    theme === 'dark' ? 'text-white' : 'text-finnieBlue'
+  );
+
   return (
     <div className={topBarMergedClasses}>
       <div className="w-9 h-9">
         {showBackButton && onBackClick && (
-          <BackIconComponent
-            data-testid="close-modal-button"
+          <Icon
+            source={ChevronArrowLine}
+            className={`${iconMergedClasses} -rotate-90`}
             onClick={onBackClick}
-            className="cursor-pointer w-9 h-9"
           />
         )}
       </div>
       <div className={titleMergedClasses}>{title}</div>
-      <div className="w-9 h-9">
-        <CloseIconComponent
-          data-testid="close-modal-button"
-          onClick={onClose}
-          className="cursor-pointer w-9 h-9"
-        />
-      </div>
+      <Icon
+        source={CloseLine}
+        className={iconMergedClasses}
+        onClick={onClose}
+      />
     </div>
   );
 };

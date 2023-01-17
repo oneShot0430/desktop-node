@@ -10,10 +10,11 @@ export const getStoredTaskVariables =
     );
 
     try {
-      const parsedData = JSON.parse(taskVariables) as TaskVariablesReturnType;
+      const parsedData: TaskVariablesReturnType = JSON.parse(taskVariables);
 
       return parsedData || {};
     } catch (error) {
+      console.log('Get Stored Task Variables: JSON parse error', error);
       return {};
     }
   };

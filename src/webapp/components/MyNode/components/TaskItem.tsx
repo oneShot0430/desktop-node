@@ -1,11 +1,14 @@
+import {
+  PauseFill,
+  PlayFill,
+  HistoryClockLine,
+  EmbedCodeFill,
+  CurrencyMoneyLine,
+  Icon,
+} from '@_koii/koii-styleguide';
 import React, { useMemo, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
-import ActionHistoryIcon from 'assets/svgs/action-history-icon.svg';
-import AddWithdrawIcon from 'assets/svgs/add-withdraw-icon.svg';
-import CodeIcon from 'assets/svgs/code-icon.svg';
-import PauseIcon from 'assets/svgs/pause-icon.svg';
-import PlayIcon from 'assets/svgs/play-icon.svg';
 import { getKoiiFromRoe } from 'utils';
 import {
   Button,
@@ -88,8 +91,16 @@ export const TaskItem = ({
           >
             <Button
               onlyIcon
-              icon={isRunning ? <PauseIcon /> : <PlayIcon />}
+              icon={
+                <Icon
+                  source={isRunning ? PauseFill : PlayFill}
+                  className="text-black h-[15px] w-[15px]"
+                />
+              }
               onClick={handleToggleTask}
+              className={`${
+                isRunning ? 'bg-finnieRed' : 'bg-finnieTeal'
+              } rounded-full w-8 h-8 mb-2`}
             />
           </Tooltip>
         )}
@@ -98,9 +109,10 @@ export const TaskItem = ({
         placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
         tooltipContent="Inspect task details"
       >
-        <CodeIcon
+        <Icon
+          source={EmbedCodeFill}
           onClick={showTaskDetailsModal}
-          className="cursor-pointer ml-2.5 -mr-1.5"
+          className="cursor-pointer h-6 w-6 ml-2.5 -mr-1.5 text-finnieTeal-100"
         />
       </Tooltip>
       <div className="text-xs flex flex-col gap-1">
@@ -126,7 +138,10 @@ export const TaskItem = ({
           <Button
             onClick={showEditStakeAmountModal}
             onlyIcon
-            icon={<AddWithdrawIcon />}
+            icon={
+              <Icon source={CurrencyMoneyLine} className="text-black h-8 w-8" />
+            }
+            className="bg-finnieTeal-100 py-0.75 pl-1 !pr-[0.5px] rounded-full mb-2"
           />
         </Tooltip>
         <Tooltip
@@ -136,7 +151,12 @@ export const TaskItem = ({
           <Button
             onClick={handleOutputLogsToConsole}
             onlyIcon
-            icon={<ActionHistoryIcon />}
+            icon={
+              <Icon
+                source={HistoryClockLine}
+                className="text-finnieTeal-100 h-9 w-9 mb-2"
+              />
+            }
           />
         </Tooltip>
       </div>

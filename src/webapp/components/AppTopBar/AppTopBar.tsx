@@ -4,7 +4,7 @@ import {
   useNotificationsContext,
   NotificationBanner,
   AppNotification,
-} from 'features/notifications';
+} from 'webapp/features/notifications';
 
 import { BackButton } from '../BackButton';
 

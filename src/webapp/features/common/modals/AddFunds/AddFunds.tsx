@@ -1,12 +1,15 @@
+import {
+  Icon,
+  CurrencyMoneyLine,
+  CloseLine,
+  ChevronArrowLine,
+} from '@_koii/koii-styleguide';
 import { create, useModal } from '@ebay/nice-modal-react';
 import QRCode from 'qrcode.react';
 import React from 'react';
 import { useQuery } from 'react-query';
 
-import CurrencyIconSvg from 'assets/svgs/onboarding/currency-icon.svg';
 import config from 'config';
-import BackIcon from 'svgs/back-icon.svg';
-import CloseIconComponent from 'svgs/close-icons/close-icon-blue.svg';
 import { Button } from 'webapp/components';
 import { useClipboard } from 'webapp/features/common';
 import { Modal, ModalContent } from 'webapp/features/modals';
@@ -49,6 +52,9 @@ export const AddFunds = create(function AddFunds({ onGoBack }: PropsType) {
     : methodsClaimed > 0
     ? 'Return to the Faucet to get the rest of your free KOII.'
     : 'Go to the Faucet for some free KOII to get started.';
+  const headerClasses = `w-full flex ${
+    onGoBack ? 'justify-between' : 'justify-end'
+  } py-2 px-4`;
 
   const closeModal = () => {
     modal.resolve();
@@ -73,25 +79,19 @@ export const AddFunds = create(function AddFunds({ onGoBack }: PropsType) {
 
   return (
     <Modal>
-      <ModalContent className="w-[416px] h-[416px] text-finnieBlue rounded-xl pt-2">
-        <div
-          className={`w-full flex ${
-            onGoBack ? 'justify-between' : 'justify-end'
-          } p-2`}
-        >
+      <ModalContent className="w-[416px] h-[430px] text-finnieBlue rounded-xl pt-2">
+        <div className={headerClasses}>
           {onGoBack && (
-            <BackIcon
+            <Icon
+              source={ChevronArrowLine}
+              className="w-6 h-6 cursor-pointer -rotate-90 z-20 mr-auto"
               onClick={closeAndGoBack}
-              className="w-[18px] h-[18px] cursor-pointer z-20"
             />
           )}
-          <CloseIconComponent
-            data-testid="close-modal-button"
-            onClick={() => {
-              modal.resolve();
-              modal.remove();
-            }}
-            className="w-[18px] h-[18px] cursor-pointer z-20"
+          <Icon
+            source={CloseLine}
+            className="w-6 h-6 cursor-pointer z-20"
+            onClick={modal.remove}
           />
         </div>
 
@@ -104,9 +104,9 @@ export const AddFunds = create(function AddFunds({ onGoBack }: PropsType) {
             <>
               <Button
                 onClick={openFaucetAndClose}
-                label={'Get My Free Tokens'}
+                label="Get My Free Tokens"
                 className="text-white bg-purple-4 w-[276px] h-[52px] mb-14 rounded-md"
-                icon={<CurrencyIconSvg className="scale-50 mb-0.5" />}
+                icon={<Icon source={CurrencyMoneyLine} className="mb-0.5" />}
               />
 
               <div className="mb-3">Or send KOII directly to this account.</div>
@@ -122,7 +122,7 @@ export const AddFunds = create(function AddFunds({ onGoBack }: PropsType) {
           <Button
             onClick={copyToClipboardAndClose}
             label="copy"
-            className="w-[72px] h-[24px] rounded-xl text-xs border border-finnieBlue bg-transparent text-finnieBlue-dark"
+            className="w-[72px] h-6 rounded-xl text-xs border border-finnieBlue bg-transparent text-finnieBlue-dark"
           />
         </div>
       </ModalContent>

@@ -1,7 +1,7 @@
+import { WarningCircleLine, Icon } from '@_koii/koii-styleguide';
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import WarningIcon from 'assets/svgs/onboarding/warning-icon.svg';
 import { ShowSeedPhrase } from 'webapp/components/ShowSeedPhrase';
 import { Button } from 'webapp/components/ui/Button';
 import { AppRoute } from 'webapp/types/routes';
@@ -53,7 +53,7 @@ export const BackupKeyNow = () => {
         </div>
 
         <div className="flex flex-row items-center w-full gap-4 mb-4 text-sm text-finnieOrange">
-          <WarningIcon />
+          <Icon source={WarningCircleLine} className="h-9 w-9 m-2" />
           <div className="text-sm leading-6">
             <p>Write down your secret phrase on a piece of</p>
             <p>paper and put it in a safe location.</p>

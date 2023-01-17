@@ -1,7 +1,7 @@
+import { CheckSuccessLine, Icon } from '@_koii/koii-styleguide';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import CheckMarkIcon from 'assets/svgs/checkmark-icon.svg';
 import { Button } from 'webapp/components/ui/Button';
 import { useFundNewAccountModal } from 'webapp/features/common';
 import { AppRoute } from 'webapp/types/routes';
@@ -21,7 +21,10 @@ const CreateNewKey = () => {
   return (
     <ContentRightWrapper>
       <div className="flex items-center justify-start w-full gap-4 text-2xl ml-[-28px] mb-4 font-semibold">
-        <CheckMarkIcon className="text-finnieEmerald-light" />
+        <Icon
+          source={CheckSuccessLine}
+          className="text-finnieEmerald-light h-16 w-16 m-2"
+        />
         New Account Created
       </div>
 

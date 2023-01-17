@@ -2,6 +2,8 @@ import { ipcMain } from 'electron';
 
 import config from 'config';
 
+import mainErrorHandler from '../utils/mainErrorHandler';
+
 import * as controllers from './controllers';
 import errorHandler from './errorHandler';
 
@@ -68,17 +70,34 @@ const initHandlers = (): void => {
     controllers.getTaskNodeInfo
   );
   ipcMain.handle(config.endpoints.WITHDRAW_STAKE, controllers.withdrawStake);
+
   ipcMain.handle(
     config.endpoints.GET_TASK_VARIABLES_NAMES,
-    controllers.getTaskVariablesNames
+    mainErrorHandler(controllers.getTaskVariablesNames)
   );
   ipcMain.handle(
     config.endpoints.GET_STORED_TASK_VARIABLES,
-    controllers.getStoredTaskVariables
+    mainErrorHandler(controllers.getStoredTaskVariables)
   );
   ipcMain.handle(
     config.endpoints.STORE_TASK_VARIABLE,
-    controllers.storeTaskVariable
+    mainErrorHandler(controllers.storeTaskVariable)
+  );
+  ipcMain.handle(
+    config.endpoints.DELETE_TASK_VARIABLE,
+    mainErrorHandler(controllers.deleteTaskVariable)
+  );
+  ipcMain.handle(
+    config.endpoints.EDIT_TASK_VARIABLE,
+    mainErrorHandler(controllers.editTaskVariable)
+  );
+  ipcMain.handle(
+    config.endpoints.PAIR_TASK_VARIABLE,
+    mainErrorHandler(controllers.pairTaskVariable)
+  );
+  ipcMain.handle(
+    config.endpoints.UNPAIR_TASK_VARIABLE,
+    mainErrorHandler(controllers.unpairTaskVariable)
   );
 };
 

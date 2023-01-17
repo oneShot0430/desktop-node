@@ -1,10 +1,13 @@
+import {
+  FavoriteStarFill,
+  FavoriteStarLine,
+  CopyLine,
+  DeleteTrashXlLine,
+  Icon,
+} from '@_koii/koii-styleguide';
 import React, { memo, useState } from 'react';
 
-import CopyIconSvg from 'assets/svgs/copy-icon.svg';
-import DeleteIconSvg from 'assets/svgs/delete-icon.svg';
 import DotsSvg from 'assets/svgs/dots.svg';
-import StarOutlined from 'assets/svgs/star-outlined.svg';
-import Star from 'assets/svgs/star.svg';
 import {
   LoadingSpinner,
   LoadingSpinnerSize,
@@ -55,7 +58,6 @@ const AccountItem = ({
     setAccountActiveLoading,
     removingAccountError,
     setAccountActiveError,
-    // removingAccountLoading,
   } = useAccount({ accountName, isDefault });
 
   const { showModal } = useConfirmModal({
@@ -95,6 +97,7 @@ const AccountItem = ({
   const rowClasses = `rounded ${
     isDefault ? 'bg-finnieTeal-100/[.3]' : 'bg-finnieTeal-100'
   } bg-opacity-5 grid grid-cols-accounts gap-y-6 gap-x-2 !py-4 border-none`;
+  const StarIcon = isDefault ? FavoriteStarFill : FavoriteStarLine;
 
   return (
     <div className="w-full mb-4 pr-2 text-white">
@@ -111,7 +114,12 @@ const AccountItem = ({
           <Tooltip tooltipContent="Select as active account">
             <Button
               onClick={setAccountActive}
-              icon={isDefault ? <Star /> : <StarOutlined />}
+              icon={
+                <Icon
+                  source={StarIcon}
+                  className="text-finnieTeal-100 h-5 w-5"
+                />
+              }
               className="w-6 h-6 bg-transparent rounded-full"
             />
           </Tooltip>
@@ -131,8 +139,8 @@ const AccountItem = ({
           >
             <Button
               onClick={handleCopyMainPublicKey}
-              icon={<CopyIconSvg />}
-              className="rounded-full w-6 h-6 bg-finnieTeal-100"
+              icon={<Icon source={CopyLine} className="text-black h-4 w-4" />}
+              className="rounded-full w-6.5 h-6.5 bg-finnieTeal-100"
             />
           </Tooltip>
           {/* <Button
@@ -152,8 +160,13 @@ const AccountItem = ({
                 <Button
                   disabled={isDeleting}
                   onClick={handleDeleteAccount}
-                  icon={<DeleteIconSvg />}
-                  className="w-6 h-6 rounded-full bg-finnieRed mr-0"
+                  icon={
+                    <Icon
+                      source={DeleteTrashXlLine}
+                      className="w-5 h-5 text-black"
+                    /> // not sure
+                  }
+                  className="w-6.5 h-6.5 rounded-full bg-finnieRed mr-0"
                 />
               </Tooltip>
             ))}
@@ -175,8 +188,8 @@ const AccountItem = ({
           >
             <Button
               onClick={handleCopyStakingPublicKey}
-              icon={<CopyIconSvg />}
-              className="rounded-full w-6 h-6 bg-finnieTeal-100"
+              icon={<Icon source={CopyLine} className="text-black h-4 w-4" />}
+              className="rounded-full w-6.5 h-6.5 bg-finnieTeal-100"
             />
           </Tooltip>
           {/* <Button
