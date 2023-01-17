@@ -7,7 +7,7 @@ import { useStoredTaskVariables } from '../hooks';
 type PropsType = {
   tool: string;
   getSecretLink?: string;
-  onSecretSelected?: (item: DropdownItem) => void;
+  onSecretSelected?: (tool: string, desktopVariableId: string) => void;
 };
 
 export const NodeTool = ({
@@ -20,7 +20,7 @@ export const NodeTool = ({
   const { data: taskVariables, isLoading } = storedTaskVariablesQuery;
 
   const handleSecretSelected = (item: DropdownItem) => {
-    onSecretSelected?.(item);
+    onSecretSelected?.(tool, item.id);
   };
 
   const transformedTaskVariables = useMemo(() => {

@@ -7,6 +7,7 @@ import {
   GetMyTasksParam,
   TaskVariableData,
   StoreUserConfigParam,
+  PairTaskVariableParamType,
 } from 'models/api';
 import sdk from 'services/sdk';
 import { getKoiiFromRoe } from 'utils';
@@ -208,6 +209,18 @@ export const editTaskVariable = async (
   await window.main.editTaskVariable({
     variableId: id,
     variableData: { label, value },
+  });
+};
+
+export const pairTaskVariable = async ({
+  taskAccountPubKey,
+  variableInTaskName,
+  desktopVariableId,
+}: PairTaskVariableParamType) => {
+  await window.main.pairTaskVariable({
+    taskAccountPubKey,
+    variableInTaskName,
+    desktopVariableId,
   });
 };
 
