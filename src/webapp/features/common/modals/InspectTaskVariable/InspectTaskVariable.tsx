@@ -70,8 +70,6 @@ export const InspectTaskVariable = create<Params>(function InspectTaskVariable({
           </div>
         </div>
 
-        <label className="mb-0.5 text-left">TASKS USING THIS TOOL</label>
-
         {tasksPairedWithVariable?.length > 0 && (
           <>
             <label className="mb-0.5 text-left">TASKS USING THIS TOOL</label>

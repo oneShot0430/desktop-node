@@ -44,25 +44,23 @@ export const deleteTaskVariable = async (
     variableId: idForDeletion,
   });
 
-  // unpair every task using variable for deletion, if any
-  if (tasksUsingVariable.length > 0) {
-    console.log(
-      `Unpairing Task Variable ID "${idForDeletion}" from following Tasks (id) ${map(
-        tasksUsingVariable,
-        'publicKey'
-      )}`
-    );
+  // unpair every task using variable for deletion
+  console.log(
+    `Unpairing Task Variable ID "${idForDeletion}" from following Tasks (id) ${map(
+      tasksUsingVariable,
+      'publicKey'
+    )}`
+  );
 
-    await Promise.all(
-      tasksUsingVariable.map(
-        async ({ publicKey }) =>
-          await unpairTaskVariable(null, {
-            taskAccountPubKey: publicKey,
-            desktopVariableId: idForDeletion,
-          })
-      )
-    );
-  }
+  await Promise.all(
+    tasksUsingVariable.map(
+      async ({ publicKey }) =>
+        await unpairTaskVariable(null, {
+          taskAccountPubKey: publicKey,
+          desktopVariableId: idForDeletion,
+        })
+    )
+  );
 
   console.log(`Deleting Task Variable with ID "${idForDeletion}"`);
 
