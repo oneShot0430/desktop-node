@@ -203,10 +203,7 @@ export const getTaskVariablesNames = async (taskPublicKey: string) => {
 };
 
 export const getStoredPairedTaskVariables = async () => {
-  const DATA = await window.main.getStoredPairedTaskVariables();
-  console.log('@@@GETTING STORED PAIRED TASK VARIABLES', DATA);
-  return DATA;
-  //return await window.main.getStoredPairedTaskVariables();
+  return await window.main.getStoredPairedTaskVariables();
 };
 
 export const editTaskVariable = async (
