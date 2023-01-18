@@ -8,6 +8,7 @@ import {
   TaskVariables,
   TaskVariableDataWithId,
 } from 'models/api';
+import { getTasksPairedWithVariable } from 'webapp/services';
 import { render } from 'webapp/tests/utils';
 
 import { TaskSettings } from './TaskSettings';
@@ -57,8 +58,11 @@ jest.mock('webapp/services', () => {
         });
       }
     ),
+    getTasksPairedWithVariable: jest.fn(),
   };
 });
+
+const getTasksPairedWithVariableMock = getTasksPairedWithVariable as jest.Mock;
 
 const inspectModalDescription =
   'This is placeholder for information about the tool, website, function, etc.';
@@ -71,10 +75,22 @@ const existingTaskVariablesData = [
   {
     label: 'my label',
     value: 'my key',
+    taskPaired: {
+      publicKey: '342dkttYwjx2dUPm3Hk2pxxPVhdWaYHVpg4bxEbvzxGr',
+      data: {
+        taskName: 'StoreCat Web Scraping',
+      },
+    },
   },
   {
     label: 'another label',
     value: 'another key',
+    taskPaired: {
+      publicKey: '442dkttYwjx2dUPm3Hk2pxxPVhdWaYHVpg4bxEbvzxGr',
+      data: {
+        taskName: 'DID-task-V2',
+      },
+    },
   },
 ];
 
@@ -85,7 +101,7 @@ const newTaskVariableData = {
 
 describe('TaskSettings', () => {
   describe('Inspect task variable', () => {
-    it('displays the right information for the selected variable', async () => {
+    it('displays the right information for each task variable', async () => {
       render(<TaskSettings />);
 
       for (const existingTaskVariableData of existingTaskVariablesData) {
@@ -108,6 +124,32 @@ describe('TaskSettings', () => {
 
         expect(label).toBeInTheDocument();
         expect(key).toBeInTheDocument();
+      }
+    });
+
+    it('displays the right paired tasks for a given variable', async () => {
+      render(<TaskSettings />);
+
+      for (const existingTaskVariableData of existingTaskVariablesData) {
+        getTasksPairedWithVariableMock.mockReturnValueOnce([
+          existingTaskVariableData.taskPaired,
+        ]);
+
+        const variableItem = await screen.findByText(
+          existingTaskVariableData.label
+        );
+        const inspectItemButton = within(
+          variableItem.parentElement
+        ).getByTestId(/inspect-task-variable/i);
+        await user.click(inspectItemButton);
+
+        const inspectModal = screen.getByText(inspectModalDescription)
+          .parentElement.parentElement;
+        const taskPairedWithVariable = within(inspectModal).getByText(
+          existingTaskVariableData.taskPaired.data.taskName
+        );
+
+        expect(taskPairedWithVariable).toBeInTheDocument();
       }
     });
   });
