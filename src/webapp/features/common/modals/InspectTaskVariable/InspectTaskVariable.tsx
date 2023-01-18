@@ -1,20 +1,22 @@
 import { Icon, CloseLine, BrowseInternetLine } from '@_koii/koii-styleguide';
 import { create, useModal } from '@ebay/nice-modal-react';
 import React from 'react';
+import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
-import { TaskVariableData } from 'models/api';
-import { Button } from 'webapp/components';
+import { TaskVariableDataWithId } from 'models/api';
+import { Button, LoadingSpinner } from 'webapp/components';
 import { Modal, ModalContent } from 'webapp/features/modals';
+import { getTasksPairedWithVariable, QueryKeys } from 'webapp/services';
 import { Theme } from 'webapp/types/common';
 import { AppRoute } from 'webapp/types/routes';
 
 interface Params {
-  taskVariable: TaskVariableData;
+  taskVariable: TaskVariableDataWithId;
 }
 
 export const InspectTaskVariable = create<Params>(function InspectTaskVariable({
-  taskVariable: { label, value },
+  taskVariable: { label, value, id },
 }) {
   const modal = useModal();
 
@@ -25,11 +27,18 @@ export const InspectTaskVariable = create<Params>(function InspectTaskVariable({
     navigate(AppRoute.MyNode);
   };
 
+  const {
+    data: tasksPairedWithVariable = [],
+    isLoading: isLoadingTasksPaired,
+  } = useQuery([QueryKeys.TasksPairedWithVariable, id], () =>
+    getTasksPairedWithVariable(id)
+  );
+
   return (
     <Modal>
       <ModalContent
         theme={Theme.Dark}
-        className="text-left p-5 pl-10 w-max h-fit rounded text-white flex flex-col gap-4 min-w-[740px]"
+        className="text-left p-5 pl-10 w-max h-fit rounded text-white flex flex-col gap-4 w-[840px]"
       >
         <div className="w-full flex justify-center items-center gap-4 text-2xl font-semibold pt-2">
           <Icon source={BrowseInternetLine} className="h-8 w-8" />
@@ -63,8 +72,24 @@ export const InspectTaskVariable = create<Params>(function InspectTaskVariable({
           </div>
         </div>
 
-        {/* TO DO: implement this section once the API to get the corresponding tasks is ready */}
-        {/* <label className="mb-0.5 text-left">TASKS USING THIS TOOL</label> */}
+        <label className="mb-0.5 text-left">TASKS USING THIS TOOL</label>
+
+        <div className="flex flex-wrap gap-x-12">
+          {isLoadingTasksPaired ? (
+            <div className="mx-auto w-full">
+              <LoadingSpinner />
+            </div>
+          ) : (
+            tasksPairedWithVariable?.map(
+              ({ publicKey, data: { taskName } }) => (
+                <div key={publicKey} className="w-fit flex items-center gap-4">
+                  <span className="h-2.5 w-2.5 bg-finnieTeal-100" />
+                  <span>{taskName}</span>
+                </div>
+              )
+            )
+          )}
+        </div>
 
         <Button
           label="See all Tasks"
