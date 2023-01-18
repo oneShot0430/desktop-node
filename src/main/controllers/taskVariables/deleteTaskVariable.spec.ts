@@ -1,9 +1,9 @@
 import { namespaceInstance } from 'main/node/helpers/Namespace';
-
 import {
   GetTasksPairedWithVariableReturnType,
   TaskVariablesReturnType,
-} from '../../../models';
+} from 'models';
+
 import { PersistentStoreKeys } from '../types';
 
 import { deleteTaskVariable } from './deleteTaskVariable';
