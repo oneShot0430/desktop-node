@@ -1,4 +1,5 @@
 export { getStoredTaskVariables } from './getStoredTaskVariables';
+export { getStoredPairedTaskVariables } from './getStoredPairedTaskVariables';
 export { storeTaskVariable } from './storeTaskVariable';
 export { editTaskVariable } from './editTaskVariable';
 export { deleteTaskVariable } from './deleteTaskVariable';

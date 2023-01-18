@@ -9,7 +9,7 @@ import React, { useState } from 'react';
 
 import { pairTaskVariable } from 'webapp/services';
 
-import { useTaskVariablesNames } from '../hooks';
+import { useTaskVariablesNames, useStoredPairedTaskVariables } from '../hooks';
 
 import { NodeTool } from './NodeTool';
 
@@ -19,6 +19,7 @@ type PropsType = {
 
 export const NodeTools = ({ taskPubKey }: PropsType) => {
   const { taskVariablesNamesQuery } = useTaskVariablesNames({ taskPubKey });
+  const { storedPairedTaskVariablesQuery } = useStoredPairedTaskVariables();
   const [selectedTools, setSelectedTools] = useState<Record<string, string>>(
     {}
   );
@@ -28,6 +29,7 @@ export const NodeTools = ({ taskPubKey }: PropsType) => {
   };
 
   const confirmTaskVariables = async () => {
+    // TODO: write it as a mutation
     const promises = Object.entries(selectedTools).map(
       ([tool, desktopVariableId]) => {
         return pairTaskVariable({
@@ -37,8 +39,6 @@ export const NodeTools = ({ taskPubKey }: PropsType) => {
         });
       }
     );
-
-    console.log('@promises', promises);
 
     try {
       await Promise.all(promises);
@@ -50,17 +50,22 @@ export const NodeTools = ({ taskPubKey }: PropsType) => {
 
   const {
     data: taskVariablesNames,
-    isLoading,
+    isLoading: isLoadingTaskVariablesNames,
     // isError,
   } = taskVariablesNamesQuery;
+
+  const { data: pairedVariables, isLoading: isLoadingPairedVariables } =
+    storedPairedTaskVariablesQuery;
+
+  console.log('@@@paired', pairedVariables);
 
   // TODO: remove this slice later
   const variableNames = taskVariablesNames && taskVariablesNames.slice(0, 3);
 
   return (
     <div className="w-full pb-4 pr-4">
-      {isLoading && <div>Loading...</div>}
-      {!isLoading && (
+      {isLoadingTaskVariablesNames && <div>Loading...</div>}
+      {!isLoadingTaskVariablesNames && (
         <>
           {variableNames.map((tool) => (
             <NodeTool

@@ -29,6 +29,7 @@ import {
   editTaskVariable,
   deleteTaskVariable,
   pairTaskVariable,
+  getStoredPairedTaskVariables,
 } from './taskVariables';
 import withdrawStake from './withdrawStake';
 
@@ -64,4 +65,5 @@ export default {
   editTaskVariable,
   deleteTaskVariable,
   pairTaskVariable,
+  getStoredPairedTaskVariables,
 };

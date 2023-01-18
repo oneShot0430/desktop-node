@@ -54,6 +54,7 @@ export const NodeTool = ({
       </div>
       <div className="flex items-start gap-3 pt-[2px]">
         <Dropdown
+          // defaultValue={}
           items={transformedTaskVariables}
           validationError="wrong tool"
           onSelect={handleSecretSelected}
