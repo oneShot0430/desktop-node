@@ -5,7 +5,7 @@ import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { TaskVariableDataWithId } from 'models/api';
-import { Button, LoadingSpinner } from 'webapp/components';
+import { Button } from 'webapp/components';
 import { Modal, ModalContent } from 'webapp/features/modals';
 import { getTasksPairedWithVariable, QueryKeys } from 'webapp/services';
 import { Theme } from 'webapp/types/common';
@@ -27,11 +27,9 @@ export const InspectTaskVariable = create<Params>(function InspectTaskVariable({
     navigate(AppRoute.MyNode);
   };
 
-  const {
-    data: tasksPairedWithVariable = [],
-    isLoading: isLoadingTasksPaired,
-  } = useQuery([QueryKeys.TasksPairedWithVariable, id], () =>
-    getTasksPairedWithVariable(id)
+  const { data: tasksPairedWithVariable } = useQuery(
+    [QueryKeys.TasksPairedWithVariable, id],
+    () => getTasksPairedWithVariable(id)
   );
 
   return (
@@ -74,22 +72,25 @@ export const InspectTaskVariable = create<Params>(function InspectTaskVariable({
 
         <label className="mb-0.5 text-left">TASKS USING THIS TOOL</label>
 
-        <div className="flex flex-wrap gap-x-12">
-          {isLoadingTasksPaired ? (
-            <div className="mx-auto w-full">
-              <LoadingSpinner />
+        {tasksPairedWithVariable?.length > 0 && (
+          <>
+            <label className="mb-0.5 text-left">TASKS USING THIS TOOL</label>
+
+            <div className="flex flex-wrap gap-x-12">
+              {tasksPairedWithVariable?.map(
+                ({ publicKey, data: { taskName } }) => (
+                  <div
+                    key={publicKey}
+                    className="w-fit flex items-center gap-4"
+                  >
+                    <span className="h-2.5 w-2.5 bg-finnieTeal-100" />
+                    <span>{taskName}</span>
+                  </div>
+                )
+              )}
             </div>
-          ) : (
-            tasksPairedWithVariable?.map(
-              ({ publicKey, data: { taskName } }) => (
-                <div key={publicKey} className="w-fit flex items-center gap-4">
-                  <span className="h-2.5 w-2.5 bg-finnieTeal-100" />
-                  <span>{taskName}</span>
-                </div>
-              )
-            )
-          )}
-        </div>
+          </>
+        )}
 
         <Button
           label="See all Tasks"
