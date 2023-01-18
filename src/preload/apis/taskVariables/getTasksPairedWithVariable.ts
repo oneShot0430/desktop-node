@@ -2,7 +2,7 @@ import config from 'config';
 import {
   GetTasksPairedWithVariableParamType,
   GetTasksPairedWithVariableReturnType,
-} from 'models/api/taskVariables/getTasksUsingVariable';
+} from 'models';
 import sendMessage from 'preload/sendMessage';
 
 export const getTasksPairedWithVariable = (
