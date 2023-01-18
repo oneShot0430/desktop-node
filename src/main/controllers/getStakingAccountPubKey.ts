@@ -5,14 +5,13 @@ import fs from 'fs';
 import { Keypair } from '@_koi/web3.js';
 
 import { namespaceInstance } from 'main/node/helpers/Namespace';
-import { ErrorType } from 'models';
+import { ErrorType, GetStakingAccountPubKeyResponse } from 'models';
 import { throwDetailedError } from 'utils';
 
-import { GetStakingAccountPubKeyResponse } from '../../models/api';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
 const stakingAccountPubKey = async (
-  event: Event
+  event?: Event
 ): Promise<GetStakingAccountPubKeyResponse> => {
   //console.log('IN THE API');
   let stakingAccount;

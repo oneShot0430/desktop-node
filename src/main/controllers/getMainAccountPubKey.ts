@@ -11,7 +11,7 @@ import { throwDetailedError } from 'utils';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
 const mainAccountPubKey = async (
-  event: Event
+  event?: Event
 ): Promise<GetMainAccountPubKeyResponse> => {
   //console.log('IN THE API');
   let mainSystemAccount;

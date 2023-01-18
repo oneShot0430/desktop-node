@@ -154,7 +154,7 @@ async function executeTasks(
   };
   // TODO: Get the task stake here
   // const STAKE = Number(process.env.TASK_STAKES?.split(',') || 0);
-  const stakingAccPubkey = getStakingAccountPublicKey();
+  const stakingAccPubkey = await getStakingAccountPublicKey();
   const STAKE = selectedTask.stakeList[stakingAccPubkey];
   fsSync.mkdirSync(getAppDataPath() + `/namespace/${selectedTask.taskId}`, {
     recursive: true,
