@@ -8,7 +8,6 @@ import { ErrorType } from 'models';
 import { GetMainAccountPubKeyResponse } from 'models/api';
 import { throwDetailedError } from 'utils';
 
-import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
 const mainAccountPubKey = async (
@@ -41,4 +40,4 @@ const mainAccountPubKey = async (
   }
 };
 
-export default mainErrorHandler(mainAccountPubKey);
+export default mainAccountPubKey;

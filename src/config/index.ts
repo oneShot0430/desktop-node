@@ -1,9 +1,9 @@
-import { endpoints } from './endpoints';
+import { Endpoints } from './endpoints';
 import * as faucet from './faucet';
 import node from './node';
 
 export default {
   node,
-  endpoints,
+  endpoints: Endpoints,
   faucet,
 };

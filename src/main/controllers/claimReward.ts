@@ -7,7 +7,6 @@ import { ErrorType } from 'models';
 import { throwDetailedError } from 'utils';
 
 import { ClaimRewardParam, ClaimRewardResponse } from '../../models/api';
-import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
 import { namespaceInstance } from '../node/helpers/Namespace';
 
@@ -73,4 +72,4 @@ const claimReward = async (
   return response;
 };
 
-export default mainErrorHandler(claimReward);
+export default claimReward;

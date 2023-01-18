@@ -19,7 +19,6 @@ import sdk from 'services/sdk';
 import { throwDetailedError } from 'utils';
 
 import { DelegateStakeParam, DelegateStakeResponse } from '../../models/api';
-import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
 import getTaskInfo from './getTaskInfo';
@@ -270,4 +269,4 @@ const getAlloc = (type: any, fields: any) => {
   return alloc;
 };
 
-export default mainErrorHandler(delegateStake);
+export default delegateStake;

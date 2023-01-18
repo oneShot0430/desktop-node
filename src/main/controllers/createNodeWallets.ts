@@ -9,7 +9,6 @@ import { ErrorType } from 'models';
 import { CreateNodeWalletsParam, CreateNodeWalletsResponse } from 'models/api';
 import { throwDetailedError } from 'utils';
 
-import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
 const createNodeWallets = async (
@@ -131,4 +130,4 @@ const createNodeWallets = async (
   }
 };
 
-export default mainErrorHandler(createNodeWallets);
+export default createNodeWallets;

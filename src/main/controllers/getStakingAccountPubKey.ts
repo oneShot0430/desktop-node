@@ -9,7 +9,6 @@ import { ErrorType } from 'models';
 import { throwDetailedError } from 'utils';
 
 import { GetStakingAccountPubKeyResponse } from '../../models/api';
-import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
 const stakingAccountPubKey = async (
@@ -48,4 +47,4 @@ const stakingAccountPubKey = async (
   }
 };
 
-export default mainErrorHandler(stakingAccountPubKey);
+export default stakingAccountPubKey;

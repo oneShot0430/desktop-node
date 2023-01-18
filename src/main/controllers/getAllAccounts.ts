@@ -8,7 +8,6 @@ import { namespaceInstance } from 'main/node/helpers/Namespace';
 import { getAllAccountsResponse } from 'models/api';
 import sdk from 'services/sdk';
 
-import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
 const getAllAccounts = async (
@@ -82,4 +81,4 @@ const getAllAccounts = async (
   return accounts;
 };
 
-export default mainErrorHandler(getAllAccounts);
+export default getAllAccounts;

@@ -13,7 +13,6 @@ import { TaskStartStopParam } from 'models/api';
 import koiiTasks from 'services/koiiTasks';
 import { throwDetailedError } from 'utils';
 
-import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
 import initExpressApp from '../node/initExpressApp';
 
@@ -287,4 +286,4 @@ interface IRunningTasks {
   };
 }
 
-export default mainErrorHandler(startTask);
+export default startTask;
