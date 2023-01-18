@@ -8,12 +8,14 @@ type PropsType = {
   tool: string;
   getSecretLink?: string;
   onSecretSelected?: (tool: string, desktopVariableId: string) => void;
+  defaultVariableId?: string;
 };
 
 export const NodeTool = ({
   tool,
   getSecretLink,
   onSecretSelected,
+  defaultVariableId,
 }: PropsType) => {
   // eslint-disable-next-line import/no-named-as-default-member
   const { storedTaskVariablesQuery } = useStoredTaskVariables();
@@ -32,9 +34,15 @@ export const NodeTool = ({
     }));
   }, [taskVariables]);
 
-  if (isLoading) return <div>Loading...</div>;
+  const defaultValue = useMemo(() => {
+    if (!defaultVariableId) return undefined;
 
-  console.log('###taskVariables', transformedTaskVariables);
+    return transformedTaskVariables.find(
+      (taskVariable) => taskVariable.id === defaultVariableId
+    );
+  }, [defaultVariableId, transformedTaskVariables]);
+
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <div className="flex justify-between w-full">
@@ -54,7 +62,7 @@ export const NodeTool = ({
       </div>
       <div className="flex items-start gap-3 pt-[2px]">
         <Dropdown
-          // defaultValue={}
+          defaultValue={defaultValue}
           items={transformedTaskVariables}
           validationError="wrong tool"
           onSelect={handleSecretSelected}

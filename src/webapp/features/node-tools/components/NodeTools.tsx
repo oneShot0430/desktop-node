@@ -5,10 +5,11 @@ import {
   CheckSuccessLine,
   Icon,
 } from '@_koii/koii-styleguide';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import { pairTaskVariable } from 'webapp/services';
 
+import { getPairedTaskVariablesForTask } from '../helpers';
 import { useTaskVariablesNames, useStoredPairedTaskVariables } from '../hooks';
 
 import { NodeTool } from './NodeTool';
@@ -57,7 +58,12 @@ export const NodeTools = ({ taskPubKey }: PropsType) => {
   const { data: pairedVariables, isLoading: isLoadingPairedVariables } =
     storedPairedTaskVariablesQuery;
 
-  console.log('@@@paired', pairedVariables);
+  const pairedVariablesForTask = useMemo(
+    () => getPairedTaskVariablesForTask(taskPubKey, pairedVariables),
+    [pairedVariables, taskPubKey]
+  );
+
+  console.log('@@@paired', pairedVariablesForTask);
 
   // TODO: remove this slice later
   const variableNames = taskVariablesNames && taskVariablesNames.slice(0, 3);
@@ -72,7 +78,9 @@ export const NodeTools = ({ taskPubKey }: PropsType) => {
               onSecretSelected={handleToolPick}
               tool={tool}
               key={tool}
+              // TODO: remove stub link later
               getSecretLink="https://google.com"
+              defaultVariableId={pairedVariablesForTask[tool]}
             />
           ))}
           <div className="flex justify-end">
