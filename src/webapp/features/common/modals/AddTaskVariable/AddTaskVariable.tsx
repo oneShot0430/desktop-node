@@ -2,7 +2,6 @@ import { Icon, CloseLine, BrowseInternetLine } from '@_koii/koii-styleguide';
 import { create, useModal } from '@ebay/nice-modal-react';
 import React from 'react';
 
-import { TaskVariableData } from 'models';
 import { Button, ErrorMessage } from 'webapp/components';
 import { useTaskVariable } from 'webapp/features/common/hooks';
 import { Modal, ModalContent } from 'webapp/features/modals';
