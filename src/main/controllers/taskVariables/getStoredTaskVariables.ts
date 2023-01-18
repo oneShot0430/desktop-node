@@ -1,5 +1,5 @@
-import { namespaceInstance } from 'main/node/helpers/Namespace';
-import { TaskVariablesReturnType } from 'models/api/taskVariables/getStoredTaskVariables';
+import { namespaceInstance } from '../../../main/node/helpers/Namespace';
+import { TaskVariablesReturnType } from '../../../models/api/taskVariables/getStoredTaskVariables';
 
 import { PersistentStoreKeys } from '../types';
 

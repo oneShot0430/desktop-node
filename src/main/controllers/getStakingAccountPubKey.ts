@@ -4,9 +4,9 @@ import fs from 'fs';
 
 import { Keypair } from '@_koi/web3.js';
 
-import { namespaceInstance } from 'main/node/helpers/Namespace';
-import { ErrorType } from 'models';
-import { throwDetailedError } from 'utils';
+import { namespaceInstance } from '../../main/node/helpers/Namespace';
+import { ErrorType } from '../../models';
+import { throwDetailedError } from '../../utils';
 
 import { GetStakingAccountPubKeyResponse } from '../../models/api';
 import mainErrorHandler from '../../utils/mainErrorHandler';

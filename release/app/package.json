@@ -1,0 +1,31 @@
+{
+  "name": "electron-react-boilerplate",
+  "version": "4.6.0",
+  "description": "A foundation for scalable desktop apps",
+  "license": "MIT",
+  "author": {
+    "name": "Electron React Boilerplate Maintainers",
+    "email": "electronreactboilerplate@gmail.com",
+    "url": "https://github.com/electron-react-boilerplate"
+  },
+  "main": "./dist/main/main.js",
+  "scripts": {
+    "rebuild": "node -r ts-node/register ../../.erb/scripts/electron-rebuild.js",
+    "postinstall": "yarn run rebuild && yarn run link-modules",
+    "link-modules": "node -r ts-node/register ../../.erb/scripts/link-modules.ts"
+  },
+  "dependencies": {
+    "@_koi/sdk": "^2.4.13",
+    "@_koi/web3.js": "^0.0.6",
+    "@headlessui/react": "^1.7.7",
+    "axios": "^1.2.2",
+    "bcryptjs": "^2.4.3",
+    "clsx": "^1.2.1",
+    "leveldown": "^6.1.1",
+    "lottie-react": "^2.3.1",
+    "qrcode.react": "^3.1.0",
+    "react-countup": "^6.4.0",
+    "react-infinite-scroll-component": "^6.1.0",
+    "react-pin-input": "^1.3.0"
+  }
+}

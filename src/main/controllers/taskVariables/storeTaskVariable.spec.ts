@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 
-import { namespaceInstance } from 'main/node/helpers/Namespace';
+import { namespaceInstance } from '../../../main/node/helpers/Namespace';
 
 import { PersistentStoreKeys } from '../types';
 

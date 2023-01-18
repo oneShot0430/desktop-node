@@ -1,7 +1,7 @@
 import { Event } from 'electron';
 
-import { TaskStartStopParam } from 'models/api';
-import koiiTasks from 'services/koiiTasks';
+import { TaskStartStopParam } from '../../models/api';
+import koiiTasks from '../../services/koiiTasks';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 

@@ -1,6 +1,9 @@
-import config from 'config';
-import { CreateNodeWalletsParam, CreateNodeWalletsResponse } from 'models/api';
-import sendMessage from 'preload/sendMessage';
+import config from '../../config';
+import {
+  CreateNodeWalletsParam,
+  CreateNodeWalletsResponse,
+} from '../../models/api';
+import sendMessage from '../../preload/sendMessage';
 
 export default (
   payload: CreateNodeWalletsParam

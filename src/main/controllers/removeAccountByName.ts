@@ -1,7 +1,7 @@
 import { Event } from 'electron';
 import fs from 'fs';
 
-import { RemoveAccountByNameParam } from 'models/api';
+import { RemoveAccountByNameParam } from '../../models/api';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';

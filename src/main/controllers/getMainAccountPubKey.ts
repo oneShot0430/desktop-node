@@ -3,10 +3,10 @@ import * as fsSync from 'fs';
 
 import { Keypair } from '@_koi/web3.js';
 
-import { namespaceInstance } from 'main/node/helpers/Namespace';
-import { ErrorType } from 'models';
-import { GetMainAccountPubKeyResponse } from 'models/api';
-import { throwDetailedError } from 'utils';
+import { namespaceInstance } from '../../main/node/helpers/Namespace';
+import { ErrorType } from '../../models';
+import { GetMainAccountPubKeyResponse } from '../../models/api';
+import { throwDetailedError } from '../../utils';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';

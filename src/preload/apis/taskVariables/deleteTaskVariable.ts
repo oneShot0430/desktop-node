@@ -1,6 +1,6 @@
-import config from 'config';
-import { TaskVariableData } from 'models';
-import sendMessage from 'preload/sendMessage';
+import config from '../../../config';
+import { TaskVariableData } from '../../../models';
+import sendMessage from '../../../preload/sendMessage';
 
 export const deleteTaskVariable = (
   payload: TaskVariableData['label']

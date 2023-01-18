@@ -1,5 +1,5 @@
-import config from 'config';
-import sendMessage from 'preload/sendMessage';
+import config from '../../config';
+import sendMessage from '../../preload/sendMessage';
 
 interface GetTaskSourceParam {
   taskAccountPubKey: string;

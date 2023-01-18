@@ -1,4 +1,4 @@
-import { AtLeastOne } from 'types/utils';
+import { AtLeastOne } from '../../../types/utils';
 
 import { TaskVariableData } from './types';
 

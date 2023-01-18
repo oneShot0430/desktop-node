@@ -3,10 +3,10 @@ import { Event } from 'electron';
 import { PublicKey } from '@_koi/web3.js';
 import axios from 'axios';
 
-import config from 'config';
-import { ErrorType } from 'models';
-import sdk from 'services/sdk';
-import { throwDetailedError } from 'utils';
+import config from '../../config';
+import { ErrorType } from '../../models';
+import sdk from '../../services/sdk';
+import { throwDetailedError } from '../../utils';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 

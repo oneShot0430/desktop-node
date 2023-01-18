@@ -1,5 +1,5 @@
-import { namespaceInstance } from 'main/node/helpers/Namespace';
-import { EditTaskVariableParamType } from 'models';
+import { namespaceInstance } from '../../../main/node/helpers/Namespace';
+import { EditTaskVariableParamType } from '../../../models';
 
 import { PersistentStoreKeys } from '../types';
 

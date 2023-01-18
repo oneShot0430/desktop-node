@@ -1,8 +1,8 @@
 // import { Task } from 'main/type';
 import { ChildProcess } from 'child_process';
 
-import { ErrorType } from 'models';
-import { throwDetailedError } from 'utils';
+import { ErrorType } from '../models';
+import { throwDetailedError } from '../utils';
 
 import fetchAllTasks from '../main/controllers/fetchAlltasks';
 import { namespaceInstance } from '../main/node/helpers/Namespace';

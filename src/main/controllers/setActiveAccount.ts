@@ -1,7 +1,7 @@
 import { Event } from 'electron';
 
-import { namespaceInstance } from 'main/node/helpers/Namespace';
-import { SetActiveAccountParam } from 'models/api';
+import { namespaceInstance } from '../../main/node/helpers/Namespace';
+import { SetActiveAccountParam } from '../../models/api';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 

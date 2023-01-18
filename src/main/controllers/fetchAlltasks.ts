@@ -3,8 +3,8 @@
 import { PublicKey } from '@_koi/web3.js';
 // import axios from 'axios';
 
-import config from 'config';
-import { FetchAllTasksParam } from 'models/api';
+import config from '../../config';
+import { FetchAllTasksParam } from '../../models/api';
 
 import sdk from '../../services/sdk';
 import mainErrorHandler from '../../utils/mainErrorHandler';

@@ -2,7 +2,7 @@ import { Event } from 'electron';
 
 import { uniq } from 'lodash';
 
-import { GetTaskVariablesNamesParam } from 'models/api';
+import { GetTaskVariablesNamesParam } from '../../../models/api';
 
 import { getTaskSource } from '..';
 

@@ -4,14 +4,17 @@ import * as fsSync from 'fs';
 
 import { Keypair, PublicKey } from '@_koi/web3.js';
 import axios from 'axios';
-import cryptoRandomString from 'crypto-random-string';
+import * as cryptoRandomString from 'crypto-random-string';
 
-import config from 'config';
-import { Namespace, namespaceInstance } from 'main/node/helpers/Namespace';
-import { ErrorType } from 'models';
-import { TaskStartStopParam } from 'models/api';
-import koiiTasks from 'services/koiiTasks';
-import { throwDetailedError } from 'utils';
+import config from '../../config';
+import {
+  Namespace,
+  namespaceInstance,
+} from '../../main/node/helpers/Namespace';
+import { ErrorType } from '../../models';
+import { TaskStartStopParam } from '../../models/api';
+import koiiTasks from '../../services/koiiTasks';
+import { throwDetailedError } from '../../utils';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';

@@ -4,9 +4,9 @@ import path from 'path';
 
 import { Keypair } from '@_koi/web3.js';
 
-import { namespaceInstance } from 'main/node/helpers/Namespace';
-import { getAllAccountsResponse } from 'models/api';
-import sdk from 'services/sdk';
+import { namespaceInstance } from '../../main/node/helpers/Namespace';
+import { getAllAccountsResponse } from '../../models/api';
+import sdk from '../../services/sdk';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';

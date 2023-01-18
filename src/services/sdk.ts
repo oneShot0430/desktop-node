@@ -1,8 +1,10 @@
-import { Connection } from '@_koi/web3.js';
+const Web3 = require('@_koi/web3.js');
 
-import config from 'config';
+import config from '../config';
 
-const k2Connection = new Connection(config.node.k2_NETWORK_URL);
+console.log('Connection: ', Web3.Connection);
+
+const k2Connection = new Web3.Connection(config.node.k2_NETWORK_URL);
 export default {
   k2Connection,
 };

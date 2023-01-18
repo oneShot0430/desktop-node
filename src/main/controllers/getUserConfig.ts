@@ -1,5 +1,5 @@
-import { namespaceInstance } from 'main/node/helpers/Namespace';
-import { getUserConfigResponse } from 'models/api';
+import { namespaceInstance } from '../../main/node/helpers/Namespace';
+import { getUserConfigResponse } from '../../models/api';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 

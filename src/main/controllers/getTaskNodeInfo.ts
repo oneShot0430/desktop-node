@@ -2,9 +2,9 @@ import { Event } from 'electron';
 
 import { PublicKey } from '@_koi/web3.js';
 
-import { ErrorType } from 'models';
-import { GetTaskNodeInfoResponse } from 'models/api';
-import { throwDetailedError } from 'utils';
+import { ErrorType } from '../../models';
+import { GetTaskNodeInfoResponse } from '../../models/api';
+import { throwDetailedError } from '../../utils';
 
 import sdk from '../../services/sdk';
 import mainErrorHandler from '../../utils/mainErrorHandler';

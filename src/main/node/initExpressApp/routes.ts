@@ -1,6 +1,6 @@
 import { Request, Response, Express } from 'express';
 
-import koiiTasks from 'services/koiiTasks';
+import koiiTasks from '../../../services/koiiTasks';
 
 import helpers from '../helpers';
 

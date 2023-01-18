@@ -1,9 +1,9 @@
 import { Event } from 'electron';
 import fs from 'fs';
 
-import { Task } from 'models';
-import { GetAvailableTasksParam } from 'models/api';
-import koiiTasks from 'services/koiiTasks';
+import { Task } from '../../models';
+import { GetAvailableTasksParam } from '../../models/api';
+import koiiTasks from '../../services/koiiTasks';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';

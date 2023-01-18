@@ -1,4 +1,4 @@
-import { namespaceInstance } from 'main/node/helpers/Namespace';
+import { namespaceInstance } from '../../../main/node/helpers/Namespace';
 
 import { getStoredTaskVariables } from './getStoredTaskVariables';
 

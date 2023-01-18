@@ -1,8 +1,8 @@
 import { Event } from 'electron';
 
-import { ErrorType } from 'models';
-import koiiState from 'services/koiiState';
-import { throwDetailedError } from 'utils';
+import { ErrorType } from '../../models';
+import koiiState from '../../services/koiiState';
+import { throwDetailedError } from '../../utils';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 

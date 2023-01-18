@@ -1,8 +1,8 @@
 import { Event } from 'electron';
 
-import { Task } from 'models';
-import { GetTasksByIdParam } from 'models/api';
-import koiiTasks from 'services/koiiTasks';
+import { Task } from '../../models';
+import { GetTasksByIdParam } from '../../models/api';
+import koiiTasks from '../../services/koiiTasks';
 
 import mainErrorHandler from '../../utils/mainErrorHandler';
 

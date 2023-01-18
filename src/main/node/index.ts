@@ -3,9 +3,9 @@ import fs from 'fs';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
-import { namespaceInstance } from 'main/node/helpers/Namespace';
-import { ErrorType } from 'models';
-import { throwDetailedError } from 'utils';
+import { namespaceInstance } from '../../main/node/helpers/Namespace';
+import { ErrorType } from '../../models';
+import { throwDetailedError } from '../../utils';
 
 import executeTasks from './executeTasks';
 import { getAppDataPath } from './helpers/getAppDataPath';
