@@ -8,7 +8,7 @@ import { AppRoute } from 'webapp/types/routes';
 const AppLoader = (): JSX.Element => {
   const { settings, loadingSettings } = useUserSettings();
 
-  const routeToNavigate = !settings?.onboardingCompleted
+  const routeToNavigate = settings?.onboardingCompleted
     ? AppRoute.Unlock
     : AppRoute.OnboardingCreatePin;
 
