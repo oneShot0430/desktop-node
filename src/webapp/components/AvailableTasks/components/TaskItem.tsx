@@ -3,7 +3,7 @@ import {
   Icon,
   SettingsFill,
   PlayFill,
-  WarningCircleLine,
+  InformationCircleLine,
 } from '@_koii/koii-styleguide';
 import React, { memo, useState, useCallback, useMemo, useEffect } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
@@ -41,9 +41,11 @@ interface Props {
 }
 
 const TaskItem = ({ task, index, columnsLayout }: Props) => {
-  const [showSettings, setShowSettings] = useState<boolean>(false);
+  const [accordionView, setAccordionView] = useState<
+    'info' | 'settings' | null
+  >(null);
   const [isTaskValidToRun, setIsTaskValidToRun] = useState<boolean>(false);
-  const [showInfo, setShowInfo] = useState<boolean>(false);
+
   /**
    * @todo: abstract it away to the hook
    */
@@ -58,11 +60,19 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
   });
 
   const handleToggleSettings = () => {
-    setShowSettings(!showSettings);
+    if (accordionView === 'settings') {
+      setAccordionView(null);
+      return;
+    }
+    setAccordionView('settings');
   };
 
   const handleToggleInfo = () => {
-    setShowInfo(!showInfo);
+    if (accordionView === 'info') {
+      setAccordionView(null);
+      return;
+    }
+    setAccordionView('info');
   };
 
   const [stake, setStake] = useState<number>(0);
@@ -89,6 +99,7 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
     TaskService.getMinStake(task)
   );
 
+  // TODO: validate task
   // const validateTask = useCallback(() => {
   //   const hasMinimumStake = taskStake >= minStake;
   //   const hasAllRequiredTaskVariables = false;
@@ -143,14 +154,16 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
   }, [isRunning, isTaskValidToRun]);
 
   const getTaskDetailsComponent = useCallback(() => {
-    if (showInfo) {
+    if (accordionView === 'info') {
       return <TaskInfo task={task} onShowCodeClick={showCodeModal} />;
     }
 
-    if (showSettings) {
+    if (accordionView === 'settings') {
       return <TaskSettings taskPubKey={task.publicKey} />;
     }
-  }, [showInfo, showSettings, task, showCodeModal]);
+
+    return null;
+  }, [accordionView, task, showCodeModal]);
 
   if (loadingMainAccount) return null;
 
@@ -165,7 +178,9 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
             <Button
               icon={
                 <Icon
-                  source={showInfo ? CloseLine : WarningCircleLine}
+                  source={
+                    accordionView === 'info' ? CloseLine : InformationCircleLine
+                  }
                   size={36}
                 />
               }
@@ -248,7 +263,7 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
 
       <div
         className={`w-full col-span-7 ${
-          showSettings || showInfo ? 'flex' : 'hidden'
+          accordionView !== null ? 'flex' : 'hidden'
         } transition-all duration-500 ease-in-out`}
       >
         {getTaskDetailsComponent()}
