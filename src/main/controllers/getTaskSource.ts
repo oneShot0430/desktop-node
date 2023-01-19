@@ -4,15 +4,9 @@ import { PublicKey } from '@_koi/web3.js';
 import axios from 'axios';
 
 import config from 'config';
-import { ErrorType } from 'models';
+import { ErrorType, GetTaskSourceParam } from 'models';
 import sdk from 'services/sdk';
 import { throwDetailedError } from 'utils';
-
-import mainErrorHandler from '../../utils/mainErrorHandler';
-
-interface GetTaskSourceParam {
-  taskAccountPubKey: string;
-}
 
 const getTaskSource = async (
   event: Event,
@@ -53,4 +47,4 @@ const getTaskSource = async (
   }
 };
 
-export default mainErrorHandler(getTaskSource);
+export default getTaskSource;

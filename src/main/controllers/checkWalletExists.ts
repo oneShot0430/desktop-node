@@ -6,7 +6,6 @@ import { ErrorType } from 'models';
 import { CheckWalletExistsResponse } from 'models/api';
 import { throwDetailedError } from 'utils';
 
-import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
 const checkWallet = async (
@@ -54,4 +53,4 @@ const checkWallet = async (
   return check;
 };
 
-export default mainErrorHandler(checkWallet);
+export default checkWallet;

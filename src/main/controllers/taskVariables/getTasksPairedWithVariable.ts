@@ -30,5 +30,5 @@ export const getTasksPairedWithVariable = async (
       Object.values(pairedTaskVariables[taskId]).includes(payload.variableId)
   );
 
-  return getTasksById(null, taskIdsUsingVariable);
+  return getTasksById(null, { tasksIds: taskIdsUsingVariable });
 };

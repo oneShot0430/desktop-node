@@ -25,7 +25,7 @@ const getStoredPairedTaskVariablesMock =
     Promise<GetStoredPairedTaskVariablesReturnType>
   >;
 
-describe('getTasksUsingVariable', () => {
+describe('getTasksPairedWithVariable', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -41,7 +41,21 @@ describe('getTasksUsingVariable', () => {
     ).rejects.toThrowError(/payload is not valid/);
   });
 
-  it("should Task using given variable by it's ID", async () => {
+  it("should return empty array if none of the Tasks is using given variable by it's ID", async () => {
+    const taskId = 'id1';
+
+    getStoredPairedTaskVariablesMock.mockResolvedValue({
+      [taskId]: { name: 'varId' },
+    });
+
+    await expect(
+      getTasksPairedWithVariable(null, { variableId: 'anotherVarId' })
+    ).resolves.not.toThrowError();
+
+    expect(getTasksById).toHaveBeenCalledWith(null, { tasksIds: [] });
+  });
+
+  it("should return Task using given variable by it's ID", async () => {
     const taskId = 'id1';
     const varId = 'variableId';
 
@@ -53,6 +67,6 @@ describe('getTasksUsingVariable', () => {
       getTasksPairedWithVariable(null, { variableId: varId })
     ).resolves.not.toThrowError();
 
-    expect(getTasksById).toHaveBeenCalledWith(null, [taskId]);
+    expect(getTasksById).toHaveBeenCalledWith(null, { tasksIds: [taskId] });
   });
 });

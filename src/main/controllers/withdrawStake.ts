@@ -16,7 +16,6 @@ import { WithdrawStakeParam } from 'models/api';
 import sdk from 'services/sdk';
 import { throwDetailedError } from 'utils';
 
-import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
 // eslint-disable-next-line
@@ -122,4 +121,4 @@ const getAlloc = (type: any, fields: any) => {
   });
   return alloc;
 };
-export default mainErrorHandler(withdrawStake);
+export default withdrawStake;

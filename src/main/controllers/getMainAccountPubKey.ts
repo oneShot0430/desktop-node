@@ -8,11 +8,10 @@ import { ErrorType } from 'models';
 import { GetMainAccountPubKeyResponse } from 'models/api';
 import { throwDetailedError } from 'utils';
 
-import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
 const mainAccountPubKey = async (
-  event: Event
+  event?: Event
 ): Promise<GetMainAccountPubKeyResponse> => {
   //console.log('IN THE API');
   let mainSystemAccount;
@@ -41,4 +40,4 @@ const mainAccountPubKey = async (
   }
 };
 
-export default mainErrorHandler(mainAccountPubKey);
+export default mainAccountPubKey;

@@ -1,4 +1,4 @@
-export enum endpoints {
+export enum Endpoints {
   GET_TASKS = 'GET_TASKS',
   GET_TASK_SOURCE = 'GET_TASK_SOURCE',
   DELEGATE_STAKE = 'DELEGATE_STAKE',

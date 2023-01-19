@@ -3,8 +3,6 @@ import { Event } from 'electron';
 import { namespaceInstance } from 'main/node/helpers/Namespace';
 import { StoreUserConfigParam } from 'models/api';
 
-import mainErrorHandler from '../../utils/mainErrorHandler';
-
 const USER_CONFIG = 'USER_CONFIG';
 
 const storeUserConfig = async (
@@ -22,4 +20,4 @@ const storeUserConfig = async (
   }
 };
 
-export default mainErrorHandler(storeUserConfig);
+export default storeUserConfig;

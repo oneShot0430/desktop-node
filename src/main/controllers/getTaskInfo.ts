@@ -6,8 +6,6 @@ import { ErrorType } from 'models';
 import sdk from 'services/sdk';
 import { throwDetailedError } from 'utils';
 
-import mainErrorHandler from '../../utils/mainErrorHandler';
-
 interface GetTaskInfoParam {
   taskAccountPubKey: string;
 }
@@ -68,4 +66,4 @@ const getTaskInfo = async (
   return taskInfo;
 };
 
-export default mainErrorHandler(getTaskInfo);
+export default getTaskInfo;

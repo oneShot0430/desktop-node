@@ -7,7 +7,6 @@ import { namespaceInstance } from 'main/node/helpers/Namespace';
 import { ErrorType } from 'models';
 import { throwDetailedError } from 'utils';
 
-import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
 interface rewardWalletPayload {
@@ -64,4 +63,4 @@ const rewardWallet = async (
   }
 };
 
-export default mainErrorHandler(rewardWallet);
+export default rewardWallet;

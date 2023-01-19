@@ -1,3 +1,5 @@
+import { GetTaskSourceParam } from 'models';
+
 import { getTaskVariablesNames } from './getTaskVariablesNames';
 
 const taskVariablesNames = ['HOME', 'APPDATA', 'K2_NODE_URL', 'NODE_MODE'];
@@ -86,19 +88,21 @@ const tasks = [
 ];
 
 jest.mock('main/controllers', () => ({
-  getTaskSource: jest.fn((taskPublicKey: keyof typeof tasks) => {
-    const { sourceCode } = tasks.find(
-      (task) => task.taskPublicKey === taskPublicKey
-    );
-    return Promise.resolve(sourceCode);
-  }),
+  getTaskSource: jest.fn(
+    (event: Event, { taskAccountPubKey }: GetTaskSourceParam) => {
+      const { sourceCode } = tasks.find(
+        (task) => task.taskPublicKey === taskAccountPubKey
+      );
+      return Promise.resolve(sourceCode);
+    }
+  ),
 }));
 
 describe('getTaskVariablesNames', () => {
   it('returns an empty array if the task source code contains no task variables', async () => {
     const { taskPublicKey } = tasks[0];
 
-    const result = await getTaskVariablesNames({} as Electron.Event, {
+    const result = await getTaskVariablesNames(null, {
       taskPublicKey,
     });
 
@@ -108,7 +112,7 @@ describe('getTaskVariablesNames', () => {
   it('returns unique (non-repeated) task variables names if they are used in the source code of the task', async () => {
     const { taskPublicKey } = tasks[1];
 
-    const result = await getTaskVariablesNames({} as Electron.Event, {
+    const result = await getTaskVariablesNames(null, {
       taskPublicKey,
     });
 
