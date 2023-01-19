@@ -4,13 +4,9 @@ import { PublicKey } from '@_koi/web3.js';
 import axios from 'axios';
 
 import config from 'config';
-import { ErrorType } from 'models';
+import { ErrorType, GetTaskSourceParam } from 'models';
 import sdk from 'services/sdk';
 import { throwDetailedError } from 'utils';
-
-interface GetTaskSourceParam {
-  taskAccountPubKey: string;
-}
 
 const getTaskSource = async (
   event: Event,

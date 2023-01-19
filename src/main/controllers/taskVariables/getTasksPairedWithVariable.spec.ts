@@ -52,7 +52,7 @@ describe('getTasksPairedWithVariable', () => {
       getTasksPairedWithVariable(null, { variableId: 'anotherVarId' })
     ).resolves.not.toThrowError();
 
-    expect(getTasksById).toHaveBeenCalledWith(null, []);
+    expect(getTasksById).toHaveBeenCalledWith(null, { tasksIds: [] });
   });
 
   it("should return Task using given variable by it's ID", async () => {
@@ -67,6 +67,6 @@ describe('getTasksPairedWithVariable', () => {
       getTasksPairedWithVariable(null, { variableId: varId })
     ).resolves.not.toThrowError();
 
-    expect(getTasksById).toHaveBeenCalledWith(null, [taskId]);
+    expect(getTasksById).toHaveBeenCalledWith(null, { tasksIds: [taskId] });
   });
 });
