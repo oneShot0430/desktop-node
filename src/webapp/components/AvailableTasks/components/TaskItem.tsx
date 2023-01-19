@@ -262,7 +262,7 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
       </div>
 
       <div
-        className={`w-full col-span-7 ${
+        className={`w-full col-span-7 max-h-[360px] overflow-y-auto ${
           accordionView !== null ? 'flex' : 'hidden'
         } transition-all duration-500 ease-in-out`}
       >

@@ -66,7 +66,7 @@ export const NodeTools = ({ taskPubKey }: PropsType) => {
   console.log('@@@paired', pairedVariablesForTask);
 
   // TODO: remove this slice later
-  const variableNames = taskVariablesNames && taskVariablesNames.slice(0, 3);
+  const variableNames = taskVariablesNames; // && taskVariablesNames.slice(0, 3);
 
   return (
     <div className="w-full pb-4 pr-4">
