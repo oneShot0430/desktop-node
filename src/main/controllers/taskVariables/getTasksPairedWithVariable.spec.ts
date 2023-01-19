@@ -53,6 +53,6 @@ describe('getTasksUsingVariable', () => {
       getTasksPairedWithVariable(null, { variableId: varId })
     ).resolves.not.toThrowError();
 
-    expect(getTasksById).toHaveBeenCalledWith(null, [taskId]);
+    expect(getTasksById).toHaveBeenCalledWith(null, { tasksIds: [taskId] });
   });
 });
