@@ -68,7 +68,7 @@ const createNodeWallets = async (
     }
     console.log('WALLET PATH', mainWalletFilePath);
     const mainSeed = bip39.mnemonicToSeedSync(mnemonic, '');
-    const mainWalletPath = "m/44'/501'/0'/0'";
+    const mainWalletPath = "m/44'/501'/0'";
     const mainWallet = Keypair.fromSeed(
       derivePath(mainWalletPath, mainSeed.toString('hex')).key
     );
