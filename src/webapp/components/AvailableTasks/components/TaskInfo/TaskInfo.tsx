@@ -1,7 +1,6 @@
 import { EmbedCodeFill, Icon } from '@_koii/koii-styleguide';
 import React from 'react';
 
-import { NodeTools } from 'features/node-tools';
 import { Task } from 'webapp/types';
 
 type PropsType = {
@@ -34,7 +33,11 @@ export const TaskInfo = ({ task, onShowCodeClick }: PropsType) => {
           </div>
         </div>
       </div>
-      <div className="mb-6 w-fit">
+      {/**
+       * @dev
+       * This will be unhidden when metadata is available
+       */}
+      <div className="mb-6  w-fit">
         <div className="mb-2 text-base font-semibold">Node Specifications:</div>
         <div className="grid grid-flow-col grid-rows-2 gap-y-2 gap-x-12">
           <div className="">
@@ -45,7 +48,6 @@ export const TaskInfo = ({ task, onShowCodeClick }: PropsType) => {
           <div>OS: {task?.metadata?.nodeSpec?.os ?? NOT_AVAILABLE}</div>
         </div>
       </div>
-      <NodeTools taskPubKey={task.publicKey} />
     </div>
   );
 };
