@@ -5,7 +5,7 @@ import {
   CheckSuccessLine,
   Icon,
 } from '@_koii/koii-styleguide';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import { ErrorMessage } from 'webapp/components';
 import { pairTaskVariable } from 'webapp/services';
@@ -17,9 +17,11 @@ import { NodeTool } from './NodeTool';
 
 type PropsType = {
   taskPubKey: string;
+  onNodeToolsValidation?: (isValid: boolean) => void;
 };
 
-export const NodeTools = ({ taskPubKey }: PropsType) => {
+export const NodeTools = ({ taskPubKey, onNodeToolsValidation }: PropsType) => {
+  const [isAllVariablesPaired, setIsAllVariablesPaired] = useState(false);
   const {
     taskVariablesNamesQuery: {
       data: taskVariablesNames,
@@ -39,6 +41,20 @@ export const NodeTools = ({ taskPubKey }: PropsType) => {
   const [selectedTools, setSelectedTools] = useState<Record<string, string>>(
     {}
   );
+
+  useEffect(() => {
+    /***
+     * @dev validate if all variables are paired
+     */
+    if (taskVariablesNames) {
+      const isAllVariablesPaired = taskVariablesNames.every(
+        (taskVariableName) => !!selectedTools[taskVariableName]
+      );
+
+      setIsAllVariablesPaired(isAllVariablesPaired);
+      onNodeToolsValidation?.(isAllVariablesPaired);
+    }
+  }, [selectedTools, taskVariablesNames]);
 
   const handleToolPick = (tool: string, desktopVariableId: string) => {
     setSelectedTools({ ...selectedTools, [tool]: desktopVariableId });
@@ -118,6 +134,7 @@ export const NodeTools = ({ taskPubKey }: PropsType) => {
               label="Confirm All"
               iconLeft={<Icon source={CheckSuccessLine} />}
               onClick={confirmTaskVariables}
+              disabled={!isAllVariablesPaired}
             />
           </div>
         </>

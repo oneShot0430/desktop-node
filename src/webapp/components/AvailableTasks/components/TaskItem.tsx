@@ -20,7 +20,7 @@ import {
   TableRow,
   ColumnsLayout,
 } from 'webapp/components';
-import { useTaskStake, useTaskDetailsModal } from 'webapp/features/common';
+import { useTaskDetailsModal } from 'webapp/features/common';
 import {
   QueryKeys,
   startTask,
@@ -41,10 +41,17 @@ interface Props {
 }
 
 const TaskItem = ({ task, index, columnsLayout }: Props) => {
+  const { taskName, publicKey, bountyAmountPerRound, taskManager, isRunning } =
+    task;
+  const queryCache = useQueryClient();
   const [accordionView, setAccordionView] = useState<
     'info' | 'settings' | null
   >(null);
-  const [isTaskValidToRun, setIsTaskValidToRun] = useState<boolean>(false);
+  const [isNodeToolsValid, setIsNodeToolsValid] = useState(false);
+  const [isTaskValidToRun, setIsTaskValidToRun] = useState(false);
+  const [stake, setStake] = useState<number>(0);
+  const [meetsMinimumStake, setMeetsMinimumStake] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   /**
    * @todo: abstract it away to the hook
@@ -75,13 +82,10 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
     setAccordionView('info');
   };
 
-  const [stake, setStake] = useState<number>(0);
-  const [meetsMinimumStake, setMeetsMinimumStake] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const handleNodeToolsValidationCheck = (isValid: boolean) => {
+    setIsNodeToolsValid(isValid);
+  };
 
-  const queryCache = useQueryClient();
-  const { taskName, publicKey, bountyAmountPerRound, taskManager, isRunning } =
-    task;
   const isFirstRowInTable = index === 0;
   const nodes = useMemo(() => TaskService.getNodesCount(task), [task]);
   const topStake = useMemo(() => TaskService.getTopStake(task), [task]);
@@ -90,36 +94,30 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
     [bountyAmountPerRound]
   );
 
-  const { taskStake, loadingTaskStake } = useTaskStake({
-    task,
-    publicKey: mainAccountPubKey,
-  });
+  // FIXME:
+  // const { taskStake, loadingTaskStake } = useTaskStake({
+  //   task,
+  //   publicKey: mainAccountPubKey,
+  // });
 
   const { data: minStake } = useQuery([QueryKeys.minStake, publicKey], () =>
     TaskService.getMinStake(task)
   );
 
-  // TODO: validate task
-  // const validateTask = useCallback(() => {
-  //   const hasMinimumStake = taskStake >= minStake;
-  //   const hasAllRequiredTaskVariables = false;
-
-  //   setIsTaskValidToRun(hasMinimumStake && hasAllRequiredTaskVariables);
-  // }, [minStake, taskStake]);
-
-  const checkIfAllTaskVariablesAreSet = useCallback(() => {
-    // ig (paire)
-  }, []);
+  const validateTask = useCallback(() => {
+    const hasMinimumStake = stake >= minStake;
+    const isTaskValid = hasMinimumStake && isNodeToolsValid;
+    setIsTaskValidToRun(isTaskValid);
+  }, [isNodeToolsValid, minStake, stake]);
 
   useEffect(() => {
-    setStake(taskStake);
-    setMeetsMinimumStake(taskStake >= minStake);
-  }, [minStake, taskStake]);
+    validateTask();
+  }, [minStake, stake, validateTask, isNodeToolsValid]);
 
   const handleStartTask = async () => {
     try {
       setLoading(true);
-      if (taskStake === 0) {
+      if (stake === 0) {
         await stakeOnTask(publicKey, stake);
       }
       await startTask(publicKey);
@@ -142,6 +140,7 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
   };
 
   const handleStakeValueChange = (value: number) => {
+    console.log('@@@usehandleStakeValueChange', value);
     setStake(value);
     setMeetsMinimumStake(value >= minStake);
   };
@@ -163,7 +162,12 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
     }
 
     if (accordionView === 'settings') {
-      return <TaskSettings taskPubKey={task.publicKey} />;
+      return (
+        <TaskSettings
+          taskPubKey={task.publicKey}
+          onNodeToolsValidation={handleNodeToolsValidationCheck}
+        />
+      );
     }
 
     return null;
@@ -224,7 +228,8 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
           stake={stake}
           minStake={minStake}
           onChange={handleStakeValueChange}
-          disabled={taskStake !== 0 || loadingTaskStake}
+          // FIXME:
+          // disabled={stake !== 0 || loadingTaskStake}
         />
       </div>
 
