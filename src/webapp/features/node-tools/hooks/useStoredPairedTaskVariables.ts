@@ -2,10 +2,17 @@ import { useQuery } from 'react-query';
 
 import { QueryKeys, getStoredPairedTaskVariables } from 'webapp/services';
 
-export const useStoredPairedTaskVariables = () => {
+type UseStoredPairedTaskVariablesParams = {
+  enabled?: boolean;
+};
+
+export const useStoredPairedTaskVariables = (
+  options?: UseStoredPairedTaskVariablesParams
+) => {
   const storedPairedTaskVariablesQuery = useQuery(
     [QueryKeys.StoredPairedTaskVariables],
-    getStoredPairedTaskVariables
+    getStoredPairedTaskVariables,
+    options
   );
 
   return { storedPairedTaskVariablesQuery };

@@ -7,6 +7,7 @@ import {
 } from '@_koii/koii-styleguide';
 import React, { useMemo, useState } from 'react';
 
+import { ErrorMessage } from 'webapp/components';
 import { pairTaskVariable } from 'webapp/services';
 
 import { getPairedTaskVariablesForTask } from '../helpers';
@@ -19,14 +20,40 @@ type PropsType = {
 };
 
 export const NodeTools = ({ taskPubKey }: PropsType) => {
-  const { taskVariablesNamesQuery } = useTaskVariablesNames({ taskPubKey });
-  const { storedPairedTaskVariablesQuery } = useStoredPairedTaskVariables();
+  const {
+    taskVariablesNamesQuery: {
+      data: taskVariablesNames,
+      isLoading: isLoadingTaskVariablesNames,
+      error: taskVariablesNamesError,
+    },
+  } = useTaskVariablesNames({ taskPubKey });
+  const {
+    storedPairedTaskVariablesQuery: {
+      data: pairedVariables,
+      isLoading: isLoadingPairedVariables,
+      error: pairedVariablesError,
+    },
+  } = useStoredPairedTaskVariables({
+    enabled: !!taskPubKey && !isLoadingTaskVariablesNames,
+  });
   const [selectedTools, setSelectedTools] = useState<Record<string, string>>(
     {}
   );
 
   const handleToolPick = (tool: string, desktopVariableId: string) => {
     setSelectedTools({ ...selectedTools, [tool]: desktopVariableId });
+  };
+
+  const handleInit = (tool: string, desktopVariableId: string) => {
+    /**
+     * @dev
+     * We need to set the default value for the tool which are not yet paired,
+     * so we can validate the form and show the "Confirm" button
+     */
+    setSelectedTools((selectedTools) => ({
+      ...selectedTools,
+      [tool]: desktopVariableId,
+    }));
   };
 
   const confirmTaskVariables = async () => {
@@ -43,43 +70,44 @@ export const NodeTools = ({ taskPubKey }: PropsType) => {
 
     try {
       await Promise.all(promises);
+      // TODO: show success message, handle pairing loading
       alert('All variables are paired successfully');
     } catch (error) {
       console.log(error);
     }
   };
 
-  const {
-    data: taskVariablesNames,
-    isLoading: isLoadingTaskVariablesNames,
-    // isError,
-  } = taskVariablesNamesQuery;
-
-  const { data: pairedVariables, isLoading: isLoadingPairedVariables } =
-    storedPairedTaskVariablesQuery;
-
   const pairedVariablesForTask = useMemo(
     () => getPairedTaskVariablesForTask(taskPubKey, pairedVariables),
     [pairedVariables, taskPubKey]
   );
 
-  console.log('@@@paired', pairedVariablesForTask);
+  // console.log('@@@paired', pairedVariablesForTask);
 
-  // TODO: remove this slice later
+  const error = taskVariablesNamesError || pairedVariablesError;
+  const loading = isLoadingTaskVariablesNames || isLoadingPairedVariables;
+
+  if (error) {
+    return <ErrorMessage error={error as string} />;
+  }
+
   const variableNames = taskVariablesNames; // && taskVariablesNames.slice(0, 3);
+
+  console.log('@@@selected', selectedTools);
 
   return (
     <div className="w-full pb-4 pr-4">
-      {isLoadingTaskVariablesNames && <div>Loading...</div>}
-      {!isLoadingTaskVariablesNames && (
+      {loading && <div>Loading...</div>}
+      {!loading && (
         <>
           {variableNames.map((tool) => (
             <NodeTool
               onSecretSelected={handleToolPick}
+              onInit={handleInit}
               tool={tool}
               key={tool}
-              // TODO: remove stub link later
-              getSecretLink="https://google.com"
+              // TODO: create a metadata for each tool (?)
+              getSecretLink={null}
               defaultVariableId={pairedVariablesForTask[tool]}
             />
           ))}

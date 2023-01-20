@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 
 import { Dropdown, DropdownItem } from 'webapp/components';
 
@@ -7,8 +7,9 @@ import { useStoredTaskVariables } from '../hooks';
 type PropsType = {
   tool: string;
   getSecretLink?: string;
-  onSecretSelected?: (tool: string, desktopVariableId: string) => void;
   defaultVariableId?: string;
+  onSecretSelected?: (tool: string, desktopVariableId: string) => void;
+  onInit?: (tool: string, desktopVariableId: string) => void;
 };
 
 export const NodeTool = ({
@@ -16,6 +17,7 @@ export const NodeTool = ({
   getSecretLink,
   onSecretSelected,
   defaultVariableId,
+  onInit,
 }: PropsType) => {
   // eslint-disable-next-line import/no-named-as-default-member
   const { storedTaskVariablesQuery } = useStoredTaskVariables();
@@ -24,6 +26,11 @@ export const NodeTool = ({
   const handleSecretSelected = (item: DropdownItem) => {
     onSecretSelected?.(tool, item.id);
   };
+
+  useEffect(() => {
+    onInit?.(tool, defaultVariableId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const transformedTaskVariables = useMemo(() => {
     if (!taskVariables) return [];

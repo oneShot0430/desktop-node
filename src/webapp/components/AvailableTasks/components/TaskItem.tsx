@@ -107,6 +107,10 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
   //   setIsTaskValidToRun(hasMinimumStake && hasAllRequiredTaskVariables);
   // }, [minStake, taskStake]);
 
+  const checkIfAllTaskVariablesAreSet = useCallback(() => {
+    // ig (paire)
+  }, []);
+
   useEffect(() => {
     setStake(taskStake);
     setMeetsMinimumStake(taskStake >= minStake);
