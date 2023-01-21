@@ -1,15 +1,15 @@
-import { screen, waitFor } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createServer, Server } from 'miragejs';
 import React from 'react';
 
 import config from 'config';
 import { Actions } from 'webapp/components/Sidebar/components/Actions';
-import * as services from 'webapp/services';
+import { openBrowserWindow } from 'webapp/services';
 import { render } from 'webapp/tests/utils';
 import { StatusResponse, ValidationStatus } from 'webapp/types';
 
-const { FAUCET_API_URL } = config.faucet;
+const { FAUCET_API_URL, FAUCET_URL } = config.faucet;
 
 const publicKey = 'myPublicKey';
 
@@ -24,14 +24,18 @@ const baseFaucetState: StatusResponse = {
 jest.mock('webapp/services', () => ({
   __esModule: true, // necessary to make it work, otherwise it fails trying to set the spy
   ...jest.requireActual('webapp/services'),
+  openBrowserWindow: jest.fn(),
 }));
-const openBrowserWindowSpy = jest.spyOn(services, 'openBrowserWindow');
+
+const openBrowserWindowMock = openBrowserWindow as jest.Mock;
 
 Object.defineProperty(window, 'main', {
-  value: { getMainAccountPubKey: () => Promise.resolve(publicKey) },
+  value: {
+    getMainAccountPubKey: jest.fn(() => Promise.resolve(publicKey)),
+    openBrowserWindow: jest.fn(),
+  },
 });
 
-// we can't spy on primitive values, so we need to override clipboard.writeText
 const copyToClipboard = jest.fn();
 Object.defineProperty(navigator, 'clipboard', {
   value: {
@@ -58,18 +62,6 @@ const renderWithFaucetStateMock = (faucetState: StatusResponse) => {
 };
 
 describe('AddFunds', () => {
-  it('displays the right modal content if the user has not completed any validation method from the faucet', async () => {
-    renderWithFaucetStateMock(baseFaucetState);
-
-    const addFundsButton = screen.getByText(/Add Funds/i);
-    userEvent.click(addFundsButton);
-    const copyForNoMethodsCompleted = await screen.findByText(
-      /Go to the Faucet for some free KOII to get started./i
-    );
-
-    expect(copyForNoMethodsCompleted).toBeInTheDocument();
-  });
-
   it('displays the right modal content if the user has completed at least 1 validation method from the faucet', async () => {
     const faucetState: StatusResponse = {
       ...baseFaucetState,
@@ -78,12 +70,26 @@ describe('AddFunds', () => {
     renderWithFaucetStateMock(faucetState);
 
     const addFundsButton = screen.getByText(/Add Funds/i);
-    userEvent.click(addFundsButton);
+    await userEvent.click(addFundsButton);
+
     const copyForOneMethodCompleted = await screen.findByText(
       /Return to the Faucet to get the rest of your free KOII./i
     );
 
     expect(copyForOneMethodCompleted).toBeInTheDocument();
+  });
+
+  it('displays the right modal content if the user has not completed any validation method from the faucet', async () => {
+    renderWithFaucetStateMock(baseFaucetState);
+
+    const addFundsButton = screen.getByText(/Add Funds/i);
+    await userEvent.click(addFundsButton);
+
+    const copyForNoMethodsCompleted = await screen.findByText(
+      /Go to the Faucet for some free KOII to get started./i
+    );
+
+    expect(copyForNoMethodsCompleted).toBeInTheDocument();
   });
 
   it('displays the right modal content if the user has completed all the validation methods from the faucet', async () => {
@@ -97,7 +103,8 @@ describe('AddFunds', () => {
     renderWithFaucetStateMock(faucetState);
 
     const addFundsButton = screen.getByText(/Add Funds/i);
-    userEvent.click(addFundsButton);
+    await userEvent.click(addFundsButton);
+
     const copyForAllMethodsCompleted = await screen.findByText(
       /Scan the QR code or copy the address to send tokens to your node account./i
     );
@@ -113,17 +120,16 @@ describe('AddFunds', () => {
     renderWithFaucetStateMock(faucetState);
 
     const addFundsButton = screen.getByText(/Add Funds/i);
-    userEvent.click(addFundsButton);
+    await userEvent.click(addFundsButton);
+
     const getMyFreeTokensButton = await screen.findByText(
       /Get My Free Tokens/i
     );
-    userEvent.click(getMyFreeTokensButton);
+    await userEvent.click(getMyFreeTokensButton);
 
-    waitFor(() => {
-      expect(openBrowserWindowSpy).toHaveBeenCalledWith(
-        FAUCET_API_URL + publicKey
-      );
-    });
+    expect(openBrowserWindowMock).toHaveBeenCalledWith(
+      `${FAUCET_URL}?key=${publicKey}`
+    );
   });
 
   it('copies the public key to the clipboard when clicking on the `copy` button', async () => {
@@ -134,12 +140,11 @@ describe('AddFunds', () => {
     renderWithFaucetStateMock(faucetState);
 
     const addFundsButton = screen.getByText(/Add Funds/i);
-    userEvent.click(addFundsButton);
-    const copyButton = await screen.findByText(/copy/i);
-    userEvent.click(copyButton);
+    await userEvent.click(addFundsButton);
 
-    waitFor(() => {
-      expect(copyToClipboard).toHaveBeenCalledWith(publicKey);
-    });
+    const copyButton = await screen.findByText(/copy/i);
+    await userEvent.click(copyButton);
+
+    expect(copyToClipboard).toHaveBeenCalledWith(publicKey);
   });
 });
