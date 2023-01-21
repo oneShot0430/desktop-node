@@ -5,3 +5,9 @@ export type AccountType = {
   isDefault?: boolean;
   type: 'main' | 'staking';
 };
+
+export enum Tab {
+  AccountsTable = 'AccountsTable',
+  TaskSettings = 'TaskSettings',
+  NodeLogs = 'NodeLogs',
+}

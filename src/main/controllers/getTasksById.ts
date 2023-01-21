@@ -6,7 +6,7 @@ import koiiTasks from 'services/koiiTasks';
 
 const getTasksById = (event: Event, payload: GetTasksByIdParam): Task[] => {
   const { tasksIds } = payload || {};
-  const response = tasksIds.map((e) => koiiTasks.getTaskByPublicKey(e));
+  const response = tasksIds?.map((e) => koiiTasks.getTaskByPublicKey(e));
   return response;
 };
 

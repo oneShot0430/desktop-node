@@ -3,6 +3,10 @@ export interface TaskVariableData {
   label: string;
 }
 
+export interface TaskVariableDataWithId extends TaskVariableData {
+  id: string;
+}
+
 export type TaskVariables = Record<string, TaskVariableData>;
 
 export type TaskId = string;

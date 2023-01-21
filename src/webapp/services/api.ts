@@ -6,6 +6,7 @@ import {
   GetAvailableTasksParam,
   GetMyTasksParam,
   TaskVariableData,
+  TaskVariableDataWithId,
   StoreUserConfigParam,
 } from 'models/api';
 import sdk from 'services/sdk';
@@ -197,10 +198,11 @@ export const getStoredTaskVariables = async () => {
   return await window.main.getStoredTaskVariables();
 };
 
-export const editTaskVariable = async (
-  id: string,
-  { label, value }: TaskVariableData
-) => {
+export const editTaskVariable = async ({
+  id,
+  label,
+  value,
+}: TaskVariableDataWithId) => {
   await window.main.editTaskVariable({
     variableId: id,
     variableData: { label, value },
@@ -209,6 +211,10 @@ export const editTaskVariable = async (
 
 export const deleteTaskVariable = async (id: string) => {
   await window.main.deleteTaskVariable(id);
+};
+
+export const getTasksPairedWithVariable = async (variableId: string) => {
+  return await window.main.getTasksPairedWithVariable({ variableId });
 };
 
 export const claimRewards = async () => {

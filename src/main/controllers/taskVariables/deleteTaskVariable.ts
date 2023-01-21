@@ -40,12 +40,11 @@ export const deleteTaskVariable = async (
     });
   }
 
-  // unpair every task using variable for deletion
-
   const tasksUsingVariable: Task[] = await getTasksPairedWithVariable(null, {
     variableId: idForDeletion,
   });
 
+  // unpair every task using variable for deletion
   console.log(
     `Unpairing Task Variable ID "${idForDeletion}" from following Tasks (id) ${map(
       tasksUsingVariable,
