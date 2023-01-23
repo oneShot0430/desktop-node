@@ -4,6 +4,8 @@ import { Dropdown, DropdownItem } from 'webapp/components';
 
 import { useStoredTaskVariables } from '../hooks';
 
+const NOT_SET_TASK_VARIABLE_VALUE = 'not_set';
+
 type PropsType = {
   tool: string;
   getSecretLink?: string;
@@ -32,22 +34,29 @@ export const NodeTool = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const transformedTaskVariables = useMemo(() => {
+  const dropdownItems = useMemo(() => {
     if (!taskVariables) return [];
 
-    return Object.entries(taskVariables).map(([id, taskVariableItem]) => ({
-      id,
-      ...taskVariableItem,
-    }));
+    const transformedItems = Object.entries(taskVariables).map(
+      ([id, taskVariableItem]) => ({
+        id,
+        ...taskVariableItem,
+      })
+    );
+
+    return [
+      ...transformedItems,
+      { id: '0', label: 'none', value: NOT_SET_TASK_VARIABLE_VALUE },
+    ];
   }, [taskVariables]);
 
   const defaultValue = useMemo(() => {
     if (!defaultVariableId) return undefined;
 
-    return transformedTaskVariables.find(
+    return dropdownItems.find(
       (taskVariable) => taskVariable.id === defaultVariableId
     );
-  }, [defaultVariableId, transformedTaskVariables]);
+  }, [defaultVariableId, dropdownItems]);
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -70,8 +79,13 @@ export const NodeTool = ({
       <div className="flex items-start gap-3 pt-[2px]">
         <Dropdown
           defaultValue={defaultValue}
-          items={transformedTaskVariables}
-          validationError="wrong tool"
+          items={dropdownItems}
+          /**
+           * @dev
+           * We don't need to show the validation error here yet, because we don't have
+           * the validation logic for the NodeTool component yet.
+           */
+          validationError={null}
           onSelect={handleSecretSelected}
         />
       </div>

@@ -61,8 +61,10 @@ export const Dropdown = ({
               />
             </span>
           </Listbox.Button>
-          {validationError && (
+          {validationError ? (
             <ErrorMessage error={validationError} className="pt-1 text-xs" />
+          ) : (
+            <div className="pt-2"></div>
           )}
           <Transition
             as={Fragment}

@@ -54,7 +54,7 @@ export const NodeTools = ({ taskPubKey, onNodeToolsValidation }: PropsType) => {
       setIsAllVariablesPaired(isAllVariablesPaired);
       onNodeToolsValidation?.(isAllVariablesPaired);
     }
-  }, [selectedTools, taskVariablesNames]);
+  }, [onNodeToolsValidation, selectedTools, taskVariablesNames]);
 
   const handleToolPick = (tool: string, desktopVariableId: string) => {
     setSelectedTools({ ...selectedTools, [tool]: desktopVariableId });
@@ -73,7 +73,7 @@ export const NodeTools = ({ taskPubKey, onNodeToolsValidation }: PropsType) => {
   };
 
   const confirmTaskVariables = async () => {
-    // TODO: write it as a mutation
+    // TODO: write it as a mutation, if value is 'not_set' then do not pair it
     const promises = Object.entries(selectedTools).map(
       ([tool, desktopVariableId]) => {
         return pairTaskVariable({
@@ -108,8 +108,6 @@ export const NodeTools = ({ taskPubKey, onNodeToolsValidation }: PropsType) => {
   }
 
   const variableNames = taskVariablesNames; // && taskVariablesNames.slice(0, 3);
-
-  console.log('@@@selected', selectedTools);
 
   return (
     <div className="w-full pb-4 pr-4">
