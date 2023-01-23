@@ -1,6 +1,7 @@
 import { ChevronArrowLine, Icon } from '@_koii/koii-styleguide';
 import { Listbox, Transition } from '@headlessui/react';
 import React, { Fragment, useCallback, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 import { ErrorMessage } from '../ErrorMessage';
 
@@ -38,6 +39,21 @@ export const Dropdown = ({
     [onSelect]
   );
 
+  const getItemClasses = useCallback(
+    (selected: boolean, item: DropdownItem) => {
+      const itemClasses = twMerge(
+        'block truncate py-1 pl-10 pr-4 font-normal text-white border-2 border-transparent',
+        selected &&
+          'border-2 border-purple-1 font-semibold rounded-lg text-finnieTeal-100',
+        item.disabled && 'text-gray-500 cursor-not-allowed',
+        item.id === 'not_set' && 'text-finnieOrange'
+      );
+
+      return itemClasses;
+    },
+    []
+  );
+
   return (
     <div className="h-full w-72" data-testid="koii_dropdown_test_id">
       <Listbox value={selected} onChange={handleItemSelect}>
@@ -53,7 +69,7 @@ export const Dropdown = ({
             ) : (
               <span>{placeholderText}</span>
             )}
-            <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+            <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none ">
               <Icon
                 source={ChevronArrowLine}
                 className="w-4 h-4 m-1 rotate-180"
@@ -85,13 +101,7 @@ export const Dropdown = ({
                   disabled={item?.disabled}
                 >
                   {({ selected }) => (
-                    <span
-                      className={`block truncate py-1 pl-10 pr-4  ${
-                        selected
-                          ? 'border-2 border-purple-1 font-semibold rounded-lg text-finnieTeal-100'
-                          : 'font-normal text-white border-2 border-transparent'
-                      }`}
-                    >
+                    <span className={getItemClasses(selected, item)}>
                       {item?.label}
                     </span>
                   )}

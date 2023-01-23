@@ -18,9 +18,9 @@ export const TaskSettings = ({
 
   return (
     <div className="flex flex-col w-full">
-      <div className="mb-4 font-semibold uppercase">
+      <div className="flex gap-1 mb-4 text-sm font-semibold uppercase">
         Configure Your task settings
-        <Icon source={TooltipChatQuestionLeftLine} />
+        <Icon size={14} source={TooltipChatQuestionLeftLine} />
       </div>
       <NodeTools
         taskPubKey={taskPubKey}

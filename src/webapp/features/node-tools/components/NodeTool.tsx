@@ -46,7 +46,11 @@ export const NodeTool = ({
 
     return [
       ...transformedItems,
-      { id: 'not_set', label: 'none', value: NOT_SET_TASK_VARIABLE_VALUE },
+      {
+        id: 'not_set',
+        label: 'Skip this setting',
+        value: NOT_SET_TASK_VARIABLE_VALUE,
+      },
     ];
   }, [taskVariables]);
 
