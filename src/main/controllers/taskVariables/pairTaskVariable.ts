@@ -4,6 +4,7 @@ import { PublicKey } from '@_koi/web3.js';
 
 import {
   ErrorType,
+  OMITTED_VARIABLE_IDENTIFIER,
   PairedTaskVariables,
   PairTaskVariableParamType,
 } from 'models';
@@ -80,7 +81,10 @@ export const pairTaskVariable = async (
 
   const taskVariables = await getStoredTaskVariables();
 
-  if (!taskVariables[payload.desktopVariableId]) {
+  if (
+    !taskVariables[payload.desktopVariableId] &&
+    payload.desktopVariableId !== OMITTED_VARIABLE_IDENTIFIER
+  ) {
     return throwDetailedError({
       detailed:
         'Variable Pairing error: Desktop Variable ID in the Task not found',
