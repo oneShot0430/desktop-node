@@ -10,7 +10,7 @@ export { default as getEarnedRewardByNode } from './getEarnedRewardByNode';
 export { default as getMainAccountPubKey } from './getMainAccountPubKey';
 export { default as getMyTasks } from './getMyTasks';
 export { default as getStakingAccountPubKey } from './getStakingAccountPubKey';
-export { default as getTaskInfo } from './getTaskInfo';
+export { getTaskInfo } from './getTaskInfo';
 export { default as getTaskLogs } from './getTaskLogs';
 export { default as getTaskNodeInfo } from './getTaskNodeInfo';
 export { default as getTasks } from './getTasks';

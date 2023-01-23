@@ -2,15 +2,15 @@ import { Event } from 'electron';
 
 import { PublicKey } from '@_koi/web3.js';
 
-import { ErrorType, GetTaskInfoParam, TaskData } from 'models';
+import { ErrorType, GetTaskInfoParam, GetTaskInfoResponse } from 'models';
 import sdk from 'services/sdk';
 import { throwDetailedError } from 'utils';
 
-const getTaskInfo = async (
+export const getTaskInfo = async (
   event: Event,
   payload: GetTaskInfoParam,
   context?: string
-): Promise<Omit<TaskData, 'isRunning'>> => {
+): Promise<GetTaskInfoResponse> => {
   // payload validation
   if (!payload?.taskAccountPubKey) {
     throw throwDetailedError({
@@ -68,4 +68,4 @@ const getTaskInfo = async (
   };
 };
 
-export default getTaskInfo;
+export const validateTask = getTaskInfo;

@@ -1,15 +1,14 @@
 import { Event } from 'electron';
 
-import { PublicKey } from '@_koi/web3.js';
-
 import {
   ErrorType,
   GetPairedVariablesNamesWithValuesParamType,
   GetPairedVariablesNamesWithValuesReturnType,
   OMITTED_VARIABLE_IDENTIFIER,
 } from 'models';
-import sdk from 'services/sdk';
 import { throwDetailedError } from 'utils';
+
+import { validateTask } from '../getTaskInfo';
 
 import { getStoredPairedTaskVariables } from './getStoredPairedTaskVariables';
 import { getStoredTaskVariables } from './getStoredTaskVariables';
@@ -28,30 +27,7 @@ export const getPairedVariablesNamesWithValues = async (
   }
 
   // task validation
-
-  const accountInfo = await sdk.k2Connection.getAccountInfo(
-    new PublicKey(payload.taskAccountPubKey)
-  );
-
-  if (!accountInfo || !accountInfo.data)
-    return throwDetailedError({
-      detailed: 'Get Paired Variables Names with Values error: Task not found',
-      type: ErrorType.TASK_NOT_FOUND,
-    });
-
-  let taskData;
-  try {
-    taskData = JSON.parse(accountInfo.data.toString());
-  } catch {
-    //
-  }
-
-  if (!taskData) {
-    return throwDetailedError({
-      detailed: 'Get Paired Variables Names with Values error: Task not found',
-      type: ErrorType.TASK_NOT_FOUND,
-    });
-  }
+  await validateTask(null, payload, 'GetPairedVariablesNamesWithValues');
 
   const pairedTaskVariables = await getStoredPairedTaskVariables();
 

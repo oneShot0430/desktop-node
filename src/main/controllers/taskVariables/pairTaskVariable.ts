@@ -1,17 +1,15 @@
 import { Event } from 'electron';
 
-import { PublicKey } from '@_koi/web3.js';
-
 import {
   ErrorType,
   OMITTED_VARIABLE_IDENTIFIER,
   PairedTaskVariables,
   PairTaskVariableParamType,
 } from 'models';
-import sdk from 'services/sdk';
 import { throwDetailedError } from 'utils';
 
 import { namespaceInstance } from '../../node/helpers/Namespace';
+import { validateTask } from '../getTaskInfo';
 import { PersistentStoreKeys } from '../types';
 
 import { getStoredPairedTaskVariables } from './getStoredPairedTaskVariables';
@@ -36,29 +34,7 @@ export const pairTaskVariable = async (
 
   // task validation
 
-  const accountInfo = await sdk.k2Connection.getAccountInfo(
-    new PublicKey(payload.taskAccountPubKey)
-  );
-
-  if (!accountInfo || !accountInfo.data)
-    return throwDetailedError({
-      detailed: 'Variable Pairing error: Task not found',
-      type: ErrorType.TASK_NOT_FOUND,
-    });
-
-  let taskData;
-  try {
-    taskData = JSON.parse(accountInfo.data.toString());
-  } catch {
-    //
-  }
-
-  if (!taskData) {
-    return throwDetailedError({
-      detailed: 'Variable Pairing error: Task not found',
-      type: ErrorType.TASK_NOT_FOUND,
-    });
-  }
+  await validateTask(null, payload, 'pairTaskVariable');
 
   // variableInTaskName validation
 

@@ -3,7 +3,7 @@ import { PublicKey } from '@_koi/web3.js';
 import { GetTaskInfoParam, TaskData } from 'models';
 import sdk from 'services/sdk';
 
-import getTaskInfo from './getTaskInfo';
+import { getTaskInfo } from './getTaskInfo';
 
 jest.mock('services/sdk', () => {
   return {
