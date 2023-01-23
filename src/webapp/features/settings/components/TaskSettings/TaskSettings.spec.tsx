@@ -1,4 +1,8 @@
-import { screen, within } from '@testing-library/react';
+import {
+  screen,
+  within,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import user from '@testing-library/user-event';
 import { cloneDeep } from 'lodash';
 import React from 'react';
@@ -111,6 +115,7 @@ describe('TaskSettings', () => {
         const inspectItemButton = within(
           variableItem.parentElement
         ).getByTestId(/inspect-task-variable/i);
+
         await user.click(inspectItemButton);
 
         const inspectModal = screen.getByText(inspectModalDescription)
@@ -141,6 +146,7 @@ describe('TaskSettings', () => {
         const inspectItemButton = within(
           variableItem.parentElement
         ).getByTestId(/inspect-task-variable/i);
+
         await user.click(inspectItemButton);
 
         const inspectModal = screen.getByText(inspectModalDescription)
@@ -153,12 +159,15 @@ describe('TaskSettings', () => {
       }
     });
   });
+
   describe('Add task variable', () => {
     it('displays the proper error and disables the Add button if the label entered is not valid', async () => {
+      const existingTaskVariableData = existingTaskVariablesData[0];
       render(<TaskSettings />);
 
       const variableLabelInput = screen.getByPlaceholderText(/Add Label/i);
-      await user.type(variableLabelInput, 'my label');
+
+      await user.type(variableLabelInput, existingTaskVariableData.label);
 
       const labelError = await screen.findByText(duplicatedLabelErrorMessage);
       const addButton = screen.getByRole('button', { name: /Add/i });
@@ -177,10 +186,12 @@ describe('TaskSettings', () => {
 
       await user.type(variableLabelInput, newTaskVariableData.label);
 
-      const variableKeyInput = screen.getByPlaceholderText(/Paste Tool here/i);
       expect(addButton).toBeDisabled();
 
+      const variableKeyInput = screen.getByPlaceholderText(/Paste Tool here/i);
+
       await user.type(variableKeyInput, newTaskVariableData.value);
+
       expect(addButton).not.toBeDisabled();
     });
 
@@ -188,17 +199,17 @@ describe('TaskSettings', () => {
       render(<TaskSettings />);
 
       const variableLabelInput = screen.getByPlaceholderText(/Add Label/i);
+
       await user.type(variableLabelInput, newTaskVariableData.label);
 
       const variableKeyInput = screen.getByPlaceholderText(/Paste Tool here/i);
+
       await user.type(variableKeyInput, newTaskVariableData.value);
 
       const addButton = screen.getByRole('button', { name: /Add/i });
-      user.click(addButton);
+      await user.click(addButton);
 
-      const newVariableItem = await screen.findByText(
-        newTaskVariableData.label
-      );
+      const newVariableItem = screen.getByText(newTaskVariableData.label);
 
       expect(variableLabelInput).toHaveDisplayValue('');
       expect(variableKeyInput).toHaveDisplayValue('');
@@ -215,6 +226,7 @@ describe('TaskSettings', () => {
       const deleteItemButton = within(variableItem.parentElement).getByTestId(
         /delete-task-variable/i
       );
+
       await user.click(deleteItemButton);
 
       const deleteModal = screen.getByText(deleteModalDescription).parentElement
@@ -222,6 +234,7 @@ describe('TaskSettings', () => {
       const keepButton = within(deleteModal).getByRole('button', {
         name: /Keep/i,
       });
+
       await user.click(keepButton);
 
       expect(deleteModal).not.toBeInTheDocument();
@@ -236,6 +249,7 @@ describe('TaskSettings', () => {
       const deleteItemButton = within(variableItem.parentElement).getByTestId(
         /delete-task-variable/i
       );
+
       await user.click(deleteItemButton);
 
       const deleteModal = screen.getByText(deleteModalDescription).parentElement
@@ -243,112 +257,122 @@ describe('TaskSettings', () => {
       const deleteButton = within(deleteModal).getByRole('button', {
         name: /Delete/i,
       });
+
       await user.click(deleteButton);
 
-      expect(variableItem).not.toBeInTheDocument();
+      await waitForElementToBeRemoved(variableItem);
+    });
+  });
+});
+describe('Edit task variable', () => {
+  it('displays the proper error and disables the Save button if the label entered is not valid', async () => {
+    const existingTaskVariableData = existingTaskVariablesData[1];
+    render(<TaskSettings />);
+
+    const variableItem = screen.getByText(existingTaskVariableData.label);
+    const editItemButton = within(variableItem.parentElement).getByTestId(
+      /edit-task-variable/i
+    );
+
+    await user.click(editItemButton);
+
+    const editModal =
+      screen.getByText(editModalDescription).parentElement.parentElement;
+    const variableLabelInput = within(editModal).getByDisplayValue(
+      existingTaskVariableData.label
+    );
+    const saveButton = screen.getByRole('button', { name: /Save/i });
+
+    await user.clear(variableLabelInput);
+    await user.type(variableLabelInput, 'my label');
+
+    const labelError = screen.getByText(duplicatedLabelErrorMessage);
+
+    expect(labelError).toBeInTheDocument();
+    expect(saveButton).toBeDisabled();
+  });
+
+  it('disables the Save button if there is no label or key value entered, and enables it when both are there (and the label is valid)', async () => {
+    const existingTaskVariableData = existingTaskVariablesData[1];
+    render(<TaskSettings />);
+
+    const variableItem = screen.getByText(existingTaskVariableData.label);
+    const editItemButton = within(variableItem.parentElement).getByTestId(
+      /edit-task-variable/i
+    );
+
+    await user.click(editItemButton);
+
+    const editModal =
+      screen.getByText(editModalDescription).parentElement.parentElement;
+    const variableLabelInput = within(editModal).getByDisplayValue(
+      existingTaskVariableData.label
+    );
+    const variableKeyInput = screen.getByDisplayValue(
+      existingTaskVariableData.value
+    );
+    const saveButton = screen.getByRole('button', {
+      name: /Save Settings/i,
     });
 
-    describe('Edit task variable', () => {
-      it('displays the proper error and disables the Save button if the label entered is not valid', async () => {
-        const existingTaskVariableData = existingTaskVariablesData[1];
-        render(<TaskSettings />);
+    await user.clear(variableLabelInput);
+    await user.clear(variableKeyInput);
 
-        const variableItem = screen.getByText(existingTaskVariableData.label);
-        const editItemButton = within(variableItem.parentElement).getByTestId(
-          /edit-task-variable/i
-        );
-        await user.click(editItemButton);
+    expect(saveButton).toBeDisabled();
 
-        const editModal =
-          screen.getByText(editModalDescription).parentElement.parentElement;
-        const variableLabelInput = within(editModal).getByDisplayValue(
-          existingTaskVariableData.label
-        );
-        const saveButton = screen.getByRole('button', { name: /Save/i });
+    await user.type(variableLabelInput, newTaskVariableData.label);
 
-        await user.clear(variableLabelInput);
-        await user.type(variableLabelInput, 'my label');
+    expect(saveButton).toBeDisabled();
 
-        const labelError = await screen.findByText(duplicatedLabelErrorMessage);
+    await user.type(variableKeyInput, newTaskVariableData.value);
 
-        expect(labelError).toBeInTheDocument();
-        expect(saveButton).toBeDisabled();
-      });
+    expect(saveButton).not.toBeDisabled();
+  });
 
-      it('disables the Save button if there is no label or key value entered, and enables it when both are there (and the label is valid)', async () => {
-        const existingTaskVariableData = existingTaskVariablesData[1];
-        render(<TaskSettings />);
+  it('edits correctly a task variable', async () => {
+    const existingTaskVariableData = existingTaskVariablesData[1];
+    render(<TaskSettings />);
 
-        const variableItem = screen.getByText(existingTaskVariableData.label);
-        const editItemButton = within(variableItem.parentElement).getByTestId(
-          /edit-task-variable/i
-        );
-        await user.click(editItemButton);
+    const variableItem = screen.getByText(existingTaskVariableData.label);
+    const editItemButton = within(variableItem.parentElement).getByTestId(
+      /edit-task-variable/i
+    );
 
-        const editModal =
-          screen.getByText(editModalDescription).parentElement.parentElement;
-        const variableLabelInput = within(editModal).getByDisplayValue(
-          existingTaskVariableData.label
-        );
-        const variableKeyInput = screen.getByDisplayValue(
-          existingTaskVariableData.value
-        );
-        const saveButton = screen.getByRole('button', {
-          name: /Save Settings/i,
-        });
+    await user.click(editItemButton);
 
-        await user.clear(variableLabelInput);
-        await user.clear(variableKeyInput);
-        expect(saveButton).toBeDisabled();
+    const editModal =
+      screen.getByText(editModalDescription).parentElement.parentElement;
+    const variableLabelInput =
+      within(editModal).getByPlaceholderText(/Add Label/i);
 
-        await user.type(variableLabelInput, newTaskVariableData.label);
-        expect(saveButton).toBeDisabled();
+    await user.clear(variableLabelInput);
+    await user.type(variableLabelInput, newTaskVariableData.label);
 
-        await user.type(variableKeyInput, newTaskVariableData.value);
-        expect(saveButton).not.toBeDisabled();
-      });
+    const variableKeyInput =
+      within(editModal).getByPlaceholderText(/Paste Tool here/i);
 
-      it('edits correctly a task variable', async () => {
-        const existingTaskVariableData = existingTaskVariablesData[1];
-        render(<TaskSettings />);
+    await user.clear(variableKeyInput);
+    await user.type(variableKeyInput, newTaskVariableData.value);
 
-        const variableItem = screen.getByText(existingTaskVariableData.label);
-        const editItemButton = within(variableItem.parentElement).getByTestId(
-          /edit-task-variable/i
-        );
-        await user.click(editItemButton);
-
-        const editModal =
-          screen.getByText(editModalDescription).parentElement.parentElement;
-        const variableLabelInput =
-          within(editModal).getByPlaceholderText(/Add Label/i);
-        await user.clear(variableLabelInput);
-        await user.type(variableLabelInput, newTaskVariableData.label);
-
-        const variableKeyInput =
-          within(editModal).getByPlaceholderText(/Paste Tool here/i);
-        await user.clear(variableKeyInput);
-        await user.type(variableKeyInput, newTaskVariableData.value);
-
-        const saveButton = within(editModal).getByRole('button', {
-          name: /Save Settings/i,
-        });
-        user.click(saveButton);
-
-        const updatedItem = await screen.findByText(newTaskVariableData.label);
-        const inspectItemButton = within(updatedItem.parentElement).getByTestId(
-          /inspect-task-variable/i
-        );
-        await user.click(inspectItemButton);
-        const inspectModal = screen.getByText(inspectModalDescription)
-          .parentElement.parentElement;
-
-        const label = within(inspectModal).getByText(newTaskVariableData.label);
-        const key = within(inspectModal).getByText(newTaskVariableData.value);
-
-        expect(label).toBeInTheDocument();
-        expect(key).toBeInTheDocument();
-      });
+    const saveButton = within(editModal).getByRole('button', {
+      name: /Save Settings/i,
     });
+    await user.click(saveButton);
+
+    const updatedItem = screen.getByText(newTaskVariableData.label);
+    const inspectItemButton = within(updatedItem.parentElement).getByTestId(
+      /inspect-task-variable/i
+    );
+
+    await user.click(inspectItemButton);
+
+    const inspectModal = screen.getByText(inspectModalDescription).parentElement
+      .parentElement;
+
+    const label = within(inspectModal).getByText(newTaskVariableData.label);
+    const key = within(inspectModal).getByText(newTaskVariableData.value);
+
+    expect(label).toBeInTheDocument();
+    expect(key).toBeInTheDocument();
   });
 });
