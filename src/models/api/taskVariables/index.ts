@@ -7,3 +7,4 @@ export * from './getStoredPairedTaskVariables';
 export * from './pairTaskVariable';
 export * from './unpairTaskVariable';
 export * from './getTasksUsingVariable';
+export * from './getPairedVariablesNamesWithValues';
