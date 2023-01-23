@@ -5,9 +5,10 @@ import {
   CheckSuccessLine,
   Icon,
 } from '@_koii/koii-styleguide';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useMutation } from 'react-query';
 
-import { ErrorMessage } from 'webapp/components';
+import { ErrorMessage, LoadingSpinner } from 'webapp/components';
 import { pairTaskVariable } from 'webapp/services';
 
 import { getPairedTaskVariablesForTask } from '../helpers';
@@ -72,33 +73,41 @@ export const NodeTools = ({ taskPubKey, onNodeToolsValidation }: PropsType) => {
     }));
   };
 
-  const confirmTaskVariables = async () => {
-    // TODO: write it as a mutation, if value is 'not_set' then do not pair it
-    const promises = Object.entries(selectedTools).map(
-      ([tool, desktopVariableId]) => {
+  const confirmTaskVariables = useCallback(async () => {
+    const promises = Object.entries(selectedTools)
+      .map(([tool, desktopVariableId]) => {
+        if (desktopVariableId === 'not_set' || !desktopVariableId) {
+          return;
+        }
+
         return pairTaskVariable({
           taskAccountPubKey: taskPubKey,
           variableInTaskName: tool,
           desktopVariableId,
         });
-      }
-    );
+      })
+      .filter(Boolean) as Promise<void>[];
 
-    try {
-      await Promise.all(promises);
-      // TODO: show success message, handle pairing loading
-      alert('All variables are paired successfully');
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    await Promise.all(promises);
+  }, [selectedTools, taskPubKey]);
+
+  const {
+    mutate: pairTaskVariables,
+    isLoading: isPairingTasksVariables,
+    error: isPairingTasksVariablesError,
+  } = useMutation(confirmTaskVariables, {
+    onSuccess: () => {
+      alert('Pairing Task Variables Success');
+    },
+    onError: (error) => {
+      alert(error);
+    },
+  });
 
   const pairedVariablesForTask = useMemo(
     () => getPairedTaskVariablesForTask(taskPubKey, pairedVariables),
     [pairedVariables, taskPubKey]
   );
-
-  // console.log('@@@paired', pairedVariablesForTask);
 
   const error = taskVariablesNamesError || pairedVariablesError;
   const loading = isLoadingTaskVariablesNames || isLoadingPairedVariables;
@@ -120,19 +129,39 @@ export const NodeTools = ({ taskPubKey, onNodeToolsValidation }: PropsType) => {
               onInit={handleInit}
               tool={tool}
               key={tool}
-              // TODO: create a metadata for each tool (?)
+              /**
+               * @dev
+               * Metadata for the tool is not available yet,
+               * so we need to pass null for now
+               */
               getSecretLink={null}
               defaultVariableId={pairedVariablesForTask[tool]}
             />
           ))}
+          {isPairingTasksVariablesError && (
+            <ErrorMessage
+              error={isPairingTasksVariablesError as string}
+              className="my-4"
+            />
+          )}
           <div className="flex justify-end">
             <Button
               variant={ButtonVariant.Primary}
               size={ButtonSize.SM}
-              label="Confirm All"
-              iconLeft={<Icon source={CheckSuccessLine} />}
-              onClick={confirmTaskVariables}
-              disabled={!isAllVariablesPaired}
+              label={isPairingTasksVariables ? 'Pairing...' : 'Confirm All'}
+              iconLeft={
+                isPairingTasksVariables ? (
+                  <LoadingSpinner />
+                ) : (
+                  <Icon source={CheckSuccessLine} />
+                )
+              }
+              onClick={() => pairTaskVariables()}
+              disabled={!isAllVariablesPaired || isPairingTasksVariables}
+              /**
+               * @todo implement loading state for style guide Button
+               */
+              // loading={isPairingTasksVariables}
             />
           </div>
         </>

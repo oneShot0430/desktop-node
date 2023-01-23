@@ -20,14 +20,12 @@ import {
   TableRow,
   ColumnsLayout,
 } from 'webapp/components';
-import { useTaskDetailsModal } from 'webapp/features/common';
+import { useTaskDetailsModal, useTaskStake } from 'webapp/features/common';
 import {
   QueryKeys,
-  startTask,
   TaskService,
   stopTask,
   getMainAccountPublicKey,
-  stakeOnTask,
 } from 'webapp/services';
 import { Task } from 'webapp/types';
 
@@ -54,12 +52,20 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   /**
-   * @todo: abstract it away to the hook
+   * @todo: abstract it away to the hook,
+   * We probably should fetch the Account pub key once and keep it in the app context
    */
   const { data: mainAccountPubKey, isLoading: loadingMainAccount } = useQuery(
     QueryKeys.MainAccount,
     () => getMainAccountPublicKey()
   );
+
+  const { taskStake: alreadyStakedTokensAmount, loadingTaskStake } =
+    useTaskStake({
+      task,
+      publicKey: mainAccountPubKey,
+      enabled: !!mainAccountPubKey,
+    });
 
   const { showModal: showCodeModal } = useTaskDetailsModal({
     task,
@@ -89,16 +95,10 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
   const isFirstRowInTable = index === 0;
   const nodes = useMemo(() => TaskService.getNodesCount(task), [task]);
   const topStake = useMemo(() => TaskService.getTopStake(task), [task]);
-  const bountyPerRoundInKoii = useMemo(
-    () => getKoiiFromRoe(bountyAmountPerRound),
-    [bountyAmountPerRound]
-  );
-
-  // FIXME:
-  // const { taskStake, loadingTaskStake } = useTaskStake({
-  //   task,
-  //   publicKey: mainAccountPubKey,
-  // });
+  // const bountyPerRoundInKoii = useMemo(
+  //   () => getKoiiFromRoe(bountyAmountPerRound),
+  //   [bountyAmountPerRound]
+  // );
 
   const { data: minStake } = useQuery([QueryKeys.minStake, publicKey], () =>
     TaskService.getMinStake(task)
@@ -115,18 +115,22 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
   }, [minStake, stake, validateTask, isNodeToolsValid]);
 
   const handleStartTask = async () => {
-    try {
-      setLoading(true);
-      if (stake === 0) {
-        await stakeOnTask(publicKey, stake);
-      }
-      await startTask(publicKey);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      queryCache.invalidateQueries();
-      setLoading(false);
-    }
+    const stakeAmount = alreadyStakedTokensAmount || stake;
+
+    console.log('@@@handleStartTask', stakeAmount, alreadyStakedTokensAmount);
+
+    // try {
+    //   setLoading(true);
+    //   if (stakeAmount === 0) {
+    //     await stakeOnTask(publicKey, stakeAmount);
+    //   }
+    //   await startTask(publicKey);
+    // } catch (error) {
+    //   console.error(error);
+    // } finally {
+    //   queryCache.invalidateQueries();
+    //   setLoading(false);
+    // }
   };
 
   const handleStopTask = async () => {
@@ -140,7 +144,6 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
   };
 
   const handleStakeValueChange = (value: number) => {
-    console.log('@@@usehandleStakeValueChange', value);
     setStake(value);
     setMeetsMinimumStake(value >= minStake);
   };
@@ -149,6 +152,7 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
     if (isRunning) {
       return <StopTealIcon />;
     }
+
     return isTaskValidToRun ? (
       <PlayIcon />
     ) : (
@@ -180,7 +184,7 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
       <div>
         <Tooltip
           placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
-          tooltipContent="Inspect task details"
+          tooltipContent="Open task details"
         >
           <div className="flex flex-col items-center justify-start w-[40px]">
             <Button
@@ -225,11 +229,10 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
       <div>
         <EditStakeInput
           meetsMinimumStake={meetsMinimumStake}
-          stake={stake}
+          stake={alreadyStakedTokensAmount || stake}
           minStake={minStake}
           onChange={handleStakeValueChange}
-          // FIXME:
-          // disabled={stake !== 0 || loadingTaskStake}
+          disabled={alreadyStakedTokensAmount !== 0 || loadingTaskStake}
         />
       </div>
 
@@ -237,7 +240,7 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
         <div>
           <Tooltip
             placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
-            tooltipContent="Inspect task details"
+            tooltipContent="Open task settings"
           >
             <div className="flex flex-col items-center justify-start w-[40px]">
               <Button

@@ -4,7 +4,7 @@ import { Dropdown, DropdownItem } from 'webapp/components';
 
 import { useStoredTaskVariables } from '../hooks';
 
-const NOT_SET_TASK_VARIABLE_VALUE = 'not_set';
+export const NOT_SET_TASK_VARIABLE_VALUE = 'not_set';
 
 type PropsType = {
   tool: string;
@@ -46,7 +46,7 @@ export const NodeTool = ({
 
     return [
       ...transformedItems,
-      { id: '0', label: 'none', value: NOT_SET_TASK_VARIABLE_VALUE },
+      { id: 'not_set', label: 'none', value: NOT_SET_TASK_VARIABLE_VALUE },
     ];
   }, [taskVariables]);
 
