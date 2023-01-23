@@ -156,7 +156,12 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
     return isTaskValidToRun ? (
       <PlayIcon />
     ) : (
-      <Icon source={PlayFill} size={32} color={'#D6D6D6'} />
+      <Icon
+        source={PlayFill}
+        size={18}
+        color={'#D6D6D6'}
+        className="cursor-not-allowed"
+      />
     );
   }, [isRunning, isTaskValidToRun]);
 
