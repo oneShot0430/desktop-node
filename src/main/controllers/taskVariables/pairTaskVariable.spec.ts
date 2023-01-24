@@ -1,7 +1,7 @@
-import { PairTaskVariableParamType } from 'models';
-import sdk from 'services/sdk';
+import { OMITTED_VARIABLE_IDENTIFIER, PairTaskVariableParamType } from 'models';
 
 import { namespaceInstance } from '../../node/helpers/Namespace';
+import { validateTask } from '../getTaskInfo';
 import { PersistentStoreKeys } from '../types';
 
 import { getStoredPairedTaskVariables } from './getStoredPairedTaskVariables';
@@ -17,11 +17,9 @@ jest.mock('main/node/helpers/Namespace', () => {
   };
 });
 
-jest.mock('services/sdk', () => {
+jest.mock('../getTaskInfo', () => {
   return {
-    k2Connection: {
-      getAccountInfo: jest.fn(),
-    },
+    validateTask: jest.fn(),
   };
 });
 
@@ -43,8 +41,7 @@ jest.mock('./getTaskVariablesNames', () => {
   };
 });
 
-const k2ConnectionGetAccountInfoMock = sdk.k2Connection
-  .getAccountInfo as jest.Mock;
+const validateTaskMock = validateTask as jest.Mock;
 const getTaskVariableNamesMock = getTaskVariablesNames as jest.Mock;
 const getStoredTaskVariablesMock = getStoredTaskVariables as jest.Mock;
 const getStoredPairedTaskVariablesMock =
@@ -65,40 +62,8 @@ describe('pairTaskVariable', () => {
     ).rejects.toThrowError(/payload is not valid/i);
   });
 
-  it('throws an error if no Task on K2', async () => {
-    k2ConnectionGetAccountInfoMock.mockResolvedValue(undefined);
-
-    const validPayload: PairTaskVariableParamType = {
-      taskAccountPubKey: k2PublicKeyExample,
-      variableInTaskName: 'test',
-      desktopVariableId: 'test1',
-    };
-
-    await expect(pairTaskVariable(null, validPayload)).rejects.toThrowError(
-      /task not found/i
-    );
-  });
-
-  it('throws an error if there is Task on K2 but with invalid data', async () => {
-    k2ConnectionGetAccountInfoMock.mockResolvedValue({
-      data: { toString: () => 'not parsable string' },
-    });
-
-    const validPayload: PairTaskVariableParamType = {
-      taskAccountPubKey: k2PublicKeyExample,
-      variableInTaskName: 'test',
-      desktopVariableId: 'test1',
-    };
-
-    await expect(pairTaskVariable(null, validPayload)).rejects.toThrowError(
-      /task not found/i
-    );
-  });
-
   it('throws an error if there is Task on K2 but not using given variable', async () => {
-    k2ConnectionGetAccountInfoMock.mockResolvedValue({
-      data: { toString: () => '{}' },
-    });
+    validateTaskMock.mockResolvedValue({});
 
     const notUsedVariableName = 'variableName';
 
@@ -116,13 +81,11 @@ describe('pairTaskVariable', () => {
   });
 
   it('throws an error if there is no variable stored with given ID', async () => {
-    k2ConnectionGetAccountInfoMock.mockResolvedValue({
-      data: { toString: () => '{}' },
-    });
+    validateTaskMock.mockResolvedValue({});
 
-    const usedVariablename = 'variableName';
+    const usedVariableName = 'variableName';
 
-    getTaskVariableNamesMock.mockResolvedValue([usedVariablename]);
+    getTaskVariableNamesMock.mockResolvedValue([usedVariableName]);
 
     getStoredTaskVariablesMock.mockResolvedValue({
       otherId: { label: 'label', value: 'value' },
@@ -130,7 +93,7 @@ describe('pairTaskVariable', () => {
 
     const validPayload: PairTaskVariableParamType = {
       taskAccountPubKey: k2PublicKeyExample,
-      variableInTaskName: usedVariablename,
+      variableInTaskName: usedVariableName,
       desktopVariableId: 'test1',
     };
 
@@ -140,9 +103,7 @@ describe('pairTaskVariable', () => {
   });
 
   it('pairs the task variable if the payload is valid - first pairing of the given task', async () => {
-    k2ConnectionGetAccountInfoMock.mockResolvedValue({
-      data: { toString: () => '{}' },
-    });
+    validateTaskMock.mockResolvedValue({});
 
     const usedVariableName = 'variableName';
 
@@ -171,10 +132,38 @@ describe('pairTaskVariable', () => {
     );
   });
 
-  it('pairs the task variable if the payload is valid - not first pairing of the given task', async () => {
-    k2ConnectionGetAccountInfoMock.mockResolvedValue({
-      data: { toString: () => '{}' },
+  it('pairs (marks) the task variable as omitted if the payload is valid', async () => {
+    validateTaskMock.mockResolvedValue({});
+
+    const usedVariableName = 'variableName';
+
+    getTaskVariableNamesMock.mockResolvedValue([usedVariableName]);
+
+    const usedStoredVariableId = 'someId';
+    getStoredTaskVariablesMock.mockResolvedValue({
+      [usedStoredVariableId]: { label: 'label', value: 'value' },
     });
+
+    getStoredPairedTaskVariablesMock.mockResolvedValue({});
+
+    const validPayload: PairTaskVariableParamType = {
+      taskAccountPubKey: k2PublicKeyExample,
+      variableInTaskName: usedVariableName,
+      desktopVariableId: OMITTED_VARIABLE_IDENTIFIER,
+    };
+
+    await expect(
+      pairTaskVariable(null, validPayload)
+    ).resolves.not.toThrowError();
+
+    expect(namespaceInstance.storeSet).toHaveBeenCalledWith(
+      PersistentStoreKeys.TaskToVariablesPairs,
+      `{"7Ds4GdPPGb2DNEwT6is31i1KkR2WqusttB55T4QgGUvg":{"variableName":"${OMITTED_VARIABLE_IDENTIFIER}"}}`
+    );
+  });
+
+  it('pairs the task variable if the payload is valid - not first pairing of the given task', async () => {
+    validateTaskMock.mockResolvedValue({});
 
     const usedVariableName = 'variableName';
 

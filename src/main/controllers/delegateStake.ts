@@ -14,14 +14,18 @@ import {
 
 import config from 'config';
 import { namespaceInstance } from 'main/node/helpers/Namespace';
-import { ErrorType, NetworkErrors } from 'models';
+import {
+  ErrorType,
+  NetworkErrors,
+  DelegateStakeParam,
+  DelegateStakeResponse,
+} from 'models';
 import sdk from 'services/sdk';
 import { throwDetailedError } from 'utils';
 
-import { DelegateStakeParam, DelegateStakeResponse } from '../../models/api';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
-import getTaskInfo from './getTaskInfo';
+import { getTaskInfo } from './getTaskInfo';
 
 // eslint-disable-next-line
 const BufferLayout = require('@solana/buffer-layout');
@@ -77,15 +81,8 @@ const delegateStake = async (
     new PublicKey(stakingAccKeypair.publicKey)
   );
 
-  let taskState;
-  try {
-    taskState = await getTaskInfo(null, { taskAccountPubKey });
-  } catch (e) {
-    return throwDetailedError({
-      detailed: e,
-      type: ErrorType.TASK_NOT_FOUND,
-    });
-  }
+  const taskState = await getTaskInfo(null, { taskAccountPubKey });
+
   console.log('ACCOUNT OWNER', accountInfo?.owner?.toBase58());
   if (
     accountInfo?.owner?.toBase58() ==

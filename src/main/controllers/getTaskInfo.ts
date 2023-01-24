@@ -2,31 +2,23 @@ import { Event } from 'electron';
 
 import { PublicKey } from '@_koi/web3.js';
 
-import { ErrorType } from 'models';
+import { ErrorType, GetTaskInfoParam, GetTaskInfoResponse } from 'models';
 import sdk from 'services/sdk';
 import { throwDetailedError } from 'utils';
 
-interface GetTaskInfoParam {
-  taskAccountPubKey: string;
-}
-interface TaskState {
-  taskName: string;
-  taskManager: string;
-  isWhitelisted: boolean;
-  isActive: boolean;
-  taskAuditProgram: string;
-  stakePotAccount: string;
-  totalBountyAmount: number;
-  bountyAmountPerRound: number;
-  status: any;
-  currentRound: number;
-  availableBalances: any;
-  stakeList: any;
-}
-const getTaskInfo = async (
+export const getTaskInfo = async (
   event: Event,
-  payload: GetTaskInfoParam
-): Promise<TaskState> => {
+  payload: GetTaskInfoParam,
+  context?: string
+): Promise<GetTaskInfoResponse> => {
+  // payload validation
+  if (!payload?.taskAccountPubKey) {
+    throw throwDetailedError({
+      detailed: 'Get Task Info error: payload is not valid',
+      type: ErrorType.GENERIC,
+    });
+  }
+
   const { taskAccountPubKey } = payload;
 
   const accountInfo = await sdk.k2Connection.getAccountInfo(
@@ -35,20 +27,32 @@ const getTaskInfo = async (
 
   if (!accountInfo || !accountInfo.data)
     return throwDetailedError({
-      detailed: 'Task not found',
+      detailed: `Task not found${context ? ' in context of ' + context : ''}`,
       type: ErrorType.TASK_NOT_FOUND,
     });
 
-  const taskData = JSON.parse(accountInfo.data.toString());
-
-  if (!taskData) {
+  let taskData;
+  try {
+    taskData = JSON.parse(accountInfo.data.toString());
+  } catch (e) {
     return throwDetailedError({
-      detailed: 'Task not found',
+      detailed: `Error during Task parsing${
+        context ? ' in context of ' + context : ''
+      }: ${e}`,
       type: ErrorType.TASK_NOT_FOUND,
     });
   }
 
-  const taskInfo = {
+  if (!taskData) {
+    return throwDetailedError({
+      detailed: `Task data not found${
+        context ? ' in context of ' + context : ''
+      }`,
+      type: ErrorType.TASK_NOT_FOUND,
+    });
+  }
+
+  return {
     taskName: taskData.task_name,
     taskManager: new PublicKey(taskData.task_manager).toBase58(),
     isWhitelisted: taskData.is_whitelisted,
@@ -62,8 +66,6 @@ const getTaskInfo = async (
     availableBalances: taskData.available_balances,
     stakeList: taskData.stake_list,
   };
-
-  return taskInfo;
 };
 
-export default getTaskInfo;
+export const validateTask = getTaskInfo;
