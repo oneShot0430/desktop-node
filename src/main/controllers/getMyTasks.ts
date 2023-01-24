@@ -5,7 +5,6 @@ import { Task } from 'models';
 import { GetMyTasksParam } from 'models/api';
 import koiiTasks from 'services/koiiTasks';
 
-import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
 const getMyTasks = (event: Event, payload: GetMyTasksParam): Task[] => {
@@ -23,4 +22,4 @@ const getMyTasks = (event: Event, payload: GetMyTasksParam): Task[] => {
     .slice(offset, offset + limit);
 };
 
-export default mainErrorHandler(getMyTasks);
+export default getMyTasks;

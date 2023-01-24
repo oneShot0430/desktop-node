@@ -7,7 +7,6 @@ import { GetTaskNodeInfoResponse } from 'models/api';
 import { throwDetailedError } from 'utils';
 
 import sdk from '../../services/sdk';
-import mainErrorHandler from '../../utils/mainErrorHandler';
 import { Task } from '../type/TaskData';
 
 import fetchAlltasks from './fetchAlltasks';
@@ -45,4 +44,4 @@ const getTaskNodeInfo = async (
   }
 };
 
-export default mainErrorHandler(getTaskNodeInfo);
+export default getTaskNodeInfo;

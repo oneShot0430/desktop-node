@@ -15,4 +15,5 @@ export enum QueryKeys {
   TaskVariablesNames = 'TaskVariablesNames',
   StoredTaskVariables = 'StoredTaskVariables',
   StoredPairedTaskVariables = 'StoredPairedTaskVariables',
+  TasksPairedWithVariable = 'TasksPairedWithVariable',
 }

@@ -3,13 +3,16 @@ export interface TaskVariableData {
   label: string;
 }
 
+export interface TaskVariableDataWithId extends TaskVariableData {
+  id: string;
+}
+
 export type TaskVariables = Record<string, TaskVariableData>;
 
-type TaskId = string;
-type TaskVariableName = string;
-type DesktopNodeVariableID = string;
+export type TaskId = string;
+export type TaskVariableName = string;
+export type DesktopNodeVariableID = string;
 
-export type PairedTaskVariables = Record<
-  TaskId,
-  Record<TaskVariableName, DesktopNodeVariableID>
->;
+export type TaskPairing = Record<TaskVariableName, DesktopNodeVariableID>;
+
+export type PairedTaskVariables = Record<TaskId, TaskPairing>;

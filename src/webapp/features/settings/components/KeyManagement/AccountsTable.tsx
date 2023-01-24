@@ -4,11 +4,11 @@ import React, { memo, useMemo } from 'react';
 import { Button, Table } from 'webapp/components';
 import { useAddNewAccountModal } from 'webapp/features/common/hooks/useAddNewAccountModal';
 
-import { useAccounts } from '../hooks';
+import { useAccounts } from '../../hooks';
 
-import AccountItem from './AccountItem';
+import { AccountItem } from './AccountItem';
 
-const AccountsTable = () => {
+export const AccountsTable = memo(() => {
   const { showModal } = useAddNewAccountModal();
 
   const { accounts, loadingAccounts, accountsError } = useAccounts();
@@ -73,6 +73,6 @@ const AccountsTable = () => {
       </div>
     </>
   );
-};
+});
 
-export default memo(AccountsTable);
+AccountsTable.displayName = 'AccountsTable';

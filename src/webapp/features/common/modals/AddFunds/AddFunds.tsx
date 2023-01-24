@@ -62,7 +62,8 @@ export const AddFunds = create(function AddFunds({ onGoBack }: PropsType) {
   };
 
   const openFaucetAndClose = () => {
-    openBrowserWindow(config.faucet.FAUCET_URL + mainAccountPubKey);
+    const urlToFaucet = `${config.faucet.FAUCET_URL}?key=${mainAccountPubKey}`;
+    openBrowserWindow(urlToFaucet);
     closeModal();
   };
 

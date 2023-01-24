@@ -1,63 +1,27 @@
 import { Icon, CloseLine, BrowseInternetLine } from '@_koii/koii-styleguide';
 import { create, useModal } from '@ebay/nice-modal-react';
-import React, { ChangeEventHandler, useState } from 'react';
-import { useQuery, useMutation } from 'react-query';
+import React from 'react';
 
-import { TaskVariableData } from 'models';
 import { Button, ErrorMessage } from 'webapp/components';
+import { useTaskVariable } from 'webapp/features/common/hooks';
 import { Modal, ModalContent } from 'webapp/features/modals';
-import {
-  getStoredTaskVariables,
-  storeTaskVariable as storeTaskVariableService,
-  QueryKeys,
-} from 'webapp/services';
 import { Theme } from 'webapp/types/common';
 
 const baseInputClassName =
   'px-6 py-2 text-sm rounded-md bg-finnieBlue-light-tertiary focus:ring-2 focus:ring-finnieTeal focus:outline-none focus:bg-finnieBlue-light-secondary';
 
 export const AddTaskVariable = create(function AddTaskVariable() {
-  const [label, setLabel] = useState<string>('');
-  const [value, setValue] = useState<string>('');
-  const [labelError, setLabelError] = useState<string>('');
-
   const modal = useModal();
 
-  const { data: storedTaskVariables } = useQuery(
-    QueryKeys.TaskVariables,
-    getStoredTaskVariables
-  );
-
-  const { mutate: storeTaskVariable, error: errorStoringTaskVariable } =
-    useMutation<void, Error, TaskVariableData>(storeTaskVariableService, {
-      onSuccess: () => {
-        modal.remove();
-      },
-    });
-
-  const handleAddTaskVariable = async () => {
-    storeTaskVariable({ label, value });
-  };
-
-  const handleLabelChange: ChangeEventHandler<HTMLInputElement> = ({
-    target: { value: label },
-  }) => {
-    setLabelError('');
-    setLabel(label);
-    const storedTaskVariablesLabels = Object.values(storedTaskVariables).map(
-      ({ label }) => label
-    );
-    const enteredLabelIsDuplicate = storedTaskVariablesLabels?.some(
-      (storedLabel) => storedLabel === label
-    );
-    if (enteredLabelIsDuplicate) {
-      setLabelError('You already have a tool registered with that label');
-    }
-  };
-
-  const handleToolKeyChange: ChangeEventHandler<HTMLInputElement> = ({
-    target: { value },
-  }) => setValue(value);
+  const {
+    handleAddTaskVariable,
+    handleLabelChange,
+    handleToolKeyChange,
+    label,
+    labelError,
+    value,
+    errorStoringTaskVariable,
+  } = useTaskVariable({ onSuccess: modal.remove });
 
   return (
     <Modal>
