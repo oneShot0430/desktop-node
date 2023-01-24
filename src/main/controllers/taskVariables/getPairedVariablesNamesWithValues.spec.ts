@@ -56,7 +56,7 @@ describe('getPairedVariablesNamesWithValues', () => {
     ).rejects.toThrowError(/payload is not valid/i);
   });
 
-  it('throws an error if no pairings for a Task', async () => {
+  it('throws an error if there are no pairings for a Task', async () => {
     validateTaskMock.mockResolvedValue({});
 
     const validPayload: GetPairedVariablesNamesWithValuesParamType = {
