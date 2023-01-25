@@ -6,7 +6,7 @@ type UseStoredPairedTaskVariablesParams = {
   enabled?: boolean;
 };
 
-export const useStoredPairedTaskVariables = (
+export const useAllStoredPairedTaskVariables = (
   options?: UseStoredPairedTaskVariablesParams
 ) => {
   const storedPairedTaskVariablesQuery = useQuery(

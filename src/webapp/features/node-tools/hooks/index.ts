@@ -1,3 +1,4 @@
 export * from './useTaskVariablesNames';
 export * from './useStoredTaskVariables';
-export * from './useStoredPairedTaskVariables';
+export * from './useAllStoredPairedTaskVariables';
+export * from './useTaskPairedVariablesNamesWithValues';

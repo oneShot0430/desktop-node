@@ -12,7 +12,11 @@ import { ErrorMessage, LoadingSpinner } from 'webapp/components';
 import { pairTaskVariable } from 'webapp/services';
 
 import { getPairedTaskVariablesForTask } from '../helpers';
-import { useTaskVariablesNames, useStoredPairedTaskVariables } from '../hooks';
+import {
+  useTaskVariablesNames,
+  useAllStoredPairedTaskVariables,
+  useTaskPairedVariablesNamesWithValues,
+} from '../hooks';
 
 import { NodeTool } from './NodeTool';
 
@@ -30,15 +34,28 @@ export const NodeTools = ({ taskPubKey, onNodeToolsValidation }: PropsType) => {
       error: taskVariablesNamesError,
     },
   } = useTaskVariablesNames({ taskPubKey });
+
   const {
     storedPairedTaskVariablesQuery: {
       data: pairedVariables,
       isLoading: isLoadingPairedVariables,
       error: pairedVariablesError,
     },
-  } = useStoredPairedTaskVariables({
+  } = useAllStoredPairedTaskVariables({
     enabled: !!taskPubKey && !isLoadingTaskVariablesNames,
   });
+
+  const { storedTaskPairedTaskVariablesQuery } =
+    useTaskPairedVariablesNamesWithValues({
+      taskAccountPubKey: taskPubKey,
+      options: { enabled: !!taskPubKey },
+    });
+
+  console.log(
+    '@@@storedTaskPairedTaskVariablesQuery',
+    storedTaskPairedTaskVariablesQuery
+  );
+
   const [selectedTools, setSelectedTools] = useState<Record<string, string>>(
     {}
   );
