@@ -3,14 +3,13 @@ import * as fsSync from 'fs';
 
 import { Keypair, PublicKey } from '@_koi/web3.js';
 
-import { ErrorType } from 'models';
+import { ErrorType, ClaimRewardParam, ClaimRewardResponse } from 'models';
 import { throwDetailedError } from 'utils';
 
-import { ClaimRewardParam, ClaimRewardResponse } from '../../models/api';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
 import { namespaceInstance } from '../node/helpers/Namespace';
 
-import getTaskInfo from './getTaskInfo';
+import { getTaskInfo } from './getTaskInfo';
 
 const claimReward = async (
   event: Event,
@@ -49,15 +48,7 @@ const claimReward = async (
   const stakingPubKey = new PublicKey(stakingAccKeypair.publicKey);
   console.log('STAKING ACCOUNT PUBLIC KEY', stakingPubKey.toBase58());
 
-  let taskState;
-  try {
-    taskState = await getTaskInfo(null, { taskAccountPubKey });
-  } catch (e) {
-    return throwDetailedError({
-      detailed: e,
-      type: ErrorType.TASK_NOT_FOUND,
-    });
-  }
+  const taskState = await getTaskInfo(null, { taskAccountPubKey });
 
   const statePotPubKey = new PublicKey(taskState.stakePotAccount);
   console.log('STATE POT ACCOUNT PUBLIC KEY', statePotPubKey);
