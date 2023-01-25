@@ -1,10 +1,9 @@
 import React, { useEffect, useMemo } from 'react';
 
+import { OMITTED_VARIABLE_IDENTIFIER } from 'models';
 import { Dropdown, DropdownItem } from 'webapp/components';
 
 import { useStoredTaskVariables } from '../hooks';
-
-export const NOT_SET_TASK_VARIABLE_VALUE = 'not_set';
 
 type PropsType = {
   tool: string;
@@ -47,9 +46,9 @@ export const NodeTool = ({
     return [
       ...transformedItems,
       {
-        id: 'not_set',
+        id: OMITTED_VARIABLE_IDENTIFIER,
         label: 'Skip this setting',
-        value: NOT_SET_TASK_VARIABLE_VALUE,
+        value: OMITTED_VARIABLE_IDENTIFIER,
       },
     ];
   }, [taskVariables]);

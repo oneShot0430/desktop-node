@@ -15,7 +15,6 @@ import { getPairedTaskVariablesForTask } from '../helpers';
 import {
   useTaskVariablesNames,
   useAllStoredPairedTaskVariables,
-  useTaskPairedVariablesNamesWithValues,
 } from '../hooks';
 
 import { NodeTool } from './NodeTool';
@@ -44,17 +43,6 @@ export const NodeTools = ({ taskPubKey, onNodeToolsValidation }: PropsType) => {
   } = useAllStoredPairedTaskVariables({
     enabled: !!taskPubKey && !isLoadingTaskVariablesNames,
   });
-
-  const { storedTaskPairedTaskVariablesQuery } =
-    useTaskPairedVariablesNamesWithValues({
-      taskAccountPubKey: taskPubKey,
-      options: { enabled: !!taskPubKey },
-    });
-
-  console.log(
-    '@@@storedTaskPairedTaskVariablesQuery',
-    storedTaskPairedTaskVariablesQuery
-  );
 
   const [selectedTools, setSelectedTools] = useState<Record<string, string>>(
     {}
@@ -93,7 +81,7 @@ export const NodeTools = ({ taskPubKey, onNodeToolsValidation }: PropsType) => {
   const confirmTaskVariables = useCallback(async () => {
     const promises = Object.entries(selectedTools)
       .map(([tool, desktopVariableId]) => {
-        if (desktopVariableId === 'not_set' || !desktopVariableId) {
+        if (!desktopVariableId) {
           return;
         }
 
