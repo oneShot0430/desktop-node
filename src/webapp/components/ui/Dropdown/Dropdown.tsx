@@ -3,6 +3,8 @@ import { Listbox, Transition } from '@headlessui/react';
 import React, { Fragment, useCallback, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
+import { OMITTED_VARIABLE_IDENTIFIER } from 'models';
+
 import { ErrorMessage } from '../ErrorMessage';
 
 export type DropdownItem = {
@@ -46,7 +48,11 @@ export const Dropdown = ({
         selected &&
           'border-2 border-purple-1 font-semibold rounded-lg text-finnieTeal-100',
         item.disabled && 'text-gray-500 cursor-not-allowed',
-        item.id === 'not_set' && 'text-finnieOrange'
+        /**
+         * @dev when this component will go to styleguide, this logic should be abstracted away and probably we should make
+         * possible to add dropdown items using "slot pattern"
+         */
+        item.id === OMITTED_VARIABLE_IDENTIFIER && 'text-finnieOrange'
       );
 
       return itemClasses;

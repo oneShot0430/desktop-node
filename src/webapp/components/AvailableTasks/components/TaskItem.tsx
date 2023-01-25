@@ -26,6 +26,8 @@ import {
   TaskService,
   stopTask,
   getMainAccountPublicKey,
+  stakeOnTask,
+  startTask,
 } from 'webapp/services';
 import { Task } from 'webapp/types';
 
@@ -39,8 +41,7 @@ interface Props {
 }
 
 const TaskItem = ({ task, index, columnsLayout }: Props) => {
-  const { taskName, publicKey, bountyAmountPerRound, taskManager, isRunning } =
-    task;
+  const { taskName, publicKey, taskManager, isRunning } = task;
   const queryCache = useQueryClient();
   const [accordionView, setAccordionView] = useState<
     'info' | 'settings' | null
@@ -117,20 +118,18 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
   const handleStartTask = async () => {
     const stakeAmount = alreadyStakedTokensAmount || stake;
 
-    console.log('@@@handleStartTask', stakeAmount, alreadyStakedTokensAmount);
-
-    // try {
-    //   setLoading(true);
-    //   if (stakeAmount === 0) {
-    //     await stakeOnTask(publicKey, stakeAmount);
-    //   }
-    //   await startTask(publicKey);
-    // } catch (error) {
-    //   console.error(error);
-    // } finally {
-    //   queryCache.invalidateQueries();
-    //   setLoading(false);
-    // }
+    try {
+      setLoading(true);
+      if (stakeAmount === 0) {
+        await stakeOnTask(publicKey, stakeAmount);
+      }
+      await startTask(publicKey);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      queryCache.invalidateQueries();
+      setLoading(false);
+    }
   };
 
   const handleStopTask = async () => {
