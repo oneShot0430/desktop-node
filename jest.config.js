@@ -17,6 +17,7 @@ const config = {
       moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
       testMatch: ['<rootDir>/**/*.(spec|test).(ts|tsx)'],
       moduleNameMapper: {
+        'features/(.*)': '<rootDir>/src/webapp/features/$1',
         '^.+\\.svg$': '<rootDir>/src/webapp/tests/mocks/svgMocker.js',
         uuid: require.resolve('uuid'),
       },

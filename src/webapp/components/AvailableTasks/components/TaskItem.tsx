@@ -10,7 +10,6 @@ import { useQuery, useQueryClient } from 'react-query';
 
 import PlayIcon from 'assets/svgs/play-icon.svg';
 import StopTealIcon from 'assets/svgs/stop-icon-teal.svg';
-import { EditStakeInput } from 'features/onboarding';
 import { getKoiiFromRoe } from 'utils';
 import {
   Button,
@@ -19,6 +18,7 @@ import {
   Tooltip,
   TableRow,
   ColumnsLayout,
+  EditStakeInput,
 } from 'webapp/components';
 import { useTaskDetailsModal, useTaskStake } from 'webapp/features/common';
 import {

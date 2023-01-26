@@ -6,12 +6,10 @@ import CheckmarkIconSvg from 'assets/svgs/checkmark-teal-icon.svg';
 import CodeIconSvg from 'assets/svgs/code-icon.svg';
 import EditIconSvg from 'assets/svgs/edit-icon.svg';
 import { getKoiiFromRoe } from 'utils';
-import { Button } from 'webapp/components';
+import { Button, EditStakeInput } from 'webapp/components';
 import { useTaskDetailsModal } from 'webapp/features/common';
 import { getMainAccountPublicKey, QueryKeys } from 'webapp/services';
 import { TaskWithStake } from 'webapp/types';
-
-import { EditStakeInput } from '..';
 
 interface PropsType {
   task: TaskWithStake;
@@ -73,7 +71,7 @@ export const TaskRow = ({
 
   return (
     <div
-      className="flex flex-row w-full text-md text-finnieEmerald-light px-12"
+      className="flex flex-row w-full px-12 text-md text-finnieEmerald-light"
       key={publicKey}
     >
       <div className="w-[70%]">

@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 
 import CloseIcon from 'assets/svgs/close-icons/close-icon.svg';
 import CodeIconSvg from 'assets/svgs/code-icon.svg';
-import { Tooltip } from 'webapp/components';
-
-import { EditStakeInput } from '../EditStakeInput';
+import { EditStakeInput, Tooltip } from 'webapp/components';
 
 type PropsType = {
   name: string;

@@ -10,7 +10,6 @@ const navItems = [
   // { name: 'Rewards', to: '/rewards' },
   // { name: 'History', to: '/history' },
   // { name: 'Notifications', to: '/notifications' },
-  { name: 'Secrets', to: AppRoute.Secrets },
   { name: 'Settings', to: AppRoute.Settings },
 ];
 
