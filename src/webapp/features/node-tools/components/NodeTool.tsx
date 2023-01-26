@@ -61,7 +61,7 @@ export const NodeTool = ({
     );
   }, [defaultVariableId, dropdownItems]);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return null;
 
   return (
     <div className="flex justify-between w-full">

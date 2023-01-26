@@ -8,7 +8,11 @@ import {
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useMutation } from 'react-query';
 
-import { ErrorMessage, LoadingSpinner } from 'webapp/components';
+import {
+  ErrorMessage,
+  LoadingSpinner,
+  LoadingSpinnerSize,
+} from 'webapp/components';
 import { pairTaskVariable } from 'webapp/services';
 
 import { getPairedTaskVariablesForTask } from '../helpers';
@@ -91,7 +95,7 @@ export const NodeTools = ({ taskPubKey, onNodeToolsValidation }: PropsType) => {
           desktopVariableId,
         });
       })
-      .filter(Boolean) as Promise<void>[];
+      .filter(Boolean);
 
     await Promise.all(promises);
   }, [selectedTools, taskPubKey]);
@@ -121,14 +125,17 @@ export const NodeTools = ({ taskPubKey, onNodeToolsValidation }: PropsType) => {
     return <ErrorMessage error={error as string} />;
   }
 
-  const variableNames = taskVariablesNames; // && taskVariablesNames.slice(0, 3);
-
   return (
     <div className="w-full pb-4 pr-4">
-      {loading && <div>Loading...</div>}
+      {loading && (
+        <div className="flex flex-col items-center justify-center h-40 gap-4">
+          <LoadingSpinner size={LoadingSpinnerSize.Large} />
+          <div>Loading Node Tools</div>
+        </div>
+      )}
       {!loading && (
         <>
-          {variableNames.map((tool) => (
+          {taskVariablesNames.map((tool) => (
             <NodeTool
               onSecretSelected={handleToolPick}
               onInit={handleInit}

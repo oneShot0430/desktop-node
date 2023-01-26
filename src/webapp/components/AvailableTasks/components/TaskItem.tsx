@@ -10,7 +10,7 @@ import { useQuery, useQueryClient } from 'react-query';
 
 import PlayIcon from 'assets/svgs/play-icon.svg';
 import StopTealIcon from 'assets/svgs/stop-icon-teal.svg';
-import { EditStakeInput } from 'features/index';
+import { EditStakeInput } from 'features/onboarding';
 import { getKoiiFromRoe } from 'utils';
 import {
   Button,
@@ -74,11 +74,8 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
   });
 
   const handleToggleSettings = () => {
-    if (accordionView === 'settings') {
-      setAccordionView(null);
-      return;
-    }
-    setAccordionView('settings');
+    const newView = accordionView === 'settings' ? null : 'settings';
+    setAccordionView(newView);
   };
 
   const handleToggleInfo = () => {
@@ -158,8 +155,7 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
       <Icon
         source={PlayFill}
         size={18}
-        color={'#D6D6D6'}
-        className="cursor-not-allowed"
+        className="cursor-not-allowed text-gray"
       />
     );
   }, [isRunning, isTaskValidToRun]);
@@ -249,7 +245,13 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
             <div className="flex flex-col items-center justify-start w-[40px]">
               <Button
                 onClick={handleToggleSettings}
-                icon={<Icon source={SettingsFill} size={36} color="#FFC78F" />}
+                icon={
+                  <Icon
+                    source={SettingsFill}
+                    size={36}
+                    className="text-finnieOrange"
+                  />
+                }
                 onlyIcon
               />
             </div>

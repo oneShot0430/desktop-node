@@ -4,7 +4,5 @@ export const getPairedTaskVariablesForTask = (
   taskPubKey: string,
   pairedVariables?: PairedTaskVariables
 ) => {
-  if (!pairedVariables) return {};
-
-  return pairedVariables[taskPubKey] || {};
+  return pairedVariables?.[taskPubKey] ?? {};
 };
