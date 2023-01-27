@@ -10,6 +10,7 @@ import { useQuery, useQueryClient } from 'react-query';
 
 import PlayIcon from 'assets/svgs/play-icon.svg';
 import StopTealIcon from 'assets/svgs/stop-icon-teal.svg';
+import { useMainAccount } from 'features/settings';
 import { getKoiiFromRoe } from 'utils';
 import {
   Button,
@@ -25,7 +26,6 @@ import {
   QueryKeys,
   TaskService,
   stopTask,
-  getMainAccountPublicKey,
   stakeOnTask,
   startTask,
 } from 'webapp/services';
@@ -56,9 +56,7 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
    * @todo: abstract it away to the hook,
    * We probably should fetch the Account pub key once and keep it in the app context
    */
-  const { data: mainAccountPubKey } = useQuery(QueryKeys.MainAccount, () =>
-    getMainAccountPublicKey()
-  );
+  const { data: mainAccountPubKey } = useMainAccount();
 
   const { taskStake: alreadyStakedTokensAmount, loadingTaskStake } =
     useTaskStake({
@@ -183,7 +181,7 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
           placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
           tooltipContent="Open task details"
         >
-          <div className="flex flex-col items-center justify-start w-[40px]">
+          <div className="flex flex-col items-center justify-start w-10">
             <Button
               icon={
                 <Icon

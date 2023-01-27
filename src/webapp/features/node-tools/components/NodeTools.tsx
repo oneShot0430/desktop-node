@@ -108,9 +108,6 @@ export const NodeTools = ({ taskPubKey, onNodeToolsValidation }: PropsType) => {
     onSuccess: () => {
       alert('Pairing Task Variables Success');
     },
-    onError: (error) => {
-      alert(error);
-    },
   });
 
   const pairedVariablesForTask = useMemo(
@@ -118,11 +115,27 @@ export const NodeTools = ({ taskPubKey, onNodeToolsValidation }: PropsType) => {
     [pairedVariables, taskPubKey]
   );
 
-  const error = taskVariablesNamesError || pairedVariablesError;
+  const hasError =
+    taskVariablesNamesError ||
+    pairedVariablesError ||
+    isPairingTasksVariablesError;
   const loading = isLoadingTaskVariablesNames || isLoadingPairedVariables;
 
-  if (error) {
-    return <ErrorMessage error={error as string} />;
+  if (hasError) {
+    return (
+      <>
+        {taskVariablesNamesError && (
+          <ErrorMessage error={taskVariablesNamesError as string} />
+        )}
+        {pairedVariablesError &&
+          (pairedVariablesError || (
+            <ErrorMessage error={pairedVariablesError as string} />
+          ))}
+        {isPairingTasksVariablesError && (
+          <ErrorMessage error={isPairingTasksVariablesError as string} />
+        )}
+      </>
+    );
   }
 
   return (
