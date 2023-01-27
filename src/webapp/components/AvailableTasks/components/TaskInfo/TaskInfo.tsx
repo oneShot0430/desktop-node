@@ -10,9 +10,6 @@ type PropsType = {
 
 const NOT_AVAILABLE = 'N/A';
 
-const temp =
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sit amet commodo mi. Vestibulum finibus risus ac tellus tempor semper. Aliquam consequat gravida viverra. Mauris mi lectus, convallis et placerat non, ultrices ut purus. Cras at purus vel mauris sodales lobortis posuere vel risus. Quisque eu aliquet diam, id dignissim nunc. Aliquam non lectus viverra, varius massa vitae, semper mi. Quisque et arcu neque. Suspendisse sit amet mauris suscipit, ornare urna ut, tincidunt sem.';
-
 export const TaskInfo = ({ task, onShowCodeClick }: PropsType) => {
   const handleShowSourceCode = () => {
     onShowCodeClick();
@@ -37,7 +34,7 @@ export const TaskInfo = ({ task, onShowCodeClick }: PropsType) => {
        * @dev
        * This will be unhidden when metadata is available
        */}
-      <div className="mb-6  w-fit">
+      <div className="mb-6 w-fit">
         <div className="mb-2 text-base font-semibold">Node Specifications:</div>
         <div className="grid grid-flow-col grid-rows-2 gap-y-2 gap-x-12">
           <div className="">
