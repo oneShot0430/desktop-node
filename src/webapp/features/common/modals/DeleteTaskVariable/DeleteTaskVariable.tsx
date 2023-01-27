@@ -26,6 +26,9 @@ export const DeleteTaskVariable = create<Params>(function DeleteTaskVariable({
     {
       onSuccess: () => {
         queryClient.invalidateQueries([QueryKeys.TaskVariables]);
+        queryClient.invalidateQueries([
+          QueryKeys.StoredTaskPairedTaskVariables,
+        ]);
       },
     }
   );
@@ -48,17 +51,17 @@ export const DeleteTaskVariable = create<Params>(function DeleteTaskVariable({
         theme={Theme.Dark}
         className="p-5 pl-10 w-fit h-fit text-white rounded min-w-[740px]"
       >
-        <div className="w-full flex justify-center items-center gap-4 text-2xl font-semibold pt-2">
-          <Icon source={SettingsLine} className="h-8 w-8" />
+        <div className="flex items-center justify-center w-full gap-4 pt-2 text-2xl font-semibold">
+          <Icon source={SettingsLine} className="w-8 h-8" />
           <span>Delete Task Setting</span>
           <Icon
             source={CloseLine}
-            className="h-8 w-8 ml-auto cursor-pointer"
+            className="w-8 h-8 ml-auto cursor-pointer"
             onClick={modal.remove}
           />
         </div>
 
-        <div className="pr-14 py-10 text-left leading-8">
+        <div className="py-10 leading-8 text-left pr-14">
           <span> Are you sure you want to delete Task Setting </span>
           <span className="font-black">{label}</span>? This procedure cannot be
           undone and it will cause the tasks that are running on this tool to

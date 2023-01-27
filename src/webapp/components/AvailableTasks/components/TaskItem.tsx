@@ -177,8 +177,6 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
     return null;
   }, [accordionView, task, showCodeModal]);
 
-  if (loadingMainAccount) return null;
-
   return (
     <TableRow columnsLayout={columnsLayout} className="py-2">
       <div>

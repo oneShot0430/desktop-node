@@ -27,7 +27,7 @@ export const AvailableTasks = () => {
     Task[],
     Error
   >(
-    QueryKeys.availableTaskList,
+    [QueryKeys.availableTaskList],
     ({ pageParam = 0 }) =>
       fetchAvailableTasks({ limit: pageSize, offset: pageParam * pageSize }),
     {
@@ -42,6 +42,7 @@ export const AvailableTasks = () => {
   );
 
   const allRows = (data?.pages || []).flat();
+  console.log('@@@allRows', allRows);
 
   return (
     <InfiniteScrollTable
