@@ -19,7 +19,6 @@ import { getPairedTaskVariablesForTask } from '../helpers';
 import {
   useTaskVariablesNames,
   useAllStoredPairedTaskVariables,
-  useTaskPairedVariablesNamesWithValues,
 } from '../hooks';
 
 import { NodeTool } from './NodeTool';
@@ -40,13 +39,6 @@ export const NodeTools = ({ taskPubKey, onNodeToolsValidation }: PropsType) => {
   } = useTaskVariablesNames({ taskPubKey });
 
   const {
-    storedTaskPairedTaskVariablesQuery: { data: taskPairedTaskVariables },
-  } = useTaskPairedVariablesNamesWithValues({
-    taskAccountPubKey: taskPubKey,
-    options: { enabled: !!taskPubKey },
-  });
-
-  const {
     storedPairedTaskVariablesQuery: {
       data: pairedVariables,
       isLoading: isLoadingPairedVariables,
@@ -54,11 +46,6 @@ export const NodeTools = ({ taskPubKey, onNodeToolsValidation }: PropsType) => {
     },
   } = useAllStoredPairedTaskVariables({
     enabled: !!taskPubKey && !isLoadingTaskVariablesNames,
-  });
-
-  console.log('@@@@TaskPairedTaskVariables', {
-    taskPairedTaskVariables,
-    pairedVariables,
   });
 
   const [selectedTools, setSelectedTools] = useState<Record<string, string>>(

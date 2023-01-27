@@ -42,7 +42,6 @@ export const AvailableTasks = () => {
   );
 
   const allRows = (data?.pages || []).flat();
-  console.log('@@@allRows', allRows);
 
   return (
     <InfiniteScrollTable

@@ -33,8 +33,6 @@ export const getPairedVariablesNamesWithValues = async (
 
   const taskPairings = pairedTaskVariables[payload.taskAccountPubKey];
 
-  console.log('@@@payload', payload.taskAccountPubKey);
-
   if (!taskPairings) {
     return throwDetailedError({
       detailed: `Get Paired Variables Names with Values error: No pairings found for Task (${payload.taskAccountPubKey})`,

@@ -56,9 +56,8 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
    * @todo: abstract it away to the hook,
    * We probably should fetch the Account pub key once and keep it in the app context
    */
-  const { data: mainAccountPubKey, isLoading: loadingMainAccount } = useQuery(
-    QueryKeys.MainAccount,
-    () => getMainAccountPublicKey()
+  const { data: mainAccountPubKey } = useQuery(QueryKeys.MainAccount, () =>
+    getMainAccountPublicKey()
   );
 
   const { taskStake: alreadyStakedTokensAmount, loadingTaskStake } =
