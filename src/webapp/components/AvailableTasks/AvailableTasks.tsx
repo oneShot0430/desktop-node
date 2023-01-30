@@ -8,13 +8,12 @@ import { Task } from 'webapp/types';
 import TaskItem from './components/TaskItem';
 
 const tableHeaders = [
-  { title: 'Code' },
-  { title: 'Task Name' },
-  { title: 'Creator' },
-  { title: 'Bounty' },
-  { title: 'Nodes' },
-  { title: 'Top Stake' },
-  { title: 'Set Stake' },
+  { title: 'Info' },
+  { title: 'Task Name & Start Time' },
+  { title: '' },
+  { title: '' },
+  { title: 'Stake' },
+  { title: 'Settings' },
   { title: 'Run Task' },
 ];
 
@@ -28,7 +27,7 @@ export const AvailableTasks = () => {
     Task[],
     Error
   >(
-    QueryKeys.availableTaskList,
+    [QueryKeys.availableTaskList],
     ({ pageParam = 0 }) =>
       fetchAvailableTasks({ limit: pageSize, offset: pageParam * pageSize }),
     {

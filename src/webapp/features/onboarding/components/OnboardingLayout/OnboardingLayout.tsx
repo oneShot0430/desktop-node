@@ -10,6 +10,7 @@ import React, { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import KoiiLogo from 'assets/svgs/koii-logo-white.svg';
+import { useMainAccount } from 'features/settings/hooks/useMainAccount';
 import { Button } from 'webapp/components/ui/Button';
 import { useUserAppConfig } from 'webapp/features/settings';
 import { AppRoute } from 'webapp/types/routes';
@@ -23,6 +24,7 @@ type PropsType = {
 };
 
 const OnboardingLayout = ({ children }: PropsType) => {
+  const { data: mainAccountPubKey } = useMainAccount();
   const {
     handleBackButtonClick,
     showOnboardingBackButton,
@@ -32,8 +34,9 @@ const OnboardingLayout = ({ children }: PropsType) => {
 
   const location = useLocation();
   const displaySkipButton = useMemo(
-    () => location.pathname !== AppRoute.OnboardingCreatePin,
-    [location.pathname]
+    () =>
+      location.pathname !== AppRoute.OnboardingCreatePin && mainAccountPubKey,
+    [location.pathname, mainAccountPubKey]
   );
 
   const { handleSaveUserAppConfig } = useUserAppConfig({
@@ -50,7 +53,7 @@ const OnboardingLayout = ({ children }: PropsType) => {
         {showOnboardingBackButton && (
           <Icon
             source={ChevronArrowLine}
-            className="w-9 h-9 cursor-pointer -rotate-90 absolute top-5 left-5"
+            className="absolute -rotate-90 cursor-pointer w-9 h-9 top-5 left-5"
             onClick={handleBackButtonClick}
           />
         )}
@@ -68,24 +71,24 @@ const OnboardingLayout = ({ children }: PropsType) => {
           <StepListItem
             isActive={currentPath === AppRoute.OnboardingCreatePin}
             text="Secure your Node with a PIN."
-            iconSlot={<Icon source={LockLine} className="h-9 w-9 m-1" />}
+            iconSlot={<Icon source={LockLine} className="m-1 h-9 w-9" />}
           />
           <StepListItem
             isActive={currentPath.includes('create-or-import-key')}
             text="Fund your new key or import one."
             iconSlot={
-              <Icon source={CurrencyMoneyLine} className="h-9 w-9 m-1" />
+              <Icon source={CurrencyMoneyLine} className="m-1 h-9 w-9" />
             }
           />
           <StepListItem
             isActive={currentPath === AppRoute.OnboardingCreateFirstTask}
             text="Select your first tasks."
-            iconSlot={<Icon source={WebCursorXlLine} className="h-9 w-9 m-1" />}
+            iconSlot={<Icon source={WebCursorXlLine} className="m-1 h-9 w-9" />}
           />
           <StepListItem
             isActive={currentPath === AppRoute.OnboardingConfirmStake}
             text="Confirm your stake and go!"
-            iconSlot={<Icon source={ClickXlLine} className="h-9 w-9 m-1" />}
+            iconSlot={<Icon source={ClickXlLine} className="m-1 h-9 w-9" />}
           />
           <div className="absolute bottom-2 left-2">
             {displaySkipButton && (

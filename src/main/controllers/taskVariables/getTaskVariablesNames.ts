@@ -12,7 +12,7 @@ export const getTaskVariablesNames = async (
   _: Event,
   { taskPublicKey }: GetTaskVariablesNamesParam
 ): Promise<string[]> => {
-  const taskSourceCode: string = await getTaskSource(null, {
+  const taskSourceCode: string = await getTaskSource(_, {
     taskAccountPubKey: taskPublicKey,
   });
   const taskVariablesRegex = /process\.env\.[A-Za-z0-9_]+/g;

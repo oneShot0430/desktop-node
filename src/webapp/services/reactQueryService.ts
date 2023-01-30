@@ -12,5 +12,9 @@ export enum QueryKeys {
   Accounts = 'Accounts',
   TaskStake = 'TaskStake',
   TaskVariables = 'TaskVariables',
+  TaskVariablesNames = 'TaskVariablesNames',
+  StoredTaskVariables = 'StoredTaskVariables',
+  StoredPairedTaskVariables = 'StoredPairedTaskVariables',
   TasksPairedWithVariable = 'TasksPairedWithVariable',
+  StoredTaskPairedTaskVariables = 'StoredTaskPairedTaskVariables',
 }

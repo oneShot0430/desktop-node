@@ -8,7 +8,6 @@ export enum AppRoute {
   Settings = '/settings',
   History = '/history',
   Onboarding = '/onboarding',
-  Secrets = '/secrets',
   // onboarding routes
   OnboardingCreatePin = '/onboarding/create-pin',
   OnboardingCreateOrImportKey = '/onboarding/create-or-import-key',

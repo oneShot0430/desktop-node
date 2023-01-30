@@ -23,7 +23,7 @@ const ImportWithKeyPhrase = ({ onClose, onImportSuccess }: PropsType) => {
     <ModalContent theme={Theme.Dark} className="w-fit h-fit">
       <div className="text-white ">
         <div className="flex justify-between p-3">
-          <div className="flex items-center justify-between pl-6 gap-6">
+          <div className="flex items-center justify-between gap-6 pl-6">
             <Icon source={UploadLine} className="w-7 h-7" />
             <span className="text-[24px]">
               Import a key with a secret phrase
@@ -53,7 +53,6 @@ const ImportWithKeyPhrase = ({ onClose, onImportSuccess }: PropsType) => {
            */
           accountName={accountName}
           onImportSuccess={({ stakingAccountPubKey, mainAccountPubKey }) => {
-            console.log('@@@keys', { stakingAccountPubKey, mainAccountPubKey });
             queryCache.invalidateQueries();
             onImportSuccess({ stakingAccountPubKey, mainAccountPubKey });
           }}
