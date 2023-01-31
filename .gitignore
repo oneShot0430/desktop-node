@@ -21,7 +21,13 @@ node_modules
 release/app/dist
 release/build
 .erb/dll
-
+.vscode
+.webpack
+desktopKoiiNodeDB
+wallets
+namespace
+executables
+desktop-node.iml
 .idea
 npm-debug.log.*
 *.css.d.ts
