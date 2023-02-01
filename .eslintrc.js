@@ -46,6 +46,7 @@ module.exports = {
       },
     ],
     'unused-imports/no-unused-imports': 'error',
+    '@typescript-eslint/no-var-requires': 'off'
   },
   parser: '@typescript-eslint/parser',
   settings: {
