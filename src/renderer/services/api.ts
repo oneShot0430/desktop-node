@@ -1,4 +1,3 @@
-import { PublicKey } from '@_koi/web3.js';
 import { sum } from 'lodash';
 
 import {
@@ -8,9 +7,8 @@ import {
   TaskVariableData,
   StoreUserConfigParam,
 } from 'models/api';
-import sdk from 'services/sdk';
-import { getKoiiFromRoe } from 'utils';
 import { Task } from 'renderer/types';
+import { getKoiiFromRoe } from 'utils';
 
 import { TaskService } from './taskService';
 
@@ -57,7 +55,11 @@ export const getRewardEarned = async (task: Task): Promise<number> => {
 export const getMainAccountBalance = (): Promise<number> => {
   return window.main
     .getMainAccountPubKey()
-    .then((pubkey) => sdk.k2Connection.getBalance(new PublicKey(pubkey)))
+    .then((pubkey) => {
+      return Promise.resolve(123);
+
+      // return sdk.k2Connection.getBalance(new PublicKey(pubkey));
+    })
     .then(getKoiiFromRoe)
     .then((balance) => {
       console.log('GETTING MAIN ACCOUNT BALANCE', balance);
@@ -66,13 +68,14 @@ export const getMainAccountBalance = (): Promise<number> => {
 };
 
 export const getAccountBalance = (pubKey: string) => {
-  return sdk.k2Connection
-    .getBalance(new PublicKey(pubKey))
-    .then(getKoiiFromRoe)
-    .then((balance) => {
-      console.log('GETTING ACCOUNT BALANCE', pubKey, balance);
-      return balance;
-    });
+  return Promise.resolve(123);
+  // return sdk.k2Connection
+  //   .getBalance(new PublicKey(pubKey))
+  //   .then(getKoiiFromRoe)
+  //   .then((balance) => {
+  //     console.log('GETTING ACCOUNT BALANCE', pubKey, balance);
+  //     return balance;
+  //   });
 };
 
 export const getMainAccountPublicKey = (): Promise<string> => {
