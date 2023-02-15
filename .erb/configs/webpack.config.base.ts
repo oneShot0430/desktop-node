@@ -1,7 +1,6 @@
 /**
  * Base webpack config used across other specific configs
  */
-import path from 'path';
 import webpack from 'webpack';
 import TsconfigPathsPlugins from 'tsconfig-paths-webpack-plugin';
 import webpackPaths from './webpack.paths';
@@ -55,6 +54,10 @@ const configuration: webpack.Configuration = {
     //   utils: path.resolve(__dirname, '../../src/utils/'),
     //   models: path.resolve(__dirname, '../../src/models/'),
     // },
+    fallback: {
+      "crypto": require.resolve("crypto-browserify"),
+      "stream": require.resolve("stream-browserify")
+    }
   },
 
   plugins: [
