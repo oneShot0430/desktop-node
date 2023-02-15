@@ -89,9 +89,9 @@ const createWindow = async () => {
   // );
   // mainWindow.webContents.openDevTools({ mode: 'detach' });
 
-  mainWindow.on('ready-to-show', () => {
-    main()
-      .then((): void => {
+  await main()
+    .then((): void => {
+      mainWindow?.on('ready-to-show', () => {
         if (!mainWindow) {
           throw new Error('"mainWindow" is not defined');
         }
@@ -100,13 +100,13 @@ const createWindow = async () => {
         } else {
           mainWindow.show();
         }
-      })
-      .catch((err): void => {
-        dialog.showErrorBox('Something went wrong!', err.message);
-
-        app.quit();
       });
-  });
+    })
+    .catch((err): void => {
+      dialog.showErrorBox('Something went wrong!', err.message);
+
+      app.quit();
+    });
 
   mainWindow.on('closed', () => {
     mainWindow = null;
@@ -129,17 +129,13 @@ app.on('window-all-closed', () => {
   }
 });
 
-app
-  .whenReady()
-  .then(() => {
+app.on('activate', () => {
+  // On OS X it's common to re-create a window in the app when the
+  // dock icon is clicked and there are no other windows open.
+  if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
-    app.on('activate', () => {
-      // On macOS it's common to re-create a window in the app when the
-      // dock icon is clicked and there are no other windows open.
-      if (mainWindow === null) createWindow();
-    });
-  })
-  .catch(console.log);
+  }
+});
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
