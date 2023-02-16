@@ -5,9 +5,14 @@ module.exports = {
     node: true,
   },
   parserOptions: {
+    ecmaVersion: 2020,
+    sourceType: 'module',
     project: './tsconfig.json',
+    tsconfigRootDir: __dirname,
+    createDefaultProgram: true,
   },
   extends: [
+    'erb',
     'eslint:recommended',
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
@@ -46,15 +51,20 @@ module.exports = {
       },
     ],
     'unused-imports/no-unused-imports': 'error',
-    '@typescript-eslint/no-var-requires': 'off'
+    '@typescript-eslint/no-var-requires': 'off',
   },
   parser: '@typescript-eslint/parser',
   settings: {
     'import/resolver': {
+      // See https://github.com/benmosher/eslint-plugin-import/issues/1396#issuecomment-575727774 for line below
+      node: {},
+      webpack: {
+        config: require.resolve('./.erb/configs/webpack.config.eslint.ts'),
+      },
       typescript: {},
     },
-    react: {
-      version: '17',
+    'import/parsers': {
+      '@typescript-eslint/parser': ['.ts', '.tsx'],
     },
   },
 };

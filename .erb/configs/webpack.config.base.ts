@@ -1,10 +1,12 @@
 /**
  * Base webpack config used across other specific configs
  */
-import webpack from 'webpack';
 import TsconfigPathsPlugins from 'tsconfig-paths-webpack-plugin';
-import webpackPaths from './webpack.paths';
+import webpack from 'webpack';
+
 import { dependencies as externals } from '../../release/app/package.json';
+
+import webpackPaths from './webpack.paths';
 
 const configuration: webpack.Configuration = {
   externals: [...Object.keys(externals || {})],
@@ -45,19 +47,11 @@ const configuration: webpack.Configuration = {
     extensions: ['.js', '.jsx', '.json', '.ts', '.tsx'],
     modules: [webpackPaths.srcPath, 'node_modules'],
     // There is no need to add aliases here, the paths in tsconfig get mirrored
-    // plugins: [new TsconfigPathsPlugins({ configFile: './tsconfig.json' })],
     plugins: [new TsconfigPathsPlugins()],
-    // alias: {
-    //   config: path.resolve(__dirname, '../../src/config/'),
-    //   main: path.resolve(__dirname, '../../src/main/'),
-    //   services: path.resolve(__dirname, '../../src/services/'),
-    //   utils: path.resolve(__dirname, '../../src/utils/'),
-    //   models: path.resolve(__dirname, '../../src/models/'),
-    // },
     fallback: {
-      "crypto": require.resolve("crypto-browserify"),
-      "stream": require.resolve("stream-browserify")
-    }
+      crypto: require.resolve('crypto-browserify'),
+      stream: require.resolve('stream-browserify'),
+    },
   },
 
   plugins: [
