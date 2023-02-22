@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import { RefreshBalance } from './RefreshBalance';
 import { ShowBalance } from './ShowBalance';
 
-export const SeeBalance = () => {
-  const [balance, setBalance] = useState(null);
+export function SeeBalance() {
+  const [balance, setBalance] = useState<number>();
 
   return (
     <div className="w-full h-full">
@@ -17,4 +17,4 @@ export const SeeBalance = () => {
       </div>
     </div>
   );
-};
+}

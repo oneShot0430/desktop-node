@@ -1,31 +1,31 @@
 // import { Task } from 'main/type';
 import { ChildProcess } from 'child_process';
 
-import { ErrorType } from '../models';
-import { throwDetailedError } from '../utils';
-
 import fetchAllTasks from '../main/controllers/fetchAlltasks';
 import { namespaceInstance } from '../main/node/helpers/Namespace';
 import { Task, IRunningTasks } from '../main/type/TaskData';
+import { ErrorType } from '../models';
+import { throwDetailedError } from '../utils';
 
 class KoiiTasks {
   private tasks: Task[] = [];
+
   public RUNNING_TASKS: IRunningTasks = {};
   // private addedTasks: AddedTask[]
 
   constructor() {
-    fetchAllTasks().then((res: any) => {
+    // eslint-disable-next-line promise/catch-or-return,
+    fetchAllTasks().then((res: Task[]) => {
       this.tasks = res;
       this.getTasksStateFromRedis();
     });
     this.watchTasks();
   }
 
-  getTaskByPublicKey(publicKey: string): Task {
-    const task: Task = this.tasks.find((task) => {
-      return task.publicKey == publicKey;
+  getTaskByPublicKey(publicKey: string): Task | undefined {
+    return this.tasks.find((task) => {
+      return task.publicKey === publicKey;
     });
-    return task;
   }
 
   getRunningTasks(): Task[] {
@@ -35,8 +35,10 @@ class KoiiTasks {
   getAllTasks(): Task[] {
     return this.tasks.length ? this.tasks : [];
   }
+
   private async watchTasks() {
     setInterval(() => {
+      // eslint-disable-next-line promise/catch-or-return
       fetchAllTasks().then((res: Task[]) => {
         this.tasks = res;
         this.getTasksStateFromRedis();
@@ -52,13 +54,13 @@ class KoiiTasks {
     secret: string
   ): Promise<void> {
     this.tasks.map((task) => {
-      if (task.publicKey == taskAccountPubKey) {
+      if (task.publicKey === taskAccountPubKey) {
         task.data.isRunning = true;
         this.RUNNING_TASKS[taskAccountPubKey] = {
-          namespace: namespace,
+          namespace,
           child: childTaskProcess,
-          expressAppPort: expressAppPort,
-          secret: secret,
+          expressAppPort,
+          secret,
         };
       }
       return task;
@@ -76,11 +78,11 @@ class KoiiTasks {
       'runningTasks',
       JSON.stringify(runningTasks)
     );
-    return;
   }
+
   taskStopped(taskAccountPubKey: string) {
     this.tasks.map((task) => {
-      if (task.publicKey == taskAccountPubKey) {
+      if (task.publicKey === taskAccountPubKey) {
         task.data.isRunning = false;
         if (!this.RUNNING_TASKS[taskAccountPubKey])
           return throwDetailedError({
@@ -98,9 +100,9 @@ class KoiiTasks {
   }
 
   private async getTasksStateFromRedis() {
-    const runningTasksStr: string = await namespaceInstance.storeGet(
+    const runningTasksStr: string = (await namespaceInstance.storeGet(
       'runningTasks'
-    );
+    )) as string;
     const runningTasks: Array<string> = runningTasksStr
       ? JSON.parse(runningTasksStr)
       : [];

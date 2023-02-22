@@ -1,10 +1,8 @@
 {
   "compilerOptions": {
     "incremental": true,
-    "target": "es2021",
     "module": "commonjs",
     "lib": ["dom", "es2021"],
-    "jsx": "react-jsx",
     "strict": true,
     "sourceMap": true,
     "moduleResolution": "node",
@@ -13,7 +11,12 @@
     "resolveJsonModule": true,
     "allowJs": true,
     "outDir": ".erb/dll",
-    "baseUrl": "./src"
+    "baseUrl": "./src",
+    "skipLibCheck": true,
+    "noImplicitAny": true,
+    "jsx": "react",
+    "target": "ES6"
+
   },
   "exclude": ["test", "release/build", "release/app/dist", ".erb/dll"]
 }

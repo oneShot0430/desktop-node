@@ -13,16 +13,17 @@ type PropsType = {
   columnsLayout: ColumnsLayout;
   children: ReactNode;
   isLoading?: boolean;
-  error?: string | Error;
+  // eslint-disable-next-line react/require-default-props
+  error?: string | Error | null;
 };
 
-export const Table = ({
+export function Table({
   headers,
   columnsLayout,
   children,
   isLoading,
   error,
-}: PropsType) => {
+}: PropsType) {
   if (isLoading)
     return (
       <div className="grid place-items-center h-full">
@@ -38,4 +39,4 @@ export const Table = ({
       <div className="overflow-y-auto min-h-table">{children}</div>
     </div>
   );
-};
+}

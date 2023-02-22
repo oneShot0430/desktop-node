@@ -8,7 +8,7 @@ import { useAccounts } from '../hooks';
 
 import AccountItem from './AccountItem';
 
-const AccountsTable = () => {
+function AccountsTable() {
   const { showModal } = useAddNewAccountModal();
 
   const { accounts, loadingAccounts, accountsError } = useAccounts();
@@ -19,7 +19,8 @@ const AccountsTable = () => {
       (accounts ?? []).sort((a) => {
         if (a.isDefault) {
           return -1;
-        } else return 0;
+        }
+        return 0;
       }),
     [accounts]
   );
@@ -73,6 +74,6 @@ const AccountsTable = () => {
       </div>
     </>
   );
-};
+}
 
 export default memo(AccountsTable);

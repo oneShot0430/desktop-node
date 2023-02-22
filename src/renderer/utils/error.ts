@@ -1,5 +1,6 @@
 import { DetailedError, ErrorType } from 'models';
 
+// eslint-disable-next-line no-shadow
 export enum ErrorContext {
   CLAIM_REWARD = 'CLAIM_REWARD',
   DELEGATE_STAKE = 'DELEGATE_STAKE',
@@ -35,14 +36,14 @@ export const getErrorToDisplay = (
     const parsedError: DetailedError = JSON.parse(serializedError);
     const errorContent = errorTypeToContent[parsedError.type];
     const hasContext = typeof errorContent !== 'string';
-    const errorMessage = hasContext
-      ? `${errorContent.mainMessage}${errorContent.contextToSuffix[context]}`
-      : `${errorContent || parsedError.detailed}`;
+    const errorMessage =
+      hasContext && context
+        ? `${errorContent.mainMessage}${errorContent.contextToSuffix[context]}`
+        : `${errorContent || parsedError.detailed}`;
 
     return errorMessage;
-  } else {
-    return error?.message;
   }
+  return error?.message;
 };
 
 export const errorTypeToContent = {

@@ -11,7 +11,7 @@ export const useMainAccountBalance = () => {
   );
 
   const mainAccountBalanceQuery = useQuery(
-    ['account-balance', mainAccountPubKey],
+    ['account-balance', mainAccountPubKey as string],
     fetchAccountBalance,
     {
       enabled: !!mainAccountPubKey,

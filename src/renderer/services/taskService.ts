@@ -1,8 +1,6 @@
 import { isNil, max, min, sum, isString } from 'lodash';
-
-import { Task as TaskRaw } from 'main/type/TaskData';
-import arweave from 'services/arweave';
 import { Task, TaskStatus } from 'renderer/types';
+import arweave from 'services/arweave';
 
 import { getStakingAccountPublicKey } from './api';
 
@@ -39,15 +37,12 @@ export class TaskService {
     return Object.values(task.stakeList).length;
   }
 
-  static getStatus(task: Task): TaskStatus {
-    if (!isNil(task.status['AcceptingSubmissions']))
+  // eslint-disable-next-line consistent-return
+  static getStatus(task: Task): TaskStatus | undefined {
+    if (!isNil(task.status.AcceptingSubmissions))
       return TaskStatus.ACCEPTING_SUBMISSIONS;
-    if (!isNil(task.status['Voting'])) return TaskStatus.VOTING;
-    if (!isNil(task.status['Completed'])) return TaskStatus.COMPLETED;
-  }
-
-  static parseTask({ data, publicKey }: TaskRaw): Task {
-    return { publicKey, ...data };
+    if (!isNil(task.status.Voting)) return TaskStatus.VOTING;
+    if (!isNil(task.status.Completed)) return TaskStatus.COMPLETED;
   }
 }
 

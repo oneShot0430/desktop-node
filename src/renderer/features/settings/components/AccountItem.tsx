@@ -4,7 +4,7 @@ import {
   CopyLine,
   Icon,
 } from '@_koii/koii-styleguide';
-import React, { memo, useState } from 'react';
+import React, { FC, memo, SVGProps, useState } from 'react';
 
 import DeleteIconSvg from 'assets/svgs/delete-icon.svg';
 import DotsSvg from 'assets/svgs/dots.svg';
@@ -32,13 +32,13 @@ type PropsType = {
   columnsLayout: ColumnsLayout;
 };
 
-const AccountItem = ({
+function AccountItem({
   accountName,
   mainPublicKey,
   stakingPublicKey,
   isDefault,
   columnsLayout,
-}: PropsType) => {
+}: PropsType) {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const { accountBalance, accountBalanceLoadingError } =
@@ -68,7 +68,7 @@ const AccountItem = ({
             Are you sure you want to delete{' '}
             <span className="text-lg text-finnieTeal">{accountName}</span>?
           </p>
-          <br></br>
+          <br />
           If you want to use this account in the future, you will <br /> need to
           import it again using the secret phrase.
         </div>
@@ -160,13 +160,19 @@ const AccountItem = ({
                 <Button
                   disabled={isDeleting}
                   onClick={handleDeleteAccount}
-                  icon={<Icon source={DeleteIconSvg} />}
+                  icon={
+                    <Icon
+                      source={
+                        DeleteIconSvg as unknown as FC<SVGProps<SVGSVGElement>>
+                      }
+                    />
+                  }
                   className="w-6 h-6 rounded-full bg-finnieRed mr-0"
                 />
               </Tooltip>
             ))}
         </div>
-        <div></div>
+        <div />
         <div className="text-finnieOrange">Staking Key</div>
 
         {/* <Button
@@ -195,6 +201,6 @@ const AccountItem = ({
       </TableRow>
     </div>
   );
-};
+}
 
 export default memo(AccountItem);

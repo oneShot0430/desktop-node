@@ -123,7 +123,7 @@ const routes = [
   },
 ];
 
-const AppRoutes = (): JSX.Element => {
+const AppRoutes = () => {
   return useRoutes(routes);
 };
 

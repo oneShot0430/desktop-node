@@ -13,7 +13,6 @@ import {
 } from '@_koi/web3.js';
 
 import config from '../../config';
-import { namespaceInstance } from '../../main/node/helpers/Namespace';
 import {
   ErrorType,
   NetworkErrors,
@@ -22,8 +21,8 @@ import {
 } from '../../models';
 import sdk from '../../services/sdk';
 import { throwDetailedError, mainErrorHandler } from '../../utils';
-
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
+import { namespaceInstance } from '../node/helpers/Namespace';
 
 import getTaskInfo from './getTaskInfo';
 
@@ -53,10 +52,8 @@ const delegateStake = async (
       type: ErrorType.NO_ACTIVE_ACCOUNT,
     });
   }
-  const stakingWalletfilePath =
-    getAppDataPath() + `/namespace/${activeAccount}_stakingWallet.json`;
-  const mainWalletfilePath =
-    getAppDataPath() + `/wallets/${activeAccount}_mainSystemWallet.json`;
+  const stakingWalletfilePath = `${getAppDataPath()}/namespace/${activeAccount}_stakingWallet.json`;
+  const mainWalletfilePath = `${getAppDataPath()}/wallets/${activeAccount}_mainSystemWallet.json`;
   let mainSystemAccount;
   let stakingAccKeypair;
   try {
@@ -70,7 +67,7 @@ const delegateStake = async (
         JSON.parse(fsSync.readFileSync(stakingWalletfilePath, 'utf-8'))
       )
     );
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
     return throwDetailedError({
       detailed: e,
@@ -84,7 +81,7 @@ const delegateStake = async (
   let taskState;
   try {
     taskState = await getTaskInfo(null, { taskAccountPubKey });
-  } catch (e) {
+  } catch (e: any) {
     return throwDetailedError({
       detailed: e,
       type: ErrorType.TASK_NOT_FOUND,
@@ -92,7 +89,7 @@ const delegateStake = async (
   }
   console.log('ACCOUNT OWNER', accountInfo?.owner?.toBase58());
   if (
-    accountInfo?.owner?.toBase58() ==
+    accountInfo?.owner?.toBase58() ===
     'Koiitask22222222222222222222222222222222222'
   ) {
     // Means account already exists
@@ -109,7 +106,7 @@ const delegateStake = async (
         createSubmitterAccTransaction,
         [mainSystemAccount]
       );
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       const errorType = e.message
         .toLowerCase()
@@ -144,7 +141,7 @@ const delegateStake = async (
         { pubkey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false },
       ],
       programId: TASK_CONTRACT_ID,
-      data: data,
+      data,
     });
     try {
       const response = await sendAndConfirmTransaction(
@@ -153,7 +150,7 @@ const delegateStake = async (
         [mainSystemAccount, stakingAccKeypair]
       );
       return response;
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       const errorType = e.message
         .toLowerCase()
@@ -178,7 +175,7 @@ const delegateStake = async (
         lamports:
           stakeAmount * LAMPORTS_PER_SOL +
           (await sdk.k2Connection.getMinimumBalanceForRentExemption(100)) +
-          10000, //Adding 10,000 extra lamports for padding
+          10000, // Adding 10,000 extra lamports for padding
         space: 100,
         programId: TASK_CONTRACT_ID,
       })
@@ -190,7 +187,7 @@ const delegateStake = async (
         [mainSystemAccount, stakingAccKeypair]
       );
       console.log('Stake account created');
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       const errorType = e.message
         .toLowerCase()
@@ -226,7 +223,7 @@ const delegateStake = async (
         { pubkey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false },
       ],
       programId: TASK_CONTRACT_ID,
-      data: data,
+      data,
     });
     try {
       const response = await sendAndConfirmTransaction(
@@ -237,7 +234,7 @@ const delegateStake = async (
       console.log('Staking complete');
 
       return response;
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       const errorType = e.message
         .toLowerCase()
@@ -256,7 +253,7 @@ const encodeData = (type: any, fields: any) => {
   const allocLength =
     type.layout.span >= 0 ? type.layout.span : getAlloc(type, fields);
   const data = Buffer.alloc(allocLength);
-  const layoutFields = Object.assign({ instruction: type.index }, fields);
+  const layoutFields = { instruction: type.index, ...fields };
   type.layout.encode(layoutFields, data);
   return data;
 };

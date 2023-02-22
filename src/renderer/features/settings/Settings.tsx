@@ -4,13 +4,9 @@ import AccountsTable from './components/AccountsTable';
 import NodeLogs from './components/NodeLogs';
 import SettingsHeader from './components/SettingsHeader';
 import { logsMock } from './mocks';
+import { Tab } from './types';
 
-export enum Tab {
-  AccountsTable = 'AccountsTable',
-  NodeLogs = 'NodeLogs',
-}
-
-const Settings = () => {
+function Settings() {
   const [selectedTab, setTab] = useState(Tab.AccountsTable);
 
   return (
@@ -20,6 +16,6 @@ const Settings = () => {
       {selectedTab === Tab.NodeLogs && <NodeLogs logs={logsMock} />}
     </div>
   );
-};
+}
 
 export default memo(Settings);

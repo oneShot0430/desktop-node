@@ -1,5 +1,4 @@
 import { sum } from 'lodash';
-
 import {
   FetchAllTasksParam,
   GetAvailableTasksParam,
@@ -10,20 +9,24 @@ import {
 import { Task } from 'renderer/types';
 import { getKoiiFromRoe } from 'utils';
 
-import { TaskService } from './taskService';
+import { Task as TaskRaw } from '../../main/type/TaskData';
+
+function parseTask({ data, publicKey }: TaskRaw): Task {
+  return { publicKey, ...data };
+}
 
 export const fetchAllTasks = async (
   params: FetchAllTasksParam
 ): Promise<Task[]> => {
   const tasks = await window.main.getTasks(params);
   console.log('FETCHING TASKS', tasks);
-  return tasks.map(TaskService.parseTask);
+  return tasks.map(parseTask);
 };
 
 export const getTasksById = (tasksIds: string[]) => {
   return window.main.getTasksById({ tasksIds }).then((tasks) => {
     console.log('GETTING TASKS BY ID', tasks);
-    return tasks.filter(Boolean).map(TaskService.parseTask);
+    return tasks.filter(Boolean).map(parseTask);
   });
 };
 
@@ -32,7 +35,7 @@ export const fetchMyTasks = async (
 ): Promise<Task[]> => {
   const tasks = await window.main.getMyTasks(params);
   console.log('FETCHING MY TASKS', tasks);
-  return tasks.map(TaskService.parseTask);
+  return tasks.map(parseTask);
 };
 
 export const fetchAvailableTasks = async (
@@ -40,7 +43,7 @@ export const fetchAvailableTasks = async (
 ): Promise<Task[]> => {
   const tasks = await window.main.getAvailableTasks(params);
   console.log('FETCHING AVAILABLE TASKS', tasks);
-  return tasks.map(TaskService.parseTask);
+  return tasks.map(parseTask);
 };
 
 export const getRewardEarned = async (task: Task): Promise<number> => {
@@ -57,7 +60,7 @@ export const getMainAccountBalance = (): Promise<number> => {
     .getMainAccountPubKey()
     .then((pubkey) => {
       return Promise.resolve(123);
-
+      // TODO move to BACK END - renderer cannot use native deps
       // return sdk.k2Connection.getBalance(new PublicKey(pubkey));
     })
     .then(getKoiiFromRoe)

@@ -7,10 +7,10 @@ import { useFundNewAccountModal } from 'renderer/features/common';
 import { getMainAccountBalance } from 'renderer/services';
 
 type PropsType = {
-  onBalanceRefresh?: (balance: string | number) => void;
+  onBalanceRefresh?: (balance: number) => void;
 };
 
-export const RefreshBalance = ({ onBalanceRefresh }: PropsType) => {
+export function RefreshBalance({ onBalanceRefresh }: PropsType) {
   const {
     data: balance,
     isLoading,
@@ -65,4 +65,4 @@ export const RefreshBalance = ({ onBalanceRefresh }: PropsType) => {
       </div>
     </div>
   );
-};
+}

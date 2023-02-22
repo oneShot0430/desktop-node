@@ -2,12 +2,14 @@ import React, { createContext, useState } from 'react';
 
 const OnboardingContext = createContext<
   | {
-      systemKey: string;
-      newSeedPhrase: string;
-      accountName: string;
-      setAccountName: React.Dispatch<React.SetStateAction<string>>;
-      setNewSeedPhrase: React.Dispatch<React.SetStateAction<string>>;
-      setSystemKey: React.Dispatch<React.SetStateAction<string>>;
+      systemKey: string | undefined;
+      newSeedPhrase: string | undefined;
+      accountName: string | undefined;
+      setAccountName: React.Dispatch<React.SetStateAction<string | undefined>>;
+      setNewSeedPhrase: React.Dispatch<
+        React.SetStateAction<string | undefined>
+      >;
+      setSystemKey: React.Dispatch<React.SetStateAction<string | undefined>>;
     }
   | undefined
 >(undefined);
@@ -17,10 +19,11 @@ type PropsType = {
 };
 
 function OnboardingProvider({ children }: PropsType) {
-  const [systemKey, setSystemKey] = useState<string>(null);
-  const [accountName, setAccountName] = useState<string>(null);
-  const [newSeedPhrase, setNewSeedPhrase] = useState<string>(null);
+  const [systemKey, setSystemKey] = useState<string>();
+  const [accountName, setAccountName] = useState<string>();
+  const [newSeedPhrase, setNewSeedPhrase] = useState<string>();
 
+  // eslint-disable-next-line react/jsx-no-constructed-context-values
   const value = {
     systemKey,
     setSystemKey,

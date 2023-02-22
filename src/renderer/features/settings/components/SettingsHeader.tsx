@@ -1,13 +1,13 @@
 import React, { memo, useCallback } from 'react';
 
-import { Tab } from '../Settings';
+import { Tab } from '../types';
 
 type PropsType = {
   onTabChange: (tab: Tab) => void;
   activeTab: Tab;
 };
 
-const SettingsHeader = ({ onTabChange, activeTab }: PropsType) => {
+function SettingsHeader({ onTabChange, activeTab }: PropsType) {
   const isActiveTab = useCallback(
     (tabName: Tab) => activeTab === tabName && 'border-finnieTeal border-b-4',
     [activeTab]
@@ -31,6 +31,6 @@ const SettingsHeader = ({ onTabChange, activeTab }: PropsType) => {
       </div>
     </div>
   );
-};
+}
 
 export default memo(SettingsHeader);

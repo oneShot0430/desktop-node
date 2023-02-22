@@ -5,11 +5,11 @@ import { twMerge } from 'tailwind-merge';
 import CheckmarkIconSvg from 'assets/svgs/checkmark-teal-icon.svg';
 import CodeIconSvg from 'assets/svgs/code-icon.svg';
 import EditIconSvg from 'assets/svgs/edit-icon.svg';
-import { getKoiiFromRoe } from 'utils';
 import { Button } from 'renderer/components';
 import { useTaskDetailsModal } from 'renderer/features/common';
 import { getMainAccountPublicKey, QueryKeys } from 'renderer/services';
 import { TaskWithStake } from 'renderer/types';
+import { getKoiiFromRoe } from 'utils';
 
 import { EditStakeInput } from '..';
 
@@ -19,11 +19,11 @@ interface PropsType {
   setIsRunButtonDisabled: (isDisabled: boolean) => void;
 }
 
-export const TaskRow = ({
+export function TaskRow({
   task,
   updateStake,
   setIsRunButtonDisabled,
-}: PropsType) => {
+}: PropsType) {
   const { publicKey, taskName, stake: originalStake, minStake } = task;
 
   const [stake, setStake] = useState<number>(originalStake);
@@ -39,7 +39,7 @@ export const TaskRow = ({
 
   const { showModal } = useTaskDetailsModal({
     task,
-    accountPublicKey: mainAccountPubKey,
+    accountPublicKey: mainAccountPubKey as string,
   });
 
   const handleEditInputChange = (newStake: number) => setStake(newStake);
@@ -104,4 +104,4 @@ export const TaskRow = ({
       </div>
     </div>
   );
-};
+}
