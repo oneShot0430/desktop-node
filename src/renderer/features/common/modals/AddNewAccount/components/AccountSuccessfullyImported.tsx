@@ -5,7 +5,7 @@ import CloseIconWhite from 'assets/svgs/close-icons/close-icon-white.svg';
 import { ModalContent } from 'renderer/features/modals';
 import { Theme } from 'renderer/types/common';
 
-import { Steps, KeysType } from '../AddNewAccount';
+import { Steps, KeysType } from '../types';
 
 import { AccountInfo } from './AccountInfo';
 
@@ -15,10 +15,7 @@ type PropsType = Readonly<{
   setNextStep: (step: Steps) => void;
 }>;
 
-export const AccountSuccessfullyImported = ({
-  onClose,
-  newKeys,
-}: PropsType) => {
+export function AccountSuccessfullyImported({ onClose, newKeys }: PropsType) {
   return (
     <ModalContent theme={Theme.Dark} className="pb-6 text-white w-[680px]">
       <div className="flex justify-between w-full p-3">
@@ -43,4 +40,4 @@ export const AccountSuccessfullyImported = ({
       </div>
     </ModalContent>
   );
-};
+}

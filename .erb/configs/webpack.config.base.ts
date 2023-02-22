@@ -1,7 +1,7 @@
 /**
  * Base webpack config used across other specific configs
  */
-// import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import TsconfigPathsPlugins from 'tsconfig-paths-webpack-plugin';
 import webpack from 'webpack';
 
@@ -61,7 +61,7 @@ const configuration: webpack.Configuration = {
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'production',
     }),
-    // new ForkTsCheckerWebpackPlugin(),
+    new ForkTsCheckerWebpackPlugin(),
     new CircularDependencyPlugin({
       // exclude detection of files based on a RegExp
       exclude: /a\.js|node_modules/,

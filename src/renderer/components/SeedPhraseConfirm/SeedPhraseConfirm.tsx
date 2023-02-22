@@ -10,11 +10,11 @@ type PropsType = {
   error?: string;
 };
 
-export const SeedPhraseConfirm = ({
+export function SeedPhraseConfirm({
   onPhraseChange,
   seedPhraseValue,
   error,
-}: PropsType) => {
+}: PropsType) {
   const [phrases, setPhrases] = useState<string[]>(new Array(12).fill(''));
   const numbers = useMemo(() => pickRandomNumbers(3), []);
 
@@ -22,12 +22,14 @@ export const SeedPhraseConfirm = ({
     e: React.ChangeEvent<HTMLInputElement>,
     phraseIndex: number
   ) => {
-    const value = e.target.value;
+    const { value } = e.target;
     const newPhrases = Object.assign([], phrases, {
       [phraseIndex]: value,
     });
     setPhrases(newPhrases);
-    onPhraseChange && onPhraseChange(newPhrases.join(' '));
+    if (onPhraseChange) {
+      onPhraseChange(newPhrases.join(' '));
+    }
   };
 
   const seedPhraseValueArray = useMemo(
@@ -38,7 +40,7 @@ export const SeedPhraseConfirm = ({
   useEffect(() => {
     if (seedPhraseValue) {
       setPhrases(
-        seedPhraseValueArray.map((phrase, index) =>
+        (seedPhraseValueArray || []).map((phrase, index) =>
           numbers.includes(index) ? '' : phrase
         )
       );
@@ -78,4 +80,4 @@ export const SeedPhraseConfirm = ({
       {error && <ErrorMessage error={error} />}
     </div>
   );
-};
+}

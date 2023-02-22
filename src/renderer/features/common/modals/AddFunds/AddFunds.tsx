@@ -112,7 +112,11 @@ export const AddFunds = create(function AddFunds({ onGoBack }: PropsType) {
 
               <div className="mb-3">Or send KOII directly to this account.</div>
 
-              <QRCode value={mainAccountPubKey} renderAs="canvas" size={80} />
+              <QRCode
+                value={mainAccountPubKey as string}
+                renderAs="canvas"
+                size={80}
+              />
             </>
           )}
 

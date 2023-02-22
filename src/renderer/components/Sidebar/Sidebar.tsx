@@ -40,9 +40,9 @@ export function Sidebar() {
     }
   );
 
-  const totalBalanceInKoii = getKoiiFromRoe(data?.totalKOII);
-  const totalStakedInKoii = getKoiiFromRoe(data?.totalStaked);
-  const pendingRewardsInKoii = getKoiiFromRoe(data?.pendingRewards);
+  const totalBalanceInKoii = getKoiiFromRoe(data?.totalKOII as number);
+  const totalStakedInKoii = getKoiiFromRoe(data?.totalStaked as number);
+  const pendingRewardsInKoii = getKoiiFromRoe(data?.pendingRewards as number);
 
   return (
     <div className="flex flex-col pr-[22px] gap-4">

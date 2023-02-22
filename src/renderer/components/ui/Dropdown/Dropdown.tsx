@@ -19,13 +19,15 @@ export type DropdownProps = {
  * @todo:
  * This component shoudl finally be moved to the @_koii/koii-styleguide
  */
-export const Dropdown = ({
+export function Dropdown({
   items = [],
   onSelect,
   placeholderText = 'Select item',
-  defaultValue = null,
-}: DropdownProps) => {
-  const [selected, setSelected] = useState<DropdownItem>(defaultValue);
+  defaultValue,
+}: DropdownProps) {
+  const [selected, setSelected] = useState<DropdownItem | undefined>(
+    defaultValue
+  );
   const handleItemSelect = useCallback(
     (item: DropdownItem) => {
       setSelected(item);
@@ -94,4 +96,4 @@ export const Dropdown = ({
       </Listbox>
     </div>
   );
-};
+}

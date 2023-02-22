@@ -27,6 +27,8 @@ import { stopTask, startTask, TaskService, getLogs } from 'renderer/services';
 import { Task } from 'renderer/types';
 import { getKoiiFromRoe } from 'utils';
 
+import { useEarnedReward } from '../../../features/common/hooks/useEarnedReward';
+
 type PropsType = {
   task: Task;
   accountPublicKey: string;
@@ -34,12 +36,12 @@ type PropsType = {
   columnsLayout: ColumnsLayout;
 };
 
-export const TaskItem = ({
+export function TaskItem({
   task,
   accountPublicKey,
   index,
   columnsLayout,
-}: PropsType) => {
+}: PropsType) {
   const [loading, setLoading] = useState<boolean>(false);
   const { taskName, taskManager, isRunning, publicKey } = task;
   const { showModal: showEditStakeAmountModal } = useEditStakeAmountModal({
@@ -161,4 +163,4 @@ export const TaskItem = ({
       </div>
     </TableRow>
   );
-};
+}

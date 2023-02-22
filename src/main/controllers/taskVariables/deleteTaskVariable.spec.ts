@@ -29,7 +29,7 @@ describe('deleteTaskVariable', () => {
     let invalidPayload: undefined;
 
     await expect(
-      deleteTaskVariable({} as Event, invalidPayload)
+      deleteTaskVariable({} as Event, invalidPayload as unknown as string)
     ).rejects.toThrow();
   });
 

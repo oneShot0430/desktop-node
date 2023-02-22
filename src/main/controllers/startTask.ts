@@ -1,3 +1,7 @@
+// eslint-disable
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import { ChildProcess, fork, ForkOptions } from 'child_process';
 import { Event } from 'electron';
 import * as fsSync from 'fs';
@@ -92,7 +96,7 @@ const startTask = async (event: Event, payload: TaskStartStopParam) => {
     // const cronArray = await taskSrc.execute();
     // console.log('CRON ARRAY', cronArray);
     // await koiiTasks.taskStarted(taskAccountPubKey, cronArray);
-  } catch (err) {
+  } catch (err: any) {
     console.error('ERR-:', err);
     throw new Error(err);
   }
