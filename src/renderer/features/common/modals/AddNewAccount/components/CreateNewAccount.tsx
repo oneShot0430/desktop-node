@@ -14,7 +14,7 @@ import {
 } from 'renderer/services';
 import { Theme } from 'renderer/types/common';
 
-import { CreateKeyPayload, Steps } from '../AddNewAccount';
+import { CreateKeyPayload, Steps } from '../types';
 
 type PropsType = Readonly<{
   onClose: () => void;

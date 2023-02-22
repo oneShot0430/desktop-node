@@ -5,7 +5,7 @@ import CloseIconWhite from 'assets/svgs/close-icons/close-icon-white.svg';
 import { ModalContent } from 'renderer/features/modals';
 import { Theme } from 'renderer/types/common';
 
-import { Steps, KeysType } from '../AddNewAccount';
+import { Steps, KeysType } from '../types';
 
 import { AccountInfo } from './AccountInfo';
 

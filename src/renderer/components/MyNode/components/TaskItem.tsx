@@ -9,7 +9,6 @@ import {
 import React, { useMemo, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
-import { getKoiiFromRoe } from 'utils';
 import {
   Button,
   Tooltip,
@@ -18,15 +17,15 @@ import {
   TableRow,
   ColumnsLayout,
   NodeStatusCell,
-} from 'renderer/components';
+} from 'renderer/components/ui';
 import {
   useEditStakeAmountModal,
   useTaskStake,
   useTaskDetailsModal,
 } from 'renderer/features/common';
-import { useEarnedReward } from 'renderer/features/common/hooks/useEarnedReward';
 import { stopTask, startTask, TaskService, getLogs } from 'renderer/services';
 import { Task } from 'renderer/types';
+import { getKoiiFromRoe } from 'utils';
 
 type PropsType = {
   task: Task;

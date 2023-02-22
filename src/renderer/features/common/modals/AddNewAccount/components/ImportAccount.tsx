@@ -5,7 +5,7 @@ import UploadIcon from 'assets/svgs/upload-icon.svg';
 import { ModalContent, ModalTopBar } from 'renderer/features/modals';
 import { Theme } from 'renderer/types/common';
 
-import { Steps } from '../AddNewAccount';
+import { Steps } from '../types';
 
 import { AddAccountAction } from './AddAccountAction';
 

@@ -1,11 +1,11 @@
 import React, { memo } from 'react';
 
 import CloseIconWhite from 'assets/svgs/close-icons/close-icon-white.svg';
-import { Button } from 'renderer/components/ui/Button';
+import { Button } from 'renderer/components/ui';
 import { ModalContent } from 'renderer/features/modals';
 import { Theme } from 'renderer/types/common';
 
-import { Steps } from '../AddNewAccount';
+import { Steps } from '../types';
 
 type PropsType = {
   onClose: () => void;
@@ -19,7 +19,7 @@ const ShowSeedPhrase = ({ onClose, setNextStep, seedPhrase }: PropsType) => {
   return (
     <ModalContent theme={Theme.Dark} className="w-[800px] h-[400px] text-white">
       <div className="flex justify-between p-3">
-        <div></div>
+        <div />
         <div className="flex items-center justify-between pl-6">
           <span className="text-[24px]">Seed Phrase</span>
         </div>

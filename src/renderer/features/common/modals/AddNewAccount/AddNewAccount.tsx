@@ -10,18 +10,7 @@ import ImportKey from './components/ImportAccount';
 import ImportWithKeyPhrase from './components/ImportWithKeyPhrase';
 import ShowSeedPhrase from './components/ShowSeedPhrase';
 
-export type KeysType = { system: string; task: string };
-
-export type CreateKeyPayload = { keys: KeysType; seedPhrase: string };
-
-export enum Steps {
-  ImportKey,
-  ImportWithKeyPhrase,
-  CreateNewKey,
-  KeyCreated,
-  ShowSeedPhrase,
-  AccountImported,
-}
+import { KeysType, Steps, CreateKeyPayload } from './types';
 
 export const AddNewAccount = create(function AddNewAccount() {
   const modal = useModal();

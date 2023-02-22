@@ -1,6 +1,6 @@
 import React, { memo, useState } from 'react';
 
-import { ErrorMessage, Button } from 'renderer/components';
+import { ErrorMessage, Button } from 'renderer/components/ui';
 import { ErrorContext } from 'renderer/utils';
 
 type PropsType = Readonly<{

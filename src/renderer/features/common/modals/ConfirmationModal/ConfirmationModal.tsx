@@ -1,7 +1,7 @@
 import { create, useModal } from '@ebay/nice-modal-react';
 import React, { ReactNode } from 'react';
 
-import { Button } from 'renderer/components';
+import { Button } from 'renderer/components/ui';
 import { Modal, ModalContent, ModalTopBar } from 'renderer/features/modals';
 
 export type ConfirmationModalPropsType = {

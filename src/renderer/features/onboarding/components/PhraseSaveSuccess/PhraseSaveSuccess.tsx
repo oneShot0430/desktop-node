@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import CheckMarkIcon from 'assets/svgs/checkmark-icon.svg';
 import WarningIndicatorSvg from 'assets/svgs/warning-indicator-icon.svg';
-import { Button } from 'renderer/components/ui/Button';
+import { Button } from 'renderer/components/ui';
 import { AppRoute } from 'renderer/types/routes';
 
 export const PhraseSaveSuccess = () => {

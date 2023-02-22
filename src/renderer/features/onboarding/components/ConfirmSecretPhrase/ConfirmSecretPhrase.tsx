@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { SeedPhraseConfirm } from 'renderer/components/SeedPhraseConfirm/SeedPhraseConfirm';
-import { Button } from 'renderer/components/ui/Button';
+import { Button } from 'renderer/components/ui';
 import { AppRoute } from 'renderer/types/routes';
 
 import { useOnboardingContext } from '../../context/onboarding-context';

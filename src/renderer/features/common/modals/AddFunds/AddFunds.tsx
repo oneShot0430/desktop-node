@@ -6,8 +6,8 @@ import { useQuery } from 'react-query';
 
 import BackIcon from 'assets/svgs/back-icon.svg';
 import config from 'config';
-import { Button } from 'renderer/components';
-import { useClipboard } from 'renderer/features/common/';
+import { Button } from 'renderer/components/ui';
+import { useClipboard } from 'renderer/features/common/hooks/useClipboard';
 import { Modal, ModalContent } from 'renderer/features/modals';
 import {
   getMainAccountPublicKey,

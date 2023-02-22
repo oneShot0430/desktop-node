@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useInfiniteQuery, useQuery } from 'react-query';
 
-import { InfiniteScrollTable } from 'renderer/components';
+import { InfiniteScrollTable } from 'renderer/components/ui';
 import {
   fetchMyTasks,
   getMainAccountPublicKey,

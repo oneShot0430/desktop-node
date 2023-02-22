@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Button } from 'renderer/components/ui/Button';
+import { Button } from 'renderer/components/ui';
 import { useFundNewAccountModal } from 'renderer/features/common';
 import { AppRoute } from 'renderer/types/routes';
 
@@ -23,7 +23,7 @@ export const FundNewKey = () => {
         <Button
           label="Next"
           onClick={() => navigate(AppRoute.OnboardingSeeBalance)}
-        ></Button>
+        />
       </div>
     </div>
   );

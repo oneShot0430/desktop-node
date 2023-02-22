@@ -5,7 +5,7 @@ import { twMerge } from 'tailwind-merge';
 import CheckmarkIconSvg from 'assets/svgs/checkmark-teal-icon.svg';
 import CodeIconSvg from 'assets/svgs/code-icon.svg';
 import EditIconSvg from 'assets/svgs/edit-icon.svg';
-import { Button } from 'renderer/components';
+import { Button } from 'renderer/components/ui';
 import { useTaskDetailsModal } from 'renderer/features/common';
 import { getMainAccountPublicKey, QueryKeys } from 'renderer/services';
 import { TaskWithStake } from 'renderer/types';

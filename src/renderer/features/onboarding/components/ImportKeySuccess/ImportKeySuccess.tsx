@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import CheckMarkIcon from 'assets/svgs/checkmark-icon.svg';
-import { Button } from 'renderer/components/ui/Button';
+import { Button } from 'renderer/components/ui';
 import { AppRoute } from 'renderer/types/routes';
 
 import { useOnboardingContext } from '../../context/onboarding-context';

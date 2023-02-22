@@ -1,7 +1,7 @@
 import React from 'react';
 import { useQuery } from 'react-query';
 
-import { TableRow, NodeStatusCell } from 'renderer/components';
+import { TableRow, NodeStatusCell } from 'renderer/components/ui';
 import { useTaskStake, useTaskDetailsModal } from 'renderer/features/common';
 import {
   getMainAccountPublicKey,

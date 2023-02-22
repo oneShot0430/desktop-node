@@ -3,7 +3,7 @@ import React, { useCallback, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { GetTaskNodeInfoResponse } from 'models/api';
-import { Button } from 'renderer/components';
+import { Button } from 'renderer/components/ui';
 import { Modal, ModalContent, ModalTopBar } from 'renderer/features/modals';
 import {
   QueryKeys,
@@ -16,7 +16,7 @@ import {
 import { Task } from 'renderer/types';
 import { getKoiiFromRoe } from 'utils';
 
-import { useTaskStake } from '../../hooks';
+import { useTaskStake } from '../../hooks/useTaskStake';
 
 import { AddStake } from './AddStake';
 import { ConfirmStake } from './ConfirmStake';

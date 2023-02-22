@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 
 import SuccessSvg from 'assets/svgs/success-lg.svg';
-import { Button } from 'renderer/components/ui/Button';
+import { Button } from 'renderer/components/ui';
 
 type PropsType = Readonly<{
   onOkClick: () => void;

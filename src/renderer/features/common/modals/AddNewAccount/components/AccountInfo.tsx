@@ -4,7 +4,7 @@ import { twMerge } from 'tailwind-merge';
 import CopyIconSvg from 'assets/svgs/copy-icon.svg';
 import TooltipYellowIcon from 'assets/svgs/tooltip-teal-icon.svg';
 import TooltipTealIcon from 'assets/svgs/tooltip-yellow-icon.svg';
-import { Button } from 'renderer/components/ui/Button';
+import { Button } from 'renderer/components/ui';
 
 type KeyType = 'system' | 'task';
 type PropsType = Readonly<{

@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 
-// TO DO: come back to barreel imports without causing cyclic dependencies issues
-import { Button } from 'renderer/components/ui/Button';
-import { ErrorMessage } from 'renderer/components/ui/ErrorMessage';
+import { Button, ErrorMessage } from 'renderer/components/ui';
 import { ErrorContext } from 'renderer/utils';
 import { getKoiiFromRoe } from 'utils';
 
