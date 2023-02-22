@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Tooltip } from 'renderer/components';
+import { Tooltip } from 'renderer/components/ui/Tooltip';
 
 export interface TableHeader {
   title: string;

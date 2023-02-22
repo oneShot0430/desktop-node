@@ -1,10 +1,10 @@
 import React, { ReactNode } from 'react';
 
+import { ErrorMessage } from 'renderer/components/ui/ErrorMessage';
 import {
-  ErrorMessage,
   LoadingSpinner,
   LoadingSpinnerSize,
-} from 'renderer/components';
+} from 'renderer/components/ui/LoadingSpinner';
 
 import { TableHeaders, TableHeader, ColumnsLayout } from './TableHeaders';
 

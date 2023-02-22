@@ -1,10 +1,9 @@
 import React, { useEffect, ReactNode } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-import { Table } from 'renderer/components';
-
 import { LoadingSpinner } from '../LoadingSpinner';
 
+import { Table } from './Table';
 import { TableHeader, ColumnsLayout } from './TableHeaders';
 
 interface PropsType {
