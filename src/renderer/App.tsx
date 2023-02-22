@@ -3,26 +3,27 @@ import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import '@_koii/koii-styleguide/dist/style.css';
+import 'tailwindcss/tailwind.css';
+
+import AppProvider from 'renderer/Providers/AppProvider';
+
+import { NotificationsProvider } from './features/notifications';
+import AppRoutes from './routing/AppRoutes';
 
 const queryClient = new QueryClient();
 
-import { NotificationsProvider } from './features/notifications/context/notifications-context';
-import AppProvider from 'renderer/Providers/AppProvider';
-import AppRoutes from './routing/AppRoutes';
-
-const App = (): JSX.Element => {
+function App(): JSX.Element {
   return (
     <QueryClientProvider client={queryClient}>
       <AppProvider>
         <NiceModal.Provider>
           <NotificationsProvider>
             <AppRoutes />
-            {/* <div>asdf</div> */}
           </NotificationsProvider>
         </NiceModal.Provider>
       </AppProvider>
     </QueryClientProvider>
   );
-};
+}
 
 export default App;
