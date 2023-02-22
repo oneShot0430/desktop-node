@@ -1,7 +1,7 @@
 import React from 'react';
 
 import CodeIcon from 'assets/svgs/code-icon.svg';
-import { Tooltip } from 'renderer/components';
+import { Tooltip } from 'renderer/components/ui/Tooltip';
 
 type PropsType = {
   taskName: string;

@@ -6,8 +6,7 @@ import {
 } from '@_koii/koii-styleguide';
 import React from 'react';
 
-import { Tooltip } from 'renderer/components';
-import { Placement } from 'renderer/components/ui/Tooltip';
+import { Tooltip, Placement } from 'renderer/components/ui/Tooltip';
 import { TaskStatus } from 'renderer/types';
 
 const statuses = {
