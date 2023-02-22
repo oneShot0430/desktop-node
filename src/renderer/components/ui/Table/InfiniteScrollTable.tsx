@@ -14,12 +14,12 @@ interface PropsType {
   update: () => void;
   hasMore: boolean;
   isLoading?: boolean;
-  error?: Error;
+  error?: Error | null;
 }
 
 const tableWrapperId = 'infiniteTableWrapper';
 
-export const InfiniteScrollTable = ({
+export function InfiniteScrollTable({
   headers,
   columnsLayout,
   children,
@@ -27,9 +27,9 @@ export const InfiniteScrollTable = ({
   hasMore,
   isLoading,
   error,
-}: PropsType) => {
+}: PropsType) {
   useEffect(() => {
-    const root = document.getElementById(tableWrapperId);
+    const root = document.getElementById(tableWrapperId)!;
     if (!isLoading && hasMore && root.scrollHeight <= root.clientHeight) {
       update();
     }
@@ -56,4 +56,4 @@ export const InfiniteScrollTable = ({
       </div>
     </Table>
   );
-};
+}

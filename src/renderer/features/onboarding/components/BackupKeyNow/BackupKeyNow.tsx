@@ -1,15 +1,15 @@
 import { WarningCircleLine, Icon } from '@_koii/koii-styleguide';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { ShowSeedPhrase } from 'renderer/components/ShowSeedPhrase';
 import { Button } from 'renderer/components/ui/Button';
 import { AppRoute } from 'renderer/types/routes';
 
-import { OnboardingContext } from '../../context/onboarding-context';
+import { useOnboardingContext } from '../../context/onboarding-context';
 
-export const BackupKeyNow = () => {
-  const { newSeedPhrase } = useContext(OnboardingContext);
+export function BackupKeyNow() {
+  const { newSeedPhrase } = useOnboardingContext();
   const navigate = useNavigate();
   const [phraseRevealed, setPhraseRevealed] = useState(false);
   const handlePhraseReveal = () => {
@@ -47,7 +47,7 @@ export const BackupKeyNow = () => {
 
         <div className="flex justify-start w-full mb-4">
           <ShowSeedPhrase
-            seedPhrase={newSeedPhrase}
+            seedPhrase={newSeedPhrase as string}
             onPhraseReveal={handlePhraseReveal}
           />
         </div>
@@ -68,4 +68,4 @@ export const BackupKeyNow = () => {
       </div>
     </div>
   );
-};
+}

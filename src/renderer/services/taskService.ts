@@ -38,11 +38,12 @@ export class TaskService {
   }
 
   // eslint-disable-next-line consistent-return
-  static getStatus(task: Task): TaskStatus | undefined {
+  static getStatus(task: Task): TaskStatus {
     if (!isNil(task.status.AcceptingSubmissions))
       return TaskStatus.ACCEPTING_SUBMISSIONS;
     if (!isNil(task.status.Voting)) return TaskStatus.VOTING;
     if (!isNil(task.status.Completed)) return TaskStatus.COMPLETED;
+    return TaskStatus.COMPLETED;
   }
 }
 

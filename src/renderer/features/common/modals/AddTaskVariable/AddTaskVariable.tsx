@@ -45,9 +45,9 @@ export const AddTaskVariable = create(function AddTaskVariable() {
   }) => {
     setLabelError('');
     setLabel(label);
-    const storedTaskVariablesLabels = Object.values(storedTaskVariables).map(
-      ({ label }) => label
-    );
+    const storedTaskVariablesLabels = Object.values(
+      storedTaskVariables || {}
+    ).map(({ label }) => label);
     const enteredLabelIsDuplicate = storedTaskVariablesLabels?.some(
       (storedLabel) => storedLabel === label
     );

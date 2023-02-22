@@ -28,7 +28,7 @@ const tableHeaders = [
 const columnsLayout = 'grid-cols-my-node';
 const pageSize = 10;
 
-export const MyNode = () => {
+export function MyNode() {
   const [hasMore, setHasMore] = useState(true);
 
   const { data: mainAccountPubKey, isLoading: isLoadingMainAccount } = useQuery(
@@ -72,10 +72,10 @@ export const MyNode = () => {
           key={task.publicKey}
           index={index}
           task={task}
-          accountPublicKey={mainAccountPubKey}
+          accountPublicKey={mainAccountPubKey as string}
           columnsLayout={columnsLayout}
         />
       ))}
     </InfiniteScrollTable>
   );
-};
+}

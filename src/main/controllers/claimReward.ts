@@ -5,7 +5,6 @@ import { Keypair, PublicKey } from '@_koi/web3.js';
 
 import { ErrorType, ClaimRewardParam, ClaimRewardResponse } from '../../models';
 import { throwDetailedError } from '../../utils';
-
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
 import { namespaceInstance } from '../node/helpers/Namespace';
@@ -27,8 +26,7 @@ const claimReward = async (
     });
   }
 
-  const stakingWalletfilePath =
-    getAppDataPath() + `/namespace/${activeAccount}_stakingWallet.json`;
+  const stakingWalletfilePath = `${getAppDataPath()}/namespace/${activeAccount}_stakingWallet.json`;
   let stakingAccKeypair;
   try {
     stakingAccKeypair = Keypair.fromSecretKey(
@@ -36,7 +34,7 @@ const claimReward = async (
         JSON.parse(fsSync.readFileSync(stakingWalletfilePath, 'utf-8'))
       )
     );
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
     return throwDetailedError({
       detailed: e,
@@ -52,7 +50,7 @@ const claimReward = async (
   let taskState;
   try {
     taskState = await getTaskInfo(null, { taskAccountPubKey });
-  } catch (e) {
+  } catch (e: any) {
     return throwDetailedError({
       detailed: e,
       type: ErrorType.TASK_NOT_FOUND,

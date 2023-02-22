@@ -13,14 +13,14 @@ type PropsType = Readonly<{
   onSuccess: () => void;
 }>;
 
-export const ConfirmStake = ({
+export function ConfirmStake({
   onConfirmAddStake,
   stakeAmount,
   koiiBalance,
   onSuccess,
-}: PropsType) => {
+}: PropsType) {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error>(null);
+  const [error, setError] = useState<Error>();
   const stakeAmountInKoii = getKoiiFromRoe(stakeAmount);
   const handleConfirmAddStake = async () => {
     try {
@@ -28,7 +28,7 @@ export const ConfirmStake = ({
       await onConfirmAddStake();
 
       onSuccess();
-    } catch (error) {
+    } catch (error: any) {
       setError(error);
     } finally {
       setIsLoading(false);
@@ -52,4 +52,4 @@ export const ConfirmStake = ({
       />
     </div>
   );
-};
+}

@@ -13,7 +13,6 @@ import CheckMarkIcon from 'assets/svgs/checkmark-icon-no-borders.svg';
 import CloseIcon from 'assets/svgs/close-icons/close-icon-no-borders.svg';
 import ShareIcon from 'assets/svgs/share-icon.svg';
 import { ErrorType } from 'models';
-import { GetTaskNodeInfoResponse } from 'models/api';
 import { Tooltip, ErrorMessage } from 'renderer/components';
 import { QueryKeys, claimRewards } from 'renderer/services';
 import { Theme } from 'renderer/types/common';
@@ -23,7 +22,7 @@ interface PropsType {
   displayConfetti?: () => void;
 }
 
-export const ClaimRewards = ({ value, displayConfetti }: PropsType) => {
+export function ClaimRewards({ value, displayConfetti }: PropsType) {
   const [hasClickedClaim, setHasClickedClaim] = useState<boolean>(false);
   const [hasErrorClaimingRewards, setHasErrorClaimingRewards] =
     useState<boolean>(false);
@@ -44,7 +43,7 @@ export const ClaimRewards = ({ value, displayConfetti }: PropsType) => {
       onSuccess: (rewardsNotClaimed) => {
         queryClient.setQueryData(
           [QueryKeys.taskNodeInfo],
-          (oldNodeData: GetTaskNodeInfoResponse) => ({
+          (oldNodeData: any) => ({
             ...oldNodeData,
             totalKOII:
               oldNodeData.totalKOII +
@@ -133,4 +132,4 @@ export const ClaimRewards = ({ value, displayConfetti }: PropsType) => {
       )}
     </div>
   );
-};
+}

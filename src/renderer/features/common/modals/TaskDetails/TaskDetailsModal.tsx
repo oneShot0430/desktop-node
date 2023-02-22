@@ -70,14 +70,14 @@ export const TaskDetailsModal = create<TaskDetailsModalPropsType>(
                 >
                   Details
                 </div>
-                {/*<div*/}
-                {/*  className={`${*/}
-                {/*    currentView === TabsType.SourceCode && activeClasses*/}
-                {/*  } text-semibold cursor-pointer`}*/}
-                {/*  onClick={() => setCurrentView(TabsType.SourceCode)}*/}
-                {/*>*/}
-                {/*  Source Code*/}
-                {/*</div>*/}
+                {/* <div */}
+                {/*  className={`${ */}
+                {/*    currentView === TabsType.SourceCode && activeClasses */}
+                {/*  } text-semibold cursor-pointer`} */}
+                {/*  onClick={() => setCurrentView(TabsType.SourceCode)} */}
+                {/* > */}
+                {/*  Source Code */}
+                {/* </div> */}
               </div>
 
               <CloseIcon
@@ -99,7 +99,7 @@ export const TaskDetailsModal = create<TaskDetailsModalPropsType>(
                 </span>{' '}
                 Source Code
               </div>
-              {/*TODO: handle open in the browser window */}
+              {/* TODO: handle open in the browser window */}
               {currentView === TabsType.SourceCode && (
                 <a
                   className="cursor-pointer"
@@ -128,14 +128,14 @@ export const TaskDetailsModal = create<TaskDetailsModalPropsType>(
                     />
                   </div>
 
-                  {/*<div className="pl-6 mt-16">*/}
-                  {/*  <Button*/}
-                  {/*    onClick={handleWithdraw}*/}
-                  {/*    label="Withdraw Stake"*/}
-                  {/*    variant="danger"*/}
-                  {/*    className="bg-finnieGray-secondary text-finnieBlue"*/}
-                  {/*  />*/}
-                  {/*</div>*/}
+                  {/* <div className="pl-6 mt-16"> */}
+                  {/*  <Button */}
+                  {/*    onClick={handleWithdraw} */}
+                  {/*    label="Withdraw Stake" */}
+                  {/*    variant="danger" */}
+                  {/*    className="bg-finnieGray-secondary text-finnieBlue" */}
+                  {/*  /> */}
+                  {/* </div> */}
                 </>
               )}
               {currentView === TabsType.SourceCode && (
@@ -143,8 +143,7 @@ export const TaskDetailsModal = create<TaskDetailsModalPropsType>(
                   {isLoading ? (
                     <div>Loading...</div>
                   ) : (
-                    // @ts-ignore
-                    <SourceCode sourceCode={sourceCode} />
+                    <SourceCode sourceCode={sourceCode as string} />
                   )}
                 </div>
               )}

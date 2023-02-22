@@ -89,7 +89,7 @@ jest.mock('main/controllers', () => ({
   getTaskSource: jest.fn((taskPublicKey: keyof typeof tasks) => {
     const { sourceCode } = tasks.find(
       (task) => task.taskPublicKey === taskPublicKey
-    );
+    )!;
     return Promise.resolve(sourceCode);
   }),
 }));

@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import React, { useContext } from 'react';
+import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { Tooltip } from 'renderer/components';
@@ -10,16 +10,16 @@ import {
 import { Theme } from 'renderer/types/common';
 import { AppRoute } from 'renderer/types/routes';
 
-import { OnboardingContext } from '../../context/onboarding-context';
+import { useOnboardingContext } from '../../context/onboarding-context';
 import { ContentRightWrapper } from '../ContentRightWrapper';
 
 type LocationStateType = {
   accountName: string;
 };
 
-const ImportKey = () => {
+function ImportKey() {
   const navigate = useNavigate();
-  const { setSystemKey } = useContext(OnboardingContext);
+  const { setSystemKey } = useOnboardingContext();
   const location = useLocation();
   const { accountName } = location.state as LocationStateType;
 
@@ -59,6 +59,6 @@ const ImportKey = () => {
       </ContentRightWrapper>
     </div>
   );
-};
+}
 
 export default ImportKey;

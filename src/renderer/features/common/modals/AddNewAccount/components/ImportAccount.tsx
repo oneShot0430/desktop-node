@@ -14,8 +14,8 @@ type PropsType = Readonly<{
   setNextStep: (step: Steps) => void;
 }>;
 
-const ImportAccount = ({ onClose, setNextStep }: PropsType) => {
-  const ref = useRef(null);
+function ImportAccount({ onClose, setNextStep }: PropsType) {
+  const ref = useRef<HTMLInputElement>();
 
   useEffect(() => {
     if (ref.current) {
@@ -25,7 +25,7 @@ const ImportAccount = ({ onClose, setNextStep }: PropsType) => {
 
   return (
     <ModalContent theme={Theme.Dark} className="w-[800px] h-[320px]">
-      <ModalTopBar theme="dark" title={'Key Management'} onClose={onClose} />
+      <ModalTopBar theme="dark" title="Key Management" onClose={onClose} />
       <div className="flex flex-col items-start gap-2 pt-4 pl-12">
         <div className="text-xl font-semibold text-white">Add New Account</div>
         <AddAccountAction
@@ -45,6 +45,6 @@ const ImportAccount = ({ onClose, setNextStep }: PropsType) => {
       </div>
     </ModalContent>
   );
-};
+}
 
 export default memo(ImportAccount);

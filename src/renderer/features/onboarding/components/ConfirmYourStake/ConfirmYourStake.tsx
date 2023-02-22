@@ -1,10 +1,10 @@
-import { sum } from 'lodash';
 import React, { useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import AddIconSvg from 'assets/svgs/onboarding/add-teal-icon.svg';
 import CurrencySvgIcon from 'assets/svgs/onboarding/currency-teal-small-icon.svg';
 import config from 'config';
+import { sum } from 'lodash';
 import { ErrorMessage, Button } from 'renderer/components';
 import {
   useNotEnoughFunds,
@@ -21,7 +21,7 @@ import { SelectedTasksSummary } from './SelectedTasksSummary';
 
 const { TASK_FEE } = config.node;
 
-const ConfirmYourStake = () => {
+function ConfirmYourStake() {
   const navigate = useNavigate();
   const { state: selectedTasks } = useLocation();
 
@@ -55,7 +55,7 @@ const ConfirmYourStake = () => {
   const totalKoiiToUse = totalKoiiStaked + tasksFeeInKoii;
 
   const handleConfirm = () => {
-    if (balance < totalKoiiToUse) {
+    if ((balance as number) < totalKoiiToUse) {
       showNotEnoughFunds();
     } else {
       runAllTasks();
@@ -126,6 +126,6 @@ const ConfirmYourStake = () => {
       </div>
     </div>
   );
-};
+}
 
 export default ConfirmYourStake;

@@ -10,13 +10,12 @@ import {
 } from '@_koi/web3.js';
 
 import config from '../../config';
-import { namespaceInstance } from '../../main/node/helpers/Namespace';
 import { ErrorType, NetworkErrors, WithdrawStakeParam } from '../../models';
 import sdk from '../../services/sdk';
 import { throwDetailedError } from '../../utils';
-
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
+import { namespaceInstance } from '../node/helpers/Namespace';
 
 // eslint-disable-next-line
 const BufferLayout = require('@solana/buffer-layout');
@@ -42,10 +41,8 @@ const withdrawStake = async (
       type: ErrorType.NO_ACTIVE_ACCOUNT,
     });
   }
-  const stakingWalletfilePath =
-    getAppDataPath() + `/namespace/${activeAccount}_stakingWallet.json`;
-  const mainWalletfilePath =
-    getAppDataPath() + `/wallets/${activeAccount}_mainSystemWallet.json`;
+  const stakingWalletfilePath = `${getAppDataPath()}/namespace/${activeAccount}_stakingWallet.json`;
+  const mainWalletfilePath = `${getAppDataPath()}/wallets/${activeAccount}_mainSystemWallet.json`;
   let mainSystemAccount;
   let stakingAccKeypair;
   try {
@@ -59,7 +56,7 @@ const withdrawStake = async (
         JSON.parse(fsSync.readFileSync(stakingWalletfilePath, 'utf-8'))
       )
     );
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
     return throwDetailedError({
       detailed: e,
@@ -78,7 +75,7 @@ const withdrawStake = async (
       { pubkey: stakingAccKeypair.publicKey, isSigner: true, isWritable: true },
     ],
     programId: TASK_CONTRACT_ID,
-    data: data,
+    data,
   });
   try {
     const res = await sendAndConfirmTransaction(
@@ -87,7 +84,7 @@ const withdrawStake = async (
       [mainSystemAccount, stakingAccKeypair]
     );
     return res;
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
     const errorType = e.message
       .toLowerCase()
@@ -105,7 +102,7 @@ const encodeData = (type: any, fields: any) => {
   const allocLength =
     type.layout.span >= 0 ? type.layout.span : getAlloc(type, fields);
   const data = Buffer.alloc(allocLength);
-  const layoutFields = Object.assign({ instruction: type.index }, fields);
+  const layoutFields = { instruction: type.index, ...fields };
   type.layout.encode(layoutFields, data);
   return data;
 };

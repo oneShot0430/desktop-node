@@ -30,7 +30,7 @@ export const AddFunds = create(function AddFunds({ onGoBack }: PropsType) {
   // give faucetStatus an initial value so we can safely destructure it below
   const { data: faucetStatus = { walletAddress: '' } } = useQuery(
     ['faucet-status', mainAccountPubKey],
-    () => getFaucetStatus(mainAccountPubKey)
+    () => getFaucetStatus(mainAccountPubKey as string)
   );
 
   const { walletAddress: _, ...methods } = faucetStatus;
@@ -63,7 +63,7 @@ export const AddFunds = create(function AddFunds({ onGoBack }: PropsType) {
   };
 
   const copyToClipboardAndClose = () => {
-    copyToClipboard(mainAccountPubKey);
+    copyToClipboard(mainAccountPubKey as string);
     closeModal();
   };
 
@@ -96,7 +96,11 @@ export const AddFunds = create(function AddFunds({ onGoBack }: PropsType) {
           <div className="mb-3 text-lg leading-8 text-center">{title}</div>
 
           {hasClaimedAllMethods ? (
-            <QRCode value={mainAccountPubKey} renderAs="canvas" size={240} />
+            <QRCode
+              value={mainAccountPubKey as string}
+              renderAs="canvas"
+              size={240}
+            />
           ) : (
             <>
               <Button

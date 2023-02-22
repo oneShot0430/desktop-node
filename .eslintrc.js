@@ -61,6 +61,12 @@ module.exports = {
     'react/no-unused-prop-types': 'warn',
     'no-shadow': 'warn',
     'jsx-a11y/click-events-have-key-events': 'warn',
+    'prefer-template': 'warn',
+    'jsx-a11y/label-has-associated-control': 'warn',
+    'no-nested-ternary': 'warn',
+    'react/no-array-index-key': 'warn',
+    'jsx-a11y/tabindex-no-positive': 'warn',
+    'jsx-a11y/jsx-a11y/no-noninteractive-tabindex': 'warn',
   },
   parser: '@typescript-eslint/parser',
   settings: {

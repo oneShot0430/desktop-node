@@ -5,7 +5,6 @@ import * as readLastLines from 'read-last-lines';
 import { ErrorType } from '../../models';
 import { GetTaskLogsParam, GetTaskLogsResponse } from '../../models/api';
 import { throwDetailedError } from '../../utils';
-
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
@@ -17,11 +16,11 @@ const getTaskLogs = async (
 
   try {
     const contents = await readLastLines.read(
-      getAppDataPath() + `/namespace/${taskAccountPubKey}/task.log`,
+      `${getAppDataPath()}/namespace/${taskAccountPubKey}/task.log`,
       noOfLines
     );
     return contents;
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
     return throwDetailedError({
       detailed: e,

@@ -1,5 +1,11 @@
+// eslint-disable
+// @ts-nocheck
+
 import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
+
+import jwt from 'jsonwebtoken';
+import levelup from 'levelup';
 
 import {
   Keypair,
@@ -15,8 +21,6 @@ import {
 } from '@_koi/web3.js';
 import axios from 'axios';
 import bs58 from 'bs58';
-import jwt from 'jsonwebtoken';
-import levelup from 'levelup';
 import nacl from 'tweetnacl';
 
 import { ErrorType, NetworkErrors } from '../../../models';
@@ -94,22 +98,34 @@ class Namespace {
    * @param {*} expressApp // Express app for configuration
    */
   taskTxId: string;
+
   app: any;
+
   /**
    * @todo: All redis dependencies should be removed
    */
   redisClient?: any;
+
   taskData: TaskData;
+
   #mainSystemAccount: Keypair;
+
   mainSystemAccountPubKey: PublicKey;
+
   db: levelup.LevelUp;
 
   programId: PublicKey;
+
   taskAccountInfo: AccountInfo<Buffer> | null;
+
   submitterAccountKeyPair: Keypair;
+
   submitterPubkey: string;
+
   connection: Connection;
+
   taskStateInfoPublicKey: any;
+
   STAKE_POT_ACCOUNT: any;
 
   constructor(
@@ -149,8 +165,7 @@ class Namespace {
             Uint8Array.from(
               JSON.parse(
                 fs.readFileSync(
-                  getAppDataPath() +
-                    `/wallets/${activeAccount}_mainSystemWallet.json`,
+                  `${getAppDataPath()}/wallets/${activeAccount}_mainSystemWallet.json`,
                   'utf-8'
                 )
               )
@@ -201,6 +216,7 @@ class Namespace {
       return null;
     }
   }
+
   /**
    * Namespace wrapper of storeGetAsync
    * @param {string} key // Path to get
@@ -221,6 +237,7 @@ class Namespace {
       return null;
     }
   }
+
   /**
    * Namespace wrapper over storeSetAsync
    * @param {string} key Path to set
@@ -368,27 +385,27 @@ class Namespace {
    * @returns {Promise<any>}
    */
   async fs(method: any, path: any, ...args: any) {
-    const basePath = getAppDataPath() + '/namespace/' + this.taskTxId;
+    const basePath = `${getAppDataPath()}/namespace/${this.taskTxId}`;
     await fsPromises.mkdir(basePath, { recursive: true }).catch(console.error);
     return fsPromises[method](`${basePath}/${path}`, ...args);
   }
 
   async fsStaking(method: any, path: any, ...args: any) {
-    const basePath = getAppDataPath() + '/namespace/';
+    const basePath = `${getAppDataPath()}/namespace/`;
     await fsPromises.mkdir(basePath, { recursive: true }).catch(console.error);
     return fsPromises[method](`${basePath}/${path}`, ...args);
   }
 
   async fsWriteStream(imagepath: string) {
-    const basePath = getAppDataPath() + '/namespace/' + this.taskTxId;
+    const basePath = `${getAppDataPath()}/namespace/${this.taskTxId}`;
     await fsPromises.mkdir(basePath, { recursive: true }).catch(console.error);
-    const image = basePath + '/' + imagepath;
+    const image = `${basePath}/${imagepath}`;
     const writer = fs.createWriteStream(image);
     return writer;
   }
 
   async fsReadStream(imagepath: string) {
-    const basePath = getAppDataPath() + '/namespace/' + this.taskTxId;
+    const basePath = `${getAppDataPath()}/namespace/${this.taskTxId}`;
     await fsPromises.mkdir(basePath, { recursive: true }).catch(console.error);
     const image = basePath + imagepath;
     const file = fs.readFileSync(image);
@@ -431,7 +448,7 @@ class Namespace {
    * @param {Function} callback // Callback function on traffic receive
    */
   express(method: any, path: any, callback: any) {
-    return this.app[method]('/' + this.taskTxId + path, callback);
+    return this.app[method](`/${this.taskTxId}${path}`, callback);
   }
 
   /**
@@ -454,6 +471,7 @@ class Namespace {
       config && config.username ? config.username : process.env.REDIS_USERNAME;
     if (!host || !port) throw Error('CANNOT READ REDIS IP OR PORT FROM ENV');
   }
+
   /**
    * Wrapper function for the OnChain submission for Task contract
    * @param {Connection} connection // The k2 connection object
@@ -471,7 +489,7 @@ class Namespace {
     const data = encodeData(TASK_INSTRUCTION_LAYOUTS.SubmitTask, {
       submission: new TextEncoder().encode(
         padStringWithSpaces(submission, 512)
-      ), //must be 512 chracters long
+      ), // must be 512 chracters long
     });
     const instruction = new TransactionInstruction({
       keys: [
@@ -487,7 +505,7 @@ class Namespace {
         },
       ],
       programId: TASK_CONTRACT_ID,
-      data: data,
+      data,
     });
 
     try {
@@ -510,6 +528,7 @@ class Namespace {
       });
     }
   }
+
   /**
    * Wrapper function for the OnChain Voting for Task contract
    * @param {Connection} connection // The k2 connection object
@@ -536,11 +555,11 @@ class Namespace {
           isWritable: true,
         },
         { pubkey: voterKeypair.publicKey, isSigner: true, isWritable: true },
-        { pubkey: candidatePubkey, isSigner: false, isWritable: false }, //Candidate public key who submitted the task and you are approving whose task is correct
+        { pubkey: candidatePubkey, isSigner: false, isWritable: false }, // Candidate public key who submitted the task and you are approving whose task is correct
         { pubkey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false },
       ],
       programId: TASK_CONTRACT_ID,
-      data: data,
+      data,
     });
     try {
       const result = await sendAndConfirmTransaction(
@@ -586,7 +605,7 @@ class Namespace {
         { pubkey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false },
       ],
       programId: TASK_CONTRACT_ID,
-      data: data,
+      data,
     });
     try {
       const response = await sendAndConfirmTransaction(
@@ -623,9 +642,7 @@ class Namespace {
     const instruction = new TransactionInstruction({
       keys: [
         {
-          pubkey: taskStateInfoPublicKey
-            ? taskStateInfoPublicKey
-            : this.taskStateInfoPublicKey,
+          pubkey: taskStateInfoPublicKey || this.taskStateInfoPublicKey,
           isSigner: false,
           isWritable: true,
         },
@@ -634,7 +651,7 @@ class Namespace {
         { pubkey: beneficiaryAccount, isSigner: false, isWritable: true },
       ],
       programId: TASK_CONTRACT_ID,
-      data: data,
+      data,
     });
     console.log(
       'this.mainSystemAccount',
@@ -787,8 +804,7 @@ class Namespace {
     try {
       const ACTIVE_ACCOUNT = 'ACTIVE_ACCOUNT';
       const activeAccount = await this.#storeGetRaw(ACTIVE_ACCOUNT);
-      const STAKING_WALLET_PATH =
-        getAppDataPath() + `/namespace/${activeAccount}_stakingWallet.json`;
+      const STAKING_WALLET_PATH = `${getAppDataPath()}/namespace/${activeAccount}_stakingWallet.json`;
       console.log({ STAKING_WALLET_PATH });
       if (!fs.existsSync(STAKING_WALLET_PATH)) return null;
       submitterAccount = Keypair.fromSecretKey(
@@ -893,7 +909,7 @@ class Namespace {
   async checkSubmissionAndUpdateRound(submissionValue = 'default') {
     console.log('******/  IN SUBMISSION /******');
     const taskAccountDataJSON = await this.getTaskState();
-    const current_round = taskAccountDataJSON.current_round;
+    const { current_round } = taskAccountDataJSON;
     console.log('Submitting for round', current_round);
     try {
       const result = await this.storeGet('round');
@@ -920,6 +936,7 @@ class Namespace {
       console.warn('Error submitting task to chain', err);
     }
   }
+
   /**
    * @description Get the latest Task State
    * @returns task data in JSON format
@@ -943,10 +960,10 @@ class Namespace {
     // await this.checkVoteStatus();
     console.log('******/  IN VOTING /******');
     const taskAccountDataJSON = await this.getTaskState();
-    const current_round = taskAccountDataJSON.current_round;
+    const { current_round } = taskAccountDataJSON;
     const expected_round = current_round - 1;
 
-    const status = taskAccountDataJSON.status;
+    const { status } = taskAccountDataJSON;
     const task_status = Object.keys(status)[0];
 
     // const voteStatus = await this.storeGet('voteStatus');
@@ -1020,6 +1037,7 @@ class Namespace {
 
       // After every iteration of checking the Submissions the Voting will be closed for that round
       try {
+        // eslint-disable-next-line camelcase
         await this.storeSet('lastVotedRound', `${expected_round}`);
       } catch (err) {
         console.warn('Error setting voting status', err);
@@ -1047,12 +1065,14 @@ class Namespace {
       console.log('Submitter key', this.submitterPubkey);
     }
   }
+
   /**
    * @description Get URL from K2_NODE_URL environment variable
    */
   async getRpcUrl() {
     return await getRpcUrlWrapper();
   }
+
   /**
    * Gets an array of service nodes
    * @param url URL of the service node to retrieve the array from a known service node
@@ -1082,12 +1102,11 @@ const namespaceInstance = new Namespace(
 async function getRpcUrlWrapper() {
   if (process.env.K2_NODE_URL) {
     return process.env.K2_NODE_URL;
-  } else {
-    console.warn(
-      'Failed to fetch URL from K2_NODE_URL environment variable setting it to https://k2-testnet.koii.live'
-    );
-    return 'https://k2-testnet.koii.live';
   }
+  console.warn(
+    'Failed to fetch URL from K2_NODE_URL environment variable setting it to https://k2-testnet.koii.live'
+  );
+  return 'https://k2-testnet.koii.live';
 }
 /**
  * @description Sleep utility function
@@ -1148,7 +1167,7 @@ async function registerNodes(newNodes: any) {
   // Verify each registration TODO process promises in parallel
   newNodes = newNodes.filter(async (node: any) => {
     // Filter registrations that don't have an owner or url
-    const owner = node.owner;
+    const { owner } = node;
     if (typeof owner !== 'string') {
       console.error('Invalid node input:', node);
       return false;
@@ -1163,7 +1182,7 @@ async function registerNodes(newNodes: any) {
   const latestNodes: any = {};
   for (const node of nodes.concat(newNodes)) {
     // Filter registrations that don't have an owner or url
-    const owner = node.owner;
+    const { owner } = node;
     if (
       typeof owner !== 'string' ||
       node.data === undefined ||
@@ -1201,7 +1220,7 @@ function encodeData(type: any, fields: any) {
   const allocLength =
     type.layout.span >= 0 ? type.layout.span : getAlloc(type, fields);
   const data = Buffer.alloc(allocLength);
-  const layoutFields = Object.assign({ instruction: type.index }, fields);
+  const layoutFields = { instruction: type.index, ...fields };
   type.layout.encode(layoutFields, data);
   return data;
 }
@@ -1219,7 +1238,7 @@ function getAlloc(type: any, fields: any) {
 
 function padStringWithSpaces(input: string, length: number) {
   if (input.length > length)
-    throw Error('Input exceeds the maxiumum length of ' + length);
+    throw Error(`Input exceeds the maxiumum length of ${length}`);
   input = input.padEnd(length);
   return input;
 }

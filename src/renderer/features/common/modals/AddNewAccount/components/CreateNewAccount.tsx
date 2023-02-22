@@ -2,8 +2,8 @@ import { compare } from 'bcryptjs';
 import React, { useCallback, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
-import KeyIconSvg from 'assets/svgs/key-icon-white.svg';
 import CloseIconWhite from 'assets/svgs/close-icons/close-icon-white.svg';
+import KeyIconSvg from 'assets/svgs/key-icon-white.svg';
 import { ErrorMessage, PinInput, Button } from 'renderer/components';
 import { useUserSettings } from 'renderer/features/common/hooks';
 import { ModalContent } from 'renderer/features/modals';
@@ -21,7 +21,7 @@ type PropsType = Readonly<{
   setNextStep: (step: Steps, payload: CreateKeyPayload) => void;
 }>;
 
-export const CreateNewAccount = ({ onClose, setNextStep }: PropsType) => {
+export function CreateNewAccount({ onClose, setNextStep }: PropsType) {
   const [pin, setPin] = useState('');
   const [error, setError] = useState<Error | string>('');
   const [accountName, setAccounttName] = useState('');
@@ -30,7 +30,7 @@ export const CreateNewAccount = ({ onClose, setNextStep }: PropsType) => {
 
   const validatePin = async (pin: string) => {
     if (pin.length === 6) {
-      const pinMatchesStoredHash = await compare(pin, settings.pin);
+      const pinMatchesStoredHash = await compare(pin, settings?.pin || '');
       return pinMatchesStoredHash;
     }
     return false;
@@ -56,7 +56,7 @@ export const CreateNewAccount = ({ onClose, setNextStep }: PropsType) => {
       } else {
         setError('Your pin is not correct');
       }
-    } catch (error) {
+    } catch (error: any) {
       setError(error);
     } finally {
       queryCache.invalidateQueries(QueryKeys.Accounts);
@@ -128,4 +128,4 @@ export const CreateNewAccount = ({ onClose, setNextStep }: PropsType) => {
       </div>
     </ModalContent>
   );
-};
+}

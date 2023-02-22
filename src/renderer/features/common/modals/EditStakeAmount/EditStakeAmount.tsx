@@ -50,7 +50,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
   const [stakeAmount, setStakeAmount] = useState<number>();
   const { taskStake } = useTaskStake({ task, publicKey });
 
-  const stakeAmountInKoii = getKoiiFromRoe(stakeAmount);
+  const stakeAmountInKoii = getKoiiFromRoe(stakeAmount as number);
 
   const { data: minStake } = useQuery([QueryKeys.minStake, publicKey], () =>
     TaskService.getMinStake(task)
@@ -62,7 +62,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
   );
 
   const addStakeMutation = useMutation(
-    () => stakeOnTask(publicKey, stakeAmount),
+    () => stakeOnTask(publicKey, stakeAmount as number),
     {
       onMutate: async () => {
         await queryClient.cancelQueries({
@@ -80,7 +80,8 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
 
         queryClient.setQueryData(
           [QueryKeys.TaskStake, publicKey],
-          (oldStakeAmount: number) => {
+          // TODO: Get rid on `any`
+          (oldStakeAmount: any) => {
             const totalStake = stakeAmount + oldStakeAmount;
             return totalStake;
           }
@@ -88,11 +89,12 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
 
         queryClient.setQueryData(
           [QueryKeys.taskNodeInfo],
-          (oldNodeData: NodeInfoType) => {
+          // TODO: Get rid on `any`
+          (oldNodeData: any) => {
             const newNodeInfodata = {
               ...oldNodeData,
               totalStaked: oldNodeData.totalStaked + stakeAmount,
-              totalKOII: oldNodeData.totalKOII - stakeAmount,
+              totalKOII: oldNodeData.totalKOII - (stakeAmount as number),
             };
 
             return newNodeInfodata;
@@ -103,14 +105,16 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
       },
 
       onError: (_err, _newData, context) => {
-        queryClient.setQueryData(
-          [QueryKeys.TaskStake, publicKey],
-          context.previousStakeAmount
-        );
-        queryClient.setQueryData(
-          [QueryKeys.taskNodeInfo],
-          context.previousNodeInfo
-        );
+        if (context) {
+          queryClient.setQueryData(
+            [QueryKeys.TaskStake, publicKey],
+            context.previousStakeAmount
+          );
+          queryClient.setQueryData(
+            [QueryKeys.taskNodeInfo],
+            context.previousNodeInfo
+          );
+        }
       },
     }
   );
@@ -137,32 +141,31 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
          */
         return 0;
       });
+      // TODO: Get rid on `any`
+      queryClient.setQueryData([QueryKeys.taskNodeInfo], (oldNodeData: any) => {
+        const newNodeInfodata = {
+          ...oldNodeData,
+          totalStaked: oldNodeData.totalStaked - taskStake,
+          pendingRewards: oldNodeData.pendingRewards + taskStake,
+        };
 
-      queryClient.setQueryData(
-        [QueryKeys.taskNodeInfo],
-        (oldNodeData: NodeInfoType) => {
-          const newNodeInfodata = {
-            ...oldNodeData,
-            totalStaked: oldNodeData.totalStaked - taskStake,
-            pendingRewards: oldNodeData.pendingRewards + taskStake,
-          };
-
-          return newNodeInfodata;
-        }
-      );
+        return newNodeInfodata;
+      });
 
       return { previousStakeAmount, previousNodeInfo };
     },
 
     onError: (err, newData, context) => {
-      queryClient.setQueryData(
-        [QueryKeys.TaskStake, publicKey],
-        context.previousStakeAmount
-      );
-      queryClient.setQueryData(
-        [QueryKeys.taskNodeInfo],
-        context.previousNodeInfo
-      );
+      if (context) {
+        queryClient.setQueryData(
+          [QueryKeys.TaskStake, publicKey],
+          context.previousStakeAmount
+        );
+        queryClient.setQueryData(
+          [QueryKeys.taskNodeInfo],
+          context.previousNodeInfo
+        );
+      }
     },
   });
 
@@ -216,7 +219,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
   const showBackButton = view !== View.SelectAction;
   const title = getTitle();
 
-  const earnedRewardInKoii = getKoiiFromRoe(earnedReward);
+  const earnedRewardInKoii = getKoiiFromRoe(earnedReward as number);
   const myStakeInKoii = getKoiiFromRoe(taskStake);
 
   return (
@@ -229,23 +232,23 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
           showBackButton={showBackButton}
         />
         {/* TODO: Currently not supported */}
-        {/*{view === View.WithdrawAmount && (*/}
-        {/*  <WithdrawAmount*/}
-        {/*    stakedBalance={myStakeInKoii}*/}
-        {/*    onWithdraw={(amount) => {*/}
-        {/*      // setWithdrawAmount(amount);*/}
-        {/*      setView(View.WithdrawConfirm);*/}
-        {/*    }}*/}
-        {/*  />*/}
-        {/*)}*/}
+        {/* {view === View.WithdrawAmount && ( */}
+        {/*  <WithdrawAmount */}
+        {/*    stakedBalance={myStakeInKoii} */}
+        {/*    onWithdraw={(amount) => { */}
+        {/*      // setWithdrawAmount(amount); */}
+        {/*      setView(View.WithdrawConfirm); */}
+        {/*    }} */}
+        {/*  /> */}
+        {/* )} */}
         {view === View.Stake && (
           <AddStake
-            balance={balance}
+            balance={balance as number}
             onAddStake={(amount) => {
               setStakeAmount(amount);
               setView(View.StakeConfirm);
             }}
-            minStake={minStake}
+            minStake={minStake as number}
             currentStake={taskStake}
           />
         )}
@@ -253,8 +256,8 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
           <ConfirmStake
             onSuccess={handleAddStakeSuccess}
             onConfirmAddStake={handleAddStake}
-            stakeAmount={stakeAmount}
-            koiiBalance={balance}
+            stakeAmount={stakeAmount as number}
+            koiiBalance={balance as number}
           />
         )}
         {view === View.WithdrawConfirm && (
@@ -262,7 +265,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
             onSuccess={handleWithdrawStakeSuccess}
             onConfirmWithdraw={handleWithdraw}
             withdrawAmount={myStakeInKoii}
-            koiiBalance={balance}
+            koiiBalance={balance as number}
           />
         )}
         {view === View.StakeSuccess && (
@@ -275,9 +278,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
         {view === View.WithdrawSuccess && (
           <SuccessMessage
             onOkClick={handleClose}
-            successMessage={
-              'You have successfully withdrawn your tokens. To earn more rewards, stake again soon.'
-            }
+            successMessage="You have successfully withdrawn your tokens. To earn more rewards, stake again soon."
           />
         )}
         {view === View.SelectAction && (

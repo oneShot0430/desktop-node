@@ -1,5 +1,5 @@
 import { SeedSecretPhraseXlLine, Icon } from '@_koii/koii-styleguide';
-import React, { memo, useContext, useState, ChangeEventHandler } from 'react';
+import React, { memo, useState, ChangeEventHandler } from 'react';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,13 +13,13 @@ import {
 } from 'renderer/services';
 import { AppRoute } from 'renderer/types/routes';
 
-import { OnboardingContext } from '../../context/onboarding-context';
+import { useOnboardingContext } from '../../context/onboarding-context';
 
-const KeyCreationMethodPick = () => {
+function KeyCreationMethodPick() {
   const [accountName, setAccountName] = useState<string>('');
   const [error, setError] = useState<Error | string>('');
   const navigate = useNavigate();
-  const { setNewSeedPhrase, setSystemKey } = useContext(OnboardingContext);
+  const { setNewSeedPhrase, setSystemKey } = useOnboardingContext();
   const { accounts } = useAccounts();
 
   const createNewKey = async (accountName: string) => {
@@ -99,6 +99,7 @@ const KeyCreationMethodPick = () => {
       <div className="mt-16 ">
         <div className="flex flex-row items-center justify-evenly">
           <div className="flex flex-col items-center">
+            {/* eslint-disable-next-line react/button-has-type */}
             <button
               className="w-[180px] h-[180px] p-2 border-dashed border-finnieOrange rounded-full border-2 mb-4 cursor-pointer"
               onClick={handleClickCreate}
@@ -127,6 +128,6 @@ const KeyCreationMethodPick = () => {
       </div>
     </div>
   );
-};
+}
 
 export default memo(KeyCreationMethodPick);

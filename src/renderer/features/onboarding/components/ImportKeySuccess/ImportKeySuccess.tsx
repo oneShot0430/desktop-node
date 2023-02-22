@@ -1,20 +1,20 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import CheckMarkIcon from 'assets/svgs/checkmark-icon.svg';
 import { Button } from 'renderer/components/ui/Button';
 import { AppRoute } from 'renderer/types/routes';
 
-import { OnboardingContext } from '../../context/onboarding-context';
+import { useOnboardingContext } from '../../context/onboarding-context';
 
-const ImportKeySuccess = () => {
+function ImportKeySuccess() {
   const navigate = useNavigate();
-  const { systemKey } = useContext(OnboardingContext);
+  const { systemKey } = useOnboardingContext();
 
   const maskedKey = systemKey
-    ? systemKey.substring(0, 22) +
-      '...' +
-      systemKey.trim().substring(systemKey.length - 5)
+    ? `${systemKey.substring(0, 22)}...${systemKey
+        .trim()
+        .substring(systemKey.length - 5)}`
     : '';
 
   return (
@@ -42,6 +42,6 @@ const ImportKeySuccess = () => {
       </div>
     </div>
   );
-};
+}
 
 export default ImportKeySuccess;

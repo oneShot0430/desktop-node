@@ -8,7 +8,6 @@ import React, { memo, useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 import { twMerge } from 'tailwind-merge';
 
-import { getKoiiFromRoe } from 'utils';
 import {
   Button,
   LoadingSpinner,
@@ -28,6 +27,7 @@ import {
   stakeOnTask,
 } from 'renderer/services';
 import { Task } from 'renderer/types';
+import { getKoiiFromRoe } from 'utils';
 
 interface Props {
   task: Task;
@@ -35,7 +35,7 @@ interface Props {
   columnsLayout: ColumnsLayout;
 }
 
-const TaskItem = ({ task, index, columnsLayout }: Props) => {
+function TaskItem({ task, index, columnsLayout }: Props) {
   /**
    * @todo: abstract it away to the hook
    */
@@ -46,7 +46,7 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
 
   const { showModal } = useTaskDetailsModal({
     task,
-    accountPublicKey: mainAccountPubKey,
+    accountPublicKey: mainAccountPubKey as string,
   });
 
   const [stake, setStake] = useState<number>(0);
@@ -72,7 +72,7 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
 
   useEffect(() => {
     setStake(taskStake);
-    setMeetsMinimumStake(taskStake >= minStake);
+    setMeetsMinimumStake((taskStake >= minStake) as number);
   }, [minStake, taskStake]);
 
   const handleStartTask = async () => {
@@ -102,7 +102,7 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
 
   const handleStakeValueChange = (value: number) => {
     setStake(value);
-    setMeetsMinimumStake(value >= minStake);
+    setMeetsMinimumStake((value >= (minStake as number));
   };
 
   const handleShowCode = () => {
@@ -145,7 +145,7 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
         <EditStakeInput
           meetsMinimumStake={meetsMinimumStake}
           stake={stake}
-          minStake={minStake}
+          minStake={minStake as number}
           onChange={handleStakeValueChange}
           disabled={taskStake !== 0 || loadingTaskStake}
         />
@@ -185,6 +185,6 @@ const TaskItem = ({ task, index, columnsLayout }: Props) => {
       </div>
     </TableRow>
   );
-};
+}
 
 export default memo(TaskItem);

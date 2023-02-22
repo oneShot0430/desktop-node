@@ -2,22 +2,19 @@ import { ChildProcess, fork, ForkOptions } from 'child_process';
 import { Event } from 'electron';
 import * as fsSync from 'fs';
 
-import { Keypair, PublicKey } from '@_koi/web3.js';
-import axios from 'axios';
 import * as cryptoRandomString from 'crypto-random-string';
 
+import { Keypair, PublicKey } from '@_koi/web3.js';
+import axios from 'axios';
+
 import config from '../../config';
-import {
-  Namespace,
-  namespaceInstance,
-} from '../../main/node/helpers/Namespace';
 import { ErrorType } from '../../models';
 import { TaskStartStopParam } from '../../models/api';
 import koiiTasks from '../../services/koiiTasks';
 import { throwDetailedError } from '../../utils';
-
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
+import { Namespace, namespaceInstance } from '../node/helpers/Namespace';
 import initExpressApp from '../node/initExpressApp';
 
 import getStakingAccountPublicKey from './getStakingAccountPubKey';
@@ -36,8 +33,7 @@ const startTask = async (event: Event, payload: TaskStartStopParam) => {
       type: ErrorType.NO_ACTIVE_ACCOUNT,
     });
   }
-  const mainWalletfilePath =
-    getAppDataPath() + `/wallets/${activeAccount}_mainSystemWallet.json`;
+  const mainWalletfilePath = `${getAppDataPath()}/wallets/${activeAccount}_mainSystemWallet.json`;
   const mainSystemAccount = Keypair.fromSecretKey(
     Uint8Array.from(
       JSON.parse(fsSync.readFileSync(mainWalletfilePath, 'utf-8'))
@@ -113,9 +109,9 @@ async function loadTask(selectedTask: ISelectedTasks) {
   let res;
   try {
     res = await axios.get(
-      config.node.GATEWAY_URL + '/' + selectedTask.taskAuditProgram
+      `${config.node.GATEWAY_URL}/${selectedTask.taskAuditProgram}`
     );
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
     return throwDetailedError({
       detailed: e,
@@ -123,9 +119,9 @@ async function loadTask(selectedTask: ISelectedTasks) {
     });
   }
   if (res.data) {
-    fsSync.mkdirSync(getAppDataPath() + '/executables', { recursive: true });
+    fsSync.mkdirSync(`${getAppDataPath()}/executables`, { recursive: true });
     fsSync.writeFileSync(
-      getAppDataPath() + `/executables/${selectedTask.taskAuditProgram}.js`,
+      `${getAppDataPath()}/executables/${selectedTask.taskAuditProgram}.js`,
       res.data
     );
   }
@@ -160,15 +156,15 @@ async function executeTasks(
   // const STAKE = Number(process.env.TASK_STAKES?.split(',') || 0);
   const stakingAccPubkey = getStakingAccountPublicKey();
   const STAKE = selectedTask.stakeList[stakingAccPubkey];
-  fsSync.mkdirSync(getAppDataPath() + `/namespace/${selectedTask.taskId}`, {
+  fsSync.mkdirSync(`${getAppDataPath()}/namespace/${selectedTask.taskId}`, {
     recursive: true,
   });
   const log_file = fsSync.createWriteStream(
-    getAppDataPath() + `/namespace/${selectedTask.taskId}/task.log`,
+    `${getAppDataPath()}/namespace/${selectedTask.taskId}/task.log`,
     { flags: 'a+' }
   );
   const childTaskProcess = fork(
-    getAppDataPath() + `/executables/${selectedTask.taskAuditProgram}.js`,
+    `${getAppDataPath()}/executables/${selectedTask.taskAuditProgram}.js`,
     [
       `${selectedTask.taskName}`,
       `${selectedTask.taskId}`,
@@ -200,10 +196,10 @@ async function executeTasks(
   );
   LAST_USED_PORT += 1;
   return {
-    namespace: namespace,
+    namespace,
     child: childTaskProcess,
     expressAppPort: LAST_USED_PORT,
-    secret: secret,
+    secret,
   };
 }
 

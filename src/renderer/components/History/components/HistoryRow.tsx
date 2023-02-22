@@ -10,7 +10,7 @@ import {
 } from 'renderer/services';
 import { Task } from 'renderer/types';
 
-export const HistoryRow = ({ task }: { task: Task }) => {
+export function HistoryRow({ task }: { task: Task }) {
   /**
    * @todo: abstract it away to the hook
    */
@@ -28,7 +28,7 @@ export const HistoryRow = ({ task }: { task: Task }) => {
 
   const { showModal } = useTaskDetailsModal({
     task,
-    accountPublicKey: mainAccountPubKey,
+    accountPublicKey: mainAccountPubKey as string,
   });
 
   if (loadingMainAccount) return null;
@@ -43,11 +43,11 @@ export const HistoryRow = ({ task }: { task: Task }) => {
         <div>{taskName}</div>
         <div className="text-finnieTeal">date string</div>
       </div>
-      <div>{'TBD'}</div>
+      <div>TBD</div>
       <NodeStatusCell status={nodeStatus} />
       <div>{nodes}</div>
       <div>{topStake}</div>
       <div>{taskStake}</div>
     </TableRow>
   );
-};
+}

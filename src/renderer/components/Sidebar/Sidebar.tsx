@@ -12,7 +12,7 @@ import { getKoiiFromRoe } from 'utils';
 import { Actions } from './components/Actions';
 import { Summary } from './components/Summary';
 
-export const Sidebar = () => {
+export function Sidebar() {
   const { addNotification } = useNotificationsContext();
   const { userConfig, handleSaveUserAppConfig } = useUserAppConfig({});
   const firstRewardNotificationDisplayed =
@@ -23,8 +23,11 @@ export const Sidebar = () => {
     getTaskNodeInfo,
     {
       refetchInterval: 1000 * 60 * 5,
-      onSettled: ({ pendingRewards }) => {
-        if (pendingRewards > 0 && !firstRewardNotificationDisplayed) {
+      onSettled: (nodeInfo) => {
+        if (
+          (nodeInfo?.pendingRewards as number) > 0 &&
+          !firstRewardNotificationDisplayed
+        ) {
           // set notification for very first node reward
           addNotification(AppNotification.FirstNodeReward);
           handleSaveUserAppConfig({
@@ -52,4 +55,4 @@ export const Sidebar = () => {
       <Actions />
     </div>
   );
-};
+}

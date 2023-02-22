@@ -19,14 +19,14 @@ type PropsType = {
   className?: string;
 };
 
-const ImportFromSeedPhrase = ({
+function ImportFromSeedPhrase({
   accountName,
   onImportSuccess,
   onImportFail,
   confirmActionLabel,
   setImportedWalletAsDefault = false,
   className,
-}: PropsType) => {
+}: PropsType) {
   const [phrases, setPhrases] = useState(new Array(12).fill(''));
   const [error, setError] = useState<Error | string>('');
 
@@ -35,7 +35,7 @@ const ImportFromSeedPhrase = ({
     phraseIndex: number
   ) => {
     setError('');
-    const value = e.target.value;
+    const { value } = e.target;
     const newPhrases = Object.assign([], phrases, {
       [phraseIndex]: value,
     });
@@ -65,7 +65,7 @@ const ImportFromSeedPhrase = ({
           mainAccountPubKey: accounts.mainAccountPubKey,
           stakingAccountPubKey: accounts.stakingWalletPubKey,
         });
-      } catch (error) {
+      } catch (error: any) {
         setError(error);
         if (onImportFail) {
           onImportFail(error);
@@ -115,6 +115,6 @@ const ImportFromSeedPhrase = ({
       </div>
     </div>
   );
-};
+}
 
 export default ImportFromSeedPhrase;

@@ -1,5 +1,4 @@
-import { namespaceInstance } from '../../../main/node/helpers/Namespace';
-
+import { namespaceInstance } from '../../node/helpers/Namespace';
 import { PersistentStoreKeys } from '../types';
 
 import { deleteTaskVariable } from './deleteTaskVariable';
@@ -30,8 +29,8 @@ describe('deleteTaskVariable', () => {
     let invalidPayload: undefined;
 
     await expect(
-      deleteTaskVariable(null, invalidPayload)
-    ).rejects.toThrowError();
+      deleteTaskVariable({} as Event, invalidPayload)
+    ).rejects.toThrow();
   });
 
   it('throws an error if the payload is not valid - number', async () => {
@@ -40,8 +39,8 @@ describe('deleteTaskVariable', () => {
     const invalidPayload = 123;
 
     await expect(
-      deleteTaskVariable(null, invalidPayload as never)
-    ).rejects.toThrowError();
+      deleteTaskVariable({} as Event, invalidPayload as never)
+    ).rejects.toThrow();
   });
 
   it('throws an error if variable is not found by ID', async () => {
@@ -52,8 +51,8 @@ describe('deleteTaskVariable', () => {
     const nonExistingIdPayload = 'some-other-id';
 
     await expect(
-      deleteTaskVariable(null, nonExistingIdPayload)
-    ).rejects.toThrowError();
+      deleteTaskVariable({} as Event, nonExistingIdPayload)
+    ).rejects.toThrow();
   });
 
   it('deletes the task variable if the payload is valid and the ID does exist', async () => {
@@ -70,8 +69,8 @@ describe('deleteTaskVariable', () => {
     });
 
     await expect(
-      deleteTaskVariable(null, idForDeletion)
-    ).resolves.not.toThrowError();
+      deleteTaskVariable({} as Event, idForDeletion)
+    ).resolves.not.toThrow();
 
     expect(namespaceInstance.storeSet).toHaveBeenCalledWith(
       PersistentStoreKeys.TaskVariables,

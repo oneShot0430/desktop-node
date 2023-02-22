@@ -1,6 +1,5 @@
-import { namespaceInstance } from '../../../main/node/helpers/Namespace';
 import { TaskVariablesReturnType } from '../../../models/api/taskVariables/getStoredTaskVariables';
-
+import { namespaceInstance } from '../../node/helpers/Namespace';
 import { PersistentStoreKeys } from '../types';
 
 export const getStoredTaskVariables =
@@ -10,7 +9,9 @@ export const getStoredTaskVariables =
     );
 
     try {
-      const parsedData = JSON.parse(taskVariables) as TaskVariablesReturnType;
+      const parsedData = JSON.parse(
+        taskVariables as string
+      ) as TaskVariablesReturnType;
 
       return parsedData || {};
     } catch (error) {

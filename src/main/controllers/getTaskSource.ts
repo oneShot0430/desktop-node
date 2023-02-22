@@ -7,7 +7,6 @@ import config from '../../config';
 import { ErrorType } from '../../models';
 import sdk from '../../services/sdk';
 import { throwDetailedError } from '../../utils';
-
 import mainErrorHandler from '../../utils/mainErrorHandler';
 
 interface GetTaskSourceParam {
@@ -42,9 +41,9 @@ const getTaskSource = async (
   const url = `${config.node.GATEWAY_URL}/${taskData.task_audit_program}`;
 
   try {
-    const { data: src } = await axios.get(url);
+    const { data: src } = await axios.get<string>(url);
     return src;
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
     return throwDetailedError({
       detailed: e,

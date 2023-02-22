@@ -4,9 +4,8 @@ import { PublicKey } from '@_koi/web3.js';
 
 import { ErrorType } from '../../models';
 import { GetTaskNodeInfoResponse } from '../../models/api';
-import { throwDetailedError } from '../../utils';
-
 import sdk from '../../services/sdk';
+import { throwDetailedError } from '../../utils';
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import { Task } from '../type/TaskData';
 
@@ -36,7 +35,7 @@ const getTaskNodeInfo = async (
       totalStaked: totalStaked || 0,
       pendingRewards: pendingRewards || 0,
     };
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
     return throwDetailedError({
       detailed: e,

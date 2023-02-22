@@ -3,18 +3,17 @@ import * as fsSync from 'fs';
 
 import { Keypair } from '@_koi/web3.js';
 
-import { namespaceInstance } from '../../main/node/helpers/Namespace';
 import { ErrorType } from '../../models';
 import { GetMainAccountPubKeyResponse } from '../../models/api';
 import { throwDetailedError } from '../../utils';
-
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
+import { namespaceInstance } from '../node/helpers/Namespace';
 
 const mainAccountPubKey = async (
   event: Event
 ): Promise<GetMainAccountPubKeyResponse> => {
-  //console.log('IN THE API');
+  // console.log('IN THE API');
   let mainSystemAccount;
   let pubkey: string;
   const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
@@ -24,8 +23,7 @@ const mainAccountPubKey = async (
       type: ErrorType.NO_ACTIVE_ACCOUNT,
     });
   }
-  const mainWalletfilePath =
-    getAppDataPath() + `/wallets/${activeAccount}_mainSystemWallet.json`;
+  const mainWalletfilePath = `${getAppDataPath()}/wallets/${activeAccount}_mainSystemWallet.json`;
   try {
     mainSystemAccount = Keypair.fromSecretKey(
       Uint8Array.from(
@@ -33,11 +31,11 @@ const mainAccountPubKey = async (
       )
     );
     pubkey = mainSystemAccount.publicKey.toBase58();
-    //console.log('PUBKEY', pubkey);
+    // console.log('PUBKEY', pubkey);
     return pubkey;
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
-    return null;
+    return 'null';
   }
 };
 

@@ -1,14 +1,14 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { SeedPhraseConfirm } from 'renderer/components/SeedPhraseConfirm/SeedPhraseConfirm';
 import { Button } from 'renderer/components/ui/Button';
 import { AppRoute } from 'renderer/types/routes';
 
-import { OnboardingContext } from '../../context/onboarding-context';
+import { useOnboardingContext } from '../../context/onboarding-context';
 
-export const ConfirmSecretPhrase = () => {
-  const { newSeedPhrase } = useContext(OnboardingContext);
+export function ConfirmSecretPhrase() {
+  const { newSeedPhrase } = useOnboardingContext();
   const [phrase, setPhrase] = useState('');
   const [error, setError] = useState<string>('');
   const navigate = useNavigate();
@@ -47,4 +47,4 @@ export const ConfirmSecretPhrase = () => {
       </div>
     </div>
   );
-};
+}

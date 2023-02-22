@@ -9,7 +9,7 @@ import { PinInput } from 'renderer/components/PinInput';
 import { useUserSettings } from 'renderer/features/common';
 import { AppRoute } from 'renderer/types/routes';
 
-export const Unlock = (): JSX.Element => {
+export function Unlock(): JSX.Element {
   const [hasPinError, setHasPinError] = useState<boolean>(false);
 
   const { settings } = useUserSettings();
@@ -21,7 +21,10 @@ export const Unlock = (): JSX.Element => {
     const finishedTypingPin = enteredPin.length === 6;
 
     if (finishedTypingPin) {
-      const pinMatchesStoredHash = await compare(enteredPin, settings.pin);
+      const pinMatchesStoredHash = await compare(
+        enteredPin,
+        settings?.pin || ''
+      );
 
       if (pinMatchesStoredHash) {
         navigate(AppRoute.MyNode, { state: { noBackButton: true } });
@@ -51,4 +54,4 @@ export const Unlock = (): JSX.Element => {
       <WelcomeLinesDiagonal className="absolute bottom-0 right-0 h-full" />
     </div>
   );
-};
+}

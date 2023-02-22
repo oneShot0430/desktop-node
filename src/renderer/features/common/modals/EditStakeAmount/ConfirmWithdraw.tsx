@@ -10,14 +10,14 @@ type PropsType = Readonly<{
   onSuccess: () => void;
 }>;
 
-export const ConfirmWithdraw = ({
+export function ConfirmWithdraw({
   onConfirmWithdraw,
   withdrawAmount,
   koiiBalance,
   onSuccess,
-}: PropsType) => {
+}: PropsType) {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error>(null);
+  const [error, setError] = useState<Error>();
 
   const handleConfirmWithdrawStake = async () => {
     try {
@@ -25,7 +25,7 @@ export const ConfirmWithdraw = ({
       await onConfirmWithdraw();
       setIsLoading(false);
       onSuccess();
-    } catch (error) {
+    } catch (error: any) {
       setError(error);
       setIsLoading(false);
     }
@@ -48,6 +48,6 @@ export const ConfirmWithdraw = ({
       />
     </div>
   );
-};
+}
 
 export default memo(ConfirmWithdraw);

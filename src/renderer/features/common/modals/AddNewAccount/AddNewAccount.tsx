@@ -26,7 +26,7 @@ export enum Steps {
 export const AddNewAccount = create(function AddNewAccount() {
   const modal = useModal();
   const [currentStep, setCurrentStep] = useState(Steps.ImportKey);
-  const [newKeys, setNewKeys] = useState<KeysType>(null);
+  const [newKeys, setNewKeys] = useState<KeysType>();
   const [seedPhrase, setSeedPhrase] = useState('');
 
   const handleCreatedNewKeyStep = (step: Steps, payload: CreateKeyPayload) => {
@@ -66,14 +66,14 @@ export const AddNewAccount = create(function AddNewAccount() {
         <AccountCreated
           onClose={handleClose}
           setNextStep={setCurrentStep}
-          newKeys={newKeys}
+          newKeys={newKeys as KeysType}
         />
       ),
       [Steps.AccountImported]: (
         <AccountSuccessfullyImported
           onClose={handleClose}
           setNextStep={setCurrentStep}
-          newKeys={newKeys}
+          newKeys={newKeys as KeysType}
         />
       ),
       [Steps.ShowSeedPhrase]: (

@@ -12,7 +12,7 @@ type PropsType = Readonly<{
   address: string;
 }>;
 
-export const AccountInfo = ({ keyType, address }: PropsType) => {
+export function AccountInfo({ keyType, address }: PropsType) {
   const addressRef = useRef<HTMLSpanElement>(null);
 
   const titleClasses = twMerge(
@@ -21,8 +21,8 @@ export const AccountInfo = ({ keyType, address }: PropsType) => {
   );
 
   const handleCopyToClipboard = () => {
-    const address = addressRef.current.innerHTML;
-    navigator.clipboard.writeText(address);
+    const address = addressRef.current?.innerHTML;
+    navigator.clipboard.writeText(address || '');
   };
 
   const isTaskKey = keyType === 'system';
@@ -49,4 +49,4 @@ export const AccountInfo = ({ keyType, address }: PropsType) => {
       </div>
     </div>
   );
-};
+}
