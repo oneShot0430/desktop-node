@@ -72,7 +72,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
 
   useEffect(() => {
     setStake(taskStake);
-    setMeetsMinimumStake((taskStake >= minStake) as number);
+    setMeetsMinimumStake(taskStake >= (minStake as number));
   }, [minStake, taskStake]);
 
   const handleStartTask = async () => {
@@ -102,7 +102,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
 
   const handleStakeValueChange = (value: number) => {
     setStake(value);
-    setMeetsMinimumStake((value >= (minStake as number));
+    setMeetsMinimumStake(value >= (minStake as number));
   };
 
   const handleShowCode = () => {

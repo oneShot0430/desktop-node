@@ -67,6 +67,7 @@ module.exports = {
     'react/no-array-index-key': 'warn',
     'jsx-a11y/tabindex-no-positive': 'warn',
     'jsx-a11y/jsx-a11y/no-noninteractive-tabindex': 'warn',
+    'react/function-component-definition': 'warn',
   },
   parser: '@typescript-eslint/parser',
   settings: {
