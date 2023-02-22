@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import LinesVerticalTeal from 'assets/svgs/onboarding/lines-vertical-teal.svg';
 import { Button } from 'renderer/components';
 import { PinInput } from 'renderer/components/PinInput';
-import { useUserAppConfig } from 'renderer/features/settings';
+import { useUserAppConfig } from 'renderer/features/common';
 import { openBrowserWindow } from 'renderer/services';
 import { AppRoute } from 'renderer/types/routes';
 

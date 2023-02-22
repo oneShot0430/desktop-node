@@ -4,10 +4,10 @@ import QRCode from 'qrcode.react';
 import React from 'react';
 import { useQuery } from 'react-query';
 
-import config from 'config';
 import BackIcon from 'assets/svgs/back-icon.svg';
+import config from 'config';
 import { Button } from 'renderer/components';
-import { useClipboard } from 'renderer/features/common';
+import { useClipboard } from 'renderer/features/common/';
 import { Modal, ModalContent } from 'renderer/features/modals';
 import {
   getMainAccountPublicKey,

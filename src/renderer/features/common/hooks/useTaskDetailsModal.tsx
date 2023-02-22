@@ -2,7 +2,7 @@ import { show } from '@ebay/nice-modal-react';
 
 import { Task } from 'renderer/types';
 
-import { TaskDetailsModal } from '../modals';
+import { TaskDetailsModal } from '../modals/TaskDetails';
 
 type ParamsType = {
   task: Task;

@@ -2,12 +2,12 @@ import { create, useModal } from '@ebay/nice-modal-react';
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 
+import CloseIcon from 'assets/svgs/close-icons/close-icon-white.svg';
 import ExternalSourceIconSvg from 'assets/svgs/external-source-icon-white.svg';
 import FlagIconTealSvg from 'assets/svgs/flag-teal-icon.svg';
-import CloseIcon from 'assets/svgs/close-icons/close-icon-white.svg';
 import { SourceCode } from 'renderer/components/SourceCode';
-import { useTaskStake } from 'renderer/features/common';
 import { useEarnedReward } from 'renderer/features/common/hooks/useEarnedReward';
+import { useTaskStake } from 'renderer/features/common/hooks/useTaskStake';
 import { Modal, ModalContent } from 'renderer/features/modals';
 import { QueryKeys, TaskService, TaskStatusToLabeMap } from 'renderer/services';
 import { Task } from 'renderer/types';

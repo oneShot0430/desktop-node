@@ -1,8 +1,7 @@
 import { useQuery } from 'react-query';
 
+import { fetchAccountBalance } from 'renderer/features/settings/hooks/common';
 import { getMainAccountPublicKey } from 'renderer/services';
-
-import { fetchAccountBalance } from './common';
 
 export const useMainAccountBalance = () => {
   const { data: mainAccountPubKey } = useQuery(

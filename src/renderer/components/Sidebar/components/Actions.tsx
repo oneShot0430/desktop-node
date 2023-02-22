@@ -10,7 +10,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import {
   useCreateTaskModal,
   useFundNewAccountModal,
-} from 'renderer/features/common';
+} from 'renderer/features/common/hooks/';
 import { AppRoute } from 'renderer/types/routes';
 
 export const Actions = () => {

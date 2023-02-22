@@ -3,9 +3,11 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Button } from 'renderer/components';
-import { useFundNewAccountModal } from 'renderer/features/common';
+import {
+  useUserAppConfig,
+  useFundNewAccountModal,
+} from 'renderer/features/common';
 import { Modal, ModalContent, ModalTopBar } from 'renderer/features/modals';
-import { useUserAppConfig } from 'renderer/features/settings';
 import { Theme } from 'renderer/types/common';
 import { AppRoute } from 'renderer/types/routes';
 

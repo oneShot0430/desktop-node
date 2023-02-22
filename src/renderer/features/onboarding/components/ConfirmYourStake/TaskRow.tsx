@@ -11,7 +11,7 @@ import { getMainAccountPublicKey, QueryKeys } from 'renderer/services';
 import { TaskWithStake } from 'renderer/types';
 import { getKoiiFromRoe } from 'utils';
 
-import { EditStakeInput } from '..';
+import { EditStakeInput } from '../EditStakeInput';
 
 interface PropsType {
   task: TaskWithStake;

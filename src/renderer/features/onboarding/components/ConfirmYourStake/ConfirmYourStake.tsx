@@ -5,19 +5,17 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import AddIconSvg from 'assets/svgs/onboarding/add-teal-icon.svg';
 import CurrencySvgIcon from 'assets/svgs/onboarding/currency-teal-small-icon.svg';
 import config from 'config';
-import { getKoiiFromRoe } from 'utils';
 import { ErrorMessage, Button } from 'renderer/components';
 import {
   useNotEnoughFunds,
   useRunMultipleTasks,
-} from 'renderer/features/common';
-import {
-  useMainAccountBalance,
   useUserAppConfig,
-} from 'renderer/features/settings';
+  useMainAccountBalance,
+} from 'renderer/features/common';
 import { TaskWithStake } from 'renderer/types';
 import { AppRoute } from 'renderer/types/routes';
 import { ErrorContext } from 'renderer/utils';
+import { getKoiiFromRoe } from 'utils';
 
 import { SelectedTasksSummary } from './SelectedTasksSummary';
 

@@ -11,7 +11,7 @@ import { useLocation } from 'react-router-dom';
 import BackIconComponent from 'assets/svgs/back-icon.svg';
 import KoiiLogo from 'assets/svgs/koii-logo-white.svg';
 import { Button } from 'renderer/components/ui/Button';
-import { useUserAppConfig } from 'renderer/features/settings';
+import { useUserAppConfig } from 'renderer/features';
 import { AppRoute } from 'renderer/types/routes';
 
 import { useBackButtonHandler } from '../../hooks/useBackButtonHandler';

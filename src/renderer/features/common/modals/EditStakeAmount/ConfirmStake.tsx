@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 
-import { getKoiiFromRoe } from 'utils';
-import { ErrorMessage, Button } from 'renderer/components';
+// TO DO: come back to barreel imports without causing cyclic dependencies issues
+import { Button } from 'renderer/components/ui/Button';
+import { ErrorMessage } from 'renderer/components/ui/ErrorMessage';
 import { ErrorContext } from 'renderer/utils';
+import { getKoiiFromRoe } from 'utils';
 
 type PropsType = Readonly<{
   stakeAmount: number;
