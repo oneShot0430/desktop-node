@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { AppTopBar } from 'renderer/components';
+import { AppTopBar } from 'renderer/components/AppTopBar';
 import { saveUserConfig } from 'renderer/services';
 import { AppRoute } from 'renderer/types/routes';
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useInfiniteQuery } from 'react-query';
 
-import { InfiniteScrollTable } from 'renderer/components';
+import { InfiniteScrollTable } from 'renderer/components/ui';
 import { fetchAvailableTasks, QueryKeys } from 'renderer/services';
 import { Task } from 'renderer/types';
 

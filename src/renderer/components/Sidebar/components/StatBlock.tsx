@@ -6,7 +6,7 @@ import confettiAnimation from 'assets/animations/confetti.json';
 import FinnieKoiiLogo from 'assets/svgs/finnie-logos/finnie-koii-logo-inverse.svg';
 import TotalStakedIcon from 'assets/svgs/koii-staked-icon.svg';
 import PendingRewardsIcon from 'assets/svgs/pending-rewards-icon.svg';
-import { LoadingSpinner } from 'renderer/components';
+import { LoadingSpinner } from 'renderer/components/ui';
 import { usePrevious } from 'renderer/features/common';
 
 import { ClaimRewards } from './ClaimRewards';

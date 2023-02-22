@@ -13,7 +13,7 @@ import CheckMarkIcon from 'assets/svgs/checkmark-icon-no-borders.svg';
 import CloseIcon from 'assets/svgs/close-icons/close-icon-no-borders.svg';
 import ShareIcon from 'assets/svgs/share-icon.svg';
 import { ErrorType } from 'models';
-import { Tooltip, ErrorMessage } from 'renderer/components';
+import { Tooltip, ErrorMessage } from 'renderer/components/ui';
 import { QueryKeys, claimRewards } from 'renderer/services';
 import { Theme } from 'renderer/types/common';
 

@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 
-import { Table } from 'renderer/components';
+import { Table } from 'renderer/components/ui';
 import { Task } from 'renderer/types';
 
 import { HistoryRow } from './components/HistoryRow';

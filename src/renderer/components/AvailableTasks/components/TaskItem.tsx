@@ -15,7 +15,7 @@ import {
   Tooltip,
   TableRow,
   ColumnsLayout,
-} from 'renderer/components';
+} from 'renderer/components/ui';
 import { useTaskStake, useTaskDetailsModal } from 'renderer/features/common';
 import { EditStakeInput } from 'renderer/features/onboarding/components/EditStakeInput';
 import {
