@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ReactComponent as FinnieLogo } from 'assets/svgs/finnie-logos/finnie-logo.svg';
+import FinnieLogo from 'assets/svgs/finnie-logos/finnie-logo.svg';
 
 import Navbar from './Navbar';
 

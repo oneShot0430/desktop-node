@@ -1,9 +1,9 @@
 import React, { memo } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { ReactComponent as BackIconBlue } from 'assets/svgs/back-icon.svg';
-import { ReactComponent as CloseIconBlue } from 'assets/svgs/close-icons/close-icon-blue.svg';
-import { ReactComponent as CloseIconWhite } from 'assets/svgs/close-icons/close-icon-white.svg';
+import BackIconBlue from 'assets/svgs/back-icon.svg';
+import CloseIconBlue from 'assets/svgs/close-icons/close-icon-blue.svg';
+import CloseIconWhite from 'assets/svgs/close-icons/close-icon-white.svg';
 
 type PropsType = Readonly<{
   title: React.ReactNode;

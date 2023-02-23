@@ -1,8 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { ReactComponent as AddIconSvg } from 'assets/svgs/onboarding/add-teal-icon.svg';
-import { ReactComponent as CurrencySvgIcon } from 'assets/svgs/onboarding/currency-teal-small-icon.svg';
+import AddIconSvg from 'assets/svgs/onboarding/add-teal-icon.svg';
+import CurrencySvgIcon from 'assets/svgs/onboarding/currency-teal-small-icon.svg';
 import config from 'config';
 import { sum } from 'lodash';
 import { ErrorMessage, Button } from 'renderer/components';

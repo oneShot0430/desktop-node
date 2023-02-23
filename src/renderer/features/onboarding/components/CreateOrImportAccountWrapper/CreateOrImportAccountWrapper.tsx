@@ -1,8 +1,8 @@
 import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
-import { ReactComponent as YellowLinesTop } from 'assets/svgs/onboarding/key-import-lines-top.svg';
-import { ReactComponent as TealLinesBottom } from 'assets/svgs/onboarding/key-import-teal-lines-bot.svg';
+import YellowLinesTop from 'assets/svgs/onboarding/key-import-lines-top.svg';
+import TealLinesBottom from 'assets/svgs/onboarding/key-import-teal-lines-bot.svg';
 
 function CreateOrImportAccountWrapper() {
   const location = useLocation();

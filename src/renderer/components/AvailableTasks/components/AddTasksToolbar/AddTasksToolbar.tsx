@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ReactComponent as AddTasksIcon } from 'assets/svgs/toolbar-icons/add-tasks-icon.svg';
+import AddTasksIcon from 'assets/svgs/toolbar-icons/add-tasks-icon.svg';
 import Toolbar from 'renderer/components/Toolbar';
 
 import AddTasksActionCenter from './AddTasksActionCenter';

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ReactComponent as NewTaskIcon } from 'assets/svgs/add-icons/add-icon.svg';
+import NewTaskIcon from 'assets/svgs/add-icons/add-icon.svg';
 import ActionButton from 'renderer/components/ActionButton';
 import { useCreateTaskModal } from 'renderer/features/common/hooks/useCreateTaskModal';
 

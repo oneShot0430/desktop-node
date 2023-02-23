@@ -2,8 +2,8 @@ import { compare } from 'bcryptjs';
 import React, { useCallback, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
-import { ReactComponent as CloseIconWhite } from 'assets/svgs/close-icons/close-icon-white.svg';
-import { ReactComponent as KeyIconSvg } from 'assets/svgs/key-icon-white.svg';
+import CloseIconWhite from 'assets/svgs/close-icons/close-icon-white.svg';
+import KeyIconSvg from 'assets/svgs/key-icon-white.svg';
 import { ErrorMessage, PinInput, Button } from 'renderer/components';
 import { useUserSettings } from 'renderer/features/common/hooks';
 import { ModalContent } from 'renderer/features/modals';

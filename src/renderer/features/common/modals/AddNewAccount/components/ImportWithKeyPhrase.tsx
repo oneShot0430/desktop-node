@@ -1,8 +1,8 @@
 import React, { memo, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
-import { ReactComponent as CloseIconWhite } from 'assets/svgs/close-icons/close-icon-white.svg';
-import { ReactComponent as UploadIcon } from 'assets/svgs/upload-icon.svg';
+import CloseIconWhite from 'assets/svgs/close-icons/close-icon-white.svg';
+import UploadIcon from 'assets/svgs/upload-icon.svg';
 import {
   AccountsType,
   ImportFromSeedPhrase,

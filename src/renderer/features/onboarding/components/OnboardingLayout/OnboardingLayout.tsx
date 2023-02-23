@@ -8,7 +8,7 @@ import {
 import React, { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import { ReactComponent as BackIconComponent } from 'assets/svgs/back-icon.svg';
+import BackIconComponent from 'assets/svgs/back-icon.svg';
 import KoiiLogo from 'assets/svgs/koii-logo-white.svg';
 import { Button } from 'renderer/components/ui';
 import { useUserAppConfig } from 'renderer/features';

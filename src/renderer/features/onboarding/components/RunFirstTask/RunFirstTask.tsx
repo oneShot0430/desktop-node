@@ -2,8 +2,8 @@ import { AddFill, CurrencyMoneyLine, Icon } from '@_koii/koii-styleguide';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { ReactComponent as RestoreIconSvg } from 'assets/svgs/onboarding/restore-orange-icon.svg';
-import { ReactComponent as BgShape } from 'assets/svgs/onboarding/shape_1.svg';
+import RestoreIconSvg from 'assets/svgs/onboarding/restore-orange-icon.svg';
+import BgShape from 'assets/svgs/onboarding/shape_1.svg';
 import { Button } from 'renderer/components/ui';
 import { AppRoute } from 'renderer/types/routes';
 import { getKoiiFromRoe } from 'utils';

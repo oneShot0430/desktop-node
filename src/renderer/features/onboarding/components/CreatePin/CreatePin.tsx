@@ -2,7 +2,7 @@ import { hash } from 'bcryptjs';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { ReactComponent as LinesVerticalTeal } from 'assets/svgs/onboarding/lines-vertical-teal.svg';
+import LinesVerticalTeal from 'assets/svgs/onboarding/lines-vertical-teal.svg';
 import { PinInput } from 'renderer/components/PinInput';
 import { Button } from 'renderer/components/ui';
 import { useUserAppConfig } from 'renderer/features/common';

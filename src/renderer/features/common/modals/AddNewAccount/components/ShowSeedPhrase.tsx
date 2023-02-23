@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 
-import { ReactComponent as CloseIconWhite } from 'assets/svgs/close-icons/close-icon-white.svg';
+import CloseIconWhite from 'assets/svgs/close-icons/close-icon-white.svg';
 import { Button } from 'renderer/components/ui';
 import { ModalContent } from 'renderer/features/modals';
 import { Theme } from 'renderer/types/common';

@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import React from 'react';
 
-import { ReactComponent as InspectIcon } from 'assets/svgs/inspect-icon.svg';
+import InspectIcon from 'assets/svgs/inspect-icon.svg';
 
 const iconSizes = {
   big: 'w-7 h-4.375',
