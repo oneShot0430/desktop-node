@@ -16,7 +16,6 @@
     "noImplicitAny": true,
     "jsx": "react",
     "target": "ES6"
-
   },
   "exclude": ["test", "release/build", "release/app/dist", ".erb/dll"]
 }

@@ -2,8 +2,8 @@ import { AddFill, CurrencyMoneyLine, Icon } from '@_koii/koii-styleguide';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import RestoreIconSvg from 'assets/svgs/onboarding/restore-orange-icon.svg';
-import BgShape from 'assets/svgs/onboarding/shape_1.svg';
+import { ReactComponent as RestoreIconSvg } from 'assets/svgs/onboarding/restore-orange-icon.svg';
+import { ReactComponent as BgShape } from 'assets/svgs/onboarding/shape_1.svg';
 import { Button } from 'renderer/components/ui';
 import { AppRoute } from 'renderer/types/routes';
 import { getKoiiFromRoe } from 'utils';
@@ -11,7 +11,7 @@ import { getKoiiFromRoe } from 'utils';
 import { useRunFirstTasksLogic } from './hooks';
 import TaskItem from './TaskItem';
 
-const RunFirstTask = () => {
+function RunFirstTask() {
   const [isRunButtonDisabled, setIsRunButtonDisabled] = useState<boolean>(true);
 
   const navigate = useNavigate();
@@ -99,6 +99,6 @@ const RunFirstTask = () => {
       <BgShape className="absolute top-0 right-0" />
     </div>
   );
-};
+}
 
 export default RunFirstTask;

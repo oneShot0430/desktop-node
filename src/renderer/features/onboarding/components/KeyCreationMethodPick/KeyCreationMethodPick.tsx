@@ -3,7 +3,7 @@ import React, { memo, useState, ChangeEventHandler } from 'react';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
-import RewardsSvg from 'assets/svgs/onboarding/rewards-icon.svg';
+import { ReactComponent as RewardsSvg } from 'assets/svgs/onboarding/rewards-icon.svg';
 import { ErrorMessage } from 'renderer/components';
 import { useAccounts } from 'renderer/features/settings';
 import {

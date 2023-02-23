@@ -2,7 +2,7 @@ import { hash } from 'bcryptjs';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import LinesVerticalTeal from 'assets/svgs/onboarding/lines-vertical-teal.svg';
+import { ReactComponent as LinesVerticalTeal } from 'assets/svgs/onboarding/lines-vertical-teal.svg';
 import { PinInput } from 'renderer/components/PinInput';
 import { Button } from 'renderer/components/ui';
 import { useUserAppConfig } from 'renderer/features/common';
@@ -11,7 +11,7 @@ import { AppRoute } from 'renderer/types/routes';
 
 import { ContentRightWrapper } from '../ContentRightWrapper';
 
-const CreatePin = () => {
+function CreatePin() {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [pin, setPin] = useState('');
   const [pinConfirm, setPinConfirm] = useState('');
@@ -94,6 +94,7 @@ const CreatePin = () => {
               className="ml-4 text-sm font-medium "
             >
               I agree with the{' '}
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <a
                 href="#"
                 className="underline text-finnieTeal"
@@ -115,6 +116,6 @@ const CreatePin = () => {
       <LinesVerticalTeal className="absolute top-0 right-0 z-10 h-screen" />
     </div>
   );
-};
+}
 
 export default CreatePin;

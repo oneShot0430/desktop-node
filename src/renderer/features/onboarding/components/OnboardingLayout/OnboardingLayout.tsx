@@ -8,7 +8,7 @@ import {
 import React, { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import BackIconComponent from 'assets/svgs/back-icon.svg';
+import { ReactComponent as BackIconComponent } from 'assets/svgs/back-icon.svg';
 import KoiiLogo from 'assets/svgs/koii-logo-white.svg';
 import { Button } from 'renderer/components/ui';
 import { useUserAppConfig } from 'renderer/features';
@@ -22,7 +22,7 @@ type PropsType = {
   children: React.ReactNode;
 };
 
-const OnboardingLayout = ({ children }: PropsType) => {
+function OnboardingLayout({ children }: PropsType) {
   const {
     handleBackButtonClick,
     showOnboardingBackButton,
@@ -101,6 +101,6 @@ const OnboardingLayout = ({ children }: PropsType) => {
       <div className="w-full">{children}</div>
     </div>
   );
-};
+}
 
 export default OnboardingLayout;

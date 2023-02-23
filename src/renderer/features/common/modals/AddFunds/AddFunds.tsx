@@ -4,7 +4,7 @@ import QRCode from 'qrcode.react';
 import React from 'react';
 import { useQuery } from 'react-query';
 
-import BackIcon from 'assets/svgs/back-icon.svg';
+import { ReactComponent as BackIcon } from 'assets/svgs/back-icon.svg';
 import config from 'config';
 import { Button } from 'renderer/components/ui';
 import { useClipboard } from 'renderer/features/common/hooks/useClipboard';

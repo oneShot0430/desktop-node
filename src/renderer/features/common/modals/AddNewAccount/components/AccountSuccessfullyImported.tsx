@@ -1,7 +1,7 @@
 import React from 'react';
 
-import CheckmarkTealSvg from 'assets/svgs/checkmark-teal-icon.svg';
-import CloseIconWhite from 'assets/svgs/close-icons/close-icon-white.svg';
+import { ReactComponent as CheckmarkTealSvg } from 'assets/svgs/checkmark-teal-icon.svg';
+import { ReactComponent as CloseIconWhite } from 'assets/svgs/close-icons/close-icon-white.svg';
 import { ModalContent } from 'renderer/features/modals';
 import { Theme } from 'renderer/types/common';
 

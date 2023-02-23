@@ -1,11 +1,11 @@
 import React from 'react';
 
-import AddTasksIcon from 'assets/svgs/toolbar-icons/add-tasks-icon.svg';
+import { ReactComponent as AddTasksIcon } from 'assets/svgs/toolbar-icons/add-tasks-icon.svg';
 import Toolbar from 'renderer/components/Toolbar';
 
 import AddTasksActionCenter from './AddTasksActionCenter';
 
-const AddTasksToolbar = (): JSX.Element => {
+function AddTasksToolbar(): JSX.Element {
   return (
     <div>
       <Toolbar
@@ -15,6 +15,6 @@ const AddTasksToolbar = (): JSX.Element => {
       />
     </div>
   );
-};
+}
 
 export default AddTasksToolbar;

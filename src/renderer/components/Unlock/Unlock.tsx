@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import KoiiLogo from 'assets/svgs/koii-logo-white.svg';
-import WelcomeLinesDiagonal from 'assets/svgs/welcome-lines-diagonal.svg';
-import WelcomeWheelBackground from 'assets/svgs/welcome-wheel-background.svg';
+import { ReactComponent as WelcomeLinesDiagonal } from 'assets/svgs/welcome-lines-diagonal.svg';
+import { ReactComponent as WelcomeWheelBackground } from 'assets/svgs/welcome-wheel-background.svg';
 import { PinInput } from 'renderer/components/PinInput';
 import { useUserSettings } from 'renderer/features/common';
 import { AppRoute } from 'renderer/types/routes';

@@ -17,7 +17,7 @@ export function RefreshBalance({ onBalanceRefresh }: PropsType) {
     isRefetching,
     refetch,
     error,
-  } = useQuery(['main-account-balance'], getMainAccountBalance, {
+  } = useQuery<number, Error>(['main-account-balance'], getMainAccountBalance, {
     onSuccess: (data) => {
       if (onBalanceRefresh) {
         onBalanceRefresh(data);

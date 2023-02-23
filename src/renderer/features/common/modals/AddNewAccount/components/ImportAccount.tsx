@@ -15,7 +15,7 @@ type PropsType = Readonly<{
 }>;
 
 function ImportAccount({ onClose, setNextStep }: PropsType) {
-  const ref = useRef<HTMLInputElement>();
+  const ref = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (ref.current) {

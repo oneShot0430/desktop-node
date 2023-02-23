@@ -1,10 +1,10 @@
 import React from 'react';
 
-import NewTaskIcon from 'assets/svgs/add-icons/add-icon.svg';
+import { ReactComponent as NewTaskIcon } from 'assets/svgs/add-icons/add-icon.svg';
 import ActionButton from 'renderer/components/ActionButton';
 import { useCreateTaskModal } from 'renderer/features/common/hooks/useCreateTaskModal';
 
-const AddTasksActionCenter = (): JSX.Element => {
+function AddTasksActionCenter(): JSX.Element {
   const { showModal } = useCreateTaskModal();
 
   return (
@@ -25,6 +25,6 @@ const AddTasksActionCenter = (): JSX.Element => {
       />
     </div>
   );
-};
+}
 
 export default AddTasksActionCenter;

@@ -68,6 +68,9 @@ module.exports = {
     'jsx-a11y/tabindex-no-positive': 'warn',
     // 'jsx-a11y/jsx-a11y/no-noninteractive-tabindex': 'warn',
     'react/function-component-definition': 'warn',
+    'react/button-has-type': 'off',
+    'jsx-a11y/anchor-is-valid': 'warn',
+    'jsx-a11y/no-static-element-interactions': 'warn',
   },
   parser: '@typescript-eslint/parser',
   settings: {

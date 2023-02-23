@@ -2,8 +2,8 @@ import { create, useModal } from '@ebay/nice-modal-react';
 import React, { ChangeEventHandler, useState } from 'react';
 import { useQuery, useMutation } from 'react-query';
 
-import BrowserIcon from 'assets/svgs/browser-icon.svg';
-import CloseIconWhite from 'assets/svgs/close-icons/close-icon-white.svg';
+import { ReactComponent as BrowserIcon } from 'assets/svgs/browser-icon.svg';
+import { ReactComponent as CloseIconWhite } from 'assets/svgs/close-icons/close-icon-white.svg';
 import { TaskVariableData } from 'models';
 import { Button, ErrorMessage } from 'renderer/components/ui';
 import { Modal, ModalContent } from 'renderer/features/modals';

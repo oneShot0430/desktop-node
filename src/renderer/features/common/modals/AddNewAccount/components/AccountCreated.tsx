@@ -1,7 +1,7 @@
 import React from 'react';
 
-import CheckmarkTealSvg from 'assets/svgs/checkmark-teal-icon.svg';
-import CloseIconWhite from 'assets/svgs/close-icons/close-icon-white.svg';
+import { ReactComponent as CheckmarkTealSvg } from 'assets/svgs/checkmark-teal-icon.svg';
+import { ReactComponent as CloseIconWhite } from 'assets/svgs/close-icons/close-icon-white.svg';
 import { ModalContent } from 'renderer/features/modals';
 import { Theme } from 'renderer/types/common';
 
@@ -15,7 +15,7 @@ type PropsType = Readonly<{
   setNextStep: (step: Steps) => void;
 }>;
 
-export const AccountCreated = ({ onClose, newKeys }: PropsType) => {
+export function AccountCreated({ onClose, newKeys }: PropsType) {
   return (
     <ModalContent theme={Theme.Dark} className="pb-6 text-white w-[680px]">
       <div className="flex justify-between w-full p-3">
@@ -40,4 +40,4 @@ export const AccountCreated = ({ onClose, newKeys }: PropsType) => {
       </div>
     </ModalContent>
   );
-};
+}

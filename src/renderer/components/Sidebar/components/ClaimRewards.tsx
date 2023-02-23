@@ -9,9 +9,9 @@ import React, { useState } from 'react';
 import { useQueryClient, useMutation } from 'react-query';
 
 import loadingDotsAnimation from 'assets/animations/loading-dots.json';
-import CheckMarkIcon from 'assets/svgs/checkmark-icon-no-borders.svg';
-import CloseIcon from 'assets/svgs/close-icons/close-icon-no-borders.svg';
-import ShareIcon from 'assets/svgs/share-icon.svg';
+import { ReactComponent as CheckMarkIcon } from 'assets/svgs/checkmark-icon-no-borders.svg';
+import { ReactComponent as CloseIcon } from 'assets/svgs/close-icons/close-icon-no-borders.svg';
+import { ReactComponent as ShareIcon } from 'assets/svgs/share-icon.svg';
 import { ErrorType } from 'models';
 import { Tooltip, ErrorMessage } from 'renderer/components/ui';
 import { QueryKeys, claimRewards } from 'renderer/services';

@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import React from 'react';
 
-import InspectIcon from 'assets/svgs/inspect-icon.svg';
+import { ReactComponent as InspectIcon } from 'assets/svgs/inspect-icon.svg';
 
 const iconSizes = {
   big: 'w-7 h-4.375',
@@ -17,7 +17,7 @@ type InspectButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   size: keyof typeof sizes;
 };
 
-const InspectButton = ({ size, ...props }: InspectButtonProps): JSX.Element => {
+function InspectButton({ size, ...props }: InspectButtonProps): JSX.Element {
   return (
     <button
       className={clsx(
@@ -34,6 +34,6 @@ const InspectButton = ({ size, ...props }: InspectButtonProps): JSX.Element => {
       )}
     </button>
   );
-};
+}
 
 export default InspectButton;

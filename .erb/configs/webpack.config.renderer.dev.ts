@@ -109,27 +109,29 @@ const configuration: webpack.Configuration = {
         type: 'asset/resource',
       },
       // SVG
-      // {
-      //   test: /\.svg$/,
-      //   use: [
-      //     {
-      //       loader: '@svgr/webpack',
-      //       options: {
-      //         prettier: false,
-      //         svgo: false,
-      //         svgoConfig: {
-      //           plugins: [{ removeViewBox: false }],
-      //         },
-      //         titleProp: true,
-      //         ref: true,
-      //       },
-      //     },
-      //     'file-loader',
-      //   ],
-      // },
       {
-        test: /\.(png|svg|jpg|jpeg|gif)$/i,
-        use: ['@svgr/webpack'],
+        test: /\.svg$/i,
+        type: 'asset',
+        resourceQuery: /url/, // *.svg?url
+      },
+      {
+        test: /\.svg$/i,
+        issuer: /\.[jt]sx?$/,
+        use: [
+          {
+            loader: '@svgr/webpack',
+            options: {
+              prettier: false,
+              svgo: false,
+              svgoConfig: {
+                plugins: [{ removeViewBox: false }],
+              },
+              titleProp: true,
+              ref: true,
+            },
+          },
+          'file-loader',
+        ],
       },
     ],
   },

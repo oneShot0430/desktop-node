@@ -1,10 +1,10 @@
 import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
-import YellowLinesTop from 'assets/svgs/onboarding/key-import-lines-top.svg';
-import TealLinesBottom from 'assets/svgs/onboarding/key-import-teal-lines-bot.svg';
+import { ReactComponent as YellowLinesTop } from 'assets/svgs/onboarding/key-import-lines-top.svg';
+import { ReactComponent as TealLinesBottom } from 'assets/svgs/onboarding/key-import-teal-lines-bot.svg';
 
-const CreateOrImportAccountWrapper = () => {
+function CreateOrImportAccountWrapper() {
   const location = useLocation();
   const showBgShapes = !location.pathname.includes('backup');
 
@@ -22,6 +22,6 @@ const CreateOrImportAccountWrapper = () => {
       )}
     </div>
   );
-};
+}
 
 export default CreateOrImportAccountWrapper;
