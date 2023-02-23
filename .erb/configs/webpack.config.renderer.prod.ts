@@ -106,7 +106,6 @@ const configuration: webpack.Configuration = {
               ref: true,
             },
           },
-          'file-loader',
         ],
       },
     ],
