@@ -6,7 +6,7 @@ import codeTheme from './codeTheme';
 type PropsType = {
   sourceCode: string;
 };
-const SourceCode = ({ sourceCode }: PropsType) => {
+function SourceCode({ sourceCode }: PropsType) {
   return (
     <SyntaxHighlighter
       showLineNumbers
@@ -18,6 +18,6 @@ const SourceCode = ({ sourceCode }: PropsType) => {
       {sourceCode}
     </SyntaxHighlighter>
   );
-};
+}
 
 export default memo(SourceCode);

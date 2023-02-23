@@ -6,7 +6,7 @@ type PropsType = {
   isActive?: boolean;
 };
 
-const StepListItem = ({ text, iconSlot, isActive }: PropsType) => {
+function StepListItem({ text, iconSlot, isActive }: PropsType) {
   return (
     <div
       className={`flex flex-row items-center gap-3 ${
@@ -17,6 +17,6 @@ const StepListItem = ({ text, iconSlot, isActive }: PropsType) => {
       <span>{text}</span>
     </div>
   );
-};
+}
 
 export default StepListItem;

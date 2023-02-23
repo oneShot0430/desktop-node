@@ -10,9 +10,7 @@ const viewsWithBackButton = [
 ];
 
 const sholdDisplayBackButton = (pathname: string) => {
-  if (viewsWithBackButton.includes(pathname as AppRoute)) {
-    return true;
-  }
+  return viewsWithBackButton.includes(pathname as AppRoute);
 };
 
 export const useBackButtonHandler = () => {

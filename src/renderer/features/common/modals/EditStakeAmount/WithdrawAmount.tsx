@@ -10,7 +10,7 @@ export type PropsType = {
 };
 
 // TODO: currently API does not support partial stake withdrawal
-export const WithdrawAmount = ({ stakedBalance, onWithdraw }: PropsType) => {
+export function WithdrawAmount({ stakedBalance, onWithdraw }: PropsType) {
   const [inputValue, setInputValue] = useState(0);
   const [error, setError] = useState('');
 
@@ -49,4 +49,4 @@ export const WithdrawAmount = ({ stakedBalance, onWithdraw }: PropsType) => {
       />
     </div>
   );
-};
+}

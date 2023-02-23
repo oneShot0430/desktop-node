@@ -9,7 +9,6 @@ import { CreateNewAccount } from './components/CreateNewAccount';
 import ImportKey from './components/ImportAccount';
 import ImportWithKeyPhrase from './components/ImportWithKeyPhrase';
 import ShowSeedPhrase from './components/ShowSeedPhrase';
-
 import { KeysType, Steps, CreateKeyPayload } from './types';
 
 export const AddNewAccount = create(function AddNewAccount() {

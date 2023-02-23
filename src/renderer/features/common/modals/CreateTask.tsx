@@ -25,7 +25,7 @@ export const CreateTaskModal = create(function CreateTaskModal() {
   return (
     <Modal>
       <ModalContent>
-        <ModalTopBar title={'Create New Task'} onClose={handleClose} />
+        <ModalTopBar title="Create New Task" onClose={handleClose} />
         <div className="flex flex-col items-center pt-4 text-finnieBlue tracking-finnieSpacing-wider">
           <div className="text-2xl font-semibold  mb-2.5 leading-8">
             Create your own Koii Tasks

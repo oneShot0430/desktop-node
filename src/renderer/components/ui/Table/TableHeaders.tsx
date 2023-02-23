@@ -14,7 +14,7 @@ interface PropsType {
   columnsLayout: ColumnsLayout;
 }
 
-export const TableHeaders = ({ headers, columnsLayout }: PropsType) => {
+export function TableHeaders({ headers, columnsLayout }: PropsType) {
   const containerClasses = `grid mb-4 pb-2 font-semibold leading-5 text-sm text-white border-b-2 border-white gap-4 ${columnsLayout}`;
 
   return (
@@ -32,4 +32,4 @@ export const TableHeaders = ({ headers, columnsLayout }: PropsType) => {
       ))}
     </div>
   );
-};
+}

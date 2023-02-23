@@ -2,9 +2,9 @@ import { create, useModal } from '@ebay/nice-modal-react';
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 
-import CloseIcon from 'assets/svgs/close-icons/close-icon-white.svg';
-import ExternalSourceIconSvg from 'assets/svgs/external-source-icon-white.svg';
-import FlagIconTealSvg from 'assets/svgs/flag-teal-icon.svg';
+import { ReactComponent as CloseIcon } from 'assets/svgs/close-icons/close-icon-white.svg';
+import { ReactComponent as ExternalSourceIconSvg } from 'assets/svgs/external-source-icon-white.svg';
+import { ReactComponent as FlagIconTealSvg } from 'assets/svgs/flag-teal-icon.svg';
 import { SourceCode } from 'renderer/components/SourceCode';
 import { useEarnedReward } from 'renderer/features/common/hooks/useEarnedReward';
 import { useTaskStake } from 'renderer/features/common/hooks/useTaskStake';
@@ -82,7 +82,6 @@ export const TaskDetailsModal = create<TaskDetailsModalPropsType>(
 
               <CloseIcon
                 data-testid="close-modal-button"
-                // @ts-ignore
                 onClick={handleClose}
                 className="w-[24px] h-[24px] cursor-pointer"
               />

@@ -1,6 +1,6 @@
 import config from '../../../config';
 import { EditTaskVariableParamType } from '../../../models';
-import sendMessage from '../../../preload/sendMessage';
+import sendMessage from '../../sendMessage';
 
 export const editTaskVariable = (
   payload: EditTaskVariableParamType

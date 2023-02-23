@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState } from 'react';
 
-import { AppNotification } from '../NotificationBanner';
+export enum AppNotification {
+  FirstNodeReward = 'FirstNodeReward',
+}
 
 export interface NotificationsContextType {
   pendingNotifications: AppNotification[];
@@ -27,7 +29,7 @@ export const useNotificationsContext = () => {
   return context;
 };
 
-export const NotificationsProvider = ({ children }: NotificationsPropsType) => {
+export function NotificationsProvider({ children }: NotificationsPropsType) {
   const [pendingNotifications, setPendingNotifications] = useState<
     AppNotification[]
   >([]);
@@ -39,7 +41,6 @@ export const NotificationsProvider = ({ children }: NotificationsPropsType) => {
   const removeNotification = () => {
     setPendingNotifications((prev) => prev.slice(1));
   };
-
   return (
     <NotificationsContext.Provider
       value={{ pendingNotifications, addNotification, removeNotification }}
@@ -47,4 +48,4 @@ export const NotificationsProvider = ({ children }: NotificationsPropsType) => {
       {children}
     </NotificationsContext.Provider>
   );
-};
+}

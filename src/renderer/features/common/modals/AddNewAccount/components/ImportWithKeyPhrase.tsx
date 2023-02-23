@@ -1,8 +1,8 @@
 import React, { memo, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
-import UploadIcon from 'assets/svgs/upload-icon.svg';
-import CloseIconWhite from 'assets/svgs/close-icons/close-icon-white.svg';
+import { ReactComponent as CloseIconWhite } from 'assets/svgs/close-icons/close-icon-white.svg';
+import { ReactComponent as UploadIcon } from 'assets/svgs/upload-icon.svg';
 import {
   AccountsType,
   ImportFromSeedPhrase,
@@ -15,7 +15,7 @@ type PropsType = Readonly<{
   onImportSuccess: (keys: AccountsType) => void;
 }>;
 
-const ImportWithKeyPhrase = ({ onClose, onImportSuccess }: PropsType) => {
+function ImportWithKeyPhrase({ onClose, onImportSuccess }: PropsType) {
   const queryCache = useQueryClient();
 
   const [accountName, setAccountName] = useState('');
@@ -30,7 +30,6 @@ const ImportWithKeyPhrase = ({ onClose, onImportSuccess }: PropsType) => {
               Import a key with a secret phrase
             </span>
           </div>
-          {/* @ts-ignore */}
           <CloseIconWhite className="w-8 h-8" onClick={onClose} />
         </div>
 
@@ -54,12 +53,12 @@ const ImportWithKeyPhrase = ({ onClose, onImportSuccess }: PropsType) => {
             queryCache.invalidateQueries();
             onImportSuccess({ stakingAccountPubKey, mainAccountPubKey });
           }}
-          confirmActionLabel={'Import Account'}
+          confirmActionLabel="Import Account"
           className="px-8 bg-finnieBlue-light-4"
         />
       </div>
     </ModalContent>
   );
-};
+}
 
 export default memo(ImportWithKeyPhrase);

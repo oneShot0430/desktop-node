@@ -5,7 +5,7 @@ type PropsType = {
   onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-const KoiiInput = ({ disabled, onInputChange }: PropsType) => {
+function KoiiInput({ disabled, onInputChange }: PropsType) {
   const [inputValue, setInputValue] = useState('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,6 +27,6 @@ const KoiiInput = ({ disabled, onInputChange }: PropsType) => {
       <div className="p-2">KOII</div>
     </div>
   );
-};
+}
 
 export default memo(KoiiInput);

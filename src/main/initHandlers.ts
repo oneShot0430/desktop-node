@@ -1,7 +1,6 @@
 import { ipcMain } from 'electron';
 
 import config from '../config';
-
 import mainErrorHandler from '../utils/mainErrorHandler';
 
 import * as controllers from './controllers';

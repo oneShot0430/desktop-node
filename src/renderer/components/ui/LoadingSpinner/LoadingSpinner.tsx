@@ -21,10 +21,10 @@ const getSizeClasses = (size: LoadingSpinnerSize) => {
   return sizes;
 };
 
-export const LoadingSpinner = ({
+export function LoadingSpinner({
   size = LoadingSpinnerSize.Medium,
   className,
-}: PropsType) => {
+}: PropsType) {
   const sizeClasses = getSizeClasses(size);
 
   const classes = twMerge(
@@ -54,4 +54,4 @@ export const LoadingSpinner = ({
       <span className="sr-only">Loading...</span>
     </div>
   );
-};
+}

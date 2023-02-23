@@ -18,14 +18,14 @@ type PropsType = {
   forceDisplaying?: boolean;
 };
 
-export const Tooltip = ({
+export function Tooltip({
   children,
   tooltipContent,
   theme = Theme.Dark,
   placement = 'top-right',
   manualClose = false,
   forceDisplaying = false,
-}: PropsType) => {
+}: PropsType) {
   const [isHovered, setIsHovered] = useState(manualClose);
 
   const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -97,4 +97,4 @@ export const Tooltip = ({
       {children}
     </div>
   );
-};
+}

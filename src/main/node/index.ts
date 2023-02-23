@@ -12,6 +12,7 @@ import { namespaceInstance } from './helpers/Namespace';
 dotenv.config();
 // import loadTasks from './loadTasks';
 
+// eslint-disable-next-line consistent-return
 export default async (): Promise<any> => {
   // if (!process.env.NODE_MODE) throw new Error('env not found');
   /* Connect Redis */

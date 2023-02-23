@@ -1,10 +1,10 @@
 import clsx from 'clsx';
-import { noop } from 'lodash';
 import React from 'react';
 
 import PauseActiveIcon from 'assets/svgs/run-button-icons/pause-active-icon.svg';
 import PlayActiveIcon from 'assets/svgs/run-button-icons/play-active-icon.svg';
 import PlayDeactivatedIcon from 'assets/svgs/run-button-icons/play-deactivated-icon.svg';
+import { noop } from 'lodash';
 
 const variants = {
   'play-active': 'bg-finnieEmerald pl-1',
@@ -24,11 +24,11 @@ type RunButtonProps = {
   onStateChange?: () => void;
 };
 
-const RunButton = ({
+function RunButton({
   isRunning,
   taskAccountPubKey,
   onStateChange = noop,
-}: RunButtonProps): JSX.Element => {
+}: RunButtonProps): JSX.Element {
   const changeState = () => {
     window.main[isRunning ? 'stopTask' : 'startTask']({
       taskAccountPubKey,
@@ -46,6 +46,6 @@ const RunButton = ({
       {logos[isRunning ? 'pause-active' : 'play-active']}
     </div>
   );
-};
+}
 
 export default RunButton;

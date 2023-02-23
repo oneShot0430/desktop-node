@@ -1,4 +1,3 @@
-// eslint-disable
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
@@ -209,6 +208,7 @@ class Namespace {
       });
       return response;
     } catch (e) {
+      // eslint-disable-next-line eqeqeq
       if (e.type == 'NotFoundError') {
         console.error(key, 'Not found');
       } else {
@@ -230,6 +230,7 @@ class Namespace {
       });
       return response;
     } catch (e) {
+      // eslint-disable-next-line eqeqeq
       if (e.type == 'NotFoundError') {
         console.error(key, 'Not found');
       } else {
@@ -291,11 +292,13 @@ class Namespace {
   //     }
   // }
 
+  // eslint-disable-next-line class-methods-use-this
   async JwtSign(data: object, secret: string): Promise<string> {
     const accessToken = jwt.sign(data, secret);
     return accessToken;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   async JwtVerify(accessToken: string, secret: string): Promise<any> {
     const response = jwt.verify(accessToken, secret);
     return response;
@@ -391,6 +394,7 @@ class Namespace {
     return fsPromises[method](`${basePath}/${path}`, ...args);
   }
 
+  // eslint-disable-next-line class-methods-use-this
   async fsStaking(method: any, path: any, ...args: any) {
     const basePath = `${getAppDataPath()}/namespace/`;
     await fsPromises.mkdir(basePath, { recursive: true }).catch(console.error);
@@ -455,6 +459,7 @@ class Namespace {
   /**
    * Loads redis client
    */
+  // eslint-disable-next-line class-methods-use-this
   loadRedisClient(config?: redisConfig): void {
     const host =
       config && config.redis_ip
@@ -463,7 +468,7 @@ class Namespace {
     const port =
       config && config.redis_port
         ? config.redis_port
-        : parseInt(process.env.REDIS_PORT || ('6379' as string));
+        : parseInt(process.env.REDIS_PORT || ('6379' as string), 10);
     const password =
       config && config.redis_password
         ? config.redis_password
@@ -543,7 +548,9 @@ class Namespace {
     isValid: boolean,
     voterKeypair: Keypair
   ): Promise<string> {
+    // eslint-disable-next-line no-param-reassign
     candidatePubkey = new PublicKey(candidatePubkey);
+    // eslint-disable-next-line no-param-reassign
     if (!voterKeypair) voterKeypair = this.submitterAccountKeyPair;
     const data = encodeData(TASK_INSTRUCTION_LAYOUTS.Vote, {
       is_valid: isValid,
@@ -714,12 +721,14 @@ class Namespace {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   async bs58Encode(data: any): Promise<string> {
     return bs58.encode(
       Buffer.from(data.buffer, data.byteOffset, data.byteLength)
     );
   }
 
+  // eslint-disable-next-line class-methods-use-this
   async bs58Decode(data: any): Promise<any> {
     return new Uint8Array(bs58.decode(data));
   }
@@ -731,7 +740,7 @@ class Namespace {
   async signData(data: any) {
     const msg = new TextEncoder().encode(JSON.stringify(data));
     const signedMessage = nacl.sign(msg, this.#mainSystemAccount.secretKey);
-    return await this.bs58Encode(signedMessage);
+    return this.bs58Encode(signedMessage);
   }
 
   async verifySignedData(signedData: any, publicKey: any) {
@@ -759,8 +768,10 @@ class Namespace {
     transaction: any,
     signers: any[]
   ): Promise<string> {
+    // eslint-disable-next-line no-param-reassign
     signers = signers.map((e) =>
       Keypair.fromSecretKey(
+        // eslint-disable-next-line no-underscore-dangle
         Uint8Array.from(Object.values(e._keypair.secretKey))
       )
     );
@@ -791,6 +802,7 @@ class Namespace {
       new PublicKey(this.taskStateInfoPublicKey)
     );
     if (this.taskAccountInfo === null) {
+      // eslint-disable-next-line no-throw-literal
       throw 'Error: cannot find the task contract data';
     }
     return JSON.parse(this.taskAccountInfo.data.toString());
@@ -910,10 +922,12 @@ class Namespace {
   async checkSubmissionAndUpdateRound(submissionValue = 'default') {
     console.log('******/  IN SUBMISSION /******');
     const taskAccountDataJSON = await this.getTaskState();
+    // eslint-disable-next-line camelcase
     const { current_round } = taskAccountDataJSON;
     console.log('Submitting for round', current_round);
     try {
       const result = await this.storeGet('round');
+      // eslint-disable-next-line eqeqeq,camelcase
       if (result == current_round) {
         console.log('No submission allowed until the next round');
       } else {
@@ -947,6 +961,7 @@ class Namespace {
       new PublicKey(DEFAULT_PROGRAM_ID)
     );
     if (this.taskAccountInfo === null) {
+      // eslint-disable-next-line no-throw-literal
       throw 'Error: cannot find the task contract data';
     }
     return programAccounts;
@@ -961,15 +976,19 @@ class Namespace {
     // await this.checkVoteStatus();
     console.log('******/  IN VOTING /******');
     const taskAccountDataJSON = await this.getTaskState();
+    // eslint-disable-next-line camelcase
     const { current_round } = taskAccountDataJSON;
+    // eslint-disable-next-line camelcase
     const expected_round = current_round - 1;
 
     const { status } = taskAccountDataJSON;
+    // eslint-disable-next-line camelcase
     const task_status = Object.keys(status)[0];
 
     // const voteStatus = await this.storeGet('voteStatus');
     const lastVotedRound = await this.storeGet('lastVotedRound');
     console.log(
+      // eslint-disable-next-line camelcase
       `Task status: ${task_status}, Last Voted Round: ${lastVotedRound}, Submissions: ${
         Object.keys(taskAccountDataJSON.submissions).length
       }`
@@ -983,18 +1002,22 @@ class Namespace {
 
     console.log('expected_round.toString()', lastVotedRound, expected_round);
     if (
+      // eslint-disable-next-line eqeqeq,camelcase
       lastVotedRound != expected_round.toString() &&
+      // eslint-disable-next-line camelcase,eqeqeq
       task_status == 'Voting' &&
       Object.keys(taskAccountDataJSON.submissions).length > 0
     ) {
       // Filter only submissions from last round
       const submissions: any = {};
+      // eslint-disable-next-line guard-for-in,no-restricted-syntax
       for (const id in taskAccountDataJSON.submissions) {
         console.log(
           'round - expected',
           taskAccountDataJSON.submissions[id].round,
           expected_round
         );
+        // eslint-disable-next-line camelcase,eqeqeq
         if (taskAccountDataJSON.submissions[id].round == expected_round) {
           submissions[id] = taskAccountDataJSON.submissions[id];
         }
@@ -1005,14 +1028,17 @@ class Namespace {
       console.log('Submissions from last round: ', size, submissions);
       if (!this.submitterAccountKeyPair) await this.defaultTaskSetup();
 
+      // eslint-disable-next-line no-plusplus
       for (let i = 0; i < size; i++) {
         // Fetch candidate public key
         const candidatePublicKey = keys[i];
         const candidateKeyPairPublicKey = new PublicKey(keys[i]);
+        // eslint-disable-next-line eqeqeq
         if (candidatePublicKey == this.submitterPubkey) {
           console.log('YOU CANNOT VOTE ON YOUR OWN SUBMISSIONS');
         } else {
           // LOGIC for voting function
+          // eslint-disable-next-line eqeqeq
           const node = nodes.find((e) => e.submitterPubkey == keys[i]);
           const nodeData = node
             ? {
@@ -1023,6 +1049,7 @@ class Namespace {
           const isValid = validate(nodeData);
           console.log(`Voting ${isValid} to ${candidatePublicKey}`);
           try {
+            // eslint-disable-next-line no-await-in-loop
             const response = await this.voteOnChain(
               candidateKeyPairPublicKey,
               isValid,
@@ -1070,8 +1097,9 @@ class Namespace {
   /**
    * @description Get URL from K2_NODE_URL environment variable
    */
+  // eslint-disable-next-line class-methods-use-this
   async getRpcUrl() {
-    return await getRpcUrlWrapper();
+    return getRpcUrlWrapper();
   }
 
   /**
@@ -1079,6 +1107,7 @@ class Namespace {
    * @param url URL of the service node to retrieve the array from a known service node
    * @returns Array of service nodes
    */
+  // eslint-disable-next-line class-methods-use-this
   async getNodes(url: string): Promise<Array<INode>> {
     try {
       const res = await axios.get(url + BUNDLER_NODES);
@@ -1116,6 +1145,7 @@ async function getRpcUrlWrapper() {
  * Awaiting a function should suffice
  */
 async function sleep(ms: any) {
+  // eslint-disable-next-line no-promise-executor-return
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
@@ -1166,6 +1196,7 @@ async function registerNodes(newNodes: any) {
   );
 
   // Verify each registration TODO process promises in parallel
+  // eslint-disable-next-line no-param-reassign
   newNodes = newNodes.filter(async (node: any) => {
     // Filter registrations that don't have an owner or url
     const { owner } = node;
@@ -1181,6 +1212,7 @@ async function registerNodes(newNodes: any) {
 
   // Filter out duplicate entries
   const latestNodes: any = {};
+  // eslint-disable-next-line no-restricted-syntax
   for (const node of nodes.concat(newNodes)) {
     // Filter registrations that don't have an owner or url
     const { owner } = node;
@@ -1191,6 +1223,7 @@ async function registerNodes(newNodes: any) {
       typeof node.data.timestamp !== 'number'
     ) {
       console.error('Invalid node input:', node);
+      // eslint-disable-next-line no-continue
       continue;
     }
 
@@ -1240,6 +1273,7 @@ function getAlloc(type: any, fields: any) {
 function padStringWithSpaces(input: string, length: number) {
   if (input.length > length)
     throw Error(`Input exceeds the maxiumum length of ${length}`);
+  // eslint-disable-next-line no-param-reassign
   input = input.padEnd(length);
   return input;
 }

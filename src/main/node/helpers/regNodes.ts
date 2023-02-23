@@ -8,9 +8,10 @@ export default async (newNodes: any[]) => {
   );
 
   // Verify each registration TODO process promises in parallel
+  // eslint-disable-next-line no-param-reassign
   newNodes = newNodes.filter(async (node) => {
     // Filter registrations that don't have an owner or url
-    const owner = node.owner;
+    const { owner } = node;
     if (typeof owner !== 'string') {
       console.error('Invalid node input:', node);
       return false;
@@ -23,9 +24,10 @@ export default async (newNodes: any[]) => {
 
   // Filter out duplicate entries
   const latestNodes: any = {};
+  // eslint-disable-next-line no-restricted-syntax
   for (const node of nodes.concat(newNodes)) {
     // Filter registrations that don't have an owner or url
-    const owner = node.owner;
+    const { owner } = node;
     if (
       typeof owner !== 'string' ||
       node.data === undefined ||
@@ -33,6 +35,7 @@ export default async (newNodes: any[]) => {
       typeof node.data.timestamp !== 'number'
     ) {
       console.error('Invalid node input:', node);
+      // eslint-disable-next-line no-continue
       continue;
     }
     // Make this node the latest if the timestamp is more recent

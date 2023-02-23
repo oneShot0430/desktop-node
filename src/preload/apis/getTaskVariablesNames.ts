@@ -1,6 +1,6 @@
 import config from '../../config';
 import { GetTaskVariablesNamesParam } from '../../models/api';
-import sendMessage from '../../preload/sendMessage';
+import sendMessage from '../sendMessage';
 
 export default (params: GetTaskVariablesNamesParam): Promise<string[]> =>
   sendMessage(config.endpoints.GET_TASK_VARIABLES_NAMES, params);

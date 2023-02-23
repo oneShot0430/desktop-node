@@ -17,5 +17,5 @@
     "jsx": "react",
     "target": "ES6"
   },
-  "exclude": ["test", "release/build", "release/app/dist", ".erb/dll"]
+  "exclude": ["test", "release/build", "release/app/dist", ".erb/dll", ".erb/configs"]
 }

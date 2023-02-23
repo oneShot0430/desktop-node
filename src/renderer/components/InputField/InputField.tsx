@@ -12,14 +12,14 @@ type InputFieldProps = {
   ) => void;
 };
 
-const InputField = ({
+function InputField({
   label,
   name,
   value,
   setValue,
   type,
   className,
-}: InputFieldProps): JSX.Element => {
+}: InputFieldProps): JSX.Element {
   return (
     <div className={clsx('flex flex-col', className)}>
       <label className="leading-6 w-full">{label}</label>
@@ -41,6 +41,6 @@ const InputField = ({
       )}
     </div>
   );
-};
+}
 
 export default InputField;

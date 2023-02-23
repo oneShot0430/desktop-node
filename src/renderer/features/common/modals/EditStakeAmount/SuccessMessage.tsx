@@ -9,11 +9,11 @@ type PropsType = Readonly<{
   stakedAmount?: number;
 }>;
 
-export const SuccessMessage = ({
+export function SuccessMessage({
   onOkClick,
   stakedAmount,
   successMessage,
-}: PropsType) => {
+}: PropsType) {
   return (
     <div className="relative flex flex-col items-center justify-center text-finnieBlue-dark">
       <div className="absolute z-0 left-[38px] top-[38px]">
@@ -28,6 +28,6 @@ export const SuccessMessage = ({
       </div>
     </div>
   );
-};
+}
 
 export default memo(SuccessMessage);

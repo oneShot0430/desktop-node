@@ -2,7 +2,6 @@ import { Event } from 'electron';
 import fs from 'fs';
 
 import { RemoveAccountByNameParam } from '../../models/api';
-
 import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
@@ -13,10 +12,10 @@ const removeAccountByName = async (
   const { accountName } = payload;
   try {
     fs.unlinkSync(
-      getAppDataPath() + `/namespace/${accountName}_stakingWallet.json`
+      `${getAppDataPath()}/namespace/${accountName}_stakingWallet.json`
     );
     fs.unlinkSync(
-      getAppDataPath() + `/wallets/${accountName}_mainSystemWallet.json`
+      `${getAppDataPath()}/wallets/${accountName}_mainSystemWallet.json`
     );
     return true;
   } catch (err) {

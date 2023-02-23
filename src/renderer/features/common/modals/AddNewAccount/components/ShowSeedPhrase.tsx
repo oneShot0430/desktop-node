@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 
-import CloseIconWhite from 'assets/svgs/close-icons/close-icon-white.svg';
+import { ReactComponent as CloseIconWhite } from 'assets/svgs/close-icons/close-icon-white.svg';
 import { Button } from 'renderer/components/ui';
 import { ModalContent } from 'renderer/features/modals';
 import { Theme } from 'renderer/types/common';
@@ -13,7 +13,7 @@ type PropsType = {
   seedPhrase: string;
 };
 
-const ShowSeedPhrase = ({ onClose, setNextStep, seedPhrase }: PropsType) => {
+function ShowSeedPhrase({ onClose, setNextStep, seedPhrase }: PropsType) {
   const phraseWords = seedPhrase.split(' ');
 
   return (
@@ -23,8 +23,6 @@ const ShowSeedPhrase = ({ onClose, setNextStep, seedPhrase }: PropsType) => {
         <div className="flex items-center justify-between pl-6">
           <span className="text-[24px]">Seed Phrase</span>
         </div>
-        {/*
-            @ts-ignore */}
         <CloseIconWhite className="w-[32px] h-[32px]" onClick={onClose} />
       </div>
       <div className="flex justify-center">
@@ -50,6 +48,6 @@ const ShowSeedPhrase = ({ onClose, setNextStep, seedPhrase }: PropsType) => {
       </div>
     </ModalContent>
   );
-};
+}
 
 export default memo(ShowSeedPhrase);

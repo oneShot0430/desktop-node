@@ -2,14 +2,13 @@ import { Event } from 'electron';
 
 import { isString } from 'lodash';
 
-import { namespaceInstance } from '../../../main/node/helpers/Namespace';
 import {
   DeleteTaskVariableParamType,
   ErrorType,
   TaskVariables,
 } from '../../../models';
 import { throwDetailedError } from '../../../utils';
-
+import { namespaceInstance } from '../../node/helpers/Namespace';
 import { PersistentStoreKeys } from '../types';
 
 import { getStoredTaskVariables } from './getStoredTaskVariables';

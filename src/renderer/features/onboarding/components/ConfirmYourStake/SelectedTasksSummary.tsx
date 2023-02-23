@@ -1,8 +1,8 @@
-import { sum } from 'lodash';
 import React, { useMemo } from 'react';
 
-import { getKoiiFromRoe } from 'utils';
+import { sum } from 'lodash';
 import { TaskWithStake } from 'renderer/types';
+import { getKoiiFromRoe } from 'utils';
 
 import { TaskRow } from './TaskRow';
 
@@ -13,12 +13,12 @@ type PropsType = {
   setIsRunButtonDisabled: (isDisabled: boolean) => void;
 };
 
-export const SelectedTasksSummary = ({
+export function SelectedTasksSummary({
   selectedTasks,
   tasksFee,
   updateStake,
   setIsRunButtonDisabled,
-}: PropsType) => {
+}: PropsType) {
   const listEmpty = selectedTasks.length === 0;
   const totalStakedInKoii = useMemo(() => {
     const totalStakedInRoe = sum(selectedTasks.map((task) => task.stake));
@@ -64,4 +64,4 @@ export const SelectedTasksSummary = ({
       </div>
     </div>
   );
-};
+}

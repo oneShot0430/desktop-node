@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 /*
 
 
@@ -25,6 +28,7 @@ type AddedTask = {
 
 class KoiiState {
   private state: any;
+
   private addedTasks: AddedTask[];
 
   constructor(state: any, addedTasks: AddedTask[]) {
@@ -55,6 +59,7 @@ class KoiiState {
   findTask(transactionId: string): Task | null {
     if (!(this.state.tasks instanceof Array)) return null;
 
+    // eslint-disable-next-line no-restricted-syntax
     for (const task of this.state.tasks) {
       if (task.txId === transactionId) return task;
     }

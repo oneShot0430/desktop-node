@@ -28,6 +28,7 @@ const bufferlayout = require('buffer-layout');
 const OPERATION_MODE = 'service';
 let LAST_USED_PORT = 10000;
 
+// eslint-disable-next-line consistent-return
 const startTask = async (event: Event, payload: TaskStartStopParam) => {
   const { taskAccountPubKey } = payload;
   const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
@@ -108,6 +109,7 @@ const startTask = async (event: Event, payload: TaskStartStopParam) => {
  * @param {any} expressApp
  * @returns {any[]} Array of executable tasks
  */
+// eslint-disable-next-line consistent-return
 async function loadTask(selectedTask: ISelectedTasks) {
   console.log('Selected Tasks', selectedTask);
   let res;
@@ -163,6 +165,7 @@ async function executeTasks(
   fsSync.mkdirSync(`${getAppDataPath()}/namespace/${selectedTask.taskId}`, {
     recursive: true,
   });
+  // eslint-disable-next-line camelcase
   const log_file = fsSync.createWriteStream(
     `${getAppDataPath()}/namespace/${selectedTask.taskId}/task.log`,
     { flags: 'a+' }

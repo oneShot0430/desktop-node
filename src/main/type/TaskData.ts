@@ -1,6 +1,6 @@
 import { ChildProcess } from 'child_process';
 
-import { Namespace } from '../../main/node/helpers/Namespace';
+import { Namespace } from '../node/helpers/Namespace';
 
 export interface TaskData {
   taskName: string;

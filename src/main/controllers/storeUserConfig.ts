@@ -1,9 +1,8 @@
 import { Event } from 'electron';
 
-import { namespaceInstance } from '../../main/node/helpers/Namespace';
 import { StoreUserConfigParam } from '../../models/api';
-
 import mainErrorHandler from '../../utils/mainErrorHandler';
+import { namespaceInstance } from '../node/helpers/Namespace';
 
 const USER_CONFIG = 'USER_CONFIG';
 

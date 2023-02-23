@@ -5,7 +5,6 @@ import { PublicKey } from '@_koi/web3.js';
 import { ErrorType } from '../../models';
 import sdk from '../../services/sdk';
 import { throwDetailedError } from '../../utils';
-
 import mainErrorHandler from '../../utils/mainErrorHandler';
 
 interface GetTaskInfoParam {

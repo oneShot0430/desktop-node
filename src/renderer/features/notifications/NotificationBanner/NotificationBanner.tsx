@@ -12,17 +12,13 @@ import { twMerge } from 'tailwind-merge';
 import { AppRoute } from 'renderer/types/routes';
 
 import { BackButton } from '../../../components/BackButton';
-import { useNotificationsContext } from '../context';
-
-export enum AppNotification {
-  FirstNodeReward = 'FirstNodeReward',
-}
+import { AppNotification, useNotificationsContext } from '../context';
 
 type PropsType = {
   variant: AppNotification;
 };
 
-export const NotificationBanner = ({ variant }: PropsType) => {
+export function NotificationBanner({ variant }: PropsType) {
   const navigate = useNavigate();
   const { removeNotification } = useNotificationsContext();
 
@@ -69,4 +65,4 @@ export const NotificationBanner = ({ variant }: PropsType) => {
       </div>
     </div>
   );
-};
+}

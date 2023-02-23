@@ -15,7 +15,7 @@ type PropsType = {
   color?: 'white' | 'blue';
 };
 
-export const BackButton = ({ color }: PropsType) => {
+export function BackButton({ color }: PropsType) {
   const location = useLocation();
 
   const navigate = useNavigate();
@@ -55,4 +55,4 @@ export const BackButton = ({ color }: PropsType) => {
       <div className={labelClasses}>{routeLabel}</div>
     </div>
   );
-};
+}

@@ -6,11 +6,7 @@ type ToolbarProps = {
   rightPart: React.ReactNode;
 };
 
-const Toolbar = ({
-  logo: Logo,
-  title,
-  rightPart,
-}: ToolbarProps): JSX.Element => {
+function Toolbar({ logo: Logo, title, rightPart }: ToolbarProps): JSX.Element {
   return (
     <div className="fixed w-screen z-10 h-34.5 bg-gradient-to-r from-finnieBlue-dark to-finnieBlue text-white pl-9.75 flex justify-between pr-8">
       <div className="pt-10 flex items-end mb-6.5">
@@ -22,6 +18,6 @@ const Toolbar = ({
       <div>{rightPart}</div>
     </div>
   );
-};
+}
 
 export default Toolbar;

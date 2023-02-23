@@ -10,7 +10,7 @@ type PropTypes = {
   className?: string;
 };
 
-const ModalContent = ({ children, theme, className }: PropTypes) => {
+function ModalContent({ children, theme, className }: PropTypes) {
   const classes = twMerge(
     'w-[600px] h-fit py-3 rounded bg-finnieGray text-center',
     theme === Theme.Dark && 'bg-finnieBlue-light-secondary',
@@ -18,6 +18,6 @@ const ModalContent = ({ children, theme, className }: PropTypes) => {
   );
 
   return <div className={classes}>{children}</div>;
-};
+}
 
 export default memo(ModalContent);

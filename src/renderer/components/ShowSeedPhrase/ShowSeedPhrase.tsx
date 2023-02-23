@@ -6,10 +6,7 @@ type PropsType = {
   onPhraseReveal?: () => void;
 };
 
-export const ShowSeedPhrase = ({
-  seedPhrase = '',
-  onPhraseReveal,
-}: PropsType) => {
+export function ShowSeedPhrase({ seedPhrase = '', onPhraseReveal }: PropsType) {
   const [showSeedPhrase, setShowSeedPhrase] = useState(false);
 
   const seedPhraseArray = seedPhrase
@@ -50,4 +47,4 @@ export const ShowSeedPhrase = ({
       </div>
     </div>
   );
-};
+}

@@ -9,12 +9,12 @@ type SummaryProps = {
   isLoading: boolean;
 };
 
-export const Summary = ({
+export function Summary({
   totalKoii,
   totalStaked,
   pendingRewards,
   isLoading,
-}: SummaryProps) => {
+}: SummaryProps) {
   const [shouldAnimate, setShouldAnimate] = useState<boolean>(false);
 
   const displayConfetti = () => {
@@ -42,4 +42,4 @@ export const Summary = ({
       />
     </div>
   );
-};
+}

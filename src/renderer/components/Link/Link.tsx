@@ -6,7 +6,7 @@ type LinkProps = {
   to: string;
 };
 
-const Link = ({ text, to }: LinkProps): JSX.Element => {
+function Link({ text, to }: LinkProps): JSX.Element {
   return (
     <RouterLink
       className="text-finnieTeal-700 font-semibold underline inline-block"
@@ -15,6 +15,6 @@ const Link = ({ text, to }: LinkProps): JSX.Element => {
       {text}
     </RouterLink>
   );
-};
+}
 
 export default Link;

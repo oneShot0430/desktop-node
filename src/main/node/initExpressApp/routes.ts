@@ -51,7 +51,7 @@ export default (app: Express) => {
 
     const { args } = req.body;
     const { taskId } = req.body;
-    if (koiiTasks.RUNNING_TASKS[taskId].secret != req.body.secret) {
+    if (koiiTasks.RUNNING_TASKS[taskId].secret !== req.body.secret) {
       return res.status(401).send({ message: 'Invalid secret provided' });
     }
     try {
@@ -59,9 +59,9 @@ export default (app: Express) => {
       const response = await (koiiTasks.RUNNING_TASKS[taskId] as any).namespace[
         args[0]
       ](...params);
-      res.status(200).send({ response });
+      return res.status(200).send({ response });
     } catch (err: any) {
-      res.status(422).send({ message: err.message });
+      return res.status(422).send({ message: err.message });
     }
   });
 };

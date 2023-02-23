@@ -16,7 +16,7 @@ const tableHeaders = [
   { title: 'Set Stake' },
 ];
 
-export const History = () => {
+export function History() {
   return (
     /**
      * @todo: update this to use the new Table when we need to re-include the History feature
@@ -28,6 +28,6 @@ export const History = () => {
       ))}
     </Table>
   );
-};
+}
 
 export default memo(History);

@@ -2,6 +2,7 @@ import NiceModal from '@ebay/nice-modal-react';
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
+import './App.css';
 import '@_koii/koii-styleguide/dist/style.css';
 import 'tailwindcss/tailwind.css';
 

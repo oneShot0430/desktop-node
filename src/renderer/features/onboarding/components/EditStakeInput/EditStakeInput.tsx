@@ -11,13 +11,13 @@ interface PropsType {
   disabled?: boolean;
 }
 
-export const EditStakeInput = ({
+export function EditStakeInput({
   stake,
   minStake,
   meetsMinimumStake,
   onChange,
   disabled = false,
-}: PropsType) => {
+}: PropsType) {
   const [hasEnteredAValue, setHasEnteredAValue] = useState<boolean>(false);
 
   const inputClasses = twMerge(
@@ -52,4 +52,4 @@ export const EditStakeInput = ({
       </div>
     </div>
   );
-};
+}

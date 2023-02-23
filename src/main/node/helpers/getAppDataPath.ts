@@ -1,5 +1,6 @@
 import path from 'path';
 
+// eslint-disable-next-line consistent-return
 export function getAppDataPath() {
   switch (process.platform) {
     case 'darwin': {

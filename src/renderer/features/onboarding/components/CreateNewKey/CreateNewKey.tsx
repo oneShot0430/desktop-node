@@ -8,7 +8,7 @@ import { AppRoute } from 'renderer/types/routes';
 
 import { ContentRightWrapper } from '../ContentRightWrapper';
 
-const CreateNewKey = () => {
+function CreateNewKey() {
   const navigate = useNavigate();
   const { showModal } = useFundNewAccountModal();
 
@@ -50,6 +50,6 @@ const CreateNewKey = () => {
       </div>
     </ContentRightWrapper>
   );
-};
+}
 
 export default CreateNewKey;

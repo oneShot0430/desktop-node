@@ -5,7 +5,7 @@ import { Button } from 'renderer/components/ui';
 import { useFundNewAccountModal } from 'renderer/features/common';
 import { AppRoute } from 'renderer/types/routes';
 
-export const FundNewKey = () => {
+export function FundNewKey() {
   const navigate = useNavigate();
   const { showModal } = useFundNewAccountModal();
 
@@ -27,4 +27,4 @@ export const FundNewKey = () => {
       </div>
     </div>
   );
-};
+}

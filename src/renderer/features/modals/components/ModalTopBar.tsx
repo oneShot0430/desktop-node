@@ -1,9 +1,9 @@
 import React, { memo } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import BackIconBlue from 'assets/svgs/back-icon.svg';
-import CloseIconBlue from 'assets/svgs/close-icons/close-icon-blue.svg';
-import CloseIconWhite from 'assets/svgs/close-icons/close-icon-white.svg';
+import { ReactComponent as BackIconBlue } from 'assets/svgs/back-icon.svg';
+import { ReactComponent as CloseIconBlue } from 'assets/svgs/close-icons/close-icon-blue.svg';
+import { ReactComponent as CloseIconWhite } from 'assets/svgs/close-icons/close-icon-white.svg';
 
 type PropsType = Readonly<{
   title: React.ReactNode;
@@ -29,7 +29,7 @@ const getBackIcon = (theme: 'dark' | 'light') => {
   }[theme];
 };
 
-const ModalTopBar = ({
+function ModalTopBar({
   title,
   onClose,
   onBackClick,
@@ -37,7 +37,7 @@ const ModalTopBar = ({
   theme = 'light',
   titleClasses = '',
   wrapperClasses = '',
-}: PropsType) => {
+}: PropsType) {
   const BackIconComponent = getBackIcon(theme);
   const CloseIconComponent = getCloseIcon(theme);
 
@@ -58,7 +58,6 @@ const ModalTopBar = ({
         {showBackButton && onBackClick && (
           <BackIconComponent
             data-testid="close-modal-button"
-            // @ts-ignore
             onClick={onBackClick}
             className="cursor-pointer w-9 h-9"
           />
@@ -68,13 +67,12 @@ const ModalTopBar = ({
       <div className="w-9 h-9">
         <CloseIconComponent
           data-testid="close-modal-button"
-          // @ts-ignore
           onClick={onClose}
           className="cursor-pointer w-9 h-9"
         />
       </div>
     </div>
   );
-};
+}
 
 export default memo(ModalTopBar);

@@ -12,6 +12,6 @@ export const useAccountBalance = (accountPublicKey: string) => {
   return {
     accountBalance,
     loadingAccountBalance,
-    accountBalanceLoadingError: accountBalanceLoadingError,
+    accountBalanceLoadingError,
   };
 };

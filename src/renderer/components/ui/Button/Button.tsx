@@ -18,14 +18,14 @@ type ButtonProps = {
   HTMLButtonElement
 >;
 
-const Button = ({
+function Button({
   label,
   icon,
   onlyIcon,
   className,
   loading,
   ...rest
-}: ButtonProps) => {
+}: ButtonProps) {
   if (onlyIcon) {
     return (
       <button className={className} aria-label={label} {...rest}>
@@ -50,10 +50,10 @@ const Button = ({
       {loading ? (
         <LoadingSpinner />
       ) : (
-        <span className={'self-center'}>{label}</span>
+        <span className="self-center">{label}</span>
       )}
     </button>
   );
-};
+}
 
 export default Button;

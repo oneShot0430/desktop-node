@@ -5,16 +5,15 @@ import { AppRoute } from 'renderer/types/routes';
 
 import { useUserSettings } from './features/common';
 
-const AppLoader = (): JSX.Element => {
+function AppLoader(): JSX.Element {
   const { settings, loadingSettings } = useUserSettings();
 
   if (loadingSettings) return <div>loading...</div>;
 
   if (settings?.onboardingCompleted) {
     return <Navigate to={AppRoute.Unlock} />;
-  } else {
-    return <Navigate to={AppRoute.OnboardingCreatePin} />;
   }
-};
+  return <Navigate to={AppRoute.OnboardingCreatePin} />;
+}
 
 export default AppLoader;

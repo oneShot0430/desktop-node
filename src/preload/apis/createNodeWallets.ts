@@ -3,7 +3,7 @@ import {
   CreateNodeWalletsParam,
   CreateNodeWalletsResponse,
 } from '../../models/api';
-import sendMessage from '../../preload/sendMessage';
+import sendMessage from '../sendMessage';
 
 export default (
   payload: CreateNodeWalletsParam

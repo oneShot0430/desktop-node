@@ -34,17 +34,18 @@ type StatProps = {
   shouldAnimate?: boolean;
 };
 
-export const StatBlock = ({
+export function StatBlock({
   value,
   type,
   isLoading,
   displayConfetti,
   shouldAnimate,
-}: StatProps) => {
+}: StatProps) {
   const previousValue = usePrevious(value);
 
   const { label, IconComponent } = statContentByType[type];
   const isPendingRewardsBlock = type === 'pendingRewards';
+  // eslint-disable-next-line no-unsafe-optional-chaining
   const decimalsAmount = +String(value).split('.')[1]?.length;
   const statValue = isLoading ? (
     <LoadingSpinner className="ml-auto" />
@@ -87,4 +88,4 @@ export const StatBlock = ({
       )}
     </div>
   );
-};
+}

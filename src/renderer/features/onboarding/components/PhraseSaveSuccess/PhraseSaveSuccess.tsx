@@ -6,9 +6,8 @@ import WarningIndicatorSvg from 'assets/svgs/warning-indicator-icon.svg';
 import { Button } from 'renderer/components/ui';
 import { AppRoute } from 'renderer/types/routes';
 
-export const PhraseSaveSuccess = () => {
+export function PhraseSaveSuccess() {
   const navigate = useNavigate();
-  ('');
   return (
     <div className="flex flex-col items-center pt-[160px]">
       <div>
@@ -42,4 +41,4 @@ export const PhraseSaveSuccess = () => {
       </div>
     </div>
   );
-};
+}

@@ -32,7 +32,7 @@ type PropsType = {
   isFirstRowInTable?: boolean;
 };
 
-export const NodeStatusCell = ({ status, isFirstRowInTable }: PropsType) => {
+export function NodeStatusCell({ status, isFirstRowInTable }: PropsType) {
   const { icon: StatusIcon, title, iconColor } = statuses[status];
   const tooltipPlacement: Placement = `${
     isFirstRowInTable ? 'bottom' : 'top'
@@ -43,4 +43,4 @@ export const NodeStatusCell = ({ status, isFirstRowInTable }: PropsType) => {
       <Icon source={StatusIcon} className={`h-8 w-8 mb-2 ${iconColor}`} />
     </Tooltip>
   );
-};
+}

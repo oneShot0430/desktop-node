@@ -21,7 +21,7 @@ const tableHeaders = [
 const columnsLayout = 'grid-cols-available-tasks';
 const pageSize = 10;
 
-export const AvailableTasks = () => {
+export function AvailableTasks() {
   const [hasMore, setHasMore] = useState(true);
 
   const { data, isLoading, error, fetchNextPage } = useInfiniteQuery<
@@ -63,4 +63,4 @@ export const AvailableTasks = () => {
       ))}
     </InfiniteScrollTable>
   );
-};
+}

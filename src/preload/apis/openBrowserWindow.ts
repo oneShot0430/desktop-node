@@ -1,6 +1,6 @@
 import config from '../../config';
 import { OpenBrowserWindowParam } from '../../models/api';
-import sendMessage from '../../preload/sendMessage';
+import sendMessage from '../sendMessage';
 
 export default (payload: OpenBrowserWindowParam) =>
   sendMessage(config.endpoints.OPEN_BROWSER_WINDOW, payload);

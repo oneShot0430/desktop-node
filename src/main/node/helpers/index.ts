@@ -1,4 +1,4 @@
-import errorHandler from '../../../main/errorHandler';
+import errorHandler from '../../errorHandler';
 
 import getNodes from './getNodes';
 import { Namespace } from './Namespace';

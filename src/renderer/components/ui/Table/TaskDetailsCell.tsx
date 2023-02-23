@@ -10,12 +10,12 @@ type PropsType = {
   isFirstRow?: boolean;
 };
 
-export const TaskDetailsCell = ({
+export function TaskDetailsCell({
   taskName,
   onClick,
   createdAt,
   isFirstRow,
-}: PropsType) => {
+}: PropsType) {
   return (
     <div
       className="flex items-center justify-start gap-1 cursor-pointer"
@@ -33,4 +33,4 @@ export const TaskDetailsCell = ({
       </div>
     </div>
   );
-};
+}

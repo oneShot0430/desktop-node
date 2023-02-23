@@ -59,7 +59,7 @@ export const getMainAccountBalance = (): Promise<number> => {
   return window.main
     .getMainAccountPubKey()
     .then((pubkey) => {
-      return Promise.resolve(123);
+      return 123;
       // TODO move to BACK END - renderer cannot use native deps
       // return sdk.k2Connection.getBalance(new PublicKey(pubkey));
     })
@@ -200,7 +200,7 @@ export const storeTaskVariable = async ({ label, value }: TaskVariableData) => {
 };
 
 export const getStoredTaskVariables = async () => {
-  return await window.main.getStoredTaskVariables();
+  return window.main.getStoredTaskVariables();
 };
 
 export const editTaskVariable = async (

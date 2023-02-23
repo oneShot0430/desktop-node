@@ -1,14 +1,13 @@
 import { randomUUID } from 'crypto';
 import { Event } from 'electron';
 
-import { namespaceInstance } from '../../../main/node/helpers/Namespace';
 import {
   ErrorType,
   StoreTaskVariableParamsType,
   TaskVariables,
 } from '../../../models';
 import { throwDetailedError } from '../../../utils';
-
+import { namespaceInstance } from '../../node/helpers/Namespace';
 import { PersistentStoreKeys } from '../types';
 
 import { getStoredTaskVariables } from './getStoredTaskVariables';

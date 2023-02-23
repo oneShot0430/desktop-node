@@ -12,7 +12,7 @@ type MainLayoutProps = {
   children: React.ReactNode;
 };
 
-const MainLayout = ({ children }: MainLayoutProps): JSX.Element => {
+function MainLayout({ children }: MainLayoutProps): JSX.Element {
   const navigate = useNavigate();
 
   // TODO: Remove after release
@@ -36,6 +36,6 @@ const MainLayout = ({ children }: MainLayoutProps): JSX.Element => {
       </div>
     </div>
   );
-};
+}
 
 export default MainLayout;

@@ -14,13 +14,13 @@ type PropsType = Readonly<{
   focus?: boolean;
 }>;
 
-const PinInputComponent = ({
+function PinInputComponent({
   onComplete,
   onChange,
   initialValue,
   showHideButton = true,
   focus = false,
-}: PropsType) => {
+}: PropsType) {
   const [showPinInput, setShowPinInput] = useState(false);
 
   const ShowOrHideInputIcon = showPinInput ? ShowIconSvg : HideIconSvg;
@@ -36,7 +36,7 @@ const PinInputComponent = ({
         type="numeric"
         inputMode="number"
         onComplete={onComplete}
-        autoSelect={true}
+        autoSelect
         regexCriteria={/^[ A-Za-z0-9_@./#&+-]*$/}
         ariaLabel="pin-input"
       />
@@ -49,6 +49,6 @@ const PinInputComponent = ({
       )}
     </div>
   );
-};
+}
 
 export default memo(PinInputComponent);

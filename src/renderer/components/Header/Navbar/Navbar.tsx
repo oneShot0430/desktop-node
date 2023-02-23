@@ -14,7 +14,7 @@ const navItems = [
   { name: 'Settings', to: AppRoute.Settings },
 ];
 
-const Navbar = (): JSX.Element => {
+function Navbar(): JSX.Element {
   return (
     <nav className="flex justify-between">
       {navItems.map((item) => (
@@ -33,6 +33,6 @@ const Navbar = (): JSX.Element => {
       ))}
     </nav>
   );
-};
+}
 
 export default Navbar;

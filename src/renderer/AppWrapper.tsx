@@ -5,7 +5,7 @@ import { MainLayout } from './components';
 import { OnboardingLayout } from './features/onboarding/components/OnboardingLayout';
 import { OnboardingProvider } from './features/onboarding/context/onboarding-context';
 
-const AppWrapper = (): JSX.Element => {
+function AppWrapper(): JSX.Element {
   const location = useLocation();
   const isOnbaording = location.pathname.includes('onboarding');
 
@@ -15,15 +15,14 @@ const AppWrapper = (): JSX.Element => {
         <Outlet />
       </MainLayout>
     );
-  } else {
-    return (
-      <OnboardingProvider>
-        <OnboardingLayout>
-          <Outlet />
-        </OnboardingLayout>
-      </OnboardingProvider>
-    );
   }
-};
+  return (
+    <OnboardingProvider>
+      <OnboardingLayout>
+        <Outlet />
+      </OnboardingLayout>
+    </OnboardingProvider>
+  );
+}
 
 export default AppWrapper;

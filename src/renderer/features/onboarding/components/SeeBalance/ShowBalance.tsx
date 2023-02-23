@@ -8,7 +8,7 @@ type PropsType = {
   balance: string | number;
 };
 
-export const ShowBalance = ({ balance }: PropsType) => {
+export function ShowBalance({ balance }: PropsType) {
   const navigate = useNavigate();
   useEffect(() => {
     setTimeout(() => {
@@ -30,4 +30,4 @@ export const ShowBalance = ({ balance }: PropsType) => {
       <span className="text-white">{balance} KOII</span>
     </div>
   );
-};
+}
