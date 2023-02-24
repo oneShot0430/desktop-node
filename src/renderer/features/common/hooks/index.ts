@@ -4,6 +4,7 @@ export { useTaskStake } from './useTaskStake';
 export { useRunMultipleTasks } from './useRunMultipleTasks';
 export { usePrevious } from './usePrevious';
 export { useTaskVariable } from './useTaskVariable';
+export { useOnClickOutside } from './useOnClickOutside';
 
 // modals
 export { useCreateTaskModal } from './useCreateTaskModal';

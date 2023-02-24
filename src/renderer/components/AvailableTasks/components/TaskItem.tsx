@@ -5,7 +5,15 @@ import {
   PlayFill,
   InformationCircleLine,
 } from '@_koii/koii-styleguide';
-import React, { memo, useState, useCallback, useMemo, useEffect } from 'react';
+import React, {
+  memo,
+  useState,
+  useCallback,
+  useMemo,
+  useEffect,
+  useRef,
+  MutableRefObject,
+} from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
 import PlayIcon from 'assets/svgs/play-icon.svg';
@@ -24,6 +32,7 @@ import {
   useMainAccount,
   useTaskDetailsModal,
   useTaskStake,
+  useOnClickOutside,
 } from 'renderer/features';
 import {
   QueryKeys,
@@ -39,6 +48,7 @@ import { TaskInfo } from './TaskInfo';
 import { TaskSettings } from './TaskSettings';
 
 const getTaskMetadata = async (metadataCID: string): Promise<TaskMetadata> =>
+  // TO DO: replace mock with actual fetch from IPFS once we have both the CID available and the metadata deployed
   await Promise.resolve({
     author: 'string',
     description:
@@ -103,6 +113,13 @@ function TaskItem({ task, index, columnsLayout }: Props) {
    * We probably should fetch the Account pub key once and keep it in the app context
    */
   const { data: mainAccountPubKey } = useMainAccount();
+
+  const ref = useRef<HTMLDivElement>(null);
+
+  useOnClickOutside(
+    ref as MutableRefObject<HTMLDivElement>,
+    useCallback(() => setAccordionView(null), [])
+  );
 
   const { taskStake: alreadyStakedTokensAmount, loadingTaskStake } =
     useTaskStake({
@@ -230,7 +247,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   }, [accordionView, task, showCodeModal, taskMetadata]);
 
   return (
-    <TableRow columnsLayout={columnsLayout} className="py-2">
+    <TableRow columnsLayout={columnsLayout} className="py-2" ref={ref}>
       <div>
         <Tooltip
           placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
