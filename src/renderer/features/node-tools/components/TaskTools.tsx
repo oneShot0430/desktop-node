@@ -25,10 +25,10 @@ import { NodeTool } from './NodeTool';
 
 type PropsType = {
   taskPubKey: string;
-  onNodeToolsValidation?: (isValid: boolean) => void;
+  onToolsValidation?: (isValid: boolean) => void;
 };
 
-export function NodeTools({ taskPubKey, onNodeToolsValidation }: PropsType) {
+export function TaskTools({ taskPubKey, onToolsValidation }: PropsType) {
   const [isAllVariablesPaired, setIsAllVariablesPaired] = useState(false);
   const {
     taskVariablesNamesQuery: {
@@ -62,9 +62,9 @@ export function NodeTools({ taskPubKey, onNodeToolsValidation }: PropsType) {
       );
 
       setIsAllVariablesPaired(isAllVariablesPaired);
-      onNodeToolsValidation?.(isAllVariablesPaired);
+      onToolsValidation?.(isAllVariablesPaired);
     }
-  }, [onNodeToolsValidation, selectedTools, taskVariablesNames]);
+  }, [onToolsValidation, selectedTools, taskVariablesNames]);
 
   const handleToolPick = (tool: string, desktopVariableId: string) => {
     setSelectedTools({ ...selectedTools, [tool]: desktopVariableId });
@@ -159,7 +159,6 @@ export function NodeTools({ taskPubKey, onNodeToolsValidation }: PropsType) {
                * Metadata for the tool is not available yet,
                * so we need to pass null for now
                */
-              getSecretLink={undefined}
               defaultVariableId={pairedVariablesForTask[tool]}
             />
           ))}

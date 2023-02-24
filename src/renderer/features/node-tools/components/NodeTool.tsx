@@ -7,7 +7,7 @@ import { useStoredTaskVariables } from '../hooks';
 
 type PropsType = {
   tool: string;
-  getSecretLink?: string;
+  description?: string;
   defaultVariableId?: string;
   onSecretSelected?: (tool: string, desktopVariableId: string) => void;
   onInit?: (tool: string, desktopVariableId: string) => void;
@@ -15,7 +15,7 @@ type PropsType = {
 
 export function NodeTool({
   tool,
-  getSecretLink,
+  description,
   onSecretSelected,
   defaultVariableId,
   onInit,
@@ -64,20 +64,10 @@ export function NodeTool({
   if (isLoading) return null;
 
   return (
-    <div className="flex justify-between w-full">
-      <div>
-        <div className="mb-2 font-semibold text-finnieTeal">{tool}</div>
-        {getSecretLink && (
-          <div className="text-xs">
-            Don’t have one yet?{' '}
-            <a
-              href={getSecretLink}
-              className="font-normal underline cursor-pointer text-orange-2"
-            >
-              Click here to get it.
-            </a>
-          </div>
-        )}
+    <div className="flex justify-between w-full my-3">
+      <div className="flex flex-col gap-1">
+        <div className="font-semibold text-finnieTeal">{tool}</div>
+        {description && <div className="text-xs">{description}</div>}
       </div>
       <div className="flex items-start gap-3 pt-[2px]">
         <Dropdown
