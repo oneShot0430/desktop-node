@@ -2,11 +2,11 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { Tooltip } from 'renderer/components';
 import {
   ImportFromSeedPhrase,
   AccountsType,
 } from 'renderer/components/ImportFromSeedPhrase';
+import { Tooltip } from 'renderer/components/ui';
 import { Theme } from 'renderer/types/common';
 import { AppRoute } from 'renderer/types/routes';
 

@@ -4,7 +4,7 @@ import { GetTaskInfoParam, TaskData } from 'models';
 
 import { getTaskInfo } from './getTaskInfo';
 
-jest.mock('services/sdk', () => {
+jest.mock('main/services/sdk', () => {
   return {
     k2Connection: {
       getAccountInfo: jest.fn(),

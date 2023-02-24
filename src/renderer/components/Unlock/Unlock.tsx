@@ -1,3 +1,4 @@
+import { Icon } from '@_koii/koii-styleguide';
 import { compare } from 'bcryptjs';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -38,7 +39,7 @@ export function Unlock(): JSX.Element {
     <div className="relative h-full overflow-y-auto flex flex-col justify-center items-center gap-5 h-full bg-gradient-to-b from-finnieBlue-dark-secondary to-finnieBlue text-white">
       <WelcomeWheelBackground className="absolute top-0 left-0 h-[40%]" />
 
-      <KoiiLogo />
+      <Icon source={KoiiLogo} className="h-[156px] w-[156px]" />
       <h1 className="text-[40px] leading-[48px] text-center">
         Welcome to the Koii Node
       </h1>

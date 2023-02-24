@@ -3,7 +3,7 @@ import { Event } from 'electron';
 import { uniq } from 'lodash';
 import { GetTaskVariablesNamesParam } from 'models/api';
 
-import getTaskSource from '../getTaskSource';
+import { getTaskSource } from '../getTaskSource';
 
 const TASK_VARIABLES_PREFIX = 'process.env.';
 

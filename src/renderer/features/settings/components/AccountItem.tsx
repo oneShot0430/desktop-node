@@ -16,7 +16,7 @@ import {
   Tooltip,
   TableRow,
   ColumnsLayout,
-} from 'renderer/components';
+} from 'renderer/components/ui';
 import { useClipboard } from 'renderer/features/common';
 import { useConfirmModal } from 'renderer/features/common/modals/ConfirmationModal';
 

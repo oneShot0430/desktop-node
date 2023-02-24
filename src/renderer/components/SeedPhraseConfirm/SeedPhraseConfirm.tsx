@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
-import { ErrorMessage } from 'renderer/components';
+import { ErrorMessage } from 'renderer/components/ui';
 
 import { pickRandomNumbers } from './pickRandomNumbers';
 
@@ -27,9 +27,7 @@ export function SeedPhraseConfirm({
       [phraseIndex]: value,
     });
     setPhrases(newPhrases);
-    if (onPhraseChange) {
-      onPhraseChange(newPhrases.join(' '));
-    }
+    onPhraseChange && onPhraseChange(newPhrases.join(' '));
   };
 
   const seedPhraseValueArray = useMemo(

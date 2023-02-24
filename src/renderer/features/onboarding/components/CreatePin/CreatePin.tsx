@@ -5,10 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import LinesVerticalTeal from 'assets/svgs/onboarding/lines-vertical-teal.svg';
 import { PinInput } from 'renderer/components/PinInput';
 import { Button } from 'renderer/components/ui';
-import { useUserAppConfig } from 'renderer/features/common';
 import { openBrowserWindow } from 'renderer/services';
 import { AppRoute } from 'renderer/types/routes';
 
+import { useUserAppConfig } from '../../../common/hooks/useUserAppConfig';
 import { ContentRightWrapper } from '../ContentRightWrapper';
 
 function CreatePin() {
@@ -94,7 +94,6 @@ function CreatePin() {
               className="ml-4 text-sm font-medium "
             >
               I agree with the{' '}
-              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <a
                 href="#"
                 className="underline text-finnieTeal"

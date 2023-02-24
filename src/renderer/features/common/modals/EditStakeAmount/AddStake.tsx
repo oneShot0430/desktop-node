@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Button, ErrorMessage } from 'renderer/components/ui';
+import { ErrorMessage, Button } from 'renderer/components/ui';
 import { getRoeFromKoii, getKoiiFromRoe } from 'utils';
 
 import KoiiInput from './KoiiInput';

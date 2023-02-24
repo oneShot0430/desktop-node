@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Button } from 'renderer/components/ui';
+import { Button } from 'renderer/components/ui/Button';
 
 import KoiiInput from './KoiiInput';
 

@@ -1,10 +1,14 @@
-import { CurrencyMoneyLine, CloseLine, Icon } from '@_koii/koii-styleguide';
+import {
+  Icon,
+  CurrencyMoneyLine,
+  CloseLine,
+  ChevronArrowLine,
+} from '@_koii/koii-styleguide';
 import { create, useModal } from '@ebay/nice-modal-react';
 import QRCode from 'qrcode.react';
 import React from 'react';
 import { useQuery } from 'react-query';
 
-import BackIcon from 'assets/svgs/back-icon.svg';
 import config from 'config';
 import { Button } from 'renderer/components/ui';
 import { useClipboard } from 'renderer/features/common/hooks/useClipboard';
@@ -58,7 +62,8 @@ export const AddFunds = create(function AddFunds({ onGoBack }: PropsType) {
   };
 
   const openFaucetAndClose = () => {
-    openBrowserWindow(config.faucet.FAUCET_URL + mainAccountPubKey);
+    const urlToFaucet = `${config.faucet.FAUCET_URL}?key=${mainAccountPubKey}`;
+    openBrowserWindow(urlToFaucet);
     closeModal();
   };
 
@@ -75,20 +80,19 @@ export const AddFunds = create(function AddFunds({ onGoBack }: PropsType) {
 
   return (
     <Modal>
-      <ModalContent className="w-[416px] h-[416px] text-finnieBlue rounded-xl pt-2">
+      <ModalContent className="w-[416px] h-[430px] text-finnieBlue rounded-xl pt-2">
         <div className={headerClasses}>
           {onGoBack && (
             <Icon
-              source={BackIcon}
+              source={ChevronArrowLine}
+              className="w-6 h-6 cursor-pointer -rotate-90 z-20 mr-auto"
               onClick={closeAndGoBack}
-              className="w-5 h-5 cursor-pointer z-20 mr-auto"
             />
           )}
           <Icon
             source={CloseLine}
-            data-testid="close-modal-button"
+            className="w-6 h-6 cursor-pointer z-20"
             onClick={modal.remove}
-            className="w-5 h-5 cursor-pointer z-20"
           />
         </div>
 

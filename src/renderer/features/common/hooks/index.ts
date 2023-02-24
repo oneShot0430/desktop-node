@@ -3,6 +3,7 @@ export { useUserSettings } from './userSettings';
 export { useTaskStake } from './useTaskStake';
 export { useRunMultipleTasks } from './useRunMultipleTasks';
 export { usePrevious } from './usePrevious';
+export { useTaskVariable } from './useTaskVariable';
 
 // modals
 export { useCreateTaskModal } from './useCreateTaskModal';
@@ -11,5 +12,6 @@ export { useFundNewAccountModal } from './useFundAccountModal';
 export { useNotEnoughFunds } from './useNotEnoughFunds';
 export { useTaskDetailsModal } from './useTaskDetailsModal';
 export { useAddTaskVariableModal } from './useAddTaskVariableModal';
-export { useUserAppConfig } from './useUserAppConfig';
-export { useMainAccountBalance } from './useMainAccountBalance';
+export { useEditTaskVariable } from './useEditTaskVariable';
+export { useDeleteTaskVariable } from './useDeleteTaskVariable';
+export { useInspectTaskVariable } from './useInspectTaskVariable';

@@ -57,6 +57,7 @@
     ]
   },
   "jest": {
+    "preset": "ts-jest",
     "moduleDirectories": [
       "node_modules",
       "release/app/node_modules",
@@ -69,9 +70,11 @@
       "tsx",
       "json"
     ],
+    "testMatch": ["<rootDir>/**/*.(spec|test).(ts|tsx)"],
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/.erb/mocks/fileMock.js",
-      "\\.(css|less|sass|scss)$": "identity-obj-proxy"
+      "\\.(css|less|sass|scss)$": "identity-obj-proxy",
+      "uuid": "uuid"
     },
     "setupFiles": [
       "./.erb/scripts/check-build-exists.ts"
@@ -85,8 +88,10 @@
       ".erb/dll"
     ],
     "transform": {
-      "\\.(ts|tsx|js|jsx)$": "ts-jest"
-    }
+      "\\.(ts|tsx|js|jsx)$": "ts-jest",
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/src/renderer/tests/mocks/fileTransformer.js"
+    },
+    "setupFilesAfterEnv": ["<rootDir>/src/renderer/tests/jest.setup.ts"]
   },
   "dependencies": {
     "@_koii/koii-styleguide": "^0.2.13-alpha",
@@ -135,6 +140,7 @@
     "@teamsupercell/typings-for-css-modules-loader": "^2.5.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^14.4.3",
     "@types/bcryptjs": "^2.4.2",
     "@types/cookie-parser": "^1.4.3",
     "@types/cors": "^2.8.13",
@@ -184,9 +190,11 @@
     "husky": "^8.0.1",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.4.2",
+    "jest-canvas-mock": "^2.4.0",
     "jest-environment-jsdom": "^29.4.2",
     "lint-staged": "^13.0.3",
     "mini-css-extract-plugin": "^2.7.2",
+    "miragejs": "^0.1.47",
     "postcss": "^8.4.21",
     "postcss-loader": "^7.0.2",
     "prettier": "^2.8.4",

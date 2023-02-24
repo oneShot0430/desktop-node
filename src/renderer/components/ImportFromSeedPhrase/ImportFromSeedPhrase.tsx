@@ -1,9 +1,8 @@
 import React, { useState, ChangeEvent } from 'react';
 import { twMerge } from 'tailwind-merge';
 
+import { ErrorMessage, Button } from 'renderer/components/ui';
 import { createNodeWallets, setActiveAccount } from 'renderer/services';
-
-import { ErrorMessage, Button } from '..';
 
 export interface AccountsType {
   stakingAccountPubKey: string;

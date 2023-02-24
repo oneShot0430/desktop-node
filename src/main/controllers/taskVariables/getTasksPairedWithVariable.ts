@@ -6,7 +6,7 @@ import {
 } from 'models';
 import { throwDetailedError } from 'utils';
 
-import getTasksById from '../getTasksById';
+import { getTasksById } from '../getTasksById';
 
 import { getStoredPairedTaskVariables } from './getStoredPairedTaskVariables';
 
@@ -29,5 +29,5 @@ export const getTasksPairedWithVariable = async (
       Object.values(pairedTaskVariables[taskId]).includes(payload.variableId)
   );
 
-  return getTasksById({} as Event, { tasksIds: taskIdsUsingVariable });
+  return getTasksById(_, { tasksIds: taskIdsUsingVariable });
 };

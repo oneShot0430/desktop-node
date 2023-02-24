@@ -1,7 +1,7 @@
+import { Icon, CheckSuccessLine } from '@_koii/koii-styleguide';
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import CheckMarkIcon from 'assets/svgs/checkmark-icon.svg';
 import { AppRoute } from 'renderer/types/routes';
 
 type PropsType = {
@@ -24,7 +24,7 @@ export function ShowBalance({ balance }: PropsType) {
       </div>
       <div className="w-[180px] h-[180px] p-2 border-dashed border-finnieEmerald-light rounded-full border-2 mb-4 cursor-pointer">
         <div className="flex flex-col items-center justify-center w-full h-full rounded-full text-finnieEmerald bg-finnieBlue-light-secondary">
-          <CheckMarkIcon />
+          <Icon source={CheckSuccessLine} className="h-16 w-16" />
         </div>
       </div>
       <span className="text-white">{balance} KOII</span>

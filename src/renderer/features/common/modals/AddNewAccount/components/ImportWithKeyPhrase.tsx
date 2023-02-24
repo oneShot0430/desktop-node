@@ -1,8 +1,7 @@
+import { Icon, UploadLine, CloseLine } from '@_koii/koii-styleguide';
 import React, { memo, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
-import CloseIconWhite from 'assets/svgs/close-icons/close-icon-white.svg';
-import UploadIcon from 'assets/svgs/upload-icon.svg';
 import {
   AccountsType,
   ImportFromSeedPhrase,
@@ -24,13 +23,18 @@ function ImportWithKeyPhrase({ onClose, onImportSuccess }: PropsType) {
     <ModalContent theme={Theme.Dark} className="w-fit h-fit">
       <div className="text-white ">
         <div className="flex justify-between p-3">
-          <div className="flex items-center justify-between pl-6">
-            <UploadIcon />
+          <div className="flex items-center justify-between gap-6 pl-6">
+            <Icon source={UploadLine} className="w-7 h-7" />
             <span className="text-[24px]">
               Import a key with a secret phrase
             </span>
           </div>
-          <CloseIconWhite className="w-8 h-8" onClick={onClose} />
+          <Icon
+            source={CloseLine}
+            className="w-8 h-8 cursor-pointer"
+            onClick={onClose}
+          />
+          {/*  not sure */}
         </div>
 
         <div className="flex items-center justify-center w-full p-4">
@@ -49,7 +53,6 @@ function ImportWithKeyPhrase({ onClose, onImportSuccess }: PropsType) {
            */
           accountName={accountName}
           onImportSuccess={({ stakingAccountPubKey, mainAccountPubKey }) => {
-            console.log('@@@keys', { stakingAccountPubKey, mainAccountPubKey });
             queryCache.invalidateQueries();
             onImportSuccess({ stakingAccountPubKey, mainAccountPubKey });
           }}

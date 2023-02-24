@@ -4,12 +4,13 @@ import koiiTasks from 'main/services/koiiTasks';
 import { Task } from 'models';
 import { GetTasksByIdParam } from 'models/api';
 
-const getTasksById = (event: Event, payload: GetTasksByIdParam): Task[] => {
+export const getTasksById = (
+  event: Event,
+  payload: GetTasksByIdParam
+): Task[] => {
   const { tasksIds } = payload || {};
   const response = tasksIds
     .map((e) => koiiTasks.getTaskByPublicKey(e))
     .filter((e): e is Task => Boolean(e));
   return response;
 };
-
-export default getTasksById;

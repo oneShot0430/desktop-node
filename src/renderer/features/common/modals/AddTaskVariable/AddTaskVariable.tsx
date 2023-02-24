@@ -1,64 +1,27 @@
+import { Icon, CloseLine, BrowseInternetLine } from '@_koii/koii-styleguide';
 import { create, useModal } from '@ebay/nice-modal-react';
-import React, { ChangeEventHandler, useState } from 'react';
-import { useQuery, useMutation } from 'react-query';
+import React from 'react';
 
-import BrowserIcon from 'assets/svgs/browser-icon.svg';
-import CloseIconWhite from 'assets/svgs/close-icons/close-icon-white.svg';
-import { TaskVariableData } from 'models';
 import { Button, ErrorMessage } from 'renderer/components/ui';
+import { useTaskVariable } from 'renderer/features/common/hooks/useTaskVariable';
 import { Modal, ModalContent } from 'renderer/features/modals';
-import {
-  getStoredTaskVariables,
-  storeTaskVariable as storeTaskVariableService,
-  QueryKeys,
-} from 'renderer/services';
 import { Theme } from 'renderer/types/common';
 
 const baseInputClassName =
   'px-6 py-2 text-sm rounded-md bg-finnieBlue-light-tertiary focus:ring-2 focus:ring-finnieTeal focus:outline-none focus:bg-finnieBlue-light-secondary';
 
 export const AddTaskVariable = create(function AddTaskVariable() {
-  const [label, setLabel] = useState<string>('');
-  const [value, setValue] = useState<string>('');
-  const [labelError, setLabelError] = useState<string>('');
-
   const modal = useModal();
 
-  const { data: storedTaskVariables } = useQuery(
-    QueryKeys.TaskVariables,
-    getStoredTaskVariables
-  );
-
-  const { mutate: storeTaskVariable, error: errorStoringTaskVariable } =
-    useMutation<void, Error, TaskVariableData>(storeTaskVariableService, {
-      onSuccess: () => {
-        modal.remove();
-      },
-    });
-
-  const handleAddTaskVariable = async () => {
-    storeTaskVariable({ label, value });
-  };
-
-  const handleLabelChange: ChangeEventHandler<HTMLInputElement> = ({
-    target: { value: label },
-  }) => {
-    setLabelError('');
-    setLabel(label);
-    const storedTaskVariablesLabels = Object.values(
-      storedTaskVariables || {}
-    ).map(({ label }) => label);
-    const enteredLabelIsDuplicate = storedTaskVariablesLabels?.some(
-      (storedLabel) => storedLabel === label
-    );
-    if (enteredLabelIsDuplicate) {
-      setLabelError('You already have a tool registered with that label');
-    }
-  };
-
-  const handleToolKeyChange: ChangeEventHandler<HTMLInputElement> = ({
-    target: { value },
-  }) => setValue(value);
+  const {
+    handleAddTaskVariable,
+    handleLabelChange,
+    handleToolKeyChange,
+    label,
+    labelError,
+    value,
+    errorStoringTaskVariable,
+  } = useTaskVariable({ onSuccess: modal.remove });
 
   return (
     <Modal>
@@ -67,10 +30,10 @@ export const AddTaskVariable = create(function AddTaskVariable() {
         className="text-left px-12 pt-3 pb-6 w-max h-fit rounded text-white flex flex-col gap-6"
       >
         <div className="w-full flex justify-center items-center gap-4 text-2xl  font-semibold">
-          <BrowserIcon width={48} height={48} />
+          <Icon source={BrowseInternetLine} className="w-9 h-9 m-2" />
           <span>Add a Node Tool</span>
-
-          <CloseIconWhite
+          <Icon
+            source={CloseLine}
             className="w-8 h-8 -mr-8 ml-auto cursor-pointer"
             onClick={modal.remove}
           />

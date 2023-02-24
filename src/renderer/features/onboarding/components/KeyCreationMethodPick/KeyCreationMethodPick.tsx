@@ -4,7 +4,7 @@ import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
 import RewardsSvg from 'assets/svgs/onboarding/rewards-icon.svg';
-import { ErrorMessage } from 'renderer/components';
+import { ErrorMessage } from 'renderer/components/ui/ErrorMessage';
 import { useAccounts } from 'renderer/features/settings';
 import {
   createNodeWallets,
@@ -99,7 +99,6 @@ function KeyCreationMethodPick() {
       <div className="mt-16 ">
         <div className="flex flex-row items-center justify-evenly">
           <div className="flex flex-col items-center">
-            {/* eslint-disable-next-line react/button-has-type */}
             <button
               className="w-[180px] h-[180px] p-2 border-dashed border-finnieOrange rounded-full border-2 mb-4 cursor-pointer"
               onClick={handleClickCreate}

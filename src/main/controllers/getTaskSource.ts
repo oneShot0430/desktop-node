@@ -7,7 +7,7 @@ import { throwDetailedError } from 'utils';
 
 import { getTaskInfo } from './getTaskInfo';
 
-const getTaskSource = async (
+export const getTaskSource = async (
   event: Event,
   payload: GetTaskSourceParam
 ): Promise<string> => {
@@ -26,5 +26,3 @@ const getTaskSource = async (
     });
   }
 };
-
-export default getTaskSource;

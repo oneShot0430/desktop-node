@@ -3,7 +3,7 @@ import {
   GetTasksPairedWithVariableParamType,
 } from 'models';
 
-import { getTasksById } from '..';
+import { getTasksById } from '../getTasksById';
 
 import { getStoredPairedTaskVariables } from './getStoredPairedTaskVariables';
 import { getTasksPairedWithVariable } from './getTasksPairedWithVariable';
@@ -14,7 +14,7 @@ jest.mock('./getStoredPairedTaskVariables', () => {
   };
 });
 
-jest.mock('..', () => {
+jest.mock('../getTasksById', () => {
   return {
     getTasksById: jest.fn(),
   };
@@ -52,7 +52,7 @@ describe('getTasksPairedWithVariable', () => {
       getTasksPairedWithVariable({} as Event, { variableId: 'anotherVarId' })
     ).resolves.not.toThrow();
 
-    expect(getTasksById).toHaveBeenCalledWith(null, { tasksIds: [] });
+    expect(getTasksById).toHaveBeenCalledWith({} as Event, { tasksIds: [] });
   });
 
   it("should return Task using given variable by it's ID", async () => {
@@ -67,6 +67,8 @@ describe('getTasksPairedWithVariable', () => {
       getTasksPairedWithVariable({} as Event, { variableId: varId })
     ).resolves.not.toThrow();
 
-    expect(getTasksById).toHaveBeenCalledWith(null, { tasksIds: [taskId] });
+    expect(getTasksById).toHaveBeenCalledWith({} as Event, {
+      tasksIds: [taskId],
+    });
   });
 });

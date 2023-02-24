@@ -80,6 +80,8 @@ module.exports = {
     'no-new': 'off',
     camelcase: 'warn',
     'consistent-return': 'warn',
+    'no-restricted-syntax': 'warn',
+    'no-await-in-loop': 'off',
   },
   parser: '@typescript-eslint/parser',
   settings: {

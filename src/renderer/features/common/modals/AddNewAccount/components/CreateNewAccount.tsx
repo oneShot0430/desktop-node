@@ -1,10 +1,10 @@
+import { Icon, KeyUnlockLine, CloseLine } from '@_koii/koii-styleguide';
 import { compare } from 'bcryptjs';
 import React, { useCallback, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
-import CloseIconWhite from 'assets/svgs/close-icons/close-icon-white.svg';
-import KeyIconSvg from 'assets/svgs/key-icon-white.svg';
-import { ErrorMessage, PinInput, Button } from 'renderer/components';
+import { PinInput } from 'renderer/components/PinInput';
+import { ErrorMessage, Button } from 'renderer/components/ui';
 import { useUserSettings } from 'renderer/features/common/hooks';
 import { ModalContent } from 'renderer/features/modals';
 import {
@@ -78,11 +78,15 @@ export function CreateNewAccount({ onClose, setNextStep }: PropsType) {
     <ModalContent theme={Theme.Dark} className="w-[800px] h-[520px] text-white">
       <div className="flex justify-between p-3">
         <div className="flex items-center justify-between pl-6">
-          <KeyIconSvg />
+          <Icon source={KeyUnlockLine} className="h-8 w-6 mx-5" />
           <span className="text-[24px]">Create a New Account</span>
         </div>
-
-        <CloseIconWhite className="w-[32px] h-[32px]" onClick={onClose} />
+        <Icon
+          source={CloseLine}
+          className="w-8 h-8 cursor-pointer"
+          onClick={onClose}
+        />
+        {/*  not sure */}
       </div>
       <div>
         <div className="px-[62px] text-left leading-8 mb-4">

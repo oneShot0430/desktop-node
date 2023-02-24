@@ -5,13 +5,11 @@ import { twMerge } from 'tailwind-merge';
 import CheckmarkIconSvg from 'assets/svgs/checkmark-teal-icon.svg';
 import CodeIconSvg from 'assets/svgs/code-icon.svg';
 import EditIconSvg from 'assets/svgs/edit-icon.svg';
-import { Button } from 'renderer/components/ui';
+import { Button, EditStakeInput } from 'renderer/components/ui';
 import { useTaskDetailsModal } from 'renderer/features/common';
 import { getMainAccountPublicKey, QueryKeys } from 'renderer/services';
 import { TaskWithStake } from 'renderer/types';
 import { getKoiiFromRoe } from 'utils';
-
-import { EditStakeInput } from '../EditStakeInput';
 
 interface PropsType {
   task: TaskWithStake;
@@ -73,7 +71,7 @@ export function TaskRow({
 
   return (
     <div
-      className="flex flex-row w-full text-md text-finnieEmerald-light px-12"
+      className="flex flex-row w-full px-12 text-md text-finnieEmerald-light"
       key={publicKey}
     >
       <div className="w-[70%]">

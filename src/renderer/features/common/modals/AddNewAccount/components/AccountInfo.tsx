@@ -1,10 +1,12 @@
+import {
+  TooltipChatQuestionLeftLine,
+  CopyLine,
+  Icon,
+} from '@_koii/koii-styleguide';
 import React, { useRef } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import CopyIconSvg from 'assets/svgs/copy-icon.svg';
-import TooltipYellowIcon from 'assets/svgs/tooltip-teal-icon.svg';
-import TooltipTealIcon from 'assets/svgs/tooltip-yellow-icon.svg';
-import { Button } from 'renderer/components/ui';
+import { Button } from 'renderer/components/ui/Button';
 
 type KeyType = 'system' | 'task';
 type PropsType = Readonly<{
@@ -16,7 +18,7 @@ export function AccountInfo({ keyType, address }: PropsType) {
   const addressRef = useRef<HTMLSpanElement>(null);
 
   const titleClasses = twMerge(
-    'font-semibold text-finnieEmerald-light flex justify-start items-center',
+    'font-semibold text-finnieEmerald-light flex justify-start items-center gap-1',
     keyType === 'task' && 'text-finnieOrange'
   );
 
@@ -31,7 +33,8 @@ export function AccountInfo({ keyType, address }: PropsType) {
     <div className="bg-finnieBlue-light-tertiary p-4 flex flex-col items-start rounded-md w-[100%]">
       <div className={titleClasses}>
         {`${isTaskKey ? 'System' : 'Task'} Key Address`}
-        {isTaskKey ? <TooltipYellowIcon /> : <TooltipTealIcon />}
+
+        <Icon source={TooltipChatQuestionLeftLine} className="h-4 w-4" />
       </div>
       <div className="flex justify-start">
         {address && (
@@ -40,7 +43,7 @@ export function AccountInfo({ keyType, address }: PropsType) {
               {address}
             </span>
             <Button
-              icon={<CopyIconSvg />}
+              icon={<Icon source={CopyLine} className="text-black h-4 w-4" />}
               className="rounded-[50%] w-[24px] h-[24px] bg-finnieTeal-100"
               onClick={handleCopyToClipboard}
             />

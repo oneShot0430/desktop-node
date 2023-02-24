@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 
-import { Button } from 'renderer/components/ui';
+import { Button } from 'renderer/components/ui/Button';
 import { getRouteViewLabel } from 'renderer/routing/utils';
 import { AppRoute } from 'renderer/types/routes';
 

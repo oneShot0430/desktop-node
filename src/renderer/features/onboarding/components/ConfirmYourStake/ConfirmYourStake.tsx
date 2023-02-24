@@ -1,17 +1,18 @@
+import { Icon, AddFill, CurrencyMoneyLine } from '@_koii/koii-styleguide';
 import React, { useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import AddIconSvg from 'assets/svgs/onboarding/add-teal-icon.svg';
-import CurrencySvgIcon from 'assets/svgs/onboarding/currency-teal-small-icon.svg';
 import config from 'config';
 import { sum } from 'lodash';
-import { ErrorMessage, Button } from 'renderer/components';
+import { ErrorMessage, Button } from 'renderer/components/ui';
 import {
   useNotEnoughFunds,
   useRunMultipleTasks,
-  useUserAppConfig,
-  useMainAccountBalance,
 } from 'renderer/features/common';
+import {
+  useMainAccountBalance,
+  useUserAppConfig,
+} from 'renderer/features/settings';
 import { TaskWithStake } from 'renderer/types';
 import { AppRoute } from 'renderer/types/routes';
 import { ErrorContext } from 'renderer/utils';
@@ -94,7 +95,7 @@ function ConfirmYourStake() {
         <div className="flex justify-center mt-[40px]">
           <div className="flex flex-col items-center justify-center">
             <div className="flex flex-row items-center gap-2 mb-2 text-sm text-finnieEmerald-light">
-              <CurrencySvgIcon className="h-[24px]" />
+              <Icon source={CurrencyMoneyLine} className="h-6 w-6" />
               {`Total balance: ${
                 isLoading ? 'Loading balance...' : balance
               } KOII`}
@@ -120,7 +121,7 @@ function ConfirmYourStake() {
         <Button
           label="Select more tasks"
           className="bg-transparent text-finnieEmerald-light w-max"
-          icon={<AddIconSvg />}
+          icon={<Icon source={AddFill} />}
           onClick={handleSelectMoreTasks}
         />
       </div>

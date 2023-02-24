@@ -12,4 +12,3 @@ export { ImportKey } from './ImportKey';
 export { CreateNewKey } from './CreateNewKey';
 export { ImportKeySuccess } from './ImportKeySuccess';
 export * from './ContentRightWrapper';
-export { EditStakeInput } from './EditStakeInput';

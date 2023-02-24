@@ -1,17 +1,17 @@
 import {
+  Icon,
   CurrencyMoneyLine,
   ClickXlLine,
   WebCursorXlLine,
   LockLine,
-  Icon,
+  ChevronArrowLine,
 } from '@_koii/koii-styleguide';
 import React, { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import BackIconComponent from 'assets/svgs/back-icon.svg';
 import KoiiLogo from 'assets/svgs/koii-logo-white.svg';
-import { Button } from 'renderer/components/ui';
-import { useUserAppConfig } from 'renderer/features';
+import { Button } from 'renderer/components/ui/Button';
+import { useMainAccount, useUserAppConfig } from 'renderer/features/settings';
 import { AppRoute } from 'renderer/types/routes';
 
 import { useBackButtonHandler } from '../../hooks/useBackButtonHandler';
@@ -23,6 +23,7 @@ type PropsType = {
 };
 
 function OnboardingLayout({ children }: PropsType) {
+  const { data: mainAccountPubKey } = useMainAccount();
   const {
     handleBackButtonClick,
     showOnboardingBackButton,
@@ -32,8 +33,9 @@ function OnboardingLayout({ children }: PropsType) {
 
   const location = useLocation();
   const displaySkipButton = useMemo(
-    () => location.pathname !== AppRoute.OnboardingCreatePin,
-    [location.pathname]
+    () =>
+      location.pathname !== AppRoute.OnboardingCreatePin && mainAccountPubKey,
+    [location.pathname, mainAccountPubKey]
   );
 
   const { handleSaveUserAppConfig } = useUserAppConfig({
@@ -48,14 +50,14 @@ function OnboardingLayout({ children }: PropsType) {
     <div className="flex flex-row h-full text-white">
       <div className="w-[650px] bg-finnieBlue-light-secondary items-center flex flex-col relative">
         {showOnboardingBackButton && (
-          <BackIconComponent
-            data-testid="close-modal-button"
+          <Icon
+            source={ChevronArrowLine}
+            className="absolute -rotate-90 cursor-pointer w-9 h-9 top-5 left-5"
             onClick={handleBackButtonClick}
-            className="w-9 h-9 cursor-pointer absolute top-[20px] left-[20px]"
           />
         )}
         <div className="flex flex-col items-center justify-center mb-14">
-          <KoiiLogo />
+          <Icon source={KoiiLogo} className="h-[156px] w-[156px]" />
           <div className="text-[40px] w-[75%] text-center">
             Welcome to the Koii Node
           </div>
@@ -68,24 +70,24 @@ function OnboardingLayout({ children }: PropsType) {
           <StepListItem
             isActive={currentPath === AppRoute.OnboardingCreatePin}
             text="Secure your Node with a PIN."
-            iconSlot={<Icon source={LockLine} className="h-9 w-9 m-1" />}
+            iconSlot={<Icon source={LockLine} className="m-1 h-9 w-9" />}
           />
           <StepListItem
             isActive={currentPath.includes('create-or-import-key')}
             text="Fund your new key or import one."
             iconSlot={
-              <Icon source={CurrencyMoneyLine} className="h-9 w-9 m-1" />
+              <Icon source={CurrencyMoneyLine} className="m-1 h-9 w-9" />
             }
           />
           <StepListItem
             isActive={currentPath === AppRoute.OnboardingCreateFirstTask}
             text="Select your first tasks."
-            iconSlot={<Icon source={WebCursorXlLine} className="h-9 w-9 m-1" />}
+            iconSlot={<Icon source={WebCursorXlLine} className="m-1 h-9 w-9" />}
           />
           <StepListItem
             isActive={currentPath === AppRoute.OnboardingConfirmStake}
             text="Confirm your stake and go!"
-            iconSlot={<Icon source={ClickXlLine} className="h-9 w-9 m-1" />}
+            iconSlot={<Icon source={ClickXlLine} className="m-1 h-9 w-9" />}
           />
           <div className="absolute bottom-2 left-2">
             {displaySkipButton && (

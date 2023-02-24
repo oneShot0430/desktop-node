@@ -1,9 +1,10 @@
 import React, { useEffect, ReactNode } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
+import { Table } from 'renderer/components/ui/Table/Table';
+
 import { LoadingSpinner } from '../LoadingSpinner';
 
-import { Table } from './Table';
 import { TableHeader, ColumnsLayout } from './TableHeaders';
 
 interface PropsType {
@@ -28,8 +29,13 @@ export function InfiniteScrollTable({
   error,
 }: PropsType) {
   useEffect(() => {
-    const root = document.getElementById(tableWrapperId)!;
-    if (!isLoading && hasMore && root.scrollHeight <= root.clientHeight) {
+    const root = document.getElementById(tableWrapperId);
+    if (
+      !isLoading &&
+      hasMore &&
+      root &&
+      root.scrollHeight <= root.clientHeight
+    ) {
       update();
     }
   }, [isLoading, hasMore, update]);

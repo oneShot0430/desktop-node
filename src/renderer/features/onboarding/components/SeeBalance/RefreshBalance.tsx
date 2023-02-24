@@ -1,13 +1,14 @@
+import { Icon } from '@_koii/koii-styleguide';
 import React, { useCallback, useMemo } from 'react';
 import { useQuery } from 'react-query';
 
 import ReloadSvg from 'assets/svgs/reload-icon-big.svg';
-import { ErrorMessage } from 'renderer/components';
+import { ErrorMessage } from 'renderer/components/ui';
 import { useFundNewAccountModal } from 'renderer/features/common';
 import { getMainAccountBalance } from 'renderer/services';
 
 type PropsType = {
-  onBalanceRefresh?: (balance: number) => void;
+  onBalanceRefresh?: (balance: string | number) => void;
 };
 
 export function RefreshBalance({ onBalanceRefresh }: PropsType) {
@@ -47,7 +48,7 @@ export function RefreshBalance({ onBalanceRefresh }: PropsType) {
         onClick={handleRefetch}
       >
         <div className="flex flex-col items-center justify-center w-full h-full rounded-full bg-finnieBlue-light-secondary">
-          <ReloadSvg />
+          <Icon source={ReloadSvg} className="h-24 w-24" />
         </div>
       </div>
       <div className="mb-2">Refresh Balance</div>

@@ -13,7 +13,6 @@ type PropsType = {
   columnsLayout: ColumnsLayout;
   children: ReactNode;
   isLoading?: boolean;
-  // eslint-disable-next-line react/require-default-props
   error?: string | Error | null;
 };
 

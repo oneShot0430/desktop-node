@@ -12,7 +12,9 @@ export function SeeBalance() {
         {balance ? (
           <ShowBalance balance={balance} />
         ) : (
-          <RefreshBalance onBalanceRefresh={(balance) => setBalance(balance)} />
+          <RefreshBalance
+            onBalanceRefresh={(balance) => setBalance(balance as number)}
+          />
         )}
       </div>
     </div>
