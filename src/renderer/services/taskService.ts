@@ -1,5 +1,4 @@
-import { isNil, max, min, sum, isString } from 'lodash';
-import arweave from 'main/services/arweave';
+import { isNil, max, min, sum } from 'lodash';
 import { Task, TaskStatus } from 'renderer/types';
 
 import { getStakingAccountPublicKey } from './api';
@@ -16,13 +15,7 @@ export class TaskService {
   }
 
   static getTaskSourceCode(task: Task): Promise<string> {
-    return arweave.transactions
-      .getData(task.taskAuditProgram, { decode: true })
-      .then((dataBuffer) => {
-        return isString(dataBuffer)
-          ? dataBuffer
-          : new TextDecoder().decode(dataBuffer);
-      });
+    return window.main.getTaskSource({ taskAccountPubKey: task.publicKey });
   }
 
   static getTopStake(task: Task): number {
@@ -37,7 +30,6 @@ export class TaskService {
     return Object.values(task.stakeList).length;
   }
 
-  // eslint-disable-next-line consistent-return
   static getStatus(task: Task): TaskStatus {
     if (!isNil(task.status.AcceptingSubmissions))
       return TaskStatus.ACCEPTING_SUBMISSIONS;
