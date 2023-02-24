@@ -27,5 +27,5 @@ for (const arg of PARSE_ARGS)
 const { tools, arweave, Namespace } = require("./src/helpers");
 const { verifyStake, setupWebServer, runPeriodic } = require("./src/service");
 
-const GATEWAY_URL = "https://arweave.net/";
+export const IPFS_GATEWAY_URL = 'https://ipfs.io/ipfs';
 `;

@@ -1,6 +1,10 @@
 import { Event } from 'electron';
 
 import axios from 'axios';
+// eslint-disable-next-line
+// @ts-ignore
+import * as isIPFS from 'is-ipfs';
+
 import config from 'config';
 import { ErrorType, GetTaskSourceParam } from 'models';
 import { throwDetailedError } from 'utils';
@@ -13,7 +17,10 @@ export const getTaskSource = async (
 ): Promise<string> => {
   const taskData = await getTaskInfo({} as Event, payload, 'getTaskSource');
 
-  const url = `${config.node.GATEWAY_URL}/${taskData.taskAuditProgram}`;
+  const isTaskDeployedToIPFS = isIPFS.cid(taskData.taskAuditProgram);
+  const url = isTaskDeployedToIPFS
+    ? `${config.node.IPFS_GATEWAY_URL}/${taskData.taskAuditProgram}/main.js`
+    : `${config.node.ARWEAVE_GATEWAY_URL}/${taskData.taskAuditProgram}`;
 
   try {
     const { data: src } = await axios.get<string>(url);

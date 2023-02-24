@@ -7,6 +7,9 @@ import { Event } from 'electron';
 import * as fsSync from 'fs';
 
 import cryptoRandomString from 'crypto-random-string';
+// eslint-disable-next-line
+// @ts-ignore
+import * as isIPFS from 'is-ipfs';
 
 import { Keypair, PublicKey } from '@_koi/web3.js';
 import axios from 'axios';
@@ -110,11 +113,13 @@ const startTask = async (event: Event, payload: TaskStartStopParam) => {
 async function loadTask(selectedTask: ISelectedTasks) {
   console.log('Selected Tasks', selectedTask);
   let res;
+  const isTaskDeployedToIPFS = isIPFS.cid(selectedTask.taskAuditProgram);
+  const sourceCodeUrl = isTaskDeployedToIPFS
+    ? `${config.node.IPFS_GATEWAY_URL}/${selectedTask.taskAuditProgram}/main.js`
+    : `${config.node.ARWEAVE_GATEWAY_URL}/${selectedTask.taskAuditProgram}`;
   try {
-    res = await axios.get(
-      `${config.node.GATEWAY_URL}/${selectedTask.taskAuditProgram}`
-    );
-  } catch (e: any) {
+    res = await axios.get(sourceCodeUrl);
+  } catch (e) {
     console.error(e);
     return throwDetailedError({
       detailed: e,
