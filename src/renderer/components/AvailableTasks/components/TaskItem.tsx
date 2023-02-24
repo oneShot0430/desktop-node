@@ -18,7 +18,6 @@ import { useQuery, useQueryClient } from 'react-query';
 
 import PlayIcon from 'assets/svgs/play-icon.svg';
 import StopTealIcon from 'assets/svgs/stop-icon-teal.svg';
-import { TaskMetadata, RequirementType } from 'models/task';
 import {
   Button,
   LoadingSpinner,
@@ -40,54 +39,13 @@ import {
   stopTask,
   stakeOnTask,
   startTask,
+  getTaskMetadata,
 } from 'renderer/services';
 import { Task } from 'renderer/types';
 import { getKoiiFromRoe } from 'utils';
 
 import { TaskInfo } from './TaskInfo';
 import { TaskSettings } from './TaskSettings';
-
-const getTaskMetadata = async (metadataCID: string): Promise<TaskMetadata> =>
-  // TO DO: replace mock with actual fetch from IPFS once we have both the CID available and the metadata deployed
-  await Promise.resolve({
-    author: 'string',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sit amet commodo mi. Vestibulum finibus risus ac tellus tempor semper. Aliquam consequat gravida viverra. Mauris mi lectus, convallis et placerat non, ultrices ut purus. Cras at purus vel mauris sodales lobortis posuere vel risus. Quisque eu aliquet diam, id dignissim nunc. Aliquam non lectus viverra, varius massa vitae, semper mi. Quisque et arcu neque. Suspendisse sit amet mauris suscipit, ornare urna ut, tincidunt sem.',
-    repositoryUrl: 'string',
-    createdAt: 1,
-    imageUrl: 'string',
-    requirementsTags: [
-      { type: RequirementType.RAM, value: '4GB' },
-      { type: RequirementType.CPU, value: 'ASD' },
-      { type: RequirementType.STORAGE, value: '30GB' },
-      { type: RequirementType.OS, value: 'Windows 10 PRO' },
-      {
-        type: RequirementType.GLOBAL_VARIABLE,
-        value: 'GLOBAL_SETTING_1',
-        description: 'asdfasdfasdf',
-      },
-      {
-        type: RequirementType.GLOBAL_VARIABLE,
-        value: 'GLOBAL_SETTING_2',
-        description: 'asdfasdfasdf',
-      },
-      {
-        type: RequirementType.GLOBAL_VARIABLE,
-        value: 'GLOBAL_SETTING_3',
-        description: 'asdfasdfasdf',
-      },
-      {
-        type: RequirementType.GLOBAL_VARIABLE,
-        value: 'GLOBAL_SETTING_4',
-        description: 'asdfasdfasdf',
-      },
-      {
-        type: RequirementType.GLOBAL_VARIABLE,
-        value: 'GLOBAL_SETTING_5',
-        description: 'asdfasdfasdf',
-      },
-    ],
-  });
 
 interface Props {
   task: Task;
@@ -161,6 +119,10 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   const { data: taskMetadata } = useQuery(
     [QueryKeys.TaskMetadata, publicKey],
     () => getTaskMetadata('where do we get this CID from?')
+  );
+
+  const taskSettings = taskMetadata?.requirementsTags.filter(
+    ({ type }) => type === 'TASK_VARIABLE'
   );
 
   const validateTask = useCallback(() => {
@@ -239,12 +201,13 @@ function TaskItem({ task, index, columnsLayout }: Props) {
         <TaskSettings
           taskPubKey={task.publicKey}
           onToolsValidation={handleTaskToolsValidationCheck}
+          settings={taskSettings}
         />
       );
     }
 
     return null;
-  }, [accordionView, task, showCodeModal, taskMetadata]);
+  }, [accordionView, task, showCodeModal, taskMetadata, taskSettings]);
 
   return (
     <TableRow columnsLayout={columnsLayout} className="py-2" ref={ref}>

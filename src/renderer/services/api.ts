@@ -8,6 +8,7 @@ import {
   StoreUserConfigParam,
   PairTaskVariableParamType,
 } from 'models/api';
+import { TaskMetadata, RequirementType } from 'models/task';
 import { Task } from 'renderer/types';
 import { getKoiiFromRoe } from 'utils';
 
@@ -235,6 +236,45 @@ export const deleteTaskVariable = async (id: string) => {
 export const getTasksPairedWithVariable = async (variableId: string) => {
   return window.main.getTasksPairedWithVariable({ variableId });
 };
+
+export const getTaskMetadata = async (
+  metadataCID: string
+): Promise<TaskMetadata> =>
+  // TO DO: replace mock with actual fetch from IPFS once we have both the CID available within the Task structure and the metadata deployed
+  Promise.resolve({
+    author: 'string',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sit amet commodo mi. Vestibulum finibus risus ac tellus tempor semper. Aliquam consequat gravida viverra. Mauris mi lectus, convallis et placerat non, ultrices ut purus. Cras at purus vel mauris sodales lobortis posuere vel risus. Quisque eu aliquet diam, id dignissim nunc. Aliquam non lectus viverra, varius massa vitae, semper mi. Quisque et arcu neque. Suspendisse sit amet mauris suscipit, ornare urna ut, tincidunt sem.',
+    repositoryUrl: 'string',
+    createdAt: 1,
+    imageUrl: 'string',
+    requirementsTags: [
+      { type: RequirementType.RAM, value: '4GB' },
+      { type: RequirementType.CPU, value: 'ASD' },
+      { type: RequirementType.STORAGE, value: '30GB' },
+      { type: RequirementType.OS, value: 'Windows 10 PRO' },
+      {
+        type: RequirementType.GLOBAL_VARIABLE,
+        value: 'ELECTRON_RUN_AS_NODE',
+        description: 'asdfasdfasdf',
+      },
+      {
+        type: RequirementType.GLOBAL_VARIABLE,
+        value: 'ARM_VERSION',
+        description: 'asdfasdfasdf',
+      },
+      {
+        type: RequirementType.TASK_VARIABLE,
+        value: 'DEBUG_MIME',
+        description: 'asdfasdfasdf',
+      },
+      {
+        type: RequirementType.TASK_VARIABLE,
+        value: 'PREBUILDS_ONLY',
+        description: 'asdfasdfasdf',
+      },
+    ],
+  });
 
 export const claimRewards = async () => {
   const getPendingRewardsByTask = (task: Task) =>

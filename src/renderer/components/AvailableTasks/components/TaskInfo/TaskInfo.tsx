@@ -2,7 +2,7 @@ import { EmbedCodeFill, Icon } from '@_koii/koii-styleguide';
 import React from 'react';
 
 import { TaskMetadata } from 'models/task';
-import { GlobalTools } from 'renderer/features/node-tools';
+import { NodeTools } from 'renderer/features/node-tools';
 
 type PropsType = {
   taskPubKey: string;
@@ -33,7 +33,7 @@ export function TaskInfo({
       type === 'NETWORK'
   );
 
-  const globalSettings = info?.requirementsTags?.filter(
+  const globalSettings = info?.requirementsTags.filter(
     ({ type }) => type === 'GLOBAL_VARIABLE' || type === 'TASK_VARIABLE'
   );
 
@@ -64,7 +64,7 @@ export function TaskInfo({
       </div>
 
       <div className="mb-2 text-base font-semibold">Global Tools:</div>
-      <GlobalTools
+      <NodeTools
         taskPubKey={taskPubKey}
         tools={globalSettings}
         onToolsValidation={onToolsValidation}

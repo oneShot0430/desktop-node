@@ -15,7 +15,7 @@ export interface TaskMetadata {
   requirementsTags: RequirementTag[];
 }
 
-interface RequirementTag {
+export interface RequirementTag {
   type: RequirementType;
   value?: string;
   description?: string;
