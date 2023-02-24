@@ -79,6 +79,7 @@ module.exports = {
     'jsx-a11y/no-noninteractive-tabindex': 'warn',
     'no-new': 'off',
     camelcase: 'warn',
+    'consistent-return': 'warn',
   },
   parser: '@typescript-eslint/parser',
   settings: {

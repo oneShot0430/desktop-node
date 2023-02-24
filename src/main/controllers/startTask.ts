@@ -6,19 +6,18 @@ import { ChildProcess, fork, ForkOptions } from 'child_process';
 import { Event } from 'electron';
 import * as fsSync from 'fs';
 
-import * as cryptoRandomString from 'crypto-random-string';
+import cryptoRandomString from 'crypto-random-string';
 
 import { Keypair, PublicKey } from '@_koi/web3.js';
 import axios from 'axios';
+import config from 'config';
+import { Namespace, namespaceInstance } from 'main/node/helpers/Namespace';
+import { ErrorType } from 'models';
+import { TaskStartStopParam } from 'models/api';
+import koiiTasks from 'services/koiiTasks';
+import { throwDetailedError } from 'utils';
 
-import config from '../../config';
-import { ErrorType } from '../../models';
-import { TaskStartStopParam } from '../../models/api';
-import koiiTasks from '../../services/koiiTasks';
-import { throwDetailedError } from '../../utils';
-import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
-import { Namespace, namespaceInstance } from '../node/helpers/Namespace';
 import initExpressApp from '../node/initExpressApp';
 
 import getStakingAccountPublicKey from './getStakingAccountPubKey';
@@ -28,7 +27,6 @@ const bufferlayout = require('buffer-layout');
 const OPERATION_MODE = 'service';
 let LAST_USED_PORT = 10000;
 
-// eslint-disable-next-line consistent-return
 const startTask = async (event: Event, payload: TaskStartStopParam) => {
   const { taskAccountPubKey } = payload;
   const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
@@ -97,7 +95,7 @@ const startTask = async (event: Event, payload: TaskStartStopParam) => {
     // const cronArray = await taskSrc.execute();
     // console.log('CRON ARRAY', cronArray);
     // await koiiTasks.taskStarted(taskAccountPubKey, cronArray);
-  } catch (err: any) {
+  } catch (err) {
     console.error('ERR-:', err);
     throw new Error(err);
   }
@@ -109,7 +107,6 @@ const startTask = async (event: Event, payload: TaskStartStopParam) => {
  * @param {any} expressApp
  * @returns {any[]} Array of executable tasks
  */
-// eslint-disable-next-line consistent-return
 async function loadTask(selectedTask: ISelectedTasks) {
   console.log('Selected Tasks', selectedTask);
   let res;
@@ -160,12 +157,11 @@ async function executeTasks(
   };
   // TODO: Get the task stake here
   // const STAKE = Number(process.env.TASK_STAKES?.split(',') || 0);
-  const stakingAccPubkey = getStakingAccountPublicKey();
+  const stakingAccPubkey = await getStakingAccountPublicKey();
   const STAKE = selectedTask.stakeList[stakingAccPubkey];
   fsSync.mkdirSync(`${getAppDataPath()}/namespace/${selectedTask.taskId}`, {
     recursive: true,
   });
-  // eslint-disable-next-line camelcase
   const log_file = fsSync.createWriteStream(
     `${getAppDataPath()}/namespace/${selectedTask.taskId}/task.log`,
     { flags: 'a+' }
@@ -293,4 +289,4 @@ interface IRunningTasks {
   };
 }
 
-export default mainErrorHandler(startTask);
+export default startTask;

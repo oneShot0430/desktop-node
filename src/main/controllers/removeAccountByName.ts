@@ -1,8 +1,8 @@
 import { Event } from 'electron';
 import fs from 'fs';
 
-import { RemoveAccountByNameParam } from '../../models/api';
-import mainErrorHandler from '../../utils/mainErrorHandler';
+import { RemoveAccountByNameParam } from 'models/api';
+
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
 const removeAccountByName = async (
@@ -24,4 +24,4 @@ const removeAccountByName = async (
   }
 };
 
-export default mainErrorHandler(removeAccountByName);
+export default removeAccountByName;

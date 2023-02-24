@@ -1,8 +1,6 @@
-import config from '../../config';
-import {
-  CreateNodeWalletsParam,
-  CreateNodeWalletsResponse,
-} from '../../models/api';
+import config from 'config';
+import { CreateNodeWalletsParam, CreateNodeWalletsResponse } from 'models/api';
+
 import sendMessage from '../sendMessage';
 
 export default (

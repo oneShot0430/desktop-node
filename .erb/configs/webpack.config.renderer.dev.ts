@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import 'webpack-dev-server';
 import { execSync, spawn } from 'child_process';
 import fs from 'fs';

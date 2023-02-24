@@ -1,6 +1,5 @@
-import { getUserConfigResponse } from '../../models/api';
-import mainErrorHandler from '../../utils/mainErrorHandler';
-import { namespaceInstance } from '../node/helpers/Namespace';
+import { namespaceInstance } from 'main/node/helpers/Namespace';
+import { getUserConfigResponse } from 'models/api';
 
 const USER_CONFIG = 'USER_CONFIG';
 
@@ -14,4 +13,4 @@ const getUserConfig = async (): Promise<getUserConfigResponse> => {
   }
 };
 
-export default mainErrorHandler(getUserConfig);
+export default getUserConfig;

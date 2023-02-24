@@ -1,5 +1,6 @@
-import config from '../../config';
-import { getAllAccountsResponse } from '../../models/api';
+import config from 'config';
+import { getAllAccountsResponse } from 'models';
+
 import sendMessage from '../sendMessage';
 
 export default (): Promise<getAllAccountsResponse> =>

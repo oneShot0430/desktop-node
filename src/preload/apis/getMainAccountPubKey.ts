@@ -1,5 +1,6 @@
-import config from '../../config';
-import { GetMainAccountPubKeyResponse } from '../../models/api';
+import config from 'config';
+import { GetMainAccountPubKeyResponse } from 'models';
+
 import sendMessage from '../sendMessage';
 
 export default (): Promise<GetMainAccountPubKeyResponse> =>

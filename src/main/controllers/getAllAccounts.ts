@@ -3,12 +3,11 @@ import fs from 'fs';
 import path from 'path';
 
 import { Keypair } from '@_koi/web3.js';
+import { namespaceInstance } from 'main/node/helpers/Namespace';
+import { getAllAccountsResponse } from 'models/api';
+import sdk from 'services/sdk';
 
-import { getAllAccountsResponse } from '../../models/api';
-import sdk from '../../services/sdk';
-import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
-import { namespaceInstance } from '../node/helpers/Namespace';
 
 const getAllAccounts = async (
   event: Event,
@@ -81,4 +80,4 @@ const getAllAccounts = async (
   return accounts;
 };
 
-export default mainErrorHandler(getAllAccounts);
+export default getAllAccounts;

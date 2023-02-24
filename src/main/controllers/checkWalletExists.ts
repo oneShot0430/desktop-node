@@ -1,12 +1,12 @@
 import { Event } from 'electron';
 import fs from 'fs';
 
-import { ErrorType } from '../../models';
-import { CheckWalletExistsResponse } from '../../models/api';
-import { throwDetailedError } from '../../utils';
-import mainErrorHandler from '../../utils/mainErrorHandler';
+import { namespaceInstance } from 'main/node/helpers/Namespace';
+import { ErrorType } from 'models';
+import { CheckWalletExistsResponse } from 'models/api';
+import { throwDetailedError } from 'utils';
+
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
-import { namespaceInstance } from '../node/helpers/Namespace';
 
 const checkWallet = async (
   event: Event
@@ -51,4 +51,4 @@ const checkWallet = async (
   return check;
 };
 
-export default mainErrorHandler(checkWallet);
+export default checkWallet;

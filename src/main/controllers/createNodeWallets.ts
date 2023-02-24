@@ -5,13 +5,10 @@ import { derivePath } from 'ed25519-hd-key';
 
 import { Keypair } from '@_koi/web3.js';
 import * as bip39 from 'bip39';
+import { ErrorType } from 'models';
+import { CreateNodeWalletsParam, CreateNodeWalletsResponse } from 'models/api';
+import { throwDetailedError } from 'utils';
 
-import {
-  ErrorType,
-  CreateNodeWalletsParam,
-  CreateNodeWalletsResponse,
-} from '../../models';
-import { throwDetailedError, mainErrorHandler } from '../../utils';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
 const createNodeWallets = async (
@@ -69,7 +66,7 @@ const createNodeWallets = async (
     }
     console.log('WALLET PATH', mainWalletFilePath);
     const mainSeed = bip39.mnemonicToSeedSync(mnemonic, '');
-    const mainWalletPath = "m/44'/501'/0'/0'";
+    const mainWalletPath = "m/44'/501'/0'";
     const mainWallet = Keypair.fromSeed(
       derivePath(mainWalletPath, mainSeed.toString('hex')).key
     );
@@ -131,4 +128,4 @@ const createNodeWallets = async (
   }
 };
 
-export default mainErrorHandler(createNodeWallets);
+export default createNodeWallets;

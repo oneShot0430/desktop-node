@@ -1,9 +1,8 @@
 import { Event } from 'electron';
 
-import { Task } from '../../models';
-import { GetTasksByIdParam } from '../../models/api';
-import koiiTasks from '../../services/koiiTasks';
-import mainErrorHandler from '../../utils/mainErrorHandler';
+import { Task } from 'models';
+import { GetTasksByIdParam } from 'models/api';
+import koiiTasks from 'services/koiiTasks';
 
 const getTasksById = (event: Event, payload: GetTasksByIdParam): Task[] => {
   const { tasksIds } = payload || {};
@@ -13,4 +12,4 @@ const getTasksById = (event: Event, payload: GetTasksByIdParam): Task[] => {
   return response;
 };
 
-export default mainErrorHandler(getTasksById);
+export default getTasksById;

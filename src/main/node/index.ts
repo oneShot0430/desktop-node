@@ -1,9 +1,8 @@
 import fs from 'fs';
 
 import * as dotenv from 'dotenv';
-
-import { ErrorType } from '../../models';
-import { throwDetailedError } from '../../utils';
+import { ErrorType } from 'models';
+import { throwDetailedError } from 'utils';
 
 import executeTasks from './executeTasks';
 import { getAppDataPath } from './helpers/getAppDataPath';

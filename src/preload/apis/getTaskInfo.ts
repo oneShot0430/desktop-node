@@ -1,5 +1,6 @@
-import config from '../../config';
-import { GetTaskInfoParam, GetTaskInfoResponse } from '../../models/api';
+import config from 'config';
+import { GetTaskInfoParam, GetTaskInfoResponse } from 'models';
+
 import sendMessage from '../sendMessage';
 
 export default (payload: GetTaskInfoParam): Promise<GetTaskInfoResponse> =>

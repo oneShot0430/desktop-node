@@ -1,5 +1,6 @@
-import config from '../../config';
-import { getUserConfigResponse } from '../../models/api';
+import config from 'config';
+import { getUserConfigResponse } from 'models';
+
 import sendMessage from '../sendMessage';
 
 export default (): Promise<getUserConfigResponse> =>

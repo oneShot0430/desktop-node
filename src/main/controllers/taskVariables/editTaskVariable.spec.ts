@@ -1,5 +1,6 @@
-import { EditTaskVariableParamType } from '../../../models';
-import { namespaceInstance } from '../../node/helpers/Namespace';
+import { namespaceInstance } from 'main/node/helpers/Namespace';
+import { EditTaskVariableParamType } from 'models';
+
 import { PersistentStoreKeys } from '../types';
 
 import { editTaskVariable } from './editTaskVariable';
@@ -19,13 +20,15 @@ jest.mock('./getStoredTaskVariables', () => {
   };
 });
 
+const getStoredTaskVariablesMock = getStoredTaskVariables as jest.Mock;
+
 describe('editTaskVariable', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   it('throws an error if the payload is not valid', async () => {
-    (getStoredTaskVariables as jest.Mock).mockResolvedValue({});
+    getStoredTaskVariablesMock.mockResolvedValue({});
 
     const invalidPayload = {};
 
@@ -35,7 +38,7 @@ describe('editTaskVariable', () => {
   });
 
   it('throws an error if variable is not found by id', async () => {
-    (getStoredTaskVariables as jest.Mock).mockResolvedValue({
+    getStoredTaskVariablesMock.mockResolvedValue({
       'some-id': { label: 'label', value: 'some value' },
     });
 
@@ -53,16 +56,16 @@ describe('editTaskVariable', () => {
   });
 
   it('throws an error if variable is found by ID but there is other variable with given label', async () => {
-    const exitingLabel = 'label';
-    (getStoredTaskVariables as jest.Mock).mockResolvedValue({
+    const existingLabel = 'label';
+    getStoredTaskVariablesMock.mockResolvedValue({
       'some-id': { label: 'label to change', value: 'some value' },
-      'some-other-id': { label: exitingLabel, value: 'some value' },
+      'some-other-id': { label: existingLabel, value: 'some value' },
     });
 
     const nonExistingIdPayload: EditTaskVariableParamType = {
       variableId: 'some-other-id',
       variableData: {
-        label: exitingLabel,
+        label: existingLabel,
         value: 'some other value',
       },
     };
@@ -73,7 +76,7 @@ describe('editTaskVariable', () => {
   });
 
   it('changes the task variable label and value if the payload is valid and the ID does exist', async () => {
-    (getStoredTaskVariables as jest.Mock).mockResolvedValue({
+    getStoredTaskVariablesMock.mockResolvedValue({
       'already-existing-id': {
         label: 'old label',
         value: 'old value',
@@ -96,7 +99,7 @@ describe('editTaskVariable', () => {
   });
 
   it('changes the task variable label if the payload is valid and the ID does exist', async () => {
-    (getStoredTaskVariables as jest.Mock).mockResolvedValue({
+    getStoredTaskVariablesMock.mockResolvedValue({
       'already-existing-id': {
         label: 'old label',
         value: 'old value',
@@ -119,7 +122,7 @@ describe('editTaskVariable', () => {
   });
 
   it('changes the task variable value if the payload is valid and the ID does exist', async () => {
-    (getStoredTaskVariables as jest.Mock).mockResolvedValue({
+    getStoredTaskVariablesMock.mockResolvedValue({
       'already-existing-id': {
         label: 'old label',
         value: 'old value',

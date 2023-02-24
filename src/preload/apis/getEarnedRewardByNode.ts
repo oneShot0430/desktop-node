@@ -1,5 +1,6 @@
-import config from '../../config';
-import { TaskData } from '../../models/task';
+import config from 'config';
+import { TaskData } from 'models';
+
 import sendMessage from '../sendMessage';
 
 interface rewardWalletPayload {

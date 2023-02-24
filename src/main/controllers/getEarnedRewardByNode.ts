@@ -2,12 +2,11 @@ import { Event } from 'electron';
 import * as fsSync from 'fs';
 
 import { Keypair } from '@_koi/web3.js';
+import { namespaceInstance } from 'main/node/helpers/Namespace';
+import { ErrorType } from 'models';
+import { throwDetailedError } from 'utils';
 
-import { ErrorType } from '../../models';
-import { throwDetailedError } from '../../utils';
-import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
-import { namespaceInstance } from '../node/helpers/Namespace';
 
 interface rewardWalletPayload {
   available_balances: any;
@@ -17,7 +16,6 @@ const rewardWallet = async (
   event: Event,
   payload: rewardWalletPayload
 ): Promise<unknown> => {
-  // eslint-disable-next-line camelcase
   const { available_balances } = payload;
   // console.log('AVAILABLE_BALANCE', available_balances);
   // console.log('IN THE API');
@@ -64,4 +62,4 @@ const rewardWallet = async (
   }
 };
 
-export default mainErrorHandler(rewardWallet);
+export default rewardWallet;

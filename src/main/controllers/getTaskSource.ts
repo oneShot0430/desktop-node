@@ -1,44 +1,19 @@
 import { Event } from 'electron';
 
-import { PublicKey } from '@_koi/web3.js';
 import axios from 'axios';
+import config from 'config';
+import { ErrorType, GetTaskSourceParam } from 'models';
+import { throwDetailedError } from 'utils';
 
-import config from '../../config';
-import { ErrorType } from '../../models';
-import sdk from '../../services/sdk';
-import { throwDetailedError } from '../../utils';
-import mainErrorHandler from '../../utils/mainErrorHandler';
-
-interface GetTaskSourceParam {
-  taskAccountPubKey: string;
-}
+import { getTaskInfo } from './getTaskInfo';
 
 const getTaskSource = async (
   event: Event,
   payload: GetTaskSourceParam
 ): Promise<string> => {
-  const { taskAccountPubKey } = payload;
+  const taskData = await getTaskInfo({} as Event, payload, 'getTaskSource');
 
-  const accountInfo = await sdk.k2Connection.getAccountInfo(
-    new PublicKey(taskAccountPubKey)
-  );
-
-  if (!accountInfo || !accountInfo.data)
-    return throwDetailedError({
-      detailed: 'Task not found',
-      type: ErrorType.TASK_NOT_FOUND,
-    });
-
-  const taskData = JSON.parse(accountInfo.data.toString());
-
-  if (!taskData) {
-    return throwDetailedError({
-      detailed: 'Task not found',
-      type: ErrorType.TASK_NOT_FOUND,
-    });
-  }
-
-  const url = `${config.node.GATEWAY_URL}/${taskData.task_audit_program}`;
+  const url = `${config.node.GATEWAY_URL}/${taskData.taskAuditProgram}`;
 
   try {
     const { data: src } = await axios.get<string>(url);
@@ -52,4 +27,4 @@ const getTaskSource = async (
   }
 };
 
-export default mainErrorHandler(getTaskSource);
+export default getTaskSource;

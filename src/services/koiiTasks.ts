@@ -15,7 +15,7 @@ class KoiiTasks {
 
   constructor() {
     // eslint-disable-next-line promise/catch-or-return,
-    fetchAllTasks().then((res: Task[]) => {
+    fetchAllTasks({} as Event).then((res: Task[]) => {
       this.tasks = res;
       this.getTasksStateFromRedis();
     });
@@ -39,7 +39,7 @@ class KoiiTasks {
   private async watchTasks() {
     setInterval(() => {
       // eslint-disable-next-line promise/catch-or-return
-      fetchAllTasks().then((res: Task[]) => {
+      fetchAllTasks({} as Event).then((res: Task[]) => {
         this.tasks = res;
         this.getTasksStateFromRedis();
       });

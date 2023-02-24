@@ -1,19 +1,13 @@
-// import { Event } from 'electron';
-
 import { PublicKey } from '@_koi/web3.js';
-// import axios from 'axios';
+import config from 'config';
+import { FetchAllTasksParam } from 'models/api';
 
-import config from '../../config';
-import { FetchAllTasksParam } from '../../models/api';
 import sdk from '../../services/sdk';
-import mainErrorHandler from '../../utils/mainErrorHandler';
 import { Task, TaskData } from '../type/TaskData';
 
-// import koiiState from 'services/koiiState';
-// import sdk from 'services/sdk';
 async function fetchAllTasks(
   event: Event,
-  payload: FetchAllTasksParam
+  payload?: FetchAllTasksParam
 ): Promise<Task[]> {
   const { offset, limit } = payload || {};
   let taskAccountInfo = await sdk.k2Connection.getProgramAccounts(
@@ -53,7 +47,7 @@ async function fetchAllTasks(
           data: taskData,
         };
         return task;
-      } catch (e) {
+      } catch (e: any) {
         return null;
       }
     })
@@ -67,4 +61,4 @@ async function fetchAllTasks(
   return tasks;
 }
 
-export default mainErrorHandler(fetchAllTasks);
+export default fetchAllTasks;

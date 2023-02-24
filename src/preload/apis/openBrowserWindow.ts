@@ -1,5 +1,6 @@
+import { OpenBrowserWindowParam } from 'models';
+
 import config from '../../config';
-import { OpenBrowserWindowParam } from '../../models/api';
 import sendMessage from '../sendMessage';
 
 export default (payload: OpenBrowserWindowParam) =>

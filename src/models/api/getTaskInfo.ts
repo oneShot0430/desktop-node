@@ -1,7 +1,7 @@
-import { Task } from '../task';
+import { TaskData } from '../task';
 
 export interface GetTaskInfoParam {
   taskAccountPubKey: string;
 }
 
-export type GetTaskInfoResponse = Task;
+export type GetTaskInfoResponse = Omit<TaskData, 'isRunning'>;

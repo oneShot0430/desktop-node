@@ -3,3 +3,8 @@ export * from './storeTaskVariable';
 export * from './getTaskVariablesNames';
 export * from './editTaskVariable';
 export * from './deleteTaskVariable';
+export * from './getStoredPairedTaskVariables';
+export * from './pairTaskVariable';
+export * from './unpairTaskVariable';
+export * from './getTasksPairedWithVariable';
+export * from './getPairedVariablesNamesWithValues';

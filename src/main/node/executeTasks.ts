@@ -7,7 +7,7 @@ const executeTasks = async (): Promise<any> => {
 
   console.log('EXECUTABLE TASKS', executableTasks);
   const taskSrcProms = executableTasks.map(async (task) => {
-    await startTask(null, { taskAccountPubKey: task.publicKey });
+    await startTask({} as Event, { taskAccountPubKey: task.publicKey });
   });
 };
 

@@ -8,14 +8,14 @@ import {
   Transaction,
   sendAndConfirmTransaction,
 } from '@_koi/web3.js';
+import config from 'config';
+import { namespaceInstance } from 'main/node/helpers/Namespace';
+import { ErrorType, NetworkErrors } from 'models';
+import { WithdrawStakeParam } from 'models/api';
+import sdk from 'services/sdk';
+import { throwDetailedError } from 'utils';
 
-import config from '../../config';
-import { ErrorType, NetworkErrors, WithdrawStakeParam } from '../../models';
-import sdk from '../../services/sdk';
-import { throwDetailedError } from '../../utils';
-import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
-import { namespaceInstance } from '../node/helpers/Namespace';
 
 // eslint-disable-next-line
 const BufferLayout = require('@solana/buffer-layout');
@@ -118,4 +118,4 @@ const getAlloc = (type: any, fields: any) => {
   });
   return alloc;
 };
-export default mainErrorHandler(withdrawStake);
+export default withdrawStake;

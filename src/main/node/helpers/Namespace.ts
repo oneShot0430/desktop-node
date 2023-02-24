@@ -207,7 +207,7 @@ class Namespace {
         asBuffer: false,
       });
       return response;
-    } catch (e) {
+    } catch (e: any) {
       // eslint-disable-next-line eqeqeq
       if (e.type == 'NotFoundError') {
         console.error(key, 'Not found');
@@ -229,7 +229,7 @@ class Namespace {
         asBuffer: false,
       });
       return response;
-    } catch (e) {
+    } catch (e: any) {
       // eslint-disable-next-line eqeqeq
       if (e.type == 'NotFoundError') {
         console.error(key, 'Not found');
@@ -249,7 +249,7 @@ class Namespace {
   async storeSet(key: string, value: string): Promise<void> {
     try {
       await this.db.put(this.taskTxId + key, value);
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       throw e;
     }
@@ -521,7 +521,7 @@ class Namespace {
         [this.#mainSystemAccount, submitterKeypair]
       );
       return result;
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       const errorType = e.message
         .toLowerCase()
@@ -576,7 +576,7 @@ class Namespace {
         [this.#mainSystemAccount, voterKeypair]
       );
       return result;
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       const errorType = e.message
         .toLowerCase()
@@ -622,7 +622,7 @@ class Namespace {
         [this.#mainSystemAccount, stakingAccKeypair]
       );
       return response;
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       const errorType = e.message
         .toLowerCase()
@@ -672,7 +672,7 @@ class Namespace {
         [this.#mainSystemAccount, claimerKeypair]
       );
       return response;
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       const errorType = e.message
         .toLowerCase()
@@ -707,7 +707,7 @@ class Namespace {
       );
       console.log('SIGNATURE', signature);
       return signature;
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       const errorType = e.message
         .toLowerCase()
@@ -752,7 +752,7 @@ class Namespace {
       if (!payload) return { error: 'Empty payload' };
       const decodedPayload = new TextDecoder().decode(payload);
       return { data: decodedPayload };
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       return { error: 'Empty payload' };
     }
@@ -826,7 +826,7 @@ class Namespace {
         )
       );
       console.log({ submitterAccount });
-    } catch (e) {
+    } catch (e: any) {
       console.error(
         'Staking wallet not found. Please create a staking wallet and place it in the namespace folder'
       );
@@ -1161,7 +1161,7 @@ async function getCacheNodes() {
       (await namespaceInstance.storeGet('nodeRegistry')) || '[]'
     );
     if (nodes === null) nodes = [];
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
     nodes = [];
   }

@@ -21,4 +21,4 @@ export * from './openBrowserWindow';
 export * from './getTaskNodeInfo';
 export * from './taskVariables';
 export * from './getTaskVariablesNames';
-// GetTaskNodeInfoResponse
+export * from './getTaskSource';

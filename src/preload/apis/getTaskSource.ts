@@ -1,4 +1,5 @@
-import config from '../../config';
+import config from 'config';
+
 import sendMessage from '../sendMessage';
 
 interface GetTaskSourceParam {

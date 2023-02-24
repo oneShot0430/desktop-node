@@ -1,9 +1,7 @@
 import { Event } from 'electron';
 
-import { SetActiveAccountParam } from 'models';
-
-import mainErrorHandler from '../../utils/mainErrorHandler';
-import { namespaceInstance } from '../node/helpers/Namespace';
+import { namespaceInstance } from 'main/node/helpers/Namespace';
+import { SetActiveAccountParam } from 'models/api';
 
 const storeWallet = async (
   event: Event,
@@ -21,4 +19,4 @@ const storeWallet = async (
   }
 };
 
-export default mainErrorHandler(storeWallet);
+export default storeWallet;

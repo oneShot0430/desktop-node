@@ -1,6 +1,6 @@
-import config from '../../config';
-import { Task } from '../../models';
-import { GetMyTasksParam } from '../../models/api';
+import config from 'config';
+import { Task, GetMyTasksParam } from 'models';
+
 import sendMessage from '../sendMessage';
 
 export default (params: GetMyTasksParam): Promise<Task[]> =>

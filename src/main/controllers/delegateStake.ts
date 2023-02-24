@@ -11,20 +11,20 @@ import {
   SystemProgram,
   LAMPORTS_PER_SOL,
 } from '@_koi/web3.js';
-
-import config from '../../config';
+import config from 'config';
+import { namespaceInstance } from 'main/node/helpers/Namespace';
 import {
   ErrorType,
   NetworkErrors,
   DelegateStakeParam,
   DelegateStakeResponse,
-} from '../../models';
-import sdk from '../../services/sdk';
-import { throwDetailedError, mainErrorHandler } from '../../utils';
-import { getAppDataPath } from '../node/helpers/getAppDataPath';
-import { namespaceInstance } from '../node/helpers/Namespace';
+} from 'models';
+import sdk from 'services/sdk';
+import { throwDetailedError } from 'utils';
 
-import getTaskInfo from './getTaskInfo';
+import { getAppDataPath } from '../node/helpers/getAppDataPath';
+
+import { getTaskInfo } from './getTaskInfo';
 
 // eslint-disable-next-line
 const BufferLayout = require('@solana/buffer-layout');
@@ -78,15 +78,8 @@ const delegateStake = async (
     new PublicKey(stakingAccKeypair.publicKey)
   );
 
-  let taskState;
-  try {
-    taskState = await getTaskInfo(null, { taskAccountPubKey });
-  } catch (e: any) {
-    return throwDetailedError({
-      detailed: e,
-      type: ErrorType.TASK_NOT_FOUND,
-    });
-  }
+  const taskState = await getTaskInfo({} as Event, { taskAccountPubKey });
+
   console.log('ACCOUNT OWNER', accountInfo?.owner?.toBase58());
   if (
     accountInfo?.owner?.toBase58() ===
@@ -270,4 +263,4 @@ const getAlloc = (type: any, fields: any) => {
   return alloc;
 };
 
-export default mainErrorHandler(delegateStake);
+export default delegateStake;

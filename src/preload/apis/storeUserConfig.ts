@@ -1,5 +1,6 @@
+import { StoreUserConfigParam } from 'models';
+
 import config from '../../config';
-import { StoreUserConfigParam } from '../../models/api';
 import sendMessage from '../sendMessage';
 
 export default (payload: StoreUserConfigParam): Promise<boolean> =>

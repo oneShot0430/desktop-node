@@ -1,5 +1,6 @@
+import { TaskStartStopParam } from 'models';
+
 import config from '../../config';
-import { TaskStartStopParam } from '../../models/api';
 import sendMessage from '../sendMessage';
 
 export default (payload: TaskStartStopParam): Promise<void> =>

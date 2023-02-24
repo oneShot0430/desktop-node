@@ -12,12 +12,12 @@ export type PropsType = {
   onAddStake: (amount: number) => void;
 };
 
-export const AddStake = ({
+export function AddStake({
   balance,
   currentStake,
   minStake,
   onAddStake,
-}: PropsType) => {
+}: PropsType) {
   const [inputValue, setInputValue] = useState(0);
   const [error, setError] = useState('');
   const stakeToAddInRoe = getRoeFromKoii(inputValue);
@@ -61,4 +61,4 @@ export const AddStake = ({
       />
     </div>
   );
-};
+}

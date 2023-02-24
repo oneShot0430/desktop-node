@@ -1,12 +1,9 @@
 import { Event } from 'electron';
 
-import {
-  EditTaskVariableParamType,
-  ErrorType,
-  TaskVariables,
-} from '../../../models';
-import { throwDetailedError } from '../../../utils';
-import { namespaceInstance } from '../../node/helpers/Namespace';
+import { namespaceInstance } from 'main/node/helpers/Namespace';
+import { EditTaskVariableParamType, ErrorType, TaskVariables } from 'models';
+import { throwDetailedError } from 'utils';
+
 import { PersistentStoreKeys } from '../types';
 
 import { getStoredTaskVariables } from './getStoredTaskVariables';
@@ -60,10 +57,10 @@ export const editTaskVariable = async (
     },
   };
 
-  const strigifiedTaskVariableValue = JSON.stringify(newTaskVariables);
+  const stringifiedTaskVariableValue = JSON.stringify(newTaskVariables);
 
   await namespaceInstance.storeSet(
     PersistentStoreKeys.TaskVariables,
-    strigifiedTaskVariableValue
+    stringifiedTaskVariableValue
   );
 };

@@ -13,7 +13,7 @@ import {
 } from 'renderer/features/common';
 import { AppRoute } from 'renderer/types/routes';
 
-export const Actions = () => {
+export function Actions() {
   const navigate = useNavigate();
   const location = useLocation();
   const { showModal: showFundModal } = useFundNewAccountModal();
@@ -62,4 +62,4 @@ export const Actions = () => {
       </button>
     </div>
   );
-};
+}

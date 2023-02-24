@@ -2,16 +2,15 @@ import { Event } from 'electron';
 import * as fsSync from 'fs';
 
 import { Keypair } from '@_koi/web3.js';
+import { namespaceInstance } from 'main/node/helpers/Namespace';
+import { ErrorType } from 'models';
+import { GetMainAccountPubKeyResponse } from 'models/api';
+import { throwDetailedError } from 'utils';
 
-import { ErrorType } from '../../models';
-import { GetMainAccountPubKeyResponse } from '../../models/api';
-import { throwDetailedError } from '../../utils';
-import mainErrorHandler from '../../utils/mainErrorHandler';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
-import { namespaceInstance } from '../node/helpers/Namespace';
 
 const mainAccountPubKey = async (
-  event: Event
+  event?: Event
 ): Promise<GetMainAccountPubKeyResponse> => {
   // console.log('IN THE API');
   let mainSystemAccount;
@@ -39,4 +38,4 @@ const mainAccountPubKey = async (
   }
 };
 
-export default mainErrorHandler(mainAccountPubKey);
+export default mainAccountPubKey;

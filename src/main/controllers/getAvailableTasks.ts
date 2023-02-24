@@ -1,10 +1,10 @@
 import { Event } from 'electron';
 import fs from 'fs';
 
-import { Task } from '../../models';
-import { GetAvailableTasksParam } from '../../models/api';
-import koiiTasks from '../../services/koiiTasks';
-import mainErrorHandler from '../../utils/mainErrorHandler';
+import { Task } from 'models';
+import { GetAvailableTasksParam } from 'models/api';
+import koiiTasks from 'services/koiiTasks';
+
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
 const getAvailableTasks = (
@@ -25,4 +25,4 @@ const getAvailableTasks = (
     .slice(offset, offset + limit);
 };
 
-export default mainErrorHandler(getAvailableTasks);
+export default getAvailableTasks;

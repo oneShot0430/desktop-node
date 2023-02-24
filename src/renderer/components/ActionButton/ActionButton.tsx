@@ -12,12 +12,12 @@ type ActionButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant: keyof typeof variants;
 };
 
-const ActionButton = ({
+function ActionButton({
   logo: Logo,
   name,
   variant,
   ...props
-}: ActionButtonProps): JSX.Element => {
+}: ActionButtonProps): JSX.Element {
   return (
     <button
       className={clsx(
@@ -30,6 +30,6 @@ const ActionButton = ({
       <div className="text-center tracking-finnieSpacing-tight">{name}</div>
     </button>
   );
-};
+}
 
 export default ActionButton;

@@ -1,5 +1,6 @@
+import { RemoveAccountByNameParam } from 'models';
+
 import config from '../../config';
-import { RemoveAccountByNameParam } from '../../models/api';
 import sendMessage from '../sendMessage';
 
 export default (payload: RemoveAccountByNameParam): Promise<boolean> =>

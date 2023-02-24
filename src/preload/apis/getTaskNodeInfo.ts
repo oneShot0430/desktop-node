@@ -1,5 +1,6 @@
-import config from '../../config';
-import { GetTaskNodeInfoResponse } from '../../models/api';
+import config from 'config';
+import { GetTaskNodeInfoResponse } from 'models/api';
+
 import sendMessage from '../sendMessage';
 
 export default (): Promise<GetTaskNodeInfoResponse> =>
