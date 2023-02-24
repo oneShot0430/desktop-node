@@ -10,6 +10,7 @@ import { useQuery, useQueryClient } from 'react-query';
 
 import PlayIcon from 'assets/svgs/play-icon.svg';
 import StopTealIcon from 'assets/svgs/stop-icon-teal.svg';
+import { TaskMetadata, RequirementType } from 'models/task';
 import {
   Button,
   LoadingSpinner,
@@ -37,6 +38,47 @@ import { getKoiiFromRoe } from 'utils';
 import { TaskInfo } from './TaskInfo';
 import { TaskSettings } from './TaskSettings';
 
+const getTaskMetadata = async (metadataCID: string): Promise<TaskMetadata> =>
+  await Promise.resolve({
+    author: 'string',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sit amet commodo mi. Vestibulum finibus risus ac tellus tempor semper. Aliquam consequat gravida viverra. Mauris mi lectus, convallis et placerat non, ultrices ut purus. Cras at purus vel mauris sodales lobortis posuere vel risus. Quisque eu aliquet diam, id dignissim nunc. Aliquam non lectus viverra, varius massa vitae, semper mi. Quisque et arcu neque. Suspendisse sit amet mauris suscipit, ornare urna ut, tincidunt sem.',
+    repositoryUrl: 'string',
+    createdAt: 1,
+    imageUrl: 'string',
+    requirementsTags: [
+      { type: RequirementType.RAM, value: '4GB' },
+      { type: RequirementType.CPU, value: 'ASD' },
+      { type: RequirementType.STORAGE, value: '30GB' },
+      { type: RequirementType.OS, value: 'Windows 10 PRO' },
+      {
+        type: RequirementType.GLOBAL_VARIABLE,
+        value: 'GLOBAL_SETTING_1',
+        description: 'asdfasdfasdf',
+      },
+      {
+        type: RequirementType.GLOBAL_VARIABLE,
+        value: 'GLOBAL_SETTING_2',
+        description: 'asdfasdfasdf',
+      },
+      {
+        type: RequirementType.GLOBAL_VARIABLE,
+        value: 'GLOBAL_SETTING_3',
+        description: 'asdfasdfasdf',
+      },
+      {
+        type: RequirementType.GLOBAL_VARIABLE,
+        value: 'GLOBAL_SETTING_4',
+        description: 'asdfasdfasdf',
+      },
+      {
+        type: RequirementType.GLOBAL_VARIABLE,
+        value: 'GLOBAL_SETTING_5',
+        description: 'asdfasdfasdf',
+      },
+    ],
+  });
+
 interface Props {
   task: Task;
   index: number;
@@ -49,7 +91,8 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   const [accordionView, setAccordionView] = useState<
     'info' | 'settings' | null
   >(null);
-  const [isNodeToolsValid, setIsNodeToolsValid] = useState(false);
+  const [isGlobalToolsValid, setIsGlobalToolsValid] = useState(false);
+  const [isTaskToolsValid, setIsTaskToolsValid] = useState(false);
   const [isTaskValidToRun, setIsTaskValidToRun] = useState(false);
   const [stake, setStake] = useState<number>(0);
   const [meetsMinimumStake, setMeetsMinimumStake] = useState<boolean>(false);
@@ -73,44 +116,46 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     accountPublicKey: mainAccountPubKey as string,
   });
 
-  const handleToggleSettings = () => {
-    const newView = accordionView === 'settings' ? null : 'settings';
+  const handleToggleView = (view: 'info' | 'settings') => {
+    const newView = accordionView === view ? null : view;
     setAccordionView(newView);
   };
 
-  const handleToggleInfo = () => {
-    if (accordionView === 'info') {
-      setAccordionView(null);
-      return;
-    }
-    setAccordionView('info');
+  const handleGlobalToolsValidationCheck = (isValid: boolean) => {
+    setIsGlobalToolsValid(isValid);
   };
 
-  const handleNodeToolsValidationCheck = (isValid: boolean) => {
-    setIsNodeToolsValid(isValid);
+  const handleTaskToolsValidationCheck = (isValid: boolean) => {
+    setIsTaskToolsValid(isValid);
   };
 
   const isFirstRowInTable = index === 0;
   const nodes = useMemo(() => TaskService.getNodesCount(task), [task]);
   const topStake = useMemo(() => TaskService.getTopStake(task), [task]);
-  // const bountyPerRoundInKoii = useMemo(
-  //   () => getKoiiFromRoe(bountyAmountPerRound),
-  //   [bountyAmountPerRound]
-  // );
+  const bountyPerRoundInKoii = useMemo(
+    () => getKoiiFromRoe(task.totalBountyAmount),
+    [task.totalBountyAmount]
+  );
 
   const { data: minStake } = useQuery([QueryKeys.minStake, publicKey], () =>
     TaskService.getMinStake(task)
   );
 
+  const { data: taskMetadata } = useQuery(
+    [QueryKeys.TaskMetadata, publicKey],
+    () => getTaskMetadata('where do we get this CID from?')
+  );
+
   const validateTask = useCallback(() => {
     const hasMinimumStake = stake >= (minStake as number);
-    const isTaskValid = hasMinimumStake && isNodeToolsValid;
+    const isTaskValid =
+      hasMinimumStake && isGlobalToolsValid && isTaskToolsValid;
     setIsTaskValidToRun(isTaskValid);
-  }, [isNodeToolsValid, minStake, stake]);
+  }, [isGlobalToolsValid, isTaskToolsValid, minStake, stake]);
 
   useEffect(() => {
     validateTask();
-  }, [minStake, stake, validateTask, isNodeToolsValid]);
+  }, [validateTask]);
 
   const handleStartTask = async () => {
     const stakeAmount = alreadyStakedTokensAmount || stake;
@@ -162,20 +207,27 @@ function TaskItem({ task, index, columnsLayout }: Props) {
 
   const getTaskDetailsComponent = useCallback(() => {
     if (accordionView === 'info') {
-      return <TaskInfo task={task} onShowCodeClick={showCodeModal} />;
+      return (
+        <TaskInfo
+          taskPubKey={task.publicKey}
+          info={taskMetadata}
+          onShowCodeClick={showCodeModal}
+          onToolsValidation={handleGlobalToolsValidationCheck}
+        />
+      );
     }
 
     if (accordionView === 'settings') {
       return (
         <TaskSettings
           taskPubKey={task.publicKey}
-          onNodeToolsValidation={handleNodeToolsValidationCheck}
+          onToolsValidation={handleTaskToolsValidationCheck}
         />
       );
     }
 
     return null;
-  }, [accordionView, task, showCodeModal]);
+  }, [accordionView, task, showCodeModal, taskMetadata]);
 
   return (
     <TableRow columnsLayout={columnsLayout} className="py-2">
@@ -186,6 +238,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
         >
           <div className="flex flex-col items-center justify-start w-10">
             <Button
+              onClick={() => handleToggleView('info')}
               icon={
                 <Icon
                   source={
@@ -195,7 +248,6 @@ function TaskItem({ task, index, columnsLayout }: Props) {
                 />
               }
               onlyIcon
-              onClick={handleToggleInfo}
             />
           </div>
         </Tooltip>
@@ -213,7 +265,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
         title={taskManager}
       >
         <div className="truncate">{`Creator: ${task.taskName}`}</div>
-        <div className="truncate">{`Bounty: ${task.totalBountyAmount}`}</div>
+        <div className="truncate">{`Bounty: ${bountyPerRoundInKoii}`}</div>
       </div>
 
       <div
@@ -240,9 +292,9 @@ function TaskItem({ task, index, columnsLayout }: Props) {
             placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
             tooltipContent="Open task settings"
           >
-            <div className="flex flex-col items-center justify-start w-[40px]">
+            <div className="flex flex-col items-center justify-start w-10">
               <Button
-                onClick={handleToggleSettings}
+                onMouseDown={() => handleToggleView('settings')}
                 icon={
                   <Icon
                     source={SettingsFill}

@@ -7,16 +7,29 @@ type ROE = number;
 type EndTimestamp = number;
 
 export interface TaskMetadata {
-  createdAt: number;
+  author: string;
   description: string;
-  nodeSpec: {
-    storage: string;
-    cpu: string;
-    memory: string;
-    os: string;
-    network: string;
-    other: string;
-  };
+  repositoryUrl: string;
+  createdAt: number;
+  imageUrl: string;
+  requirementsTags: RequirementTag[];
+}
+
+interface RequirementTag {
+  type: RequirementType;
+  value?: string;
+  description?: string;
+}
+
+export enum RequirementType {
+  GLOBAL_VARIABLE = 'GLOBAL_VARIABLE',
+  TASK_VARIABLE = 'TASK_VARIABLE',
+  CPU = 'CPU',
+  RAM = 'RAM',
+  STORAGE = 'STORAGE',
+  NETWORK = 'NETWORK',
+  ARCHITECTURE = 'ARCHITECTURE',
+  OS = 'OS',
 }
 
 export interface TaskData {

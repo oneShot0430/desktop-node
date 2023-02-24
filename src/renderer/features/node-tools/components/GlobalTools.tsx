@@ -40,7 +40,7 @@ interface Tool {
 type PropsType = {
   taskPubKey: string;
   onToolsValidation?: (isValid: boolean) => void;
-  tools: Tool[];
+  tools?: Tool[];
 };
 
 export const GlobalTools = ({
