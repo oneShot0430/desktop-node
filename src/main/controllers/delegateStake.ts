@@ -13,13 +13,13 @@ import {
 } from '@_koi/web3.js';
 import config from 'config';
 import { namespaceInstance } from 'main/node/helpers/Namespace';
+import sdk from 'main/services/sdk';
 import {
   ErrorType,
   NetworkErrors,
   DelegateStakeParam,
   DelegateStakeResponse,
 } from 'models';
-import sdk from 'services/sdk';
 import { throwDetailedError } from 'utils';
 
 import { getAppDataPath } from '../node/helpers/getAppDataPath';

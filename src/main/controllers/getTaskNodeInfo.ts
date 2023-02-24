@@ -5,7 +5,7 @@ import { ErrorType } from 'models';
 import { GetTaskNodeInfoResponse } from 'models/api';
 import { throwDetailedError } from 'utils';
 
-import sdk from '../../services/sdk';
+import sdk from '../services/sdk';
 import { Task } from '../type/TaskData';
 
 import fetchAlltasks from './fetchAlltasks';

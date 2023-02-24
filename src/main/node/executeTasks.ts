@@ -1,6 +1,6 @@
-import koiiTasks from '../../services/koiiTasks';
 import startTask from '../controllers/startTask';
 import errorHandler from '../errorHandler';
+import koiiTasks from '../services/koiiTasks';
 
 const executeTasks = async (): Promise<any> => {
   const executableTasks = koiiTasks.getRunningTasks();

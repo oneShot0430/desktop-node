@@ -46,6 +46,7 @@ const endpointToControllerMap: Record<
     controllers.getTasksPairedWithVariable,
   [Endpoints.GET_STORED_PAIRED_TASK_VARIABLES]:
     controllers.getStoredPairedTaskVariables,
+  [Endpoints.GET_ACCOUNT_BALANCE]: controllers.getAccountBalance,
 };
 const initHandlers = (): void => {
   Object.entries(endpointToControllerMap).forEach(

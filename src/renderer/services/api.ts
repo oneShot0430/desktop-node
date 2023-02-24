@@ -58,11 +58,7 @@ export const getRewardEarned = async (task: Task): Promise<number> => {
 export const getMainAccountBalance = (): Promise<number> => {
   return window.main
     .getMainAccountPubKey()
-    .then((pubkey) => {
-      return 123;
-      // TODO move to BACK END - renderer cannot use native deps
-      // return sdk.k2Connection.getBalance(new PublicKey(pubkey));
-    })
+    .then((pubKey) => getAccountBalance(pubKey))
     .then(getKoiiFromRoe)
     .then((balance) => {
       console.log('GETTING MAIN ACCOUNT BALANCE', balance);
@@ -71,14 +67,10 @@ export const getMainAccountBalance = (): Promise<number> => {
 };
 
 export const getAccountBalance = (pubKey: string) => {
-  return Promise.resolve(123);
-  // return sdk.k2Connection
-  //   .getBalance(new PublicKey(pubKey))
-  //   .then(getKoiiFromRoe)
-  //   .then((balance) => {
-  //     console.log('GETTING ACCOUNT BALANCE', pubKey, balance);
-  //     return balance;
-  //   });
+  return window.main.getAccountBalance(pubKey).then((balance) => {
+    console.log('GETTING ACCOUNT BALANCE', pubKey, balance);
+    return balance;
+  });
 };
 
 export const getMainAccountPublicKey = (): Promise<string> => {

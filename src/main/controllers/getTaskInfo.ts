@@ -1,8 +1,8 @@
 import { Event } from 'electron';
 
 import { PublicKey } from '@_koi/web3.js';
+import sdk from 'main/services/sdk';
 import { ErrorType, GetTaskInfoParam, GetTaskInfoResponse } from 'models';
-import sdk from 'services/sdk';
 import { throwDetailedError } from 'utils';
 
 export const getTaskInfo = async (

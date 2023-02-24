@@ -1,7 +1,7 @@
 import { Request, Response, Express } from 'express';
+import koiiState from 'main/services/koiiState';
 
 import config from '../../../config';
-import koiiState from '../../../services/koiiState';
 import errorHandler from '../../errorHandler';
 
 import app from './app';

@@ -3,9 +3,8 @@ import proxy from 'express-http-proxy';
 
 import cors from 'cors';
 import express, { Express, Request, Response, NextFunction } from 'express';
-
-import koiiState from '../../../services/koiiState';
-import koiiTasks from '../../../services/koiiTasks';
+import koiiState from 'main/services/koiiState';
+import koiiTasks from 'main/services/koiiTasks';
 
 import routes from './routes';
 

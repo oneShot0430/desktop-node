@@ -1,6 +1,6 @@
 import { isNil, max, min, sum, isString } from 'lodash';
+import arweave from 'main/services/arweave';
 import { Task, TaskStatus } from 'renderer/types';
-import arweave from 'services/arweave';
 
 import { getStakingAccountPublicKey } from './api';
 

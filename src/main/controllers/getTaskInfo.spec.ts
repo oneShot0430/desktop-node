@@ -1,6 +1,6 @@
 import { PublicKey } from '@_koi/web3.js';
+import sdk from 'main/services/sdk';
 import { GetTaskInfoParam, TaskData } from 'models';
-import sdk from 'services/sdk';
 
 import { getTaskInfo } from './getTaskInfo';
 

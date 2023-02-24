@@ -12,9 +12,9 @@ import { Keypair, PublicKey } from '@_koi/web3.js';
 import axios from 'axios';
 import config from 'config';
 import { Namespace, namespaceInstance } from 'main/node/helpers/Namespace';
+import koiiTasks from 'main/services/koiiTasks';
 import { ErrorType } from 'models';
 import { TaskStartStopParam } from 'models/api';
-import koiiTasks from 'services/koiiTasks';
 import { throwDetailedError } from 'utils';
 
 import { getAppDataPath } from '../node/helpers/getAppDataPath';

@@ -1,6 +1,6 @@
 import { Request, Response, Express } from 'express';
+import koiiTasks from 'main/services/koiiTasks';
 
-import koiiTasks from '../../../services/koiiTasks';
 import helpers from '../helpers';
 
 const heartbeat = (req: Request, res: Response): void => {

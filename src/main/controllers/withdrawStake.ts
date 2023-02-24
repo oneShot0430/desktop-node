@@ -10,9 +10,9 @@ import {
 } from '@_koi/web3.js';
 import config from 'config';
 import { namespaceInstance } from 'main/node/helpers/Namespace';
+import sdk from 'main/services/sdk';
 import { ErrorType, NetworkErrors } from 'models';
 import { WithdrawStakeParam } from 'models/api';
-import sdk from 'services/sdk';
 import { throwDetailedError } from 'utils';
 
 import { getAppDataPath } from '../node/helpers/getAppDataPath';

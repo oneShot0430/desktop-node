@@ -2,7 +2,7 @@ import { PublicKey } from '@_koi/web3.js';
 import config from 'config';
 import { FetchAllTasksParam } from 'models/api';
 
-import sdk from '../../services/sdk';
+import sdk from '../services/sdk';
 import { Task, TaskData } from '../type/TaskData';
 
 async function fetchAllTasks(
