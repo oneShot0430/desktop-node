@@ -19,17 +19,14 @@ export const getTaskSource = async (
   const taskData = await getTaskInfo({} as Event, payload, 'getTaskSource');
 
   const isTaskDeployedToIPFS = isIPFS.cid(taskData.taskAuditProgram);
-  const retrieveFromArweave = async () =>
-    (
-      await axios.get<string>(
-        `${config.node.ARWEAVE_GATEWAY_URL}/${taskData.taskAuditProgram}`
-      )
-    ).data;
+  const retrieveFromArweave = async (cid: string) =>
+    (await axios.get<string>(`${config.node.ARWEAVE_GATEWAY_URL}/${cid}`))
+      ?.data;
 
   try {
     const sourceCode = isTaskDeployedToIPFS
       ? await retrieveFromIPFS(taskData.taskAuditProgram)
-      : await retrieveFromArweave();
+      : await retrieveFromArweave(taskData.taskAuditProgram);
 
     return sourceCode;
   } catch (e: any) {
