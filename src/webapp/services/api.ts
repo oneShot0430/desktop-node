@@ -8,8 +8,8 @@ import {
   StoreUserConfigParam,
   PairTaskVariableParamType,
 } from 'models/api';
-import { Task } from 'webapp/types';
 import { getKoiiFromRoe } from 'utils';
+import { Task } from 'webapp/types';
 
 import { Task as TaskRaw } from '../../main/type/TaskData';
 

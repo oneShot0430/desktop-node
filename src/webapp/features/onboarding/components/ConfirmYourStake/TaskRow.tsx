@@ -5,11 +5,11 @@ import { twMerge } from 'tailwind-merge';
 import CheckmarkIconSvg from 'assets/svgs/checkmark-teal-icon.svg';
 import CodeIconSvg from 'assets/svgs/code-icon.svg';
 import EditIconSvg from 'assets/svgs/edit-icon.svg';
+import { getKoiiFromRoe } from 'utils';
 import { Button, EditStakeInput } from 'webapp/components/ui';
 import { useTaskDetailsModal } from 'webapp/features/common';
 import { getMainAccountPublicKey, QueryKeys } from 'webapp/services';
 import { TaskWithStake } from 'webapp/types';
-import { getKoiiFromRoe } from 'utils';
 
 interface PropsType {
   task: TaskWithStake;

@@ -1,12 +1,12 @@
 import React from 'react';
 import { useQuery } from 'react-query';
 
+import { getKoiiFromRoe } from 'utils';
 import {
   AppNotification,
   useNotificationsContext,
 } from 'webapp/features/notifications';
 import { getTaskNodeInfo, QueryKeys } from 'webapp/services';
-import { getKoiiFromRoe } from 'utils';
 
 import { useUserAppConfig } from '../../features/common/hooks/useUserAppConfig';
 

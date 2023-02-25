@@ -10,6 +10,7 @@ import { useQuery, useQueryClient } from 'react-query';
 
 import PlayIcon from 'assets/svgs/play-icon.svg';
 import StopTealIcon from 'assets/svgs/stop-icon-teal.svg';
+import { getKoiiFromRoe } from 'utils';
 import {
   Button,
   LoadingSpinner,
@@ -32,7 +33,6 @@ import {
   startTask,
 } from 'webapp/services';
 import { Task } from 'webapp/types';
-import { getKoiiFromRoe } from 'utils';
 
 import { TaskInfo } from './TaskInfo';
 import { TaskSettings } from './TaskSettings';

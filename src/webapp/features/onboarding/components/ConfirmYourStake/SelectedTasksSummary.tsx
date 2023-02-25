@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 
 import { sum } from 'lodash';
-import { TaskWithStake } from 'webapp/types';
 import { getKoiiFromRoe } from 'utils';
+import { TaskWithStake } from 'webapp/types';
 
 import { TaskRow } from './TaskRow';
 

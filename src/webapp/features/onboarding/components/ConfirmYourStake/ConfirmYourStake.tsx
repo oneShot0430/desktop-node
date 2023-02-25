@@ -4,11 +4,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import config from 'config';
 import { sum } from 'lodash';
+import { getKoiiFromRoe } from 'utils';
 import { ErrorMessage, Button } from 'webapp/components/ui';
-import {
-  useNotEnoughFunds,
-  useRunMultipleTasks,
-} from 'webapp/features/common';
+import { useNotEnoughFunds, useRunMultipleTasks } from 'webapp/features/common';
 import {
   useMainAccountBalance,
   useUserAppConfig,
@@ -16,7 +14,6 @@ import {
 import { TaskWithStake } from 'webapp/types';
 import { AppRoute } from 'webapp/types/routes';
 import { ErrorContext } from 'webapp/utils';
-import { getKoiiFromRoe } from 'utils';
 
 import { SelectedTasksSummary } from './SelectedTasksSummary';
 

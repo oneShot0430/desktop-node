@@ -9,7 +9,7 @@ import {
 import { logsMock } from './mocks';
 import { Tab } from './types';
 
-const Settings = () => {
+function Settings() {
   const [selectedTab, setTab] = useState(Tab.AccountsTable);
 
   return (
@@ -20,6 +20,6 @@ const Settings = () => {
       {selectedTab === Tab.NodeLogs && <NodeLogs logs={logsMock} />}
     </div>
   );
-};
+}
 
 export default memo(Settings);

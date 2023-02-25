@@ -9,6 +9,7 @@ import {
 import React, { useMemo, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
+import { getKoiiFromRoe } from 'utils';
 import {
   Button,
   Tooltip,
@@ -26,7 +27,6 @@ import {
 import { useEarnedReward } from 'webapp/features/common/hooks/useEarnedReward';
 import { stopTask, startTask, TaskService, getLogs } from 'webapp/services';
 import { Task } from 'webapp/types';
-import { getKoiiFromRoe } from 'utils';
 
 type PropsType = {
   task: Task;

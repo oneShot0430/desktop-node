@@ -4,9 +4,9 @@ import { useNavigate } from 'react-router-dom';
 
 import RestoreIconSvg from 'assets/svgs/onboarding/restore-orange-icon.svg';
 import BgShape from 'assets/svgs/onboarding/shape_1.svg';
+import { getKoiiFromRoe } from 'utils';
 import { Button } from 'webapp/components/ui';
 import { AppRoute } from 'webapp/types/routes';
-import { getKoiiFromRoe } from 'utils';
 
 import { useRunFirstTasksLogic } from './hooks';
 import TaskItem from './TaskItem';

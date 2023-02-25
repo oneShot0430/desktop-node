@@ -3,6 +3,7 @@ import React, { useCallback, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { GetTaskNodeInfoResponse } from 'models/api';
+import { getKoiiFromRoe } from 'utils';
 import { Button } from 'webapp/components/ui';
 import { Modal, ModalContent, ModalTopBar } from 'webapp/features/modals';
 import {
@@ -14,7 +15,6 @@ import {
   TaskService,
 } from 'webapp/services';
 import { Task } from 'webapp/types';
-import { getKoiiFromRoe } from 'utils';
 
 import { useTaskStake } from '../../hooks/useTaskStake';
 
