@@ -16,8 +16,8 @@ import {
   Tooltip,
   TableRow,
   ColumnsLayout,
-} from 'webapp/components';
-import { useClipboard } from 'webapp/features/common';
+} from 'webapp/components/ui';
+import { useClipboard } from 'webapp/features/common/hooks/useClipboard';
 import { useConfirmModal } from 'webapp/features/common/modals/ConfirmationModal';
 
 import { useAccount, useAccountBalance } from '../../hooks';

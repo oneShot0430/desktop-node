@@ -1,7 +1,7 @@
 import { AddLine, Icon } from '@_koii/koii-styleguide';
 import React, { memo, useMemo } from 'react';
 
-import { Button, Table } from 'webapp/components';
+import { Button, Table } from 'webapp/components/ui';
 import { useAddNewAccountModal } from 'webapp/features/common/hooks/useAddNewAccountModal';
 
 import { useAccounts } from '../../hooks';

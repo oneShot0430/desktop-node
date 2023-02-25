@@ -2,10 +2,10 @@ import { create, useModal } from '@ebay/nice-modal-react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Button } from 'webapp/components';
-import { useFundNewAccountModal } from 'webapp/features/common';
+import { Button } from 'webapp/components/ui';
+import { useFundNewAccountModal } from 'webapp/features/common/hooks/useFundAccountModal';
 import { Modal, ModalContent, ModalTopBar } from 'webapp/features/modals';
-import { useUserAppConfig } from 'webapp/features/settings';
+import { useUserAppConfig } from 'webapp/features/settings/hooks/useUserAppConfig';
 import { Theme } from 'webapp/types/common';
 import { AppRoute } from 'webapp/types/routes';
 

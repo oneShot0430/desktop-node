@@ -5,7 +5,7 @@ import { useQueryClient } from 'react-query';
 
 import { PinInput } from 'webapp/components/PinInput';
 import { ErrorMessage, Button } from 'webapp/components/ui';
-import { useUserSettings } from 'webapp/features/common/hooks';
+import { useUserSettings } from 'webapp/features/common/hooks/userSettings';
 import { ModalContent } from 'webapp/features/modals';
 import {
   createNodeWallets,

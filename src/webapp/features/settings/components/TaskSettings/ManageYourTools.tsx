@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useTaskVariable } from 'webapp/features/common/hooks';
+import { useTaskVariable } from 'webapp/features/common/hooks/useTaskVariable';
 
 import { TaskVariableItem } from './TaskVariableItem';
 
