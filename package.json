@@ -76,9 +76,7 @@
       "\\.(css|less|sass|scss)$": "identity-obj-proxy",
       "uuid": "uuid"
     },
-    "setupFiles": [
-      "./.erb/scripts/check-build-exists.ts"
-    ],
+    "setupFiles": [],
     "testEnvironment": "jsdom",
     "testEnvironmentOptions": {
       "url": "http://localhost/"
