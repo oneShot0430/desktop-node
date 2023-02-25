@@ -87,7 +87,7 @@ const tasks = [
   },
 ];
 
-jest.mock('main/controllers', () => ({
+jest.mock('../getTaskSource', () => ({
   getTaskSource: jest.fn(
     (event: Event, { taskAccountPubKey }: GetTaskSourceParam) => {
       const { sourceCode } = tasks.find(
