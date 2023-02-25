@@ -1,12 +1,13 @@
 import { Event } from 'electron';
 
-import axios from 'axios';
 // eslint-disable-next-line
 // @ts-ignore
 import * as isIPFS from 'is-ipfs';
 
+import axios from 'axios';
 import config from 'config';
 import { ErrorType, GetTaskSourceParam } from 'models';
+import { retrieveFromIPFS } from 'services/ipfs';
 import { throwDetailedError } from 'utils';
 
 import { getTaskInfo } from './getTaskInfo';
@@ -18,13 +19,19 @@ export const getTaskSource = async (
   const taskData = await getTaskInfo({} as Event, payload, 'getTaskSource');
 
   const isTaskDeployedToIPFS = isIPFS.cid(taskData.taskAuditProgram);
-  const url = isTaskDeployedToIPFS
-    ? `${config.node.IPFS_GATEWAY_URL}/${taskData.taskAuditProgram}/main.js`
-    : `${config.node.ARWEAVE_GATEWAY_URL}/${taskData.taskAuditProgram}`;
+  const retrieveFromArweave = async () =>
+    (
+      await axios.get<string>(
+        `${config.node.ARWEAVE_GATEWAY_URL}/${taskData.taskAuditProgram}`
+      )
+    ).data;
 
   try {
-    const { data: src } = await axios.get<string>(url);
-    return src;
+    const sourceCode = isTaskDeployedToIPFS
+      ? await retrieveFromIPFS(taskData.taskAuditProgram)
+      : await retrieveFromArweave();
+
+    return sourceCode;
   } catch (e: any) {
     console.error(e);
     return throwDetailedError({
