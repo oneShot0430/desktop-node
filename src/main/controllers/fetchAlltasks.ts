@@ -6,7 +6,7 @@ import sdk from '../services/sdk';
 import { Task, TaskData } from '../type/TaskData';
 
 async function fetchAllTasks(
-  event: Event,
+  _: Event,
   payload?: FetchAllTasksParam
 ): Promise<Task[]> {
   const { offset, limit } = payload || {};
@@ -21,8 +21,6 @@ async function fetchAllTasks(
     (e) =>
       e.account.data.length > config.node.MINIMUM_ACCEPTED_LENGTH_TASK_CONTRACT
   );
-  // eslint-disable-next-line
-  // @ts-ignore
   const tasks: Task[] = taskAccountInfo
     .map((rawData) => {
       try {
