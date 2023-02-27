@@ -19,8 +19,8 @@ export function TableHeaders({ headers, columnsLayout }: PropsType) {
 
   return (
     <div className={containerClasses}>
-      {headers.map(({ title, tooltip }) => (
-        <div key={title} className="font-semibold text-white">
+      {headers.map(({ title, tooltip }, index) => (
+        <div key={`${title}${index}`} className="font-semibold text-white">
           {tooltip ? (
             <Tooltip placement="top-right" tooltipContent={tooltip}>
               {title}
