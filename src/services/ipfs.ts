@@ -13,7 +13,7 @@ function makeStorageClient(token: string) {
 export async function retrieveFromIPFS(cid: string) {
   const storedTaskVariables = await getStoredTaskVariables();
   const userWeb3StorageKey = Object.values(storedTaskVariables).find(
-    ({ label }) => label === 'Web3_storage_key'
+    ({ label }) => label === 'WEB3_STORAGE_KEY'
   )?.value;
 
   if (userWeb3StorageKey) {
