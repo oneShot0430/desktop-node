@@ -256,22 +256,22 @@ export const getTaskMetadata = async (
       {
         type: RequirementType.GLOBAL_VARIABLE,
         value: 'ELECTRON_RUN_AS_NODE',
-        description: 'asdfasdfasdf',
+        description: 'This is a description',
       },
       {
         type: RequirementType.GLOBAL_VARIABLE,
         value: 'ARM_VERSION',
-        description: 'asdfasdfasdf',
+        description: 'This is a description',
       },
       {
         type: RequirementType.TASK_VARIABLE,
         value: 'DEBUG_MIME',
-        description: 'asdfasdfasdf',
+        description: 'This is a description',
       },
       {
         type: RequirementType.TASK_VARIABLE,
         value: 'PREBUILDS_ONLY',
-        description: 'asdfasdfasdf',
+        description: 'This is a description',
       },
     ],
   });

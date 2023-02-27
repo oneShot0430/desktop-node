@@ -17,10 +17,7 @@ import {
 import { pairTaskVariable } from 'renderer/services';
 
 import { getPairedTaskVariablesForTask } from '../helpers';
-import {
-  useAllStoredPairedTaskVariables,
-  useTaskVariablesNames,
-} from '../hooks';
+import { useAllStoredPairedTaskVariables } from '../hooks';
 
 import { NodeTool } from './NodeTool';
 
@@ -32,16 +29,6 @@ type PropsType = {
 
 export function NodeTools({ taskPubKey, onToolsValidation, tools }: PropsType) {
   const [isAllVariablesPaired, setIsAllVariablesPaired] = useState(false);
-
-  const {
-    taskVariablesNamesQuery: {
-      data: taskVariablesNames,
-      isLoading: isLoadingTaskVariablesNames,
-      error: taskVariablesNamesError,
-    },
-  } = useTaskVariablesNames({ taskPubKey });
-
-  console.log('taskVariablesNames: ', taskVariablesNames);
 
   const {
     storedPairedTaskVariablesQuery: {
@@ -65,8 +52,6 @@ export function NodeTools({ taskPubKey, onToolsValidation, tools }: PropsType) {
       const isAllVariablesPaired = tools?.every(
         ({ value }) => !!selectedTools[value as string]
       );
-
-      console.log('tools: ', tools, 'selectedTools: ', selectedTools);
 
       setIsAllVariablesPaired(isAllVariablesPaired);
       onToolsValidation?.(isAllVariablesPaired);
@@ -124,13 +109,6 @@ export function NodeTools({ taskPubKey, onToolsValidation, tools }: PropsType) {
 
   const hasError = pairedVariablesError || isPairingTasksVariablesError;
   const isLoading = isLoadingPairedVariables;
-
-  console.log(
-    'isAllVariablesPaired: ',
-    isAllVariablesPaired,
-    'isPairingTasksVariables: ',
-    isPairingTasksVariables
-  );
 
   if (hasError) {
     return (
