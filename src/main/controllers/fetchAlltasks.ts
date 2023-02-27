@@ -21,6 +21,8 @@ async function fetchAllTasks(
     (e) =>
       e.account.data.length > config.node.MINIMUM_ACCEPTED_LENGTH_TASK_CONTRACT
   );
+  // eslint-disable-next-line
+  // @ts-ignore
   const tasks: Task[] = taskAccountInfo
     .map((rawData) => {
       try {
@@ -43,18 +45,20 @@ async function fetchAllTasks(
           isRunning: false,
         };
         const task: Task = {
-          publicKey: rawTaskData.pubkey.toBase58(),
+          publicKey: rawData.pubkey.toBase58(),
           data: taskData,
         };
         return task;
-      } catch (e: any) {
+      } catch (e) {
         return null;
       }
     })
+
     .filter(
       (task): task is Task =>
         task !== null && task.data.isWhitelisted && task.data.isActive
     );
+
   if (Number.isInteger(offset) && Number.isInteger(limit) && offset && limit) {
     return tasks.slice(offset, offset + limit);
   }
