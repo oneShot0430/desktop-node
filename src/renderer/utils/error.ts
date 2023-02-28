@@ -65,7 +65,7 @@ export const errorTypeToContent = {
   [ErrorType.TASK_NOT_FOUND]:
     "Hmm... We can't find this Task, try a different one",
   [ErrorType.NO_TASK_SOURCECODE]:
-    'There was an error collecting the Task information from Arweave. Try again or let us know about the issue',
+    'There was an error collecting the Task information from IPFS or Arweave. Try again or let us know about the issue',
   [ErrorType.NO_RUNNING_TASK]:
     "All good here, that task isn't running right now",
   [ErrorType.TRANSACTION_TIMEOUT]:

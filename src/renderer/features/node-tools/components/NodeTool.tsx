@@ -20,7 +20,6 @@ export function NodeTool({
   defaultVariableId,
   onInit,
 }: PropsType) {
-  // eslint-disable-next-line import/no-named-as-default-member
   const { storedTaskVariablesQuery } = useStoredTaskVariables();
   const { data: taskVariables, isLoading } = storedTaskVariablesQuery;
 
