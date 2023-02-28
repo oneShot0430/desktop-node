@@ -1,7 +1,5 @@
 import { Event } from 'electron';
 
-// eslint-disable-next-line
-// @ts-ignore
 import * as isIPFS from 'is-ipfs';
 
 import axios from 'axios';

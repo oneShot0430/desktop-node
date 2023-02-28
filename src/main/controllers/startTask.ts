@@ -7,8 +7,6 @@ import { Event } from 'electron';
 import * as fsSync from 'fs';
 
 import cryptoRandomString from 'crypto-random-string';
-// eslint-disable-next-line
-// @ts-ignore
 import * as isIPFS from 'is-ipfs';
 
 import { Keypair, PublicKey } from '@_koi/web3.js';
