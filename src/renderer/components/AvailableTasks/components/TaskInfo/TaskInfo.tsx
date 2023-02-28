@@ -34,7 +34,7 @@ export function TaskInfo({
   );
 
   const globalSettings = info?.requirementsTags.filter(
-    ({ type }) => type === 'GLOBAL_VARIABLE' || type === 'TASK_VARIABLE'
+    ({ type }) => type === 'GLOBAL_VARIABLE'
   );
 
   return (

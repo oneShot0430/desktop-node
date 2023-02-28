@@ -239,9 +239,10 @@ export const getTasksPairedWithVariable = async (variableId: string) => {
 
 export const getTaskMetadata = async (
   metadataCID: string
-): Promise<TaskMetadata> =>
-  // TO DO: replace mock with actual fetch from IPFS once we have both the CID available within the Task structure and the metadata deployed
-  Promise.resolve({
+): Promise<TaskMetadata> => {
+  // return await window.main.getTaskMetadata({ metadataCID });
+
+  return Promise.resolve({
     author: 'string',
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sit amet commodo mi. Vestibulum finibus risus ac tellus tempor semper. Aliquam consequat gravida viverra. Mauris mi lectus, convallis et placerat non, ultrices ut purus. Cras at purus vel mauris sodales lobortis posuere vel risus. Quisque eu aliquet diam, id dignissim nunc. Aliquam non lectus viverra, varius massa vitae, semper mi. Quisque et arcu neque. Suspendisse sit amet mauris suscipit, ornare urna ut, tincidunt sem.',
@@ -275,6 +276,7 @@ export const getTaskMetadata = async (
       },
     ],
   });
+};
 
 export const claimRewards = async () => {
   const getPendingRewardsByTask = (task: Task) =>

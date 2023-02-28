@@ -22,3 +22,4 @@ export * from './getTaskNodeInfo';
 export * from './taskVariables';
 export * from './getTaskVariablesNames';
 export * from './getTaskSource';
+export * from './getTaskMetadata';
