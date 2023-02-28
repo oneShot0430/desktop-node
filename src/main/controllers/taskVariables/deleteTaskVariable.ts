@@ -1,7 +1,6 @@
 import { Event } from 'electron';
 
 import { isString, map } from 'lodash';
-
 import { namespaceInstance } from 'main/node/helpers/Namespace';
 import {
   DeleteTaskVariableParamType,
@@ -40,9 +39,12 @@ export const deleteTaskVariable = async (
     });
   }
 
-  const tasksUsingVariable: Task[] = await getTasksPairedWithVariable(null, {
-    variableId: idForDeletion,
-  });
+  const tasksUsingVariable: Task[] = await getTasksPairedWithVariable(
+    {} as Event,
+    {
+      variableId: idForDeletion,
+    }
+  );
 
   // unpair every task using variable for deletion
   console.log(
@@ -53,12 +55,11 @@ export const deleteTaskVariable = async (
   );
 
   await Promise.all(
-    tasksUsingVariable.map(
-      async ({ publicKey }) =>
-        await unpairTaskVariable(null, {
-          taskAccountPubKey: publicKey,
-          desktopVariableId: idForDeletion,
-        })
+    tasksUsingVariable.map(async ({ publicKey }) =>
+      unpairTaskVariable({} as Event, {
+        taskAccountPubKey: publicKey,
+        desktopVariableId: idForDeletion,
+      })
     )
   );
 

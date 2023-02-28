@@ -10,7 +10,9 @@ export const getStoredTaskVariables =
     );
 
     try {
-      const parsedData: TaskVariablesReturnType = JSON.parse(taskVariables);
+      const parsedData: TaskVariablesReturnType = JSON.parse(
+        taskVariables as string
+      );
 
       return parsedData || {};
     } catch (error) {

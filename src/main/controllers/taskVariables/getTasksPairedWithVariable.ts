@@ -1,5 +1,4 @@
 import { isString } from 'lodash';
-
 import {
   ErrorType,
   GetTasksPairedWithVariableParamType,
@@ -7,7 +6,7 @@ import {
 } from 'models';
 import { throwDetailedError } from 'utils';
 
-import { getTasksById } from '..';
+import { getTasksById } from '../getTasksById';
 
 import { getStoredPairedTaskVariables } from './getStoredPairedTaskVariables';
 
@@ -30,5 +29,5 @@ export const getTasksPairedWithVariable = async (
       Object.values(pairedTaskVariables[taskId]).includes(payload.variableId)
   );
 
-  return getTasksById(null, { tasksIds: taskIdsUsingVariable });
+  return getTasksById(_, { tasksIds: taskIdsUsingVariable });
 };

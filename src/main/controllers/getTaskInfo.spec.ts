@@ -1,11 +1,10 @@
 import { PublicKey } from '@_koi/web3.js';
-
+import sdk from 'main/services/sdk';
 import { GetTaskInfoParam, TaskData } from 'models';
-import sdk from 'services/sdk';
 
 import { getTaskInfo } from './getTaskInfo';
 
-jest.mock('services/sdk', () => {
+jest.mock('main/services/sdk', () => {
   return {
     k2Connection: {
       getAccountInfo: jest.fn(),
@@ -57,8 +56,8 @@ describe('getTaskInfo', () => {
     const invalidPayload = {};
 
     await expect(
-      getTaskInfo(null, invalidPayload as GetTaskInfoParam)
-    ).rejects.toThrowError(/payload is not valid/i);
+      getTaskInfo({} as Event, invalidPayload as GetTaskInfoParam)
+    ).rejects.toThrow(/payload is not valid/i);
   });
 
   it('throws an error if no Task on K2', async () => {
@@ -68,7 +67,7 @@ describe('getTaskInfo', () => {
       taskAccountPubKey: k2PublicKeyExample,
     };
 
-    await expect(getTaskInfo(null, validPayload)).rejects.toThrowError(
+    await expect(getTaskInfo({} as Event, validPayload)).rejects.toThrow(
       /task not found/i
     );
   });
@@ -82,7 +81,7 @@ describe('getTaskInfo', () => {
       taskAccountPubKey: k2PublicKeyExample,
     };
 
-    await expect(getTaskInfo(null, validPayload)).rejects.toThrowError(
+    await expect(getTaskInfo({} as Event, validPayload)).rejects.toThrow(
       /Task data not found/i
     );
   });
@@ -96,7 +95,7 @@ describe('getTaskInfo', () => {
       taskAccountPubKey: k2PublicKeyExample,
     };
 
-    await expect(getTaskInfo(null, validPayload)).rejects.toThrowError(
+    await expect(getTaskInfo({} as Event, validPayload)).rejects.toThrow(
       /Error during Task parsing/i
     );
   });
@@ -112,6 +111,8 @@ describe('getTaskInfo', () => {
       taskAccountPubKey: k2PublicKeyExample,
     };
 
-    await expect(await getTaskInfo(null, validPayload)).toEqual(parsedTaskData);
+    await expect(await getTaskInfo({} as Event, validPayload)).toEqual(
+      parsedTaskData
+    );
   });
 });

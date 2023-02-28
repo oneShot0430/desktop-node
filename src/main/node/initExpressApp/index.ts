@@ -1,13 +1,13 @@
 import { Request, Response, Express } from 'express';
+import koiiState from 'main/services/koiiState';
 
-import config from 'config';
-import errorHandler from 'main/errorHandler';
-import koiiState from 'services/koiiState';
+import config from '../../../config';
+import errorHandler from '../../errorHandler';
 
 import app from './app';
 
 let isExpressListening = false;
-const initExpressApp = async (): Promise<Express> => {
+const initExpressApp = async (): Promise<Express | undefined> => {
   // skip stake for now
 
   if (isExpressListening) return;
@@ -31,6 +31,7 @@ const initExpressApp = async (): Promise<Express> => {
     console.log(`Express server started @ http://localhost:${port}`);
   });
 
+  // eslint-disable-next-line consistent-return
   return expressApp;
 };
 

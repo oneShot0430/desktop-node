@@ -27,7 +27,7 @@ export const getPairedVariablesNamesWithValues = async (
   }
 
   // task validation
-  await validateTask(null, payload, 'GetPairedVariablesNamesWithValues');
+  await validateTask({} as Event, payload, 'GetPairedVariablesNamesWithValues');
 
   const pairedTaskVariables = await getStoredPairedTaskVariables();
 
@@ -44,7 +44,7 @@ export const getPairedVariablesNamesWithValues = async (
 
   return Object.entries(taskPairings).reduce(
     (res, [taskVariableName, desktopVariableId]) => {
-      if (desktopVariableId == OMITTED_VARIABLE_IDENTIFIER) {
+      if (desktopVariableId === OMITTED_VARIABLE_IDENTIFIER) {
         return res;
       }
 

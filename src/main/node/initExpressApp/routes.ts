@@ -1,6 +1,5 @@
 import { Request, Response, Express } from 'express';
-
-import koiiTasks from 'services/koiiTasks';
+import koiiTasks from 'main/services/koiiTasks';
 
 import helpers from '../helpers';
 
@@ -18,7 +17,7 @@ const nodes = async (req: Request, res: Response): Promise<any> => {
     res.status(200).send(nodes);
   } catch (err) {
     console.error('Error during "nodes" request:', err);
-    res.status(500).send({ error: 'ERROR: ' + err });
+    res.status(500).send({ error: `ERROR: ${err}` });
   }
 };
 
@@ -34,7 +33,7 @@ const registerNodes = async (req: Request, res: Response): Promise<any> => {
     }
   } catch (err) {
     console.error('Error during "register-node" request:', err);
-    res.status(500).send({ error: 'ERROR: ' + err });
+    res.status(500).send({ error: `ERROR: ${err}` });
   }
 };
 
@@ -50,9 +49,9 @@ export default (app: Express) => {
     if (!req.body.secret)
       return res.status(422).send({ message: 'No secret provided' });
 
-    const args = req.body.args;
-    const taskId = req.body.taskId;
-    if (koiiTasks.RUNNING_TASKS[taskId].secret != req.body.secret) {
+    const { args } = req.body;
+    const { taskId } = req.body;
+    if (koiiTasks.RUNNING_TASKS[taskId].secret !== req.body.secret) {
       return res.status(401).send({ message: 'Invalid secret provided' });
     }
     try {
@@ -60,9 +59,9 @@ export default (app: Express) => {
       const response = await (koiiTasks.RUNNING_TASKS[taskId] as any).namespace[
         args[0]
       ](...params);
-      res.status(200).send({ response });
-    } catch (err) {
-      res.status(422).send({ message: err.message });
+      return res.status(200).send({ response });
+    } catch (err: any) {
+      return res.status(422).send({ message: err.message });
     }
   });
 };

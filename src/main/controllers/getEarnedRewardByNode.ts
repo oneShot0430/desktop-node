@@ -2,7 +2,6 @@ import { Event } from 'electron';
 import * as fsSync from 'fs';
 
 import { Keypair } from '@_koi/web3.js';
-
 import { namespaceInstance } from 'main/node/helpers/Namespace';
 import { ErrorType } from 'models';
 import { throwDetailedError } from 'utils';
@@ -18,8 +17,8 @@ const rewardWallet = async (
   payload: rewardWalletPayload
 ): Promise<unknown> => {
   const { available_balances } = payload;
-  //console.log('AVAILABLE_BALANCE', available_balances);
-  //console.log('IN THE API');
+  // console.log('AVAILABLE_BALANCE', available_balances);
+  // console.log('IN THE API');
   let stakingAccKeypair;
   const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
   if (!activeAccount) {
@@ -28,8 +27,7 @@ const rewardWallet = async (
       type: ErrorType.NO_ACTIVE_ACCOUNT,
     });
   }
-  const stakingWalletfilePath =
-    getAppDataPath() + `/namespace/${activeAccount}_stakingWallet.json`;
+  const stakingWalletfilePath = `${getAppDataPath()}/namespace/${activeAccount}_stakingWallet.json`;
   try {
     stakingAccKeypair = Keypair.fromSecretKey(
       Uint8Array.from(
@@ -37,24 +35,25 @@ const rewardWallet = async (
       )
     );
     const stakingPubkey = stakingAccKeypair.publicKey.toBase58();
-    //console.log('STAKING PUBLIC KEY', stakingPubkey);
+    // console.log('STAKING PUBLIC KEY', stakingPubkey);
     const size = Object.keys(available_balances).length;
-    //console.log('SIZE', size);
+    // console.log('SIZE', size);
     const keys = Object.keys(available_balances);
     const values = Object.values(available_balances);
     let reward: unknown;
 
+    // eslint-disable-next-line no-plusplus
     for (let i = 0; i < size; i++) {
       // eslint-disable-next-line prefer-const
       let candidatePublicKey = keys[i];
       console.log('CANDIDATE PUBLIC KEY', candidatePublicKey);
-      if (candidatePublicKey == stakingPubkey) {
+      if (candidatePublicKey === stakingPubkey) {
         reward = values[i];
         console.log('REWARD', reward);
       }
     }
     return reward;
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
     return throwDetailedError({
       detailed: e,

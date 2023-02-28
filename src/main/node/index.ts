@@ -1,16 +1,17 @@
 import fs from 'fs';
 
 import * as dotenv from 'dotenv';
-
-dotenv.config();
-import { namespaceInstance } from 'main/node/helpers/Namespace';
 import { ErrorType } from 'models';
 import { throwDetailedError } from 'utils';
 
 import executeTasks from './executeTasks';
 import { getAppDataPath } from './helpers/getAppDataPath';
+import { namespaceInstance } from './helpers/Namespace';
+
+dotenv.config();
 // import loadTasks from './loadTasks';
 
+// eslint-disable-next-line consistent-return
 export default async (): Promise<any> => {
   // if (!process.env.NODE_MODE) throw new Error('env not found');
   /* Connect Redis */
@@ -37,8 +38,7 @@ export default async (): Promise<any> => {
         type: ErrorType.NO_ACTIVE_ACCOUNT,
       });
     }
-    const mainWalletfilePath =
-      getAppDataPath() + `/wallets/${activeAccount}_mainSystemWallet.json`;
+    const mainWalletfilePath = `${getAppDataPath()}/wallets/${activeAccount}_mainSystemWallet.json`;
     if (fs.existsSync(mainWalletfilePath)) {
       /* Loading and Executing last running tasks */
       setTimeout(() => {
@@ -46,7 +46,7 @@ export default async (): Promise<any> => {
         executeTasks();
       }, 5000);
     }
-  } catch (e) {
+  } catch (e: any) {
     console.error('ERROR In TASK start', e);
   }
 };

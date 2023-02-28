@@ -50,10 +50,10 @@ describe('getPairedVariablesNamesWithValues', () => {
 
     await expect(
       getPairedVariablesNamesWithValues(
-        null,
+        {} as Event,
         invalidPayload as GetPairedVariablesNamesWithValuesParamType
       )
-    ).rejects.toThrowError(/payload is not valid/i);
+    ).rejects.toThrow(/payload is not valid/i);
   });
 
   it('throws an error if there are no pairings for a Task', async () => {
@@ -68,8 +68,8 @@ describe('getPairedVariablesNamesWithValues', () => {
     });
 
     await expect(
-      getPairedVariablesNamesWithValues(null, validPayload)
-    ).rejects.toThrowError(/No pairings found for Task/i);
+      getPairedVariablesNamesWithValues({} as Event, validPayload)
+    ).rejects.toThrow(/No pairings found for Task/i);
   });
 
   it('throws an error if paired variable  is not stored', async () => {
@@ -86,8 +86,8 @@ describe('getPairedVariablesNamesWithValues', () => {
     getStoredTaskVariablesMock.mockResolvedValue({});
 
     await expect(
-      getPairedVariablesNamesWithValues(null, validPayload)
-    ).rejects.toThrowError(/No paired Task variable stored/i);
+      getPairedVariablesNamesWithValues({} as Event, validPayload)
+    ).rejects.toThrow(/No paired Task variable stored/i);
   });
 
   it('returns proper map of Task Variable Name to Variable Value', async () => {
@@ -109,7 +109,7 @@ describe('getPairedVariablesNamesWithValues', () => {
     });
 
     await expect(
-      await getPairedVariablesNamesWithValues(null, validPayload)
+      await getPairedVariablesNamesWithValues({} as Event, validPayload)
     ).toEqual({ [variableName]: 'value' });
   });
 });

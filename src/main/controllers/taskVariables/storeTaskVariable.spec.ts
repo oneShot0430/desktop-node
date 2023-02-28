@@ -41,8 +41,8 @@ describe('storeTaskVariable', () => {
     const invalidPayload = {};
 
     await expect(
-      storeTaskVariable(null, invalidPayload as unknown as never)
-    ).rejects.toThrowError();
+      storeTaskVariable({} as Event, invalidPayload as unknown as never)
+    ).rejects.toThrow();
   });
 
   it('throws an error if the label already exists', async () => {
@@ -56,8 +56,8 @@ describe('storeTaskVariable', () => {
     };
 
     await expect(
-      storeTaskVariable(null, existingLabelPayload)
-    ).rejects.toThrowError();
+      storeTaskVariable({} as Event, existingLabelPayload)
+    ).rejects.toThrow();
   });
 
   it('stores the task variable if the payload is valid and the label does not exist', async () => {
@@ -75,8 +75,8 @@ describe('storeTaskVariable', () => {
     const validPayload = { label: 'new label', value: 'some new value' };
 
     await expect(
-      storeTaskVariable(null, validPayload)
-    ).resolves.not.toThrowError();
+      storeTaskVariable({} as Event, validPayload)
+    ).resolves.not.toThrow();
 
     expect(namespaceInstance.storeSet).toHaveBeenCalledWith(
       PersistentStoreKeys.TaskVariables,

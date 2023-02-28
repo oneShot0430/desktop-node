@@ -1,9 +1,8 @@
 import { Event } from 'electron';
 
 import { PublicKey } from '@_koi/web3.js';
-
+import sdk from 'main/services/sdk';
 import { ErrorType, GetTaskInfoParam, GetTaskInfoResponse } from 'models';
-import sdk from 'services/sdk';
 import { throwDetailedError } from 'utils';
 
 export const getTaskInfo = async (
@@ -27,17 +26,17 @@ export const getTaskInfo = async (
 
   if (!accountInfo || !accountInfo.data)
     return throwDetailedError({
-      detailed: `Task not found${context ? ' in context of ' + context : ''}`,
+      detailed: `Task not found${context ? ` in context of ${context}` : ''}`,
       type: ErrorType.TASK_NOT_FOUND,
     });
 
   let taskData;
   try {
     taskData = JSON.parse(accountInfo.data.toString());
-  } catch (e) {
+  } catch (e: any) {
     return throwDetailedError({
       detailed: `Error during Task parsing${
-        context ? ' in context of ' + context : ''
+        context ? ` in context of ${context}` : ''
       }: ${e}`,
       type: ErrorType.TASK_NOT_FOUND,
     });
@@ -46,7 +45,7 @@ export const getTaskInfo = async (
   if (!taskData) {
     return throwDetailedError({
       detailed: `Task data not found${
-        context ? ' in context of ' + context : ''
+        context ? ` in context of ${context}` : ''
       }`,
       type: ErrorType.TASK_NOT_FOUND,
     });

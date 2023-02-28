@@ -8,14 +8,13 @@ stages:
 install:
   stage: prerequisites
   script:
-    - yarn install --cache-folder .yarn
+    - npm install
 
   artifacts:
     name: 'artifacts'
     untracked: true
     expire_in: 30 mins
     paths:
-      - .yarn/
       - node_modules/
 
 lint:
@@ -23,14 +22,14 @@ lint:
   needs: ['install']
 
   script:
-    - yarn run lint
+    - npm run lint
 
 test:
   stage: checks
   needs: ['install']
 
   script:
-    - yarn run test:unit-webapp
+    - npm run test
   dependencies:
     - install
 
@@ -38,20 +37,14 @@ build:
   stage: checks
   needs: ['install']
 
-  before_script:
-    - apt-get update -qq && apt-get install
-    - apt -y install dpkg
-    - apt update -y && apt upgrade -y
-    - apt install fakeroot -y
-
   script:
-    - yarn make
+    - npm run package
   artifacts:
     name: 'artifacts'
     untracked: true
     expire_in: 30 mins
     paths:
-      - out
+      - release/build
   dependencies:
     - install
 
@@ -60,20 +53,10 @@ deploy:
   needs: ['build']
   only:
     - main
-  
+
   before_script:
-    - apt-get update -qq && apt-get install
-    - apt -y install dpkg
-    - apt update -y && apt upgrade -y
-    - apt install fakeroot -y
-    - apt-get install awscli -y
     - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
     - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
 
   script:
-    - ls -ltr out/make/deb/x64/
-    - mkdir .public
-    - cp -r out/make/deb/x64/* .public
-    - mv .public public
-    - ls -ltr public/
-    - aws s3 cp public/* s3://cdn.koii.live --acl public-read   
+    - aws s3 cp release/build/* s3://cdn.koii.live --acl public-read

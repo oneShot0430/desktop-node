@@ -8,7 +8,7 @@ import errorHandler from './errorHandler';
 
 const endpointToControllerMap: Record<
   Endpoints,
-  (event: Event, ...args: unknown[]) => unknown
+  (event: Event, ...args: any[]) => unknown
 > = {
   [Endpoints.GET_TASKS]: controllers.getTasks,
   [Endpoints.GET_MY_TASKS]: controllers.getMyTasks,
@@ -46,6 +46,7 @@ const endpointToControllerMap: Record<
     controllers.getTasksPairedWithVariable,
   [Endpoints.GET_STORED_PAIRED_TASK_VARIABLES]:
     controllers.getStoredPairedTaskVariables,
+  [Endpoints.GET_ACCOUNT_BALANCE]: controllers.getAccountBalance,
 };
 const initHandlers = (): void => {
   Object.entries(endpointToControllerMap).forEach(

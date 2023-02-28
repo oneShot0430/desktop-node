@@ -1,8 +1,8 @@
 const colors = require('tailwindcss/colors');
 
 module.exports = {
-  content: ['./src/**/*.{js,jsx,ts,tsx}', './src/index.html'],
-  media: false, // or 'media' or 'class'
+  content: ['./src/renderer/**/*.{js,jsx,ts,tsx,ejs}'],
+  media: false,
   theme: {
     fontFamily: {
       sans: ['Sora', 'Open Sans', 'ui-sans-serif', 'system-ui'],
@@ -156,6 +156,7 @@ module.exports = {
       },
     },
   },
+
   variants: {
     extend: {},
   },

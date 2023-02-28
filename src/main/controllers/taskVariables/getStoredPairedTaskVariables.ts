@@ -13,7 +13,9 @@ export const getStoredPairedTaskVariables =
     );
 
     try {
-      const parsedData: PairedTaskVariables = JSON.parse(taskVariables);
+      const parsedData: PairedTaskVariables = JSON.parse(
+        taskVariables as string
+      );
 
       return parsedData || {};
     } catch (error) {

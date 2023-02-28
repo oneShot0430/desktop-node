@@ -33,8 +33,8 @@ describe('editTaskVariable', () => {
     const invalidPayload = {};
 
     await expect(
-      editTaskVariable(null, invalidPayload as never)
-    ).rejects.toThrowError();
+      editTaskVariable({} as Event, invalidPayload as never)
+    ).rejects.toThrow();
   });
 
   it('throws an error if variable is not found by id', async () => {
@@ -51,8 +51,8 @@ describe('editTaskVariable', () => {
     };
 
     await expect(
-      editTaskVariable(null, nonExistingIdPayload)
-    ).rejects.toThrowError();
+      editTaskVariable({} as Event, nonExistingIdPayload)
+    ).rejects.toThrow();
   });
 
   it('throws an error if variable is found by ID but there is other variable with given label', async () => {
@@ -71,8 +71,8 @@ describe('editTaskVariable', () => {
     };
 
     await expect(
-      editTaskVariable(null, nonExistingIdPayload)
-    ).rejects.toThrowError();
+      editTaskVariable({} as Event, nonExistingIdPayload)
+    ).rejects.toThrow();
   });
 
   it('changes the task variable label and value if the payload is valid and the ID does exist', async () => {
@@ -89,8 +89,8 @@ describe('editTaskVariable', () => {
     };
 
     await expect(
-      editTaskVariable(null, validPayload)
-    ).resolves.not.toThrowError();
+      editTaskVariable({} as Event, validPayload)
+    ).resolves.not.toThrow();
 
     expect(namespaceInstance.storeSet).toHaveBeenCalledWith(
       PersistentStoreKeys.TaskVariables,
@@ -112,8 +112,8 @@ describe('editTaskVariable', () => {
     };
 
     await expect(
-      editTaskVariable(null, validPayload)
-    ).resolves.not.toThrowError();
+      editTaskVariable({} as Event, validPayload)
+    ).resolves.not.toThrow();
 
     expect(namespaceInstance.storeSet).toHaveBeenCalledWith(
       PersistentStoreKeys.TaskVariables,
@@ -135,8 +135,8 @@ describe('editTaskVariable', () => {
     };
 
     await expect(
-      editTaskVariable(null, validPayload)
-    ).resolves.not.toThrowError();
+      editTaskVariable({} as Event, validPayload)
+    ).resolves.not.toThrow();
 
     expect(namespaceInstance.storeSet).toHaveBeenCalledWith(
       PersistentStoreKeys.TaskVariables,

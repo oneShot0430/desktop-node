@@ -1,5 +1,11 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
+
+import jwt from 'jsonwebtoken';
+import levelup from 'levelup';
 
 import {
   Keypair,
@@ -15,12 +21,10 @@ import {
 } from '@_koi/web3.js';
 import axios from 'axios';
 import bs58 from 'bs58';
-import jwt from 'jsonwebtoken';
-import levelup from 'levelup';
 import nacl from 'tweetnacl';
 
-import { ErrorType, NetworkErrors } from 'models';
-import { throwDetailedError } from 'utils';
+import { ErrorType, NetworkErrors } from '../../../models';
+import { throwDetailedError } from '../../../utils';
 
 import { getAppDataPath } from './getAppDataPath';
 import leveldbWrapper from './leveldb';
@@ -94,22 +98,34 @@ class Namespace {
    * @param {*} expressApp // Express app for configuration
    */
   taskTxId: string;
+
   app: any;
+
   /**
    * @todo: All redis dependencies should be removed
    */
   redisClient?: any;
+
   taskData: TaskData;
+
   #mainSystemAccount: Keypair;
+
   mainSystemAccountPubKey: PublicKey;
+
   db: levelup.LevelUp;
 
   programId: PublicKey;
+
   taskAccountInfo: AccountInfo<Buffer> | null;
+
   submitterAccountKeyPair: Keypair;
+
   submitterPubkey: string;
+
   connection: Connection;
+
   taskStateInfoPublicKey: any;
+
   STAKE_POT_ACCOUNT: any;
 
   constructor(
@@ -149,8 +165,7 @@ class Namespace {
             Uint8Array.from(
               JSON.parse(
                 fs.readFileSync(
-                  getAppDataPath() +
-                    `/wallets/${activeAccount}_mainSystemWallet.json`,
+                  `${getAppDataPath()}/wallets/${activeAccount}_mainSystemWallet.json`,
                   'utf-8'
                 )
               )
@@ -192,7 +207,8 @@ class Namespace {
         asBuffer: false,
       });
       return response;
-    } catch (e) {
+    } catch (e: any) {
+      // eslint-disable-next-line eqeqeq
       if (e.type == 'NotFoundError') {
         console.error(key, 'Not found');
       } else {
@@ -201,6 +217,7 @@ class Namespace {
       return null;
     }
   }
+
   /**
    * Namespace wrapper of storeGetAsync
    * @param {string} key // Path to get
@@ -212,7 +229,8 @@ class Namespace {
         asBuffer: false,
       });
       return response;
-    } catch (e) {
+    } catch (e: any) {
+      // eslint-disable-next-line eqeqeq
       if (e.type == 'NotFoundError') {
         console.error(key, 'Not found');
       } else {
@@ -221,6 +239,7 @@ class Namespace {
       return null;
     }
   }
+
   /**
    * Namespace wrapper over storeSetAsync
    * @param {string} key Path to set
@@ -230,7 +249,7 @@ class Namespace {
   async storeSet(key: string, value: string): Promise<void> {
     try {
       await this.db.put(this.taskTxId + key, value);
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       throw e;
     }
@@ -273,11 +292,13 @@ class Namespace {
   //     }
   // }
 
+  // eslint-disable-next-line class-methods-use-this
   async JwtSign(data: object, secret: string): Promise<string> {
     const accessToken = jwt.sign(data, secret);
     return accessToken;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   async JwtVerify(accessToken: string, secret: string): Promise<any> {
     const response = jwt.verify(accessToken, secret);
     return response;
@@ -368,27 +389,28 @@ class Namespace {
    * @returns {Promise<any>}
    */
   async fs(method: any, path: any, ...args: any) {
-    const basePath = getAppDataPath() + '/namespace/' + this.taskTxId;
+    const basePath = `${getAppDataPath()}/namespace/${this.taskTxId}`;
     await fsPromises.mkdir(basePath, { recursive: true }).catch(console.error);
     return fsPromises[method](`${basePath}/${path}`, ...args);
   }
 
+  // eslint-disable-next-line class-methods-use-this
   async fsStaking(method: any, path: any, ...args: any) {
-    const basePath = getAppDataPath() + '/namespace/';
+    const basePath = `${getAppDataPath()}/namespace/`;
     await fsPromises.mkdir(basePath, { recursive: true }).catch(console.error);
     return fsPromises[method](`${basePath}/${path}`, ...args);
   }
 
   async fsWriteStream(imagepath: string) {
-    const basePath = getAppDataPath() + '/namespace/' + this.taskTxId;
+    const basePath = `${getAppDataPath()}/namespace/${this.taskTxId}`;
     await fsPromises.mkdir(basePath, { recursive: true }).catch(console.error);
-    const image = basePath + '/' + imagepath;
+    const image = `${basePath}/${imagepath}`;
     const writer = fs.createWriteStream(image);
     return writer;
   }
 
   async fsReadStream(imagepath: string) {
-    const basePath = getAppDataPath() + '/namespace/' + this.taskTxId;
+    const basePath = `${getAppDataPath()}/namespace/${this.taskTxId}`;
     await fsPromises.mkdir(basePath, { recursive: true }).catch(console.error);
     const image = basePath + imagepath;
     const file = fs.readFileSync(image);
@@ -431,12 +453,13 @@ class Namespace {
    * @param {Function} callback // Callback function on traffic receive
    */
   express(method: any, path: any, callback: any) {
-    return this.app[method]('/' + this.taskTxId + path, callback);
+    return this.app[method](`/${this.taskTxId}${path}`, callback);
   }
 
   /**
    * Loads redis client
    */
+  // eslint-disable-next-line class-methods-use-this
   loadRedisClient(config?: redisConfig): void {
     const host =
       config && config.redis_ip
@@ -445,7 +468,7 @@ class Namespace {
     const port =
       config && config.redis_port
         ? config.redis_port
-        : parseInt(process.env.REDIS_PORT || ('6379' as string));
+        : parseInt(process.env.REDIS_PORT || ('6379' as string), 10);
     const password =
       config && config.redis_password
         ? config.redis_password
@@ -454,6 +477,7 @@ class Namespace {
       config && config.username ? config.username : process.env.REDIS_USERNAME;
     if (!host || !port) throw Error('CANNOT READ REDIS IP OR PORT FROM ENV');
   }
+
   /**
    * Wrapper function for the OnChain submission for Task contract
    * @param {Connection} connection // The k2 connection object
@@ -471,7 +495,7 @@ class Namespace {
     const data = encodeData(TASK_INSTRUCTION_LAYOUTS.SubmitTask, {
       submission: new TextEncoder().encode(
         padStringWithSpaces(submission, 512)
-      ), //must be 512 chracters long
+      ), // must be 512 chracters long
     });
     const instruction = new TransactionInstruction({
       keys: [
@@ -487,7 +511,7 @@ class Namespace {
         },
       ],
       programId: TASK_CONTRACT_ID,
-      data: data,
+      data,
     });
 
     try {
@@ -497,7 +521,7 @@ class Namespace {
         [this.#mainSystemAccount, submitterKeypair]
       );
       return result;
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       const errorType = e.message
         .toLowerCase()
@@ -510,6 +534,7 @@ class Namespace {
       });
     }
   }
+
   /**
    * Wrapper function for the OnChain Voting for Task contract
    * @param {Connection} connection // The k2 connection object
@@ -523,7 +548,9 @@ class Namespace {
     isValid: boolean,
     voterKeypair: Keypair
   ): Promise<string> {
+    // eslint-disable-next-line no-param-reassign
     candidatePubkey = new PublicKey(candidatePubkey);
+    // eslint-disable-next-line no-param-reassign
     if (!voterKeypair) voterKeypair = this.submitterAccountKeyPair;
     const data = encodeData(TASK_INSTRUCTION_LAYOUTS.Vote, {
       is_valid: isValid,
@@ -536,11 +563,11 @@ class Namespace {
           isWritable: true,
         },
         { pubkey: voterKeypair.publicKey, isSigner: true, isWritable: true },
-        { pubkey: candidatePubkey, isSigner: false, isWritable: false }, //Candidate public key who submitted the task and you are approving whose task is correct
+        { pubkey: candidatePubkey, isSigner: false, isWritable: false }, // Candidate public key who submitted the task and you are approving whose task is correct
         { pubkey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false },
       ],
       programId: TASK_CONTRACT_ID,
-      data: data,
+      data,
     });
     try {
       const result = await sendAndConfirmTransaction(
@@ -549,7 +576,7 @@ class Namespace {
         [this.#mainSystemAccount, voterKeypair]
       );
       return result;
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       const errorType = e.message
         .toLowerCase()
@@ -586,7 +613,7 @@ class Namespace {
         { pubkey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false },
       ],
       programId: TASK_CONTRACT_ID,
-      data: data,
+      data,
     });
     try {
       const response = await sendAndConfirmTransaction(
@@ -595,7 +622,7 @@ class Namespace {
         [this.#mainSystemAccount, stakingAccKeypair]
       );
       return response;
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       const errorType = e.message
         .toLowerCase()
@@ -623,9 +650,7 @@ class Namespace {
     const instruction = new TransactionInstruction({
       keys: [
         {
-          pubkey: taskStateInfoPublicKey
-            ? taskStateInfoPublicKey
-            : this.taskStateInfoPublicKey,
+          pubkey: taskStateInfoPublicKey || this.taskStateInfoPublicKey,
           isSigner: false,
           isWritable: true,
         },
@@ -634,7 +659,7 @@ class Namespace {
         { pubkey: beneficiaryAccount, isSigner: false, isWritable: true },
       ],
       programId: TASK_CONTRACT_ID,
-      data: data,
+      data,
     });
     console.log(
       'this.mainSystemAccount',
@@ -647,7 +672,7 @@ class Namespace {
         [this.#mainSystemAccount, claimerKeypair]
       );
       return response;
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       const errorType = e.message
         .toLowerCase()
@@ -682,7 +707,7 @@ class Namespace {
       );
       console.log('SIGNATURE', signature);
       return signature;
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       const errorType = e.message
         .toLowerCase()
@@ -696,12 +721,14 @@ class Namespace {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   async bs58Encode(data: any): Promise<string> {
     return bs58.encode(
       Buffer.from(data.buffer, data.byteOffset, data.byteLength)
     );
   }
 
+  // eslint-disable-next-line class-methods-use-this
   async bs58Decode(data: any): Promise<any> {
     return new Uint8Array(bs58.decode(data));
   }
@@ -713,7 +740,7 @@ class Namespace {
   async signData(data: any) {
     const msg = new TextEncoder().encode(JSON.stringify(data));
     const signedMessage = nacl.sign(msg, this.#mainSystemAccount.secretKey);
-    return await this.bs58Encode(signedMessage);
+    return this.bs58Encode(signedMessage);
   }
 
   async verifySignedData(signedData: any, publicKey: any) {
@@ -725,7 +752,7 @@ class Namespace {
       if (!payload) return { error: 'Empty payload' };
       const decodedPayload = new TextDecoder().decode(payload);
       return { data: decodedPayload };
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       return { error: 'Empty payload' };
     }
@@ -741,8 +768,10 @@ class Namespace {
     transaction: any,
     signers: any[]
   ): Promise<string> {
+    // eslint-disable-next-line no-param-reassign
     signers = signers.map((e) =>
       Keypair.fromSecretKey(
+        // eslint-disable-next-line no-underscore-dangle
         Uint8Array.from(Object.values(e._keypair.secretKey))
       )
     );
@@ -773,6 +802,7 @@ class Namespace {
       new PublicKey(this.taskStateInfoPublicKey)
     );
     if (this.taskAccountInfo === null) {
+      // eslint-disable-next-line no-throw-literal
       throw 'Error: cannot find the task contract data';
     }
     return JSON.parse(this.taskAccountInfo.data.toString());
@@ -787,8 +817,7 @@ class Namespace {
     try {
       const ACTIVE_ACCOUNT = 'ACTIVE_ACCOUNT';
       const activeAccount = await this.#storeGetRaw(ACTIVE_ACCOUNT);
-      const STAKING_WALLET_PATH =
-        getAppDataPath() + `/namespace/${activeAccount}_stakingWallet.json`;
+      const STAKING_WALLET_PATH = `${getAppDataPath()}/namespace/${activeAccount}_stakingWallet.json`;
       console.log({ STAKING_WALLET_PATH });
       if (!fs.existsSync(STAKING_WALLET_PATH)) return null;
       submitterAccount = Keypair.fromSecretKey(
@@ -797,7 +826,7 @@ class Namespace {
         )
       );
       console.log({ submitterAccount });
-    } catch (e) {
+    } catch (e: any) {
       console.error(
         'Staking wallet not found. Please create a staking wallet and place it in the namespace folder'
       );
@@ -893,10 +922,12 @@ class Namespace {
   async checkSubmissionAndUpdateRound(submissionValue = 'default') {
     console.log('******/  IN SUBMISSION /******');
     const taskAccountDataJSON = await this.getTaskState();
-    const current_round = taskAccountDataJSON.current_round;
+    // eslint-disable-next-line camelcase
+    const { current_round } = taskAccountDataJSON;
     console.log('Submitting for round', current_round);
     try {
       const result = await this.storeGet('round');
+      // eslint-disable-next-line eqeqeq,camelcase
       if (result == current_round) {
         console.log('No submission allowed until the next round');
       } else {
@@ -920,6 +951,7 @@ class Namespace {
       console.warn('Error submitting task to chain', err);
     }
   }
+
   /**
    * @description Get the latest Task State
    * @returns task data in JSON format
@@ -929,6 +961,7 @@ class Namespace {
       new PublicKey(DEFAULT_PROGRAM_ID)
     );
     if (this.taskAccountInfo === null) {
+      // eslint-disable-next-line no-throw-literal
       throw 'Error: cannot find the task contract data';
     }
     return programAccounts;
@@ -943,15 +976,19 @@ class Namespace {
     // await this.checkVoteStatus();
     console.log('******/  IN VOTING /******');
     const taskAccountDataJSON = await this.getTaskState();
-    const current_round = taskAccountDataJSON.current_round;
+    // eslint-disable-next-line camelcase
+    const { current_round } = taskAccountDataJSON;
+    // eslint-disable-next-line camelcase
     const expected_round = current_round - 1;
 
-    const status = taskAccountDataJSON.status;
+    const { status } = taskAccountDataJSON;
+    // eslint-disable-next-line camelcase
     const task_status = Object.keys(status)[0];
 
     // const voteStatus = await this.storeGet('voteStatus');
     const lastVotedRound = await this.storeGet('lastVotedRound');
     console.log(
+      // eslint-disable-next-line camelcase
       `Task status: ${task_status}, Last Voted Round: ${lastVotedRound}, Submissions: ${
         Object.keys(taskAccountDataJSON.submissions).length
       }`
@@ -965,18 +1002,22 @@ class Namespace {
 
     console.log('expected_round.toString()', lastVotedRound, expected_round);
     if (
+      // eslint-disable-next-line eqeqeq,camelcase
       lastVotedRound != expected_round.toString() &&
+      // eslint-disable-next-line camelcase,eqeqeq
       task_status == 'Voting' &&
       Object.keys(taskAccountDataJSON.submissions).length > 0
     ) {
       // Filter only submissions from last round
       const submissions: any = {};
+      // eslint-disable-next-line guard-for-in,no-restricted-syntax
       for (const id in taskAccountDataJSON.submissions) {
         console.log(
           'round - expected',
           taskAccountDataJSON.submissions[id].round,
           expected_round
         );
+        // eslint-disable-next-line camelcase,eqeqeq
         if (taskAccountDataJSON.submissions[id].round == expected_round) {
           submissions[id] = taskAccountDataJSON.submissions[id];
         }
@@ -987,14 +1028,17 @@ class Namespace {
       console.log('Submissions from last round: ', size, submissions);
       if (!this.submitterAccountKeyPair) await this.defaultTaskSetup();
 
+      // eslint-disable-next-line no-plusplus
       for (let i = 0; i < size; i++) {
         // Fetch candidate public key
         const candidatePublicKey = keys[i];
         const candidateKeyPairPublicKey = new PublicKey(keys[i]);
+        // eslint-disable-next-line eqeqeq
         if (candidatePublicKey == this.submitterPubkey) {
           console.log('YOU CANNOT VOTE ON YOUR OWN SUBMISSIONS');
         } else {
           // LOGIC for voting function
+          // eslint-disable-next-line eqeqeq
           const node = nodes.find((e) => e.submitterPubkey == keys[i]);
           const nodeData = node
             ? {
@@ -1005,6 +1049,7 @@ class Namespace {
           const isValid = validate(nodeData);
           console.log(`Voting ${isValid} to ${candidatePublicKey}`);
           try {
+            // eslint-disable-next-line no-await-in-loop
             const response = await this.voteOnChain(
               candidateKeyPairPublicKey,
               isValid,
@@ -1020,6 +1065,7 @@ class Namespace {
 
       // After every iteration of checking the Submissions the Voting will be closed for that round
       try {
+        // eslint-disable-next-line camelcase
         await this.storeSet('lastVotedRound', `${expected_round}`);
       } catch (err) {
         console.warn('Error setting voting status', err);
@@ -1047,17 +1093,21 @@ class Namespace {
       console.log('Submitter key', this.submitterPubkey);
     }
   }
+
   /**
    * @description Get URL from K2_NODE_URL environment variable
    */
+  // eslint-disable-next-line class-methods-use-this
   async getRpcUrl() {
-    return await getRpcUrlWrapper();
+    return getRpcUrlWrapper();
   }
+
   /**
    * Gets an array of service nodes
    * @param url URL of the service node to retrieve the array from a known service node
    * @returns Array of service nodes
    */
+  // eslint-disable-next-line class-methods-use-this
   async getNodes(url: string): Promise<Array<INode>> {
     try {
       const res = await axios.get(url + BUNDLER_NODES);
@@ -1082,12 +1132,11 @@ const namespaceInstance = new Namespace(
 async function getRpcUrlWrapper() {
   if (process.env.K2_NODE_URL) {
     return process.env.K2_NODE_URL;
-  } else {
-    console.warn(
-      'Failed to fetch URL from K2_NODE_URL environment variable setting it to https://k2-testnet.koii.live'
-    );
-    return 'https://k2-testnet.koii.live';
   }
+  console.warn(
+    'Failed to fetch URL from K2_NODE_URL environment variable setting it to https://k2-testnet.koii.live'
+  );
+  return 'https://k2-testnet.koii.live';
 }
 /**
  * @description Sleep utility function
@@ -1096,6 +1145,7 @@ async function getRpcUrlWrapper() {
  * Awaiting a function should suffice
  */
 async function sleep(ms: any) {
+  // eslint-disable-next-line no-promise-executor-return
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
@@ -1111,7 +1161,7 @@ async function getCacheNodes() {
       (await namespaceInstance.storeGet('nodeRegistry')) || '[]'
     );
     if (nodes === null) nodes = [];
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
     nodes = [];
   }
@@ -1146,9 +1196,10 @@ async function registerNodes(newNodes: any) {
   );
 
   // Verify each registration TODO process promises in parallel
+  // eslint-disable-next-line no-param-reassign
   newNodes = newNodes.filter(async (node: any) => {
     // Filter registrations that don't have an owner or url
-    const owner = node.owner;
+    const { owner } = node;
     if (typeof owner !== 'string') {
       console.error('Invalid node input:', node);
       return false;
@@ -1161,9 +1212,10 @@ async function registerNodes(newNodes: any) {
 
   // Filter out duplicate entries
   const latestNodes: any = {};
+  // eslint-disable-next-line no-restricted-syntax
   for (const node of nodes.concat(newNodes)) {
     // Filter registrations that don't have an owner or url
-    const owner = node.owner;
+    const { owner } = node;
     if (
       typeof owner !== 'string' ||
       node.data === undefined ||
@@ -1171,6 +1223,7 @@ async function registerNodes(newNodes: any) {
       typeof node.data.timestamp !== 'number'
     ) {
       console.error('Invalid node input:', node);
+      // eslint-disable-next-line no-continue
       continue;
     }
 
@@ -1201,7 +1254,7 @@ function encodeData(type: any, fields: any) {
   const allocLength =
     type.layout.span >= 0 ? type.layout.span : getAlloc(type, fields);
   const data = Buffer.alloc(allocLength);
-  const layoutFields = Object.assign({ instruction: type.index }, fields);
+  const layoutFields = { instruction: type.index, ...fields };
   type.layout.encode(layoutFields, data);
   return data;
 }
@@ -1219,7 +1272,8 @@ function getAlloc(type: any, fields: any) {
 
 function padStringWithSpaces(input: string, length: number) {
   if (input.length > length)
-    throw Error('Input exceeds the maxiumum length of ' + length);
+    throw Error(`Input exceeds the maxiumum length of ${length}`);
+  // eslint-disable-next-line no-param-reassign
   input = input.padEnd(length);
   return input;
 }

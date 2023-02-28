@@ -87,12 +87,12 @@ const tasks = [
   },
 ];
 
-jest.mock('main/controllers', () => ({
+jest.mock('../getTaskSource', () => ({
   getTaskSource: jest.fn(
     (event: Event, { taskAccountPubKey }: GetTaskSourceParam) => {
       const { sourceCode } = tasks.find(
         (task) => task.taskPublicKey === taskAccountPubKey
-      );
+      )!;
       return Promise.resolve(sourceCode);
     }
   ),
@@ -102,7 +102,7 @@ describe('getTaskVariablesNames', () => {
   it('returns an empty array if the task source code contains no task variables', async () => {
     const { taskPublicKey } = tasks[0];
 
-    const result = await getTaskVariablesNames(null, {
+    const result = await getTaskVariablesNames({} as Event, {
       taskPublicKey,
     });
 
@@ -112,7 +112,7 @@ describe('getTaskVariablesNames', () => {
   it('returns unique (non-repeated) task variables names if they are used in the source code of the task', async () => {
     const { taskPublicKey } = tasks[1];
 
-    const result = await getTaskVariablesNames(null, {
+    const result = await getTaskVariablesNames({} as Event, {
       taskPublicKey,
     });
 

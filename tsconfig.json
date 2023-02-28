@@ -1,21 +1,21 @@
 {
   "compilerOptions": {
-    "allowJs": true,
+    "incremental": true,
     "module": "commonjs",
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "noImplicitAny": true,
+    "lib": ["dom", "es2021"],
+    "strict": true,
     "sourceMap": true,
-    "outDir": "dist",
     "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
-    "jsx": "react",
+    "allowJs": true,
+    "outDir": ".erb/dll",
     "baseUrl": "./src",
-    "paths": {
-      "svgs/*": ["assets/svgs/*"],
-      "features/*": ["webapp/features/*"]
-    },
+    "skipLibCheck": true,
+    "noImplicitAny": true,
+    "jsx": "react",
     "target": "ES6"
   },
-  "include": ["src/**/*", "tests"]
+  "exclude": ["test", "release/build", "release/app/dist", ".erb/dll", ".erb/configs"]
 }

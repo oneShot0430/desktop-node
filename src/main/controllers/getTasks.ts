@@ -5,7 +5,9 @@ import { FetchAllTasksParam } from 'models/api';
 
 import fetchAlltasks from './fetchAlltasks';
 
-const getTasks = (event: Event, payload: FetchAllTasksParam): Task[] =>
-  fetchAlltasks(event, payload);
+const getTasks = async (
+  event: Event,
+  payload: FetchAllTasksParam
+): Promise<Task[]> => fetchAlltasks(event, payload);
 
 export default getTasks;

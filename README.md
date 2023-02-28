@@ -4,10 +4,11 @@
 
 This repo contains the desktop application as the UI for the [Koii Node](https://github.com/koii-network/node)
 
+The project structure is based on [Electron React Boilerplate](https://electron-react-boilerplate.js.org)
+
 ## Prerequisites
 
 - [NodeJS](https://nodejs.org/en/)
-- [Yarn](https://yarnpkg.com/getting-started/install) package manager
 
 ## Installation
 
@@ -17,30 +18,26 @@ This repo contains the desktop application as the UI for the [Koii Node](https:/
 git clone https://github.com/koii-network/desktop-node
 ```
 
-- Install packages:
+- Install dependencies / packages:
 
 ```
-yarn
+npm install
 ```
 
-- Then, start this project:
+## Starting Development
 
-```
-yarn start
-```
+Start the app in the `dev` environment:
 
-The application should be up and running
-
-## Testing
-
-- To run UI unit tests:
-
-```
-yarn test:unit-webapp
+```bash
+npm start
 ```
 
-- To run tests and generate coverage:
+## Packaging for Production
 
+To package apps for the local platform:
+
+```bash
+npm run package
 ```
-yarn test:unit-webapp --coverage
-```
+
+Then ready to be run/installed version of application can be found in `release/build`

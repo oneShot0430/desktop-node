@@ -34,16 +34,22 @@ describe('unpairTaskVariable', () => {
     const invalidPayload = {};
 
     await expect(
-      unpairTaskVariable(null, invalidPayload as UnpairTaskVariableParamType)
-    ).rejects.toThrowError(/payload is not valid/);
+      unpairTaskVariable(
+        {} as Event,
+        invalidPayload as UnpairTaskVariableParamType
+      )
+    ).rejects.toThrow(/payload is not valid/);
   });
 
   it('throws an error if the payload is not valid - missing Task Id', async () => {
     const invalidPayload = { desktopVariableId: 'test' };
 
     await expect(
-      unpairTaskVariable(null, invalidPayload as UnpairTaskVariableParamType)
-    ).rejects.toThrowError(/payload is not valid/);
+      unpairTaskVariable(
+        {} as Event,
+        invalidPayload as UnpairTaskVariableParamType
+      )
+    ).rejects.toThrow(/payload is not valid/);
   });
 
   it('throws an error if there is no pairings for provided Task', async () => {
@@ -56,7 +62,7 @@ describe('unpairTaskVariable', () => {
       desktopVariableId: 'test1',
     };
 
-    await expect(unpairTaskVariable(null, validPayload)).rejects.toThrowError(
+    await expect(unpairTaskVariable({} as Event, validPayload)).rejects.toThrow(
       /no pairings for Task/
     );
   });
@@ -71,7 +77,7 @@ describe('unpairTaskVariable', () => {
       desktopVariableId: 'test1',
     };
 
-    await expect(unpairTaskVariable(null, validPayload)).rejects.toThrowError(
+    await expect(unpairTaskVariable({} as Event, validPayload)).rejects.toThrow(
       /no pairings for stored Task/
     );
   });
@@ -87,8 +93,8 @@ describe('unpairTaskVariable', () => {
     };
 
     await expect(
-      unpairTaskVariable(null, validPayload)
-    ).resolves.not.toThrowError();
+      unpairTaskVariable({} as Event, validPayload)
+    ).resolves.not.toThrow();
 
     expect(namespaceInstance.storeSet).toHaveBeenCalledWith(
       PersistentStoreKeys.TaskToVariablesPairs,
@@ -107,8 +113,8 @@ describe('unpairTaskVariable', () => {
     };
 
     await expect(
-      unpairTaskVariable(null, validPayload)
-    ).resolves.not.toThrowError();
+      unpairTaskVariable({} as Event, validPayload)
+    ).resolves.not.toThrow();
 
     expect(namespaceInstance.storeSet).toHaveBeenCalledWith(
       PersistentStoreKeys.TaskToVariablesPairs,

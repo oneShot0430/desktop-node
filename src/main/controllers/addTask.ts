@@ -1,10 +1,9 @@
 import { Event } from 'electron';
 
+import koiiState from 'main/services/koiiState';
 import { ErrorType } from 'models';
-import koiiState from 'services/koiiState';
 import { throwDetailedError } from 'utils';
-
-import mainErrorHandler from '../../utils/mainErrorHandler';
+import mainErrorHandler from 'utils/mainErrorHandler';
 
 type AddTaskPayload = {
   contractId: string;

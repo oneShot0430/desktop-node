@@ -2,7 +2,6 @@ import { Event } from 'electron';
 import * as fsSync from 'fs';
 
 import { Keypair, PublicKey } from '@_koi/web3.js';
-
 import { ErrorType, ClaimRewardParam, ClaimRewardResponse } from 'models';
 import { throwDetailedError } from 'utils';
 
@@ -26,8 +25,7 @@ const claimReward = async (
     });
   }
 
-  const stakingWalletfilePath =
-    getAppDataPath() + `/namespace/${activeAccount}_stakingWallet.json`;
+  const stakingWalletfilePath = `${getAppDataPath()}/namespace/${activeAccount}_stakingWallet.json`;
   let stakingAccKeypair;
   try {
     stakingAccKeypair = Keypair.fromSecretKey(
@@ -35,7 +33,7 @@ const claimReward = async (
         JSON.parse(fsSync.readFileSync(stakingWalletfilePath, 'utf-8'))
       )
     );
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
     return throwDetailedError({
       detailed: e,
@@ -48,7 +46,7 @@ const claimReward = async (
   const stakingPubKey = new PublicKey(stakingAccKeypair.publicKey);
   console.log('STAKING ACCOUNT PUBLIC KEY', stakingPubKey.toBase58());
 
-  const taskState = await getTaskInfo(null, { taskAccountPubKey });
+  const taskState = await getTaskInfo({} as Event, { taskAccountPubKey });
 
   const statePotPubKey = new PublicKey(taskState.stakePotAccount);
   console.log('STATE POT ACCOUNT PUBLIC KEY', statePotPubKey);

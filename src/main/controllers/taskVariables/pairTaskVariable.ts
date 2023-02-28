@@ -34,7 +34,7 @@ export const pairTaskVariable = async (
 
   // task validation
 
-  await validateTask(null, payload, 'pairTaskVariable');
+  await validateTask({} as Event, payload, 'pairTaskVariable');
 
   // variableInTaskName validation
 

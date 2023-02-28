@@ -1,26 +1,20 @@
-// import { Event } from 'electron';
-
 import { PublicKey } from '@_koi/web3.js';
-// import axios from 'axios';
-
 import config from 'config';
 import { FetchAllTasksParam } from 'models/api';
 
-import sdk from '../../services/sdk';
-import mainErrorHandler from '../../utils/mainErrorHandler';
+import sdk from '../services/sdk';
 import { Task, TaskData } from '../type/TaskData';
 
-// import koiiState from 'services/koiiState';
-// import sdk from 'services/sdk';
 async function fetchAllTasks(
-  event: Event,
-  payload: FetchAllTasksParam
+  _: Event,
+  payload?: FetchAllTasksParam
 ): Promise<Task[]> {
   const { offset, limit } = payload || {};
   let taskAccountInfo = await sdk.k2Connection.getProgramAccounts(
     new PublicKey(config.node.TASK_CONTRACT_ID)
   );
   if (taskAccountInfo === null) {
+    // eslint-disable-next-line no-throw-literal
     throw 'Error: cannot find the task contract data';
   }
   taskAccountInfo = taskAccountInfo.filter(
@@ -28,9 +22,9 @@ async function fetchAllTasks(
       e.account.data.length > config.node.MINIMUM_ACCEPTED_LENGTH_TASK_CONTRACT
   );
   const tasks: Task[] = taskAccountInfo
-    .map((e) => {
+    .map((rawData) => {
       try {
-        const rawTaskData = JSON.parse(e.account.data.toString());
+        const rawTaskData = JSON.parse(rawData.account.data.toString());
         const taskData: TaskData = {
           taskName: rawTaskData.task_name,
           taskManager: new PublicKey(rawTaskData.task_manager).toBase58(),
@@ -49,20 +43,24 @@ async function fetchAllTasks(
           isRunning: false,
         };
         const task: Task = {
-          publicKey: e.pubkey.toBase58(),
+          publicKey: rawData.pubkey.toBase58(),
           data: taskData,
         };
         return task;
       } catch (e) {
-        return null as Task;
+        return null;
       }
     })
-    .filter((e) => e != null && e.data.isWhitelisted && e.data.isActive);
-  if (Number.isInteger(offset) && Number.isInteger(limit)) {
+
+    .filter(
+      (task): task is Task =>
+        task !== null && task.data.isWhitelisted && task.data.isActive
+    );
+
+  if (Number.isInteger(offset) && Number.isInteger(limit) && offset && limit) {
     return tasks.slice(offset, offset + limit);
-  } else {
-    return tasks;
   }
+  return tasks;
 }
 
-export default mainErrorHandler(fetchAllTasks);
+export default fetchAllTasks;

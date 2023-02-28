@@ -14,8 +14,8 @@ export { getTaskInfo } from './getTaskInfo';
 export { default as getTaskLogs } from './getTaskLogs';
 export { default as getTaskNodeInfo } from './getTaskNodeInfo';
 export { default as getTasks } from './getTasks';
-export { default as getTasksById } from './getTasksById';
-export { default as getTaskSource } from './getTaskSource';
+export { getTasksById } from './getTasksById';
+export { getTaskSource } from './getTaskSource';
 export { default as getUserConfig } from './getUserConfig';
 export { default as openBrowserWindow } from './openBrowserWindow';
 export { default as removeAccountByName } from './removeAccountByName';
@@ -24,6 +24,7 @@ export { default as startTask } from './startTask';
 export { default as stopTask } from './stopTask';
 export { default as storeUserConfig } from './storeUserConfig';
 export { default as withdrawStake } from './withdrawStake';
+export { default as getAccountBalance } from './getAccountBalance';
 export * from './taskVariables';
 
 export * from './types';

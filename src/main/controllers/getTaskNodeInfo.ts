@@ -1,24 +1,20 @@
 import { Event } from 'electron';
 
 import { PublicKey } from '@_koi/web3.js';
-
 import { ErrorType } from 'models';
 import { GetTaskNodeInfoResponse } from 'models/api';
 import { throwDetailedError } from 'utils';
 
-import sdk from '../../services/sdk';
+import sdk from '../services/sdk';
 import { Task } from '../type/TaskData';
 
 import fetchAlltasks from './fetchAlltasks';
 import getMainAccountPubKey from './getMainAccountPubKey';
 import getStakingAccountPubKey from './getStakingAccountPubKey';
 
-const getTaskNodeInfo = async (
-  event: Event,
-  payload: any
-): Promise<GetTaskNodeInfoResponse> => {
+const getTaskNodeInfo = async (): Promise<GetTaskNodeInfoResponse> => {
   try {
-    const tasks: Task[] = await fetchAlltasks();
+    const tasks: Task[] = await fetchAlltasks({} as Event);
     const stakingPubKey = await getStakingAccountPubKey();
     let totalStaked = 0;
     let pendingRewards = 0;
@@ -35,7 +31,7 @@ const getTaskNodeInfo = async (
       totalStaked: totalStaked || 0,
       pendingRewards: pendingRewards || 0,
     };
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
     return throwDetailedError({
       detailed: e,

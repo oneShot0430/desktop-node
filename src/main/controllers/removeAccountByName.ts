@@ -12,10 +12,10 @@ const removeAccountByName = async (
   const { accountName } = payload;
   try {
     fs.unlinkSync(
-      getAppDataPath() + `/namespace/${accountName}_stakingWallet.json`
+      `${getAppDataPath()}/namespace/${accountName}_stakingWallet.json`
     );
     fs.unlinkSync(
-      getAppDataPath() + `/wallets/${accountName}_mainSystemWallet.json`
+      `${getAppDataPath()}/wallets/${accountName}_mainSystemWallet.json`
     );
     return true;
   } catch (err) {

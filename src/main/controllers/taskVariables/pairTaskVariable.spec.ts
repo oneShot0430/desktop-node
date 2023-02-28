@@ -58,8 +58,8 @@ describe('pairTaskVariable', () => {
     const invalidPayload = {};
 
     await expect(
-      pairTaskVariable(null, invalidPayload as PairTaskVariableParamType)
-    ).rejects.toThrowError(/payload is not valid/i);
+      pairTaskVariable({} as Event, invalidPayload as PairTaskVariableParamType)
+    ).rejects.toThrow(/payload is not valid/i);
   });
 
   it('throws an error if there is Task on K2 but not using given variable', async () => {
@@ -75,7 +75,7 @@ describe('pairTaskVariable', () => {
       desktopVariableId: 'test1',
     };
 
-    await expect(pairTaskVariable(null, validPayload)).rejects.toThrowError(
+    await expect(pairTaskVariable({} as Event, validPayload)).rejects.toThrow(
       /variable Name in the task not found/i
     );
   });
@@ -97,7 +97,7 @@ describe('pairTaskVariable', () => {
       desktopVariableId: 'test1',
     };
 
-    await expect(pairTaskVariable(null, validPayload)).rejects.toThrowError(
+    await expect(pairTaskVariable({} as Event, validPayload)).rejects.toThrow(
       /desktop variable ID in the task not found/i
     );
   });
@@ -123,8 +123,8 @@ describe('pairTaskVariable', () => {
     };
 
     await expect(
-      pairTaskVariable(null, validPayload)
-    ).resolves.not.toThrowError();
+      pairTaskVariable({} as Event, validPayload)
+    ).resolves.not.toThrow();
 
     expect(namespaceInstance.storeSet).toHaveBeenCalledWith(
       PersistentStoreKeys.TaskToVariablesPairs,
@@ -153,8 +153,8 @@ describe('pairTaskVariable', () => {
     };
 
     await expect(
-      pairTaskVariable(null, validPayload)
-    ).resolves.not.toThrowError();
+      pairTaskVariable({} as Event, validPayload)
+    ).resolves.not.toThrow();
 
     expect(namespaceInstance.storeSet).toHaveBeenCalledWith(
       PersistentStoreKeys.TaskToVariablesPairs,
@@ -185,8 +185,8 @@ describe('pairTaskVariable', () => {
     };
 
     await expect(
-      pairTaskVariable(null, validPayload)
-    ).resolves.not.toThrowError();
+      pairTaskVariable({} as Event, validPayload)
+    ).resolves.not.toThrow();
 
     expect(namespaceInstance.storeSet).toHaveBeenCalledWith(
       PersistentStoreKeys.TaskToVariablesPairs,

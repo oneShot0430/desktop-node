@@ -16,11 +16,11 @@ const getTaskLogs = async (
 
   try {
     const contents = await readLastLines.read(
-      getAppDataPath() + `/namespace/${taskAccountPubKey}/task.log`,
+      `${getAppDataPath()}/namespace/${taskAccountPubKey}/task.log`,
       noOfLines
     );
     return contents;
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
     return throwDetailedError({
       detailed: e,

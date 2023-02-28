@@ -4,7 +4,7 @@ export default async (): Promise<any> => {
   let nodes = [];
   try {
     nodes = await getCacheNodes();
-  } catch (err) {
+  } catch (err: any) {
     console.error('Get nodes error: ', err.message);
   }
 

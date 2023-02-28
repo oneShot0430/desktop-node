@@ -15,6 +15,7 @@ const storeWallet = async (
     return true;
   } catch (err) {
     console.log('ERROR', err);
+    return false;
   }
 };
 

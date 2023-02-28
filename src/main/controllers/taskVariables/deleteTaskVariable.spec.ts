@@ -47,9 +47,9 @@ describe('deleteTaskVariable', () => {
 
     let invalidPayload: undefined;
 
-    await expect(deleteTaskVariable(null, invalidPayload)).rejects.toThrowError(
-      /payload is not valid/i
-    );
+    await expect(
+      deleteTaskVariable({} as Event, invalidPayload as unknown as string)
+    ).rejects.toThrow(/payload is not valid/i);
   });
 
   it('throws an error if the payload is not valid - number', async () => {
@@ -58,8 +58,8 @@ describe('deleteTaskVariable', () => {
     const invalidPayload = 123;
 
     await expect(
-      deleteTaskVariable(null, invalidPayload as never)
-    ).rejects.toThrowError(/payload is not valid/i);
+      deleteTaskVariable({} as Event, invalidPayload as never)
+    ).rejects.toThrow(/payload is not valid/i);
   });
 
   it('throws an error if variable is not found by ID', async () => {
@@ -70,8 +70,8 @@ describe('deleteTaskVariable', () => {
     const nonExistingIdPayload = 'some-other-id';
 
     await expect(
-      deleteTaskVariable(null, nonExistingIdPayload)
-    ).rejects.toThrowError(/task variable with ID .+ was not found/i);
+      deleteTaskVariable({} as Event, nonExistingIdPayload)
+    ).rejects.toThrow(/task variable with ID .+ was not found/i);
   });
 
   it('deletes the task variable if the payload is valid and the ID does exist', async () => {
@@ -90,8 +90,8 @@ describe('deleteTaskVariable', () => {
     getTasksPairedWithVariableMock.mockResolvedValue([]);
 
     await expect(
-      deleteTaskVariable(null, idForDeletion)
-    ).resolves.not.toThrowError();
+      deleteTaskVariable({} as Event, idForDeletion)
+    ).resolves.not.toThrow();
 
     expect(namespaceInstance.storeSet).toHaveBeenCalledWith(
       PersistentStoreKeys.TaskVariables,

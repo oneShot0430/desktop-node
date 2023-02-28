@@ -3,7 +3,7 @@ import {
   GetTasksPairedWithVariableParamType,
 } from 'models';
 
-import { getTasksById } from '..';
+import { getTasksById } from '../getTasksById';
 
 import { getStoredPairedTaskVariables } from './getStoredPairedTaskVariables';
 import { getTasksPairedWithVariable } from './getTasksPairedWithVariable';
@@ -14,7 +14,7 @@ jest.mock('./getStoredPairedTaskVariables', () => {
   };
 });
 
-jest.mock('..', () => {
+jest.mock('../getTasksById', () => {
   return {
     getTasksById: jest.fn(),
   };
@@ -35,10 +35,10 @@ describe('getTasksPairedWithVariable', () => {
 
     await expect(
       getTasksPairedWithVariable(
-        null,
+        {} as Event,
         invalidPayload as GetTasksPairedWithVariableParamType
       )
-    ).rejects.toThrowError(/payload is not valid/);
+    ).rejects.toThrow(/payload is not valid/);
   });
 
   it("should return empty array if none of the Tasks is using given variable by it's ID", async () => {
@@ -49,10 +49,10 @@ describe('getTasksPairedWithVariable', () => {
     });
 
     await expect(
-      getTasksPairedWithVariable(null, { variableId: 'anotherVarId' })
-    ).resolves.not.toThrowError();
+      getTasksPairedWithVariable({} as Event, { variableId: 'anotherVarId' })
+    ).resolves.not.toThrow();
 
-    expect(getTasksById).toHaveBeenCalledWith(null, { tasksIds: [] });
+    expect(getTasksById).toHaveBeenCalledWith({} as Event, { tasksIds: [] });
   });
 
   it("should return Task using given variable by it's ID", async () => {
@@ -64,9 +64,11 @@ describe('getTasksPairedWithVariable', () => {
     });
 
     await expect(
-      getTasksPairedWithVariable(null, { variableId: varId })
-    ).resolves.not.toThrowError();
+      getTasksPairedWithVariable({} as Event, { variableId: varId })
+    ).resolves.not.toThrow();
 
-    expect(getTasksById).toHaveBeenCalledWith(null, { tasksIds: [taskId] });
+    expect(getTasksById).toHaveBeenCalledWith({} as Event, {
+      tasksIds: [taskId],
+    });
   });
 });

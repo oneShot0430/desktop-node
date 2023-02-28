@@ -3,7 +3,6 @@ import * as fsSync from 'fs';
 import fs from 'fs';
 
 import { Keypair } from '@_koi/web3.js';
-
 import { namespaceInstance } from 'main/node/helpers/Namespace';
 import { ErrorType, GetStakingAccountPubKeyResponse } from 'models';
 import { throwDetailedError } from 'utils';
@@ -13,7 +12,7 @@ import { getAppDataPath } from '../node/helpers/getAppDataPath';
 const stakingAccountPubKey = async (
   event?: Event
 ): Promise<GetStakingAccountPubKeyResponse> => {
-  //console.log('IN THE API');
+  // console.log('IN THE API');
   let stakingAccount;
   let pubkey: string;
 
@@ -24,8 +23,7 @@ const stakingAccountPubKey = async (
       type: ErrorType.NO_ACTIVE_ACCOUNT,
     });
   }
-  const stakingWalletfilePath =
-    getAppDataPath() + `/namespace/${activeAccount}_stakingWallet.json`;
+  const stakingWalletfilePath = `${getAppDataPath()}/namespace/${activeAccount}_stakingWallet.json`;
   if (fs.existsSync(stakingWalletfilePath)) {
     try {
       stakingAccount = Keypair.fromSecretKey(
@@ -34,15 +32,15 @@ const stakingAccountPubKey = async (
         )
       );
       pubkey = stakingAccount.publicKey.toBase58();
-      //console.log('PUBKEY', pubkey);
+      // console.log('PUBKEY', pubkey);
       return pubkey;
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
-      return null;
+      return 'null';
     }
   } else {
     console.log('Staking wallet do not exists at ', stakingWalletfilePath);
-    return null;
+    return 'null';
   }
 };
 

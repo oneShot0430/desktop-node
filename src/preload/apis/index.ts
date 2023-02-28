@@ -3,6 +3,7 @@ import claimReward from './claimReward';
 import createNodeWallets from './createNodeWallets';
 import delegateStake from './delegateStake';
 import generateSeedPhrase from './generateSeedPhrase';
+import getAccountBalance from './getAccountBalance';
 import getAllAccounts from './getAllAccounts';
 import getAvailableTasks from './getAvailableTasks';
 import getEarnedRewardByNode from './getEarnedRewardByNode';
@@ -68,4 +69,5 @@ export default {
   pairTaskVariable,
   getStoredPairedTaskVariables,
   getTasksPairedWithVariable,
+  getAccountBalance,
 };
