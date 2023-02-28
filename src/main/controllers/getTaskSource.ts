@@ -23,7 +23,7 @@ export const getTaskSource = async (
 
   try {
     const sourceCode = isTaskDeployedToIPFS
-      ? await retrieveFromIPFS(taskData.taskAuditProgram)
+      ? await retrieveFromIPFS(taskData.taskAuditProgram, 'main.js')
       : await retrieveFromArweave(taskData.taskAuditProgram);
 
     return sourceCode;

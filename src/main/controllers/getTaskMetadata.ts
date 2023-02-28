@@ -19,7 +19,7 @@ export const getTaskMetadata = async (
 
   try {
     const rawMetadata = isTaskDeployedToIPFS
-      ? await retrieveFromIPFS(metadataCID)
+      ? await retrieveFromIPFS(metadataCID, 'index.json')
       : await retrieveFromArweave(metadataCID);
     const metadata: TaskMetadata = await JSON.parse(rawMetadata);
 

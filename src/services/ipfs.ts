@@ -10,7 +10,7 @@ function makeStorageClient(token: string) {
   return new Web3Storage({ token });
 }
 
-export async function retrieveFromIPFS(cid: string) {
+export async function retrieveFromIPFS(cid: string, fileName: string) {
   const storedTaskVariables = await getStoredTaskVariables();
   const userWeb3StorageKey = Object.values(storedTaskVariables).find(
     ({ label }) => label === 'WEB3_STORAGE_KEY'
@@ -29,17 +29,17 @@ export async function retrieveFromIPFS(cid: string) {
       }
 
       const files = await containerRes.files();
-      const sourceCodeCid = files[0].cid;
-      const sourceCodeRes = await client.get(sourceCodeCid);
-      if (!sourceCodeRes?.ok) {
+      const fileCID = files[0].cid;
+      const fileRes = await client.get(fileCID);
+      if (!fileRes?.ok) {
         throw new Error(`failed to get ${cid}`);
       }
 
-      const sourceCode = await streamToString(sourceCodeRes.body);
-      console.log('sourceCode: ', sourceCode);
+      const fileText = await streamToString(fileRes.body);
+      console.log('sourceCode: ', fileText);
       console.log('used Web3storage to get the source code');
 
-      return sourceCode;
+      return fileText;
     } catch (error: any) {
       return throwDetailedError({
         detailed: error,
@@ -47,12 +47,12 @@ export async function retrieveFromIPFS(cid: string) {
       });
     }
   } else {
-    const { data: sourceCode } = await axios.get<string>(
-      `${config.node.IPFS_GATEWAY_URL}/${cid}/main.js`
+    const { data: fileText } = await axios.get<string>(
+      `${config.node.IPFS_GATEWAY_URL}/${cid}${fileName}`
     );
     console.log('used the HTTP gateway to get the source code');
 
-    return sourceCode;
+    return fileText;
   }
 }
 
