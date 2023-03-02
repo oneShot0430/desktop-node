@@ -119,7 +119,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   const mockedUpMetadataCID =
     'bafybeicjuykahd7guj27hjop2ocwp7wl7h3nnkiljharag3gqgzti3uhfq';
 
-  const { data: taskMetadata } = useQuery(
+  const { data: taskMetadata, isLoading: isLoadingTaskMetadata } = useQuery(
     [QueryKeys.TaskMetadata, mockedUpMetadataCID],
     () => getTaskMetadata(mockedUpMetadataCID)
   );
@@ -188,6 +188,10 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   }, [isRunning, isTaskValidToRun]);
 
   const getTaskDetailsComponent = useCallback(() => {
+    if (isLoadingTaskMetadata) {
+      return <LoadingSpinner />;
+    }
+
     if (accordionView === 'info') {
       return (
         <TaskInfo
@@ -210,7 +214,14 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     }
 
     return null;
-  }, [accordionView, task, showCodeModal, taskMetadata, taskSettings]);
+  }, [
+    accordionView,
+    task,
+    showCodeModal,
+    taskMetadata,
+    taskSettings,
+    isLoadingTaskMetadata,
+  ]);
 
   return (
     <TableRow columnsLayout={columnsLayout} className="py-2" ref={ref}>
