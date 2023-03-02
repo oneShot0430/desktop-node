@@ -57,6 +57,7 @@ module.exports = {
     'react/jsx-filename-extension': 'off',
     'promise/always-return': 'off',
     'no-use-before-define': 'off',
+    'no-else-return': 'off',
     'react/require-default-props': 'off',
     'react/no-unused-prop-types': 'warn',
     'no-shadow': 'warn',

@@ -116,12 +116,15 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     TaskService.getMinStake(task)
   );
 
+  const mockedUpMetadataCID =
+    'bafybeicjuykahd7guj27hjop2ocwp7wl7h3nnkiljharag3gqgzti3uhfq';
+
   const { data: taskMetadata } = useQuery(
-    [QueryKeys.TaskMetadata, publicKey],
-    () => getTaskMetadata('where do we get this CID from?')
+    [QueryKeys.TaskMetadata, mockedUpMetadataCID],
+    () => getTaskMetadata(mockedUpMetadataCID)
   );
 
-  const taskSettings = taskMetadata?.requirementsTags.filter(
+  const taskSettings = taskMetadata?.requirementsTags?.filter(
     ({ type }) => type === 'TASK_VARIABLE'
   );
 

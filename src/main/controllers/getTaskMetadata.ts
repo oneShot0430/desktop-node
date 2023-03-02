@@ -14,14 +14,13 @@ export const getTaskMetadata = async (
 ): Promise<TaskMetadata> => {
   const isTaskDeployedToIPFS = isIPFS.cid(metadataCID);
   const retrieveFromArweave = async (cid: string) =>
-    (await axios.get<string>(`${config.node.ARWEAVE_GATEWAY_URL}/${cid}`))
+    (await axios.get<TaskMetadata>(`${config.node.ARWEAVE_GATEWAY_URL}/${cid}`))
       ?.data;
 
   try {
-    const rawMetadata = isTaskDeployedToIPFS
-      ? await retrieveFromIPFS(metadataCID, 'index.json')
+    const metadata = isTaskDeployedToIPFS
+      ? await retrieveFromIPFS<TaskMetadata>(metadataCID, 'metadata.json')
       : await retrieveFromArweave(metadataCID);
-    const metadata: TaskMetadata = await JSON.parse(rawMetadata);
 
     console.log('metadata: ', metadata);
 
