@@ -1,7 +1,7 @@
 import { EmbedCodeFill, Icon } from '@_koii/koii-styleguide';
 import React from 'react';
 
-import { TaskMetadata } from 'models/task';
+import { RequirementType, TaskMetadata } from 'models/task';
 import { NodeTools } from 'renderer/features/node-tools';
 
 type PropsType = {
@@ -23,18 +23,19 @@ export function TaskInfo({
     onShowCodeClick();
   };
 
-  const specs = info?.requirementsTags?.filter(
-    ({ type }) =>
-      type === 'CPU' ||
-      type === 'RAM' ||
-      type === 'STORAGE' ||
-      type === 'ARCHITECTURE' ||
-      type === 'OS' ||
-      type === 'NETWORK'
+  const specs = info?.requirementsTags?.filter(({ type }) =>
+    [
+      RequirementType.CPU,
+      RequirementType.RAM,
+      RequirementType.STORAGE,
+      RequirementType.ARCHITECTURE,
+      RequirementType.OS,
+      RequirementType.NETWORK,
+    ].includes(type)
   );
 
   const globalSettings = info?.requirementsTags?.filter(
-    ({ type }) => type === 'GLOBAL_VARIABLE'
+    ({ type }) => type === RequirementType.GLOBAL_VARIABLE
   );
 
   return (

@@ -65,7 +65,7 @@ module.exports = {
     'prefer-template': 'warn',
     'jsx-a11y/label-has-associated-control': 'warn',
     'no-nested-ternary': 'warn',
-    'react/no-array-index-key': 'warn',
+    'react/no-array-index-key': 'off',
     'jsx-a11y/tabindex-no-positive': 'warn',
     'react/function-component-definition': 'warn',
     'react/button-has-type': 'off',

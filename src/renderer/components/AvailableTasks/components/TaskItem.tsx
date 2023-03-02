@@ -18,6 +18,7 @@ import { useQuery, useQueryClient } from 'react-query';
 
 import PlayIcon from 'assets/svgs/play-icon.svg';
 import StopTealIcon from 'assets/svgs/stop-icon-teal.svg';
+import { RequirementType } from 'models';
 import {
   Button,
   LoadingSpinner,
@@ -125,7 +126,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   );
 
   const taskSettings = taskMetadata?.requirementsTags?.filter(
-    ({ type }) => type === 'TASK_VARIABLE'
+    ({ type }) => type === RequirementType.TASK_VARIABLE
   );
 
   const validateTask = useCallback(() => {
