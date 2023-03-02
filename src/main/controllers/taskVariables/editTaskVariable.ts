@@ -27,7 +27,6 @@ export const editTaskVariable = async (
   let isExistingVariableId = false;
   let isLabelDuplicated = false;
   Object.entries(taskVariables).forEach(([id, { label }]) => {
-    console.log('id: ', id, 'payload.variableId: ', payload.variableId);
     if (id === payload.variableId) {
       isExistingVariableId = true;
     }

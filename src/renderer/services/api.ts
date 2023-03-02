@@ -8,7 +8,6 @@ import {
   StoreUserConfigParam,
   PairTaskVariableParamType,
 } from 'models/api';
-import { TaskMetadata, RequirementType } from 'models/task';
 import { Task } from 'renderer/types';
 import { getKoiiFromRoe } from 'utils';
 
