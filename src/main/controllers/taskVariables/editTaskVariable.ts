@@ -27,10 +27,11 @@ export const editTaskVariable = async (
   let isExistingVariableId = false;
   let isLabelDuplicated = false;
   Object.entries(taskVariables).forEach(([id, { label }]) => {
+    console.log('id: ', id, 'payload.variableId: ', payload.variableId);
     if (id === payload.variableId) {
       isExistingVariableId = true;
     }
-    if (label === payload.variableData.label) {
+    if (label === payload.variableData.label && id !== payload.variableId) {
       isLabelDuplicated = true;
     }
   });
@@ -44,7 +45,7 @@ export const editTaskVariable = async (
 
   if (isLabelDuplicated) {
     throw throwDetailedError({
-      detailed: `task variable with label "${payload.variableId}" already exist`,
+      detailed: `task variable with label "${payload.variableData.label}" already exist`,
       type: ErrorType.GENERIC,
     });
   }
