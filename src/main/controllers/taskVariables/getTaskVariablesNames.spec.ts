@@ -1,4 +1,4 @@
-import { GetTaskSourceParam } from 'models';
+import { GetTaskInfoParam, GetTaskSourceParam } from 'models';
 
 import { getTaskVariablesNames } from './getTaskVariablesNames';
 
@@ -79,19 +79,31 @@ const namespaceInstance = new Namespace(
 const tasks = [
   {
     taskPublicKey: '342dkttYwjx2dUPm3Hk2pxxPVhdWaYHVpg4bxEbvzxGr',
+    taskAuditProgram:
+      'bafybeicjuykahd7guj27hjop2ocwp7wl7h3nnkiljharag3gqgzti3uasd',
     sourceCode: sourceCodeWithoutVariableTasks,
   },
   {
     taskPublicKey: '4ZbqVcP95zkhm9HsRWSveCosHjUozPf4QC73ce6Q8TRr',
+    taskAuditProgram:
+      'bafybeicjuykahd7guj27hjop2ocwp7wl7h3nnkiljharag3gqgzti3uqwe',
     sourceCode: sourceCodeWithVariableTasks,
   },
 ];
 
+jest.mock('../getTaskInfo', () => ({
+  getTaskInfo: jest.fn((_: Event, { taskAccountPubKey }: GetTaskInfoParam) => {
+    const { taskAuditProgram } = tasks.find(
+      (task) => task.taskPublicKey === taskAccountPubKey
+    )!;
+    return Promise.resolve({ taskAuditProgram });
+  }),
+}));
 jest.mock('../getTaskSource', () => ({
   getTaskSource: jest.fn(
-    (event: Event, { taskAccountPubKey }: GetTaskSourceParam) => {
+    (_: Event, { taskAuditProgram }: GetTaskSourceParam) => {
       const { sourceCode } = tasks.find(
-        (task) => task.taskPublicKey === taskAccountPubKey
+        (task) => task.taskAuditProgram === taskAuditProgram
       )!;
       return Promise.resolve(sourceCode);
     }

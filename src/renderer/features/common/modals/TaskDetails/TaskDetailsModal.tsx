@@ -36,8 +36,8 @@ export const TaskDetailsModal = create<TaskDetailsModalPropsType>(
     );
     const { earnedReward } = useEarnedReward({ task, publicKey });
     const { data: sourceCode, isLoading } = useQuery(
-      [QueryKeys.taskSourceCode, task.publicKey],
-      () => TaskService.getTaskSourceCode(task)
+      [QueryKeys.taskSourceCode, task.taskAuditProgram],
+      () => TaskService.getTaskSourceCode(task.taskAuditProgram)
     );
     const { taskStake } = useTaskStake({ task, publicKey });
 

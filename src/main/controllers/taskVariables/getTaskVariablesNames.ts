@@ -3,6 +3,7 @@ import { Event } from 'electron';
 import { uniq } from 'lodash';
 import { GetTaskVariablesNamesParam } from 'models/api';
 
+import { getTaskInfo } from '../getTaskInfo';
 import { getTaskSource } from '../getTaskSource';
 
 const TASK_VARIABLES_PREFIX = 'process.env.';
@@ -11,8 +12,13 @@ export const getTaskVariablesNames = async (
   _: Event,
   { taskPublicKey }: GetTaskVariablesNamesParam
 ): Promise<string[]> => {
+  const { taskAuditProgram } = await getTaskInfo(
+    _,
+    { taskAccountPubKey: taskPublicKey },
+    'getTaskSource'
+  );
   const taskSourceCode: string = await getTaskSource(_, {
-    taskAccountPubKey: taskPublicKey,
+    taskAuditProgram,
   });
   const taskVariablesRegex = /process\.env\.[A-Za-z0-9_]+/g;
   const taskVariablesMatches = taskSourceCode.match(taskVariablesRegex) || [];

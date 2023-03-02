@@ -4,18 +4,12 @@ import { ErrorType, GetTaskSourceParam } from 'models';
 import { throwDetailedError } from 'utils';
 
 import { fetchFromIPFSOrArweave } from './fetchFromIPFSOrArweave';
-import { getTaskInfo } from './getTaskInfo';
 
 export const getTaskSource = async (
   _: Event,
-  payload: GetTaskSourceParam
+  { taskAuditProgram }: GetTaskSourceParam
 ): Promise<string> => {
   try {
-    const { taskAuditProgram } = await getTaskInfo(
-      {} as Event,
-      payload,
-      'getTaskSource'
-    );
     const sourceCode = fetchFromIPFSOrArweave<string>(
       taskAuditProgram,
       'main.js'
