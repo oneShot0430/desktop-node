@@ -33,7 +33,7 @@ export function TaskInfo({
       type === 'NETWORK'
   );
 
-  const globalSettings = info?.requirementsTags.filter(
+  const globalSettings = info?.requirementsTags?.filter(
     ({ type }) => type === 'GLOBAL_VARIABLE'
   );
 
@@ -63,12 +63,16 @@ export function TaskInfo({
         </div>
       </div>
 
-      <div className="mb-2 text-base font-semibold">Global Tools:</div>
-      <NodeTools
-        taskPubKey={taskPubKey}
-        tools={globalSettings}
-        onToolsValidation={onToolsValidation}
-      />
+      {!!globalSettings?.length && (
+        <>
+          <div className="mb-2 text-base font-semibold">Global Tools:</div>
+          <NodeTools
+            taskPubKey={taskPubKey}
+            tools={globalSettings}
+            onToolsValidation={onToolsValidation}
+          />
+        </>
+      )}
     </div>
   );
 }

@@ -21,11 +21,14 @@ export function TaskSettings({
         Configure Your task settings
         <Icon size={14} source={TooltipChatQuestionLeftLine} />
       </div>
-      <NodeTools
-        tools={settings}
-        taskPubKey={taskPubKey}
-        onToolsValidation={onToolsValidation}
-      />
+
+      {!!settings?.length && (
+        <NodeTools
+          tools={settings}
+          taskPubKey={taskPubKey}
+          onToolsValidation={onToolsValidation}
+        />
+      )}
     </div>
   );
 }
