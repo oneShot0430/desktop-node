@@ -63,7 +63,7 @@ describe('editTaskVariable', () => {
     });
 
     const nonExistingIdPayload: EditTaskVariableParamType = {
-      variableId: 'some-other-id',
+      variableId: 'some-other-new-id',
       variableData: {
         label: existingLabel,
         value: 'some other value',
