@@ -1,35 +1,17 @@
 import { Event } from 'electron';
 
-import * as isIPFS from 'is-ipfs';
+import { GetTaskMetadataParam, TaskMetadata } from 'models';
 
-import axios from 'axios';
-import config from 'config';
-import { ErrorType, GetTaskMetadataParam, TaskMetadata } from 'models';
-import { retrieveFromIPFS } from 'services/ipfs';
-import { throwDetailedError } from 'utils';
+import { fetchFromIPFSOrArweave } from './fetchFromIPFSOrArweave';
 
 export const getTaskMetadata = async (
   _: Event,
   { metadataCID }: GetTaskMetadataParam
 ): Promise<TaskMetadata> => {
-  const isTaskDeployedToIPFS = isIPFS.cid(metadataCID);
-  const retrieveFromArweave = async (cid: string) =>
-    (await axios.get<TaskMetadata>(`${config.node.ARWEAVE_GATEWAY_URL}/${cid}`))
-      ?.data;
+  const metadata = fetchFromIPFSOrArweave<TaskMetadata>(
+    metadataCID,
+    'metadata.json'
+  );
 
-  try {
-    const metadata = isTaskDeployedToIPFS
-      ? await retrieveFromIPFS<TaskMetadata>(metadataCID, 'metadata.json')
-      : await retrieveFromArweave(metadataCID);
-
-    console.log('metadata: ', metadata);
-
-    return metadata;
-  } catch (e: any) {
-    console.error(e);
-    return throwDetailedError({
-      detailed: e,
-      type: ErrorType.NO_TASK_SOURCECODE,
-    });
-  }
+  return metadata;
 };

@@ -60,7 +60,7 @@ module.exports = {
     'no-else-return': 'off',
     'react/require-default-props': 'off',
     'react/no-unused-prop-types': 'warn',
-    'no-shadow': 'warn',
+    'no-shadow': 'off',
     'jsx-a11y/click-events-have-key-events': 'warn',
     'prefer-template': 'warn',
     'jsx-a11y/label-has-associated-control': 'warn',
