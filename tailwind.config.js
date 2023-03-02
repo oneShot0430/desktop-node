@@ -19,6 +19,7 @@ module.exports = {
       },
       width: {
         22.5: '5.6rem',
+        125: '31.25rem',
       },
       animation: {
         'reverse-spin': 'reverse-spin 1s linear infinite',
