@@ -5,6 +5,7 @@ import {
   PlayFill,
   InformationCircleLine,
 } from '@_koii/koii-styleguide';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 import React, {
   memo,
   useState,
@@ -74,6 +75,8 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   const { data: mainAccountPubKey } = useMainAccount();
 
   const ref = useRef<HTMLDivElement>(null);
+
+  const [parent] = useAutoAnimate();
 
   useOnClickOutside(
     ref as MutableRefObject<HTMLDivElement>,
@@ -225,7 +228,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   ]);
 
   return (
-    <TableRow columnsLayout={columnsLayout} className="py-2" ref={ref}>
+    <TableRow columnsLayout={columnsLayout} className="py-2 gap-y-0" ref={ref}>
       <div>
         <Tooltip
           placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
@@ -326,10 +329,12 @@ function TaskItem({ task, index, columnsLayout }: Props) {
 
       <div
         className={`w-full col-span-7 max-h-[360px] overflow-y-auto ${
-          accordionView !== null ? 'flex' : 'hidden'
+          accordionView !== null ? 'opacity-1 pt-6' : 'opacity-0'
         } transition-all duration-500 ease-in-out`}
       >
-        {getTaskDetailsComponent()}
+        <div ref={parent} className="flex w-full">
+          {getTaskDetailsComponent()}
+        </div>
       </div>
     </TableRow>
   );

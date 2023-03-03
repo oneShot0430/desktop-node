@@ -97,6 +97,7 @@
   "dependencies": {
     "@_koii/koii-styleguide": "^0.2.13-alpha",
     "@ebay/nice-modal-react": "^1.2.8",
+    "@formkit/auto-animate": "^1.0.0-beta.6",
     "@headlessui/react": "^1.7.7",
     "arweave": "^1.12.2",
     "axios": "^1.2.2",
