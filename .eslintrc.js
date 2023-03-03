@@ -74,7 +74,7 @@ module.exports = {
     'no-return-wrap': 'off',
     'promise/catch-or-return': 'off',
     'react/jsx-no-constructed-context-values': 'warn',
-    'import/no-extraneous-dependencies': 'warn',
+    'import/no-extraneous-dependencies': 'off',
     'react/jsx-props-no-spreading': 'off',
     'no-unused-expressions': 'warn',
     'jsx-a11y/no-noninteractive-tabindex': 'warn',
