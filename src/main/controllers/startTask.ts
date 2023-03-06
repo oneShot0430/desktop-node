@@ -9,8 +9,6 @@ import * as fsSync from 'fs';
 import cryptoRandomString from 'crypto-random-string';
 
 import { Keypair, PublicKey } from '@_koi/web3.js';
-import axios from 'axios';
-import config from 'config';
 import { Namespace, namespaceInstance } from 'main/node/helpers/Namespace';
 import koiiTasks from 'main/services/koiiTasks';
 import { ErrorType } from 'models';
@@ -21,13 +19,14 @@ import { getAppDataPath } from '../node/helpers/getAppDataPath';
 import initExpressApp from '../node/initExpressApp';
 
 import getStakingAccountPublicKey from './getStakingAccountPubKey';
+import { getTaskSource } from './getTaskSource';
 
 // eslint-disable-next-line
 const bufferlayout = require('buffer-layout');
 const OPERATION_MODE = 'service';
 let LAST_USED_PORT = 10000;
 
-const startTask = async (event: Event, payload: TaskStartStopParam) => {
+const startTask = async (_: Event, payload: TaskStartStopParam) => {
   const { taskAccountPubKey } = payload;
   const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
   if (!activeAccount) {
@@ -107,25 +106,15 @@ const startTask = async (event: Event, payload: TaskStartStopParam) => {
  * @param {any} expressApp
  * @returns {any[]} Array of executable tasks
  */
-async function loadTask(selectedTask: ISelectedTasks) {
-  console.log('Selected Tasks', selectedTask);
-  let res;
-  try {
-    res = await axios.get(
-      `${config.node.GATEWAY_URL}/${selectedTask.taskAuditProgram}`
-    );
-  } catch (e: any) {
-    console.error(e);
-    return throwDetailedError({
-      detailed: e,
-      type: ErrorType.NO_TASK_SOURCECODE,
-    });
-  }
-  if (res.data) {
+async function loadTask({ taskAuditProgram }: ISelectedTasks) {
+  console.log('taskAuditProgram', taskAuditProgram);
+
+  const sourceCode = await getTaskSource({} as Event, { taskAuditProgram });
+  if (sourceCode) {
     fsSync.mkdirSync(`${getAppDataPath()}/executables`, { recursive: true });
     fsSync.writeFileSync(
-      `${getAppDataPath()}/executables/${selectedTask.taskAuditProgram}.js`,
-      res.data
+      `${getAppDataPath()}/executables/${taskAuditProgram}.js`,
+      sourceCode
     );
   }
 }

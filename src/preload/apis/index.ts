@@ -12,6 +12,7 @@ import getMyTasks from './getMyTasks';
 import getStakingAccountPubKey from './getStakingAccountPubKey';
 import getTaskInfo from './getTaskInfo';
 import getTaskLogs from './getTaskLogs';
+import getTaskMetadata from './getTaskMetadata';
 import getTaskNodeInfo from './getTaskNodeInfo';
 import getTasks from './getTasks';
 import getTasksById from './getTasksById';
@@ -38,6 +39,7 @@ import withdrawStake from './withdrawStake';
 export default {
   getTasks,
   getTaskSource,
+  getTaskMetadata,
   getTaskInfo,
   delegateStake,
   startTask,

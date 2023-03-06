@@ -17,6 +17,10 @@ import { render } from 'renderer/tests/utils';
 
 import { TaskSettings } from './TaskSettings';
 
+jest.mock('@formkit/auto-animate/react', () => ({
+  useAutoAnimate: jest.fn(() => []),
+}));
+
 jest.mock('renderer/services', () => {
   const getStoredTaskVariablesInitialState: TaskVariables = {
     id: {

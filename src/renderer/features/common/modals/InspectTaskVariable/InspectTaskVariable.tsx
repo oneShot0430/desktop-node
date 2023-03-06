@@ -57,7 +57,7 @@ export const InspectTaskVariable = create<Params>(function InspectTaskVariable({
           <div className="flex flex-col flex-1 mb-2">
             <label className="mb-0.5 text-left">TOOL LABEL</label>
 
-            <div className="px-6 py-2 mr-6 text-sm rounded-md bg-finnieBlue-light-tertiary">
+            <div className="px-6 py-2 mr-6 text-sm rounded-md bg-finnieBlue-light-tertiary overflow-hidden text-ellipsis w-56 whitespace-nowrap">
               {label}
             </div>
           </div>
@@ -65,13 +65,13 @@ export const InspectTaskVariable = create<Params>(function InspectTaskVariable({
           <div className="flex flex-col flex-[2] mb-2">
             <label className="mb-0.5 text-left">TOOL KEY INPUT</label>
 
-            <div className="px-6 py-2 mr-6 text-sm rounded-md bg-finnieBlue-light-tertiary">
+            <div className="px-6 py-2 mr-6 text-sm rounded-md bg-finnieBlue-light-tertiary overflow-hidden text-ellipsis w-125 whitespace-nowrap">
               {value}
             </div>
           </div>
         </div>
 
-        {tasksPairedWithVariable?.length && (
+        {!!tasksPairedWithVariable?.length && (
           <>
             <label className="mb-0.5 text-left">TASKS USING THIS TOOL</label>
 

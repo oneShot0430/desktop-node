@@ -14,6 +14,7 @@ const endpointToControllerMap: Record<
   [Endpoints.GET_MY_TASKS]: controllers.getMyTasks,
   [Endpoints.GET_AVAILABLE_TASKS]: controllers.getAvailableTasks,
   [Endpoints.GET_TASK_SOURCE]: controllers.getTaskSource,
+  [Endpoints.GET_TASK_METADATA]: controllers.getTaskMetadata,
   [Endpoints.DELEGATE_STAKE]: controllers.delegateStake,
   [Endpoints.GET_TASK_INFO]: controllers.getTaskInfo,
   [Endpoints.START_TASK]: controllers.startTask,

@@ -236,6 +236,12 @@ export const getTasksPairedWithVariable = async (variableId: string) => {
   return window.main.getTasksPairedWithVariable({ variableId });
 };
 
+export const getTaskMetadata = async (metadataCID: string) => {
+  return window.main.getTaskMetadata({
+    metadataCID,
+  });
+};
+
 export const claimRewards = async () => {
   const getPendingRewardsByTask = (task: Task) =>
     sum(Object.values(task.availableBalances));

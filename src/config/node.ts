@@ -9,7 +9,8 @@ export const RESTORE_KOHAKU = true;
 
 export const SERVER_PORT = 8080;
 
-export const GATEWAY_URL = 'https://arweave.net';
+export const ARWEAVE_GATEWAY_URL = 'https://arweave.net';
+export const IPFS_GATEWAY_URL = 'https://ipfs.io/ipfs';
 
 // eslint-disable-next-line camelcase
 export const k2_NETWORK_URL = 'https://k2-testnet.koii.live';
@@ -27,7 +28,8 @@ export default {
   BUNDLER_URL,
   RESTORE_KOHAKU,
   SERVER_PORT,
-  GATEWAY_URL,
+  ARWEAVE_GATEWAY_URL,
+  IPFS_GATEWAY_URL,
   k2_NETWORK_URL,
   TASK_CONTRACT_ID,
   MINIMUM_ACCEPTED_LENGTH_TASK_CONTRACT,

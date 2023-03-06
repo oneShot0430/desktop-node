@@ -14,8 +14,10 @@ export class TaskService {
     );
   }
 
-  static getTaskSourceCode(task: Task): Promise<string> {
-    return window.main.getTaskSource({ taskAccountPubKey: task.publicKey });
+  static getTaskSourceCode(
+    taskAuditProgram: Task['taskAuditProgram']
+  ): Promise<string> {
+    return window.main.getTaskSource({ taskAuditProgram });
   }
 
   static getTopStake(task: Task): number {

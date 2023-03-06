@@ -5,11 +5,21 @@ import {
   PlayFill,
   InformationCircleLine,
 } from '@_koii/koii-styleguide';
-import React, { memo, useState, useCallback, useMemo, useEffect } from 'react';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
+import React, {
+  memo,
+  useState,
+  useCallback,
+  useMemo,
+  useEffect,
+  useRef,
+  MutableRefObject,
+} from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
 import PlayIcon from 'assets/svgs/play-icon.svg';
 import StopTealIcon from 'assets/svgs/stop-icon-teal.svg';
+import { RequirementType } from 'models';
 import {
   Button,
   LoadingSpinner,
@@ -23,6 +33,7 @@ import {
   useMainAccount,
   useTaskDetailsModal,
   useTaskStake,
+  useOnClickOutside,
 } from 'renderer/features';
 import {
   QueryKeys,
@@ -30,6 +41,7 @@ import {
   stopTask,
   stakeOnTask,
   startTask,
+  getTaskMetadata,
 } from 'renderer/services';
 import { Task } from 'renderer/types';
 import { getKoiiFromRoe } from 'utils';
@@ -49,7 +61,8 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   const [accordionView, setAccordionView] = useState<
     'info' | 'settings' | null
   >(null);
-  const [isNodeToolsValid, setIsNodeToolsValid] = useState(false);
+  const [isGlobalToolsValid, setIsGlobalToolsValid] = useState(false);
+  const [isTaskToolsValid, setIsTaskToolsValid] = useState(false);
   const [isTaskValidToRun, setIsTaskValidToRun] = useState(false);
   const [stake, setStake] = useState<number>(0);
   const [meetsMinimumStake, setMeetsMinimumStake] = useState<boolean>(false);
@@ -60,6 +73,15 @@ function TaskItem({ task, index, columnsLayout }: Props) {
    * We probably should fetch the Account pub key once and keep it in the app context
    */
   const { data: mainAccountPubKey } = useMainAccount();
+
+  const ref = useRef<HTMLDivElement>(null);
+
+  const [parent] = useAutoAnimate();
+
+  useOnClickOutside(
+    ref as MutableRefObject<HTMLDivElement>,
+    useCallback(() => setAccordionView(null), [])
+  );
 
   const { taskStake: alreadyStakedTokensAmount, loadingTaskStake } =
     useTaskStake({
@@ -73,44 +95,53 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     accountPublicKey: mainAccountPubKey as string,
   });
 
-  const handleToggleSettings = () => {
-    const newView = accordionView === 'settings' ? null : 'settings';
+  const handleToggleView = (view: 'info' | 'settings') => {
+    const newView = accordionView === view ? null : view;
     setAccordionView(newView);
   };
 
-  const handleToggleInfo = () => {
-    if (accordionView === 'info') {
-      setAccordionView(null);
-      return;
-    }
-    setAccordionView('info');
+  const handleGlobalToolsValidationCheck = (isValid: boolean) => {
+    setIsGlobalToolsValid(isValid);
   };
 
-  const handleNodeToolsValidationCheck = (isValid: boolean) => {
-    setIsNodeToolsValid(isValid);
+  const handleTaskToolsValidationCheck = (isValid: boolean) => {
+    setIsTaskToolsValid(isValid);
   };
 
   const isFirstRowInTable = index === 0;
   const nodes = useMemo(() => TaskService.getNodesCount(task), [task]);
   const topStake = useMemo(() => TaskService.getTopStake(task), [task]);
-  // const bountyPerRoundInKoii = useMemo(
-  //   () => getKoiiFromRoe(bountyAmountPerRound),
-  //   [bountyAmountPerRound]
-  // );
+  const bountyPerRoundInKoii = useMemo(
+    () => getKoiiFromRoe(task.totalBountyAmount),
+    [task.totalBountyAmount]
+  );
 
   const { data: minStake } = useQuery([QueryKeys.minStake, publicKey], () =>
     TaskService.getMinStake(task)
   );
 
+  const mockedUpMetadataCID =
+    'bafybeicjuykahd7guj27hjop2ocwp7wl7h3nnkiljharag3gqgzti3uhfq';
+
+  const { data: taskMetadata, isLoading: isLoadingTaskMetadata } = useQuery(
+    [QueryKeys.TaskMetadata, mockedUpMetadataCID],
+    () => getTaskMetadata(mockedUpMetadataCID)
+  );
+
+  const taskSettings = taskMetadata?.requirementsTags?.filter(
+    ({ type }) => type === RequirementType.TASK_VARIABLE
+  );
+
   const validateTask = useCallback(() => {
     const hasMinimumStake = stake >= (minStake as number);
-    const isTaskValid = hasMinimumStake && isNodeToolsValid;
+    const isTaskValid =
+      hasMinimumStake && isGlobalToolsValid && isTaskToolsValid;
     setIsTaskValidToRun(isTaskValid);
-  }, [isNodeToolsValid, minStake, stake]);
+  }, [isGlobalToolsValid, isTaskToolsValid, minStake, stake]);
 
   useEffect(() => {
     validateTask();
-  }, [minStake, stake, validateTask, isNodeToolsValid]);
+  }, [validateTask]);
 
   const handleStartTask = async () => {
     const stakeAmount = alreadyStakedTokensAmount || stake;
@@ -161,24 +192,43 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   }, [isRunning, isTaskValidToRun]);
 
   const getTaskDetailsComponent = useCallback(() => {
+    if (isLoadingTaskMetadata) {
+      return <LoadingSpinner />;
+    }
+
     if (accordionView === 'info') {
-      return <TaskInfo task={task} onShowCodeClick={showCodeModal} />;
+      return (
+        <TaskInfo
+          taskPubKey={task.publicKey}
+          info={taskMetadata}
+          onShowCodeClick={showCodeModal}
+          onToolsValidation={handleGlobalToolsValidationCheck}
+        />
+      );
     }
 
     if (accordionView === 'settings') {
       return (
         <TaskSettings
           taskPubKey={task.publicKey}
-          onNodeToolsValidation={handleNodeToolsValidationCheck}
+          onToolsValidation={handleTaskToolsValidationCheck}
+          settings={taskSettings}
         />
       );
     }
 
     return null;
-  }, [accordionView, task, showCodeModal]);
+  }, [
+    accordionView,
+    task,
+    showCodeModal,
+    taskMetadata,
+    taskSettings,
+    isLoadingTaskMetadata,
+  ]);
 
   return (
-    <TableRow columnsLayout={columnsLayout} className="py-2">
+    <TableRow columnsLayout={columnsLayout} className="py-2 gap-y-0" ref={ref}>
       <div>
         <Tooltip
           placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
@@ -186,6 +236,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
         >
           <div className="flex flex-col items-center justify-start w-10">
             <Button
+              onClick={() => handleToggleView('info')}
               icon={
                 <Icon
                   source={
@@ -195,7 +246,6 @@ function TaskItem({ task, index, columnsLayout }: Props) {
                 />
               }
               onlyIcon
-              onClick={handleToggleInfo}
             />
           </div>
         </Tooltip>
@@ -213,7 +263,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
         title={taskManager}
       >
         <div className="truncate">{`Creator: ${task.taskName}`}</div>
-        <div className="truncate">{`Bounty: ${task.totalBountyAmount}`}</div>
+        <div className="truncate">{`Bounty: ${bountyPerRoundInKoii}`}</div>
       </div>
 
       <div
@@ -240,9 +290,9 @@ function TaskItem({ task, index, columnsLayout }: Props) {
             placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
             tooltipContent="Open task settings"
           >
-            <div className="flex flex-col items-center justify-start w-[40px]">
+            <div className="flex flex-col items-center justify-start w-10">
               <Button
-                onClick={handleToggleSettings}
+                onMouseDown={() => handleToggleView('settings')}
                 icon={
                   <Icon
                     source={SettingsFill}
@@ -279,10 +329,12 @@ function TaskItem({ task, index, columnsLayout }: Props) {
 
       <div
         className={`w-full col-span-7 max-h-[360px] overflow-y-auto ${
-          accordionView !== null ? 'flex' : 'hidden'
+          accordionView !== null ? 'opacity-1 pt-6' : 'opacity-0'
         } transition-all duration-500 ease-in-out`}
       >
-        {getTaskDetailsComponent()}
+        <div ref={parent} className="flex w-full">
+          {getTaskDetailsComponent()}
+        </div>
       </div>
     </TableRow>
   );

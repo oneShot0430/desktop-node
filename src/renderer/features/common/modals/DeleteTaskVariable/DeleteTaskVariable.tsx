@@ -49,7 +49,7 @@ export const DeleteTaskVariable = create<Params>(function DeleteTaskVariable({
     <Modal>
       <ModalContent
         theme={Theme.Dark}
-        className="p-5 pl-10 w-fit h-fit text-white rounded min-w-[740px]"
+        className="p-5 pl-10 w-fit h-fit text-white rounded max-w-[840px]"
       >
         <div className="flex items-center justify-center w-full gap-4 pt-2 text-2xl font-semibold">
           <Icon source={SettingsLine} className="w-8 h-8" />

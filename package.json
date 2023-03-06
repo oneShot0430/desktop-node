@@ -69,7 +69,9 @@
       "tsx",
       "json"
     ],
-    "testMatch": ["<rootDir>/**/*.(spec|test).(ts|tsx)"],
+    "testMatch": [
+      "<rootDir>/**/*.(spec|test).(ts|tsx)"
+    ],
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/.erb/mocks/fileMock.js",
       "\\.(css|less|sass|scss)$": "identity-obj-proxy",
@@ -88,11 +90,14 @@
       "\\.(ts|tsx|js|jsx)$": "ts-jest",
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/src/renderer/tests/mocks/fileTransformer.js"
     },
-    "setupFilesAfterEnv": ["<rootDir>/src/renderer/tests/jest.setup.ts"]
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/renderer/tests/jest.setup.ts"
+    ]
   },
   "dependencies": {
     "@_koii/koii-styleguide": "^0.2.13-alpha",
     "@ebay/nice-modal-react": "^1.2.8",
+    "@formkit/auto-animate": "^1.0.0-beta.6",
     "@headlessui/react": "^1.7.7",
     "arweave": "^1.12.2",
     "axios": "^1.2.2",
@@ -111,6 +116,7 @@
     "electron-squirrel-startup": "^1.0.0",
     "electron-updater": "^5.3.0",
     "express-http-proxy": "^1.6.3",
+    "is-ipfs": "6.0.0",
     "jsonwebtoken": "^9.0.0",
     "levelup": "^5.1.1",
     "lodash": "^4.17.21",
@@ -127,7 +133,8 @@
     "read-last-lines": "^1.8.0",
     "stream-browserify": "^3.0.0",
     "tailwind-merge": "^1.10.0",
-    "tweetnacl": "^1.0.3"
+    "tweetnacl": "^1.0.3",
+    "web3.storage": "^4.5.4"
   },
   "devDependencies": {
     "@electron/notarize": "^1.2.3",

@@ -5,9 +5,10 @@ import {
   CheckSuccessLine,
   Icon,
 } from '@_koii/koii-styleguide';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import { useMutation } from 'react-query';
 
+import { RequirementTag } from 'models/task';
 import {
   ErrorMessage,
   LoadingSpinner,
@@ -16,27 +17,18 @@ import {
 import { pairTaskVariable } from 'renderer/services';
 
 import { getPairedTaskVariablesForTask } from '../helpers';
-import {
-  useTaskVariablesNames,
-  useAllStoredPairedTaskVariables,
-} from '../hooks';
+import { useAllStoredPairedTaskVariables } from '../hooks';
 
 import { NodeTool } from './NodeTool';
 
 type PropsType = {
   taskPubKey: string;
-  onNodeToolsValidation?: (isValid: boolean) => void;
+  onToolsValidation?: (isValid: boolean) => void;
+  tools?: RequirementTag[];
 };
 
-export function NodeTools({ taskPubKey, onNodeToolsValidation }: PropsType) {
+export function NodeTools({ taskPubKey, onToolsValidation, tools }: PropsType) {
   const [isAllVariablesPaired, setIsAllVariablesPaired] = useState(false);
-  const {
-    taskVariablesNamesQuery: {
-      data: taskVariablesNames,
-      isLoading: isLoadingTaskVariablesNames,
-      error: taskVariablesNamesError,
-    },
-  } = useTaskVariablesNames({ taskPubKey });
 
   const {
     storedPairedTaskVariablesQuery: {
@@ -45,7 +37,7 @@ export function NodeTools({ taskPubKey, onNodeToolsValidation }: PropsType) {
       error: pairedVariablesError,
     },
   } = useAllStoredPairedTaskVariables({
-    enabled: !!taskPubKey && !isLoadingTaskVariablesNames,
+    enabled: !!taskPubKey,
   });
 
   const [selectedTools, setSelectedTools] = useState<Record<string, string>>(
@@ -53,18 +45,18 @@ export function NodeTools({ taskPubKey, onNodeToolsValidation }: PropsType) {
   );
 
   useEffect(() => {
-    /** *
+    /**
      * @dev validate if all variables are paired
      */
-    if (taskVariablesNames) {
-      const isAllVariablesPaired = taskVariablesNames.every(
-        (taskVariableName) => !!selectedTools[taskVariableName]
+    if (tools) {
+      const isAllVariablesPaired = tools?.every(
+        ({ value }) => !!selectedTools[value as string]
       );
 
       setIsAllVariablesPaired(isAllVariablesPaired);
-      onNodeToolsValidation?.(isAllVariablesPaired);
+      onToolsValidation?.(isAllVariablesPaired);
     }
-  }, [onNodeToolsValidation, selectedTools, taskVariablesNames]);
+  }, [onToolsValidation, selectedTools, tools]);
 
   const handleToolPick = (tool: string, desktopVariableId: string) => {
     setSelectedTools({ ...selectedTools, [tool]: desktopVariableId });
@@ -115,18 +107,12 @@ export function NodeTools({ taskPubKey, onNodeToolsValidation }: PropsType) {
     [pairedVariables, taskPubKey]
   );
 
-  const hasError =
-    taskVariablesNamesError ||
-    pairedVariablesError ||
-    isPairingTasksVariablesError;
-  const loading = isLoadingTaskVariablesNames || isLoadingPairedVariables;
+  const hasError = pairedVariablesError || isPairingTasksVariablesError;
+  const isLoading = isLoadingPairedVariables;
 
   if (hasError) {
     return (
       <>
-        {taskVariablesNamesError && (
-          <ErrorMessage error={taskVariablesNamesError as string} />
-        )}
         {pairedVariablesError &&
           (pairedVariablesError || (
             <ErrorMessage error={pairedVariablesError as string} />
@@ -140,27 +126,22 @@ export function NodeTools({ taskPubKey, onNodeToolsValidation }: PropsType) {
 
   return (
     <div className="w-full pb-4 pr-4">
-      {loading && (
+      {isLoading && (
         <div className="flex flex-col items-center justify-center h-40 gap-4">
           <LoadingSpinner size={LoadingSpinnerSize.Large} />
           <div>Loading Node Tools</div>
         </div>
       )}
-      {!loading && (
+      {!isLoading && (
         <>
-          {taskVariablesNames?.map((tool) => (
+          {tools?.map(({ value, description }, index) => (
             <NodeTool
               onSecretSelected={handleToolPick}
               onInit={handleInit}
-              tool={tool}
-              key={tool}
-              /**
-               * @dev
-               * Metadata for the tool is not available yet,
-               * so we need to pass null for now
-               */
-              getSecretLink={undefined}
-              defaultVariableId={pairedVariablesForTask[tool]}
+              tool={value as string}
+              key={index}
+              defaultVariableId={pairedVariablesForTask[value as string]}
+              description={description}
             />
           ))}
           {isPairingTasksVariablesError && (

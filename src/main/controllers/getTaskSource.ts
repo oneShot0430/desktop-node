@@ -1,23 +1,20 @@
 import { Event } from 'electron';
 
-import axios from 'axios';
-import config from 'config';
 import { ErrorType, GetTaskSourceParam } from 'models';
 import { throwDetailedError } from 'utils';
 
-import { getTaskInfo } from './getTaskInfo';
+import { fetchFromIPFSOrArweave } from './fetchFromIPFSOrArweave';
 
 export const getTaskSource = async (
-  event: Event,
-  payload: GetTaskSourceParam
+  _: Event,
+  { taskAuditProgram }: GetTaskSourceParam
 ): Promise<string> => {
-  const taskData = await getTaskInfo({} as Event, payload, 'getTaskSource');
-
-  const url = `${config.node.GATEWAY_URL}/${taskData.taskAuditProgram}`;
-
   try {
-    const { data: src } = await axios.get<string>(url);
-    return src;
+    const sourceCode = fetchFromIPFSOrArweave<string>(
+      taskAuditProgram,
+      'main.js'
+    );
+    return sourceCode;
   } catch (e: any) {
     console.error(e);
     return throwDetailedError({

@@ -6,7 +6,7 @@ import { ErrorType, GetTaskInfoParam, GetTaskInfoResponse } from 'models';
 import { throwDetailedError } from 'utils';
 
 export const getTaskInfo = async (
-  event: Event,
+  _: Event,
   payload: GetTaskInfoParam,
   context?: string
 ): Promise<GetTaskInfoResponse> => {
