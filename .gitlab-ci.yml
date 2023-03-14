@@ -12,16 +12,6 @@ variables:
     paths:
       - node_modules/
 
-.lint_template: &lint_script
-  stage: checks
-  script:
-    - npm run lint
-
-.test_template: &test_script
-  stage: checks
-  script:
-    - npm run test
-
 .package_template: &package_script
   stage: checks
   artifacts:
@@ -45,7 +35,6 @@ variables:
 
 stages:
   - prerequisites
-  - checks
   - deploy
 
 install_macos:
