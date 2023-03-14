@@ -1,5 +1,28 @@
 variables:
+  WINDOWS_IMAGE: 'electronuserland/builder:wine'
+  LINUX_IMAGE: 'node:18.8.0'
   MACOS_IMAGE: 'macos-12-xcode-14'
+
+.install_deps_template: &install_deps_script
+  stage: prerequisites
+  script:
+    - npm install
+  artifacts:
+    name: 'artifacts'
+    untracked: true
+    expire_in: 30 mins
+    paths:
+      - node_modules/
+
+.lint_template: &lint_script
+  stage: checks
+  script:
+    - npm run lint
+
+.test_template: &test_script
+  stage: checks
+  script:
+    - npm run test
 
 .package_template: &package_script
   stage: checks
@@ -13,7 +36,7 @@ variables:
 .deploy_template: &deploy_script
   stage: deploy
   only:
-    - test-mac
+    - main
 
   before_script:
     - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
@@ -22,25 +45,101 @@ variables:
   script:
     - aws s3 cp release/build/* s3://cdn.koii.live/$CURRENT_TARGET --acl public-read
 
+stages:
+  - prerequisites
+  - checks
+  - deploy
+
+install_win:
+  image: $WINDOWS_IMAGE
+  <<: *install_deps_script
+
+install_linux:
+  image: $LINUX_IMAGE
+  <<: *install_deps_script
+
 install_macos:
   image: $MACOS_IMAGE
-  script:
-    - npm install
+  <<: *install_deps_script
   tags:
     - shared-macos-amd64  
     
+lint_win:
+  image: $WINDOWS_IMAGE
+  needs: ['install_win']
+  <<: *lint_script
+
+lint_linux:
+  image: $LINUX_IMAGE
+  needs: ['install_linux']
+  <<: *lint_script
+
+lint_macos:
+  image: $MACOS_IMAGE
+  needs: ['install_macos']
+  <<: *lint_script
+  tags:
+    - shared-macos-amd64  
+
+test_win:
+  image: $WINDOWS_IMAGE
+  needs: ['install_win']
+  <<: *test_script
+
+test_linux:
+  image: $LINUX_IMAGE
+  needs: ['install_linux']
+  <<: *test_script
+
+test_macos:
+  image: $MACOS_IMAGE
+  needs: ['install_macos']
+  <<: *test_script
+  tags:
+    - shared-macos-amd64  
+
+package_win:
+  image: $WINDOWS_IMAGE
+  needs: ['install_win']
+  <<: *package_script
+  script:
+    - npm run package -- -w
+
+package_linux:
+  image: $LINUX_IMAGE
+  needs: ['install_linux']
+  <<: *package_script
+  script:
+    - npm run package
+
 package_macos:
   image: $MACOS_IMAGE
   needs: ['install_macos']
+  <<: *package_script
   script:
     - npm run package
   tags:
     - shared-macos-amd64  
 
+deploy_win:
+  image: $WINDOWS_IMAGE
+  needs: ['package_win']
+  variables:
+    CURRENT_TARGET: 'win'
+  <<: *deploy_script
+
+deploy_linux:
+  image: $LINUX_IMAGE
+  needs: ['package_linux']
+  variables:
+    CURRENT_TARGET: 'linux'
+  <<: *deploy_script
+
 deploy_macos:
   image: $MACOS_IMAGE
   needs: ['package_macos']
-  script:
-    - npm install
+  variables:
+    CURRENT_TARGET: 'macos'
+  <<: *deploy_script
   tags:
-    - shared-macos-amd64    
+    - shared-macos-amd64  
