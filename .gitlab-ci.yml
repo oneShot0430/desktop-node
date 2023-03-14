@@ -35,21 +35,12 @@ variables:
 
 stages:
   - prerequisites
+  - checks
   - deploy
 
 install_macos:
   image: $MACOS_IMAGE
   <<: *install_deps_script
-
-lint_macos:
-  image: $MACOS_IMAGE
-  needs: ['install_macos']
-  <<: *lint_script
-
-test_macos:
-  image: $MACOS_IMAGE
-  needs: ['install_macos']
-  <<: *test_script
 
 package_macos:
   image: $MACOS_IMAGE
