@@ -2,7 +2,7 @@ variables:
   WINDOWS_IMAGE: 'electronuserland/builder:wine'
   LINUX_IMAGE: 'node:18.8.0'
   MACOS_IMAGE: 'macos-12-xcode-14'
-
+  
 .install_deps_template: &install_deps_script
   stage: prerequisites
   script:
@@ -128,6 +128,8 @@ deploy_linux:
   <<: *deploy_script
   
 deploy_macos:
+  tags:
+    - shared-macos-amd6  
   image: $MACOS_IMAGE
   needs: ['package_macos']
   variables:
