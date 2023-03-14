@@ -1,16 +1,6 @@
 variables:
   MACOS_IMAGE: 'macos-12-xcode-14'
 
-.lint_template: &lint_script
-  stage: checks
-  script:
-    - npm run lint
-
-.test_template: &test_script
-  stage: checks
-  script:
-    - npm run test
-
 .package_template: &package_script
   stage: checks
   artifacts:
@@ -39,18 +29,6 @@ stages:
 
 install_macos:
   image: $MACOS_IMAGE
-  script:
-    - npm install
-
-lint_macos:
-  image: $MACOS_IMAGE
-  needs: ['install_macos']
-  script:
-    - npm install
-
-test_macos:
-  image: $MACOS_IMAGE
-  needs: ['install_macos']
   script:
     - npm install
 
