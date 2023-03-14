@@ -22,11 +22,6 @@ variables:
   script:
     - aws s3 cp release/build/* s3://cdn.koii.live/$CURRENT_TARGET --acl public-read
 
-stages:
-  - prerequisites
-  - checks
-  - deploy
-
 install_macos:
   image: $MACOS_IMAGE
   script:
@@ -35,13 +30,10 @@ install_macos:
 package_macos:
   image: $MACOS_IMAGE
   needs: ['install_macos']
-  <<: *package_script
   script:
     - npm run package
 
 deploy_macos:
-  tags:
-    - shared-macos-amd6  
   image: $MACOS_IMAGE
   needs: ['package_macos']
   script:
