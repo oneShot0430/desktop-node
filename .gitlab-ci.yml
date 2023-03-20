@@ -61,6 +61,8 @@ install_linux:
 install_macos:
   image: $MACOS_IMAGE
   <<: *install_deps_script
+  tags:
+    - shared-macos-amd64  
     
 lint_win:
   image: $WINDOWS_IMAGE
@@ -76,6 +78,8 @@ lint_macos:
   image: $MACOS_IMAGE
   needs: ['install_macos']
   <<: *lint_script
+  tags:
+    - shared-macos-amd64  
 
 test_win:
   image: $WINDOWS_IMAGE
@@ -91,6 +95,8 @@ test_macos:
   image: $MACOS_IMAGE
   needs: ['install_macos']
   <<: *test_script 
+  tags:
+    - shared-macos-amd64  
 
 package_win:
   image: $WINDOWS_IMAGE
@@ -112,6 +118,8 @@ package_macos:
   <<: *package_script
   script:
     - npm run package
+  tags:
+    - shared-macos-amd64  
 
 deploy_win:
   image: $WINDOWS_IMAGE
@@ -133,3 +141,5 @@ deploy_macos:
   variables:
     CURRENT_TARGET: 'macos'
   <<: *deploy_script
+  tags:
+    - shared-macos-amd64  
