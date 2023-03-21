@@ -28,11 +28,13 @@ const statuses = {
 };
 
 type PropsType = {
-  status: TaskStatus;
+  status: TaskStatus | null | undefined;
   isFirstRowInTable?: boolean;
 };
 
 export function NodeStatusCell({ status, isFirstRowInTable }: PropsType) {
+  if (!status) return <span>N/A</span>;
+
   const { icon: StatusIcon, title, iconColor } = statuses[status];
   const tooltipPlacement: Placement = `${
     isFirstRowInTable ? 'bottom' : 'top'

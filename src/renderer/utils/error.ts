@@ -33,7 +33,7 @@ export const getErrorToDisplay = (
 
   if (isDetailedError) {
     const serializedError = error.message.substring(error.message.indexOf('{'));
-    const parsedError: DetailedError = JSON.parse(serializedError);
+    const parsedError = JSON.parse(serializedError) as DetailedError;
     const errorContent = errorTypeToContent[parsedError.type];
     const hasContext = typeof errorContent !== 'string';
     const errorMessage =

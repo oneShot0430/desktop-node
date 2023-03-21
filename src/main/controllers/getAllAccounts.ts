@@ -37,7 +37,9 @@ const getAllAccounts = async (
     const currentAccountName = e.substring(0, e.lastIndexOf('_'));
     const mainSystemWallet = Keypair.fromSecretKey(
       Uint8Array.from(
-        JSON.parse(fs.readFileSync(`${getAppDataPath()}/wallets/${e}`, 'utf-8'))
+        JSON.parse(
+          fs.readFileSync(`${getAppDataPath()}/wallets/${e}`, 'utf-8')
+        ) as Uint8Array
       )
     );
     const stakingWalletNameArr = stakingWalletfilesInDirectory.filter(
@@ -53,7 +55,7 @@ const getAllAccounts = async (
             `${getAppDataPath()}/namespace/${stakingWalletName}`,
             'utf-8'
           )
-        )
+        ) as Uint8Array
       )
     );
     accounts.push({

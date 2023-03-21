@@ -31,7 +31,9 @@ const rewardWallet = async (
   try {
     stakingAccKeypair = Keypair.fromSecretKey(
       Uint8Array.from(
-        JSON.parse(fsSync.readFileSync(stakingWalletfilePath, 'utf-8'))
+        JSON.parse(
+          fsSync.readFileSync(stakingWalletfilePath, 'utf-8')
+        ) as Uint8Array
       )
     );
     const stakingPubkey = stakingAccKeypair.publicKey.toBase58();

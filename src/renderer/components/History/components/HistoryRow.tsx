@@ -14,10 +14,8 @@ export function HistoryRow({ task }: { task: Task }) {
   /**
    * @todo: abstract it away to the hook
    */
-  const { data: mainAccountPubKey, isLoading: loadingMainAccount } = useQuery(
-    QueryKeys.MainAccount,
-    () => getMainAccountPublicKey()
-  );
+  const { data: mainAccountPubKey = '', isLoading: loadingMainAccount } =
+    useQuery(QueryKeys.MainAccount, () => getMainAccountPublicKey());
   const { taskStake } = useTaskStake({ task, publicKey: mainAccountPubKey });
   const { taskName, publicKey } = task;
 
@@ -28,7 +26,7 @@ export function HistoryRow({ task }: { task: Task }) {
 
   const { showModal } = useTaskDetailsModal({
     task,
-    accountPublicKey: mainAccountPubKey as string,
+    accountPublicKey: mainAccountPubKey,
   });
 
   if (loadingMainAccount) return null;

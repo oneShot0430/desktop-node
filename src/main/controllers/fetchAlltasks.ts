@@ -1,9 +1,12 @@
 import { PublicKey } from '@_koi/web3.js';
 import config from 'config';
-import { FetchAllTasksParam } from 'models/api';
+import { Task, TaskData, FetchAllTasksParam } from 'models';
 
+import {
+  RawTaskData,
+  parseRawK2TaskData,
+} from '../node/helpers/parseRawK2TaskData';
 import sdk from '../services/sdk';
-import { Task, TaskData } from '../type/TaskData';
 
 async function fetchAllTasks(
   _: Event,
@@ -24,24 +27,10 @@ async function fetchAllTasks(
   const tasks: Task[] = taskAccountInfo
     .map((rawData) => {
       try {
-        const rawTaskData = JSON.parse(rawData.account.data.toString());
-        const taskData: TaskData = {
-          taskName: rawTaskData.task_name,
-          taskManager: new PublicKey(rawTaskData.task_manager).toBase58(),
-          isWhitelisted: rawTaskData.is_whitelisted,
-          isActive: rawTaskData.is_active,
-          taskAuditProgram: rawTaskData.task_audit_program,
-          stakePotAccount: new PublicKey(
-            rawTaskData.stake_pot_account
-          ).toBase58(),
-          totalBountyAmount: rawTaskData.total_bounty_amount,
-          bountyAmountPerRound: rawTaskData.bounty_amount_per_round,
-          status: rawTaskData.status,
-          currentRound: rawTaskData.current_round,
-          availableBalances: rawTaskData.available_balances,
-          stakeList: rawTaskData.stake_list,
-          isRunning: false,
-        };
+        const rawTaskData = JSON.parse(
+          rawData.account.data.toString()
+        ) as RawTaskData;
+        const taskData: TaskData = parseRawK2TaskData(rawTaskData);
         const task: Task = {
           publicKey: rawData.pubkey.toBase58(),
           data: taskData,

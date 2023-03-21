@@ -4,13 +4,13 @@ import { fetchAccountBalance } from 'renderer/features/settings/hooks/common';
 import { getMainAccountPublicKey } from 'renderer/services';
 
 export const useMainAccountBalance = () => {
-  const { data: mainAccountPubKey } = useQuery(
+  const { data: mainAccountPubKey = '' } = useQuery(
     ['main-account'],
     getMainAccountPublicKey
   );
 
   const mainAccountBalanceQuery = useQuery(
-    ['account-balance', mainAccountPubKey as string],
+    ['account-balance', mainAccountPubKey],
     fetchAccountBalance,
     {
       enabled: !!mainAccountPubKey,

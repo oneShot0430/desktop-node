@@ -48,5 +48,5 @@ export interface TaskData {
   availableBalances: Record<string, ROE>;
   stakeList: Record<string, ROE>;
   isRunning: boolean;
-  metadata?: Partial<TaskMetadata>;
+  metadataCID: string;
 }

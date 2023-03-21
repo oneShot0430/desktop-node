@@ -1,118 +1,80 @@
-import { GetTaskInfoParam, GetTaskSourceParam } from 'models';
+import {
+  GetTaskInfoParam,
+  GetTaskInfoResponse,
+  GetTaskMetadataParam,
+  RequirementType,
+  TaskMetadata,
+} from 'models';
 
 import { getTaskVariablesNames } from './getTaskVariablesNames';
 
-const taskVariablesNames = ['HOME', 'APPDATA', 'K2_NODE_URL', 'NODE_MODE'];
-const sourceCodeWithoutVariableTasks = `import path from 'path';
+const taskVariablesNames = ['HOME', 'APPDATA'];
 
-export function getAppDataPath() {
-  switch (process.platform) {
-    case 'darwin': {
-      return path.join(
-        'Home',
-        'Library',
-        'Application Support',
-        'KOII-Desktop-Node'
-      );
-    }
-    case 'win32': {
-      return path.join('app-data', 'KOII-Desktop-Node');
-    }
-    case 'linux': {
-      return path.join('Home', '.KOII-Desktop-Node');
-    }
-    default: {
-      console.log('Unsupported platform!');
-      process.exit(1);
-    }
-  }
-}`;
-
-// This sample source code contains all the risky delimiters mentioned in https://gitlab.com/koii-network/desktop-node/-/issues/108#note_1193556643 🙌🏻
-const sourceCodeWithVariableTasks = `import path from 'path';
-
-export function getAppDataPath() {
-  switch (process.platform) {
-    case 'darwin': {
-      return path.join(
-        process.env.${taskVariablesNames[0]},
-        'Library',
-        'Application Support',
-        'KOII-Desktop-Node'
-      );
-    }
-    case 'win32': {
-      return path.join(process.env.${taskVariablesNames[1]}, 'KOII-Desktop-Node');
-    }
-    case 'linux': {
-      return path.join(process.env.${taskVariablesNames[0]}, '.KOII-Desktop-Node');
-    }
-    default: {
-      console.log('Unsupported platform!');
-      process.exit(1);
-    }
-  }
-}
-
-/**
- * @description Get URL from K2_NODE_URL environment variable
- */
-async function getRpcUrlWrapper() {
-  if (process.env.${taskVariablesNames[2]}) {
-    return process.env.${taskVariablesNames[2]};
-  } else {
-    console.warn(
-      Failed to fetch URL from K2_NODE_URL environment variable setting it to https://k2-testnet.koii.live', {task variable: process.env.${taskVariablesNames[2]}}
-    );
-    return 'https://k2-testnet.koii.live';
-  }
-}
-
-const namespaceInstance = new Namespace(
-  '',
-  null,
-  process.env.${taskVariablesNames[3]} || 'service',
-  null,
-  {}
-);`;
-
-const tasks = [
+const tasksTestData: {
+  taskPublicKey: string;
+  taskMetadataCid: string;
+  taskMetadata: TaskMetadata;
+}[] = [
   {
     taskPublicKey: '342dkttYwjx2dUPm3Hk2pxxPVhdWaYHVpg4bxEbvzxGr',
-    taskAuditProgram:
-      'bafybeicjuykahd7guj27hjop2ocwp7wl7h3nnkiljharag3gqgzti3uasd',
-    sourceCode: sourceCodeWithoutVariableTasks,
+    taskMetadataCid: 'test1',
+    taskMetadata: {
+      author: 'test',
+      description: 'test',
+      repositoryUrl: 'test',
+      createdAt: 123,
+      imageUrl: 'test',
+      requirementsTags: [],
+    },
   },
   {
     taskPublicKey: '4ZbqVcP95zkhm9HsRWSveCosHjUozPf4QC73ce6Q8TRr',
-    taskAuditProgram:
-      'bafybeicjuykahd7guj27hjop2ocwp7wl7h3nnkiljharag3gqgzti3uqwe',
-    sourceCode: sourceCodeWithVariableTasks,
+    taskMetadataCid: 'test2',
+    taskMetadata: {
+      author: 'test',
+      description: 'test',
+      repositoryUrl: 'test',
+      createdAt: 123,
+      imageUrl: 'test',
+      requirementsTags: [
+        { type: RequirementType.TASK_VARIABLE, value: taskVariablesNames[0] },
+        { type: RequirementType.GLOBAL_VARIABLE, value: taskVariablesNames[1] },
+      ],
+    },
   },
 ];
 
 jest.mock('../getTaskInfo', () => ({
-  getTaskInfo: jest.fn((_: Event, { taskAccountPubKey }: GetTaskInfoParam) => {
-    const { taskAuditProgram } = tasks.find(
-      (task) => task.taskPublicKey === taskAccountPubKey
-    )!;
-    return Promise.resolve({ taskAuditProgram });
-  }),
-}));
-jest.mock('../getTaskSource', () => ({
-  getTaskSource: jest.fn(
-    (_: Event, { taskAuditProgram }: GetTaskSourceParam) => {
-      const { sourceCode } = tasks.find(
-        (task) => task.taskAuditProgram === taskAuditProgram
+  getTaskInfo: jest.fn(
+    (
+      _: Event,
+      { taskAccountPubKey }: GetTaskInfoParam
+    ): Promise<Partial<GetTaskInfoResponse>> => {
+      const { taskMetadataCid } = tasksTestData.find(
+        (task) => task.taskPublicKey === taskAccountPubKey
       )!;
-      return Promise.resolve(sourceCode);
+      return Promise.resolve({ metadataCID: taskMetadataCid });
+    }
+  ),
+}));
+
+jest.mock('../getTaskMetadata', () => ({
+  getTaskMetadata: jest.fn(
+    (
+      _: Event,
+      { metadataCID }: GetTaskMetadataParam
+    ): Promise<TaskMetadata> => {
+      const { taskMetadata } = tasksTestData.find(
+        (task) => task.taskMetadataCid === metadataCID
+      )!;
+      return Promise.resolve(taskMetadata);
     }
   ),
 }));
 
 describe('getTaskVariablesNames', () => {
   it('returns an empty array if the task source code contains no task variables', async () => {
-    const { taskPublicKey } = tasks[0];
+    const { taskPublicKey } = tasksTestData[0];
 
     const result = await getTaskVariablesNames({} as Event, {
       taskPublicKey,
@@ -122,7 +84,7 @@ describe('getTaskVariablesNames', () => {
   });
 
   it('returns unique (non-repeated) task variables names if they are used in the source code of the task', async () => {
-    const { taskPublicKey } = tasks[1];
+    const { taskPublicKey } = tasksTestData[1];
 
     const result = await getTaskVariablesNames({} as Event, {
       taskPublicKey,

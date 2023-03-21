@@ -1,8 +1,7 @@
 import cookieParser from 'cookie-parser';
-import proxy from 'express-http-proxy';
-
 import cors from 'cors';
 import express, { Express, Request, Response, NextFunction } from 'express';
+import proxy from 'express-http-proxy';
 import koiiState from 'main/services/koiiState';
 import koiiTasks from 'main/services/koiiTasks';
 

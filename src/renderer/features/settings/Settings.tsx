@@ -1,12 +1,6 @@
 import React, { memo, useState } from 'react';
 
-import {
-  AccountsTable,
-  NodeLogs,
-  SettingsHeader,
-  TaskSettings,
-} from './components';
-import { logsMock } from './mocks';
+import { AccountsTable, SettingsHeader, TaskSettings } from './components';
 import { Tab } from './types';
 
 function Settings() {
@@ -17,7 +11,6 @@ function Settings() {
       <SettingsHeader onTabChange={setTab} activeTab={selectedTab} />
       {selectedTab === Tab.AccountsTable && <AccountsTable />}
       {selectedTab === Tab.TaskSettings && <TaskSettings />}
-      {selectedTab === Tab.NodeLogs && <NodeLogs logs={logsMock} />}
     </div>
   );
 }

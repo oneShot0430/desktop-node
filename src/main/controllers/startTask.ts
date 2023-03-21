@@ -1,14 +1,14 @@
 // eslint-disable
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 
 import { ChildProcess, fork, ForkOptions } from 'child_process';
 import { Event } from 'electron';
 import * as fsSync from 'fs';
 
+import { PublicKey, Keypair } from '@_koi/web3.js';
 import cryptoRandomString from 'crypto-random-string';
-
-import { Keypair, PublicKey } from '@_koi/web3.js';
+import db from 'main/db';
+import { getRpcUrlWrapper } from 'main/node/helpers/getRpcUrlWrapper';
 import { Namespace, namespaceInstance } from 'main/node/helpers/Namespace';
 import koiiTasks from 'main/services/koiiTasks';
 import { ErrorType } from 'models';
@@ -38,7 +38,7 @@ const startTask = async (_: Event, payload: TaskStartStopParam) => {
   const mainWalletfilePath = `${getAppDataPath()}/wallets/${activeAccount}_mainSystemWallet.json`;
   const mainSystemAccount = Keypair.fromSecretKey(
     Uint8Array.from(
-      JSON.parse(fsSync.readFileSync(mainWalletfilePath, 'utf-8'))
+      JSON.parse(fsSync.readFileSync(mainWalletfilePath, 'utf-8')) as Uint8Array
     )
   );
 
@@ -96,7 +96,7 @@ const startTask = async (_: Event, payload: TaskStartStopParam) => {
     // await koiiTasks.taskStarted(taskAccountPubKey, cronArray);
   } catch (err) {
     console.error('ERR-:', err);
-    throw new Error(err);
+    throw new Error(err as string);
   }
 };
 
@@ -151,7 +151,7 @@ async function executeTasks(
   fsSync.mkdirSync(`${getAppDataPath()}/namespace/${selectedTask.taskId}`, {
     recursive: true,
   });
-  const log_file = fsSync.createWriteStream(
+  const logFile = fsSync.createWriteStream(
     `${getAppDataPath()}/namespace/${selectedTask.taskId}/task.log`,
     { flags: 'a+' }
   );
@@ -170,22 +170,42 @@ async function executeTasks(
     ],
     options
   );
-  childTaskProcess.stdout.pipe(log_file);
-  childTaskProcess.stderr.pipe(log_file);
+  childTaskProcess.stdout?.pipe(logFile);
+  childTaskProcess.stderr?.pipe(logFile);
+
   const namespace = new Namespace(
-    selectedTask.taskId,
-    expressApp,
-    operationMode,
-    mainSystemAccount,
+    // selectedTask.taskId,
+    // expressApp,
+    // operationMode,
+    // mainSystemAccount,
+
+    // {
+    //   task_name: selectedTask.taskName,
+    //   task_id: selectedTask.taskId,
+    //   task_audit_program: selectedTask.taskAuditProgram,
+    //   task_manager: new PublicKey(selectedTask.taskManager),
+    //   stake_pot_account: new PublicKey(selectedTask.stakePotAccount),
+    //   bounty_amount_per_round: selectedTask.bountyAmountPerRound,
+    //
     {
-      task_name: selectedTask.taskName,
-      task_id: selectedTask.taskId,
-      task_audit_program: selectedTask.taskAuditProgram,
-      task_manager: new PublicKey(selectedTask.taskManager),
-      stake_pot_account: new PublicKey(selectedTask.stakePotAccount),
-      bounty_amount_per_round: selectedTask.bountyAmountPerRound,
+      taskTxId: selectedTask.taskId,
+      serverApp: expressApp,
+      mainSystemAccount,
+      db,
+      rpcUrl: getRpcUrlWrapper(),
+      taskData: {
+        task_name: selectedTask.taskName,
+        task_id: selectedTask.taskId,
+        task_audit_program: selectedTask.taskAuditProgram,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        task_manager: new PublicKey(selectedTask.taskManager!),
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        stake_pot_account: new PublicKey(selectedTask.stakePotAccount!),
+        bounty_amount_per_round: selectedTask.bountyAmountPerRound,
+      },
     }
   );
+
   LAST_USED_PORT += 1;
   return {
     namespace,
