@@ -1,11 +1,12 @@
 // import { Task } from 'main/type';
 import { ChildProcess } from 'child_process';
 
-import { ErrorType } from '../../models';
-import { throwDetailedError } from '../../utils';
+import { ErrorType, Task } from 'models';
+import { throwDetailedError } from 'utils';
+
 import fetchAllTasks from '../controllers/fetchAlltasks';
 import { namespaceInstance } from '../node/helpers/Namespace';
-import { Task, IRunningTasks } from '../type/TaskData';
+import { IRunningTasks } from '../type/TaskData';
 
 class KoiiTasks {
   private tasks: Task[] = [];
@@ -104,7 +105,7 @@ class KoiiTasks {
       'runningTasks'
     )) as string;
     const runningTasks: Array<string> = runningTasksStr
-      ? JSON.parse(runningTasksStr)
+      ? (JSON.parse(runningTasksStr) as Array<string>)
       : [];
     console.log({ runningTasks });
     this.tasks.map((task) => {

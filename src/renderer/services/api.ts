@@ -1,5 +1,6 @@
 import { sum } from 'lodash';
 import {
+  Task as TaskRaw,
   FetchAllTasksParam,
   GetAvailableTasksParam,
   GetMyTasksParam,
@@ -7,11 +8,9 @@ import {
   TaskVariableDataWithId,
   StoreUserConfigParam,
   PairTaskVariableParamType,
-} from 'models/api';
+} from 'models';
 import { Task } from 'renderer/types';
 import { getKoiiFromRoe } from 'utils';
-
-import { Task as TaskRaw } from '../../main/type/TaskData';
 
 function parseTask({ data, publicKey }: TaskRaw): Task {
   return { publicKey, ...data };
@@ -237,9 +236,14 @@ export const getTasksPairedWithVariable = async (variableId: string) => {
 };
 
 export const getTaskMetadata = async (metadataCID: string) => {
-  return window.main.getTaskMetadata({
-    metadataCID,
-  });
+  return window.main
+    .getTaskMetadata({
+      metadataCID,
+    })
+    .then((metadata) => {
+      console.log('GETTING METADATA BY CID', metadataCID, metadata);
+      return metadata;
+    });
 };
 
 export const claimRewards = async () => {

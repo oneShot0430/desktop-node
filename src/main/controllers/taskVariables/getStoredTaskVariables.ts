@@ -5,16 +5,16 @@ import { PersistentStoreKeys } from '../types';
 
 export const getStoredTaskVariables =
   async (): Promise<TaskVariablesReturnType> => {
-    const taskVariables = await namespaceInstance.storeGet(
+    const taskVariablesStringified: string = await namespaceInstance.storeGet(
       PersistentStoreKeys.TaskVariables
     );
 
     try {
-      const parsedData: TaskVariablesReturnType = JSON.parse(
-        taskVariables as string
-      );
+      const taskVariables: TaskVariablesReturnType = {
+        ...(JSON.parse(taskVariablesStringified) as TaskVariablesReturnType),
+      };
 
-      return parsedData || {};
+      return taskVariables;
     } catch (error) {
       console.log('Get Stored Task Variables: JSON parse error', error);
       return {};

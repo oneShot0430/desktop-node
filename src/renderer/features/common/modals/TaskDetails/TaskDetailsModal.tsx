@@ -12,7 +12,7 @@ import { SourceCode } from 'renderer/components/SourceCode';
 import { useEarnedReward } from 'renderer/features/common/hooks/useEarnedReward';
 import { useTaskStake } from 'renderer/features/common/hooks/useTaskStake';
 import { Modal, ModalContent } from 'renderer/features/modals';
-import { QueryKeys, TaskService, TaskStatusToLabeMap } from 'renderer/services';
+import { QueryKeys, TaskService, getTaskStatusLabel } from 'renderer/services';
 import { Task } from 'renderer/types';
 import { Theme } from 'renderer/types/common';
 
@@ -44,7 +44,8 @@ export const TaskDetailsModal = create<TaskDetailsModalPropsType>(
     const totalStake = TaskService.getTotalStaked(task);
     const nodes = TaskService.getNodesCount(task);
     const topStake = TaskService.getTopStake(task);
-    const state = TaskStatusToLabeMap[TaskService.getStatus(task)];
+    const taskStatus = TaskService.getStatus(task);
+    const state = getTaskStatusLabel(taskStatus);
 
     const handleClose = () => {
       modal.remove();
@@ -86,7 +87,7 @@ export const TaskDetailsModal = create<TaskDetailsModalPropsType>(
               {/*  not sure */}
             </div>
 
-            <div className="flex items-center mb-5 w-full">
+            <div className="flex items-center w-full mb-5">
               <Icon
                 source={FlagReportLine}
                 className="w-3 h-5 text-[#ECFFFE]"
@@ -108,7 +109,7 @@ export const TaskDetailsModal = create<TaskDetailsModalPropsType>(
                 >
                   <Icon
                     source={ExportGoToLine1}
-                    className="w-4 h-4 cursor-pointer mb-1"
+                    className="w-4 h-4 mb-1 cursor-pointer"
                   />
                 </a>
               )}

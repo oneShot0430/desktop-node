@@ -1,6 +1,7 @@
-import { PublicKey } from '@_koi/web3.js';
 import sdk from 'main/services/sdk';
 import { GetTaskInfoParam, TaskData } from 'models';
+
+import { parseRawK2TaskData } from '../node/helpers/parseRawK2TaskData';
 
 import { getTaskInfo } from './getTaskInfo';
 
@@ -30,22 +31,10 @@ const testRawTaskData = {
   current_round: 1,
   available_balances: {},
   stake_list: {},
+  task_metadata: 'test',
 };
 
-const parsedTaskData: Omit<TaskData, 'isRunning'> = {
-  taskName: testRawTaskData.task_name,
-  taskManager: new PublicKey(testRawTaskData.task_manager).toBase58(),
-  isWhitelisted: testRawTaskData.is_whitelisted,
-  isActive: testRawTaskData.is_active,
-  taskAuditProgram: testRawTaskData.task_audit_program,
-  stakePotAccount: new PublicKey(testRawTaskData.stake_pot_account).toBase58(),
-  totalBountyAmount: testRawTaskData.total_bounty_amount,
-  bountyAmountPerRound: testRawTaskData.bounty_amount_per_round,
-  status: testRawTaskData.status,
-  currentRound: testRawTaskData.current_round,
-  availableBalances: testRawTaskData.available_balances,
-  stakeList: testRawTaskData.stake_list,
-};
+const parsedTaskData: TaskData = parseRawK2TaskData(testRawTaskData);
 
 describe('getTaskInfo', () => {
   beforeEach(() => {

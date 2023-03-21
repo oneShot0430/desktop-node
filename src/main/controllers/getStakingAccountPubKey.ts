@@ -28,7 +28,9 @@ const stakingAccountPubKey = async (
     try {
       stakingAccount = Keypair.fromSecretKey(
         Uint8Array.from(
-          JSON.parse(fsSync.readFileSync(stakingWalletfilePath, 'utf-8'))
+          JSON.parse(
+            fsSync.readFileSync(stakingWalletfilePath, 'utf-8')
+          ) as Uint8Array
         )
       );
       pubkey = stakingAccount.publicKey.toBase58();

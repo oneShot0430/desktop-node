@@ -1,26 +1,21 @@
 import { EmbedCodeFill, Icon } from '@_koii/koii-styleguide';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { RequirementType, TaskMetadata } from 'models/task';
 import { NodeTools } from 'renderer/features/node-tools';
+import { openBrowserWindow } from 'renderer/services';
 
 type PropsType = {
   taskPubKey: string;
   info?: TaskMetadata;
-  onShowCodeClick: () => void;
   onToolsValidation?: (isValid: boolean) => void;
 };
 
 const NOT_AVAILABLE = 'N/A';
 
-export function TaskInfo({
-  taskPubKey,
-  info,
-  onShowCodeClick,
-  onToolsValidation,
-}: PropsType) {
-  const handleShowSourceCode = () => {
-    onShowCodeClick();
+export function TaskInfo({ taskPubKey, info, onToolsValidation }: PropsType) {
+  const showSourceCodeInRepository = () => {
+    openBrowserWindow(info?.repositoryUrl ?? '');
   };
 
   const specs = info?.requirementsTags?.filter(({ type }) =>
@@ -38,19 +33,30 @@ export function TaskInfo({
     ({ type }) => type === RequirementType.GLOBAL_VARIABLE
   );
 
+  useEffect(() => {
+    if (!globalSettings?.length) {
+      onToolsValidation?.(true);
+    }
+  });
+
   return (
     <div className="flex flex-col w-full">
       <div className="pr-3">
         <div className="mb-3 text-base font-semibold">Task description:</div>
         <div className="flex justify-between gap-16 mb-4">
           <p>{info?.description ?? NOT_AVAILABLE}</p>
-          <div
-            className="w-[54px] flex flex-col items-center cursor-pointer"
-            onClick={handleShowSourceCode}
+
+          <button
+            className="w-[54px] h-[76px] flex flex-col items-center cursor-pointer"
+            onClick={showSourceCodeInRepository}
           >
-            <Icon source={EmbedCodeFill} size={36} color="#BEF0ED" />
-            <span className="text-center">Source Code</span>
-          </div>
+            {info?.repositoryUrl && (
+              <>
+                <Icon source={EmbedCodeFill} size={36} color="#BEF0ED" />
+                <span className="text-center">Source Code</span>
+              </>
+            )}
+          </button>
         </div>
       </div>
       <div className="mb-6 w-fit">

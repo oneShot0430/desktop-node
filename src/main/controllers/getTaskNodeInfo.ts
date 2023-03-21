@@ -1,12 +1,11 @@
 import { Event } from 'electron';
 
 import { PublicKey } from '@_koi/web3.js';
-import { ErrorType } from 'models';
+import { ErrorType, Task } from 'models';
 import { GetTaskNodeInfoResponse } from 'models/api';
 import { throwDetailedError } from 'utils';
 
 import sdk from '../services/sdk';
-import { Task } from '../type/TaskData';
 
 import fetchAlltasks from './fetchAlltasks';
 import getMainAccountPubKey from './getMainAccountPubKey';

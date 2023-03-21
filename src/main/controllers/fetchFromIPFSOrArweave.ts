@@ -9,6 +9,7 @@ export const fetchFromIPFSOrArweave = async <T>(
   fileName: string
 ) => {
   const isTaskDeployedToIPFS = isIPFS.cid(cid);
+
   const retrieveFromArweave = async (cid: string) =>
     (await axios.get<T>(`${config.node.ARWEAVE_GATEWAY_URL}/${cid}`))?.data;
 

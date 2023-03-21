@@ -1,8 +1,7 @@
 import fs from 'fs';
 
-import levelup from 'levelup';
-
 import leveldown from 'leveldown';
+import levelup from 'levelup';
 
 import { getAppDataPath } from './getAppDataPath';
 

@@ -17,5 +17,14 @@
     "jsx": "react",
     "target": "ES6"
   },
-  "exclude": ["test", "release/build", "release/app/dist", ".erb/dll", ".erb/configs"]
+  "exclude": [
+    "test",
+    "release/build",
+    "release/app/dist",
+    ".erb/dll",
+    ".erb/configs"
+  ],
+  "env": {
+    "K2_NODE_URL": "https://k2-devnet.koii.live"
+  }
 }

@@ -19,6 +19,7 @@ import {
 } from 'renderer/components/ui';
 import { useClipboard } from 'renderer/features/common/hooks/useClipboard';
 import { useConfirmModal } from 'renderer/features/common/modals/ConfirmationModal';
+import { getKoiiFromRoe } from 'utils';
 
 import { useAccount, useAccountBalance } from '../../hooks';
 
@@ -41,7 +42,7 @@ export const AccountItem = memo(
   }: PropsType) => {
     const [isDeleting, setIsDeleting] = useState(false);
 
-    const { accountBalance, accountBalanceLoadingError } =
+    const { accountBalance = 0, accountBalanceLoadingError } =
       useAccountBalance(mainPublicKey);
 
     const { copyToClipboard: copyMainKeyToClipboard, copied: copiedMainKey } =
@@ -98,6 +99,7 @@ export const AccountItem = memo(
       isDefault ? 'bg-finnieTeal-100/[.3]' : 'bg-finnieTeal-100'
     } bg-opacity-5 grid grid-cols-accounts gap-y-6 gap-x-2 !py-4 border-none`;
     const StarIcon = isDefault ? FavoriteStarFill : FavoriteStarLine;
+    const accountBalanceInKoii = getKoiiFromRoe(accountBalance);
 
     return (
       <div className="w-full mb-4 pr-2 text-white">
@@ -149,7 +151,9 @@ export const AccountItem = memo(
           /> */}
           </div>
 
-          <span>{accountBalanceLoadingError ? '-' : accountBalance} KOII</span>
+          <span>
+            {accountBalanceLoadingError ? '-' : accountBalanceInKoii} KOII
+          </span>
 
           <div className="mr-4 ml-auto">
             {!isDefault &&

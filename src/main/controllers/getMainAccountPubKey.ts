@@ -26,7 +26,9 @@ const mainAccountPubKey = async (
   try {
     mainSystemAccount = Keypair.fromSecretKey(
       Uint8Array.from(
-        JSON.parse(fsSync.readFileSync(mainWalletfilePath, 'utf-8'))
+        JSON.parse(
+          fsSync.readFileSync(mainWalletfilePath, 'utf-8')
+        ) as Uint8Array
       )
     );
     pubkey = mainSystemAccount.publicKey.toBase58();

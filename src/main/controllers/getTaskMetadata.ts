@@ -7,11 +7,19 @@ import { fetchFromIPFSOrArweave } from './fetchFromIPFSOrArweave';
 
 export const getTaskMetadata = async (
   _: Event,
-  { metadataCID }: GetTaskMetadataParam
+  payload: GetTaskMetadataParam
 ): Promise<TaskMetadata> => {
+  // payload validation
+  if (!payload?.metadataCID) {
+    throw throwDetailedError({
+      detailed: 'Get Task Metadata error: payload is not valid',
+      type: ErrorType.GENERIC,
+    });
+  }
+
   try {
     const metadata = fetchFromIPFSOrArweave<TaskMetadata>(
-      metadataCID,
+      payload.metadataCID,
       'metadata.json'
     );
     return metadata;

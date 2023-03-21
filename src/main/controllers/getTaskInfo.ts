@@ -5,6 +5,11 @@ import sdk from 'main/services/sdk';
 import { ErrorType, GetTaskInfoParam, GetTaskInfoResponse } from 'models';
 import { throwDetailedError } from 'utils';
 
+import {
+  RawTaskData,
+  parseRawK2TaskData,
+} from '../node/helpers/parseRawK2TaskData';
+
 export const getTaskInfo = async (
   _: Event,
   payload: GetTaskInfoParam,
@@ -30,9 +35,10 @@ export const getTaskInfo = async (
       type: ErrorType.TASK_NOT_FOUND,
     });
 
-  let taskData;
+  let rawTaskData;
+
   try {
-    taskData = JSON.parse(accountInfo.data.toString());
+    rawTaskData = JSON.parse(accountInfo.data.toString()) as RawTaskData;
   } catch (e: any) {
     return throwDetailedError({
       detailed: `Error during Task parsing${
@@ -42,7 +48,7 @@ export const getTaskInfo = async (
     });
   }
 
-  if (!taskData) {
+  if (!rawTaskData) {
     return throwDetailedError({
       detailed: `Task data not found${
         context ? ` in context of ${context}` : ''
@@ -50,21 +56,8 @@ export const getTaskInfo = async (
       type: ErrorType.TASK_NOT_FOUND,
     });
   }
-
-  return {
-    taskName: taskData.task_name,
-    taskManager: new PublicKey(taskData.task_manager).toBase58(),
-    isWhitelisted: taskData.is_whitelisted,
-    isActive: taskData.is_active,
-    taskAuditProgram: taskData.task_audit_program,
-    stakePotAccount: new PublicKey(taskData.stake_pot_account).toBase58(),
-    totalBountyAmount: taskData.total_bounty_amount,
-    bountyAmountPerRound: taskData.bounty_amount_per_round,
-    status: taskData.status,
-    currentRound: taskData.current_round,
-    availableBalances: taskData.available_balances,
-    stakeList: taskData.stake_list,
-  };
+  console.log(rawTaskData);
+  return parseRawK2TaskData(rawTaskData);
 };
 
 export const validateTask = getTaskInfo;

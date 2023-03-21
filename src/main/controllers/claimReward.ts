@@ -30,7 +30,9 @@ const claimReward = async (
   try {
     stakingAccKeypair = Keypair.fromSecretKey(
       Uint8Array.from(
-        JSON.parse(fsSync.readFileSync(stakingWalletfilePath, 'utf-8'))
+        JSON.parse(
+          fsSync.readFileSync(stakingWalletfilePath, 'utf-8')
+        ) as Uint8Array
       )
     );
   } catch (e: any) {
@@ -54,8 +56,9 @@ const claimReward = async (
   const response = await namespaceInstance.claimReward(
     statePotPubKey,
     stakingPubKey,
-    stakingAccKeypair,
-    taskStateInfoPublicKey
+    stakingAccKeypair
+    // FIXME: check this params
+    // taskStateInfoPublicKey
   );
   console.log('RESPONSE FROM CLAIM REWARD FUNCTION', response);
   return response;

@@ -64,7 +64,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   const [isGlobalToolsValid, setIsGlobalToolsValid] = useState(false);
   const [isTaskToolsValid, setIsTaskToolsValid] = useState(false);
   const [isTaskValidToRun, setIsTaskValidToRun] = useState(false);
-  const [stake, setStake] = useState<number>(0);
+  const [valueToStake, setValueToStake] = useState<number>(0);
   const [meetsMinimumStake, setMeetsMinimumStake] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -72,7 +72,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
    * @todo: abstract it away to the hook,
    * We probably should fetch the Account pub key once and keep it in the app context
    */
-  const { data: mainAccountPubKey } = useMainAccount();
+  const { data: mainAccountPubKey = '' } = useMainAccount();
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -92,7 +92,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
 
   const { showModal: showCodeModal } = useTaskDetailsModal({
     task,
-    accountPublicKey: mainAccountPubKey as string,
+    accountPublicKey: mainAccountPubKey,
   });
 
   const handleToggleView = (view: 'info' | 'settings') => {
@@ -116,16 +116,15 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     [task.totalBountyAmount]
   );
 
-  const { data: minStake } = useQuery([QueryKeys.minStake, publicKey], () =>
+  const { data: minStake = 0 } = useQuery([QueryKeys.minStake, publicKey], () =>
     TaskService.getMinStake(task)
   );
 
-  const mockedUpMetadataCID =
-    'bafybeicjuykahd7guj27hjop2ocwp7wl7h3nnkiljharag3gqgzti3uhfq';
-
   const { data: taskMetadata, isLoading: isLoadingTaskMetadata } = useQuery(
-    [QueryKeys.TaskMetadata, mockedUpMetadataCID],
-    () => getTaskMetadata(mockedUpMetadataCID)
+    [QueryKeys.TaskMetadata, task.metadataCID],
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    () => getTaskMetadata(task.metadataCID!),
+    { enabled: !!task.metadataCID }
   );
 
   const taskSettings = taskMetadata?.requirementsTags?.filter(
@@ -133,23 +132,21 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   );
 
   const validateTask = useCallback(() => {
-    const hasMinimumStake = stake >= (minStake as number);
+    const hasMinimumStake = valueToStake >= minStake;
     const isTaskValid =
       hasMinimumStake && isGlobalToolsValid && isTaskToolsValid;
     setIsTaskValidToRun(isTaskValid);
-  }, [isGlobalToolsValid, isTaskToolsValid, minStake, stake]);
+  }, [isGlobalToolsValid, isTaskToolsValid, minStake, valueToStake]);
 
   useEffect(() => {
     validateTask();
   }, [validateTask]);
 
   const handleStartTask = async () => {
-    const stakeAmount = alreadyStakedTokensAmount || stake;
-
     try {
       setLoading(true);
-      if (stakeAmount === 0) {
-        await stakeOnTask(publicKey, stakeAmount);
+      if (alreadyStakedTokensAmount === 0) {
+        await stakeOnTask(publicKey, valueToStake);
       }
       await startTask(publicKey);
     } catch (error) {
@@ -171,8 +168,8 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   };
 
   const handleStakeValueChange = (value: number) => {
-    setStake(value);
-    setMeetsMinimumStake(value >= (minStake as number));
+    setValueToStake(value);
+    setMeetsMinimumStake(value >= minStake);
   };
 
   const getTaskPlayButtonIcon = useCallback(() => {
@@ -201,7 +198,6 @@ function TaskItem({ task, index, columnsLayout }: Props) {
         <TaskInfo
           taskPubKey={task.publicKey}
           info={taskMetadata}
-          onShowCodeClick={showCodeModal}
           onToolsValidation={handleGlobalToolsValidationCheck}
         />
       );
@@ -218,14 +214,18 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     }
 
     return null;
-  }, [
-    accordionView,
-    task,
-    showCodeModal,
-    taskMetadata,
-    taskSettings,
-    isLoadingTaskMetadata,
-  ]);
+  }, [accordionView, task, taskMetadata, taskSettings, isLoadingTaskMetadata]);
+
+  const createdAt = useMemo(() => {
+    if (taskMetadata?.createdAt) {
+      const date = new Date(taskMetadata.createdAt);
+      return `${date.getFullYear()}-${(date.getMonth() + 1)
+        .toString()
+        .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+    }
+
+    return 'N/A';
+  }, [taskMetadata]);
 
   return (
     <TableRow columnsLayout={columnsLayout} className="py-2 gap-y-0" ref={ref}>
@@ -253,9 +253,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
 
       <div className="flex flex-col gap-2 text-xs">
         <div>{taskName}</div>
-        <div className="text-finnieTeal">
-          {task?.metadata?.createdAt ?? 'N/A'}
-        </div>
+        <div className="text-finnieTeal">{createdAt}</div>
       </div>
 
       <div
@@ -277,7 +275,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
       <div>
         <EditStakeInput
           meetsMinimumStake={meetsMinimumStake}
-          stake={alreadyStakedTokensAmount || stake}
+          stake={alreadyStakedTokensAmount || valueToStake}
           minStake={minStake as number}
           onChange={handleStakeValueChange}
           disabled={alreadyStakedTokensAmount !== 0 || loadingTaskStake}
@@ -321,7 +319,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
               onlyIcon
               icon={getTaskPlayButtonIcon()}
               onClick={isRunning ? handleStopTask : handleStartTask}
-              disabled={!meetsMinimumStake}
+              // disabled={!isTaskValidToRun}
             />
           </Tooltip>
         )}

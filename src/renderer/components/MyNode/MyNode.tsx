@@ -6,6 +6,7 @@ import {
   fetchMyTasks,
   getMainAccountPublicKey,
   QueryKeys,
+  getStoredPairedTaskVariables,
 } from 'renderer/services';
 import { Task } from 'renderer/types';
 
@@ -35,6 +36,13 @@ export function MyNode() {
     QueryKeys.MainAccount,
     () => getMainAccountPublicKey()
   );
+
+  (async () => {
+    console.log(
+      ' getStoredPairedTaskVariables: ',
+      await getStoredPairedTaskVariables()
+    );
+  })();
 
   const {
     isLoading: isLoadingTasks,

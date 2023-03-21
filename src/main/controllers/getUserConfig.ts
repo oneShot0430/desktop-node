@@ -5,8 +5,13 @@ const USER_CONFIG = 'USER_CONFIG';
 
 const getUserConfig = async (): Promise<getUserConfigResponse> => {
   try {
-    const userConfig = await namespaceInstance.storeGet(USER_CONFIG);
-    return JSON.parse(userConfig as string);
+    const userConfigStringified: string = await namespaceInstance.storeGet(
+      USER_CONFIG
+    );
+    const userConfig = JSON.parse(
+      userConfigStringified
+    ) as getUserConfigResponse;
+    return userConfig;
   } catch (err) {
     console.log('ERROR', err);
     throw err;

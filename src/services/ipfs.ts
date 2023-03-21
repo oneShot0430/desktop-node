@@ -1,10 +1,9 @@
-import { Web3Storage } from 'web3.storage';
-
 import axios from 'axios';
 import config from 'config';
 import { getStoredTaskVariables } from 'main/controllers/taskVariables/getStoredTaskVariables';
 import { ErrorType } from 'models';
 import { throwDetailedError } from 'utils';
+import { Web3Storage } from 'web3.storage';
 
 function makeStorageClient(token: string) {
   return new Web3Storage({ token });
@@ -48,7 +47,7 @@ async function retrieveThroughClient<T>(
     textDecoder.decode(await files[0].arrayBuffer())
   );
   console.log('used Web3storage');
-  return fileContent;
+  return fileContent as T;
 }
 
 async function retrieveThroughHttpGateway<T>(

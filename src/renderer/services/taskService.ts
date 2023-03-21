@@ -32,7 +32,11 @@ export class TaskService {
     return Object.values(task.stakeList).length;
   }
 
-  static getStatus(task: Task): TaskStatus {
+  static getStatus(task: Task): TaskStatus | null {
+    if (!task.status) {
+      return null;
+    }
+
     if (!isNil(task.status.AcceptingSubmissions))
       return TaskStatus.ACCEPTING_SUBMISSIONS;
     if (!isNil(task.status.Voting)) return TaskStatus.VOTING;
@@ -45,4 +49,11 @@ export const TaskStatusToLabeMap: Record<TaskStatus, string> = {
   [TaskStatus.VOTING]: 'Voting',
   [TaskStatus.ACCEPTING_SUBMISSIONS]: 'Accepting Submissions',
   [TaskStatus.COMPLETED]: 'Completed',
+};
+
+export const getTaskStatusLabel = (
+  status: TaskStatus | null | undefined
+): string => {
+  if (status === null || status === undefined) return 'Unknown';
+  return TaskStatusToLabeMap[status];
 };

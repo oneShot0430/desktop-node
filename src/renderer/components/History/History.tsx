@@ -5,7 +5,12 @@ import { Task } from 'renderer/types';
 
 import { HistoryRow } from './components/HistoryRow';
 
-const historyRows = [] as { publicKey: string; task: Task }[];
+interface HistoryRowType {
+  publicKey: string;
+  task: Task;
+}
+
+const historyRows: HistoryRowType[] = [];
 
 const tableHeaders = [
   { title: 'TaskName & Start Time' },

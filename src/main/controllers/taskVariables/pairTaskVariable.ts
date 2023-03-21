@@ -19,6 +19,7 @@ import { getTaskVariablesNames } from './getTaskVariablesNames';
 export const pairTaskVariable = async (
   _: Event,
   payload: PairTaskVariableParamType
+  // eslint-disable-next-line consistent-return
 ): Promise<void> => {
   // payload validation
   if (

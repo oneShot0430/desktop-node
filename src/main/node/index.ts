@@ -1,6 +1,5 @@
 import fs from 'fs';
 
-import * as dotenv from 'dotenv';
 import { ErrorType } from 'models';
 import { throwDetailedError } from 'utils';
 
@@ -8,7 +7,6 @@ import executeTasks from './executeTasks';
 import { getAppDataPath } from './helpers/getAppDataPath';
 import { namespaceInstance } from './helpers/Namespace';
 
-dotenv.config();
 // import loadTasks from './loadTasks';
 
 // eslint-disable-next-line consistent-return

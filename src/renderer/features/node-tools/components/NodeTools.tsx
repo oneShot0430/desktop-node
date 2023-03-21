@@ -68,8 +68,8 @@ export function NodeTools({ taskPubKey, onToolsValidation, tools }: PropsType) {
      * We need to set the default value for the tool which are not yet paired,
      * so we can validate the form and show the "Confirm" button
      */
-    setSelectedTools((selectedTools) => ({
-      ...selectedTools,
+    setSelectedTools((selected) => ({
+      ...selected,
       [tool]: desktopVariableId,
     }));
   };
@@ -81,6 +81,7 @@ export function NodeTools({ taskPubKey, onToolsValidation, tools }: PropsType) {
           return;
         }
 
+        // eslint-disable-next-line consistent-return
         return pairTaskVariable({
           taskAccountPubKey: taskPubKey,
           variableInTaskName: tool,
@@ -98,6 +99,7 @@ export function NodeTools({ taskPubKey, onToolsValidation, tools }: PropsType) {
     error: isPairingTasksVariablesError,
   } = useMutation(confirmTaskVariables, {
     onSuccess: () => {
+      // eslint-disable-next-line no-alert
       alert('Pairing Task Variables Success');
     },
   });

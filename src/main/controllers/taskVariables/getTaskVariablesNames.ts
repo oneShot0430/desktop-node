@@ -1,32 +1,36 @@
 import { Event } from 'electron';
 
-import { uniq } from 'lodash';
-import { GetTaskVariablesNamesParam } from 'models/api';
+import { RequirementType, GetTaskVariablesNamesParam } from 'models';
 
 import { getTaskInfo } from '../getTaskInfo';
-import { getTaskSource } from '../getTaskSource';
-
-const TASK_VARIABLES_PREFIX = 'process.env.';
+import { getTaskMetadata } from '../getTaskMetadata';
 
 export const getTaskVariablesNames = async (
   _: Event,
   { taskPublicKey }: GetTaskVariablesNamesParam
 ): Promise<string[]> => {
-  const { taskAuditProgram } = await getTaskInfo(
+  const { metadataCID } = await getTaskInfo(
     _,
     { taskAccountPubKey: taskPublicKey },
-    'getTaskSource'
+    'getTaskVariablesNames'
   );
-  const taskSourceCode: string = await getTaskSource(_, {
-    taskAuditProgram,
-  });
-  const taskVariablesRegex = /process\.env\.[A-Za-z0-9_]+/g;
-  const taskVariablesMatches = taskSourceCode.match(taskVariablesRegex) || [];
 
-  const taskVariablesNames = taskVariablesMatches.map((match) => {
-    const taskVariableName = match.substring(TASK_VARIABLES_PREFIX.length);
-    return taskVariableName;
-  });
+  const taskMetadata = await getTaskMetadata(_, { metadataCID });
 
-  return uniq(taskVariablesNames);
+  console.log(
+    'TASK METADATA OF ',
+    taskPublicKey,
+    ' with metadataCID ',
+    metadataCID,
+    taskMetadata
+  );
+
+  const variableTypes = [
+    RequirementType.GLOBAL_VARIABLE,
+    RequirementType.TASK_VARIABLE,
+  ];
+
+  return taskMetadata.requirementsTags
+    ?.filter(({ type }) => variableTypes.includes(type))
+    .map(({ value }) => value!);
 };

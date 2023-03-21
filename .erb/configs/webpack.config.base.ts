@@ -1,6 +1,7 @@
 /**
  * Base webpack config used across other specific configs
  */
+import * as dotenv from 'dotenv';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import TsconfigPathsPlugins from 'tsconfig-paths-webpack-plugin';
 import webpack from 'webpack';
@@ -8,6 +9,8 @@ import webpack from 'webpack';
 import { dependencies as externals } from '../../release/app/package.json';
 
 import webpackPaths from './webpack.paths';
+
+dotenv.config();
 
 const configuration: webpack.Configuration = {
   externals: [...Object.keys(externals || {})],
@@ -57,6 +60,7 @@ const configuration: webpack.Configuration = {
 
   plugins: [
     new webpack.EnvironmentPlugin({
+      ...process.env,
       NODE_ENV: 'production',
     }),
     new ForkTsCheckerWebpackPlugin(),

@@ -8,16 +8,17 @@ import { PersistentStoreKeys } from '../types';
 
 export const getStoredPairedTaskVariables =
   async (): Promise<GetStoredPairedTaskVariablesReturnType> => {
-    const taskVariables = await namespaceInstance.storeGet(
-      PersistentStoreKeys.TaskToVariablesPairs
-    );
-
-    try {
-      const parsedData: PairedTaskVariables = JSON.parse(
-        taskVariables as string
+    const pairedTaskVariablesStringified: string =
+      await namespaceInstance.storeGet(
+        PersistentStoreKeys.TaskToVariablesPairs
       );
 
-      return parsedData || {};
+    try {
+      const pairedTaskVariables: PairedTaskVariables = {
+        ...(JSON.parse(pairedTaskVariablesStringified) as PairedTaskVariables),
+      };
+
+      return pairedTaskVariables;
     } catch (error) {
       console.log('Get Stored Paired Task Variables: JSON parse error', error);
       return {};

@@ -42,7 +42,7 @@ function Button({
   return (
     <button
       className={`${classes} ${
-        rest.disabled && 'opacity-60'
+        rest.disabled && 'opacity-60 cursor-not-allowed pointer-events-none'
       } flex items-center justify-center`}
       {...rest}
     >
