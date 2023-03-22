@@ -11,6 +11,11 @@ function Settings() {
       <SettingsHeader onTabChange={setTab} activeTab={selectedTab} />
       {selectedTab === Tab.AccountsTable && <AccountsTable />}
       {selectedTab === Tab.TaskSettings && <TaskSettings />}
+      {selectedTab === Tab.NetworkSettings && (
+        <div>
+          <button className="text-white">Toggle network</button>
+        </div>
+      )}
     </div>
   );
 }

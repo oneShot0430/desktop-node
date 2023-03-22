@@ -29,10 +29,10 @@ export function SettingsHeader({ onTabChange, activeTab }: PropsType) {
           Task Settings
         </div>
         <div
-          onClick={() => onTabChange(Tab.NodeLogs)}
-          className={`pb-px cursor-pointer ${isActiveTab(Tab.NodeLogs)}`}
+          onClick={() => onTabChange(Tab.NetworkSettings)}
+          className={`pb-px cursor-pointer ${isActiveTab(Tab.NetworkSettings)}`}
         >
-          Node Logs
+          Network Settings
         </div>
       </div>
     </div>
