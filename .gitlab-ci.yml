@@ -1,7 +1,7 @@
 variables:
   WINDOWS_IMAGE: 'electronuserland/builder:wine'
   LINUX_IMAGE: 'node:18.8.0'
-  MACOS_IMAGE: 'macos-12-xcode-14'
+  MACOS_IMAGE: 'macos-12-xcode-13'
 
 .install_deps_template: &install_deps_script
   stage: prerequisites
