@@ -1,14 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useQuery, useQueryClient } from 'react-query';
 
-import { Toggle } from 'renderer/components/ui';
+import { LoadingSpinner, Toggle } from 'renderer/components/ui';
+import { QueryKeys, getNetworkUrl, switchNetwork } from 'renderer/services';
 
 export function NodeSettings() {
-  const [checked, setChecked] = useState(false);
+  const queryClient = useQueryClient();
 
-  const toggleNetwork = () => {
-    setChecked((checked) => !checked);
-    // window.main.switchNetwork();
+  const { data: networkUrl, isLoading: isLoadingNetworkUrl } = useQuery(
+    QueryKeys.GetNetworkUrl,
+    getNetworkUrl
+  );
+
+  const toggleNetwork = async () => {
+    await switchNetwork();
+    queryClient.invalidateQueries(QueryKeys.GetNetworkUrl);
   };
+
+  const isChecked = networkUrl === 'https://k2-devnet.koii.live';
 
   return (
     <div className="flex flex-col gap-10 text-white">
@@ -17,7 +26,11 @@ export function NodeSettings() {
       </span>
       <div className="flex items-center gap-4">
         <span>TESTNET</span>
-        <Toggle checked={checked} onChange={toggleNetwork} />
+        {isLoadingNetworkUrl ? (
+          <LoadingSpinner className="mx-2.5" />
+        ) : (
+          <Toggle checked={isChecked} onChange={toggleNetwork} />
+        )}
         <span>DEVNET</span>
       </div>
     </div>

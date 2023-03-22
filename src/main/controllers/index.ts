@@ -26,7 +26,8 @@ export { default as stopTask } from './stopTask';
 export { default as storeUserConfig } from './storeUserConfig';
 export { default as withdrawStake } from './withdrawStake';
 export { default as getAccountBalance } from './getAccountBalance';
-export { default as switchNetwork } from './switchNetwork';
+export { switchNetwork } from './switchNetwork';
+export { getNetworkUrl } from './getNetworkUrl';
 export * from './taskVariables';
 
 export * from './types';

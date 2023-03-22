@@ -1,5 +1,5 @@
 // import { exec, spawn } from 'child_process';
-import { Event, app } from 'electron';
+import { Event } from 'electron';
 
 // import node from 'main/node';
 // import { reset } from 'main/node/helpers/Namespace';
@@ -14,7 +14,7 @@ import {
 // import getUserConfig from './getUserConfig';
 // import storeUserConfig from './storeUserConfig';
 
-const switchNetwork = async (_: Event) => {
+export const switchNetwork = async (_: Event) => {
   const newNetwork =
     getK2NetworkUrl() === 'https://k2-devnet.koii.live'
       ? 'https://k2-testnet.koii.live'
@@ -42,12 +42,10 @@ const switchNetwork = async (_: Event) => {
   // // Start a new instance of the app
   // exec(`"${execPath}" "${scriptPath}"`);
   // relaunchApp();
-  app.relaunch();
+  // app.relaunch();
 
-  // setTimeout(() => {
-  app.quit();
+  // // setTimeout(() => {
+  // app.quit();
   // }, 1000);
   // main();
 };
-
-export default switchNetwork;
