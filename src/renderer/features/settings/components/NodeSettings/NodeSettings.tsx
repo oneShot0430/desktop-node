@@ -1,6 +1,7 @@
 import React from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
+import { DEFAULT_K2_NETWORK_URL } from 'config/node';
 import { LoadingSpinner, Toggle } from 'renderer/components/ui';
 import { QueryKeys, getNetworkUrl, switchNetwork } from 'renderer/services';
 
@@ -17,7 +18,7 @@ export function NodeSettings() {
     queryClient.invalidateQueries(QueryKeys.GetNetworkUrl);
   };
 
-  const isChecked = networkUrl === 'https://k2-devnet.koii.live';
+  const isChecked = networkUrl !== DEFAULT_K2_NETWORK_URL;
 
   return (
     <div className="flex flex-col gap-10 text-white">
