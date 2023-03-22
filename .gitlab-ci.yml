@@ -2,7 +2,6 @@ variables:
   WINDOWS_IMAGE: 'electronuserland/builder:wine'
   LINUX_IMAGE: 'node:18.8.0'
   MACOS_IMAGE: 'macos-12-xcode-14'
-  USE_HARD_LINKS: 'false'
 
 .install_deps_template: &install_deps_script
   stage: prerequisites
@@ -51,26 +50,26 @@ stages:
   - checks
   - deploy
 
-#install_win:
-#  image: $WINDOWS_IMAGE
-#  <<: *install_deps_script
+install_win:
+  image: $WINDOWS_IMAGE
+  <<: *install_deps_script
 
 install_linux:
   image: $LINUX_IMAGE
   <<: *install_deps_script
 
-#install_macos:
-#  image: $MACOS_IMAGE
-#  <<: *install_deps_script
-#  tags:
-#    - shared-macos-amd64
+install_macos:
+  image: $MACOS_IMAGE
+  <<: *install_deps_script
+  tags:
+    - shared-macos-amd64
 
-#lint_win:
-#  image: $WINDOWS_IMAGE
-#  needs: ['install_win']
-#  dependencies:
-#    - install_win
-#  <<: *lint_script
+lint_win:
+  image: $WINDOWS_IMAGE
+  needs: ['install_win']
+  dependencies:
+    - install_win
+  <<: *lint_script
 
 lint_linux:
   image: $LINUX_IMAGE
@@ -79,21 +78,21 @@ lint_linux:
     - install_linux
   <<: *lint_script
 
-#lint_macos:
-#  image: $MACOS_IMAGE
-#  needs: ['install_macos']
-#  dependencies:
-#    - install_macos
-#  <<: *lint_script
-#  tags:
-#    - shared-macos-amd64
+lint_macos:
+  image: $MACOS_IMAGE
+  needs: ['install_macos']
+  dependencies:
+    - install_macos
+  <<: *lint_script
+  tags:
+    - shared-macos-amd64
 
-#test_win:
-#  image: $WINDOWS_IMAGE
-#  needs: ['install_win']
-#  dependencies:
-#    - install_win
-#  <<: *test_script
+test_win:
+  image: $WINDOWS_IMAGE
+  needs: ['install_win']
+  dependencies:
+    - install_win
+  <<: *test_script
 
 test_linux:
   image: $LINUX_IMAGE
@@ -102,23 +101,23 @@ test_linux:
     - install_linux
   <<: *test_script
 
-#test_macos:
-#  image: $MACOS_IMAGE
-#  needs: ['install_macos']
-#  dependencies:
-#    - install_macos
-#  <<: *test_script
-#  tags:
-#    - shared-macos-amd64
+test_macos:
+  image: $MACOS_IMAGE
+  needs: ['install_macos']
+  dependencies:
+    - install_macos
+  <<: *test_script
+  tags:
+    - shared-macos-amd64
 
-#package_win:
-#  image: $WINDOWS_IMAGE
-#  needs: ['install_win']
-#  dependencies:
-#    - install_win
-#  <<: *package_script
-#  script:
-#    - npm run package -- -w
+package_win:
+  image: $WINDOWS_IMAGE
+  needs: ['install_win']
+  dependencies:
+    - install_win
+  <<: *package_script
+  script:
+    - npm run package -- -w
 
 package_linux:
   image: $LINUX_IMAGE
@@ -129,25 +128,25 @@ package_linux:
   script:
     - npm run package
 
-#package_macos:
-#  image: $MACOS_IMAGE
-#  needs: ['install_macos']
-#  dependencies:
-#    - install_macos
-#  <<: *package_script
-#  script:
-#    - npm run package
-#  tags:
-#    - shared-macos-amd64
+package_macos:
+  image: $MACOS_IMAGE
+  needs: ['install_macos']
+  dependencies:
+    - install_macos
+  <<: *package_script
+  script:
+    - npm run package
+  tags:
+    - shared-macos-amd64
 
-#deploy_win:
-#  image: $WINDOWS_IMAGE
-#  needs: ['package_win']
-#  dependencies:
-#    - package_win
-#  variables:
-#    CURRENT_TARGET: 'win'
-#  <<: *deploy_script
+deploy_win:
+  image: $WINDOWS_IMAGE
+  needs: ['package_win']
+  dependencies:
+    - package_win
+  variables:
+    CURRENT_TARGET: 'win'
+  <<: *deploy_script
 
 deploy_linux:
   image: $LINUX_IMAGE
@@ -157,13 +156,14 @@ deploy_linux:
   variables:
     CURRENT_TARGET: 'linux'
   <<: *deploy_script
-#deploy_macos:
-#  image: $MACOS_IMAGE
-#  needs: ['package_macos']
-#  dependencies:
-#    - package_macos
-#  variables:
-#    CURRENT_TARGET: 'macos'
-#  <<: *deploy_script
-#  tags:
-#    - shared-macos-amd64
+
+deploy_macos:
+  image: $MACOS_IMAGE
+  needs: ['package_macos']
+  dependencies:
+    - package_macos
+  variables:
+    CURRENT_TARGET: 'macos'
+  <<: *deploy_script
+  tags:
+    - shared-macos-amd64
