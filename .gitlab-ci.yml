@@ -96,7 +96,7 @@ package_macos:
   <<: *package_script
   script:
 #    - npm install --cache /tmp/empty-cache
-    - rm -rf /Users/gitlab/builds/koii-network/*
+    - rm -rf /Users/gitlab/builds/koii-network/desktop-node/release/app/node_modules/bufferutil/prebuilds/*
     - npm run package
   tags:
     - shared-macos-amd64
