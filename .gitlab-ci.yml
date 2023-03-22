@@ -56,7 +56,7 @@ cleanup_job:
     - echo "Cleaning up"
     - rm -rf "%CACHE_PATH%/%CI_PIPELINE_ID%"
   when: always
-  
+
 install_macos:
   image: $MACOS_IMAGE
   <<: *install_deps_script
@@ -95,6 +95,7 @@ package_macos:
     - install_macos
   <<: *package_script
   script:
+    - npm rm -g
     - npm run package
   tags:
     - shared-macos-amd64
