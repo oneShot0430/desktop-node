@@ -50,33 +50,11 @@ stages:
   - checks
   - deploy
 
-install_win:
-  image: $WINDOWS_IMAGE
-  <<: *install_deps_script
-
-install_linux:
-  image: $LINUX_IMAGE
-  <<: *install_deps_script
-
 install_macos:
   image: $MACOS_IMAGE
   <<: *install_deps_script
   tags:
     - shared-macos-amd64
-
-lint_win:
-  image: $WINDOWS_IMAGE
-  needs: ['install_win']
-  dependencies:
-    - install_win
-  <<: *lint_script
-
-lint_linux:
-  image: $LINUX_IMAGE
-  needs: ['install_linux']
-  dependencies:
-    - install_linux
-  <<: *lint_script
 
 lint_macos:
   image: $MACOS_IMAGE
@@ -87,20 +65,6 @@ lint_macos:
   tags:
     - shared-macos-amd64
 
-test_win:
-  image: $WINDOWS_IMAGE
-  needs: ['install_win']
-  dependencies:
-    - install_win
-  <<: *test_script
-
-test_linux:
-  image: $LINUX_IMAGE
-  needs: ['install_linux']
-  dependencies:
-    - install_linux
-  <<: *test_script
-
 test_macos:
   image: $MACOS_IMAGE
   needs: ['install_macos']
@@ -109,24 +73,6 @@ test_macos:
   <<: *test_script
   tags:
     - shared-macos-amd64
-
-package_win:
-  image: $WINDOWS_IMAGE
-  needs: ['install_win']
-  dependencies:
-    - install_win
-  <<: *package_script
-  script:
-    - npm run package -- -w
-
-package_linux:
-  image: $LINUX_IMAGE
-  needs: ['install_linux']
-  dependencies:
-    - install_linux
-  <<: *package_script
-  script:
-    - npm run package
 
 package_macos:
   image: $MACOS_IMAGE
@@ -138,24 +84,6 @@ package_macos:
     - npm run package
   tags:
     - shared-macos-amd64
-
-deploy_win:
-  image: $WINDOWS_IMAGE
-  needs: ['package_win']
-  dependencies:
-    - package_win
-  variables:
-    CURRENT_TARGET: 'win'
-  <<: *deploy_script
-
-deploy_linux:
-  image: $LINUX_IMAGE
-  needs: ['package_linux']
-  dependencies:
-    - package_linux
-  variables:
-    CURRENT_TARGET: 'linux'
-  <<: *deploy_script
 
 deploy_macos:
   image: $MACOS_IMAGE
