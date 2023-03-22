@@ -95,8 +95,7 @@ package_macos:
     - install_macos
   <<: *package_script
   script:
-    - npm rm -g
-    - npm run package
+    - npm run package --force
   tags:
     - shared-macos-amd64
 
