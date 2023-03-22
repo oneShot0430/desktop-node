@@ -13,7 +13,9 @@ function Settings() {
       {selectedTab === Tab.TaskSettings && <TaskSettings />}
       {selectedTab === Tab.NetworkSettings && (
         <div>
-          <button className="text-white">Toggle network</button>
+          <button className="text-white" onClick={window.main.switchNetwork}>
+            Toggle network
+          </button>
         </div>
       )}
     </div>

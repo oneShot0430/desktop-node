@@ -25,6 +25,7 @@ import setActiveAccount from './setActiveAccount';
 import startTask from './startTask';
 import stopTask from './stopTask';
 import storeUserConfig from './storeUserConfig';
+import switchNetwork from './switchNetwork';
 import {
   getStoredTaskVariables,
   storeTaskVariable,
@@ -72,4 +73,5 @@ export default {
   getStoredPairedTaskVariables,
   getTasksPairedWithVariable,
   getAccountBalance,
+  switchNetwork,
 };

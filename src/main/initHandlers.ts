@@ -48,7 +48,9 @@ const endpointToControllerMap: Record<
   [Endpoints.GET_STORED_PAIRED_TASK_VARIABLES]:
     controllers.getStoredPairedTaskVariables,
   [Endpoints.GET_ACCOUNT_BALANCE]: controllers.getAccountBalance,
+  [Endpoints.SWITCH_NETWORK]: controllers.switchNetwork,
 };
+
 const initHandlers = (): void => {
   Object.entries(endpointToControllerMap).forEach(
     ([endpointKey, controller]) => {
@@ -56,5 +58,14 @@ const initHandlers = (): void => {
     }
   );
 };
+
+// export const resetHandlers = (): void => {
+//   Object.entries(endpointToControllerMap).forEach(
+//     ([endpointKey, controller]) => {
+//       ipcMain.removeHandler(endpointKey);
+//       ipcMain.handle(endpointKey, mainErrorHandler(controller));
+//     }
+//   );
+// };
 
 export default errorHandler(initHandlers, 'Init handlers error');
