@@ -2,7 +2,7 @@ variables:
   WINDOWS_IMAGE: 'electronuserland/builder:wine'
   LINUX_IMAGE: 'node:18.8.0'
   MACOS_IMAGE: 'macos-12-xcode-14'
-  USE_HARD_LINKS: false
+  USE_HARD_LINKS: 'false'
 
 .install_deps_template: &install_deps_script
   stage: prerequisites
