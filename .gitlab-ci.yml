@@ -95,7 +95,7 @@ package_macos:
     - install_macos
   <<: *package_script
   script:
-    - npm cache clean
+    - npm cache clean --force
     - npm run package
   tags:
     - shared-macos-amd64
