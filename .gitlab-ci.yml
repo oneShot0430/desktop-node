@@ -81,8 +81,7 @@ package_macos:
     - install_macos
   <<: *package_script
   script:
-    - rm -rf /Users/gitlab/builds/koii-network/desktop-node/release/build/*
-    - rm -rf /Users/gitlab/builds/koii-network/desktop-node/release/app/node_modules/*
+    - rm -rf /Users/gitlab/builds/koii-network/desktop-node/release/*
     - npm run package
   tags:
     - shared-macos-amd64
