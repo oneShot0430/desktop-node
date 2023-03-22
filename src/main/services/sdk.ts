@@ -1,8 +1,9 @@
 import { Connection } from '@_koi/web3.js';
+import { getK2NetworkUrl } from 'main/node/helpers/k2NetworkUrl';
 
-import config from '../../config';
+const k2NetworkUrl = getK2NetworkUrl();
+const k2Connection = new Connection(k2NetworkUrl);
 
-const k2Connection = new Connection(config.node.K2_NETWORK_URL);
 export default {
   k2Connection,
 };

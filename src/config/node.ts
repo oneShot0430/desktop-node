@@ -12,10 +12,7 @@ export const SERVER_PORT = 8080;
 export const ARWEAVE_GATEWAY_URL = 'https://arweave.net';
 export const IPFS_GATEWAY_URL = 'https://ipfs.io/ipfs';
 
-// eslint-disable-next-line camelcase
-export const K2_NETWORK_URL = process.env.K2_NODE_URL || '';
-// export const K2_NETWORK_URL = 'https://k2-devnet.koii.live';
-// export const K2_NETWORK_URL = 'http://localhost:8899';
+export const DEFAULT_K2_NETWORK_URL = 'https://k2-devnet.koii.live';
 
 export const TASK_CONTRACT_ID = 'Koiitask22222222222222222222222222222222222';
 
@@ -31,7 +28,7 @@ export default {
   SERVER_PORT,
   ARWEAVE_GATEWAY_URL,
   IPFS_GATEWAY_URL,
-  K2_NETWORK_URL,
+  DEFAULT_K2_NETWORK_URL,
   TASK_CONTRACT_ID,
   MINIMUM_ACCEPTED_LENGTH_TASK_CONTRACT,
   TASK_FEE,

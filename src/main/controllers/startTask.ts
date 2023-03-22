@@ -6,9 +6,10 @@ import { Event } from 'electron';
 import * as fsSync from 'fs';
 
 import { PublicKey, Keypair } from '@_koi/web3.js';
+import { DEFAULT_K2_NETWORK_URL } from 'config/node';
 import cryptoRandomString from 'crypto-random-string';
 import db from 'main/db';
-import { getRpcUrlWrapper } from 'main/node/helpers/getRpcUrlWrapper';
+import { getK2NetworkUrl } from 'main/node/helpers/k2NetworkUrl';
 import { Namespace, namespaceInstance } from 'main/node/helpers/Namespace';
 import koiiTasks from 'main/services/koiiTasks';
 import { ErrorType } from 'models';
@@ -164,7 +165,7 @@ async function executeTasks(
       `${operationMode}`,
       `${mainSystemAccount.publicKey.toBase58()}`,
       `${secret}`,
-      `${process.env.K2_NODE_URL || 'https://k2-testnet.koii.live'}`,
+      `${getK2NetworkUrl() || DEFAULT_K2_NETWORK_URL}`,
       `${process.env.SERVICE_URL}`,
       `${STAKE}`,
     ],
@@ -192,7 +193,7 @@ async function executeTasks(
       serverApp: expressApp,
       mainSystemAccount,
       db,
-      rpcUrl: getRpcUrlWrapper(),
+      rpcUrl: getK2NetworkUrl(),
       taskData: {
         task_name: selectedTask.taskName,
         task_id: selectedTask.taskId,

@@ -3,11 +3,10 @@
 
 import { INode } from '@koii-network/task-node';
 import axios from 'axios';
+import { getK2NetworkUrl } from 'main/node/helpers/k2NetworkUrl';
 
 import db from '../../db';
 import { NodeNamespace } from '../../NodeNamespace';
-
-import { getRpcUrlWrapper } from './getRpcUrlWrapper';
 
 const BUNDLER_NODES = '/nodes';
 
@@ -21,7 +20,7 @@ const namespaceInstance = new NodeNamespace({
   mainSystemAccount: null,
   taskData: {},
   db,
-  rpcUrl: getRpcUrlWrapper(),
+  rpcUrl: getK2NetworkUrl(),
 });
 
 /**
