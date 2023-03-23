@@ -2,6 +2,13 @@ import { Event } from 'electron';
 import * as fsSync from 'fs';
 
 import {
+  TASK_INSTRUCTION_LAYOUTS,
+  encodeData,
+  TASK_CONTRACT_ID,
+  padStringWithSpaces,
+} from '@koii-network/task-node';
+
+import {
   Keypair,
   PublicKey,
   TransactionInstruction,
@@ -11,7 +18,6 @@ import {
   SystemProgram,
   LAMPORTS_PER_SOL,
 } from '@_koi/web3.js';
-import config from 'config';
 import { namespaceInstance } from 'main/node/helpers/Namespace';
 import sdk from 'main/services/sdk';
 import {
@@ -25,20 +31,6 @@ import { throwDetailedError } from 'utils';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
 import { getTaskInfo } from './getTaskInfo';
-
-// eslint-disable-next-line
-const BufferLayout = require('@solana/buffer-layout');
-
-const STAKE_INSTRUCTION_LAYOUT = {
-  index: 10,
-  layout: BufferLayout.struct([
-    BufferLayout.u8('instruction'),
-    BufferLayout.ns64('stakeAmount'),
-  ]),
-};
-const TASK_CONTRACT_ID: PublicKey = new PublicKey(
-  config.node.TASK_CONTRACT_ID || ''
-);
 
 const delegateStake = async (
   event: Event,
@@ -115,9 +107,12 @@ const delegateStake = async (
         type: errorType,
       });
     }
-    const data = encodeData(STAKE_INSTRUCTION_LAYOUT, {
+
+    const data = encodeData(TASK_INSTRUCTION_LAYOUTS.Stake, {
       stakeAmount: stakeAmount * LAMPORTS_PER_SOL,
+      ipAddress: new TextEncoder().encode(padStringWithSpaces('', 64)),
     });
+
     const instruction = new TransactionInstruction({
       keys: [
         {
@@ -197,9 +192,10 @@ const delegateStake = async (
       });
     }
 
-    const data = encodeData(STAKE_INSTRUCTION_LAYOUT, {
+    const data = encodeData(TASK_INSTRUCTION_LAYOUTS.Stake, {
       stakeAmount: stakeAmount * LAMPORTS_PER_SOL,
     });
+
     const instruction = new TransactionInstruction({
       keys: [
         {
@@ -222,6 +218,7 @@ const delegateStake = async (
       programId: TASK_CONTRACT_ID,
       data,
     });
+
     try {
       const response = await sendAndConfirmTransaction(
         sdk.k2Connection,
@@ -244,27 +241,6 @@ const delegateStake = async (
       });
     }
   }
-};
-
-const encodeData = (type: any, fields: any) => {
-  const allocLength =
-    type.layout.span >= 0 ? type.layout.span : getAlloc(type, fields);
-  const data = Buffer.alloc(allocLength);
-  const layoutFields = { instruction: type.index, ...fields };
-  type.layout.encode(layoutFields, data);
-  return data;
-};
-
-const getAlloc = (type: any, fields: any) => {
-  let alloc = 0;
-  type.layout.fields.forEach((item: any) => {
-    if (item.span >= 0) {
-      alloc += item.span;
-    } else if (typeof item.alloc === 'function') {
-      alloc += item.alloc(fields[item.property]);
-    }
-  });
-  return alloc;
 };
 
 export default delegateStake;
