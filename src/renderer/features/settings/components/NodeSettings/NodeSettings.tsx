@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
 import { DEFAULT_K2_NETWORK_URL } from 'config/node';
@@ -7,6 +7,7 @@ import { QueryKeys, getNetworkUrl, switchNetwork } from 'renderer/services';
 
 export function NodeSettings() {
   const queryClient = useQueryClient();
+  const [filterTasks, setFilterTasks] = useState(false);
 
   const { data: networkUrl, isLoading: isLoadingNetworkUrl } = useQuery(
     QueryKeys.GetNetworkUrl,
@@ -18,7 +19,12 @@ export function NodeSettings() {
     queryClient.invalidateQueries(QueryKeys.GetNetworkUrl);
   };
 
-  const isChecked = networkUrl !== DEFAULT_K2_NETWORK_URL;
+  const toggleFilterTasks = () => {
+    setFilterTasks((filterTasks) => !filterTasks);
+  };
+
+  const isNetworkChecked = networkUrl !== DEFAULT_K2_NETWORK_URL;
+  const isLoadingTaskFilters = false;
 
   return (
     <div className="flex flex-col gap-10 text-white">
@@ -30,9 +36,20 @@ export function NodeSettings() {
         {isLoadingNetworkUrl ? (
           <LoadingSpinner className="mx-2.5" />
         ) : (
-          <Toggle checked={isChecked} onChange={toggleNetwork} />
+          <Toggle checked={isNetworkChecked} onChange={toggleNetwork} />
         )}
         <span>DEVNET</span>
+      </div>
+
+      <span className="text-2xl font-semibold text-left">Task filters</span>
+      <div className="flex items-center gap-4">
+        <span>DEFAULT</span>
+        {isLoadingTaskFilters ? (
+          <LoadingSpinner className="mx-2.5" />
+        ) : (
+          <Toggle checked={filterTasks} onChange={toggleFilterTasks} />
+        )}
+        <span>SHOW ALL</span>
       </div>
     </div>
   );

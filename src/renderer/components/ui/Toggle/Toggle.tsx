@@ -1,6 +1,10 @@
 import React from 'react';
 
-type PropsType = { checked: boolean; onChange: () => void; className?: string };
+type PropsType = {
+  checked: boolean;
+  onChange: () => void;
+  className?: string;
+};
 
 export function Toggle({ checked, onChange, className = '' }: PropsType) {
   return (
