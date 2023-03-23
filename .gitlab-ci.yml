@@ -9,7 +9,9 @@ variables:
   script:
     - npm install
   artifacts:
-    name: 'dependencies'
+    name: 'artifacts'
+    untracked: true
+    expire_in: 30 mins
     paths:
       - node_modules/
 
