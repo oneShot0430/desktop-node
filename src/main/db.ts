@@ -1,4 +1,4 @@
-import { LevelDbAdapter } from '@_koii/k2-node';
+import { LevelDbAdapter } from '@koii-network/task-node';
 
 import { getAppDataPath } from './node/helpers/getAppDataPath';
 
