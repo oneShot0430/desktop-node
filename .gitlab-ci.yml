@@ -115,7 +115,7 @@ package_win:
     - npm run package -- -w
   artifacts:
     paths:
-      - 'release/build/Desktop Node Setup *.exe'
+      - 'release/build/*.exe'
 
 package_linux:
   image: $LINUX_IMAGE
@@ -127,7 +127,7 @@ package_linux:
     - npm run package
   artifacts:
     paths:
-      - 'release/build/Desktop Node Setup *.AppImage'
+      - 'release/build/*.AppImage'
 
 package_macos:
   image: $MACOS_IMAGE
@@ -141,8 +141,8 @@ package_macos:
     - shared-macos-amd64
   artifacts:
     paths:
-      - 'release/build/Desktop Node Setup *.zip'
-      - 'release/build/Desktop Node Setup *.dmg'
+      - 'release/build/*.zip'
+      - 'release/build/*.dmg'
 
 deploy_win:
   image: $WINDOWS_IMAGE
