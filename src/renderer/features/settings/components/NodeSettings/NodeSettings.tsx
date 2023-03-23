@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
 import { DEFAULT_K2_NETWORK_URL } from 'config/node';
-import { LoadingSpinner, Switch } from 'renderer/components/ui';
 import { QueryKeys, getNetworkUrl, switchNetwork } from 'renderer/services';
+
+import { SettingSwitch } from './SettingSwitch';
 
 export function NodeSettings() {
   const queryClient = useQueryClient();
@@ -31,34 +32,22 @@ export function NodeSettings() {
       <span className="text-2xl font-semibold text-left">
         Choose Node Network
       </span>
-      <div className="flex items-center gap-4">
-        <span>TESTNET</span>
-        {isLoadingNetworkUrl ? (
-          <LoadingSpinner className="mx-2.5" />
-        ) : (
-          <Switch
-            id="network"
-            isChecked={isNetworkChecked}
-            onSwitch={toggleNetwork}
-          />
-        )}
-        <span>DEVNET</span>
-      </div>
+      <SettingSwitch
+        id="network"
+        isLoading={isLoadingNetworkUrl}
+        isChecked={isNetworkChecked}
+        onSwitch={toggleNetwork}
+        labels={['TESTNET', 'DEVNET']}
+      />
 
       <span className="text-2xl font-semibold text-left">Task filters</span>
-      <div className="flex items-center gap-4">
-        <span>DEFAULT</span>
-        {isLoadingTaskFilters ? (
-          <LoadingSpinner className="mx-2.5" />
-        ) : (
-          <Switch
-            id="task-filter"
-            isChecked={filterTasks}
-            onSwitch={toggleFilterTasks}
-          />
-        )}
-        <span>SHOW ALL</span>
-      </div>
+      <SettingSwitch
+        id="task-filters"
+        isLoading={isLoadingTaskFilters}
+        isChecked={filterTasks}
+        onSwitch={toggleFilterTasks}
+        labels={['TESTNET', 'SHOW ALL']}
+      />
     </div>
   );
 }
