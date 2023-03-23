@@ -1,13 +1,13 @@
 import React from 'react';
 
-type PropsType = {
+interface Props {
   id: string;
   isChecked: boolean;
   onSwitch: () => void;
   className?: string;
-};
+}
 
-export function Switch({ id, isChecked, onSwitch, className = '' }: PropsType) {
+export function Switch({ id, isChecked, onSwitch, className = '' }: Props) {
   return (
     <label htmlFor={id} className="flex items-center cursor-pointer">
       <div className="relative">
@@ -20,7 +20,7 @@ export function Switch({ id, isChecked, onSwitch, className = '' }: PropsType) {
         />
         <div className="block bg-white w-11 h-6 rounded-full" />
         <div
-          className={`dot absolute left-0.5 top-0.5 bg-purple-4 w-5 h-5 rounded-full transition peer-checked:transform peer-checked:translate-x-full ${className}`}
+          className={`absolute left-0.5 top-0.5 bg-purple-4 w-5 h-5 rounded-full transition peer-checked:transform peer-checked:translate-x-full ${className}`}
         />
       </div>
     </label>

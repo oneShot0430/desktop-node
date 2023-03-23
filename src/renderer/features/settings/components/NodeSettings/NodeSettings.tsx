@@ -46,7 +46,7 @@ export function NodeSettings() {
         isLoading={isLoadingTaskFilters}
         isChecked={filterTasks}
         onSwitch={toggleFilterTasks}
-        labels={['TESTNET', 'SHOW ALL']}
+        labels={['DEFAULT', 'SHOW ALL']}
       />
     </div>
   );
