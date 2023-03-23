@@ -1,21 +1,22 @@
 import React from 'react';
 
 type PropsType = {
-  checked: boolean;
-  onChange: () => void;
+  id: string;
+  isChecked: boolean;
+  onSwitch: () => void;
   className?: string;
 };
 
-export function Toggle({ checked, onChange, className = '' }: PropsType) {
+export function Switch({ id, isChecked, onSwitch, className = '' }: PropsType) {
   return (
-    <label htmlFor="toggle" className="flex items-center cursor-pointer">
+    <label htmlFor={id} className="flex items-center cursor-pointer">
       <div className="relative">
         <input
           type="checkbox"
-          id="toggle"
+          id={id}
           className="sr-only peer"
-          checked={checked}
-          onChange={onChange}
+          checked={isChecked}
+          onChange={onSwitch}
         />
         <div className="block bg-white w-11 h-6 rounded-full" />
         <div

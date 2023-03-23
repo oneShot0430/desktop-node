@@ -5,4 +5,4 @@ export * from './LoadingSpinner';
 export * from './Tooltip';
 export * from './Dropdown';
 export * from './EditStakeInput';
-export * from './Toggle';
+export * from './Switch';

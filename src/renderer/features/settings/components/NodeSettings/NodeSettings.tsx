@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
 import { DEFAULT_K2_NETWORK_URL } from 'config/node';
-import { LoadingSpinner, Toggle } from 'renderer/components/ui';
+import { LoadingSpinner, Switch } from 'renderer/components/ui';
 import { QueryKeys, getNetworkUrl, switchNetwork } from 'renderer/services';
 
 export function NodeSettings() {
@@ -36,7 +36,11 @@ export function NodeSettings() {
         {isLoadingNetworkUrl ? (
           <LoadingSpinner className="mx-2.5" />
         ) : (
-          <Toggle checked={isNetworkChecked} onChange={toggleNetwork} />
+          <Switch
+            id="network"
+            isChecked={isNetworkChecked}
+            onSwitch={toggleNetwork}
+          />
         )}
         <span>DEVNET</span>
       </div>
@@ -47,7 +51,11 @@ export function NodeSettings() {
         {isLoadingTaskFilters ? (
           <LoadingSpinner className="mx-2.5" />
         ) : (
-          <Toggle checked={filterTasks} onChange={toggleFilterTasks} />
+          <Switch
+            id="task-filter"
+            isChecked={filterTasks}
+            onSwitch={toggleFilterTasks}
+          />
         )}
         <span>SHOW ALL</span>
       </div>
