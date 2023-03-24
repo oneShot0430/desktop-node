@@ -87,6 +87,7 @@ package_macos:
   image: $MACOS_IMAGE
   needs: ['install_macos']
   dependencies:
+    - npm install -g ts-node
     - install_macos
   <<: *package_script
 
