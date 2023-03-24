@@ -39,7 +39,7 @@ variables:
     - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
 
   script:
-    - aws s3 cp release/build/* s3://cdn.koii.live/$CURRENT_TARGET --acl public-read
+    - aws s3 cp release/build/* s3://cdn.koii.live/desktop-node/$CURRENT_TARGET --acl public-read
 
 stages:
   - prerequisites
