@@ -7,8 +7,8 @@ variables:
 .install_deps_template: &install_deps_script
   stage: prerequisites
   script: |
-    echo "@koii-network:registry=https://gitlab.com/api/v4/projects/38490933/packages/npm/" >> .npmrc
-    echo "//gitlab.com/api/v4/projects/38490933/packages/npm/:_authToken=$GITLAB_ACCESS_TOKEN" >> .npmrc
+    echo "@koii-network:registry=https://gitlab.com/api/v4/packages/npm/" >> .npmrc
+    echo "//gitlab.com/api/v4/packages/npm/:_authToken=$GITLAB_ACCESS_TOKEN" >> .npmrc
     npm install
   artifacts:
     name: 'artifacts'
