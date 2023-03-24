@@ -91,4 +91,4 @@ deploy_macos:
     CURRENT_TARGET: 'macos'
   <<: *deploy_script
   tags:
-    - shared-macos-amd64
+    - shared-macos-amd64 #mac
