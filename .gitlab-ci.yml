@@ -78,14 +78,19 @@ test_macos:
   tags:
     - shared-macos-amd64
 
+cache:
+  key: $CI_COMMIT_REF_SLUG
+  paths:
+    - .npm/
+
 package_macos:
   image: $MACOS_IMAGE
   needs: ['install_macos']
   dependencies:
     - install_macos
   <<: *package_script
-  before_script:
-  - npm ci --cache .npm --prefer-offline
+#  before_script:
+#  - npm ci --cache .npm --prefer-offline
 
   script:
     - npm run package
