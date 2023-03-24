@@ -92,8 +92,3 @@ deploy_macos:
   <<: *deploy_script
   tags:
     - shared-macos-amd64
-    
-cache:
-  key: same-key
-  paths:
-    - release/build/*
