@@ -89,8 +89,12 @@ package_macos:
   dependencies:
     - install_macos
   <<: *package_script
-#  before_script:
-#  - npm ci --cache .npm --prefer-offline
+
+  before_script:
+  cache:
+    key: package-cache
+    paths:
+      - /Users/gitlab/builds/koii-network/desktop-node/release/
 
   script:
     - npm run package
