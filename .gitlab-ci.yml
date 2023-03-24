@@ -1,7 +1,6 @@
 variables:
-  WINDOWS_IMAGE: 'electronuserland/builder:wine'
-  LINUX_IMAGE: 'node:18.8.0'
   MACOS_IMAGE: 'macos-12-xcode-14'
+  USE_HARD_LINKS: 'false'
 
 .install_deps_template: &install_deps_script
   stage: prerequisites
@@ -26,12 +25,6 @@ variables:
 
 .package_template: &package_script
   stage: checks
-  artifacts:
-    name: 'artifacts'
-    untracked: true
-    expire_in: 30 mins
-    paths:
-      - release/build
 
 .deploy_template: &deploy_script
   stage: deploy
@@ -55,10 +48,6 @@ install_macos:
   <<: *install_deps_script
   tags:
     - shared-macos-amd64
-  artifacts:
-    paths:
-      - 'release/build/*.zip'
-      - 'release/build/*.dmg'    
 
 lint_macos:
   image: $MACOS_IMAGE
@@ -78,28 +67,20 @@ test_macos:
   tags:
     - shared-macos-amd64
 
-#cache:
-#  key: $CI_COMMIT_REF_SLUG
-#  paths:
-#    - .npm/
-
 package_macos:
   image: $MACOS_IMAGE
   needs: ['install_macos']
   dependencies:
     - install_macos
   <<: *package_script
-
-#  before_script:
-#  cache:
-#    key: package-cache
-#    paths:
-#      - /Users/gitlab/builds/koii-network/desktop-node/release/
-
   script:
     - npm run package
   tags:
     - shared-macos-amd64
+  artifacts:
+    paths:
+      - 'release/build/*.zip'
+      - 'release/build/*.dmg'
 
 deploy_macos:
   image: $MACOS_IMAGE
@@ -111,3 +92,8 @@ deploy_macos:
   <<: *deploy_script
   tags:
     - shared-macos-amd64
+	
+cache:
+  key: same-key
+  paths:
+    - release/build/*
