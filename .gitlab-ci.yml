@@ -2,6 +2,7 @@ variables:
   WINDOWS_IMAGE: 'electronuserland/builder:wine'
   LINUX_IMAGE: 'node:18.8.0'
   MACOS_IMAGE: 'macos-12-xcode-14'
+  USE_HARD_LINKS: 'false'
 
 .install_deps_template: &install_deps_script
   stage: prerequisites
@@ -26,12 +27,6 @@ variables:
 
 .package_template: &package_script
   stage: checks
-  artifacts:
-    name: 'artifacts'
-    untracked: true
-    expire_in: 30 mins
-    paths:
-      - release/build
 
 .deploy_template: &deploy_script
   stage: deploy
@@ -118,6 +113,9 @@ package_win:
   <<: *package_script
   script:
     - npm run package -- -w
+  artifacts:
+    paths:
+      - 'release/build/*.exe'
 
 package_linux:
   image: $LINUX_IMAGE
@@ -127,6 +125,9 @@ package_linux:
   <<: *package_script
   script:
     - npm run package
+  artifacts:
+    paths:
+      - 'release/build/*.AppImage'
 
 package_macos:
   image: $MACOS_IMAGE
@@ -138,6 +139,10 @@ package_macos:
     - npm run package
   tags:
     - shared-macos-amd64
+  artifacts:
+    paths:
+      - 'release/build/*.zip'
+      - 'release/build/*.dmg'
 
 deploy_win:
   image: $WINDOWS_IMAGE
