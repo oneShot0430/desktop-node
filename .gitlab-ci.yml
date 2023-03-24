@@ -78,10 +78,10 @@ test_macos:
   tags:
     - shared-macos-amd64
 
-cache:
-  key: $CI_COMMIT_REF_SLUG
-  paths:
-    - .npm/
+#cache:
+#  key: $CI_COMMIT_REF_SLUG
+#  paths:
+#    - .npm/
 
 package_macos:
   image: $MACOS_IMAGE
@@ -97,7 +97,6 @@ package_macos:
 #      - /Users/gitlab/builds/koii-network/desktop-node/release/
 
   script:
-    - npm install -g ts-node
     - npm run package
   tags:
     - shared-macos-amd64
