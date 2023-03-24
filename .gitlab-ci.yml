@@ -6,7 +6,6 @@ variables:
 .install_deps_template: &install_deps_script
   stage: prerequisites
   script:
-    - rm -rf /Users/gitlab/builds/koii-network/desktop-node/release/*
     - npm install
   artifacts:
     name: 'artifacts'
@@ -86,6 +85,8 @@ package_macos:
     - install_macos
   <<: *package_script
   script:
+    - rm -rf /Users/gitlab/builds/koii-network/desktop-node/release/app/node_modules/bufferutil/prebuilds/win32-x64/*
+    - rm -rf Users/gitlab/builds/koii-network/desktop-node/release/build/mac-arm64/Electron.app/Contents/Resources/app.asar.unpacked/node_modules/bufferutil/prebuilds/win32-x64/*
     - npm run package
   tags:
     - shared-macos-amd64
