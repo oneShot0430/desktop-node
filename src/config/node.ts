@@ -12,7 +12,10 @@ export const SERVER_PORT = 8080;
 export const ARWEAVE_GATEWAY_URL = 'https://arweave.net';
 export const IPFS_GATEWAY_URL = 'https://ipfs.io/ipfs';
 
-export const DEFAULT_K2_NETWORK_URL = 'https://k2-testnet.koii.live';
+export const TESTNET_RPC_URL = 'https://k2-testnet.koii.live';
+export const DEVNET_RPC_URL = 'https://k2-devnet.koii.live';
+
+export const DEFAULT_K2_NETWORK_URL = TESTNET_RPC_URL;
 
 export const TASK_CONTRACT_ID = 'Koiitask22222222222222222222222222222222222';
 
