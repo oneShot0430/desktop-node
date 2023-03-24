@@ -17,8 +17,7 @@ export function SettingSwitch({
   onSwitch,
   labels,
 }: Props) {
-  const leftLabel = labels[0];
-  const rightLabel = labels[1];
+  const [leftLabel, rightLabel] = labels;
 
   return (
     <div className="flex items-center gap-4">

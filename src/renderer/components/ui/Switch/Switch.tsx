@@ -8,6 +8,8 @@ interface Props {
 }
 
 export function Switch({ id, isChecked, onSwitch, className = '' }: Props) {
+  const dotClasses = `absolute left-0.5 top-0.5 bg-purple-4 w-5 h-5 rounded-full transition peer-checked:transform peer-checked:translate-x-full ${className}`;
+
   return (
     <label htmlFor={id} className="flex items-center cursor-pointer">
       <div className="relative">
@@ -19,9 +21,7 @@ export function Switch({ id, isChecked, onSwitch, className = '' }: Props) {
           onChange={onSwitch}
         />
         <div className="block bg-white w-11 h-6 rounded-full" />
-        <div
-          className={`absolute left-0.5 top-0.5 bg-purple-4 w-5 h-5 rounded-full transition peer-checked:transform peer-checked:translate-x-full ${className}`}
-        />
+        <div className={dotClasses} />
       </div>
     </label>
   );
