@@ -2,13 +2,18 @@ import { Event } from 'electron';
 import * as fsSync from 'fs';
 
 import {
+  TASK_INSTRUCTION_LAYOUTS,
+  encodeData,
+  TASK_CONTRACT_ID,
+} from '@koii-network/task-node';
+
+import {
   Keypair,
   PublicKey,
   TransactionInstruction,
   Transaction,
   sendAndConfirmTransaction,
 } from '@_koi/web3.js';
-import config from 'config';
 import { namespaceInstance } from 'main/node/helpers/Namespace';
 import sdk from 'main/services/sdk';
 import { ErrorType, NetworkErrors } from 'models';
@@ -19,16 +24,7 @@ import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
 // eslint-disable-next-line
 const BufferLayout = require('@solana/buffer-layout');
-const WITHDRAW_INSTRUCTION_LAYOUT = {
-  Withdraw: {
-    index: 11,
-    layout: BufferLayout.struct([BufferLayout.u8('instruction')]),
-  },
-};
 
-const TASK_CONTRACT_ID: PublicKey = new PublicKey(
-  config.node.TASK_CONTRACT_ID || ''
-);
 const withdrawStake = async (
   event: Event,
   payload: WithdrawStakeParam
@@ -67,7 +63,7 @@ const withdrawStake = async (
       type: ErrorType.NO_ACCOUNT_KEY,
     });
   }
-  const data = encodeData(WITHDRAW_INSTRUCTION_LAYOUT.Withdraw, {});
+  const data = encodeData(TASK_INSTRUCTION_LAYOUTS.Withdraw, {});
 
   const instruction = new TransactionInstruction({
     keys: [
@@ -102,24 +98,4 @@ const withdrawStake = async (
   }
 };
 
-const encodeData = (type: any, fields: any) => {
-  const allocLength =
-    type.layout.span >= 0 ? type.layout.span : getAlloc(type, fields);
-  const data = Buffer.alloc(allocLength);
-  const layoutFields = { instruction: type.index, ...fields };
-  type.layout.encode(layoutFields, data);
-  return data;
-};
-
-const getAlloc = (type: any, fields: any) => {
-  let alloc = 0;
-  type.layout.fields.forEach((item: any) => {
-    if (item.span >= 0) {
-      alloc += item.span;
-    } else if (typeof item.alloc === 'function') {
-      alloc += item.alloc(fields[item.property]);
-    }
-  });
-  return alloc;
-};
 export default withdrawStake;
