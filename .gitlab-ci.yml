@@ -88,9 +88,6 @@ package_macos:
   - npm ci --cache .npm --prefer-offline
 
   script:
-#    - npm ci --cache .npm --prefer-offline
-#    - rm -rf /Users/gitlab/builds/koii-network/desktop-node/release/app/node_modules/bufferutil/prebuilds/win32-x64/*
-#    - rm -rf Users/gitlab/builds/koii-network/desktop-node/release/build/mac-arm64/Electron.app/Contents/Resources/app.asar.unpacked/node_modules/bufferutil/prebuilds/win32-x64/*
     - npm run package
   tags:
     - shared-macos-amd64
