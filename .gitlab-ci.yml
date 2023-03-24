@@ -90,11 +90,11 @@ package_macos:
     - install_macos
   <<: *package_script
 
-  before_script:
-  cache:
-    key: package-cache
-    paths:
-      - /Users/gitlab/builds/koii-network/desktop-node/release/
+#  before_script:
+#  cache:
+#    key: package-cache
+#    paths:
+#      - /Users/gitlab/builds/koii-network/desktop-node/release/
 
   script:
     - npm install -g ts-node
