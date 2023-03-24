@@ -6,6 +6,7 @@ variables:
 .install_deps_template: &install_deps_script
   stage: prerequisites
   script:
+    - rm -rf /Users/gitlab/builds/koii-network/desktop-node/release/*
     - npm install
   artifacts:
     name: 'artifacts'
@@ -55,6 +56,10 @@ install_macos:
   <<: *install_deps_script
   tags:
     - shared-macos-amd64
+  artifacts:
+    paths:
+      - 'release/build/*.zip'
+      - 'release/build/*.dmg'    
 
 lint_macos:
   image: $MACOS_IMAGE
@@ -81,7 +86,6 @@ package_macos:
     - install_macos
   <<: *package_script
   script:
-    - rm -rf /Users/gitlab/builds/koii-network/desktop-node/release/*
     - npm run package
   tags:
     - shared-macos-amd64
