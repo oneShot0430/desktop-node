@@ -87,7 +87,6 @@ package_macos:
   image: $MACOS_IMAGE
   needs: ['install_macos']
   dependencies:
-    - npm install -g ts-node
     - install_macos
   <<: *package_script
 
@@ -98,6 +97,7 @@ package_macos:
       - /Users/gitlab/builds/koii-network/desktop-node/release/
 
   script:
+    - npm install -g ts-node
     - npm run package
   tags:
     - shared-macos-amd64
