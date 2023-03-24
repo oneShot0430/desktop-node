@@ -1,12 +1,11 @@
 import fs from 'fs';
 
+import { Keypair } from '@_koi/web3.js';
 import {
   TaskNodeBase,
   TaskNodeConfig,
   IDatabase,
 } from '@koii-network/task-node';
-
-import { Keypair } from '@_koi/web3.js';
 
 import { getAppDataPath } from './node/helpers/getAppDataPath';
 

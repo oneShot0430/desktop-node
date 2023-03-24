@@ -2,18 +2,17 @@ import { Event } from 'electron';
 import * as fsSync from 'fs';
 
 import {
-  TASK_INSTRUCTION_LAYOUTS,
-  encodeData,
-  TASK_CONTRACT_ID,
-} from '@koii-network/task-node';
-
-import {
   Keypair,
   PublicKey,
   TransactionInstruction,
   Transaction,
   sendAndConfirmTransaction,
 } from '@_koi/web3.js';
+import {
+  TASK_INSTRUCTION_LAYOUTS,
+  encodeData,
+  TASK_CONTRACT_ID,
+} from '@koii-network/task-node';
 import { namespaceInstance } from 'main/node/helpers/Namespace';
 import sdk from 'main/services/sdk';
 import { ErrorType, NetworkErrors } from 'models';
