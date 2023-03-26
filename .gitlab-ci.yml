@@ -173,5 +173,3 @@ deploy_macos:
   variables:
     CURRENT_TARGET: 'macos'
   <<: *deploy_script
-  tags:
-    - shared-macos-amd64
