@@ -6,12 +6,15 @@ variables:
 
 .install_deps_template: &install_deps_script
   stage: prerequisites
-  script:
+  script: 
+    - npm config set -- //gitlab.com/api/v4/packages/npm/:_authToken=$GITLAB_ACCESS_TOKEN
+    - npm config set @koii-network:registry https://gitlab.com/api/v4/packages/npm/
+    - npm view @koii-network/task-node
     - npm install
   artifacts:
     name: 'artifacts'
     untracked: true
-    expire_in: 30 mins
+    expire_in: 10 mins
     paths:
       - node_modules/
 
@@ -30,6 +33,7 @@ variables:
 
 .deploy_template: &deploy_script
   stage: deploy
+  image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
   only:
     - main
 
@@ -38,7 +42,7 @@ variables:
     - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
 
   script:
-    - aws s3 cp release/build/* s3://cdn.koii.live/$CURRENT_TARGET --acl public-read
+    - aws s3 cp release/build/* s3://cdn.koii.live/desktop-node/$CURRENT_TARGET --acl public-read
 
 stages:
   - prerequisites
