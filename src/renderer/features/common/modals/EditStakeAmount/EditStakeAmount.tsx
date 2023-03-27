@@ -2,7 +2,6 @@ import { create, useModal } from '@ebay/nice-modal-react';
 import React, { useCallback, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
-import { GetTaskNodeInfoResponse } from 'models/api';
 import { Button } from 'renderer/components/ui';
 import { Modal, ModalContent, ModalTopBar } from 'renderer/features/modals';
 import {
@@ -36,8 +35,6 @@ enum View {
 type PropsType = {
   task: Task;
 };
-
-type NodeInfoType = GetTaskNodeInfoResponse;
 
 export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
   task,

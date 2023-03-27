@@ -6,10 +6,10 @@ variables:
 
 .install_deps_template: &install_deps_script
   stage: prerequisites
-  script: |
-    echo "//gitlab.com/api/v4/packages/npm/:_authToken=$GITLAB_ACCESS_TOKEN">.npmrc
-    echo "@koii-network:registry=https://gitlab.example.com/api/v4/packages/npm/">>.npmrc
-    npm install
+  script:
+    - npm config set -- //gitlab.com/api/v4/packages/npm/:_authToken=$GITLAB_ACCESS_TOKEN
+    - npm config set @koii-network:registry https://gitlab.com/api/v4/packages/npm/
+    - npm install
   artifacts:
     name: 'artifacts'
     untracked: true
@@ -58,6 +58,9 @@ install_linux:
 
 install_macos:
   image: $MACOS_IMAGE
+  before_script:
+    - brew install node@18
+    - npm install -g npm@9.6.2
   <<: *install_deps_script
   tags:
     - shared-macos-amd64
@@ -138,6 +141,9 @@ package_macos:
   dependencies:
     - install_macos
   <<: *package_script
+  before_script:
+    - brew install node@18
+    - npm install -g npm@9.6.2
   script:
     - npm run package
   tags:

@@ -25,7 +25,10 @@ const claimReward = async (
     });
   }
 
+  // FIXME: get sracking wallet from proper location
+  // move staking wallet path to config or constants (one asource of truth)
   const stakingWalletfilePath = `${getAppDataPath()}/namespace/${activeAccount}_stakingWallet.json`;
+
   let stakingAccKeypair;
   try {
     stakingAccKeypair = Keypair.fromSecretKey(

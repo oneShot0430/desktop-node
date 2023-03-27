@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import { INode } from '@_koii/k2-node';
+import { INode } from '@koii-network/task-node';
 import axios from 'axios';
 
 import db from '../../db';

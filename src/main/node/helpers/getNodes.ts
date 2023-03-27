@@ -1,4 +1,4 @@
-import { INode } from '@_koii/k2-node';
+import { INode } from '@koii-network/task-node';
 
 import { getCacheNodes } from './Namespace';
 
