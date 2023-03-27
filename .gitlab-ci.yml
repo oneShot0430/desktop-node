@@ -148,7 +148,6 @@ package_macos:
       - 'release/build/*.dmg'
 
 deploy_win:
-  image: $WINDOWS_IMAGE
   needs: ['package_win']
   dependencies:
     - package_win
@@ -157,7 +156,6 @@ deploy_win:
   <<: *deploy_script
 
 deploy_linux:
-  image: $LINUX_IMAGE
   needs: ['package_linux']
   dependencies:
     - package_linux
@@ -166,7 +164,6 @@ deploy_linux:
   <<: *deploy_script
 
 deploy_macos:
-  image: $MACOS_IMAGE
   needs: ['package_macos']
   dependencies:
     - package_macos
