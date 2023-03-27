@@ -226,7 +226,7 @@
     "webpack-merge": "^5.8.0"
   },
   "build": {
-    "productName": "Desktop Node",
+    "productName": "Desktop-Node",
     "appId": "org.erb.desktopNode",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
@@ -268,6 +268,9 @@
       "target": [
         "nsis"
       ]
+    },
+    "nsis": {
+      "artifactName": "${productName}-${version}.${ext}"
     },
     "linux": {
       "target": [
