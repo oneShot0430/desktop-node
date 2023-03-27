@@ -60,6 +60,7 @@ install_macos:
   image: $MACOS_IMAGE
   before_script:
     - brew install node@18
+    - npm install -g npm@9.6.2
   <<: *install_deps_script
   tags:
     - shared-macos-amd64
@@ -142,6 +143,7 @@ package_macos:
   <<: *package_script
   before_script:
     - brew install node@18
+    - npm install -g npm@9.6.2
   script:
     - npm run package
   tags:
