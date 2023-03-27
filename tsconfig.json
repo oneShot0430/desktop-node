@@ -24,7 +24,4 @@
     ".erb/dll",
     ".erb/configs"
   ],
-  "env": {
-    "K2_NODE_URL": "https://k2-devnet.koii.live"
-  }
 }

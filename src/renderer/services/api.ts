@@ -276,3 +276,11 @@ export const claimRewards = async () => {
     return rewardsNotClaimed;
   }
 };
+
+export const switchNetwork = async () => {
+  return window.main.switchNetwork();
+};
+
+export const getNetworkUrl = async () => {
+  return window.main.getNetworkUrl();
+};

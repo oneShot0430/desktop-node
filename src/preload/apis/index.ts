@@ -9,6 +9,7 @@ import getAvailableTasks from './getAvailableTasks';
 import getEarnedRewardByNode from './getEarnedRewardByNode';
 import getMainAccountPubKey from './getMainAccountPubKey';
 import getMyTasks from './getMyTasks';
+import getNetworkUrl from './getNetworkUrl';
 import getStakingAccountPubKey from './getStakingAccountPubKey';
 import getTaskInfo from './getTaskInfo';
 import getTaskLogs from './getTaskLogs';
@@ -25,6 +26,7 @@ import setActiveAccount from './setActiveAccount';
 import startTask from './startTask';
 import stopTask from './stopTask';
 import storeUserConfig from './storeUserConfig';
+import switchNetwork from './switchNetwork';
 import {
   getStoredTaskVariables,
   storeTaskVariable,
@@ -72,4 +74,6 @@ export default {
   getStoredPairedTaskVariables,
   getTasksPairedWithVariable,
   getAccountBalance,
+  switchNetwork,
+  getNetworkUrl,
 };

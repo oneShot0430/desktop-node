@@ -1,6 +1,11 @@
 import React, { memo, useState } from 'react';
 
-import { AccountsTable, SettingsHeader, TaskSettings } from './components';
+import {
+  AccountsTable,
+  SettingsHeader,
+  TaskSettings,
+  NodeSettings,
+} from './components';
 import { Tab } from './types';
 
 function Settings() {
@@ -11,6 +16,7 @@ function Settings() {
       <SettingsHeader onTabChange={setTab} activeTab={selectedTab} />
       {selectedTab === Tab.AccountsTable && <AccountsTable />}
       {selectedTab === Tab.TaskSettings && <TaskSettings />}
+      {selectedTab === Tab.NetworkSettings && <NodeSettings />}
     </div>
   );
 }

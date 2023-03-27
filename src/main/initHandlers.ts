@@ -48,7 +48,10 @@ const endpointToControllerMap: Record<
   [Endpoints.GET_STORED_PAIRED_TASK_VARIABLES]:
     controllers.getStoredPairedTaskVariables,
   [Endpoints.GET_ACCOUNT_BALANCE]: controllers.getAccountBalance,
+  [Endpoints.SWITCH_NETWORK]: controllers.switchNetwork,
+  [Endpoints.GET_NETWORK_URL]: controllers.getNetworkUrl,
 };
+
 const initHandlers = (): void => {
   Object.entries(endpointToControllerMap).forEach(
     ([endpointKey, controller]) => {
