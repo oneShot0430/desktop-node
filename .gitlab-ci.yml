@@ -9,6 +9,7 @@ variables:
   script: 
     - npm config set -- //gitlab.com/api/v4/packages/npm/:_authToken=$GITLAB_ACCESS_TOKEN
     - npm config set @koii-network:registry https://gitlab.com/api/v4/packages/npm/
+    - npm view @koii-network/task-node
     - npm install
   artifacts:
     name: 'artifacts'
