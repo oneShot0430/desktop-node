@@ -30,7 +30,7 @@ export function NodeSettings() {
   const { showModal } = useConfirmNetworkSwitchModal({
     onConfirm: confirmSwitchNetwork,
     onCancel: () => setHasFlippedSwitch(false),
-    newNetwork: networkUrl === TESTNET_RPC_URL ? 'DEVNET' : 'TESTNET',
+    newNetwork: networkUrl === TESTNET_RPC_URL ? 'Devnet' : 'Testnet',
   });
 
   const isNetworkChecked = !hasFlippedSwitch
