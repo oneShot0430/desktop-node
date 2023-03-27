@@ -11,7 +11,7 @@ type ParamsType = {
 
 export const useTaskDetailsModal = ({ task, accountPublicKey }: ParamsType) => {
   const showModal = () => {
-    show(TaskDetailsModal, { task, accountPublicKey });
+    show(TaskDetailsModal, { task, publicKey: accountPublicKey });
   };
 
   return {
