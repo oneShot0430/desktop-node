@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
-import { DEFAULT_K2_NETWORK_URL } from 'config/node';
+import { TESTNET_RPC_URL } from 'config/node';
 import { useConfirmNetworkSwitchModal } from 'renderer/features/common/hooks';
 import { QueryKeys, getNetworkUrl, switchNetwork } from 'renderer/services';
 
@@ -30,11 +30,12 @@ export function NodeSettings() {
   const { showModal } = useConfirmNetworkSwitchModal({
     onConfirm: confirmSwitchNetwork,
     onCancel: () => setHasFlippedSwitch(false),
+    newNetwork: networkUrl === TESTNET_RPC_URL ? 'DEVNET' : 'TESTNET',
   });
 
   const isNetworkChecked = !hasFlippedSwitch
-    ? networkUrl !== DEFAULT_K2_NETWORK_URL
-    : networkUrl === DEFAULT_K2_NETWORK_URL;
+    ? networkUrl !== TESTNET_RPC_URL
+    : networkUrl === TESTNET_RPC_URL;
 
   return (
     <div className="flex flex-col gap-10 text-white">

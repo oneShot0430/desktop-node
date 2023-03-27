@@ -7,10 +7,11 @@ import { Modal, ModalContent, ModalTopBar } from 'renderer/features/modals';
 export interface Props {
   onConfirm: () => Promise<void>;
   onCancel: () => void;
+  newNetwork: string;
 }
 
 export const ConfirmNetworkSwitch = create<Props>(
-  function ConfirmNetworkSwitch({ onConfirm, onCancel }) {
+  function ConfirmNetworkSwitch({ onConfirm, onCancel, newNetwork }) {
     const modal = useModal();
 
     const handleClose = () => {
@@ -29,13 +30,14 @@ export const ConfirmNetworkSwitch = create<Props>(
       <Modal>
         <ModalContent className="p-4 w-fit h-fit text-finnieBlue rounded-xl">
           <ModalTopBar
-            title="Confirm Network Switch"
+            title="Restart to Change Networks"
             onClose={handleClose}
             titleClasses="text-finnieBlue"
           />
           <div className="p-4 pb-8">
             {' '}
-            You are gonna restart the shit out of the app, ok?
+            The node will restart when you switch networks. Are you sure you
+            want to change to {newNetwork}?
           </div>
 
           <div className="flex items-center justify-center gap-4">

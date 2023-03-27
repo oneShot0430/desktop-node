@@ -7,9 +7,10 @@ type ParamsType = Props;
 export const useConfirmNetworkSwitchModal = ({
   onConfirm,
   onCancel,
+  newNetwork,
 }: ParamsType) => {
   const showModal = () => {
-    show(ConfirmNetworkSwitch, { onConfirm, onCancel });
+    show(ConfirmNetworkSwitch, { onConfirm, onCancel, newNetwork });
   };
 
   return {
