@@ -17,7 +17,6 @@ import {
   TASK_CONTRACT_ID,
   padStringWithSpaces,
 } from '@koii-network/task-node';
-
 import { namespaceInstance } from 'main/node/helpers/Namespace';
 import sdk from 'main/services/sdk';
 import {
