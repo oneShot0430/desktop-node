@@ -60,13 +60,4 @@ const initHandlers = (): void => {
   );
 };
 
-// export const resetHandlers = (): void => {
-//   Object.entries(endpointToControllerMap).forEach(
-//     ([endpointKey, controller]) => {
-//       ipcMain.removeHandler(endpointKey);
-//       ipcMain.handle(endpointKey, mainErrorHandler(controller));
-//     }
-//   );
-// };
-
 export default errorHandler(initHandlers, 'Init handlers error');
