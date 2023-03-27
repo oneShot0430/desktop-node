@@ -42,7 +42,7 @@ variables:
     - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
 
   script:
-    - aws s3 cp release/build/* s3://cdn.koii.live/desktop-node/$CURRENT_TARGET --acl public-read
+    - aws s3 cp release/build s3://cdn.koii.live/desktop-node/$CURRENT_TARGET --recursive --acl public-read
 
 stages:
   - prerequisites
@@ -149,7 +149,6 @@ package_macos:
       - 'release/build/*.dmg'
 
 deploy_win:
-  image: $WINDOWS_IMAGE
   needs: ['package_win']
   dependencies:
     - package_win
@@ -158,7 +157,6 @@ deploy_win:
   <<: *deploy_script
 
 deploy_linux:
-  image: $LINUX_IMAGE
   needs: ['package_linux']
   dependencies:
     - package_linux
@@ -167,12 +165,9 @@ deploy_linux:
   <<: *deploy_script
 
 deploy_macos:
-  image: $MACOS_IMAGE
   needs: ['package_macos']
   dependencies:
     - package_macos
   variables:
     CURRENT_TARGET: 'macos'
   <<: *deploy_script
-  tags:
-    - shared-macos-amd64
