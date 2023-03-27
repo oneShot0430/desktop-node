@@ -1,6 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-
 import { INode } from '@koii-network/task-node';
 import axios from 'axios';
 
@@ -17,7 +14,7 @@ const BUNDLER_NODES = '/nodes';
  */
 const namespaceInstance = new NodeNamespace({
   taskTxId: '',
-  expressApp: null,
+  serverApp: null,
   mainSystemAccount: null,
   taskData: {},
   db,
@@ -50,7 +47,7 @@ async function getCacheNodes() {
  */
 async function getNodes(url: string): Promise<Array<INode>> {
   try {
-    const res = await axios.get(url + BUNDLER_NODES);
+    const res = await axios.get<INode[]>(url + BUNDLER_NODES);
     console.log('RESPOSNE FROM GET NODES', res.data);
     return res.data;
   } catch (_e) {
