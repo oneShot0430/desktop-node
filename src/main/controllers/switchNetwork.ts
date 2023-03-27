@@ -11,7 +11,6 @@ export const switchNetwork = async (_: Event) => {
     getK2NetworkUrl() === DEVNET_RPC_URL ? TESTNET_RPC_URL : DEVNET_RPC_URL;
 
   console.log('switch network to: ', newNetwork);
-
   setK2NetworkUrl(newNetwork);
 
   app.relaunch();
