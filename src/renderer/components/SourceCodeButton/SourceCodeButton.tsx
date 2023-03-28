@@ -27,6 +27,13 @@ export function SourceCodeButton({
     repositoryUrl ? 'cursor-pointer' : 'cursor-not-allowed'
   }`;
 
+  const content = (
+    <>
+      <Icon source={EmbedCodeFill} size={iconSize} color="#BEF0ED" />
+      {displayLabel && <span className="text-center">Source Code</span>}
+    </>
+  );
+
   return (
     <button
       className={buttonClasses}
@@ -34,17 +41,13 @@ export function SourceCodeButton({
       disabled={!repositoryUrl}
     >
       {repositoryUrl ? (
-        <>
-          <Icon source={EmbedCodeFill} size={iconSize} color="#BEF0ED" />
-          {displayLabel && <span className="text-center">Source Code</span>}
-        </>
+        content
       ) : (
         <Tooltip
           tooltipContent="Repository URL is missing or invalid"
           placement="top-left"
         >
-          <Icon source={EmbedCodeFill} size={iconSize} color="#BEF0ED" />
-          {displayLabel && <span className="text-center">Source Code</span>}
+          {content}
         </Tooltip>
       )}
     </button>
