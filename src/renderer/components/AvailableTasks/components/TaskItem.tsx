@@ -313,7 +313,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
               onlyIcon
               icon={getTaskPlayButtonIcon()}
               onClick={isRunning ? handleStopTask : handleStartTask}
-              // disabled={!isTaskValidToRun}
+              disabled={!isTaskValidToRun}
             />
           </Tooltip>
         )}
