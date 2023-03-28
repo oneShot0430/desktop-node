@@ -34,6 +34,7 @@ import {
   useTaskStake,
   useOnClickOutside,
   useAccountBalance,
+  useMetadata,
 } from 'renderer/features';
 import {
   QueryKeys,
@@ -41,7 +42,6 @@ import {
   stopTask,
   stakeOnTask,
   startTask,
-  getTaskMetadata,
 } from 'renderer/services';
 import { Task } from 'renderer/types';
 import { getKoiiFromRoe } from 'utils';
@@ -68,10 +68,6 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   const [meetsMinimumStake, setMeetsMinimumStake] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
-  /**
-   * @todo: abstract it away to the hook,
-   * We probably should fetch the Account pub key once and keep it in the app context
-   */
   const { data: mainAccountPubKey = '' } = useMainAccount();
 
   const { accountBalance = 0 } = useAccountBalance(mainAccountPubKey);
@@ -117,14 +113,9 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     TaskService.getMinStake(task)
   );
 
-  const { data: taskMetadata, isLoading: isLoadingTaskMetadata } = useQuery(
-    [QueryKeys.TaskMetadata, task.metadataCID],
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    () => getTaskMetadata(task.metadataCID!),
-    { enabled: !!task.metadataCID }
-  );
+  const { metadata, isLoadingMetadata } = useMetadata(task.metadataCID);
 
-  const taskSettings = taskMetadata?.requirementsTags?.filter(
+  const taskSettings = metadata?.requirementsTags?.filter(
     ({ type }) => type === RequirementType.TASK_VARIABLE
   );
 
@@ -196,7 +187,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   }, [isRunning, isTaskValidToRun]);
 
   const getTaskDetailsComponent = useCallback(() => {
-    if (isLoadingTaskMetadata) {
+    if (isLoadingMetadata) {
       return <LoadingSpinner />;
     }
 
@@ -204,7 +195,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
       return (
         <TaskInfo
           taskPubKey={task.publicKey}
-          info={taskMetadata}
+          info={metadata}
           onToolsValidation={handleGlobalToolsValidationCheck}
         />
       );
@@ -221,18 +212,18 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     }
 
     return null;
-  }, [accordionView, task, taskMetadata, taskSettings, isLoadingTaskMetadata]);
+  }, [accordionView, task, metadata, taskSettings, isLoadingMetadata]);
 
   const createdAt = useMemo(() => {
-    if (taskMetadata?.createdAt) {
-      const date = new Date(taskMetadata.createdAt);
+    if (metadata?.createdAt) {
+      const date = new Date(metadata.createdAt);
       return `${date.getFullYear()}-${(date.getMonth() + 1)
         .toString()
         .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
     }
 
     return 'N/A';
-  }, [taskMetadata]);
+  }, [metadata]);
 
   return (
     <TableRow columnsLayout={columnsLayout} className="py-2 gap-y-0" ref={ref}>

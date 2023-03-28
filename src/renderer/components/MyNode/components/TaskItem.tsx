@@ -6,7 +6,7 @@ import {
   Icon,
 } from '@_koii/koii-styleguide';
 import React, { useMemo, useState } from 'react';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQueryClient } from 'react-query';
 
 import { SourceCodeButton } from 'renderer/components/SourceCodeButton';
 import {
@@ -21,16 +21,10 @@ import {
 import {
   useEditStakeAmountModal,
   useTaskStake,
+  useMetadata,
 } from 'renderer/features/common';
 import { useEarnedReward } from 'renderer/features/common/hooks/useEarnedReward';
-import {
-  stopTask,
-  startTask,
-  TaskService,
-  getLogs,
-  QueryKeys,
-  getTaskMetadata,
-} from 'renderer/services';
+import { stopTask, startTask, TaskService, getLogs } from 'renderer/services';
 import { Task } from 'renderer/types';
 import { getKoiiFromRoe } from 'utils';
 
@@ -61,10 +55,7 @@ export function TaskItem({
   const isFirstRowInTable = index === 0;
   const nodeStatus = useMemo(() => TaskService.getStatus(task), [task]);
 
-  const { data: taskMetadata } = useQuery(
-    [QueryKeys.TaskMetadata, task.metadataCID],
-    () => getTaskMetadata(task.metadataCID)
-  );
+  const { metadata } = useMetadata(task.metadataCID);
 
   const handleToggleTask = async () => {
     try {
@@ -114,7 +105,7 @@ export function TaskItem({
       </div>
 
       <SourceCodeButton
-        repositoryUrl={taskMetadata?.repositoryUrl || ''}
+        repositoryUrl={metadata?.repositoryUrl || ''}
         iconSize={24}
       />
 
