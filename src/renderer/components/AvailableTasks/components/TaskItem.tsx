@@ -31,7 +31,6 @@ import {
 } from 'renderer/components/ui';
 import {
   useMainAccount,
-  useTaskDetailsModal,
   useTaskStake,
   useOnClickOutside,
 } from 'renderer/features';
@@ -89,11 +88,6 @@ function TaskItem({ task, index, columnsLayout }: Props) {
       publicKey: mainAccountPubKey,
       enabled: !!mainAccountPubKey,
     });
-
-  const { showModal: showCodeModal } = useTaskDetailsModal({
-    task,
-    accountPublicKey: mainAccountPubKey,
-  });
 
   const handleToggleView = (view: 'info' | 'settings') => {
     const newView = accordionView === view ? null : view;
