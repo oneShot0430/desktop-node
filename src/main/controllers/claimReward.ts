@@ -5,7 +5,7 @@ import { Keypair, PublicKey } from '@_koi/web3.js';
 import { ErrorType, ClaimRewardParam, ClaimRewardResponse } from 'models';
 import { throwDetailedError } from 'utils';
 
-import { getAppDataPath } from '../node/helpers/getAppDataPath';
+import { getStakingWalletPath } from '../node/helpers/getAppDataPath';
 import { namespaceInstance } from '../node/helpers/Namespace';
 
 import { getTaskInfo } from './getTaskInfo';
@@ -15,31 +15,28 @@ const claimReward = async (
   payload: ClaimRewardParam
 ): Promise<ClaimRewardResponse> => {
   const { taskAccountPubKey } = payload;
-  const taskStateInfoPublicKey = new PublicKey(taskAccountPubKey);
-  const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
+  const ACTIVE_ACCOUNT = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
 
-  if (!activeAccount) {
+  if (!ACTIVE_ACCOUNT) {
     return throwDetailedError({
       detailed: 'Please select an active account',
       type: ErrorType.NO_ACTIVE_ACCOUNT,
     });
   }
 
-  // FIXME: get sracking wallet from proper location
-  // move staking wallet path to config or constants (one asource of truth)
-  const stakingWalletfilePath = `${getAppDataPath()}/namespace/${activeAccount}_stakingWallet.json`;
+  const STAKING_WALLET_FILE_PATH = getStakingWalletPath(ACTIVE_ACCOUNT);
 
   let stakingAccKeypair;
+
   try {
     stakingAccKeypair = Keypair.fromSecretKey(
       Uint8Array.from(
         JSON.parse(
-          fsSync.readFileSync(stakingWalletfilePath, 'utf-8')
+          fsSync.readFileSync(STAKING_WALLET_FILE_PATH, 'utf-8')
         ) as Uint8Array
       )
     );
   } catch (e: any) {
-    console.error(e);
     return throwDetailedError({
       detailed: e,
       type: ErrorType.NO_ACCOUNT_KEY,
@@ -47,23 +44,24 @@ const claimReward = async (
   }
 
   // deriving public key of claimer
-  console.log('stakingAccKeypair', stakingAccKeypair);
   const stakingPubKey = new PublicKey(stakingAccKeypair.publicKey);
-  console.log('STAKING ACCOUNT PUBLIC KEY', stakingPubKey.toBase58());
-
   const taskState = await getTaskInfo({} as Event, { taskAccountPubKey });
-
   const statePotPubKey = new PublicKey(taskState.stakePotAccount);
-  console.log('STATE POT ACCOUNT PUBLIC KEY', statePotPubKey);
+
+  console.log('@@@params', {
+    statePotPubKey,
+    stakingPubKey,
+    stakingAccKeypair,
+  });
+
+  // console.log('@@@mainSystemAccount', namespaceInstance.mainSystemAccount);
 
   const response = await namespaceInstance.claimReward(
     statePotPubKey,
     stakingPubKey,
     stakingAccKeypair
-    // FIXME: check this params
-    // taskStateInfoPublicKey
   );
-  console.log('RESPONSE FROM CLAIM REWARD FUNCTION', response);
+
   return response;
 };
 

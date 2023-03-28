@@ -23,3 +23,7 @@ export function getAppDataPath() {
     }
   }
 }
+
+export function getStakingWalletPath(activeAccount: string) {
+  return `${getAppDataPath()}/namespace/${activeAccount}_stakingWallet.json`;
+}
