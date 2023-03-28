@@ -1,6 +1,3 @@
-// eslint-disable
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-
 import { ChildProcess, fork, ForkOptions } from 'child_process';
 import { Event } from 'electron';
 import * as fsSync from 'fs';
