@@ -15,7 +15,12 @@ const NOT_AVAILABLE = 'N/A';
 
 export function TaskInfo({ taskPubKey, info, onToolsValidation }: PropsType) {
   const showSourceCodeInRepository = () => {
-    openBrowserWindow(info?.repositoryUrl ?? '');
+    const repositoryUrl = info?.repositoryUrl ?? '';
+    const fullUrl = repositoryUrl.includes('http')
+      ? repositoryUrl
+      : `https://${repositoryUrl}`;
+
+    openBrowserWindow(fullUrl);
   };
 
   const specs = info?.requirementsTags?.filter(({ type }) =>
