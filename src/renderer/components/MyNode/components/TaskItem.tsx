@@ -2,13 +2,13 @@ import {
   PauseFill,
   PlayFill,
   HistoryClockLine,
-  EmbedCodeFill,
   CurrencyMoneyLine,
   Icon,
 } from '@_koii/koii-styleguide';
 import React, { useMemo, useState } from 'react';
-import { useQueryClient } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 
+import { SourceCodeButton } from 'renderer/components/SourceCodeButton';
 import {
   Button,
   Tooltip,
@@ -21,10 +21,16 @@ import {
 import {
   useEditStakeAmountModal,
   useTaskStake,
-  useTaskDetailsModal,
 } from 'renderer/features/common';
 import { useEarnedReward } from 'renderer/features/common/hooks/useEarnedReward';
-import { stopTask, startTask, TaskService, getLogs } from 'renderer/services';
+import {
+  stopTask,
+  startTask,
+  TaskService,
+  getLogs,
+  QueryKeys,
+  getTaskMetadata,
+} from 'renderer/services';
 import { Task } from 'renderer/types';
 import { getKoiiFromRoe } from 'utils';
 
@@ -46,10 +52,6 @@ export function TaskItem({
   const { showModal: showEditStakeAmountModal } = useEditStakeAmountModal({
     task,
   });
-  const { showModal: showTaskDetailsModal } = useTaskDetailsModal({
-    task,
-    accountPublicKey,
-  });
   const queryCache = useQueryClient();
   const { earnedReward } = useEarnedReward({ task, publicKey });
   const { taskStake } = useTaskStake({ task, publicKey: accountPublicKey });
@@ -58,6 +60,11 @@ export function TaskItem({
   const myStakeInKoii = getKoiiFromRoe(taskStake);
   const isFirstRowInTable = index === 0;
   const nodeStatus = useMemo(() => TaskService.getStatus(task), [task]);
+
+  const { data: taskMetadata } = useQuery(
+    [QueryKeys.TaskMetadata, task.metadataCID],
+    () => getTaskMetadata(task.metadataCID)
+  );
 
   const handleToggleTask = async () => {
     try {
@@ -105,16 +112,12 @@ export function TaskItem({
           </Tooltip>
         )}
       </div>
-      <Tooltip
-        placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
-        tooltipContent="Inspect task details"
-      >
-        <Icon
-          source={EmbedCodeFill}
-          onClick={showTaskDetailsModal}
-          className="cursor-pointer h-6 w-6 ml-2.5 -mr-1.5 text-finnieTeal-100"
-        />
-      </Tooltip>
+
+      <SourceCodeButton
+        repositoryUrl={taskMetadata?.repositoryUrl || ''}
+        iconSize={24}
+      />
+
       <div className="text-xs flex flex-col gap-1">
         <div>{taskName}</div>
         <div className="text-finnieTeal">date string</div>
