@@ -33,6 +33,7 @@ import {
   useMainAccount,
   useTaskStake,
   useOnClickOutside,
+  useAccountBalance,
 } from 'renderer/features';
 import {
   QueryKeys,
@@ -72,6 +73,8 @@ function TaskItem({ task, index, columnsLayout }: Props) {
    * We probably should fetch the Account pub key once and keep it in the app context
    */
   const { data: mainAccountPubKey = '' } = useMainAccount();
+
+  const { accountBalance = 0 } = useAccountBalance(mainAccountPubKey);
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -126,11 +129,21 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   );
 
   const validateTask = useCallback(() => {
+    const hasEnoughKoii = accountBalance > valueToStake;
     const hasMinimumStake = valueToStake >= minStake;
     const isTaskValid =
-      hasMinimumStake && isGlobalToolsValid && isTaskToolsValid;
+      hasMinimumStake &&
+      isGlobalToolsValid &&
+      isTaskToolsValid &&
+      hasEnoughKoii;
     setIsTaskValidToRun(isTaskValid);
-  }, [isGlobalToolsValid, isTaskToolsValid, minStake, valueToStake]);
+  }, [
+    isGlobalToolsValid,
+    isTaskToolsValid,
+    minStake,
+    valueToStake,
+    accountBalance,
+  ]);
 
   useEffect(() => {
     validateTask();
@@ -172,12 +185,12 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     }
 
     return isTaskValidToRun ? (
-      <PlayIcon />
+      <PlayIcon className="-ml-4" />
     ) : (
       <Icon
         source={PlayFill}
         size={18}
-        className="cursor-not-allowed text-gray"
+        className="cursor-not-allowed text-gray my-4"
       />
     );
   }, [isRunning, isTaskValidToRun]);
