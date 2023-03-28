@@ -18,6 +18,7 @@ import initExpressApp from '../node/initExpressApp';
 
 import getStakingAccountPublicKey from './getStakingAccountPubKey';
 import { getTaskSource } from './getTaskSource';
+import { getPairedVariablesNamesWithValues } from './taskVariables';
 
 // eslint-disable-next-line
 const bufferlayout = require('buffer-layout');
@@ -129,19 +130,14 @@ async function executeTasks(
   mainSystemAccount: Keypair
 ) {
   const secret = await cryptoRandomString({ length: 20 });
-  // Not passing all env to tasks for security reasons (Only passing ones that starts with SECRET)
-  // TODO: Change the process.env secrets to gettingSecrets from the levelDB in future iteration
-  const SECRETS_ENV = Object.keys(process.env)
-    .filter((e) => e.includes('SECRET'))
-    .reduce((obj, key) => {
-      return Object.assign(obj, {
-        [key]: process.env[key],
-      });
-    }, {});
+
   const options: ForkOptions = {
-    env: SECRETS_ENV,
+    env: await getPairedVariablesNamesWithValues({} as Event, {
+      taskAccountPubKey: selectedTask.taskId,
+    }),
     silent: true,
   };
+
   // TODO: Get the task stake here
   // const STAKE = Number(process.env.TASK_STAKES?.split(',') || 0);
   const stakingAccPubkey = await getStakingAccountPublicKey();
