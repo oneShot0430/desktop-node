@@ -20,15 +20,18 @@ export function SourceCodeButton({
     repositoryUrl ? 'cursor-pointer' : 'cursor-not-allowed'
   }`;
 
+  const fullUrl = formatUrl(repositoryUrl);
+  const isValidRepositoryUrl = isValidUrl(fullUrl);
   const content = (
     <>
-      <Icon source={EmbedCodeFill} size={iconSize} color="#BEF0ED" />
+      <Icon
+        source={EmbedCodeFill}
+        size={iconSize}
+        color={isValidRepositoryUrl ? '#BEF0ED' : 'lightgrey'}
+      />
       {displayLabel && <span className="text-center">Source Code</span>}
     </>
   );
-
-  const fullUrl = formatUrl(repositoryUrl);
-  const isValidRepositoryUrl = isValidUrl(fullUrl);
 
   const showSourceCodeInRepository = () => {
     openBrowserWindow(fullUrl);
