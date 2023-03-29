@@ -18,11 +18,10 @@ export const getTaskMetadata = async (
   }
 
   try {
-    const metadata = fetchFromIPFSOrArweave<TaskMetadata>(
-      payload.metadataCID,
-      'metadata.json'
+    const metadata = JSON.parse(
+      await fetchFromIPFSOrArweave(payload.metadataCID, 'metadata.json')
     );
-    return metadata;
+    return metadata as TaskMetadata;
   } catch (e: any) {
     console.error(e);
     return throwDetailedError({
