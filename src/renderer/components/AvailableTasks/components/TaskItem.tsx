@@ -44,7 +44,7 @@ import {
   startTask,
 } from 'renderer/services';
 import { Task } from 'renderer/types';
-import { getKoiiFromRoe } from 'utils';
+import { getCreatedAtDate, getKoiiFromRoe } from 'utils';
 
 import { TaskInfo } from './TaskInfo';
 import { TaskSettings } from './TaskSettings';
@@ -214,16 +214,10 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     return null;
   }, [accordionView, task, metadata, taskSettings, isLoadingMetadata]);
 
-  const createdAt = useMemo(() => {
-    if (metadata?.createdAt) {
-      const date = new Date(metadata.createdAt);
-      return `${date.getFullYear()}-${(date.getMonth() + 1)
-        .toString()
-        .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
-    }
-
-    return 'N/A';
-  }, [metadata]);
+  const createdAt = useMemo(
+    () => getCreatedAtDate(metadata?.createdAt),
+    [metadata]
+  );
 
   return (
     <TableRow columnsLayout={columnsLayout} className="py-2 gap-y-0" ref={ref}>

@@ -26,7 +26,7 @@ import {
 import { useEarnedReward } from 'renderer/features/common/hooks/useEarnedReward';
 import { stopTask, startTask, TaskService, getLogs } from 'renderer/services';
 import { Task } from 'renderer/types';
-import { getKoiiFromRoe } from 'utils';
+import { getCreatedAtDate, getKoiiFromRoe } from 'utils';
 
 type PropsType = {
   task: Task;
@@ -75,6 +75,11 @@ export function TaskItem({
 
   const handleOutputLogsToConsole = () => getLogs(task.publicKey);
 
+  const createdAt = useMemo(
+    () => getCreatedAtDate(metadata?.createdAt),
+    [metadata]
+  );
+
   return (
     <TableRow columnsLayout={columnsLayout} className="py-3.5">
       <div>
@@ -111,7 +116,7 @@ export function TaskItem({
 
       <div className="text-xs flex flex-col gap-1">
         <div>{taskName}</div>
-        <div className="text-finnieTeal">date string</div>
+        <div className="text-finnieTeal">{createdAt}</div>
       </div>
       <div className="overflow-hidden text-ellipsis pr-8" title={taskManager}>
         {taskManager}
