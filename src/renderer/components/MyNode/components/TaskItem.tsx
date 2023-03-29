@@ -76,7 +76,7 @@ export function TaskItem({
   const handleOutputLogsToConsole = () => getLogs(task.publicKey);
 
   return (
-    <TableRow columnsLayout={columnsLayout}>
+    <TableRow columnsLayout={columnsLayout} className="py-3.5">
       <div>
         {loading ? (
           <div className="pl-2">
@@ -98,7 +98,7 @@ export function TaskItem({
               onClick={handleToggleTask}
               className={`${
                 isRunning ? 'bg-finnieRed' : 'bg-finnieTeal'
-              } rounded-full w-8 h-8 mb-2`}
+              } rounded-full w-8 h-8`}
             />
           </Tooltip>
         )}
@@ -124,7 +124,7 @@ export function TaskItem({
           isFirstRowInTable={isFirstRowInTable}
         />
       </div>
-      <div className="flex flex-row items-center gap-4 ">
+      <div className="flex flex-row items-center gap-4">
         <Tooltip
           placement={`${isFirstRowInTable ? 'bottom' : 'top'}-left`}
           tooltipContent="Edit stake amount"
@@ -135,7 +135,7 @@ export function TaskItem({
             icon={
               <Icon source={CurrencyMoneyLine} className="text-black h-8 w-8" />
             }
-            className="bg-finnieTeal-100 py-0.75 pl-1 !pr-[0.5px] rounded-full mb-2"
+            className="bg-finnieTeal-100 py-0.75 pl-1 !pr-[0.5px] rounded-full"
           />
         </Tooltip>
         <Tooltip
@@ -148,7 +148,7 @@ export function TaskItem({
             icon={
               <Icon
                 source={HistoryClockLine}
-                className="text-finnieTeal-100 h-9 w-9 mb-2"
+                className="text-finnieTeal-100 h-9 w-9"
               />
             }
           />
