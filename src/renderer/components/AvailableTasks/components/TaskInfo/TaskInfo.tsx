@@ -59,16 +59,16 @@ export function TaskInfo({ taskPubKey, info, onToolsValidation }: PropsType) {
         </div>
       </div>
 
-      {!!globalSettings?.length && (
-        <>
-          <div className="mb-2 text-base font-semibold">Global Tools:</div>
-          <NodeTools
-            taskPubKey={taskPubKey}
-            tools={globalSettings}
-            onToolsValidation={onToolsValidation}
-          />
-        </>
-      )}
+      {/* {!!globalSettings?.length && ( */}
+      {/*  <> */}
+      {/*    <div className="mb-2 text-base font-semibold">Global Tools:</div> */}
+      {/*    <NodeTools */}
+      {/*      taskPubKey={taskPubKey} */}
+      {/*      tools={globalSettings} */}
+      {/*      onToolsValidation={onToolsValidation} */}
+      {/*    /> */}
+      {/*  </> */}
+      {/* )} */}
     </div>
   );
 }
