@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 
 import { RequirementType, TaskMetadata } from 'models/task';
 import { SourceCodeButton } from 'renderer/components/SourceCodeButton';
-import { NodeTools } from 'renderer/features/node-tools';
 
 type PropsType = {
   taskPubKey: string;
