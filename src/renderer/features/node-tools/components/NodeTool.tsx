@@ -53,7 +53,7 @@ export function NodeTool({
   }, [taskVariables]);
 
   const defaultValue = useMemo(() => {
-    if (!defaultVariableId) return undefined;
+    if (!defaultVariableId) return null;
 
     return dropdownItems.find(
       (taskVariable) => taskVariable.id === defaultVariableId
