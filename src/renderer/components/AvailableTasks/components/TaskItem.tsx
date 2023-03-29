@@ -35,6 +35,7 @@ import {
   useOnClickOutside,
   useAccountBalance,
   useMetadata,
+  useAllStoredPairedTaskVariables,
 } from 'renderer/features';
 import {
   QueryKeys,
@@ -71,6 +72,12 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   const { data: mainAccountPubKey = '' } = useMainAccount();
 
   const { accountBalance = 0 } = useAccountBalance(mainAccountPubKey);
+
+  const {
+    storedPairedTaskVariablesQuery: { data: pairedVariables = {} },
+  } = useAllStoredPairedTaskVariables({
+    enabled: !!publicKey,
+  });
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -115,9 +122,30 @@ function TaskItem({ task, index, columnsLayout }: Props) {
 
   const { metadata, isLoadingMetadata } = useMetadata(task.metadataCID);
 
-  const taskSettings = metadata?.requirementsTags?.filter(
-    ({ type }) => type === RequirementType.TASK_VARIABLE
+  const taskVariables = metadata?.requirementsTags?.filter(({ type }) =>
+    RequirementType.TASK_VARIABLE.includes(type)
   );
+
+  const globalAndTaskSettings = metadata?.requirementsTags?.filter(({ type }) =>
+    [RequirementType.TASK_VARIABLE, RequirementType.GLOBAL_VARIABLE].includes(
+      type
+    )
+  );
+
+  useEffect(() => {
+    const validateAllVariablesWerePaired = () => {
+      const numberOfPairedVariables = Object.keys(
+        Object.values(pairedVariables)[0] || {}
+      ).length;
+
+      const allVariablesWerePaired =
+        globalAndTaskSettings?.length === numberOfPairedVariables;
+      setIsGlobalToolsValid(allVariablesWerePaired);
+      setIsTaskToolsValid(allVariablesWerePaired);
+    };
+
+    validateAllVariablesWerePaired();
+  }, [pairedVariables, globalAndTaskSettings]);
 
   const validateTask = useCallback(() => {
     const hasEnoughKoii = accountBalance > valueToStake;
@@ -209,13 +237,13 @@ function TaskItem({ task, index, columnsLayout }: Props) {
         <TaskSettings
           taskPubKey={task.publicKey}
           onToolsValidation={handleTaskToolsValidationCheck}
-          settings={taskSettings}
+          taskVariables={taskVariables}
         />
       );
     }
 
     return null;
-  }, [accordionView, task, metadata, taskSettings, isLoadingMetadata]);
+  }, [accordionView, task, metadata, taskVariables, isLoadingMetadata]);
 
   const createdAt = useMemo(
     () => getCreatedAtDate(metadata?.createdAt),
