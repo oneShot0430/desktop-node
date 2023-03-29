@@ -187,7 +187,10 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   }, [isRunning, isTaskValidToRun]);
 
   const getTaskDetailsComponent = useCallback(() => {
-    if (isLoadingMetadata) {
+    if (
+      (accordionView === 'info' || accordionView === 'settings') &&
+      isLoadingMetadata
+    ) {
       return <LoadingSpinner />;
     }
 
