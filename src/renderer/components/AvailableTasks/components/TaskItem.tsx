@@ -149,7 +149,8 @@ function TaskItem({ task, index, columnsLayout }: Props) {
 
   const validateTask = useCallback(() => {
     const hasEnoughKoii = accountBalance > valueToStake;
-    const hasMinimumStake = valueToStake >= minStake;
+    const hasMinimumStake =
+      (alreadyStakedTokensAmount || valueToStake) >= minStake;
     const isTaskValid =
       hasMinimumStake &&
       isGlobalToolsValid &&
@@ -162,6 +163,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     minStake,
     valueToStake,
     accountBalance,
+    alreadyStakedTokensAmount,
   ]);
 
   useEffect(() => {
