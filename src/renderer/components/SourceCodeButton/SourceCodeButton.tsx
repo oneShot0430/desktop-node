@@ -3,6 +3,7 @@ import React from 'react';
 
 import { Tooltip } from 'renderer/components/ui';
 import { openBrowserWindow } from 'renderer/services';
+import { formatUrl, isValidUrl } from 'utils';
 
 type PropsType = {
   repositoryUrl: string;
@@ -15,14 +16,6 @@ export function SourceCodeButton({
   displayLabel,
   iconSize,
 }: PropsType) {
-  const showSourceCodeInRepository = () => {
-    const fullUrl = repositoryUrl.includes('http')
-      ? repositoryUrl
-      : `https://${repositoryUrl}`;
-
-    openBrowserWindow(fullUrl);
-  };
-
   const buttonClasses = `w-[54px] flex flex-col items-center ${
     repositoryUrl ? 'cursor-pointer' : 'cursor-not-allowed'
   }`;
@@ -34,13 +27,20 @@ export function SourceCodeButton({
     </>
   );
 
+  const fullUrl = formatUrl(repositoryUrl);
+  const isValidRepositoryUrl = isValidUrl(fullUrl);
+
+  const showSourceCodeInRepository = () => {
+    openBrowserWindow(fullUrl);
+  };
+
   return (
     <button
       className={buttonClasses}
       onClick={showSourceCodeInRepository}
-      disabled={!repositoryUrl}
+      disabled={!isValidRepositoryUrl}
     >
-      {repositoryUrl ? (
+      {isValidRepositoryUrl ? (
         content
       ) : (
         <Tooltip
