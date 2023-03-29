@@ -1,9 +1,8 @@
-import { EmbedCodeFill, Icon } from '@_koii/koii-styleguide';
 import React, { useEffect } from 'react';
 
 import { RequirementType, TaskMetadata } from 'models/task';
+import { SourceCodeButton } from 'renderer/components/SourceCodeButton';
 import { NodeTools } from 'renderer/features/node-tools';
-import { openBrowserWindow } from 'renderer/services';
 
 type PropsType = {
   taskPubKey: string;
@@ -14,10 +13,6 @@ type PropsType = {
 const NOT_AVAILABLE = 'N/A';
 
 export function TaskInfo({ taskPubKey, info, onToolsValidation }: PropsType) {
-  const showSourceCodeInRepository = () => {
-    openBrowserWindow(info?.repositoryUrl ?? '');
-  };
-
   const specs = info?.requirementsTags?.filter(({ type }) =>
     [
       RequirementType.CPU,
@@ -46,17 +41,11 @@ export function TaskInfo({ taskPubKey, info, onToolsValidation }: PropsType) {
         <div className="flex justify-between gap-16 mb-4">
           <p>{info?.description ?? NOT_AVAILABLE}</p>
 
-          <button
-            className="w-[54px] h-[76px] flex flex-col items-center cursor-pointer"
-            onClick={showSourceCodeInRepository}
-          >
-            {info?.repositoryUrl && (
-              <>
-                <Icon source={EmbedCodeFill} size={36} color="#BEF0ED" />
-                <span className="text-center">Source Code</span>
-              </>
-            )}
-          </button>
+          <SourceCodeButton
+            repositoryUrl={info?.repositoryUrl || ''}
+            iconSize={36}
+            displayLabel
+          />
         </div>
       </div>
       <div className="mb-6 w-fit">

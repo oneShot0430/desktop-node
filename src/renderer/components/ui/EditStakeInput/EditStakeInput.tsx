@@ -27,7 +27,8 @@ export function EditStakeInput({
   );
   const stakeInKoii = getKoiiFromRoe(stake);
   const minStakeInKoii = getKoiiFromRoe(minStake);
-  const value = hasEnteredAValue && stakeInKoii !== 0 ? stakeInKoii : '';
+  const value =
+    (hasEnteredAValue || disabled) && stakeInKoii !== 0 ? stakeInKoii : '';
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = ({
     target: { value: newStakeInKoii },

@@ -2,13 +2,13 @@ import {
   PauseFill,
   PlayFill,
   HistoryClockLine,
-  EmbedCodeFill,
   CurrencyMoneyLine,
   Icon,
 } from '@_koii/koii-styleguide';
 import React, { useMemo, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
+import { SourceCodeButton } from 'renderer/components/SourceCodeButton';
 import {
   Button,
   Tooltip,
@@ -21,12 +21,12 @@ import {
 import {
   useEditStakeAmountModal,
   useTaskStake,
-  useTaskDetailsModal,
+  useMetadata,
 } from 'renderer/features/common';
 import { useEarnedReward } from 'renderer/features/common/hooks/useEarnedReward';
 import { stopTask, startTask, TaskService, getLogs } from 'renderer/services';
 import { Task } from 'renderer/types';
-import { getKoiiFromRoe } from 'utils';
+import { getCreatedAtDate, getKoiiFromRoe } from 'utils';
 
 type PropsType = {
   task: Task;
@@ -46,10 +46,6 @@ export function TaskItem({
   const { showModal: showEditStakeAmountModal } = useEditStakeAmountModal({
     task,
   });
-  const { showModal: showTaskDetailsModal } = useTaskDetailsModal({
-    task,
-    accountPublicKey,
-  });
   const queryCache = useQueryClient();
   const { earnedReward } = useEarnedReward({ task, publicKey });
   const { taskStake } = useTaskStake({ task, publicKey: accountPublicKey });
@@ -58,6 +54,8 @@ export function TaskItem({
   const myStakeInKoii = getKoiiFromRoe(taskStake);
   const isFirstRowInTable = index === 0;
   const nodeStatus = useMemo(() => TaskService.getStatus(task), [task]);
+
+  const { metadata } = useMetadata(task.metadataCID);
 
   const handleToggleTask = async () => {
     try {
@@ -77,8 +75,13 @@ export function TaskItem({
 
   const handleOutputLogsToConsole = () => getLogs(task.publicKey);
 
+  const createdAt = useMemo(
+    () => getCreatedAtDate(metadata?.createdAt),
+    [metadata]
+  );
+
   return (
-    <TableRow columnsLayout={columnsLayout}>
+    <TableRow columnsLayout={columnsLayout} className="py-3.5">
       <div>
         {loading ? (
           <div className="pl-2">
@@ -100,24 +103,20 @@ export function TaskItem({
               onClick={handleToggleTask}
               className={`${
                 isRunning ? 'bg-finnieRed' : 'bg-finnieTeal'
-              } rounded-full w-8 h-8 mb-2`}
+              } rounded-full w-8 h-8`}
             />
           </Tooltip>
         )}
       </div>
-      <Tooltip
-        placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
-        tooltipContent="Inspect task details"
-      >
-        <Icon
-          source={EmbedCodeFill}
-          onClick={showTaskDetailsModal}
-          className="cursor-pointer h-6 w-6 ml-2.5 -mr-1.5 text-finnieTeal-100"
-        />
-      </Tooltip>
+
+      <SourceCodeButton
+        repositoryUrl={metadata?.repositoryUrl || ''}
+        iconSize={24}
+      />
+
       <div className="text-xs flex flex-col gap-1">
         <div>{taskName}</div>
-        <div className="text-finnieTeal">date string</div>
+        <div className="text-finnieTeal">{createdAt}</div>
       </div>
       <div className="overflow-hidden text-ellipsis pr-8" title={taskManager}>
         {taskManager}
@@ -130,7 +129,7 @@ export function TaskItem({
           isFirstRowInTable={isFirstRowInTable}
         />
       </div>
-      <div className="flex flex-row items-center gap-4 ">
+      <div className="flex flex-row items-center gap-4">
         <Tooltip
           placement={`${isFirstRowInTable ? 'bottom' : 'top'}-left`}
           tooltipContent="Edit stake amount"
@@ -141,7 +140,7 @@ export function TaskItem({
             icon={
               <Icon source={CurrencyMoneyLine} className="text-black h-8 w-8" />
             }
-            className="bg-finnieTeal-100 py-0.75 pl-1 !pr-[0.5px] rounded-full mb-2"
+            className="bg-finnieTeal-100 py-0.75 pl-1 !pr-[0.5px] rounded-full"
           />
         </Tooltip>
         <Tooltip
@@ -154,7 +153,7 @@ export function TaskItem({
             icon={
               <Icon
                 source={HistoryClockLine}
-                className="text-finnieTeal-100 h-9 w-9 mb-2"
+                className="text-finnieTeal-100 h-9 w-9"
               />
             }
           />

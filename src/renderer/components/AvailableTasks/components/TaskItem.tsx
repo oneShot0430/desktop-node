@@ -31,9 +31,11 @@ import {
 } from 'renderer/components/ui';
 import {
   useMainAccount,
-  useTaskDetailsModal,
   useTaskStake,
   useOnClickOutside,
+  useAccountBalance,
+  useMetadata,
+  useAllStoredPairedTaskVariables,
 } from 'renderer/features';
 import {
   QueryKeys,
@@ -41,10 +43,9 @@ import {
   stopTask,
   stakeOnTask,
   startTask,
-  getTaskMetadata,
 } from 'renderer/services';
 import { Task } from 'renderer/types';
-import { getKoiiFromRoe } from 'utils';
+import { getCreatedAtDate, getKoiiFromRoe } from 'utils';
 
 import { TaskInfo } from './TaskInfo';
 import { TaskSettings } from './TaskSettings';
@@ -68,11 +69,15 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   const [meetsMinimumStake, setMeetsMinimumStake] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
-  /**
-   * @todo: abstract it away to the hook,
-   * We probably should fetch the Account pub key once and keep it in the app context
-   */
   const { data: mainAccountPubKey = '' } = useMainAccount();
+
+  const { accountBalance = 0 } = useAccountBalance(mainAccountPubKey);
+
+  const {
+    storedPairedTaskVariablesQuery: { data: pairedVariables = {} },
+  } = useAllStoredPairedTaskVariables({
+    enabled: !!publicKey,
+  });
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -89,11 +94,6 @@ function TaskItem({ task, index, columnsLayout }: Props) {
       publicKey: mainAccountPubKey,
       enabled: !!mainAccountPubKey,
     });
-
-  const { showModal: showCodeModal } = useTaskDetailsModal({
-    task,
-    accountPublicKey: mainAccountPubKey,
-  });
 
   const handleToggleView = (view: 'info' | 'settings') => {
     const newView = accordionView === view ? null : view;
@@ -120,23 +120,51 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     TaskService.getMinStake(task)
   );
 
-  const { data: taskMetadata, isLoading: isLoadingTaskMetadata } = useQuery(
-    [QueryKeys.TaskMetadata, task.metadataCID],
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    () => getTaskMetadata(task.metadataCID!),
-    { enabled: !!task.metadataCID }
+  const { metadata, isLoadingMetadata } = useMetadata(task.metadataCID);
+
+  const taskVariables = metadata?.requirementsTags?.filter(({ type }) =>
+    RequirementType.TASK_VARIABLE.includes(type)
   );
 
-  const taskSettings = taskMetadata?.requirementsTags?.filter(
-    ({ type }) => type === RequirementType.TASK_VARIABLE
+  const globalAndTaskSettings = metadata?.requirementsTags?.filter(({ type }) =>
+    [RequirementType.TASK_VARIABLE, RequirementType.GLOBAL_VARIABLE].includes(
+      type
+    )
   );
+
+  useEffect(() => {
+    const validateAllVariablesWerePaired = () => {
+      const numberOfPairedVariables = Object.keys(
+        Object.values(pairedVariables)[0] || {}
+      ).length;
+
+      const allVariablesWerePaired =
+        globalAndTaskSettings?.length === numberOfPairedVariables;
+      setIsGlobalToolsValid(allVariablesWerePaired);
+      setIsTaskToolsValid(allVariablesWerePaired);
+    };
+
+    validateAllVariablesWerePaired();
+  }, [pairedVariables, globalAndTaskSettings]);
 
   const validateTask = useCallback(() => {
-    const hasMinimumStake = valueToStake >= minStake;
+    const hasEnoughKoii = accountBalance > valueToStake;
+    const hasMinimumStake =
+      (alreadyStakedTokensAmount || valueToStake) >= minStake;
     const isTaskValid =
-      hasMinimumStake && isGlobalToolsValid && isTaskToolsValid;
+      hasMinimumStake &&
+      isGlobalToolsValid &&
+      isTaskToolsValid &&
+      hasEnoughKoii;
     setIsTaskValidToRun(isTaskValid);
-  }, [isGlobalToolsValid, isTaskToolsValid, minStake, valueToStake]);
+  }, [
+    isGlobalToolsValid,
+    isTaskToolsValid,
+    minStake,
+    valueToStake,
+    accountBalance,
+    alreadyStakedTokensAmount,
+  ]);
 
   useEffect(() => {
     validateTask();
@@ -178,18 +206,21 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     }
 
     return isTaskValidToRun ? (
-      <PlayIcon />
+      <PlayIcon className="-ml-4" />
     ) : (
       <Icon
         source={PlayFill}
         size={18}
-        className="cursor-not-allowed text-gray"
+        className="cursor-not-allowed text-gray my-4"
       />
     );
   }, [isRunning, isTaskValidToRun]);
 
   const getTaskDetailsComponent = useCallback(() => {
-    if (isLoadingTaskMetadata) {
+    if (
+      (accordionView === 'info' || accordionView === 'settings') &&
+      isLoadingMetadata
+    ) {
       return <LoadingSpinner />;
     }
 
@@ -197,7 +228,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
       return (
         <TaskInfo
           taskPubKey={task.publicKey}
-          info={taskMetadata}
+          info={metadata}
           onToolsValidation={handleGlobalToolsValidationCheck}
         />
       );
@@ -208,24 +239,18 @@ function TaskItem({ task, index, columnsLayout }: Props) {
         <TaskSettings
           taskPubKey={task.publicKey}
           onToolsValidation={handleTaskToolsValidationCheck}
-          settings={taskSettings}
+          taskVariables={taskVariables}
         />
       );
     }
 
     return null;
-  }, [accordionView, task, taskMetadata, taskSettings, isLoadingTaskMetadata]);
+  }, [accordionView, task, metadata, taskVariables, isLoadingMetadata]);
 
-  const createdAt = useMemo(() => {
-    if (taskMetadata?.createdAt) {
-      const date = new Date(taskMetadata.createdAt);
-      return `${date.getFullYear()}-${(date.getMonth() + 1)
-        .toString()
-        .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
-    }
-
-    return 'N/A';
-  }, [taskMetadata]);
+  const createdAt = useMemo(
+    () => getCreatedAtDate(metadata?.createdAt),
+    [metadata]
+  );
 
   return (
     <TableRow columnsLayout={columnsLayout} className="py-2 gap-y-0" ref={ref}>
@@ -319,7 +344,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
               onlyIcon
               icon={getTaskPlayButtonIcon()}
               onClick={isRunning ? handleStopTask : handleStartTask}
-              // disabled={!isTaskValidToRun}
+              disabled={!isTaskValidToRun}
             />
           </Tooltip>
         )}

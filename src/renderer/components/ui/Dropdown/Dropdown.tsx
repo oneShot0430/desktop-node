@@ -17,7 +17,7 @@ export type DropdownProps = {
   items: DropdownItem[];
   placeholderText?: string;
   onSelect?: (item: DropdownItem) => void;
-  defaultValue?: DropdownItem;
+  defaultValue?: DropdownItem | null;
   validationError?: string;
 };
 
@@ -29,12 +29,10 @@ export function Dropdown({
   items = [],
   onSelect,
   placeholderText = 'Select item',
-  defaultValue,
+  defaultValue = null,
   validationError,
 }: DropdownProps) {
-  const [selected, setSelected] = useState<DropdownItem | undefined>(
-    defaultValue
-  );
+  const [selected, setSelected] = useState<DropdownItem | null>(defaultValue);
   const handleItemSelect = useCallback(
     (item: DropdownItem) => {
       onSelect?.(item);
