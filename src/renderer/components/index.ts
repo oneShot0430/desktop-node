@@ -8,3 +8,4 @@ export * from './ShowSeedPhrase';
 export * from './Unlock';
 export * from './AppTopBar';
 export * from './BackButton';
+export * from './SourceCodeButton';

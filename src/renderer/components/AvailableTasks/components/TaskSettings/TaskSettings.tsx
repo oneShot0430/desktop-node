@@ -5,13 +5,13 @@ import { RequirementTag } from 'models/task';
 import { NodeTools } from 'renderer/features/node-tools';
 
 type PropsType = {
-  settings?: RequirementTag[];
+  taskVariables?: RequirementTag[];
   taskPubKey: string;
   onToolsValidation?: (isValid: boolean) => void;
 };
 
 export function TaskSettings({
-  settings,
+  taskVariables,
   taskPubKey,
   onToolsValidation,
 }: PropsType) {
@@ -22,9 +22,9 @@ export function TaskSettings({
         <Icon size={14} source={TooltipChatQuestionLeftLine} />
       </div>
 
-      {!!settings?.length && (
+      {!!taskVariables?.length && (
         <NodeTools
-          tools={settings}
+          tools={taskVariables}
           taskPubKey={taskPubKey}
           onToolsValidation={onToolsValidation}
         />

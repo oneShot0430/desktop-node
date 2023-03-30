@@ -9,7 +9,10 @@ function makeStorageClient(token: string) {
   return new Web3Storage({ token });
 }
 
-export async function retrieveFromIPFS<T>(cid: string, fileName: string) {
+export async function retrieveFromIPFS(
+  cid: string,
+  fileName: string
+): Promise<string> {
   const storedTaskVariables = await getStoredTaskVariables();
   const userWeb3StorageKey = Object.values(storedTaskVariables).find(
     ({ label }) => label === 'WEB3_STORAGE_KEY'
@@ -18,7 +21,7 @@ export async function retrieveFromIPFS<T>(cid: string, fileName: string) {
   if (userWeb3StorageKey) {
     try {
       const client = makeStorageClient(userWeb3StorageKey);
-      return retrieveThroughClient<T>(client, cid);
+      return retrieveThroughClient(client, cid);
     } catch (error: any) {
       return throwDetailedError({
         detailed: error,
@@ -26,14 +29,15 @@ export async function retrieveFromIPFS<T>(cid: string, fileName: string) {
       });
     }
   } else {
-    return retrieveThroughHttpGateway<T>(cid, fileName);
+    return retrieveThroughHttpGateway(cid, fileName);
   }
 }
 
-async function retrieveThroughClient<T>(
+async function retrieveThroughClient(
   client: Web3Storage,
   cid: string
-): Promise<T> {
+): Promise<string> {
+  console.log('use Web3.storage client');
   const response = await client.get(cid);
   if (!response?.ok) {
     return throwDetailedError({
@@ -43,20 +47,19 @@ async function retrieveThroughClient<T>(
   }
   const files = await response.files();
   const textDecoder = new TextDecoder();
-  const fileContent = JSON.parse(
-    textDecoder.decode(await files[0].arrayBuffer())
-  );
-  console.log('used Web3storage');
-  return fileContent as T;
+  return textDecoder.decode(await files[0].arrayBuffer());
 }
 
 async function retrieveThroughHttpGateway<T>(
   cid: string,
   fileName = ''
 ): Promise<T> {
+  console.log('use IPFS HTTP gateway');
   const { data: fileContent } = await axios.get<T>(
-    `${config.node.IPFS_GATEWAY_URL}/${cid}/${fileName}`
+    `${config.node.IPFS_GATEWAY_URL}/${cid}/${fileName}`,
+    {
+      transformResponse: [], // disable auto JSON parse
+    }
   );
-  console.log('used IPFS HTTP gateway');
   return fileContent;
 }

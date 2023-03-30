@@ -10,7 +10,7 @@ export const getTaskSource = async (
   { taskAuditProgram }: GetTaskSourceParam
 ): Promise<string> => {
   try {
-    const sourceCode = await fetchFromIPFSOrArweave<string>(
+    const sourceCode = await fetchFromIPFSOrArweave(
       taskAuditProgram,
       'main.js'
     );

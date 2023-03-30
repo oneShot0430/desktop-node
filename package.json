@@ -1,5 +1,6 @@
 {
   "description": "Desktop Node",
+  "homepage": "koii.network",
   "keywords": [
     "koii",
     "task",
@@ -277,9 +278,9 @@
     },
     "linux": {
       "target": [
-        "AppImage"
+        "deb"
       ],
-      "category": "Development"
+      "category": "Network"
     },
     "directories": {
       "app": "release/app",
