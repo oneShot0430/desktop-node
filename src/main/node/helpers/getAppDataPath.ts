@@ -5,12 +5,7 @@ import path from 'path';
 export function getAppDataPath() {
   switch (process.platform) {
     case 'darwin': {
-      return path.join(
-        app.getPath('home'),
-        'Library',
-        'Application Support',
-        'KOII-Desktop-Node'
-      );
+      return path.join(app.getPath('home'), 'KOII-Desktop-Node');
     }
     case 'win32': {
       return path.join(app.getPath('appData'), 'KOII-Desktop-Node');
