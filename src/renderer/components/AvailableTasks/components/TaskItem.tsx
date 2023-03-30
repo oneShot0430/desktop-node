@@ -122,14 +122,11 @@ function TaskItem({ task, index, columnsLayout }: Props) {
 
   const { metadata, isLoadingMetadata } = useMetadata(task.metadataCID);
 
-  const taskVariables = metadata?.requirementsTags?.filter(({ type }) =>
-    RequirementType.TASK_VARIABLE.includes(type)
-  );
-
-  const globalAndTaskSettings = metadata?.requirementsTags?.filter(({ type }) =>
-    [RequirementType.TASK_VARIABLE, RequirementType.GLOBAL_VARIABLE].includes(
-      type
-    )
+  const globalAndTaskVariables = metadata?.requirementsTags?.filter(
+    ({ type }) =>
+      [RequirementType.TASK_VARIABLE, RequirementType.GLOBAL_VARIABLE].includes(
+        type
+      )
   );
 
   useEffect(() => {
@@ -139,13 +136,13 @@ function TaskItem({ task, index, columnsLayout }: Props) {
       ).length;
 
       const allVariablesWerePaired =
-        globalAndTaskSettings?.length === numberOfPairedVariables;
+        globalAndTaskVariables?.length === numberOfPairedVariables;
       setIsGlobalToolsValid(allVariablesWerePaired);
       setIsTaskToolsValid(allVariablesWerePaired);
     };
 
     validateAllVariablesWerePaired();
-  }, [pairedVariables, globalAndTaskSettings]);
+  }, [pairedVariables, globalAndTaskVariables]);
 
   const validateTask = useCallback(() => {
     const hasEnoughKoii = accountBalance > valueToStake;
@@ -158,7 +155,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
       hasEnoughKoii;
     setIsTaskValidToRun(isTaskValid);
   }, [
-    isGlobalToolsValid,
+    // isGlobalToolsValid,
     isTaskToolsValid,
     minStake,
     valueToStake,
@@ -239,13 +236,19 @@ function TaskItem({ task, index, columnsLayout }: Props) {
         <TaskSettings
           taskPubKey={task.publicKey}
           onToolsValidation={handleTaskToolsValidationCheck}
-          taskVariables={taskVariables}
+          taskVariables={globalAndTaskVariables}
         />
       );
     }
 
     return null;
-  }, [accordionView, task, metadata, taskVariables, isLoadingMetadata]);
+  }, [
+    accordionView,
+    task,
+    metadata,
+    globalAndTaskVariables,
+    isLoadingMetadata,
+  ]);
 
   const createdAt = useMemo(
     () => getCreatedAtDate(metadata?.createdAt),
