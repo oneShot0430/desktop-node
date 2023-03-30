@@ -1,21 +1,14 @@
 import { app } from 'electron';
 import path from 'path';
 
+const platformsSupported = ['darwin', 'win32', 'linux'];
+
 // eslint-disable-next-line consistent-return
 export function getAppDataPath() {
-  switch (process.platform) {
-    case 'darwin': {
-      return path.join(app.getPath('home'), 'KOII-Desktop-Node');
-    }
-    case 'win32': {
-      return path.join(app.getPath('appData'), 'KOII-Desktop-Node');
-    }
-    case 'linux': {
-      return path.join(app.getPath('home'), '.KOII-Desktop-Node');
-    }
-    default: {
-      console.log('Unsupported platform!');
-      process.exit(1);
-    }
+  if (platformsSupported.includes(process.platform))
+    return path.join(app.getPath('appData'), 'KOII-Desktop-Node');
+  else {
+    console.log('Unsupported platform!');
+    process.exit(1);
   }
 }
