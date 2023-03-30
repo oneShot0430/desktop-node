@@ -2,7 +2,10 @@ import { useQuery } from 'react-query';
 
 import { QueryKeys, getTasksById } from 'renderer/services';
 
-const defaultTasksIds = ['8iaGKc2PLx7pVvyLqW378CMTEyC1t5Z2HRsXsgLXg6Kh'];
+const defaultTasksIds = [
+  'A9e5dGqvHZNdbhktNB1yYKY3NF1ick2UFEmyo5NgmJ1Y',
+  '8v7MAZcikirWyupW4KuCSRnj1tWEVid84QaMoUBjswUd',
+];
 
 export const useDefaultTasks = () => {
   const {
