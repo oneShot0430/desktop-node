@@ -16,6 +16,7 @@ const claimReward = async (
 ): Promise<ClaimRewardResponse> => {
   const { taskAccountPubKey } = payload;
   const ACTIVE_ACCOUNT = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
+  const taskStateInfoPublicKey = new PublicKey(taskAccountPubKey);
 
   if (!ACTIVE_ACCOUNT) {
     return throwDetailedError({
@@ -48,18 +49,11 @@ const claimReward = async (
   const taskState = await getTaskInfo({} as Event, { taskAccountPubKey });
   const statePotPubKey = new PublicKey(taskState.stakePotAccount);
 
-  console.log('@@@params', {
-    statePotPubKey,
-    stakingPubKey,
-    stakingAccKeypair,
-  });
-
-  // console.log('@@@mainSystemAccount', namespaceInstance.mainSystemAccount);
-
   const response = await namespaceInstance.claimReward(
     statePotPubKey,
     stakingPubKey,
-    stakingAccKeypair
+    stakingAccKeypair,
+    taskStateInfoPublicKey
   );
 
   return response;
