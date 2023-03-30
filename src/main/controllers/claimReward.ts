@@ -59,9 +59,8 @@ const claimReward = async (
   const response = await namespaceInstance.claimReward(
     statePotPubKey,
     stakingPubKey,
-    stakingAccKeypair
-    // FIXME: check this params
-    // taskStateInfoPublicKey
+    stakingAccKeypair,
+    taskStateInfoPublicKey
   );
   console.log('RESPONSE FROM CLAIM REWARD FUNCTION', response);
   return response;
