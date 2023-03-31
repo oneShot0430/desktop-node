@@ -111,7 +111,7 @@ function CreatePin() {
           />
         </div>
       </ContentRightWrapper>
-      <LinesVerticalTeal className="absolute top-0 -right-48 z-10 h-screen" />
+      <LinesVerticalTeal className="absolute top-0 -right-[22.5%] 2xl:-right-[37%] z-10 h-screen" />
     </div>
   );
 }
