@@ -1,7 +1,6 @@
 import {
   CloseLine,
   Icon,
-  SettingsFill,
   PlayFill,
   InformationCircleLine,
 } from '@_koii/koii-styleguide';
@@ -17,6 +16,8 @@ import React, {
 } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
+import GearFill from 'assets/svgs/gear-fill.svg';
+import GearLine from 'assets/svgs/gear-line.svg';
 import PlayIcon from 'assets/svgs/play-icon.svg';
 import StopTealIcon from 'assets/svgs/stop-icon-teal.svg';
 import { RequirementType } from 'models';
@@ -254,6 +255,10 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     () => getCreatedAtDate(metadata?.createdAt),
     [metadata]
   );
+  const GearIcon = globalAndTaskVariables?.length ? GearFill : GearLine;
+  const gearIconColor = isTaskToolsValid
+    ? 'text-finnieEmerald-light'
+    : 'text-finnieOrange';
 
   return (
     <TableRow columnsLayout={columnsLayout} className="py-2 gap-y-0" ref={ref}>
@@ -320,11 +325,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
               <Button
                 onMouseDown={() => handleToggleView('settings')}
                 icon={
-                  <Icon
-                    source={SettingsFill}
-                    size={36}
-                    className="text-finnieOrange"
-                  />
+                  <Icon source={GearIcon} size={36} className={gearIconColor} />
                 }
                 onlyIcon
               />
