@@ -259,6 +259,11 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   const gearIconColor = isTaskToolsValid
     ? 'text-finnieEmerald-light'
     : 'text-finnieOrange';
+  const gearTooltipContent = !globalAndTaskVariables?.length
+    ? "This Task doesn't use any Task settings"
+    : isTaskToolsValid
+    ? 'Open Task settings'
+    : 'You need to set up the Task settings first in order to run this Task.';
 
   return (
     <TableRow columnsLayout={columnsLayout} className="py-2 gap-y-0" ref={ref}>
@@ -318,8 +323,8 @@ function TaskItem({ task, index, columnsLayout }: Props) {
       <div>
         <div>
           <Tooltip
-            placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
-            tooltipContent="Open task settings"
+            placement={`${isFirstRowInTable ? 'bottom' : 'top'}-left`}
+            tooltipContent={gearTooltipContent}
           >
             <div className="flex flex-col items-center justify-start w-10">
               <Button
