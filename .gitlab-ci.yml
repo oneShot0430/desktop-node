@@ -59,8 +59,11 @@ stages:
 install_macos:
   image: $MACOS_IMAGE
   before_script:
+    - HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1 brew uninstall node@17
     - HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1 brew install node@18
-    - npm install -g npm@9.6.2
+    - export PATH="/usr/local/opt/node@18/bin:$PATH"
+    - export LDFLAGS="-L/usr/local/opt/node@18/lib"
+    - export CPPFLAGS="-I/usr/local/opt/node@18/include"
   <<: *install_deps_script
   tags:
     - shared-macos-amd64
@@ -84,6 +87,12 @@ lint_macos:
   needs: ['install_macos']
   dependencies:
     - install_macos
+  before_script:
+    - HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1 brew uninstall node@17
+    - HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1 brew install node@18
+    - export PATH="/usr/local/opt/node@18/bin:$PATH"
+    - export LDFLAGS="-L/usr/local/opt/node@18/lib"
+    - export CPPFLAGS="-I/usr/local/opt/node@18/include"
   <<: *lint_script
   tags:
     - shared-macos-amd64
@@ -107,6 +116,7 @@ test_macos:
   needs: ['install_macos']
   dependencies:
     - install_macos
+  
   <<: *test_script
   tags:
     - shared-macos-amd64
@@ -142,10 +152,13 @@ package_macos:
   needs: ['install_macos']
   dependencies:
     - install_macos
-  <<: *package_script
   before_script:
-    - brew install node@18
-    - npm install -g npm@9.6.2
+    - HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1 brew uninstall node@17
+    - HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1 brew install node@18
+    - export PATH="/usr/local/opt/node@18/bin:$PATH"
+    - export LDFLAGS="-L/usr/local/opt/node@18/lib"
+    - export CPPFLAGS="-I/usr/local/opt/node@18/include"
+  <<: *package_script
   script:
     - npm run package
   tags:
@@ -154,6 +167,7 @@ package_macos:
     paths:
       - 'release/build/*.zip'
       - 'release/build/*.dmg'
+      - 'release/build/*.pkg'
 
 # deploy_win:
 #   needs: ['package_win']
