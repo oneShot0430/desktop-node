@@ -324,6 +324,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
             <div className="flex flex-col items-center justify-start w-10">
               <Button
                 onMouseDown={() => handleToggleView('settings')}
+                disabled={!globalAndTaskVariables?.length}
                 icon={
                   <Icon source={GearIcon} size={36} className={gearIconColor} />
                 }
