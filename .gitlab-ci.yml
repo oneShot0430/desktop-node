@@ -59,7 +59,7 @@ stages:
 install_macos:
   image: $MACOS_IMAGE
   before_script:
-    - brew install node@18
+    - HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1 brew install node@18
     - npm install -g npm@9.6.2
   <<: *install_deps_script
   tags:
