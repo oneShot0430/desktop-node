@@ -4,6 +4,9 @@ variables:
   MACOS_IMAGE: 'macos-12-xcode-14'
   USE_HARD_LINKS: 'false'
 
+include:
+  - remote: https://gitlab.com/gitlab-org/incubation-engineering/devops-for-mobile-apps/demo-mobile-ci-templates/-/raw/main/Preinstall-Apple-WWDR-Certificates.gitlab-ci.yml
+
 .install_deps_template: &install_deps_script
   stage: prerequisites
   script:
@@ -158,9 +161,7 @@ package_macos:
     - export PATH="/usr/local/opt/node@18/bin:$PATH"
     - export LDFLAGS="-L/usr/local/opt/node@18/lib"
     - export CPPFLAGS="-I/usr/local/opt/node@18/include"
-  include:
-    - remote: https://gitlab.com/gitlab-org/incubation-engineering/devops-for-mobile-apps/demo-mobile-ci-templates/-/raw/main/Preinstall-Apple-WWDR-Certificates.gitlab-ci.yml
-  <<: *package_script
+<<: *package_script
   script:
     - npm run package
   tags:
