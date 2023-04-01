@@ -1,6 +1,6 @@
 {
   "productName": "Koii Desktop Node",
-  "appId": "org.desktopNode",
+  "appId": "com.koii.network.desktopnode",
   "asar": true,
   "asarUnpack": "**\\*.{node,dll}",
   "files": [
@@ -23,7 +23,7 @@
     "artifactName": "koii-desktop-node-${version}-${os}.${ext}",
     "hardenedRuntime": true,
     "gatekeeperAssess": false,
-    "provisioningProfile": "embedded.provisionprofile",
+    "provisioningProfile": "build/comkoiinetworkdesktopnode.provisionprofile",
     "entitlements": "build/entitlements.mac.plist",
     "entitlementsInherit": "build/entitlements.mac.plist"
   },
@@ -39,7 +39,8 @@
         "type": "link",
         "path": "/Applications"
       }
-    ]
+    ],
+    "sign": false
   },
   "pkg": {
     "isRelocatable": false,
