@@ -82,7 +82,7 @@ function CreatePin() {
         </div>
 
         <div className="flex flex-col items-end pt-14">
-          <div className="flex items-center relative !inline-block">
+          <div className="items-center relative inline-block">
             <input
               id="link-checkbox"
               type="checkbox"
@@ -94,13 +94,12 @@ function CreatePin() {
               className="ml-4 text-sm font-medium "
             >
               I agree with the{' '}
-              <a
-                href="#"
+              <button
                 className="underline text-finnieTeal"
                 onClick={openTermsWindow}
               >
                 Terms of Service
-              </a>
+              </button>
               .
             </label>
           </div>
@@ -108,11 +107,11 @@ function CreatePin() {
             disabled={diableLogin}
             label="Log in"
             onClick={handlePinCreate}
-            className="bg-finnieGray-light text-finnieBlue w-[240px] mt-6"
+            className="bg-finnieGray-light text-finnieBlue w-60 mt-6 mr-3"
           />
         </div>
       </ContentRightWrapper>
-      <LinesVerticalTeal className="absolute top-0 right-0 z-10 h-screen" />
+      <LinesVerticalTeal className="absolute top-0 -right-[22.5%] 2xl:-right-[37%] z-10 h-screen" />
     </div>
   );
 }

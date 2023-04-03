@@ -36,8 +36,8 @@ export function Unlock(): JSX.Element {
   };
 
   return (
-    <div className="relative h-full overflow-y-auto flex flex-col justify-center items-center gap-5 h-full bg-gradient-to-b from-finnieBlue-dark-secondary to-finnieBlue text-white">
-      <WelcomeWheelBackground className="absolute top-0 left-0 h-[40%]" />
+    <div className="relative overflow-y-auto flex flex-col justify-center items-center gap-5 h-full bg-gradient-to-b from-finnieBlue-dark-secondary to-finnieBlue text-white overflow-hidden">
+      <WelcomeWheelBackground className="absolute top-0 -left-[40%] h-[40%] scale-110" />
 
       <Icon source={KoiiLogo} className="h-[156px] w-[156px]" />
       <h1 className="text-[40px] leading-[48px] text-center">
@@ -52,7 +52,7 @@ export function Unlock(): JSX.Element {
         {hasPinError && <span>The PINs don’t match. Let’s try again.</span>}
       </div>
 
-      <WelcomeLinesDiagonal className="absolute bottom-0 right-0 h-full" />
+      <WelcomeLinesDiagonal className="absolute bottom-0 -right-[22.5%] h-full" />
     </div>
   );
 }

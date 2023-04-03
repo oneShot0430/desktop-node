@@ -1,7 +1,6 @@
 import {
   CloseLine,
   Icon,
-  SettingsFill,
   PlayFill,
   InformationCircleLine,
 } from '@_koii/koii-styleguide';
@@ -17,6 +16,8 @@ import React, {
 } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
+import GearFill from 'assets/svgs/gear-fill.svg';
+import GearLine from 'assets/svgs/gear-line.svg';
 import PlayIcon from 'assets/svgs/play-icon.svg';
 import StopTealIcon from 'assets/svgs/stop-icon-teal.svg';
 import { RequirementType } from 'models';
@@ -254,6 +255,15 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     () => getCreatedAtDate(metadata?.createdAt),
     [metadata]
   );
+  const GearIcon = globalAndTaskVariables?.length ? GearFill : GearLine;
+  const gearIconColor = isTaskToolsValid
+    ? 'text-finnieEmerald-light'
+    : 'text-finnieOrange';
+  const gearTooltipContent = !globalAndTaskVariables?.length
+    ? "This Task doesn't use any Task settings"
+    : isTaskToolsValid
+    ? 'Open Task settings'
+    : 'You need to set up the Task settings first in order to run this Task.';
 
   return (
     <TableRow columnsLayout={columnsLayout} className="py-2 gap-y-0" ref={ref}>
@@ -313,18 +323,15 @@ function TaskItem({ task, index, columnsLayout }: Props) {
       <div>
         <div>
           <Tooltip
-            placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
-            tooltipContent="Open task settings"
+            placement={`${isFirstRowInTable ? 'bottom' : 'top'}-left`}
+            tooltipContent={gearTooltipContent}
           >
             <div className="flex flex-col items-center justify-start w-10">
               <Button
                 onMouseDown={() => handleToggleView('settings')}
+                disabled={!globalAndTaskVariables?.length}
                 icon={
-                  <Icon
-                    source={SettingsFill}
-                    size={36}
-                    className="text-finnieOrange"
-                  />
+                  <Icon source={GearIcon} size={36} className={gearIconColor} />
                 }
                 onlyIcon
               />

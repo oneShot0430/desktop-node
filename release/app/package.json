@@ -1,12 +1,12 @@
 {
-  "name": "electron-react-boilerplate",
+  "name": "desktop-node",
   "version": "4.6.0",
-  "description": "A foundation for scalable desktop apps",
+  "description": "Desktop GUI and runtime for earning Koii tokens by running Koii Tasks",
   "license": "MIT",
   "author": {
-    "name": "Electron React Boilerplate Maintainers",
-    "email": "electronreactboilerplate@gmail.com",
-    "url": "https://github.com/electron-react-boilerplate"
+    "name": "Koii Network",
+    "email": "support@koii.network",
+    "url": "https://koii.network"
   },
   "main": "./dist/main/main.js",
   "scripts": {

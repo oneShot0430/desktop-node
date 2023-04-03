@@ -129,6 +129,8 @@ package_linux:
   dependencies:
     - install_linux
   <<: *package_script
+  before_script:
+    - apt-get update && apt-get install rpm -y
   script:
     - npm run package
   artifacts:
