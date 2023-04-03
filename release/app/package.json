@@ -17,7 +17,7 @@
   "dependencies": {
     "@_koi/sdk": "^2.4.13",
     "@_koi/web3.js": "^0.0.6",
-    "@koii-network/task-node": "^1.1.11",
+    "@koii-network/task-node": "^1.1.12",
     "leveldown": "^6.1.1"
   }
 }
