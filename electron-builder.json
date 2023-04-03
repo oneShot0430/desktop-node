@@ -71,7 +71,6 @@
     "allowToChangeInstallationDirectory": true,
     "uninstallDisplayName": "${productName} ${version}",
     "include": "build/installer.nsh",
-    "license": "LICENSE",
     "deleteAppDataOnUninstall": false,
     "displayLanguageSelector": false,
     "unicode": true,
