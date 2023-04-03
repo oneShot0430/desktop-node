@@ -64,7 +64,7 @@ module.exports = {
     'jsx-a11y/click-events-have-key-events': 'warn',
     'prefer-template': 'warn',
     'jsx-a11y/label-has-associated-control': 'warn',
-    'no-nested-ternary': 'warn',
+    'no-nested-ternary': 'off',
     'react/no-array-index-key': 'off',
     'jsx-a11y/tabindex-no-positive': 'warn',
     'react/function-component-definition': 'warn',
