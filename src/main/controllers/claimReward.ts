@@ -5,7 +5,10 @@ import { Keypair, PublicKey } from '@_koi/web3.js';
 import { ErrorType, ClaimRewardParam, ClaimRewardResponse } from 'models';
 import { throwDetailedError } from 'utils';
 
-import { getStakingWalletPath } from '../node/helpers/getAppDataPath';
+import {
+  getAppDataPath,
+  getStakingWalletPath,
+} from '../node/helpers/getAppDataPath';
 import { namespaceInstance } from '../node/helpers/Namespace';
 
 import { getTaskInfo } from './getTaskInfo';
@@ -45,13 +48,28 @@ const claimReward = async (
   }
 
   // deriving public key of claimer
-  const stakingPubKey = new PublicKey(stakingAccKeypair.publicKey);
   const taskState = await getTaskInfo({} as Event, { taskAccountPubKey });
   const statePotPubKey = new PublicKey(taskState.stakePotAccount);
 
+  /**
+   * @todo
+   * Beneficiary account should be set on the TaskNode level
+   * Chnage it when library will be updated
+   */
+  const mainSystemAccountKeyPair = Keypair.fromSecretKey(
+    Uint8Array.from(
+      JSON.parse(
+        fsSync.readFileSync(
+          `${getAppDataPath()}/wallets/${ACTIVE_ACCOUNT}_mainSystemWallet.json`,
+          'utf-8'
+        )
+      ) as Uint8Array
+    )
+  );
+
   const response = await namespaceInstance.claimReward(
     statePotPubKey,
-    stakingPubKey,
+    mainSystemAccountKeyPair.publicKey,
     stakingAccKeypair,
     taskStateInfoPublicKey
   );
