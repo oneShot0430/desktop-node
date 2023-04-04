@@ -1,9 +1,10 @@
 variables:
-  WINDOWS_IMAGE: 'electronuserland/builder:wine-mono'
+  WINDOWS_IMAGE: 'electronuserland/builder:wine'
   LINUX_IMAGE: 'node:18.8.0'
   MACOS_IMAGE: 'macos-12-xcode-14'
   USE_HARD_LINKS: 'false'
 
+# Set up npm cache using package-lock.json as a key
 cache:
   key:
     files:
@@ -11,6 +12,7 @@ cache:
   paths:
     - .npm/
 
+# macOS: Install Apple WWDR certificates
 include:
   - remote: https://gitlab.com/gitlab-org/incubation-engineering/devops-for-mobile-apps/demo-mobile-ci-templates/-/raw/main/Preinstall-Apple-WWDR-Certificates.gitlab-ci.yml
 
@@ -154,6 +156,10 @@ package_linux:
   artifacts:
     paths:
       - 'release/build/*.AppImage'
+      - 'release/build/*.deb'
+      - 'release/build/*.rpm'
+      - 'release/build/*.tar.gz'
+      - 'release/build/*.snap'
 
 package_macos:
   image: $MACOS_IMAGE
