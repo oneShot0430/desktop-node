@@ -106,7 +106,7 @@
       "provider": "github",
       "owner": "koii-network",
       "repo": "desktop-node",
-      "vPrefixedTagName": false
+      "releaseType": "release"
     }
   ]
 }

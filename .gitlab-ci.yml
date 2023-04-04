@@ -24,6 +24,7 @@ stages:
   - prepare
   - checks
   - package
+  - release
 
 ####################################################################################################
 ######################################## TEMPLATES #################################################
@@ -52,13 +53,39 @@ stages:
 
 .lint_template: &lint
   stage: checks
+  rules:
+    - if: '$CI_COMMIT_TAG'
+      when: never
+    - if: '$CI_MERGE_REQUEST_ID'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
   script:
     - npm run lint
 
 .test_template: &test
   stage: checks
+  rules:
+    - if: '$CI_COMMIT_TAG'
+      when: never
+    - if: '$CI_MERGE_REQUEST_ID'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
   script:
     - npm run test
+
+.package_rules_template: &package_rules
+  rules:
+    - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/'
+      when: never
+    - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+-pre+$/'
+      when: always
+  stage: package
+
+.release_rules_template: &release_rules
+  rules:
+    - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/'
+      when: always
+    - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+-pre+$/'
+      when: never
+  stage: release
 
 ####################################################################################################
 ######################################## PREPARE ###################################################
@@ -140,7 +167,7 @@ package_win:
   needs: ['install_win']
   dependencies:
     - install_win
-  stage: package
+  <<: *package_rules
   script:
     - npm run package -- -w
   artifacts:
@@ -152,7 +179,7 @@ package_linux:
   needs: ['install_linux']
   dependencies:
     - install_linux
-  stage: package
+  <<: *package_rules
   before_script:
     - apt-get update && apt-get install rpm -y
   script:
@@ -171,9 +198,59 @@ package_macos:
   dependencies:
     - install_macos
   <<: *brew
-  stage: package
+  <<: *package_rules
   script:
     - npm run package
+  tags:
+    - shared-macos-amd64
+  artifacts:
+    paths:
+      - 'release/build/*.zip'
+      - 'release/build/*.dmg'
+
+####################################################################################################
+#################################### PACKAGE AND RELEASE ###########################################
+####################################################################################################
+
+release_win:
+  image: $WINDOWS_IMAGE
+  needs: ['install_win']
+  dependencies:
+    - install_win
+  <<: *release_rules
+  script:
+    - npm run release -- -w
+  artifacts:
+    paths:
+      - 'release/build/*.exe'
+
+release_linux:
+  image: $LINUX_IMAGE
+  needs: ['install_linux']
+  dependencies:
+    - install_linux
+  <<: *release_rules
+  before_script:
+    - apt-get update && apt-get install rpm -y
+  script:
+    - npm run release
+  artifacts:
+    paths:
+      - 'release/build/*.AppImage'
+      - 'release/build/*.deb'
+      - 'release/build/*.rpm'
+      - 'release/build/*.tar.gz'
+      - 'release/build/*.snap'
+
+release_macos:
+  image: $MACOS_IMAGE
+  needs: ['install_macos']
+  dependencies:
+    - install_macos
+  <<: *brew
+  <<: *release_rules
+  script:
+    - npm run release
   tags:
     - shared-macos-amd64
   artifacts:
