@@ -75,10 +75,14 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   const { accountBalance = 0 } = useAccountBalance(mainAccountPubKey);
 
   const {
-    storedPairedTaskVariablesQuery: { data: pairedVariables = {} },
+    storedPairedTaskVariablesQuery: { data: allPairedVariables = {} },
   } = useAllStoredPairedTaskVariables({
     enabled: !!publicKey,
   });
+
+  const pairedVariables = Object.entries(allPairedVariables).filter(
+    ([taskId]) => taskId === publicKey
+  )[0]?.[1];
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -132,9 +136,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
 
   useEffect(() => {
     const validateAllVariablesWerePaired = () => {
-      const numberOfPairedVariables = Object.keys(
-        Object.values(pairedVariables)[0] || {}
-      ).length;
+      const numberOfPairedVariables = Object.keys(pairedVariables || {}).length;
 
       const allVariablesWerePaired =
         globalAndTaskVariables?.length === numberOfPairedVariables;
@@ -149,14 +151,9 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     const hasEnoughKoii = accountBalance > valueToStake;
     const hasMinimumStake =
       (alreadyStakedTokensAmount || valueToStake) >= minStake;
-    const isTaskValid =
-      hasMinimumStake &&
-      // isGlobalToolsValid &&
-      isTaskToolsValid &&
-      hasEnoughKoii;
+    const isTaskValid = hasMinimumStake && isTaskToolsValid && hasEnoughKoii;
     setIsTaskValidToRun(isTaskValid);
   }, [
-    // isGlobalToolsValid,
     isTaskToolsValid,
     minStake,
     valueToStake,

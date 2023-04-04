@@ -1,6 +1,6 @@
 {
   "productName": "Koii Desktop Node",
-  "appId": "org.desktopNode",
+  "appId": "com.koii.network.desktopnode",
   "asar": true,
   "asarUnpack": "**\\*.{node,dll}",
   "files": [
@@ -18,12 +18,12 @@
   ],
   "mac": {
     "category": "public.app-category.productivity",
-    "target": ["dmg", "pkg", "zip"],
+    "target": ["dmg", "zip"],
     "type": "distribution",
     "artifactName": "koii-desktop-node-${version}-${os}.${ext}",
     "hardenedRuntime": true,
     "gatekeeperAssess": false,
-    "provisioningProfile": "embedded.provisionprofile",
+    "provisioningProfile": "build/comkoiinetworkdesktopnode.provisionprofile",
     "entitlements": "build/entitlements.mac.plist",
     "entitlementsInherit": "build/entitlements.mac.plist"
   },
@@ -39,7 +39,8 @@
         "type": "link",
         "path": "/Applications"
       }
-    ]
+    ],
+    "sign": false
   },
   "pkg": {
     "isRelocatable": false,
@@ -62,16 +63,21 @@
     ],
     "publisherName": "Koii Network",
     "legalTrademarks": "",
-    "artifactName": "koii-desktop-node-${version}-${os}-${arch}.${ext}"
+    "artifactName": "koii-desktop-node-${version}-${os}-${arch}.${ext}",
+    "verifyUpdateCodeSignature": false,
+    "signAndEditExecutable": false,
+    "signDlls": false,
+    "icon": "assets/icons/icon.ico"
   },
   "nsis": {
     "oneClick": false,
     "perMachine": false,
     "allowElevation": true,
+    "installerIcon": "assets/icon.ico",
+    "uninstallerIcon": "assets/icon.ico",
     "allowToChangeInstallationDirectory": true,
     "uninstallDisplayName": "${productName} ${version}",
     "include": "build/installer.nsh",
-    "license": "LICENSE",
     "deleteAppDataOnUninstall": false,
     "displayLanguageSelector": false,
     "unicode": true,

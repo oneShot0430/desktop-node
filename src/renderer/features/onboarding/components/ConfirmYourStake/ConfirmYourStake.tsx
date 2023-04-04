@@ -31,9 +31,10 @@ function ConfirmYourStake() {
   );
   const [isRunButtonDisabled, setIsRunButtonDisabled] = useState<boolean>();
 
-  const { data: balance, isLoading } = useMainAccountBalance();
+  const { data: balance = 0, isLoading } = useMainAccountBalance();
   const handleRunTasksSuccess = () =>
     handleSaveUserAppConfig({ settings: { onboardingCompleted: true } });
+  const balanceInKoii = getKoiiFromRoe(balance);
 
   const { runAllTasks, runTasksLoading, runTasksError } = useRunMultipleTasks({
     tasksToRun,
@@ -56,7 +57,7 @@ function ConfirmYourStake() {
   const totalKoiiToUse = totalKoiiStaked + tasksFeeInKoii;
 
   const handleConfirm = () => {
-    if ((balance as number) < totalKoiiToUse) {
+    if (balanceInKoii < totalKoiiToUse) {
       showNotEnoughFunds();
     } else {
       runAllTasks();
@@ -97,7 +98,7 @@ function ConfirmYourStake() {
             <div className="flex flex-row items-center gap-2 mb-2 text-sm text-finnieEmerald-light">
               <Icon source={CurrencyMoneyLine} className="h-6 w-6" />
               {`Total balance: ${
-                isLoading ? 'Loading balance...' : balance
+                isLoading ? 'Loading balance...' : balanceInKoii
               } KOII`}
             </div>
             <Button

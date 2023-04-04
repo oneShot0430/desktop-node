@@ -33,16 +33,9 @@ export const getPairedVariablesNamesWithValues = async (
 
   const taskPairings = pairedTaskVariables[payload.taskAccountPubKey];
 
-  if (!taskPairings) {
-    return throwDetailedError({
-      detailed: `Get Paired Variables Names with Values error: No pairings found for Task (${payload.taskAccountPubKey})`,
-      type: ErrorType.GENERIC,
-    });
-  }
-
   const taskVariables = await getStoredTaskVariables();
 
-  return Object.entries(taskPairings).reduce(
+  return Object.entries(taskPairings || {}).reduce(
     (res, [taskVariableName, desktopVariableId]) => {
       if (desktopVariableId === OMITTED_VARIABLE_IDENTIFIER) {
         return res;
