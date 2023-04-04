@@ -3,6 +3,8 @@ variables:
   LINUX_IMAGE: 'node:18.8.0'
   MACOS_IMAGE: 'macos-12-xcode-14'
   USE_HARD_LINKS: 'false'
+  ELECTRON_CACHE: ".cache/electron"
+  ELECTRON_BUILDER_CACHE: ".cache/electron-builder"
 
 # Set up npm cache using package-lock.json as a key
 cache:
@@ -11,6 +13,8 @@ cache:
       - package-lock.json
   paths:
     - .npm/
+    - .cache/electron/
+    - .cache/electron-builder/
 
 # macOS: Install Apple WWDR certificates
 include:
