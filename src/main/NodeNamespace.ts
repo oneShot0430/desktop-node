@@ -24,8 +24,6 @@ export class NodeNamespace extends TaskNodeBase {
   async getMainSystemAccountPubKey(db: IDatabase): Promise<Keypair> {
     const activeAccount = await db.get(ACTIVE_ACCOUNT);
 
-    console.log('@@@@ACTIVE_ACCOUNT', activeAccount);
-
     if (!activeAccount) {
       throw new Error('No active account found');
     }
