@@ -1,18 +1,42 @@
 variables:
-  WINDOWS_IMAGE: 'electronuserland/builder:wine'
+  WINDOWS_IMAGE: 'electronuserland/builder:wine-mono'
   LINUX_IMAGE: 'node:18.8.0'
   MACOS_IMAGE: 'macos-12-xcode-14'
   USE_HARD_LINKS: 'false'
 
+cache:
+  key:
+    files:
+      - package-lock.json
+  paths:
+    - .npm/
+
 include:
   - remote: https://gitlab.com/gitlab-org/incubation-engineering/devops-for-mobile-apps/demo-mobile-ci-templates/-/raw/main/Preinstall-Apple-WWDR-Certificates.gitlab-ci.yml
 
-.install_deps_template: &install_deps_script
-  stage: prerequisites
+stages:
+  - prepare
+  - checks
+  - package
+
+####################################################################################################
+######################################## TEMPLATES #################################################
+####################################################################################################
+
+.brew_template: &brew
+  before_script:
+    - HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1 brew uninstall node@17
+    - HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1 brew install node@18
+    - export PATH="/usr/local/opt/node@18/bin:$PATH"
+    - export LDFLAGS="-L/usr/local/opt/node@18/lib"
+    - export CPPFLAGS="-I/usr/local/opt/node@18/include"
+
+.npm_ci_template: &npm_ci
+  stage: prepare
   script:
     - npm config set -- //gitlab.com/api/v4/packages/npm/:_authToken=$GITLAB_ACCESS_TOKEN
     - npm config set @koii-network:registry https://gitlab.com/api/v4/packages/npm/
-    - npm install
+    - npm ci --cache .npm --prefer-offline --no-audit --progress=false
   artifacts:
     name: 'artifacts'
     untracked: true
@@ -20,69 +44,60 @@ include:
     paths:
       - node_modules/
 
-.lint_template: &lint_script
+.lint_template: &lint
   stage: checks
   script:
     - npm run lint
 
-.test_template: &test_script
+.test_template: &test
   stage: checks
   script:
     - npm run test
 
-.package_template: &package_script
-  stage: checks
-
-stages:
-  - prerequisites
-  - checks
+####################################################################################################
+######################################## PREPARE ###################################################
+####################################################################################################
 
 install_win:
   image: $WINDOWS_IMAGE
-  <<: *install_deps_script
+  <<: *npm_ci
 
 install_linux:
   image: $LINUX_IMAGE
-  <<: *install_deps_script
+  <<: *npm_ci
 
 install_macos:
   image: $MACOS_IMAGE
-  before_script:
-    - HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1 brew uninstall node@17
-    - HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1 brew install node@18
-    - export PATH="/usr/local/opt/node@18/bin:$PATH"
-    - export LDFLAGS="-L/usr/local/opt/node@18/lib"
-    - export CPPFLAGS="-I/usr/local/opt/node@18/include"
-  <<: *install_deps_script
+  <<: *brew
+  <<: *npm_ci
   tags:
     - shared-macos-amd64
+
+####################################################################################################
+########################################## TEST ####################################################
+####################################################################################################
 
 lint_win:
   image: $WINDOWS_IMAGE
   needs: ['install_win']
   dependencies:
     - install_win
-  <<: *lint_script
+  <<: *lint
 
 lint_linux:
   image: $LINUX_IMAGE
   needs: ['install_linux']
   dependencies:
     - install_linux
-  <<: *lint_script
+  <<: *lint
 
 lint_macos:
   image: $MACOS_IMAGE
   needs: ['install_macos']
   dependencies:
     - install_macos
-  before_script:
-    - HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1 brew uninstall node@17
-    - HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1 brew install node@18
-    - export PATH="/usr/local/opt/node@18/bin:$PATH"
-    - export LDFLAGS="-L/usr/local/opt/node@18/lib"
-    - export CPPFLAGS="-I/usr/local/opt/node@18/include"
-  <<: *lint_script
+  <<: *brew
+  <<: *lint
   tags:
     - shared-macos-amd64
 
@@ -91,14 +106,14 @@ test_win:
   needs: ['install_win']
   dependencies:
     - install_win
-  <<: *test_script
+  <<: *test
 
 test_linux:
   image: $LINUX_IMAGE
   needs: ['install_linux']
   dependencies:
     - install_linux
-  <<: *test_script
+  <<: *test
 
 test_macos:
   image: $MACOS_IMAGE
@@ -106,16 +121,20 @@ test_macos:
   dependencies:
     - install_macos
   
-  <<: *test_script
+  <<: *test
   tags:
     - shared-macos-amd64
+
+####################################################################################################
+######################################## PACKAGE ###################################################
+####################################################################################################
 
 package_win:
   image: $WINDOWS_IMAGE
   needs: ['install_win']
   dependencies:
     - install_win
-  <<: *package_script
+  stage: package
   script:
     - npm run package -- -w
   artifacts:
@@ -127,7 +146,7 @@ package_linux:
   needs: ['install_linux']
   dependencies:
     - install_linux
-  <<: *package_script
+  stage: package
   before_script:
     - apt-get update && apt-get install rpm -y
   script:
@@ -141,13 +160,8 @@ package_macos:
   needs: ['install_macos']
   dependencies:
     - install_macos
-  before_script:
-    - HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1 brew uninstall node@17
-    - HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1 brew install node@18
-    - export PATH="/usr/local/opt/node@18/bin:$PATH"
-    - export LDFLAGS="-L/usr/local/opt/node@18/lib"
-    - export CPPFLAGS="-I/usr/local/opt/node@18/include"
-  <<: *package_script
+  <<: *brew
+  stage: package
   script:
     - npm run package
   tags:

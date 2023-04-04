@@ -63,12 +63,16 @@
     ],
     "publisherName": "Koii Network",
     "legalTrademarks": "",
-    "artifactName": "koii-desktop-node-${version}-${os}-${arch}.${ext}"
+    "artifactName": "koii-desktop-node-${version}-${os}-${arch}.${ext}",
+    "verifyUpdateCodeSignature": false,
+    "icon": "assets/icons/icon.ico"
   },
   "nsis": {
     "oneClick": false,
     "perMachine": false,
     "allowElevation": true,
+    "installerIcon": "assets/icon.ico",
+    "uninstallerIcon": "assets/icon.ico",
     "allowToChangeInstallationDirectory": true,
     "uninstallDisplayName": "${productName} ${version}",
     "include": "build/installer.nsh",
