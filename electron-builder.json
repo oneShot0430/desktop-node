@@ -65,6 +65,8 @@
     "legalTrademarks": "",
     "artifactName": "koii-desktop-node-${version}-${os}-${arch}.${ext}",
     "verifyUpdateCodeSignature": false,
+    "signAndEditExecutable": false,
+    "signDlls": false,
     "icon": "assets/icons/icon.ico"
   },
   "nsis": {
