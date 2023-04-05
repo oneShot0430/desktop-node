@@ -152,7 +152,6 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     const hasMinimumStake =
       (alreadyStakedTokensAmount || valueToStake) >= minStake;
     const isTaskValid = hasMinimumStake && isTaskToolsValid && hasEnoughKoii;
-    console.log(hasMinimumStake, isTaskToolsValid, hasEnoughKoii);
     setIsTaskValidToRun(isTaskValid);
   }, [
     isTaskToolsValid,
