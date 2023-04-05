@@ -20,7 +20,7 @@ import GearFill from 'assets/svgs/gear-fill.svg';
 import GearLine from 'assets/svgs/gear-line.svg';
 import PlayIcon from 'assets/svgs/play-icon.svg';
 import StopTealIcon from 'assets/svgs/stop-icon-teal.svg';
-import { RequirementType } from 'models';
+import { RequirementTag, RequirementType } from 'models';
 import {
   Button,
   LoadingSpinner,
@@ -127,12 +127,12 @@ function TaskItem({ task, index, columnsLayout }: Props) {
 
   const { metadata, isLoadingMetadata } = useMetadata(task.metadataCID);
 
-  const globalAndTaskVariables = metadata?.requirementsTags?.filter(
-    ({ type }) =>
+  const globalAndTaskVariables: RequirementTag[] =
+    metadata?.requirementsTags?.filter(({ type }) =>
       [RequirementType.TASK_VARIABLE, RequirementType.GLOBAL_VARIABLE].includes(
         type
       )
-  );
+    ) || [];
 
   useEffect(() => {
     const validateAllVariablesWerePaired = () => {

@@ -1,7 +1,11 @@
+import { PublicKey } from '@_koi/web3.js';
 import sdk from 'main/services/sdk';
 import { GetTaskInfoParam, TaskData } from 'models';
 
-import { parseRawK2TaskData } from '../node/helpers/parseRawK2TaskData';
+import {
+  parseRawK2TaskData,
+  RawTaskData,
+} from '../node/helpers/parseRawK2TaskData';
 
 import { getTaskInfo } from './getTaskInfo';
 
@@ -18,20 +22,39 @@ const k2PublicKeyExample = '7Ds4GdPPGb2DNEwT6is31i1KkR2WqusttB55T4QgGUvg';
 const k2ConnectionGetAccountInfoMock = sdk.k2Connection
   .getAccountInfo as jest.Mock;
 
-const testRawTaskData = {
+const testRawTaskData: RawTaskData = {
   task_name: 'task',
-  task_manager: k2PublicKeyExample,
+  task_manager: new PublicKey(k2PublicKeyExample),
   is_whitelisted: true,
   is_active: true,
   task_audit_program: 'txId',
-  stake_pot_account: k2PublicKeyExample,
+  stake_pot_account: new PublicKey(k2PublicKeyExample),
   total_bounty_amount: 100,
   bounty_amount_per_round: 10,
-  status: {},
   current_round: 1,
   available_balances: {},
   stake_list: {},
   task_metadata: 'test',
+
+  task_description: 'string',
+  submissions: {},
+  submissions_audit_trigger: {},
+  total_stake_amount: 0,
+  minimum_stake_amount: 123,
+  ip_address_list: {},
+  round_time: 123,
+  starting_slot: 123,
+  audit_window: 123,
+  submission_window: 123,
+  task_executable_network: 'IPFS',
+  distribution_rewards_submission: {},
+  distributions_audit_trigger: {},
+  distributions_audit_record: {},
+  task_vars: 'string',
+  koii_vars: 'string',
+  is_migrated: false,
+  migrated_to: 'string',
+  allowed_failed_distributions: 123,
 };
 
 const parsedTaskData: TaskData = parseRawK2TaskData(testRawTaskData);

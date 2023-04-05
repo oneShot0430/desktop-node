@@ -1,4 +1,4 @@
-import { isNil, max, min, sum } from 'lodash';
+import { max, min, sum } from 'lodash';
 import { Task, TaskStatus } from 'renderer/types';
 
 import { getStakingAccountPublicKey } from './api';
@@ -33,15 +33,15 @@ export class TaskService {
   }
 
   static getStatus(task: Task): TaskStatus | null {
-    if (!task.status) {
-      return null;
-    }
+    // if (!task.status) {
+    return null;
+    // }
 
-    if (!isNil(task.status.AcceptingSubmissions))
-      return TaskStatus.ACCEPTING_SUBMISSIONS;
-    if (!isNil(task.status.Voting)) return TaskStatus.VOTING;
-    if (!isNil(task.status.Completed)) return TaskStatus.COMPLETED;
-    return TaskStatus.COMPLETED;
+    // if (!isNil(task.status.AcceptingSubmissions))
+    //   return TaskStatus.ACCEPTING_SUBMISSIONS;
+    // if (!isNil(task.status.Voting)) return TaskStatus.VOTING;
+    // if (!isNil(task.status.Completed)) return TaskStatus.COMPLETED;
+    // return TaskStatus.COMPLETED;
   }
 }
 

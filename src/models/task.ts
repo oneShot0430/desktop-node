@@ -41,9 +41,6 @@ export interface TaskData {
   stakePotAccount: string;
   totalBountyAmount: ROE;
   bountyAmountPerRound: ROE;
-  status: Partial<
-    Record<'AcceptingSubmissions' | 'Voting' | 'Completed', EndTimestamp>
-  >;
   currentRound: number;
   availableBalances: Record<string, ROE>;
   stakeList: Record<string, ROE>;
