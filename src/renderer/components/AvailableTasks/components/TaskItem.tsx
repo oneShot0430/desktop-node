@@ -13,6 +13,7 @@ import React, {
   useEffect,
   useRef,
   MutableRefObject,
+  ReactNode,
 } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
@@ -69,6 +70,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   const [valueToStake, setValueToStake] = useState<number>(0);
   const [meetsMinimumStake, setMeetsMinimumStake] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | ReactNode>('');
 
   const { data: mainAccountPubKey = '' } = useMainAccount();
 
@@ -139,7 +141,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
       const numberOfPairedVariables = Object.keys(pairedVariables || {}).length;
 
       const allVariablesWerePaired =
-        globalAndTaskVariables?.length === numberOfPairedVariables;
+        (globalAndTaskVariables?.length || 0) === numberOfPairedVariables;
       setIsGlobalToolsValid(allVariablesWerePaired);
       setIsTaskToolsValid(allVariablesWerePaired);
     };
@@ -148,11 +150,48 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   }, [pairedVariables, globalAndTaskVariables]);
 
   const validateTask = useCallback(() => {
-    const hasEnoughKoii = accountBalance > valueToStake;
+    const hasEnoughKoii =
+      accountBalance > minStake && accountBalance > valueToStake;
     const hasMinimumStake =
       (alreadyStakedTokensAmount || valueToStake) >= minStake;
     const isTaskValid = hasMinimumStake && isTaskToolsValid && hasEnoughKoii;
     setIsTaskValidToRun(isTaskValid);
+
+    const getErrorMessage = () => {
+      const conditions = [
+        { condition: hasEnoughKoii, errorMessage: 'have enough KOII to stake' },
+        {
+          condition: hasMinimumStake,
+          errorMessage: 'meet the minimum stake required',
+        },
+        {
+          condition: isTaskToolsValid,
+          errorMessage: 'configure yet the Task settings',
+        },
+      ];
+
+      const errors = conditions
+        .filter(({ condition }) => !condition)
+        .map(({ errorMessage }) => errorMessage);
+
+      if (errors.length === 0) {
+        return '';
+      } else if (errors.length === 1) {
+        return `You don't ${errors[0]}.`;
+      } else {
+        const errorList = errors.map((error) => <li key={error}>• {error}</li>);
+        return (
+          <div>
+            You don&apos;t:
+            <br />
+            <ul> {errorList}</ul>
+          </div>
+        );
+      }
+    };
+
+    const errorMessage = getErrorMessage();
+    setErrorMessage(errorMessage);
   }, [
     isTaskToolsValid,
     minStake,
@@ -261,6 +300,8 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     : isTaskToolsValid
     ? 'Open Task settings'
     : 'You need to set up the Task settings first in order to run this Task.';
+  const runButtonTooltipContent =
+    errorMessage || (isRunning ? 'Stop task' : 'Start task');
 
   return (
     <TableRow columnsLayout={columnsLayout} className="py-2 gap-y-0" ref={ref}>
@@ -345,7 +386,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
         ) : (
           <Tooltip
             placement={`${isFirstRowInTable ? 'bottom' : 'top'}-left`}
-            tooltipContent={`${isRunning ? 'Stop' : 'Start'} task`}
+            tooltipContent={runButtonTooltipContent}
           >
             <Button
               onlyIcon
