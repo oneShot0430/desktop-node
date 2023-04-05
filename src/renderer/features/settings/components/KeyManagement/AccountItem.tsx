@@ -3,6 +3,7 @@ import {
   FavoriteStarLine,
   CopyLine,
   DeleteTrashXlLine,
+  CheckSuccessLine,
   Icon,
 } from '@_koii/koii-styleguide';
 import React, { memo, useState } from 'react';
@@ -135,13 +136,15 @@ export const AccountItem = memo(
             {mainPublicKey}
           </span>
           <div className="flex justify-center gap-4">
-            <Tooltip
-              tooltipContent={copiedMainKey ? 'Copied' : 'Copy'}
-              forceDisplaying={copiedMainKey}
-            >
+            <Tooltip tooltipContent={copiedMainKey ? 'Copied' : 'Copy'}>
               <Button
                 onClick={handleCopyMainPublicKey}
-                icon={<Icon source={CopyLine} className="text-black h-4 w-4" />}
+                icon={
+                  <Icon
+                    source={copiedMainKey ? CheckSuccessLine : CopyLine}
+                    className="text-black h-4 w-4"
+                  />
+                }
                 className="rounded-full w-6.5 h-6.5 bg-finnieTeal-100"
               />
             </Tooltip>
@@ -189,13 +192,15 @@ export const AccountItem = memo(
             {stakingPublicKey}
           </div>
           <div className="flex justify-center gap-4">
-            <Tooltip
-              tooltipContent={copiedStakingKey ? 'Copied' : 'Copy'}
-              forceDisplaying={copiedStakingKey}
-            >
+            <Tooltip tooltipContent={copiedStakingKey ? 'Copied' : 'Copy'}>
               <Button
                 onClick={handleCopyStakingPublicKey}
-                icon={<Icon source={CopyLine} className="text-black h-4 w-4" />}
+                icon={
+                  <Icon
+                    source={copiedStakingKey ? CheckSuccessLine : CopyLine}
+                    className="text-black h-4 w-4"
+                  />
+                }
                 className="rounded-full w-6.5 h-6.5 bg-finnieTeal-100"
               />
             </Tooltip>
