@@ -1,5 +1,5 @@
-import { CloseFill, Icon } from '@_koii/koii-styleguide';
-import React, { useState } from 'react';
+// import { CloseFill, Icon } from '@_koii/koii-styleguide';
+import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { Theme } from 'renderer/types/common';
@@ -12,10 +12,8 @@ export type Placement = HorizontalPlacement | CombinedPlacement;
 type PropsType = {
   children: React.ReactNode;
   tooltipContent: React.ReactNode;
-  manualClose?: boolean;
   theme?: Theme;
   placement?: Placement;
-  forceDisplaying?: boolean;
 };
 
 export function Tooltip({
@@ -23,30 +21,7 @@ export function Tooltip({
   tooltipContent,
   theme = Theme.Dark,
   placement = 'top-right',
-  manualClose = false,
-  forceDisplaying = false,
 }: PropsType) {
-  const [isHovered, setIsHovered] = useState(manualClose);
-
-  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.stopPropagation();
-    if (!manualClose) {
-      setIsHovered(true);
-    }
-  };
-
-  const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.stopPropagation();
-    if (!manualClose) {
-      setIsHovered(false);
-    }
-  };
-
-  const handleClose = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.stopPropagation();
-    setIsHovered(false);
-  };
-
   const classesByPlacement = {
     right: 'left-full after:-left-[15px] after:top-[6px] after:rotate-90',
     left: 'right-full after:-right-[15px] after:top-[6px] after:-rotate-90',
@@ -66,9 +41,8 @@ export function Tooltip({
 
   const wrappingClasses = twMerge(
     'z-50 absolute max-w-xl transition-opacity opacity-0 duration-300 invisible',
-    isHovered || forceDisplaying
-      ? 'opacity-100 visible'
-      : 'opacity-0 invisible',
+    // manualClose &&
+    'opacity-0 invisible group-hover:opacity-100 group-hover:visible',
     arrowClasses,
     classesByPlacement
   );
@@ -79,20 +53,16 @@ export function Tooltip({
   );
 
   return (
-    <div
-      className="relative inline-block"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
+    <div className="relative inline-block group">
       <div className={wrappingClasses}>
         <div className={tooltipClasses} role="tooltip">
           {tooltipContent}
         </div>
-        {manualClose && (
+        {/* {manualClose && (
           <span onClick={handleClose}>
             <Icon source={CloseFill} className="z-50 h-8 w-8 text-finnieTeal" />
           </span>
-        )}
+        )} */}
       </div>
       {children}
     </div>
