@@ -29,7 +29,6 @@ function RunFirstTask() {
 
   const handleContinue = () =>
     navigate(AppRoute.OnboardingConfirmStake, { state: selectedTasks });
-  const handleCustomizeTasks = () => navigate(AppRoute.AddTask);
 
   return (
     <div className="relative h-full overflow-hidden bg-finnieBlue-dark-secondary">
@@ -70,12 +69,6 @@ function RunFirstTask() {
         </div>
 
         <div className="flex flex-row justify-between pl-2.5 mt-4">
-          <Button
-            label="Customize my tasks"
-            className="bg-transparent text-finnieEmerald-light w-fit"
-            icon={<Icon source={AddFill} />}
-            onClick={handleCustomizeTasks}
-          />
           <Button
             label="Restore Original"
             className="bg-transparent text-finnieOrange"
