@@ -8,13 +8,15 @@ variables:
 
 # Set up npm cache using package-lock.json as a key
 cache:
-  key:
-    files:
-      - package-lock.json
-  paths:
-    - .npm/
-    - .cache/electron/
-    - .cache/electron-builder/
+  - key:
+      files:
+        - package-lock.json
+    paths:
+      - .npm/
+  - key: "$CI_COMMIT_REF_SLUG"
+    paths:
+      - .cache/electron/
+      - .cache/electron-builder/
 
 # macOS: Install Apple WWDR certificates
 include:
