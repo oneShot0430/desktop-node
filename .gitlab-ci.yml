@@ -13,10 +13,6 @@ cache:
         - package-lock.json
     paths:
       - .npm/
-  - key: "$CI_COMMIT_REF_SLUG"
-    paths:
-      - .cache/electron/
-      - .cache/electron-builder/
 
 # macOS: Install Apple WWDR certificates
 include:
@@ -42,6 +38,13 @@ stages:
 
 .npm_ci_template: &npm_ci
   stage: prepare
+  rules:
+    - if: '$CI_COMMIT_TAG'
+      when: always
+    - if: '$CI_MERGE_REQUEST_ID'
+      when: always
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: always
   script:
     - npm config set -- //gitlab.com/api/v4/packages/npm/:_authToken=$GITLAB_ACCESS_TOKEN
     - npm config set @koii-network:registry https://gitlab.com/api/v4/packages/npm/
@@ -59,7 +62,9 @@ stages:
     - if: '$CI_COMMIT_TAG'
       when: never
     - if: '$CI_MERGE_REQUEST_ID'
+      when: always
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: always
   script:
     - npm run lint
 
@@ -69,7 +74,9 @@ stages:
     - if: '$CI_COMMIT_TAG'
       when: never
     - if: '$CI_MERGE_REQUEST_ID'
+      when: always
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: always
   script:
     - npm run test
 
