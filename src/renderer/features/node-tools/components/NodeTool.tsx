@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
 
-import { OMITTED_VARIABLE_IDENTIFIER } from 'models';
 import { Dropdown, DropdownItem } from 'renderer/components/ui';
 
 import { useStoredTaskVariables } from '../hooks';
@@ -42,14 +41,7 @@ export function NodeTool({
       })
     );
 
-    return [
-      ...transformedItems,
-      {
-        id: OMITTED_VARIABLE_IDENTIFIER,
-        label: 'Skip this setting',
-        value: OMITTED_VARIABLE_IDENTIFIER,
-      },
-    ];
+    return transformedItems;
   }, [taskVariables]);
 
   const defaultValue = useMemo(() => {
