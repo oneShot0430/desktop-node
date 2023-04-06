@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import RestoreIconSvg from 'assets/svgs/onboarding/restore-orange-icon.svg';
 import BgShape from 'assets/svgs/onboarding/shape_1.svg';
 import { Button } from 'renderer/components/ui';
+import { useMainAccountBalance } from 'renderer/features/settings';
 import { AppRoute } from 'renderer/types/routes';
 import { getKoiiFromRoe } from 'utils';
 
@@ -19,13 +20,13 @@ function RunFirstTask() {
     selectedTasks,
     loadingVerifiedTasks,
     stakePerTask,
-    totalStaked,
     handleStakeInputChange,
     handleTaskRemove,
     handleRestoreTasks,
   } = useRunFirstTasksLogic();
 
-  const totalStakedInKoii = getKoiiFromRoe(totalStaked);
+  const { data: mainAccountBalance = 0 } = useMainAccountBalance();
+  const balanceInKoii = getKoiiFromRoe(mainAccountBalance);
 
   const handleContinue = () =>
     navigate(AppRoute.OnboardingConfirmStake, { state: selectedTasks });
@@ -92,7 +93,7 @@ function RunFirstTask() {
           />
           <div className="flex flex-row items-center gap-2 mt-2 text-sm text-finnieEmerald-light">
             <Icon source={CurrencyMoneyLine} />
-            {`Total staked: ${totalStakedInKoii} KOII`}
+            {`Total balance: ${balanceInKoii} KOII`}
           </div>
         </div>
       </div>
