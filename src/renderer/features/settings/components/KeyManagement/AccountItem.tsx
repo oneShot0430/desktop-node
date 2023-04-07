@@ -19,7 +19,7 @@ import {
   TableRow,
   ColumnsLayout,
 } from 'renderer/components/ui';
-import { useClipboard } from 'renderer/features/common/hooks/useClipboard';
+import { useFundNewAccountModal, useClipboard } from 'renderer/features/common';
 import { useConfirmModal } from 'renderer/features/common/modals/ConfirmationModal';
 import { getKoiiFromRoe } from 'utils';
 
@@ -77,6 +77,10 @@ export const AccountItem = memo(
         </div>
       ),
       title: 'Delete Account',
+    });
+
+    const { showModal: showFundModal } = useFundNewAccountModal({
+      accountPublicKey: mainPublicKey,
     });
 
     const handleDeleteAccount = async () => {
@@ -162,7 +166,7 @@ export const AccountItem = memo(
             {accountBalanceInKoii < 1 && (
               <Tooltip placement="top-left" tooltipContent="Add Funds">
                 <Button
-                  onClick={() => console.log('Add Funds')}
+                  onClick={showFundModal}
                   onlyIcon
                   icon={
                     <Icon
