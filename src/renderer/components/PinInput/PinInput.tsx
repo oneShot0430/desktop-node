@@ -1,6 +1,6 @@
 import { HideEyeLine, ViewShowLine, Icon } from '@_koii/koii-styleguide';
 import React, { memo, useState } from 'react';
-import ReactPinInput from 'react-pin-input';
+import PinInput from 'react-pin-input';
 
 import { Button } from '../ui/Button';
 
@@ -12,7 +12,7 @@ type PropsType = Readonly<{
   focus?: boolean;
 }>;
 
-function PinInput({
+function PinInputComponent({
   onComplete,
   onChange,
   initialValue,
@@ -20,48 +20,24 @@ function PinInput({
   focus = false,
 }: PropsType) {
   const [showPinInput, setShowPinInput] = useState(false);
-  const [temp, setTemp] = useState('');
 
   const ShowOrHideInputIcon = showPinInput ? ViewShowLine : HideEyeLine;
-  const handleOnInput = (value: string) => {
-    onChange(value);
-    setTemp(value);
-  };
-  const pinInputInitValueOnRender = temp || initialValue;
-  const shouldFocus = focus && !temp;
 
   return (
     <div className="z-50 flex items-center">
-      {showPinInput && (
-        <ReactPinInput
-          focus={shouldFocus}
-          length={6}
-          initialValue={pinInputInitValueOnRender}
-          secret={false}
-          onChange={handleOnInput}
-          type="numeric"
-          inputMode="number"
-          onComplete={onComplete}
-          autoSelect
-          regexCriteria={/^[ A-Za-z0-9_@./#&+-]*$/}
-          ariaLabel="pin-input"
-        />
-      )}
-      {!showPinInput && (
-        <ReactPinInput
-          focus={shouldFocus}
-          length={6}
-          initialValue={pinInputInitValueOnRender}
-          secret
-          onChange={handleOnInput}
-          type="numeric"
-          inputMode="number"
-          onComplete={onComplete}
-          autoSelect
-          regexCriteria={/^[ A-Za-z0-9_@./#&+-]*$/}
-          ariaLabel="pin-input"
-        />
-      )}
+      <PinInput
+        focus={focus}
+        length={6}
+        initialValue={initialValue}
+        secret={!showPinInput}
+        onChange={onChange}
+        type="numeric"
+        inputMode="number"
+        onComplete={onComplete}
+        autoSelect
+        regexCriteria={/^[ A-Za-z0-9_@./#&+-]*$/}
+        ariaLabel="pin-input"
+      />
       {showHideButton && (
         <Button
           className="bg-finnieTeal-100 rounded-[50%] w-[24px] h-[24px] cursor-pointer"
@@ -75,4 +51,4 @@ function PinInput({
   );
 }
 
-export default memo(PinInput);
+export default memo(PinInputComponent);

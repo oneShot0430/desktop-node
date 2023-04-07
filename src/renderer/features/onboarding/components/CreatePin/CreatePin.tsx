@@ -65,10 +65,7 @@ function CreatePin() {
 
           <div>
             <div className="mt-8 mb-5">Confirm your Access PIN.</div>
-            <PinInput
-              onChange={(pin) => setPinConfirm(pin)}
-              showHideButton={false}
-            />
+            <PinInput onChange={(pin) => setPinConfirm(pin)} />
             <div className="pt-4 text-xs text-finnieOrange">
               {!pinIsMatching && pinsLengtIsMatching ? (
                 <span>Those PINs don’t match. Let’s try again.</span>
