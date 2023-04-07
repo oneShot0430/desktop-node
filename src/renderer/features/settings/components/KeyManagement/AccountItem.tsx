@@ -158,19 +158,23 @@ export const AccountItem = memo(
             {accountBalanceLoadingError ? '-' : accountBalanceInKoii} KOII
           </span>
 
-          <Tooltip placement="top-left" tooltipContent="Add Funds">
-            <Button
-              onClick={() => console.log('Add Funds')}
-              onlyIcon
-              icon={
-                <Icon
-                  source={CurrencyMoneyLine}
-                  className="-mr-0.5 w-5 h-5 text-black"
+          <div>
+            {accountBalanceInKoii < 1 && (
+              <Tooltip placement="top-left" tooltipContent="Add Funds">
+                <Button
+                  onClick={() => console.log('Add Funds')}
+                  onlyIcon
+                  icon={
+                    <Icon
+                      source={CurrencyMoneyLine}
+                      className="-mr-0.5 w-5 h-5 text-black"
+                    />
+                  }
+                  className="rounded-full w-6.5 h-6.5 bg-finnieTeal-100"
                 />
-              }
-              className="rounded-full w-6.5 h-6.5 bg-finnieTeal-100"
-            />
-          </Tooltip>
+              </Tooltip>
+            )}
+          </div>
 
           <div className="mr-4 ml-auto">
             {!isDefault &&
