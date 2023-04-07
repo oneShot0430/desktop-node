@@ -19,9 +19,9 @@ export const NotEnoughFunds = create(function NotEnoughFunds() {
       navigate(AppRoute.MyNode, { state: { noBackButton: true } });
     },
   });
-  const { showModal: showFundNewAccountModal } = useFundNewAccountModal(
-    modal.show
-  );
+  const { showModal: showFundNewAccountModal } = useFundNewAccountModal({
+    onGoBack: modal.show,
+  });
 
   const handleFundMyKey = () => {
     modal.remove();

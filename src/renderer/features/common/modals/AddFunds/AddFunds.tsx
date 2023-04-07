@@ -20,21 +20,32 @@ import {
 } from 'renderer/services';
 import { ValidationStatus } from 'renderer/types';
 
-interface PropsType {
+export interface Props {
+  accountPublicKey?: string;
   onGoBack?: () => void;
 }
 
-export const AddFunds = create(function AddFunds({ onGoBack }: PropsType) {
+export const AddFunds = create(function AddFunds({
+  accountPublicKey = '',
+  onGoBack,
+}: Props) {
   const modal = useModal();
   const { copyToClipboard } = useClipboard();
-  const { data: mainAccountPubKey } = useQuery(
+
+  const { data: mainAccountPubKey = '' } = useQuery(
     ['main-account'],
-    getMainAccountPublicKey
+    getMainAccountPublicKey,
+    {
+      enabled: !accountPublicKey,
+    }
   );
+
+  const currentAccountPubKey = accountPublicKey || mainAccountPubKey;
+
   // give faucetStatus an initial value so we can safely destructure it below
   const { data: faucetStatus = { walletAddress: '' } } = useQuery(
-    ['faucet-status', mainAccountPubKey],
-    () => getFaucetStatus(mainAccountPubKey as string)
+    ['faucet-status', accountPublicKey || mainAccountPubKey],
+    () => getFaucetStatus(currentAccountPubKey)
   );
 
   const { walletAddress: _, ...methods } = faucetStatus;
@@ -62,13 +73,13 @@ export const AddFunds = create(function AddFunds({ onGoBack }: PropsType) {
   };
 
   const openFaucetAndClose = () => {
-    const urlToFaucet = `${config.faucet.FAUCET_URL}?key=${mainAccountPubKey}`;
+    const urlToFaucet = `${config.faucet.FAUCET_URL}?key=${currentAccountPubKey}`;
     openBrowserWindow(urlToFaucet);
     closeModal();
   };
 
   const copyToClipboardAndClose = () => {
-    copyToClipboard(mainAccountPubKey as string);
+    copyToClipboard(currentAccountPubKey);
     closeModal();
   };
 
@@ -100,11 +111,7 @@ export const AddFunds = create(function AddFunds({ onGoBack }: PropsType) {
           <div className="mb-3 text-lg leading-8 text-center">{title}</div>
 
           {hasClaimedAllMethods ? (
-            <QRCode
-              value={mainAccountPubKey as string}
-              renderAs="canvas"
-              size={240}
-            />
+            <QRCode value={currentAccountPubKey} renderAs="canvas" size={240} />
           ) : (
             <>
               <Button
@@ -117,7 +124,7 @@ export const AddFunds = create(function AddFunds({ onGoBack }: PropsType) {
               <div className="mb-3">Or send KOII directly to this account.</div>
 
               <QRCode
-                value={mainAccountPubKey as string}
+                value={currentAccountPubKey}
                 renderAs="canvas"
                 size={80}
               />
@@ -125,7 +132,7 @@ export const AddFunds = create(function AddFunds({ onGoBack }: PropsType) {
           )}
 
           <div className="mt-4 mb-2 text-xs select-text">
-            {mainAccountPubKey}
+            {currentAccountPubKey}
           </div>
 
           <Button
