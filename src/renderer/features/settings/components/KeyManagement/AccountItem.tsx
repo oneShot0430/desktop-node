@@ -5,6 +5,7 @@ import {
   DeleteTrashXlLine,
   CheckSuccessLine,
   Icon,
+  CurrencyMoneyLine,
 } from '@_koii/koii-styleguide';
 import React, { memo, useState } from 'react';
 
@@ -29,7 +30,6 @@ type PropsType = {
   stakingPublicKey: string;
   mainPublicKey: string;
   isDefault: boolean;
-  stakingPublicKeyBalance: number;
   columnsLayout: ColumnsLayout;
 };
 
@@ -157,6 +157,20 @@ export const AccountItem = memo(
           <span>
             {accountBalanceLoadingError ? '-' : accountBalanceInKoii} KOII
           </span>
+
+          <Tooltip placement="top-left" tooltipContent="Add Funds">
+            <Button
+              onClick={() => console.log('Add Funds')}
+              onlyIcon
+              icon={
+                <Icon
+                  source={CurrencyMoneyLine}
+                  className="-mr-0.5 w-5 h-5 text-black"
+                />
+              }
+              className="rounded-full w-6.5 h-6.5 bg-finnieTeal-100"
+            />
+          </Tooltip>
 
           <div className="mr-4 ml-auto">
             {!isDefault &&

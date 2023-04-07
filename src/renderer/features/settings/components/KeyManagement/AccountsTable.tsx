@@ -41,16 +41,9 @@ export const AccountsTable = memo(() => {
         error={accountsError}
       >
         {accountsSorted?.map(
-          ({
-            accountName,
-            mainPublicKey,
-            stakingPublicKey,
-            isDefault,
-            stakingPublicKeyBalance,
-          }) => (
+          ({ accountName, mainPublicKey, stakingPublicKey, isDefault }) => (
             <AccountItem
               key={accountName}
-              stakingPublicKeyBalance={stakingPublicKeyBalance}
               mainPublicKey={mainPublicKey}
               accountName={accountName}
               stakingPublicKey={stakingPublicKey}
