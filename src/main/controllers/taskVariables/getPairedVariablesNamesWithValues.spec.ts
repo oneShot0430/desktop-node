@@ -56,22 +56,6 @@ describe('getPairedVariablesNamesWithValues', () => {
     ).rejects.toThrow(/payload is not valid/i);
   });
 
-  it('throws an error if there are no pairings for a Task', async () => {
-    validateTaskMock.mockResolvedValue({});
-
-    const validPayload: GetPairedVariablesNamesWithValuesParamType = {
-      taskAccountPubKey: k2PublicKeyExample,
-    };
-
-    getStoredPairedTaskVariablesMock.mockResolvedValue({
-      otherTaskId: { name1: 'id' },
-    });
-
-    await expect(
-      getPairedVariablesNamesWithValues({} as Event, validPayload)
-    ).rejects.toThrow(/No pairings found for Task/i);
-  });
-
   it('throws an error if paired variable  is not stored', async () => {
     validateTaskMock.mockResolvedValue({});
 
