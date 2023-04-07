@@ -2,6 +2,7 @@ import { Event } from 'electron';
 import * as fsSync from 'fs';
 
 import { Keypair, PublicKey } from '@_koi/web3.js';
+import db from 'main/db';
 import { ErrorType, ClaimRewardParam, ClaimRewardResponse } from 'models';
 import { throwDetailedError } from 'utils';
 
@@ -9,7 +10,6 @@ import { getStakingWalletPath } from '../node/helpers/getAppDataPath';
 import { namespaceInstance } from '../node/helpers/Namespace';
 
 import { getTaskInfo } from './getTaskInfo';
-import db from 'main/db';
 
 const claimReward = async (
   event: Event,

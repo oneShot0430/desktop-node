@@ -1,4 +1,4 @@
-import { Icon, AddFill, CurrencyMoneyLine } from '@_koii/koii-styleguide';
+import { Icon, CurrencyMoneyLine } from '@_koii/koii-styleguide';
 import React, { useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
