@@ -246,12 +246,13 @@ export const getTaskMetadata = async (metadataCID: string) => {
     });
 };
 
-export const claimRewards = async () => {
+export const claimRewards = async (): Promise<number> => {
   const getPendingRewardsByTask = (task: Task) =>
     sum(Object.values(task.availableBalances));
   // we keep it as an array for now to have handy not only the rewards themselves but also the number of tasks
   const rewardsNotClaimedByTask: number[] = [];
   const tasks = await fetchMyTasks({ limit: Infinity, offset: 0 });
+
   const tasksWithClaimableRewards = tasks.filter(getPendingRewardsByTask);
   const promisesToClaimRewards = tasksWithClaimableRewards.map(async (task) => {
     try {
@@ -263,6 +264,7 @@ export const claimRewards = async () => {
       rewardsNotClaimedByTask.push(pendingReward);
     }
   });
+
   await Promise.all(promisesToClaimRewards);
   const allTasksFailed = rewardsNotClaimedByTask.length === tasks.length;
   const rewardsNotClaimed = rewardsNotClaimedByTask.reduce(

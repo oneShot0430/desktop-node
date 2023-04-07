@@ -1,9 +1,7 @@
 import { Icon, CurrencyMoneyLine } from '@_koii/koii-styleguide';
-import Lottie from 'lottie-react';
 import React from 'react';
 import CountUp from 'react-countup';
 
-import confettiAnimation from 'assets/animations/confetti.json';
 import FinnieKoiiLogo from 'assets/svgs/finnie-logos/finnie-koii-logo-inverse.svg';
 import PendingRewardsIcon from 'assets/svgs/pending-rewards-icon.svg';
 import { LoadingSpinner } from 'renderer/components/ui/LoadingSpinner';
@@ -66,7 +64,7 @@ export function StatBlock({
         isPendingRewardsBlock ? 'h-28' : 'h-[60px]'
       }`}
     >
-      <div className="flex justify-between items-center">
+      <div className="flex items-center justify-between">
         <Icon source={IconComponent} className="text-white" />
 
         <div>
@@ -79,13 +77,11 @@ export function StatBlock({
       {isPendingRewardsBlock && (
         <ClaimRewards value={value} displayConfetti={displayConfetti} />
       )}
-      {shouldAnimate && (
-        <Lottie
-          animationData={confettiAnimation}
-          loop={false}
-          className="absolute -top-14 -right-6 w-40 h-40"
-        />
-      )}
+      {/* {shouldAnimate && (
+        <div className="absolute w-40 h-40 -top-14 -right-6">
+          <Confetti width={160} height={160} />
+        </div>
+      )} */}
     </div>
   );
 }
