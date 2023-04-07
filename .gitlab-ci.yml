@@ -1,5 +1,5 @@
 variables:
-  WINDOWS_IMAGE: 'electronuserland/builder:18-wine'
+  WINDOWS_IMAGE: 'electronuserland/builder:18-wine-mono'
   LINUX_IMAGE: 'node:18.8.0'
   MACOS_IMAGE: 'macos-12-xcode-14'
   USE_HARD_LINKS: 'false'
