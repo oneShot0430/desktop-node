@@ -164,11 +164,13 @@ function TaskItem({ task, index, columnsLayout }: Props) {
         { condition: hasEnoughKoii, errorMessage: 'have enough KOII to stake' },
         {
           condition: hasMinimumStake,
-          errorMessage: 'meet the minimum stake required',
+          errorMessage: `stake at least ${getKoiiFromRoe(
+            minStake
+          )} KOII on this Task`,
         },
         {
           condition: isTaskToolsValid,
-          errorMessage: 'configure yet the Task settings',
+          errorMessage: 'configure the Task settings',
         },
       ];
 
@@ -179,12 +181,12 @@ function TaskItem({ task, index, columnsLayout }: Props) {
       if (errors.length === 0) {
         return '';
       } else if (errors.length === 1) {
-        return `You don't ${errors[0]}.`;
+        return `Make sure you ${errors[0]}.`;
       } else {
         const errorList = errors.map((error) => <li key={error}>• {error}</li>);
         return (
           <div>
-            You don&apos;t:
+            Make sure you:
             <br />
             <ul> {errorList}</ul>
           </div>
@@ -302,7 +304,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     errorMessage || (isRunning ? 'Stop task' : 'Start task');
 
   return (
-    <TableRow columnsLayout={columnsLayout} className="py-2 gap-y-0" ref={ref}>
+    <TableRow columnsLayout={columnsLayout} className="py-3 gap-y-0" ref={ref}>
       <div>
         <Tooltip
           placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
