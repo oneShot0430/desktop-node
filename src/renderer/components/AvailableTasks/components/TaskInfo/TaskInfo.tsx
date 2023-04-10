@@ -1,17 +1,15 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import { RequirementType, TaskMetadata } from 'models/task';
 import { SourceCodeButton } from 'renderer/components/SourceCodeButton';
 
 type PropsType = {
-  taskPubKey: string;
   info?: TaskMetadata;
-  onToolsValidation?: (isValid: boolean) => void;
 };
 
 const NOT_AVAILABLE = 'N/A';
 
-export function TaskInfo({ taskPubKey, info, onToolsValidation }: PropsType) {
+export function TaskInfo({ info }: PropsType) {
   const specs = info?.requirementsTags?.filter(({ type }) =>
     [
       RequirementType.CPU,
@@ -22,16 +20,6 @@ export function TaskInfo({ taskPubKey, info, onToolsValidation }: PropsType) {
       RequirementType.NETWORK,
     ].includes(type)
   );
-
-  const globalSettings = info?.requirementsTags?.filter(
-    ({ type }) => type === RequirementType.GLOBAL_VARIABLE
-  );
-
-  useEffect(() => {
-    if (!globalSettings?.length) {
-      onToolsValidation?.(true);
-    }
-  });
 
   return (
     <div className="flex flex-col w-full">
@@ -57,17 +45,6 @@ export function TaskInfo({ taskPubKey, info, onToolsValidation }: PropsType) {
           ))}
         </div>
       </div>
-
-      {/* {!!globalSettings?.length && ( */}
-      {/*  <> */}
-      {/*    <div className="mb-2 text-base font-semibold">Global Tools:</div> */}
-      {/*    <NodeTools */}
-      {/*      taskPubKey={taskPubKey} */}
-      {/*      tools={globalSettings} */}
-      {/*      onToolsValidation={onToolsValidation} */}
-      {/*    /> */}
-      {/*  </> */}
-      {/* )} */}
     </div>
   );
 }
