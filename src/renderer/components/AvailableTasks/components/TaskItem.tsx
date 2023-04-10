@@ -89,9 +89,11 @@ function TaskItem({ task, index, columnsLayout }: Props) {
 
   const [parent] = useAutoAnimate();
 
+  const closeAccordionView = useCallback(() => setAccordionView(null), []);
+
   useOnClickOutside(
     ref as MutableRefObject<HTMLDivElement>,
-    useCallback(() => setAccordionView(null), [])
+    closeAccordionView
   );
 
   const { taskStake: alreadyStakedTokensAmount, loadingTaskStake } =
@@ -125,12 +127,16 @@ function TaskItem({ task, index, columnsLayout }: Props) {
 
   const { metadata, isLoadingMetadata } = useMetadata(task.metadataCID);
 
-  const globalAndTaskVariables: RequirementTag[] =
-    metadata?.requirementsTags?.filter(({ type }) =>
-      [RequirementType.TASK_VARIABLE, RequirementType.GLOBAL_VARIABLE].includes(
-        type
-      )
-    ) || [];
+  const globalAndTaskVariables: RequirementTag[] = useMemo(
+    () =>
+      metadata?.requirementsTags?.filter(({ type }) =>
+        [
+          RequirementType.TASK_VARIABLE,
+          RequirementType.GLOBAL_VARIABLE,
+        ].includes(type)
+      ) || [],
+    [metadata?.requirementsTags]
+  );
 
   useEffect(() => {
     const validateAllVariablesWerePaired = () => {
@@ -255,13 +261,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     }
 
     if (accordionView === 'info') {
-      return (
-        <TaskInfo
-          taskPubKey={task.publicKey}
-          info={metadata}
-          onToolsValidation={handleGlobalToolsValidationCheck}
-        />
-      );
+      return <TaskInfo info={metadata} />;
     }
 
     if (accordionView === 'settings') {
@@ -270,6 +270,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
           taskPubKey={task.publicKey}
           onToolsValidation={handleTaskToolsValidationCheck}
           taskVariables={globalAndTaskVariables}
+          onPairingSuccess={closeAccordionView}
         />
       );
     }
@@ -281,6 +282,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     metadata,
     globalAndTaskVariables,
     isLoadingMetadata,
+    closeAccordionView,
   ]);
 
   const createdAt = useMemo(
