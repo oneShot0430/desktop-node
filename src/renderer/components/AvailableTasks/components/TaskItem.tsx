@@ -16,7 +16,9 @@ import React, {
   ReactNode,
 } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
+import { NavLink } from 'react-router-dom';
 
+import CheckMarkTealIcon from 'assets/svgs/checkmark-teal-icon.svg';
 import GearFill from 'assets/svgs/gear-fill.svg';
 import GearLine from 'assets/svgs/gear-line.svg';
 import PlayIcon from 'assets/svgs/play-icon.svg';
@@ -47,6 +49,7 @@ import {
   startTask,
 } from 'renderer/services';
 import { Task } from 'renderer/types';
+import { AppRoute } from 'renderer/types/routes';
 import { getCreatedAtDate, getKoiiFromRoe } from 'utils';
 
 import { TaskInfo } from './TaskInfo';
@@ -56,6 +59,25 @@ interface Props {
   task: Task;
   index: number;
   columnsLayout: ColumnsLayout;
+}
+
+function SuccessMessage() {
+  return (
+    <div className="h-[67px] w-full flex justify-start items-center text-white border-b-2 border-white relative">
+      <div className="h-[67px] w-full absolute bg-[#9BE7C4] opacity-30" />
+      <CheckMarkTealIcon className="w-[45px] h-[45px] z-10 mr-5" />
+      <div className="z-10">
+        <p>
+          You’re succesfully running this task. Head over to{' '}
+          <NavLink to={AppRoute.MyNode} className="text-[#5ED9D1] underline">
+            My Node
+          </NavLink>{' '}
+          to monitor your rewards
+        </p>
+      </div>
+      <div />
+    </div>
+  );
 }
 
 function TaskItem({ task, index, columnsLayout }: Props) {
@@ -71,6 +93,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   const [meetsMinimumStake, setMeetsMinimumStake] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | ReactNode>('');
+  const [startTaskSucceeded, setStartTaskSucceeded] = useState(false);
 
   const { data: mainAccountPubKey = '' } = useMainAccount();
 
@@ -214,7 +237,12 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     } catch (error) {
       console.error(error);
     } finally {
-      queryCache.invalidateQueries();
+      /* 
+        invalidateQueries unmounts this component
+        Can you confirm if removing the invalidateQueries() may have any unintended consequences?
+      */
+      // queryCache.invalidateQueries();
+      setStartTaskSucceeded(true);
       setLoading(false);
     }
   };
@@ -303,7 +331,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   const runButtonTooltipContent =
     errorMessage || (isRunning ? 'Stop task' : 'Start task');
 
-  return (
+  return !startTaskSucceeded ? (
     <TableRow columnsLayout={columnsLayout} className="py-2 gap-y-0" ref={ref}>
       <div>
         <Tooltip
@@ -408,6 +436,8 @@ function TaskItem({ task, index, columnsLayout }: Props) {
         </div>
       </div>
     </TableRow>
+  ) : (
+    <SuccessMessage />
   );
 }
 
