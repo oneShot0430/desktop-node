@@ -15,7 +15,7 @@ import React, {
   MutableRefObject,
   ReactNode,
 } from 'react';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQueryClient } from 'react-query';
 
 import GearFill from 'assets/svgs/gear-fill.svg';
 import GearLine from 'assets/svgs/gear-line.svg';
@@ -40,7 +40,6 @@ import {
   useAllStoredPairedTaskVariables,
 } from 'renderer/features';
 import {
-  QueryKeys,
   TaskService,
   stopTask,
   stakeOnTask,
@@ -115,16 +114,13 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     setIsTaskToolsValid(isValid);
   };
 
+  const minStake = task.minimumStakeAmount;
   const isFirstRowInTable = index === 0;
   const nodes = useMemo(() => TaskService.getNodesCount(task), [task]);
   const topStake = useMemo(() => TaskService.getTopStake(task), [task]);
   const bountyPerRoundInKoii = useMemo(
     () => getKoiiFromRoe(task.totalBountyAmount),
     [task.totalBountyAmount]
-  );
-
-  const { data: minStake = 0 } = useQuery([QueryKeys.minStake, publicKey], () =>
-    TaskService.getMinStake(task)
   );
 
   const { metadata, isLoadingMetadata } = useMetadata(task.metadataCID);
@@ -336,7 +332,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
         className="flex flex-col gap-2 text-xs min-w-[160px]"
         title={taskManager}
       >
-        <div className="truncate">{`Creator: ${task.taskName}`}</div>
+        <div className="truncate">{`Creator: ${task.taskManager}`}</div>
         <div className="truncate">{`Bounty: ${bountyPerRoundInKoii}`}</div>
       </div>
 

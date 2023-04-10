@@ -29,7 +29,7 @@ export const useRunFirstTasksLogic = () => {
   const selectedTasksWithStake = useMemo(
     () =>
       selectedTasks.map((task) => {
-        const minStake = TaskService.getMinStake(task);
+        const minStake = task.minimumStakeAmount;
 
         return {
           ...task,
