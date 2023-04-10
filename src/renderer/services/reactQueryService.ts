@@ -4,7 +4,6 @@ export enum QueryKeys {
   myTaskList = 'myTaskList',
   taskReward = 'taskReward',
   mainAccountBalance = 'mainAccountBalance',
-  minStake = 'minStake',
   taskSourceCode = 'taskSourceCode',
   taskNodeInfo = 'taskNodeInfo',
   UserSettings = 'UserSettings',
