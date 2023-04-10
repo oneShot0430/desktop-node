@@ -84,7 +84,7 @@ export function TaskItem({
     <TableRow columnsLayout={columnsLayout} className="py-3.5">
       <div>
         {loading ? (
-          <div className="pl-2">
+          <div>
             <LoadingSpinner size={LoadingSpinnerSize.Large} />
           </div>
         ) : (

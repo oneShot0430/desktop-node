@@ -236,12 +236,12 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     }
 
     return isTaskValidToRun ? (
-      <PlayIcon className="-ml-4" />
+      <PlayIcon className="mt-1 -mb-1" />
     ) : (
       <Icon
         source={PlayFill}
         size={18}
-        className="cursor-not-allowed text-gray my-4"
+        className="cursor-not-allowed text-gray ml-4 my-4"
       />
     );
   }, [isRunning, isTaskValidToRun]);
@@ -376,7 +376,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
 
       <div>
         {loading ? (
-          <div className="pl-2">
+          <div className="pl-2 py-[0.57rem]">
             <LoadingSpinner size={LoadingSpinnerSize.Large} />
           </div>
         ) : (

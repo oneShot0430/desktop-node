@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 
 import { useDefaultTasks } from 'renderer/features/onboarding/hooks';
-import { TaskService } from 'renderer/services';
 
 import { useTasksSelect } from './useTasksSelect';
 import { useTaskStakeInputLogic } from './useTaskStakeInputLogic';
