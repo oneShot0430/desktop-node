@@ -22,7 +22,7 @@ export function EditStakeInput({
   const [hasEnteredAValue, setHasEnteredAValue] = useState<boolean>(false);
 
   const inputClasses = twMerge(
-    'w-[92px] rounded-sm text-right text-finnieBlue-dark p-[3px] border border-transparent',
+    'w-[92px] rounded-sm text-right text-finnieBlue-dark p-[3px] border border-transparent focus:border-finnieEmerald focus:outline-none',
     !meetsMinimumStake && !isPristine && 'border border-red-500'
   );
   const stakeInKoii = getKoiiFromRoe(stake);

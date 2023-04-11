@@ -124,6 +124,8 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     () => getKoiiFromRoe(task.totalBountyAmount),
     [task.totalBountyAmount]
   );
+  const isEditStakeInputDisabled =
+    alreadyStakedTokensAmount !== 0 || loadingTaskStake;
 
   const { metadata, isLoadingMetadata } = useMetadata(task.metadataCID);
 
@@ -240,7 +242,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
 
   const getTaskPlayButtonIcon = useCallback(() => {
     if (isRunning) {
-      return <StopTealIcon />;
+      return <StopTealIcon className="mt-px -mb-1" />;
     }
 
     return isTaskValidToRun ? (
@@ -354,7 +356,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
           stake={alreadyStakedTokensAmount || valueToStake}
           minStake={minStake as number}
           onChange={handleStakeValueChange}
-          disabled={alreadyStakedTokensAmount !== 0 || loadingTaskStake}
+          disabled={isEditStakeInputDisabled}
         />
       </div>
 
