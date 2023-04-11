@@ -16,9 +16,7 @@ import React, {
   ReactNode,
 } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
-import { NavLink } from 'react-router-dom';
 
-import CheckMarkTealIcon from 'assets/svgs/checkmark-teal-icon.svg';
 import GearFill from 'assets/svgs/gear-fill.svg';
 import GearLine from 'assets/svgs/gear-line.svg';
 import PlayIcon from 'assets/svgs/play-icon.svg';
@@ -49,9 +47,9 @@ import {
   startTask,
 } from 'renderer/services';
 import { Task } from 'renderer/types';
-import { AppRoute } from 'renderer/types/routes';
 import { getCreatedAtDate, getKoiiFromRoe } from 'utils';
 
+import { SuccessMessage } from './SuccessMessage';
 import { TaskInfo } from './TaskInfo';
 import { TaskSettings } from './TaskSettings';
 
@@ -59,25 +57,6 @@ interface Props {
   task: Task;
   index: number;
   columnsLayout: ColumnsLayout;
-}
-
-function SuccessMessage() {
-  return (
-    <div className="h-[67px] w-full flex justify-start items-center text-white border-b-2 border-white relative">
-      <div className="h-[67px] w-full absolute bg-[#9BE7C4] opacity-30" />
-      <CheckMarkTealIcon className="w-[45px] h-[45px] z-10 mr-5" />
-      <div className="z-10">
-        <p>
-          You’re succesfully running this task. Head over to{' '}
-          <NavLink to={AppRoute.MyNode} className="text-[#5ED9D1] underline">
-            My Node
-          </NavLink>{' '}
-          to monitor your rewards
-        </p>
-      </div>
-      <div />
-    </div>
-  );
 }
 
 function TaskItem({ task, index, columnsLayout }: Props) {
@@ -237,7 +216,10 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     } catch (error) {
       console.error(error);
     } finally {
-      queryCache.invalidateQueries([QueryKeys.mainAccountBalance]);
+      queryCache.invalidateQueries([
+        QueryKeys.mainAccountBalance,
+        QueryKeys.taskNodeInfo,
+      ]);
       setStartTaskSucceeded(true);
       setLoading(false);
     }
