@@ -237,11 +237,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     } catch (error) {
       console.error(error);
     } finally {
-      /* 
-        invalidateQueries unmounts this component
-        Can you confirm if removing the invalidateQueries() may have any unintended consequences?
-      */
-      // queryCache.invalidateQueries();
+      queryCache.invalidateQueries([QueryKeys.mainAccountBalance]);
       setStartTaskSucceeded(true);
       setLoading(false);
     }
