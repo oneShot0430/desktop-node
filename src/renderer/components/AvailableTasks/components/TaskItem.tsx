@@ -354,7 +354,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
           stake={alreadyStakedTokensAmount || valueToStake}
           minStake={minStake as number}
           onChange={handleStakeValueChange}
-          disabled={isEditStakeInputDisabled}
+          disabled={alreadyStakedTokensAmount !== 0 || loadingTaskStake}
         />
       </div>
 
