@@ -69,5 +69,6 @@ export function parseRawK2TaskData(rawTaskData: RawTaskData): TaskData {
     stakeList: rawTaskData.stake_list,
     isRunning: false,
     metadataCID: rawTaskData.task_metadata,
+    minimumStakeAmount: rawTaskData.minimum_stake_amount,
   };
 }

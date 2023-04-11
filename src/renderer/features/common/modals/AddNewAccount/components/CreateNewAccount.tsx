@@ -126,7 +126,7 @@ export function CreateNewAccount({ onClose, setNextStep }: PropsType) {
             disabled={accountName.length === 0 || pin.length !== 6}
             onClick={handleCreateNewKey}
             label="Create Key"
-            className="font-semibold bg-finnieGray-tertiary text-finnieBlue-light w-[220px] h-[48px]"
+            className="font-semibold bg-white text-finnieBlue-light w-[220px] h-[48px]"
           />
         </div>
       </div>

@@ -10,7 +10,6 @@ import {
   getMainAccountBalance,
   stakeOnTask,
   withdrawStake,
-  TaskService,
 } from 'renderer/services';
 import { Task } from 'renderer/types';
 import { getKoiiFromRoe } from 'utils';
@@ -48,10 +47,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
   const { taskStake } = useTaskStake({ task, publicKey });
 
   const stakeAmountInKoii = getKoiiFromRoe(stakeAmount as number);
-
-  const { data: minStake } = useQuery([QueryKeys.minStake, publicKey], () =>
-    TaskService.getMinStake(task)
-  );
+  const minStake = task.minimumStakeAmount;
 
   const { data: earnedReward } = useQuery(
     [QueryKeys.taskReward, task.publicKey],

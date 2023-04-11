@@ -109,7 +109,7 @@ function ImportFromSeedPhrase({
         <Button
           onClick={handleImportFromPhrase}
           label={confirmActionLabel}
-          className="font-semibold bg-finnieGray-light text-finnieBlue-light w-[240px] h-[48px]"
+          className="font-semibold bg-white text-finnieBlue-light w-[240px] h-[48px]"
         />
       </div>
     </div>
