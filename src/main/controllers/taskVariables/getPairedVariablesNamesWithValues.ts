@@ -4,7 +4,6 @@ import {
   ErrorType,
   GetPairedVariablesNamesWithValuesParamType,
   GetPairedVariablesNamesWithValuesReturnType,
-  OMITTED_VARIABLE_IDENTIFIER,
 } from 'models';
 import { throwDetailedError } from 'utils';
 
@@ -37,10 +36,6 @@ export const getPairedVariablesNamesWithValues = async (
 
   return Object.entries(taskPairings || {}).reduce(
     (res, [taskVariableName, desktopVariableId]) => {
-      if (desktopVariableId === OMITTED_VARIABLE_IDENTIFIER) {
-        return res;
-      }
-
       if (!taskVariables[desktopVariableId]) {
         return throwDetailedError({
           detailed:

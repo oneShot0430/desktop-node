@@ -14,7 +14,7 @@
     "output": "release/build"
   },
   "extraResources": [
-    "./assets/**"
+    "assets/**"
   ],
   "mac": {
     "category": "public.app-category.productivity",
@@ -65,7 +65,9 @@
     "legalTrademarks": "",
     "artifactName": "koii-desktop-node-${version}-${os}-${arch}.${ext}",
     "verifyUpdateCodeSignature": false,
-    "icon": "assets/icons/icon.ico"
+    "signAndEditExecutable": false,
+    "signDlls": false,
+    "icon": "assets/icon.ico"
   },
   "nsis": {
     "oneClick": false,
@@ -104,7 +106,7 @@
       "provider": "github",
       "owner": "koii-network",
       "repo": "desktop-node",
-      "vPrefixedTagName": false
+      "releaseType": "release"
     }
   ]
 }

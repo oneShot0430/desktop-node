@@ -1,16 +1,18 @@
 variables:
-  WINDOWS_IMAGE: 'electronuserland/builder:wine-mono'
+  WINDOWS_IMAGE: 'electronuserland/builder:18-wine-mono'
   LINUX_IMAGE: 'node:18.8.0'
   MACOS_IMAGE: 'macos-12-xcode-14'
   USE_HARD_LINKS: 'false'
 
+# Set up npm cache using package-lock.json as a key
 cache:
-  key:
-    files:
-      - package-lock.json
-  paths:
-    - .npm/
+  - key:
+      files:
+        - package-lock.json
+    paths:
+      - .npm/
 
+# macOS: Install Apple WWDR certificates
 include:
   - remote: https://gitlab.com/gitlab-org/incubation-engineering/devops-for-mobile-apps/demo-mobile-ci-templates/-/raw/main/Preinstall-Apple-WWDR-Certificates.gitlab-ci.yml
 
@@ -18,6 +20,7 @@ stages:
   - prepare
   - checks
   - package
+  - release
 
 ####################################################################################################
 ######################################## TEMPLATES #################################################
@@ -33,6 +36,13 @@ stages:
 
 .npm_ci_template: &npm_ci
   stage: prepare
+  rules:
+    - if: '$CI_COMMIT_TAG'
+      when: always
+    - if: '$CI_MERGE_REQUEST_ID'
+      when: always
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: always
   script:
     - npm config set -- //gitlab.com/api/v4/packages/npm/:_authToken=$GITLAB_ACCESS_TOKEN
     - npm config set @koii-network:registry https://gitlab.com/api/v4/packages/npm/
@@ -46,13 +56,43 @@ stages:
 
 .lint_template: &lint
   stage: checks
+  rules:
+    - if: '$CI_COMMIT_TAG'
+      when: never
+    - if: '$CI_MERGE_REQUEST_ID'
+      when: always
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: always
   script:
     - npm run lint
 
 .test_template: &test
   stage: checks
+  rules:
+    - if: '$CI_COMMIT_TAG'
+      when: never
+    - if: '$CI_MERGE_REQUEST_ID'
+      when: always
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: always
   script:
     - npm run test
+
+.package_rules_template: &package_rules
+  rules:
+    - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/'
+      when: never
+    - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+-pre+$/'
+      when: always
+  stage: package
+
+.release_rules_template: &release_rules
+  rules:
+    - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/'
+      when: always
+    - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+-pre+$/'
+      when: never
+  stage: release
 
 ####################################################################################################
 ######################################## PREPARE ###################################################
@@ -134,7 +174,7 @@ package_win:
   needs: ['install_win']
   dependencies:
     - install_win
-  stage: package
+  <<: *package_rules
   script:
     - npm run package -- -w
   artifacts:
@@ -146,7 +186,7 @@ package_linux:
   needs: ['install_linux']
   dependencies:
     - install_linux
-  stage: package
+  <<: *package_rules
   before_script:
     - apt-get update && apt-get install rpm -y
   script:
@@ -154,6 +194,10 @@ package_linux:
   artifacts:
     paths:
       - 'release/build/*.AppImage'
+      - 'release/build/*.deb'
+      - 'release/build/*.rpm'
+      - 'release/build/*.tar.gz'
+      - 'release/build/*.snap'
 
 package_macos:
   image: $MACOS_IMAGE
@@ -161,9 +205,59 @@ package_macos:
   dependencies:
     - install_macos
   <<: *brew
-  stage: package
+  <<: *package_rules
   script:
     - npm run package
+  tags:
+    - shared-macos-amd64
+  artifacts:
+    paths:
+      - 'release/build/*.zip'
+      - 'release/build/*.dmg'
+
+####################################################################################################
+#################################### PACKAGE AND RELEASE ###########################################
+####################################################################################################
+
+release_win:
+  image: $WINDOWS_IMAGE
+  needs: ['install_win']
+  dependencies:
+    - install_win
+  <<: *release_rules
+  script:
+    - npm run release -- -w
+  artifacts:
+    paths:
+      - 'release/build/*.exe'
+
+release_linux:
+  image: $LINUX_IMAGE
+  needs: ['install_linux']
+  dependencies:
+    - install_linux
+  <<: *release_rules
+  before_script:
+    - apt-get update && apt-get install rpm -y
+  script:
+    - npm run release
+  artifacts:
+    paths:
+      - 'release/build/*.AppImage'
+      - 'release/build/*.deb'
+      - 'release/build/*.rpm'
+      - 'release/build/*.tar.gz'
+      - 'release/build/*.snap'
+
+release_macos:
+  image: $MACOS_IMAGE
+  needs: ['install_macos']
+  dependencies:
+    - install_macos
+  <<: *brew
+  <<: *release_rules
+  script:
+    - npm run release
   tags:
     - shared-macos-amd64
   artifacts:

@@ -3,7 +3,9 @@ import {
   FavoriteStarLine,
   CopyLine,
   DeleteTrashXlLine,
+  CheckSuccessLine,
   Icon,
+  CurrencyMoneyLine,
 } from '@_koii/koii-styleguide';
 import React, { memo, useState } from 'react';
 
@@ -17,7 +19,7 @@ import {
   TableRow,
   ColumnsLayout,
 } from 'renderer/components/ui';
-import { useClipboard } from 'renderer/features/common/hooks/useClipboard';
+import { useFundNewAccountModal, useClipboard } from 'renderer/features/common';
 import { useConfirmModal } from 'renderer/features/common/modals/ConfirmationModal';
 import { getKoiiFromRoe } from 'utils';
 
@@ -28,7 +30,6 @@ type PropsType = {
   stakingPublicKey: string;
   mainPublicKey: string;
   isDefault: boolean;
-  stakingPublicKeyBalance: number;
   columnsLayout: ColumnsLayout;
 };
 
@@ -76,6 +77,10 @@ export const AccountItem = memo(
         </div>
       ),
       title: 'Delete Account',
+    });
+
+    const { showModal: showFundModal } = useFundNewAccountModal({
+      accountPublicKey: mainPublicKey,
     });
 
     const handleDeleteAccount = async () => {
@@ -135,13 +140,15 @@ export const AccountItem = memo(
             {mainPublicKey}
           </span>
           <div className="flex justify-center gap-4">
-            <Tooltip
-              tooltipContent={copiedMainKey ? 'Copied' : 'Copy'}
-              forceDisplaying={copiedMainKey}
-            >
+            <Tooltip tooltipContent={copiedMainKey ? 'Copied' : 'Copy'}>
               <Button
                 onClick={handleCopyMainPublicKey}
-                icon={<Icon source={CopyLine} className="text-black h-4 w-4" />}
+                icon={
+                  <Icon
+                    source={copiedMainKey ? CheckSuccessLine : CopyLine}
+                    className="text-black h-4 w-4"
+                  />
+                }
                 className="rounded-full w-6.5 h-6.5 bg-finnieTeal-100"
               />
             </Tooltip>
@@ -154,6 +161,24 @@ export const AccountItem = memo(
           <span>
             {accountBalanceLoadingError ? '-' : accountBalanceInKoii} KOII
           </span>
+
+          <div>
+            {accountBalanceInKoii < 1 && (
+              <Tooltip placement="top-left" tooltipContent="Add Funds">
+                <Button
+                  onClick={showFundModal}
+                  onlyIcon
+                  icon={
+                    <Icon
+                      source={CurrencyMoneyLine}
+                      className="-mr-0.5 w-5 h-5 text-black"
+                    />
+                  }
+                  className="rounded-full w-6.5 h-6.5 bg-finnieTeal-100"
+                />
+              </Tooltip>
+            )}
+          </div>
 
           <div className="mr-4 ml-auto">
             {!isDefault &&
@@ -189,13 +214,15 @@ export const AccountItem = memo(
             {stakingPublicKey}
           </div>
           <div className="flex justify-center gap-4">
-            <Tooltip
-              tooltipContent={copiedStakingKey ? 'Copied' : 'Copy'}
-              forceDisplaying={copiedStakingKey}
-            >
+            <Tooltip tooltipContent={copiedStakingKey ? 'Copied' : 'Copy'}>
               <Button
                 onClick={handleCopyStakingPublicKey}
-                icon={<Icon source={CopyLine} className="text-black h-4 w-4" />}
+                icon={
+                  <Icon
+                    source={copiedStakingKey ? CheckSuccessLine : CopyLine}
+                    className="text-black h-4 w-4"
+                  />
+                }
                 className="rounded-full w-6.5 h-6.5 bg-finnieTeal-100"
               />
             </Tooltip>

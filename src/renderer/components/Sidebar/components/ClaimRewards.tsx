@@ -4,16 +4,14 @@ import {
   ButtonSize,
   Icon,
 } from '@_koii/koii-styleguide';
-import Lottie from 'lottie-react';
 import React, { useState } from 'react';
 import { useQueryClient, useMutation } from 'react-query';
 
-import loadingDotsAnimation from 'assets/animations/loading-dots.json';
 import NoBordersCheckMarkIcon from 'assets/svgs/checkmark-icon-no-borders.svg';
 import NoBordersCloseIcon from 'assets/svgs/close-icons/close-icon-no-borders.svg';
 import ShareIcon from 'assets/svgs/share-icon.svg';
 import { ErrorType } from 'models';
-import { Tooltip, ErrorMessage } from 'renderer/components/ui';
+import { Tooltip, ErrorMessage, DotsLoader } from 'renderer/components/ui';
 import { QueryKeys, claimRewards } from 'renderer/services';
 import { Theme } from 'renderer/types/common';
 
@@ -73,15 +71,11 @@ export function ClaimRewards({ value, displayConfetti }: PropsType) {
       {hasErrorClaimingRewards ? (
         <ErrorMessage
           error={ErrorType.GENERIC}
-          className="text-xs text-finnieRed text-center"
+          className="text-xs text-center text-finnieRed"
         />
       ) : hasClickedClaim ? (
         isClaimingRewards ? (
-          <Lottie
-            animationData={loadingDotsAnimation}
-            loop
-            className="mx-auto h-20"
-          />
+          <DotsLoader />
         ) : (
           <div className="flex justify-center gap-8">
             <Tooltip
@@ -125,7 +119,7 @@ export function ClaimRewards({ value, displayConfetti }: PropsType) {
           theme={Theme.Light}
           tooltipContent="Run a few Tasks to earn rewards. Rewards are paid out after a Task is complete."
         >
-          <div className="w-full ml-1 -mb-1 flex text-white items-center text-sm">
+          <div className="flex items-center w-full ml-1 -mb-1 text-sm text-white">
             Add a Task to Earn <Icon source={ShareIcon} className="w-8 h-8" />
           </div>
         </Tooltip>

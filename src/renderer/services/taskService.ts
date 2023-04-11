@@ -1,4 +1,4 @@
-import { isNil, max, min, sum } from 'lodash';
+import { max, sum } from 'lodash';
 import { Task, TaskStatus } from 'renderer/types';
 
 import { getStakingAccountPublicKey } from './api';
@@ -24,24 +24,20 @@ export class TaskService {
     return max(Object.values(task.stakeList)) || 0;
   }
 
-  static getMinStake(task: Task): number {
-    return min(Object.values(task.stakeList)) || 0;
-  }
-
   static getNodesCount(task: Task): number {
     return Object.values(task.stakeList).length;
   }
 
   static getStatus(task: Task): TaskStatus | null {
-    if (!task.status) {
-      return null;
-    }
+    // if (!task.status) {
+    return null;
+    // }
 
-    if (!isNil(task.status.AcceptingSubmissions))
-      return TaskStatus.ACCEPTING_SUBMISSIONS;
-    if (!isNil(task.status.Voting)) return TaskStatus.VOTING;
-    if (!isNil(task.status.Completed)) return TaskStatus.COMPLETED;
-    return TaskStatus.COMPLETED;
+    // if (!isNil(task.status.AcceptingSubmissions))
+    //   return TaskStatus.ACCEPTING_SUBMISSIONS;
+    // if (!isNil(task.status.Voting)) return TaskStatus.VOTING;
+    // if (!isNil(task.status.Completed)) return TaskStatus.COMPLETED;
+    // return TaskStatus.COMPLETED;
   }
 }
 

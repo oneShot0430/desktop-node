@@ -16,7 +16,7 @@ export const CreateTaskModal = create(function CreateTaskModal() {
 
   const handleOpenKoiiSDKWindow = () =>
     openBrowserWindow(
-      'https://docs.koii.network/microservices-and-tasks/task-development-guide'
+      'https://docs.koii.network/develop/microservices-and-tasks/task-development-guide/'
     );
 
   const handleOpenDiscordServerWindow = () =>
@@ -31,7 +31,7 @@ export const CreateTaskModal = create(function CreateTaskModal() {
             Create your own Koii Tasks
           </div>
           <div className="font-normal w-128 mb-6.25">
-            The world&aposs information is at your fingertips with the power of
+            The world&apos;s information is at your fingertips with the power of
             the Koii Network.
           </div>
           <div className="mb-1 font-semibold leading-7">

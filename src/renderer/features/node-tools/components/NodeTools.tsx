@@ -25,9 +25,15 @@ type PropsType = {
   taskPubKey: string;
   onToolsValidation?: (isValid: boolean) => void;
   tools?: RequirementTag[];
+  onPairingSuccess: () => void;
 };
 
-export function NodeTools({ taskPubKey, onToolsValidation, tools }: PropsType) {
+export function NodeTools({
+  taskPubKey,
+  onToolsValidation,
+  tools,
+  onPairingSuccess,
+}: PropsType) {
   const [isAllVariablesPaired, setIsAllVariablesPaired] = useState(false);
 
   const {
@@ -99,8 +105,11 @@ export function NodeTools({ taskPubKey, onToolsValidation, tools }: PropsType) {
     error: isPairingTasksVariablesError,
   } = useMutation(confirmTaskVariables, {
     onSuccess: () => {
-      // eslint-disable-next-line no-alert
-      alert('Pairing Task Variables Success');
+      onPairingSuccess();
+      setTimeout(() => {
+        // eslint-disable-next-line no-alert
+        alert('Pairing Task Variables Success');
+      }, 500);
     },
   });
 

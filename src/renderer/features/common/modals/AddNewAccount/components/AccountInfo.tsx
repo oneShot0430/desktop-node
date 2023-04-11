@@ -2,11 +2,13 @@ import {
   TooltipChatQuestionLeftLine,
   CopyLine,
   Icon,
+  CheckSuccessLine,
 } from '@_koii/koii-styleguide';
 import React, { useRef } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { Button } from 'renderer/components/ui/Button';
+import { Tooltip, Button } from 'renderer/components/ui';
+import { useClipboard } from 'renderer/features/common/hooks';
 
 type KeyType = 'system' | 'task';
 type PropsType = Readonly<{
@@ -22,10 +24,9 @@ export function AccountInfo({ keyType, address }: PropsType) {
     keyType === 'task' && 'text-finnieOrange'
   );
 
-  const handleCopyToClipboard = () => {
-    const address = addressRef.current?.innerHTML;
-    navigator.clipboard.writeText(address || '');
-  };
+  const { copyToClipboard, copied: hasCopiedKey } = useClipboard();
+
+  const handleCopyPublicKey = () => copyToClipboard(address);
 
   const isTaskKey = keyType === 'system';
 
@@ -42,11 +43,20 @@ export function AccountInfo({ keyType, address }: PropsType) {
             <span ref={addressRef} className="pr-2">
               {address}
             </span>
-            <Button
-              icon={<Icon source={CopyLine} className="text-black h-4 w-4" />}
-              className="rounded-[50%] w-[24px] h-[24px] bg-finnieTeal-100"
-              onClick={handleCopyToClipboard}
-            />
+            <div className="flex justify-center gap-4">
+              <Tooltip tooltipContent={hasCopiedKey ? 'Copied' : 'Copy'}>
+                <Button
+                  onClick={handleCopyPublicKey}
+                  icon={
+                    <Icon
+                      source={hasCopiedKey ? CheckSuccessLine : CopyLine}
+                      className="text-black h-4 w-4"
+                    />
+                  }
+                  className="rounded-full w-6.5 h-6.5 bg-finnieTeal-100"
+                />
+              </Tooltip>
+            </div>
           </>
         )}
       </div>
