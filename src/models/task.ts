@@ -46,4 +46,5 @@ export interface TaskData {
   stakeList: Record<string, ROE>;
   isRunning: boolean;
   metadataCID: string;
+  minimumStakeAmount: ROE;
 }

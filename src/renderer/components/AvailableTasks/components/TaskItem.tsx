@@ -15,7 +15,7 @@ import React, {
   MutableRefObject,
   ReactNode,
 } from 'react';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQueryClient } from 'react-query';
 
 import GearFill from 'assets/svgs/gear-fill.svg';
 import GearLine from 'assets/svgs/gear-line.svg';
@@ -40,7 +40,6 @@ import {
   useAllStoredPairedTaskVariables,
 } from 'renderer/features';
 import {
-  QueryKeys,
   TaskService,
   stopTask,
   stakeOnTask,
@@ -90,9 +89,11 @@ function TaskItem({ task, index, columnsLayout }: Props) {
 
   const [parent] = useAutoAnimate();
 
+  const closeAccordionView = useCallback(() => setAccordionView(null), []);
+
   useOnClickOutside(
     ref as MutableRefObject<HTMLDivElement>,
-    useCallback(() => setAccordionView(null), [])
+    closeAccordionView
   );
 
   const { taskStake: alreadyStakedTokensAmount, loadingTaskStake } =
@@ -115,6 +116,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     setIsTaskToolsValid(isValid);
   };
 
+  const minStake = task.minimumStakeAmount;
   const isFirstRowInTable = index === 0;
   const nodes = useMemo(() => TaskService.getNodesCount(task), [task]);
   const topStake = useMemo(() => TaskService.getTopStake(task), [task]);
@@ -123,18 +125,18 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     [task.totalBountyAmount]
   );
 
-  const { data: minStake = 0 } = useQuery([QueryKeys.minStake, publicKey], () =>
-    TaskService.getMinStake(task)
-  );
-
   const { metadata, isLoadingMetadata } = useMetadata(task.metadataCID);
 
-  const globalAndTaskVariables: RequirementTag[] =
-    metadata?.requirementsTags?.filter(({ type }) =>
-      [RequirementType.TASK_VARIABLE, RequirementType.GLOBAL_VARIABLE].includes(
-        type
-      )
-    ) || [];
+  const globalAndTaskVariables: RequirementTag[] = useMemo(
+    () =>
+      metadata?.requirementsTags?.filter(({ type }) =>
+        [
+          RequirementType.TASK_VARIABLE,
+          RequirementType.GLOBAL_VARIABLE,
+        ].includes(type)
+      ) || [],
+    [metadata?.requirementsTags]
+  );
 
   useEffect(() => {
     const validateAllVariablesWerePaired = () => {
@@ -162,11 +164,13 @@ function TaskItem({ task, index, columnsLayout }: Props) {
         { condition: hasEnoughKoii, errorMessage: 'have enough KOII to stake' },
         {
           condition: hasMinimumStake,
-          errorMessage: 'meet the minimum stake required',
+          errorMessage: `stake at least ${getKoiiFromRoe(
+            minStake
+          )} KOII on this Task`,
         },
         {
           condition: isTaskToolsValid,
-          errorMessage: 'configure yet the Task settings',
+          errorMessage: 'configure the Task settings',
         },
       ];
 
@@ -177,12 +181,12 @@ function TaskItem({ task, index, columnsLayout }: Props) {
       if (errors.length === 0) {
         return '';
       } else if (errors.length === 1) {
-        return `You don't ${errors[0]}.`;
+        return `Make sure you ${errors[0]}.`;
       } else {
         const errorList = errors.map((error) => <li key={error}>• {error}</li>);
         return (
           <div>
-            You don&apos;t:
+            Make sure you:
             <br />
             <ul> {errorList}</ul>
           </div>
@@ -240,12 +244,12 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     }
 
     return isTaskValidToRun ? (
-      <PlayIcon className="-ml-4" />
+      <PlayIcon className="mt-1 -mb-1" />
     ) : (
       <Icon
         source={PlayFill}
         size={18}
-        className="cursor-not-allowed text-gray my-4"
+        className="cursor-not-allowed text-gray ml-4 my-4"
       />
     );
   }, [isRunning, isTaskValidToRun]);
@@ -259,13 +263,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     }
 
     if (accordionView === 'info') {
-      return (
-        <TaskInfo
-          taskPubKey={task.publicKey}
-          info={metadata}
-          onToolsValidation={handleGlobalToolsValidationCheck}
-        />
-      );
+      return <TaskInfo info={metadata} />;
     }
 
     if (accordionView === 'settings') {
@@ -274,6 +272,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
           taskPubKey={task.publicKey}
           onToolsValidation={handleTaskToolsValidationCheck}
           taskVariables={globalAndTaskVariables}
+          onPairingSuccess={closeAccordionView}
         />
       );
     }
@@ -285,6 +284,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     metadata,
     globalAndTaskVariables,
     isLoadingMetadata,
+    closeAccordionView,
   ]);
 
   const createdAt = useMemo(
@@ -304,7 +304,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     errorMessage || (isRunning ? 'Stop task' : 'Start task');
 
   return (
-    <TableRow columnsLayout={columnsLayout} className="py-2 gap-y-0" ref={ref}>
+    <TableRow columnsLayout={columnsLayout} className="py-3 gap-y-0" ref={ref}>
       <div>
         <Tooltip
           placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
@@ -336,7 +336,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
         className="flex flex-col gap-2 text-xs min-w-[160px]"
         title={taskManager}
       >
-        <div className="truncate">{`Creator: ${task.taskName}`}</div>
+        <div className="truncate">{`Creator: ${task.taskManager}`}</div>
         <div className="truncate">{`Bounty: ${bountyPerRoundInKoii}`}</div>
       </div>
 
@@ -380,7 +380,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
 
       <div>
         {loading ? (
-          <div className="pl-2">
+          <div className="pl-2 py-[0.57rem]">
             <LoadingSpinner size={LoadingSpinnerSize.Large} />
           </div>
         ) : (
