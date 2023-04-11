@@ -89,7 +89,9 @@ function TaskItem({ task, index, columnsLayout }: Props) {
 
   const [parent] = useAutoAnimate();
 
-  const closeAccordionView = useCallback(() => setAccordionView(null), []);
+  const closeAccordionView = useCallback(() => {
+    setAccordionView(null);
+  }, []);
 
   useOnClickOutside(
     ref as MutableRefObject<HTMLDivElement>,
@@ -106,10 +108,6 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   const handleToggleView = (view: 'info' | 'settings') => {
     const newView = accordionView === view ? null : view;
     setAccordionView(newView);
-  };
-
-  const handleGlobalToolsValidationCheck = (isValid: boolean) => {
-    setIsGlobalToolsValid(isValid);
   };
 
   const handleTaskToolsValidationCheck = (isValid: boolean) => {
