@@ -5,6 +5,7 @@ import { useQueryClient } from 'react-query';
 
 import { PinInput } from 'renderer/components/PinInput';
 import { ErrorMessage, Button } from 'renderer/components/ui';
+import { useKeyInput } from 'renderer/features/common/hooks';
 import { useUserSettings } from 'renderer/features/common/hooks/userSettings';
 import { ModalContent } from 'renderer/features/modals';
 import {
@@ -72,6 +73,12 @@ export function CreateNewAccount({ onClose, setNextStep }: PropsType) {
       setAccounttName(e.target.value);
     },
     []
+  );
+
+  useKeyInput(
+    'Enter',
+    handleCreateNewKey,
+    accountName.length === 0 || pin.length !== 6
   );
 
   return (
