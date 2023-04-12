@@ -9,12 +9,14 @@ type PropsType = {
   taskVariables?: RequirementTag[];
   taskPubKey: string;
   onToolsValidation?: (isValid: boolean) => void;
+  onPairingSuccess: () => void;
 };
 
 export function TaskSettings({
   taskVariables,
   taskPubKey,
   onToolsValidation,
+  onPairingSuccess,
 }: PropsType) {
   return (
     <div className="flex flex-col w-full">
@@ -33,6 +35,7 @@ export function TaskSettings({
           tools={taskVariables}
           taskPubKey={taskPubKey}
           onToolsValidation={onToolsValidation}
+          onPairingSuccess={onPairingSuccess}
         />
       )}
     </div>

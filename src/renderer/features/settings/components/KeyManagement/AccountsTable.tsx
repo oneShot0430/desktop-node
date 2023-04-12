@@ -36,21 +36,14 @@ export const AccountsTable = memo(() => {
     <>
       <Table
         headers={headers}
-        columnsLayout="grid-cols-accounts-headers pr-6"
+        columnsLayout="grid-cols-accounts-headers pr-6 mb-4"
         isLoading={loadingAccounts}
         error={accountsError}
       >
         {accountsSorted?.map(
-          ({
-            accountName,
-            mainPublicKey,
-            stakingPublicKey,
-            isDefault,
-            stakingPublicKeyBalance,
-          }) => (
+          ({ accountName, mainPublicKey, stakingPublicKey, isDefault }) => (
             <AccountItem
               key={accountName}
-              stakingPublicKeyBalance={stakingPublicKeyBalance}
               mainPublicKey={mainPublicKey}
               accountName={accountName}
               stakingPublicKey={stakingPublicKey}

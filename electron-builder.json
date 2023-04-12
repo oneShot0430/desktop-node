@@ -14,7 +14,7 @@
     "output": "release/build"
   },
   "extraResources": [
-    "./assets/**"
+    "assets/**"
   ],
   "mac": {
     "category": "public.app-category.productivity",
@@ -67,7 +67,7 @@
     "verifyUpdateCodeSignature": false,
     "signAndEditExecutable": false,
     "signDlls": false,
-    "icon": "assets/icons/icon.ico"
+    "icon": "assets/icon.ico"
   },
   "nsis": {
     "oneClick": false,

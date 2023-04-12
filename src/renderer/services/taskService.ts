@@ -1,4 +1,4 @@
-import { max, min, sum } from 'lodash';
+import { max, sum } from 'lodash';
 import { Task, TaskStatus } from 'renderer/types';
 
 import { getStakingAccountPublicKey } from './api';
@@ -22,10 +22,6 @@ export class TaskService {
 
   static getTopStake(task: Task): number {
     return max(Object.values(task.stakeList)) || 0;
-  }
-
-  static getMinStake(task: Task): number {
-    return min(Object.values(task.stakeList)) || 0;
   }
 
   static getNodesCount(task: Task): number {

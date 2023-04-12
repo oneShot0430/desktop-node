@@ -7,6 +7,7 @@ const viewsWithBackButton = [
   AppRoute.OnboardingSeeBalance,
   AppRoute.OnboardingBackupKeyNow,
   AppRoute.OnboardingImportKey,
+  AppRoute.OnboardingConfirmStake,
 ];
 
 const sholdDisplayBackButton = (pathname: string) => {

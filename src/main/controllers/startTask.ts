@@ -167,38 +167,23 @@ async function executeTasks(
   childTaskProcess.stdout?.pipe(logFile);
   childTaskProcess.stderr?.pipe(logFile);
 
-  const namespace = new Namespace(
-    // selectedTask.taskId,
-    // expressApp,
-    // operationMode,
-    // mainSystemAccount,
-
-    // {
-    //   task_name: selectedTask.taskName,
-    //   task_id: selectedTask.taskId,
-    //   task_audit_program: selectedTask.taskAuditProgram,
-    //   task_manager: new PublicKey(selectedTask.taskManager),
-    //   stake_pot_account: new PublicKey(selectedTask.stakePotAccount),
-    //   bounty_amount_per_round: selectedTask.bountyAmountPerRound,
-    //
-    {
-      taskTxId: selectedTask.taskId,
-      serverApp: expressApp,
-      mainSystemAccount,
-      db,
-      rpcUrl: getK2NetworkUrl(),
-      taskData: {
-        task_name: selectedTask.taskName,
-        task_id: selectedTask.taskId,
-        task_audit_program: selectedTask.taskAuditProgram,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        task_manager: new PublicKey(selectedTask.taskManager!),
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        stake_pot_account: new PublicKey(selectedTask.stakePotAccount!),
-        bounty_amount_per_round: selectedTask.bountyAmountPerRound,
-      },
-    }
-  );
+  const namespace = new Namespace({
+    taskTxId: selectedTask.taskId,
+    serverApp: expressApp,
+    mainSystemAccount,
+    db,
+    rpcUrl: getK2NetworkUrl(),
+    taskData: {
+      task_name: selectedTask.taskName,
+      task_id: selectedTask.taskId,
+      task_audit_program: selectedTask.taskAuditProgram,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      task_manager: new PublicKey(selectedTask.taskManager!),
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      stake_pot_account: new PublicKey(selectedTask.stakePotAccount!),
+      bounty_amount_per_round: selectedTask.bountyAmountPerRound,
+    },
+  });
 
   LAST_USED_PORT += 1;
   return {

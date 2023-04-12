@@ -2,7 +2,6 @@ import { Event } from 'electron';
 
 import {
   ErrorType,
-  OMITTED_VARIABLE_IDENTIFIER,
   PairedTaskVariables,
   PairTaskVariableParamType,
 } from 'models';
@@ -58,10 +57,7 @@ export const pairTaskVariable = async (
 
   const taskVariables = await getStoredTaskVariables();
 
-  if (
-    !taskVariables[payload.desktopVariableId] &&
-    payload.desktopVariableId !== OMITTED_VARIABLE_IDENTIFIER
-  ) {
+  if (!taskVariables[payload.desktopVariableId]) {
     return throwDetailedError({
       detailed:
         'Variable Pairing error: Desktop Variable ID in the Task not found',

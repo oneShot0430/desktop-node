@@ -1,4 +1,4 @@
-import { OMITTED_VARIABLE_IDENTIFIER, PairTaskVariableParamType } from 'models';
+import { PairTaskVariableParamType } from 'models';
 
 import { namespaceInstance } from '../../node/helpers/Namespace';
 import { validateTask } from '../getTaskInfo';
@@ -129,36 +129,6 @@ describe('pairTaskVariable', () => {
     expect(namespaceInstance.storeSet).toHaveBeenCalledWith(
       PersistentStoreKeys.TaskToVariablesPairs,
       '{"7Ds4GdPPGb2DNEwT6is31i1KkR2WqusttB55T4QgGUvg":{"variableName":"someId"}}'
-    );
-  });
-
-  it('pairs (marks) the task variable as omitted if the payload is valid', async () => {
-    validateTaskMock.mockResolvedValue({});
-
-    const usedVariableName = 'variableName';
-
-    getTaskVariableNamesMock.mockResolvedValue([usedVariableName]);
-
-    const usedStoredVariableId = 'someId';
-    getStoredTaskVariablesMock.mockResolvedValue({
-      [usedStoredVariableId]: { label: 'label', value: 'value' },
-    });
-
-    getStoredPairedTaskVariablesMock.mockResolvedValue({});
-
-    const validPayload: PairTaskVariableParamType = {
-      taskAccountPubKey: k2PublicKeyExample,
-      variableInTaskName: usedVariableName,
-      desktopVariableId: OMITTED_VARIABLE_IDENTIFIER,
-    };
-
-    await expect(
-      pairTaskVariable({} as Event, validPayload)
-    ).resolves.not.toThrow();
-
-    expect(namespaceInstance.storeSet).toHaveBeenCalledWith(
-      PersistentStoreKeys.TaskToVariablesPairs,
-      `{"7Ds4GdPPGb2DNEwT6is31i1KkR2WqusttB55T4QgGUvg":{"variableName":"${OMITTED_VARIABLE_IDENTIFIER}"}}`
     );
   });
 

@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 
 import { useDefaultTasks } from 'renderer/features/onboarding/hooks';
-import { TaskService } from 'renderer/services';
 
 import { useTasksSelect } from './useTasksSelect';
 import { useTaskStakeInputLogic } from './useTaskStakeInputLogic';
@@ -29,7 +28,7 @@ export const useRunFirstTasksLogic = () => {
   const selectedTasksWithStake = useMemo(
     () =>
       selectedTasks.map((task) => {
-        const minStake = TaskService.getMinStake(task);
+        const minStake = task.minimumStakeAmount;
 
         return {
           ...task,

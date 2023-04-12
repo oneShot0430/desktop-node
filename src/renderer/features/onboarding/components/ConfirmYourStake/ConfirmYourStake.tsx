@@ -1,4 +1,4 @@
-import { Icon, AddFill, CurrencyMoneyLine } from '@_koii/koii-styleguide';
+import { Icon, CurrencyMoneyLine } from '@_koii/koii-styleguide';
 import React, { useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -116,15 +116,6 @@ function ConfirmYourStake() {
             ))}
           </div>
         </div>
-      </div>
-
-      <div className="flex flex-row justify-end pr-8 mt-3">
-        <Button
-          label="Select more tasks"
-          className="bg-transparent text-finnieEmerald-light w-max"
-          icon={<Icon source={AddFill} />}
-          onClick={handleSelectMoreTasks}
-        />
       </div>
     </div>
   );

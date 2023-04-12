@@ -1,10 +1,8 @@
 variables:
-  WINDOWS_IMAGE: 'electronuserland/builder:18-wine'
+  WINDOWS_IMAGE: 'electronuserland/builder:18-wine-mono'
   LINUX_IMAGE: 'node:18.8.0'
   MACOS_IMAGE: 'macos-12-xcode-14'
   USE_HARD_LINKS: 'false'
-  ELECTRON_CACHE: ".cache/electron"
-  ELECTRON_BUILDER_CACHE: ".cache/electron-builder"
 
 # Set up npm cache using package-lock.json as a key
 cache:

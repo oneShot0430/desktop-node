@@ -1,1 +1,1 @@
-export { AddFunds } from './AddFunds';
+export * from './AddFunds';

@@ -5,6 +5,7 @@ import { useQueryClient } from 'react-query';
 
 import { PinInput } from 'renderer/components/PinInput';
 import { ErrorMessage, Button } from 'renderer/components/ui';
+import { useKeyInput } from 'renderer/features/common/hooks';
 import { useUserSettings } from 'renderer/features/common/hooks/userSettings';
 import { ModalContent } from 'renderer/features/modals';
 import {
@@ -74,6 +75,12 @@ export function CreateNewAccount({ onClose, setNextStep }: PropsType) {
     []
   );
 
+  useKeyInput(
+    'Enter',
+    handleCreateNewKey,
+    accountName.length === 0 || pin.length !== 6
+  );
+
   return (
     <ModalContent theme={Theme.Dark} className="w-[800px] h-[520px] text-white">
       <div className="flex justify-between p-3">
@@ -126,7 +133,7 @@ export function CreateNewAccount({ onClose, setNextStep }: PropsType) {
             disabled={accountName.length === 0 || pin.length !== 6}
             onClick={handleCreateNewKey}
             label="Create Key"
-            className="font-semibold bg-finnieGray-tertiary text-finnieBlue-light w-[220px] h-[48px]"
+            className="font-semibold bg-white text-finnieBlue-light w-[220px] h-[48px]"
           />
         </div>
       </div>
