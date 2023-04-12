@@ -3,9 +3,11 @@ import {
   ButtonSize,
   ButtonVariant,
   CheckSuccessLine,
+  CloseLine,
   Icon,
 } from '@_koii/koii-styleguide';
-import React, { useCallback, useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 import { useMutation } from 'react-query';
 
 import { RequirementTag } from 'models/task';
@@ -80,7 +82,7 @@ export function NodeTools({
     }));
   };
 
-  const confirmTaskVariables = useCallback(async () => {
+  const confirmTaskVariables = async () => {
     const promises = Object.entries(selectedTools)
       .map(([tool, desktopVariableId]) => {
         if (!desktopVariableId) {
@@ -97,42 +99,45 @@ export function NodeTools({
       .filter(Boolean);
 
     await Promise.all(promises);
-  }, [selectedTools, taskPubKey]);
+  };
 
-  const {
-    mutate: pairTaskVariables,
-    isLoading: isPairingTasksVariables,
-    error: isPairingTasksVariablesError,
-  } = useMutation(confirmTaskVariables, {
-    onSuccess: () => {
-      onPairingSuccess();
-      setTimeout(() => {
-        // eslint-disable-next-line no-alert
-        alert('Pairing Task Variables Success');
-      }, 500);
-    },
-  });
+  const onSuccess = () => {
+    onPairingSuccess();
+
+    toast.success('Task settings successfully paired', {
+      icon: <CheckSuccessLine className="h-5 w-5" />,
+      style: {
+        backgroundColor: '#BEF0ED',
+        paddingRight: 0,
+      },
+    });
+  };
+
+  const onError = () => {
+    toast.error('Task settings pairing failed. Try Again', {
+      icon: <CloseLine className="h-5 w-5" />,
+      style: {
+        backgroundColor: '#FFA6A6',
+        paddingRight: 0,
+      },
+    });
+  };
+
+  const { mutate: pairTaskVariables, isLoading: isPairingTasksVariables } =
+    useMutation(confirmTaskVariables, {
+      onSuccess,
+      onError,
+    });
 
   const pairedVariablesForTask = useMemo(
     () => getPairedTaskVariablesForTask(taskPubKey, pairedVariables),
     [pairedVariables, taskPubKey]
   );
 
-  const hasError = pairedVariablesError || isPairingTasksVariablesError;
   const isLoading = isLoadingPairedVariables;
 
-  if (hasError) {
-    return (
-      <>
-        {pairedVariablesError &&
-          (pairedVariablesError || (
-            <ErrorMessage error={pairedVariablesError as string} />
-          ))}
-        {isPairingTasksVariablesError && (
-          <ErrorMessage error={isPairingTasksVariablesError as string} />
-        )}
-      </>
-    );
+  if (pairedVariablesError) {
+    return <ErrorMessage error={pairedVariablesError as string} />;
   }
 
   return (
@@ -155,12 +160,6 @@ export function NodeTools({
               description={description}
             />
           ))}
-          {isPairingTasksVariablesError && (
-            <ErrorMessage
-              error={isPairingTasksVariablesError as string}
-              className="my-4"
-            />
-          )}
           <div className="flex justify-end">
             <Button
               variant={ButtonVariant.Primary}
@@ -183,6 +182,7 @@ export function NodeTools({
           </div>
         </>
       )}
+      <Toaster />
     </div>
   );
 }

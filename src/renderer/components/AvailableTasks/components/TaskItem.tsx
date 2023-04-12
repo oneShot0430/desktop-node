@@ -92,7 +92,9 @@ function TaskItem({ task, index, columnsLayout }: Props) {
 
   const [parent] = useAutoAnimate();
 
-  const closeAccordionView = useCallback(() => setAccordionView(null), []);
+  const closeAccordionView = useCallback(() => {
+    setAccordionView(null);
+  }, []);
 
   useOnClickOutside(
     ref as MutableRefObject<HTMLDivElement>,
@@ -111,10 +113,6 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     setAccordionView(newView);
   };
 
-  const handleGlobalToolsValidationCheck = (isValid: boolean) => {
-    setIsGlobalToolsValid(isValid);
-  };
-
   const handleTaskToolsValidationCheck = (isValid: boolean) => {
     setIsTaskToolsValid(isValid);
   };
@@ -127,6 +125,8 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     () => getKoiiFromRoe(task.totalBountyAmount),
     [task.totalBountyAmount]
   );
+  const isEditStakeInputDisabled =
+    alreadyStakedTokensAmount !== 0 || loadingTaskStake;
 
   const { metadata, isLoadingMetadata } = useMetadata(task.metadataCID);
 
@@ -244,7 +244,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
 
   const getTaskPlayButtonIcon = useCallback(() => {
     if (isRunning) {
-      return <StopTealIcon />;
+      return <StopTealIcon className="mt-px -mb-1" />;
     }
 
     return isTaskValidToRun ? (
