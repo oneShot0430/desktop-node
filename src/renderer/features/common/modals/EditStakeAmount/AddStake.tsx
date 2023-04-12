@@ -7,7 +7,7 @@ import KoiiInput from './KoiiInput';
 
 export type PropsType = {
   balance: number;
-  currentStake: number;
+  currentStake?: number;
   minStake: number;
   onAddStake: (amount: number) => void;
 };
@@ -27,7 +27,7 @@ export function AddStake({
     setError('');
     const stakeToAdd = +e.target.value;
     const stakeToAddInRoe = getRoeFromKoii(stakeToAdd);
-    const meetsMinStake = stakeToAddInRoe + currentStake >= minStake;
+    const meetsMinStake = stakeToAddInRoe >= minStake;
     if (!meetsMinStake) {
       setError(`Min stake: ${minStakeInKoii} KOII`);
     } else if (stakeToAdd > balance) {
@@ -57,7 +57,7 @@ export function AddStake({
         label="Add Stake"
         onClick={handleAddStake}
         className="text-white"
-        disabled={!!error}
+        disabled={!!error || !inputValue}
       />
     </div>
   );
