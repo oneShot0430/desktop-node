@@ -25,25 +25,27 @@ export const ConfirmAccountDelete = create<ConfirmationModalPropsType>(
 
     return (
       <Modal>
-        <ModalContent className="pt-2 w-fit h-fit text-finnieBlue rounded-xl">
+        <ModalContent className="w-fit h-fit text-finnieBlue rounded-md">
           <ModalTopBar
             title={title}
             onClose={handleClose}
             titleClasses="text-finnieBlue"
           />
           {content}
-          <div className="flex items-center justify-center gap-4">
-            <Button
-              label="Cancel"
-              onClick={handleClose}
-              variant="danger"
-              className="bg-finnieRed text-finnieBlue-light-secondary"
-            />
-            <Button
-              label="Confirm"
-              onClick={handleConfirm}
-              className="text-white"
-            />
+          <div className="px-16 pb-5">
+            <div className="flex items-center justify-between gap-20">
+              <Button
+                label="Delete"
+                onClick={handleConfirm}
+                variant="danger"
+                className="bg-finnieRed text-finnieBlue-light-secondary rounded-md"
+              />
+              <Button
+                label="Cancel"
+                onClick={handleClose}
+                className="text-white rounded-md"
+              />
+            </div>
           </div>
         </ModalContent>
       </Modal>

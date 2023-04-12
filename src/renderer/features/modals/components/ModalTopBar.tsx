@@ -22,7 +22,7 @@ function ModalTopBar({
   wrapperClasses = '',
 }: PropsType) {
   const topBarMergedClasses = twMerge(
-    'flex justify-between items-center h-[67px] px-4',
+    'flex justify-between items-center h-[67px] px-4 shadow-[0_2px_8px_rgba(0,0,0,0.16)]',
     wrapperClasses
   );
 

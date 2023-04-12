@@ -12,7 +12,7 @@ type PropTypes = {
 
 function ModalContent({ children, theme, className }: PropTypes) {
   const classes = twMerge(
-    'w-[600px] h-fit py-3 rounded bg-finnieGray text-center',
+    'w-[600px] h-fit py-1 rounded bg-finnieGray text-center',
     theme === Theme.Dark && 'bg-finnieBlue-light-secondary',
     className
   );
