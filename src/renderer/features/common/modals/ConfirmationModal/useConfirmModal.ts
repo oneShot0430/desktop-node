@@ -6,9 +6,9 @@ import type { ConfirmationModalPropsType } from './ConfirmationModal';
 
 type ParamsType = ConfirmationModalPropsType;
 
-export const useConfirmModal = ({ content, title }: ParamsType) => {
+export const useConfirmModal = ({ accountName }: ParamsType) => {
   const showModal = () => {
-    return show(ConfirmAccountDelete, { content, title });
+    return show(ConfirmAccountDelete, { accountName });
   };
 
   return {

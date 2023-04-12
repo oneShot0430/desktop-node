@@ -62,22 +62,7 @@ export const AccountItem = memo(
       setAccountActiveError,
     } = useAccount({ accountName, isDefault });
 
-    const { showModal } = useConfirmModal({
-      title: 'Delete Account',
-      content: (
-        <div className="flex justify-center px-4 py-6">
-          <div className="">
-            <p>
-              Are you sure you want to delete{' '}
-              <span className="text-lg text-green-dark">{accountName}</span>?
-            </p>
-            <br />
-            This will erase all account information from the Node but <br />{' '}
-            you’ll still be able to import it if you have a secret phrase
-          </div>
-        </div>
-      ),
-    });
+    const { showModal } = useConfirmModal({ accountName });
 
     const { showModal: showFundModal } = useFundNewAccountModal({
       accountPublicKey: mainPublicKey,
