@@ -19,8 +19,11 @@ import {
   TableRow,
   ColumnsLayout,
 } from 'renderer/components/ui';
-import { useFundNewAccountModal, useClipboard } from 'renderer/features/common';
-import { useConfirmModal } from 'renderer/features/common/modals/ConfirmationModal';
+import {
+  useFundNewAccountModal,
+  useClipboard,
+  useDeleteAccountModal,
+} from 'renderer/features/common';
 import { getKoiiFromRoe } from 'utils';
 
 import { useAccount, useAccountBalance } from '../../hooks';
@@ -62,14 +65,16 @@ export const AccountItem = memo(
       setAccountActiveError,
     } = useAccount({ accountName, isDefault });
 
-    const { showModal } = useConfirmModal({ accountName });
+    const { showModal: showConfirmModal } = useDeleteAccountModal({
+      accountName,
+    });
 
     const { showModal: showFundModal } = useFundNewAccountModal({
       accountPublicKey: mainPublicKey,
     });
 
     const handleDeleteAccount = async () => {
-      const isConfirmed = await showModal();
+      const isConfirmed = await showConfirmModal();
       if (isConfirmed) {
         setIsDeleting(true);
         await deleteAccount();
