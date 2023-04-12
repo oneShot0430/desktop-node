@@ -21,10 +21,14 @@ export function EditStakeInput({
   const [isPristine, setIsPristine] = useState<boolean>(true);
   const [hasEnteredAValue, setHasEnteredAValue] = useState<boolean>(false);
 
+  const hasError = !meetsMinimumStake && !isPristine;
   const inputClasses = twMerge(
-    'w-[92px] rounded-sm text-right text-finnieBlue-dark p-[3px] border border-transparent focus:border-finnieEmerald focus:outline-none',
-    !meetsMinimumStake && !isPristine && 'border border-red-500'
+    'w-[92px] rounded-sm text-right text-finnieBlue-dark p-[3px] border-2 border-transparent focus:border-finnieEmerald focus:outline-none',
+    hasError && 'border-finnieRed focus:border-finnieRed'
   );
+  const minStakeLabelClasses = `text-xs text-center ${
+    hasError ? 'text-finnieRed' : 'text-finnieEmerald-light'
+  }`;
   const stakeInKoii = getKoiiFromRoe(stake);
   const minStakeInKoii = getKoiiFromRoe(minStake);
   const value =
@@ -50,9 +54,7 @@ export function EditStakeInput({
         className={inputClasses}
         disabled={disabled}
       />
-      <div className="text-xs text-center text-finnieEmerald-light">
-        minimum: {minStakeInKoii}
-      </div>
+      <div className={minStakeLabelClasses}>minimum: {minStakeInKoii}</div>
     </div>
   );
 }
