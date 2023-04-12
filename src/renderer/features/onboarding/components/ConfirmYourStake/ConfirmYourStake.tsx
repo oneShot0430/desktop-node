@@ -1,4 +1,8 @@
-import { Icon, CurrencyMoneyLine } from '@_koii/koii-styleguide';
+import {
+  Icon,
+  CurrencyMoneyLine,
+  WarningTriangleLine,
+} from '@_koii/koii-styleguide';
 import React, { useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -92,6 +96,14 @@ function ConfirmYourStake() {
           updateStake={updateStake}
           setIsRunButtonDisabled={setIsRunButtonDisabled}
         />
+
+        <div className="flex justify-center items-center gap-4 mt-2 px-3">
+          <Icon source={WarningTriangleLine} size={32} color="#FFC78F" />
+          <div className="text-xs text-finnieOrange leading-5">
+            After your node makes its first submission, stake cannot be
+            withdrawn until three rounds after the task is paused.
+          </div>
+        </div>
 
         <div className="flex justify-center mt-[40px]">
           <div className="flex flex-col items-center justify-center">
