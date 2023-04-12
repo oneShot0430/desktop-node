@@ -19,3 +19,4 @@ export { useEditTaskVariable } from './useEditTaskVariable';
 export { useDeleteTaskVariable } from './useDeleteTaskVariable';
 export { useInspectTaskVariable } from './useInspectTaskVariable';
 export { useConfirmNetworkSwitchModal } from './useConfirmNetworkSwitchModal';
+export { useDeleteAccountModal } from './useDeleteAccountModal';

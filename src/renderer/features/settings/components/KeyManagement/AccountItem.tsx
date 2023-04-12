@@ -19,8 +19,11 @@ import {
   TableRow,
   ColumnsLayout,
 } from 'renderer/components/ui';
-import { useFundNewAccountModal, useClipboard } from 'renderer/features/common';
-import { useConfirmModal } from 'renderer/features/common/modals/ConfirmationModal';
+import {
+  useFundNewAccountModal,
+  useClipboard,
+  useDeleteAccountModal,
+} from 'renderer/features/common';
 import { getKoiiFromRoe } from 'utils';
 
 import { useAccount, useAccountBalance } from '../../hooks';
@@ -62,21 +65,8 @@ export const AccountItem = memo(
       setAccountActiveError,
     } = useAccount({ accountName, isDefault });
 
-    const { showModal } = useConfirmModal({
-      content: (
-        <div className="flex justify-center px-4 py-10">
-          <div className="text-left">
-            <p>
-              Are you sure you want to delete{' '}
-              <span className="text-lg text-finnieTeal">{accountName}</span>?
-            </p>
-            <br />
-            If you want to use this account in the future, you will <br /> need
-            to import it again using the secret phrase.
-          </div>
-        </div>
-      ),
-      title: 'Delete Account',
+    const { showModal: showConfirmModal } = useDeleteAccountModal({
+      accountName,
     });
 
     const { showModal: showFundModal } = useFundNewAccountModal({
@@ -84,7 +74,7 @@ export const AccountItem = memo(
     });
 
     const handleDeleteAccount = async () => {
-      const isConfirmed = await showModal();
+      const isConfirmed = await showConfirmModal();
       if (isConfirmed) {
         setIsDeleting(true);
         await deleteAccount();
