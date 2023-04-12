@@ -6,6 +6,7 @@ export { usePrevious } from './usePrevious';
 export { useTaskVariable } from './useTaskVariable';
 export { useOnClickOutside } from './useOnClickOutside';
 export { useMetadata } from './useMetadata';
+export { useKeyInput } from './useKeyInput';
 
 // modals
 export { useCreateTaskModal } from './useCreateTaskModal';
