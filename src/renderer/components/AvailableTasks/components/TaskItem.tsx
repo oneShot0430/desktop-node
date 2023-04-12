@@ -44,10 +44,12 @@ import {
   stopTask,
   stakeOnTask,
   startTask,
+  QueryKeys,
 } from 'renderer/services';
 import { Task } from 'renderer/types';
 import { getCreatedAtDate, getKoiiFromRoe } from 'utils';
 
+import { SuccessMessage } from './SuccessMessage';
 import { TaskInfo } from './TaskInfo';
 import { TaskSettings } from './TaskSettings';
 
@@ -70,6 +72,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   const [meetsMinimumStake, setMeetsMinimumStake] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | ReactNode>('');
+  const [startTaskSucceeded, setStartTaskSucceeded] = useState(false);
 
   const { data: mainAccountPubKey = '' } = useMainAccount();
 
@@ -218,7 +221,8 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     } catch (error) {
       console.error(error);
     } finally {
-      queryCache.invalidateQueries();
+      queryCache.invalidateQueries([QueryKeys.taskNodeInfo]);
+      setStartTaskSucceeded(true);
       setLoading(false);
     }
   };
@@ -303,8 +307,8 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   const runButtonTooltipContent =
     errorMessage || (isRunning ? 'Stop task' : 'Start task');
 
-  return (
-    <TableRow columnsLayout={columnsLayout} className="py-3 gap-y-0" ref={ref}>
+  return !startTaskSucceeded ? (
+    <TableRow columnsLayout={columnsLayout} className="py-2 gap-y-0" ref={ref}>
       <div>
         <Tooltip
           placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
@@ -408,6 +412,8 @@ function TaskItem({ task, index, columnsLayout }: Props) {
         </div>
       </div>
     </TableRow>
+  ) : (
+    <SuccessMessage />
   );
 }
 
