@@ -2,10 +2,8 @@ import { useQuery } from 'react-query';
 
 import { QueryKeys, getTasksById } from 'renderer/services';
 
-const defaultTasksIds = [
-  'A9e5dGqvHZNdbhktNB1yYKY3NF1ick2UFEmyo5NgmJ1Y',
-  '8v7MAZcikirWyupW4KuCSRnj1tWEVid84QaMoUBjswUd',
-  'EkkjHTkEDKT2M39UTjmSYx2U7ApajNGCf2d1NqM9tj7x',
+const tasksAllowedOnOnboarding = [
+  '3w9yniFYvXWDfLb2wNZJY3S7vQ8nz9YNiFh4PB7oXyrw',
 ];
 
 export const useDefaultTasks = () => {
@@ -17,10 +15,10 @@ export const useDefaultTasks = () => {
     [
       QueryKeys.taskList,
       {
-        tasksIds: defaultTasksIds,
+        tasksIds: tasksAllowedOnOnboarding,
       },
     ],
-    () => getTasksById(defaultTasksIds)
+    () => getTasksById(tasksAllowedOnOnboarding)
   );
 
   console.log('###verifiedTasks', verifiedTasks);
