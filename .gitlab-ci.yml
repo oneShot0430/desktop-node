@@ -109,11 +109,22 @@ stages:
         - release/app/node_modules/
         - src/node_modules/
 
-.package_rules_template: &package_rules
+.package_template: &package
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       when: always
   stage: package
+  cache:
+    - key: npm
+      policy: pull
+      paths:
+        - npm_cache/
+    - key: node_modules-${CI_COMMIT_REF_SLUG}
+      policy: pull
+      paths:
+        - node_modules/
+        - release/app/node_modules/
+        - src/node_modules/
 
 ####################################################################################################
 ######################################## PREPARE ###################################################
@@ -199,7 +210,7 @@ package_win:
   needs: ['install_win']
   dependencies:
     - install_win
-  <<: *package_rules
+  <<: *package
   script:
     - npm run release -- -w
 
@@ -208,7 +219,7 @@ package_linux:
   needs: ['install_linux']
   dependencies:
     - install_linux
-  <<: *package_rules
+  <<: *package
   before_script:
     - apt-get update && apt-get install rpm -y
   script:
@@ -220,7 +231,7 @@ package_macos:
   dependencies:
     - install_macos
   <<: *brew
-  <<: *package_rules
+  <<: *package
   script:
     - npm run release
   tags:
