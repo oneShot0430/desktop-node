@@ -1,26 +1,22 @@
 variables:
-  WINDOWS_IMAGE: 'electronuserland/builder:18-wine-mono'
   LINUX_IMAGE: 'node:18.8.0'
   MACOS_IMAGE: 'macos-12-xcode-14'
   USE_HARD_LINKS: 'false'
+  FF_USE_FASTZIP: 'true'
+  TRANSFER_METER_FREQUENCY: 2s
+  ARTIFACT_COMPRESSION_LEVEL: "fastest"
+  CACHE_COMPRESSION_LEVEL: "fastest"
+  DOCKER_DRIVER: overlay2
 
-# Set up npm cache using package-lock.json as a key
-cache:
-  - key:
-      files:
-        - package-lock.json
-    paths:
-      - .npm/
-
-# macOS: Install Apple WWDR certificates
-include:
-  - remote: https://gitlab.com/gitlab-org/incubation-engineering/devops-for-mobile-apps/demo-mobile-ci-templates/-/raw/main/Preinstall-Apple-WWDR-Certificates.gitlab-ci.yml
+# Windows runners
+.koii-windows-runner:
+  tags:
+  - koii-desktop-node-runner
 
 stages:
   - prepare
   - checks
   - package
-  - release
 
 ####################################################################################################
 ######################################## TEMPLATES #################################################
@@ -46,13 +42,26 @@ stages:
   script:
     - npm config set -- //gitlab.com/api/v4/packages/npm/:_authToken=$GITLAB_ACCESS_TOKEN
     - npm config set @koii-network:registry https://gitlab.com/api/v4/packages/npm/
-    - npm ci --cache .npm --prefer-offline --no-audit --progress=false
-  artifacts:
-    name: 'artifacts'
-    untracked: true
-    expire_in: 10 mins
-    paths:
-      - node_modules/
+    - npm ci --cache npm_cache --prefer-offline --no-audit --progress=false
+  cache:
+    - key: npm
+      policy: pull-push
+      paths:
+        - npm_cache/
+    - key: node_modules-${CI_COMMIT_REF_SLUG}
+      policy: push
+      paths:
+        - node_modules/
+        - release/app/node_modules/
+        - src/node_modules/
+  # artifacts:
+  #   name: 'artifacts'
+  #   untracked: false
+  #   expire_in: 10 mins
+  #   paths:
+  #     - node_modules/
+  #     - release/app/node_modules/
+  #     - src/node_modules/
 
 .lint_template: &lint
   stage: checks
@@ -65,6 +74,17 @@ stages:
       when: always
   script:
     - npm run lint
+  cache:
+    - key: npm
+      policy: pull
+      paths:
+        - npm_cache/
+    - key: node_modules-${CI_COMMIT_REF_SLUG}
+      policy: pull
+      paths:
+        - node_modules/
+        - release/app/node_modules/
+        - src/node_modules/
 
 .test_template: &test
   stage: checks
@@ -77,29 +97,31 @@ stages:
       when: always
   script:
     - npm run test
+  cache:
+    - key: npm
+      policy: pull
+      paths:
+        - npm_cache/
+    - key: node_modules-${CI_COMMIT_REF_SLUG}
+      policy: pull
+      paths:
+        - node_modules/
+        - release/app/node_modules/
+        - src/node_modules/
 
 .package_rules_template: &package_rules
   rules:
-    - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/'
-      when: never
-    - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+-pre+$/'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       when: always
   stage: package
-
-.release_rules_template: &release_rules
-  rules:
-    - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/'
-      when: always
-    - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+-pre+$/'
-      when: never
-  stage: release
 
 ####################################################################################################
 ######################################## PREPARE ###################################################
 ####################################################################################################
 
 install_win:
-  image: $WINDOWS_IMAGE
+  extends:
+    - .koii-windows-runner
   <<: *npm_ci
 
 install_linux:
@@ -118,7 +140,8 @@ install_macos:
 ####################################################################################################
 
 lint_win:
-  image: $WINDOWS_IMAGE
+  extends:
+    - .koii-windows-runner
   needs: ['install_win']
   dependencies:
     - install_win
@@ -142,7 +165,8 @@ lint_macos:
     - shared-macos-amd64
 
 test_win:
-  image: $WINDOWS_IMAGE
+  extends:
+    - .koii-windows-runner
   needs: ['install_win']
   dependencies:
     - install_win
@@ -170,16 +194,14 @@ test_macos:
 ####################################################################################################
 
 package_win:
-  image: $WINDOWS_IMAGE
+  extends:
+    - .koii-windows-runner
   needs: ['install_win']
   dependencies:
     - install_win
   <<: *package_rules
   script:
-    - npm run package -- -w
-  artifacts:
-    paths:
-      - 'release/build/*.exe'
+    - npm run release -- -w
 
 package_linux:
   image: $LINUX_IMAGE
@@ -190,14 +212,7 @@ package_linux:
   before_script:
     - apt-get update && apt-get install rpm -y
   script:
-    - npm run package
-  artifacts:
-    paths:
-      - 'release/build/*.AppImage'
-      - 'release/build/*.deb'
-      - 'release/build/*.rpm'
-      - 'release/build/*.tar.gz'
-      - 'release/build/*.snap'
+    - npm run release
 
 package_macos:
   image: $MACOS_IMAGE
@@ -207,60 +222,6 @@ package_macos:
   <<: *brew
   <<: *package_rules
   script:
-    - npm run package
-  tags:
-    - shared-macos-amd64
-  artifacts:
-    paths:
-      - 'release/build/*.zip'
-      - 'release/build/*.dmg'
-
-####################################################################################################
-#################################### PACKAGE AND RELEASE ###########################################
-####################################################################################################
-
-release_win:
-  image: $WINDOWS_IMAGE
-  needs: ['install_win']
-  dependencies:
-    - install_win
-  <<: *release_rules
-  script:
-    - npm run release -- -w
-  artifacts:
-    paths:
-      - 'release/build/*.exe'
-
-release_linux:
-  image: $LINUX_IMAGE
-  needs: ['install_linux']
-  dependencies:
-    - install_linux
-  <<: *release_rules
-  before_script:
-    - apt-get update && apt-get install rpm -y
-  script:
-    - npm run release
-  artifacts:
-    paths:
-      - 'release/build/*.AppImage'
-      - 'release/build/*.deb'
-      - 'release/build/*.rpm'
-      - 'release/build/*.tar.gz'
-      - 'release/build/*.snap'
-
-release_macos:
-  image: $MACOS_IMAGE
-  needs: ['install_macos']
-  dependencies:
-    - install_macos
-  <<: *brew
-  <<: *release_rules
-  script:
     - npm run release
   tags:
     - shared-macos-amd64
-  artifacts:
-    paths:
-      - 'release/build/*.zip'
-      - 'release/build/*.dmg'
