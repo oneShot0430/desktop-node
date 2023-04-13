@@ -32,6 +32,7 @@ stages:
 
 .npm_ci_template: &npm_ci
   stage: prepare
+  interruptible: true
   rules:
     - if: '$CI_COMMIT_TAG'
       when: always
@@ -65,6 +66,7 @@ stages:
 
 .lint_template: &lint
   stage: checks
+  interruptible: true
   rules:
     - if: '$CI_COMMIT_TAG'
       when: never
@@ -88,6 +90,7 @@ stages:
 
 .test_template: &test
   stage: checks
+  interruptible: true
   rules:
     - if: '$CI_COMMIT_TAG'
       when: never
@@ -111,6 +114,7 @@ stages:
 
 .package_template: &package
   when: on_success
+  interruptible: true
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       when: always
