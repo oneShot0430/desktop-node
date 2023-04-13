@@ -214,18 +214,12 @@ test_macos:
 package_win:
   extends:
     - .koii-windows-runner
-  needs: ['install_win']
-  dependencies:
-    - install_win
   <<: *package
   script:
     - npm run release -- -w
 
 package_linux:
   image: $LINUX_IMAGE
-  needs: ['install_linux']
-  dependencies:
-    - install_linux
   <<: *package
   before_script:
     - apt-get update && apt-get install rpm -y
@@ -234,9 +228,6 @@ package_linux:
 
 package_macos:
   image: $MACOS_IMAGE
-  needs: ['install_macos']
-  dependencies:
-    - install_macos
   <<: *brew
   <<: *package
   script:
