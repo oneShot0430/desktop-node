@@ -199,7 +199,7 @@ test_macos:
   dependencies:
     - install_macos
   before_script:
-    - chmod +x node_modules/.bin/jest
+    - chmod +x node_modules/.bin/*
   <<: *test
   tags:
     - koii-macos
@@ -225,6 +225,8 @@ package_linux:
 
 package_macos:
   <<: *package
+  before_script:
+    - chmod +x node_modules/.bin/*
   script:
     - npm run release
   tags:
