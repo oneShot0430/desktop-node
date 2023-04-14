@@ -147,11 +147,9 @@ install_linux:
   <<: *npm_ci
 
 install_macos:
-  image: $MACOS_IMAGE
-  <<: *brew
   <<: *npm_ci
   tags:
-    - shared-macos-amd64
+    - koii-macos
 
 ####################################################################################################
 ########################################## TEST ####################################################
@@ -177,10 +175,9 @@ lint_macos:
   needs: ['install_macos']
   dependencies:
     - install_macos
-  <<: *brew
   <<: *lint
   tags:
-    - shared-macos-amd64
+    - koii-macos
 
 test_win:
   extends:
@@ -198,14 +195,12 @@ test_linux:
   <<: *test
 
 test_macos:
-  image: $MACOS_IMAGE
   needs: ['install_macos']
   dependencies:
     - install_macos
-  
   <<: *test
   tags:
-    - shared-macos-amd64
+    - koii-macos
 
 ####################################################################################################
 ######################################## PACKAGE ###################################################
@@ -227,10 +222,8 @@ package_linux:
     - npm run release
 
 package_macos:
-  image: $MACOS_IMAGE
-  <<: *brew
   <<: *package
   script:
     - npm run release
   tags:
-    - shared-macos-amd64
+    - koii-macos
