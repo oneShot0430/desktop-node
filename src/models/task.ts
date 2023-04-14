@@ -103,4 +103,5 @@ export interface TaskData {
   metadataCID: string;
   raw: RawTaskData;
   minimumStakeAmount: ROE;
+  roundTime: number;
 }

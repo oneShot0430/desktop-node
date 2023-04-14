@@ -38,7 +38,7 @@ function ImportKey() {
               theme={Theme.Dark}
               tooltipContent={
                 <>
-                  <span>Sometimes known as a "seed phrase"</span>
+                  <span>Sometimes known as a "seed phrase"</span>{' '}
                   <span>or a "recovery phrase"</span>
                 </>
               }

@@ -9,3 +9,4 @@ export * from './Unlock';
 export * from './AppTopBar';
 export * from './BackButton';
 export * from './SourceCodeButton';
+export * from './RoundTime';

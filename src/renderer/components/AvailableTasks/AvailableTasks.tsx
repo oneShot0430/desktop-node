@@ -12,6 +12,7 @@ const tableHeaders = [
   { title: 'Task Name & Start Time' },
   { title: '' },
   { title: '' },
+  { title: 'Round' },
   { title: 'Stake' },
   { title: 'Settings' },
   { title: 'Run Task' },
