@@ -198,6 +198,8 @@ test_macos:
   needs: ['install_macos']
   dependencies:
     - install_macos
+  before_script:
+    - chmod +x node_modules/.bin/jest
   <<: *test
   tags:
     - koii-macos
