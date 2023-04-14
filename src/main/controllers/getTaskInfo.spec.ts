@@ -94,6 +94,7 @@ const expectedResult = {
     total_bounty_amount: 100,
     total_stake_amount: 0,
   },
+  roundTime: 123,
   stakeList: {},
   stakePotAccount: '7Ds4GdPPGb2DNEwT6is31i1KkR2WqusttB55T4QgGUvg',
   taskAuditProgram: 'txId',
