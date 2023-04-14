@@ -1,11 +1,8 @@
 import { PublicKey } from '@_koi/web3.js';
 import config from 'config';
-import { Task, TaskData, FetchAllTasksParam } from 'models';
+import { Task, FetchAllTasksParam, RawTaskData } from 'models';
 
-import {
-  RawTaskData,
-  parseRawK2TaskData,
-} from '../node/helpers/parseRawK2TaskData';
+import { parseRawK2TaskData } from '../node/helpers/parseRawK2TaskData';
 import sdk from '../services/sdk';
 
 async function fetchAllTasks(
@@ -30,7 +27,7 @@ async function fetchAllTasks(
         const rawTaskData = JSON.parse(
           rawData.account.data.toString()
         ) as RawTaskData;
-        const taskData: TaskData = parseRawK2TaskData(rawTaskData);
+        const taskData = parseRawK2TaskData(rawTaskData);
         const task: Task = {
           publicKey: rawData.pubkey.toBase58(),
           data: taskData,
@@ -49,6 +46,7 @@ async function fetchAllTasks(
   if (Number.isInteger(offset) && Number.isInteger(limit) && offset && limit) {
     return tasks.slice(offset, offset + limit);
   }
+
   return tasks;
 }
 

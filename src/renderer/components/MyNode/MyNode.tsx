@@ -11,6 +11,7 @@ import {
 import { Task } from 'renderer/types';
 
 import { TaskItem } from './components/TaskItem';
+// import { ipcRenderer } from 'electron/renderer';
 
 const tableHeaders = [
   { title: 'Start/Stop' },

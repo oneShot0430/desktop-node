@@ -65,4 +65,30 @@ export class NodeNamespace extends TaskNodeBase {
     }
     return submitterAccount;
   }
+
+  async getDistributionAccount(): Promise<Keypair | null> {
+    let distributionAccount: Keypair | null;
+
+    try {
+      const activeAccount = await this.storeGetRaw(ACTIVE_ACCOUNT);
+      const STAKING_WALLET_PATH = `${getAppDataPath()}/namespace/${activeAccount}_distributionWallet.json`;
+      console.log({ STAKING_WALLET_PATH });
+      if (!fs.existsSync(STAKING_WALLET_PATH)) return null;
+      distributionAccount = Keypair.fromSecretKey(
+        Uint8Array.from(
+          JSON.parse(
+            fs.readFileSync(STAKING_WALLET_PATH, 'utf-8')
+          ) as Uint8Array
+        )
+      );
+      console.log({ distributionAccount });
+    } catch (e) {
+      console.error(
+        'Staking wallet not found. Please create a staking wallet and place it in the namespace folder'
+      );
+      distributionAccount = null;
+    }
+    console.log('@@@@getDistributionAccount', distributionAccount);
+    return distributionAccount;
+  }
 }

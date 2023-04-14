@@ -70,6 +70,8 @@ const startTask = async (_: Event, payload: TaskStartStopParam) => {
       secret
     );
 
+    // koiiTasks.runTimers();
+
     // const taskSrc = await loadTaskSource(
     //   src,
     //   new Namespace(

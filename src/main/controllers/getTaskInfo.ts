@@ -2,13 +2,15 @@ import { Event } from 'electron';
 
 import { PublicKey } from '@_koi/web3.js';
 import sdk from 'main/services/sdk';
-import { ErrorType, GetTaskInfoParam, GetTaskInfoResponse } from 'models';
+import {
+  ErrorType,
+  GetTaskInfoParam,
+  GetTaskInfoResponse,
+  RawTaskData,
+} from 'models';
 import { throwDetailedError } from 'utils';
 
-import {
-  RawTaskData,
-  parseRawK2TaskData,
-} from '../node/helpers/parseRawK2TaskData';
+import { parseRawK2TaskData } from '../node/helpers/parseRawK2TaskData';
 
 export const getTaskInfo = async (
   _: Event,
