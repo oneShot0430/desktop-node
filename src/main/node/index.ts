@@ -10,7 +10,7 @@ import { namespaceInstance } from './helpers/Namespace';
 // import loadTasks from './loadTasks';
 
 // eslint-disable-next-line consistent-return
-export default async (): Promise<any> => {
+export const loadAndExecuteTasks = async (): Promise<any> => {
   // if (!process.env.NODE_MODE) throw new Error('env not found');
   /* Connect Redis */
   // await connectRedis(
@@ -36,13 +36,14 @@ export default async (): Promise<any> => {
         type: ErrorType.NO_ACTIVE_ACCOUNT,
       });
     }
+
     const mainWalletfilePath = `${getAppDataPath()}/wallets/${activeAccount}_mainSystemWallet.json`;
+
     if (fs.existsSync(mainWalletfilePath)) {
       /* Loading and Executing last running tasks */
-      setTimeout(() => {
-        console.log('Executing TASKS');
-        executeTasks();
-      }, 5000);
+      console.info('Executing TASKS');
+
+      executeTasks();
     }
   } catch (e: any) {
     console.error('ERROR In TASK start', e);

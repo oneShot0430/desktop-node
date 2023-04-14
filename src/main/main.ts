@@ -5,7 +5,7 @@ import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 
 import initHandlers from './initHandlers';
-import node from './node';
+import { loadAndExecuteTasks } from './node';
 import { resolveHtmlPath } from './util';
 
 class AppUpdater {
@@ -47,7 +47,8 @@ const installExtensions = async () => {
 };
 const main = async (): Promise<void> => {
   initHandlers();
-  await node();
+
+  await loadAndExecuteTasks();
 };
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.

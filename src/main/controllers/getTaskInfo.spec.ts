@@ -1,11 +1,6 @@
 import { PublicKey } from '@_koi/web3.js';
 import sdk from 'main/services/sdk';
-import { GetTaskInfoParam, TaskData } from 'models';
-
-import {
-  parseRawK2TaskData,
-  RawTaskData,
-} from '../node/helpers/parseRawK2TaskData';
+import { GetTaskInfoParam, RawTaskData } from 'models';
 
 import { getTaskInfo } from './getTaskInfo';
 
@@ -57,7 +52,55 @@ const testRawTaskData: RawTaskData = {
   allowed_failed_distributions: 123,
 };
 
-const parsedTaskData: TaskData = parseRawK2TaskData(testRawTaskData);
+const expectedResult = {
+  availableBalances: {},
+  bountyAmountPerRound: 10,
+  currentRound: 1,
+  isActive: true,
+  isRunning: false,
+  isWhitelisted: true,
+  metadataCID: 'test',
+  minimumStakeAmount: 123,
+  raw: {
+    allowed_failed_distributions: 123,
+    audit_window: 123,
+    available_balances: {},
+    bounty_amount_per_round: 10,
+    current_round: 1,
+    distribution_rewards_submission: {},
+    distributions_audit_record: {},
+    distributions_audit_trigger: {},
+    ip_address_list: {},
+    is_active: true,
+    is_migrated: false,
+    is_whitelisted: true,
+    koii_vars: 'string',
+    migrated_to: 'string',
+    minimum_stake_amount: 123,
+    round_time: 123,
+    stake_list: {},
+    stake_pot_account: '7Ds4GdPPGb2DNEwT6is31i1KkR2WqusttB55T4QgGUvg',
+    starting_slot: 123,
+    submission_window: 123,
+    submissions: {},
+    submissions_audit_trigger: {},
+    task_audit_program: 'txId',
+    task_description: 'string',
+    task_executable_network: 'IPFS',
+    task_manager: '7Ds4GdPPGb2DNEwT6is31i1KkR2WqusttB55T4QgGUvg',
+    task_metadata: 'test',
+    task_name: 'task',
+    task_vars: 'string',
+    total_bounty_amount: 100,
+    total_stake_amount: 0,
+  },
+  stakeList: {},
+  stakePotAccount: '7Ds4GdPPGb2DNEwT6is31i1KkR2WqusttB55T4QgGUvg',
+  taskAuditProgram: 'txId',
+  taskManager: '7Ds4GdPPGb2DNEwT6is31i1KkR2WqusttB55T4QgGUvg',
+  taskName: 'task',
+  totalBountyAmount: 100,
+};
 
 describe('getTaskInfo', () => {
   beforeEach(() => {
@@ -124,7 +167,7 @@ describe('getTaskInfo', () => {
     };
 
     await expect(await getTaskInfo({} as Event, validPayload)).toEqual(
-      parsedTaskData
+      expectedResult
     );
   });
 });
