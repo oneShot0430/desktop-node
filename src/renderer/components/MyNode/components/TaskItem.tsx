@@ -8,6 +8,7 @@ import {
 import React, { useMemo, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
+import { RoundTime } from 'renderer/components/RoundTime';
 import { SourceCodeButton } from 'renderer/components/SourceCodeButton';
 import {
   Button,
@@ -42,7 +43,7 @@ export function TaskItem({
   columnsLayout,
 }: PropsType) {
   const [loading, setLoading] = useState<boolean>(false);
-  const { taskName, taskManager, isRunning, publicKey } = task;
+  const { taskName, taskManager, isRunning, publicKey, roundTime } = task;
   const { showModal: showEditStakeAmountModal } = useEditStakeAmountModal({
     task,
   });
@@ -123,6 +124,10 @@ export function TaskItem({
       </div>
       <div>{earnedRewardInKoii}</div>
       <div>{myStakeInKoii}</div>
+      <RoundTime
+        tooltipPlacement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
+        roundTime={roundTime}
+      />
       <div>
         <NodeStatusCell
           status={nodeStatus}

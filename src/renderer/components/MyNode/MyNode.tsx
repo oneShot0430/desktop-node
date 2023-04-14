@@ -23,6 +23,7 @@ const tableHeaders = [
     tooltip: 'Total KOII earned for running this Task',
   },
   { title: 'Stake' },
+  { title: 'Round' },
   { title: 'Status' },
   { title: 'Actions' },
 ];

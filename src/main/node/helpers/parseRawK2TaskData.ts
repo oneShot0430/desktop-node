@@ -18,5 +18,6 @@ export function parseRawK2TaskData(rawTaskData: RawTaskData): TaskData {
     metadataCID: rawTaskData.task_metadata,
     raw: rawTaskData,
     minimumStakeAmount: rawTaskData.minimum_stake_amount,
+    roundTime: rawTaskData.round_time,
   };
 }

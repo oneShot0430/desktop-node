@@ -22,6 +22,7 @@ import GearLine from 'assets/svgs/gear-line.svg';
 import PlayIcon from 'assets/svgs/play-icon.svg';
 import StopTealIcon from 'assets/svgs/stop-icon-teal.svg';
 import { RequirementTag, RequirementType } from 'models';
+import { RoundTime } from 'renderer/components/RoundTime';
 import {
   Button,
   LoadingSpinner,
@@ -49,6 +50,8 @@ import {
 import { Task } from 'renderer/types';
 import { getCreatedAtDate, getKoiiFromRoe } from 'utils';
 
+import { parseRoundTime } from '../../../utils';
+
 import { SuccessMessage } from './SuccessMessage';
 import { TaskInfo } from './TaskInfo';
 import { TaskSettings } from './TaskSettings';
@@ -60,7 +63,7 @@ interface Props {
 }
 
 function TaskItem({ task, index, columnsLayout }: Props) {
-  const { taskName, publicKey, taskManager, isRunning } = task;
+  const { taskName, publicKey, taskManager, isRunning, roundTime } = task;
   const queryCache = useQueryClient();
   const [accordionView, setAccordionView] = useState<
     'info' | 'settings' | null
@@ -242,6 +245,8 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     setMeetsMinimumStake(value >= minStake);
   };
 
+  const parsedRoundTime = parseRoundTime(roundTime);
+
   const getTaskPlayButtonIcon = useCallback(() => {
     if (isRunning) {
       return <StopTealIcon className="mt-px -mb-1" />;
@@ -345,12 +350,17 @@ function TaskItem({ task, index, columnsLayout }: Props) {
       </div>
 
       <div
-        className="flex flex-col gap-2 pr-8 overflow-hidden text-xs"
+        className="flex flex-col gap-2 overflow-hidden text-xs"
         title={taskManager}
       >
         <div>{`Nodes: ${nodes}`}</div>
         <div>{`Top Stake: ${getKoiiFromRoe(topStake)}`}</div>
       </div>
+
+      <RoundTime
+        tooltipPlacement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
+        roundTime={roundTime}
+      />
 
       <div>
         <EditStakeInput
@@ -358,7 +368,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
           stake={alreadyStakedTokensAmount || valueToStake}
           minStake={minStake as number}
           onChange={handleStakeValueChange}
-          disabled={alreadyStakedTokensAmount !== 0 || loadingTaskStake}
+          disabled={isEditStakeInputDisabled}
         />
       </div>
 
