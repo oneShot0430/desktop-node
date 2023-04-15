@@ -1,6 +1,4 @@
 variables:
-  LINUX_IMAGE: 'node:18.8.0'
-  MACOS_IMAGE: 'macos-12-xcode-14'
   USE_HARD_LINKS: 'false'
   FF_USE_FASTZIP: 'true'
   TRANSFER_METER_FREQUENCY: 2s
@@ -145,6 +143,8 @@ install_win:
 install_linux:
   image: $LINUX_IMAGE
   <<: *npm_ci
+  tags:
+    - koii-linux
 
 install_macos:
   <<: *npm_ci
@@ -169,6 +169,8 @@ lint_linux:
   dependencies:
     - install_linux
   <<: *lint
+  tags:
+    - koii-linux
 
 lint_macos:
   image: $MACOS_IMAGE
@@ -193,6 +195,8 @@ test_linux:
   dependencies:
     - install_linux
   <<: *test
+  tags:
+    - koii-linux
 
 test_macos:
   needs: ['install_macos']
@@ -222,6 +226,8 @@ package_linux:
     - apt-get update && apt-get install rpm -y
   script:
     - npm run release
+  tags:
+    - koii-linux
 
 package_macos:
   <<: *package
