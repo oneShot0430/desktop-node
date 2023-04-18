@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useInfiniteQuery } from 'react-query';
 
+import NoAvailbleTasks from 'assets/svgs/no-available-tasks.svg';
+import isEmpty from 'lodash/isEmpty';
 import { InfiniteScrollTable } from 'renderer/components/ui';
 import { fetchAvailableTasks, QueryKeys } from 'renderer/services';
 import { Task } from 'renderer/types';
@@ -44,6 +46,10 @@ export function AvailableTasks() {
 
   const allRows = (data?.pages || []).flat();
 
+  const hasNoTasks = useMemo(() => {
+    return !isLoading && isEmpty(allRows);
+  }, [allRows, isLoading]);
+
   return (
     <InfiniteScrollTable
       columnsLayout={columnsLayout}
@@ -61,6 +67,18 @@ export function AvailableTasks() {
           task={task}
         />
       ))}
+
+      {hasNoTasks && (
+        <div className="w-full h-full flex justify-center items-center text-white mt-[50px]">
+          <div className="w-[363px] h-[363px] flex flex-col justify-center items-center">
+            <NoAvailbleTasks />
+            <div className="text-center mt-[18px] text-sm">
+              You are running all tasks that are currently available for your
+              device. More tasks are added all the time, so check back soon!
+            </div>
+          </div>
+        </div>
+      )}
     </InfiniteScrollTable>
   );
 }
