@@ -6,6 +6,7 @@ import { autoUpdater } from 'electron-updater';
 
 import initHandlers from './initHandlers';
 import { loadAndExecuteTasks } from './node';
+import koiiTasks from './services/koiiTasks';
 import { resolveHtmlPath } from './util';
 
 class AppUpdater {
@@ -47,8 +48,6 @@ const installExtensions = async () => {
 };
 const main = async (): Promise<void> => {
   initHandlers();
-
-  await loadAndExecuteTasks();
 };
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -95,11 +94,15 @@ const createWindow = async () => {
   // mainWindow.webContents.openDevTools({ mode: 'detach' });
 
   await main()
-    .then((): void => {
-      mainWindow?.on('ready-to-show', () => {
+    .then(async () => {
+      mainWindow?.on('ready-to-show', async () => {
         if (!mainWindow) {
           throw new Error('"mainWindow" is not defined');
         }
+
+        await koiiTasks.initializeTaskNode();
+        await loadAndExecuteTasks();
+
         if (process.env.START_MINIMIZED) {
           mainWindow.minimize();
         } else {

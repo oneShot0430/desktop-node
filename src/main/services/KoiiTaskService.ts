@@ -17,18 +17,13 @@ export class KoiiTaskService {
 
   public STARTED_TASKS: IRunningTasks<ITaskNodeBase> = {};
 
-  constructor() {
-    /**
-     * 1. fetch all tasks from db
-     */
-    this.initializeTaskNode();
-
-    this.watchTasks();
-  }
-
+  /**
+   * @todo: Running tasks should be fetched when node is initialised!
+   */
   async initializeTaskNode() {
     this.tasks = await fetchAllTasks({} as Event);
     await this.getTasksStateFromDb();
+    this.watchTasks();
   }
 
   async runTimers() {
@@ -139,6 +134,7 @@ export class KoiiTaskService {
     const runningTasksStr: string = (await namespaceInstance.storeGet(
       'runningTasks'
     )) as string;
+
     const runningTasks: Array<string> = runningTasksStr
       ? (JSON.parse(runningTasksStr) as Array<string>)
       : [];
@@ -146,8 +142,8 @@ export class KoiiTaskService {
     this.tasks.map((task) => {
       if (runningTasks.includes(task.publicKey)) {
         task.data.isRunning = true;
-        console.log('Set task running....');
       }
+
       return task;
     });
   }

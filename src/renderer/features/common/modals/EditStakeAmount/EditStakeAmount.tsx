@@ -49,7 +49,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
   const stakeAmountInKoii = getKoiiFromRoe(stakeAmount as number);
   const minStake = task.minimumStakeAmount;
 
-  const { data: earnedReward } = useQuery(
+  const { data: taskEarnedReward } = useQuery(
     [QueryKeys.taskReward, task.publicKey],
     () => getRewardEarned(task)
   );
@@ -212,7 +212,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
   const showBackButton = view !== View.SelectAction;
   const title = getTitle();
 
-  const earnedRewardInKoii = getKoiiFromRoe(earnedReward as number);
+  // const earnedRewardInKoii = getKoiiFromRoe(taskEarnedReward as number);
   const myStakeInKoii = getKoiiFromRoe(taskStake);
 
   return (
@@ -283,12 +283,12 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
 
             <div className="flex flex-col justify-center mb-[40px] text-base">
               <p>
-                {`You’ve earned ${earnedRewardInKoii} KOII by staking ${myStakeInKoii} tokens on this task.`}
+                {`You’ve earned ${taskEarnedReward} KOII by staking ${myStakeInKoii} tokens on this task.`}
               </p>
               <p>You can withdraw your stake or add more now.</p>
             </div>
 
-            <div className="flex justify-center gap-[60px] ">
+            <div className="flex justify-center gap-8">
               <Button
                 onClick={() => setView(View.WithdrawConfirm)}
                 label="Withdraw Stake"
