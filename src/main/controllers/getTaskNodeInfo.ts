@@ -1,30 +1,25 @@
-import { Event } from 'electron';
-
-import { PublicKey } from '@_koi/web3.js';
-import { ErrorType, Task } from 'models';
+import { ErrorType } from 'models';
 import { GetTaskNodeInfoResponse } from 'models/api';
 import { throwDetailedError } from 'utils';
 
-import sdk from '../services/sdk';
+import KoiiTasks from '../services/koiiTasks';
 
-import fetchAlltasks from './fetchAlltasks';
+import getAccountBalance from './getAccountBalance';
 import getMainAccountPubKey from './getMainAccountPubKey';
 import getStakingAccountPubKey from './getStakingAccountPubKey';
 
-const getTaskNodeInfo = async (): Promise<GetTaskNodeInfoResponse> => {
+const getTaskNodeInfo = async (_: Event): Promise<GetTaskNodeInfoResponse> => {
   try {
-    const tasks: Task[] = await fetchAlltasks({} as Event);
+    const totalKOII = await getAccountBalance(_, await getMainAccountPubKey());
+
     const stakingPubKey = await getStakingAccountPubKey();
     let totalStaked = 0;
     let pendingRewards = 0;
-    // totalKOII = await getMainAccountBalance()
-    const totalKOII = await sdk.k2Connection.getBalance(
-      new PublicKey(await getMainAccountPubKey())
-    );
-    tasks.forEach((e) => {
+    KoiiTasks.getAllTasks().forEach((e) => {
       totalStaked += e.data.stakeList[stakingPubKey] || 0;
       pendingRewards += e.data.availableBalances[stakingPubKey] || 0;
     });
+
     return {
       totalKOII,
       totalStaked: totalStaked || 0,

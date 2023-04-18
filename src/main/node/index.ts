@@ -1,11 +1,5 @@
-import fs from 'fs';
-
-import { ErrorType } from 'models';
-import { throwDetailedError } from 'utils';
-
 import executeTasks from './executeTasks';
-import { getAppDataPath } from './helpers/getAppDataPath';
-import { namespaceInstance } from './helpers/Namespace';
+import { getMainSystemAccountKeypair } from './helpers';
 
 // import loadTasks from './loadTasks';
 
@@ -29,17 +23,8 @@ export const loadAndExecuteTasks = async (): Promise<any> => {
     //     taskAccountPubKey: 'dGeVfkp1BcLDK13gxoNz5cy4aMMKXVsvSjDAhyLpPCR',
     //   })
     // }, 60000)
-    const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
-    if (!activeAccount) {
-      return throwDetailedError({
-        detailed: 'Please select an active account',
-        type: ErrorType.NO_ACTIVE_ACCOUNT,
-      });
-    }
 
-    const mainWalletfilePath = `${getAppDataPath()}/wallets/${activeAccount}_mainSystemWallet.json`;
-
-    if (fs.existsSync(mainWalletfilePath)) {
+    if (await getMainSystemAccountKeypair()) {
       /* Loading and Executing last running tasks */
       console.info('Executing TASKS');
 

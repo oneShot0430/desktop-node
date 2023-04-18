@@ -1,8 +1,6 @@
 import { Event } from 'electron';
-import * as fsSync from 'fs';
 
 import {
-  Keypair,
   PublicKey,
   TransactionInstruction,
   Transaction,
@@ -17,7 +15,6 @@ import {
   TASK_CONTRACT_ID,
   padStringWithSpaces,
 } from '@koii-network/task-node';
-import { namespaceInstance } from 'main/node/helpers/Namespace';
 import sdk from 'main/services/sdk';
 import {
   ErrorType,
@@ -27,7 +24,10 @@ import {
 } from 'models';
 import { throwDetailedError } from 'utils';
 
-import { getAppDataPath } from '../node/helpers/getAppDataPath';
+import {
+  getMainSystemAccountKeypair,
+  getStakingAccountKeypair,
+} from '../node/helpers';
 
 import { getTaskInfo } from './getTaskInfo';
 
@@ -36,39 +36,10 @@ const delegateStake = async (
   payload: DelegateStakeParam
 ): Promise<DelegateStakeResponse> => {
   const { taskAccountPubKey, stakeAmount } = payload;
-  const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
-  if (!activeAccount) {
-    return throwDetailedError({
-      detailed: 'Please select an active account',
-      type: ErrorType.NO_ACTIVE_ACCOUNT,
-    });
-  }
-  const stakingWalletfilePath = `${getAppDataPath()}/namespace/${activeAccount}_stakingWallet.json`;
-  const mainWalletfilePath = `${getAppDataPath()}/wallets/${activeAccount}_mainSystemWallet.json`;
-  let mainSystemAccount;
-  let stakingAccKeypair;
-  try {
-    mainSystemAccount = Keypair.fromSecretKey(
-      Uint8Array.from(
-        JSON.parse(
-          fsSync.readFileSync(mainWalletfilePath, 'utf-8')
-        ) as Uint8Array
-      )
-    );
-    stakingAccKeypair = Keypair.fromSecretKey(
-      Uint8Array.from(
-        JSON.parse(
-          fsSync.readFileSync(stakingWalletfilePath, 'utf-8')
-        ) as Uint8Array
-      )
-    );
-  } catch (e: any) {
-    console.error(e);
-    return throwDetailedError({
-      detailed: e,
-      type: ErrorType.NO_ACCOUNT_KEY,
-    });
-  }
+
+  const mainSystemAccount = await getMainSystemAccountKeypair();
+  const stakingAccKeypair = await getStakingAccountKeypair();
+
   const accountInfo = await sdk.k2Connection.getAccountInfo(
     new PublicKey(stakingAccKeypair.publicKey)
   );
@@ -76,10 +47,7 @@ const delegateStake = async (
   const taskState = await getTaskInfo({} as Event, { taskAccountPubKey });
 
   console.log('ACCOUNT OWNER', accountInfo?.owner?.toBase58());
-  if (
-    accountInfo?.owner?.toBase58() ===
-    'Koiitask22222222222222222222222222222222222'
-  ) {
+  if (accountInfo?.owner?.toBase58() === TASK_CONTRACT_ID.toBase58()) {
     // Means account already exists
     const createSubmitterAccTransaction = new Transaction().add(
       SystemProgram.transfer({
