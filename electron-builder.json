@@ -100,6 +100,9 @@
   "rpm": {
     "fpm": ["--rpm-rpmbuild-define=_build_id_links none"]
   },
+  "snap": {
+    "publish": ["github"]
+  },
   "afterSign": ".erb/scripts/notarize.js",
   "publish": [
     {
