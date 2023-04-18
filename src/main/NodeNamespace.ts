@@ -11,6 +11,7 @@ import { getAppDataPath } from './node/helpers/getAppDataPath';
 
 const ACTIVE_ACCOUNT = 'ACTIVE_ACCOUNT';
 
+// FIXME(Chris): use methods from wallets.ts
 export class NodeNamespace extends TaskNodeBase {
   appDataPath: string;
 

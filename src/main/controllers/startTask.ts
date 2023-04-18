@@ -7,12 +7,13 @@ import { DEFAULT_K2_NETWORK_URL } from 'config/node';
 import cryptoRandomString from 'crypto-random-string';
 import db from 'main/db';
 import { getK2NetworkUrl } from 'main/node/helpers/k2NetworkUrl';
-import { Namespace, namespaceInstance } from 'main/node/helpers/Namespace';
+import { Namespace } from 'main/node/helpers/Namespace';
 import koiiTasks from 'main/services/koiiTasks';
 import { ErrorType } from 'models';
 import { TaskStartStopParam } from 'models/api';
 import { throwDetailedError } from 'utils';
 
+import { getMainSystemAccountKeypair } from '../node/helpers';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
 import initExpressApp from '../node/initExpressApp';
 
@@ -27,19 +28,8 @@ let LAST_USED_PORT = 10000;
 
 const startTask = async (_: Event, payload: TaskStartStopParam) => {
   const { taskAccountPubKey } = payload;
-  const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
-  if (!activeAccount) {
-    return throwDetailedError({
-      detailed: 'Please select an active account',
-      type: ErrorType.NO_ACTIVE_ACCOUNT,
-    });
-  }
-  const mainWalletfilePath = `${getAppDataPath()}/wallets/${activeAccount}_mainSystemWallet.json`;
-  const mainSystemAccount = Keypair.fromSecretKey(
-    Uint8Array.from(
-      JSON.parse(fsSync.readFileSync(mainWalletfilePath, 'utf-8')) as Uint8Array
-    )
-  );
+
+  const mainSystemAccount = await getMainSystemAccountKeypair();
 
   const taskInfo = koiiTasks.getTaskByPublicKey(taskAccountPubKey);
   console.log({ taskInfo });

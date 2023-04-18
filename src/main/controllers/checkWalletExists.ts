@@ -1,49 +1,28 @@
-import { Event } from 'electron';
-import fs from 'fs';
-
-import { namespaceInstance } from 'main/node/helpers/Namespace';
-import { ErrorType } from 'models';
 import { CheckWalletExistsResponse } from 'models/api';
-import { throwDetailedError } from 'utils';
 
-import { getAppDataPath } from '../node/helpers/getAppDataPath';
+import {
+  getMainSystemAccountKeypair,
+  getStakingAccountKeypair,
+} from '../node/helpers';
 
-const checkWallet = async (
-  event: Event
-): Promise<CheckWalletExistsResponse> => {
-  console.log('Check Wallet');
+const checkWallet = async (): Promise<CheckWalletExistsResponse> => {
   let mainSystemAccount = false;
   let stakingWallet = false;
-  const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
-
-  if (!activeAccount) {
-    return throwDetailedError({
-      detailed: 'Please select an active account',
-      type: ErrorType.NO_ACTIVE_ACCOUNT,
-    });
-  }
-
-  const stakingWalletfilePath = `${getAppDataPath()}/namespace/${activeAccount}_stakingWallet.json`;
-  const mainWalletfilePath = `${getAppDataPath()}/wallets/${activeAccount}_mainSystemWallet.json`;
 
   try {
-    if (fs.existsSync(stakingWalletfilePath)) {
-      stakingWallet = true;
-    } else {
-      stakingWallet = false;
-    }
+    await getMainSystemAccountKeypair();
+    mainSystemAccount = true;
   } catch (err) {
-    console.error('ERROR IN  STAKING ACCOUNT CHECK', err);
+    /* empty */
   }
+
   try {
-    if (fs.existsSync(mainWalletfilePath)) {
-      mainSystemAccount = false;
-    } else {
-      mainSystemAccount = true;
-    }
+    await getStakingAccountKeypair();
+    stakingWallet = true;
   } catch (err) {
-    console.log('CATCH IN REDIS GET', err);
+    /* empty */
   }
+
   const check = {
     mainSystemAccount,
     stakingWallet,

@@ -1,11 +1,10 @@
 import { Event } from 'electron';
-import fs from 'fs';
 
-import { Keypair } from '@_koi/web3.js';
 import { namespaceInstance } from 'main/node/helpers/Namespace';
 import { SetActiveAccountParam } from 'models/api';
 
-import { getAppDataPath } from '../node/helpers/getAppDataPath';
+import { SystemDbKeys } from '../../config/systemDbKeys';
+import { getMainSystemAccountKeypair } from '../node/helpers';
 
 const setActiveAccount = async (
   event: Event,
@@ -14,20 +13,9 @@ const setActiveAccount = async (
   const { accountName } = payload;
   console.log('Set Active Account', accountName);
   try {
-    const ACTIVE_ACCOUNT = 'ACTIVE_ACCOUNT';
+    await namespaceInstance.storeSet(SystemDbKeys.ActiveAccount, accountName);
 
-    await namespaceInstance.storeSet(ACTIVE_ACCOUNT, accountName);
-
-    const mainSystemAccountKeyPair = Keypair.fromSecretKey(
-      Uint8Array.from(
-        JSON.parse(
-          fs.readFileSync(
-            `${getAppDataPath()}/wallets/${accountName}_mainSystemWallet.json`,
-            'utf-8'
-          )
-        ) as Uint8Array
-      )
-    );
+    const mainSystemAccountKeyPair = await getMainSystemAccountKeypair();
 
     // TODO: make "mainSystemAccount" in Task Node class dynamic
     namespaceInstance.mainSystemAccount = mainSystemAccountKeyPair;

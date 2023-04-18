@@ -12,7 +12,3 @@ export function getAppDataPath() {
     process.exit(1);
   }
 }
-
-export function getStakingWalletPath(activeAccount: string) {
-  return `${getAppDataPath()}/namespace/${activeAccount}_stakingWallet.json`;
-}

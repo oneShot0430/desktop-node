@@ -3,11 +3,11 @@ import fs from 'fs';
 import path from 'path';
 
 import { Keypair } from '@_koi/web3.js';
+import { SystemDbKeys } from 'config/systemDbKeys';
+import { getAppDataPath } from 'main/node/helpers/getAppDataPath';
 import { namespaceInstance } from 'main/node/helpers/Namespace';
 import sdk from 'main/services/sdk';
 import { getAllAccountsResponse } from 'models/api';
-
-import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
 const getAllAccounts = async (
   event: Event,
@@ -30,7 +30,9 @@ const getAllAccounts = async (
     .filter((item) => item.isFile() && path.extname(item.name) === '.json')
     .map((item) => item.name);
   const accounts: getAllAccountsResponse = [];
-  const activeAccount = await namespaceInstance.storeGet('ACTIVE_ACCOUNT');
+  const activeAccount = await namespaceInstance.storeGet(
+    SystemDbKeys.ActiveAccount
+  );
   const promisesArr: Array<Promise<number>> = [];
 
   mainWalletfilesInDirectory.forEach((e) => {
