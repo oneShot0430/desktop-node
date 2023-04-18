@@ -6,12 +6,10 @@ import {
   fetchMyTasks,
   getMainAccountPublicKey,
   QueryKeys,
-  getStoredPairedTaskVariables,
 } from 'renderer/services';
 import { Task } from 'renderer/types';
 
 import { TaskItem } from './components/TaskItem';
-// import { ipcRenderer } from 'electron/renderer';
 
 const tableHeaders = [
   { title: 'Start/Stop' },
@@ -38,13 +36,6 @@ export function MyNode() {
     QueryKeys.MainAccount,
     () => getMainAccountPublicKey()
   );
-
-  (async () => {
-    console.log(
-      ' getStoredPairedTaskVariables: ',
-      await getStoredPairedTaskVariables()
-    );
-  })();
 
   const {
     isLoading: isLoadingTasks,

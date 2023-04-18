@@ -72,9 +72,14 @@ export class NodeNamespace extends TaskNodeBase {
 
     try {
       const activeAccount = await this.storeGetRaw(ACTIVE_ACCOUNT);
-      const STAKING_WALLET_PATH = `${getAppDataPath()}/namespace/${activeAccount}_distributionWallet.json`;
+      /**
+       * @dev - This is the path to the staking wallet, but we will use it as the distribution wallet
+       */
+      const STAKING_WALLET_PATH = `${getAppDataPath()}/namespace/${activeAccount}_stakingWallet.json`;
       console.log({ STAKING_WALLET_PATH });
+
       if (!fs.existsSync(STAKING_WALLET_PATH)) return null;
+
       distributionAccount = Keypair.fromSecretKey(
         Uint8Array.from(
           JSON.parse(
@@ -82,14 +87,12 @@ export class NodeNamespace extends TaskNodeBase {
           ) as Uint8Array
         )
       );
-      console.log({ distributionAccount });
     } catch (e) {
       console.error(
-        'Staking wallet not found. Please create a staking wallet and place it in the namespace folder'
+        'Distribution wallet not found. Please create a staking wallet and place it in the namespace folder'
       );
       distributionAccount = null;
     }
-    console.log('@@@@getDistributionAccount', distributionAccount);
     return distributionAccount;
   }
 }

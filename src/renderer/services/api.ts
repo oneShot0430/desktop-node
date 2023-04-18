@@ -246,6 +246,10 @@ export const getTaskMetadata = async (metadataCID: string) => {
     });
 };
 
+export const claimTaskReward = async (taskAccountPubKey: string) => {
+  return window.main.claimReward({ taskAccountPubKey });
+};
+
 export const claimRewards = async (): Promise<number> => {
   const getPendingRewardsByTask = (task: Task) =>
     sum(Object.values(task.availableBalances));
