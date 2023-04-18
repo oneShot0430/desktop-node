@@ -113,8 +113,11 @@ stages:
         - src/node_modules/
 
 .package_template: &package
-  when: manual
+  when: on_success
   interruptible: true
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: always
   stage: package
   cache:
     - key: npm
