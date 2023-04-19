@@ -158,7 +158,19 @@ async function executeTasks(
   );
   childTaskProcess.stdout?.pipe(logFile);
   childTaskProcess.stderr?.pipe(logFile);
-
+  childTaskProcess.on('error', (err) => {
+    console.error('Error starting child process:', err);
+  });
+  childTaskProcess.on('exit', (code, signal) => {
+    if (code !== 0) {
+      console.error(
+        `Child process exited with code ${code} and signal ${signal}`
+      );
+      // Handle the error here
+    } else {
+      console.log('Child process exited successfully');
+    }
+  });
   const namespace = new Namespace({
     taskTxId: selectedTask.taskId,
     serverApp: expressApp,
