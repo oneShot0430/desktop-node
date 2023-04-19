@@ -20,7 +20,7 @@
     "category": "public.app-category.productivity",
     "target": ["dmg", "zip"],
     "type": "distribution",
-    "artifactName": "koii-desktop-node-${version}-${os}.${ext}",
+    "artifactName": "koii-desktop-node-${version}-${os}-${arch}.${ext}",
     "hardenedRuntime": true,
     "gatekeeperAssess": false,
     "provisioningProfile": "build/comkoiinetworkdesktopnode.provisionprofile",
