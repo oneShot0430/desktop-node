@@ -1,14 +1,14 @@
 import {
-  GetPairedVariablesNamesWithValuesParamType,
+  GetTaskPairedVariablesNamesWithLabelsParamType,
   GetStoredPairedTaskVariablesReturnType,
   TaskVariablesReturnType,
 } from 'models';
 
 import { validateTask } from '../getTaskInfo';
 
-import { getPairedVariablesNamesWithValues } from './getPairedVariablesNamesWithValues';
 import { getStoredPairedTaskVariables } from './getStoredPairedTaskVariables';
 import { getStoredTaskVariables } from './getStoredTaskVariables';
+import { getTaskPairedVariablesNamesWithLabels } from './getTaskPairedVariablesNamesWithLabels';
 
 jest.mock('../getTaskInfo', () => {
   return {
@@ -40,7 +40,7 @@ const getStoredTaskVariablesMock = getStoredTaskVariables as jest.Mock<
   Promise<TaskVariablesReturnType>
 >;
 
-describe('getPairedVariablesNamesWithValues', () => {
+describe('getTaskPairedVariablesNamesWithLabels', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -49,17 +49,17 @@ describe('getPairedVariablesNamesWithValues', () => {
     const invalidPayload = {};
 
     await expect(
-      getPairedVariablesNamesWithValues(
+      getTaskPairedVariablesNamesWithLabels(
         {} as Event,
-        invalidPayload as GetPairedVariablesNamesWithValuesParamType
+        invalidPayload as GetTaskPairedVariablesNamesWithLabelsParamType
       )
     ).rejects.toThrow(/payload is not valid/i);
   });
 
-  it('throws an error if paired variable  is not stored', async () => {
+  it('throws an error if paired variable is not stored', async () => {
     validateTaskMock.mockResolvedValue({});
 
-    const validPayload: GetPairedVariablesNamesWithValuesParamType = {
+    const validPayload: GetTaskPairedVariablesNamesWithLabelsParamType = {
       taskAccountPubKey: k2PublicKeyExample,
     };
 
@@ -70,14 +70,14 @@ describe('getPairedVariablesNamesWithValues', () => {
     getStoredTaskVariablesMock.mockResolvedValue({});
 
     await expect(
-      getPairedVariablesNamesWithValues({} as Event, validPayload)
+      getTaskPairedVariablesNamesWithLabels({} as Event, validPayload)
     ).rejects.toThrow(/No paired Task variable stored/i);
   });
 
-  it('returns proper map of Task Variable Name to Variable Value', async () => {
+  it('returns proper map of Task Variable Name to Variable Label', async () => {
     validateTaskMock.mockResolvedValue({});
 
-    const validPayload: GetPairedVariablesNamesWithValuesParamType = {
+    const validPayload: GetTaskPairedVariablesNamesWithLabelsParamType = {
       taskAccountPubKey: k2PublicKeyExample,
     };
 
@@ -92,8 +92,8 @@ describe('getPairedVariablesNamesWithValues', () => {
       [varId]: { label: 'label', value: 'value' },
     });
 
-    await expect(
-      await getPairedVariablesNamesWithValues({} as Event, validPayload)
-    ).toEqual({ [variableName]: 'value' });
+    expect(
+      await getTaskPairedVariablesNamesWithLabels({} as Event, validPayload)
+    ).toEqual([{ name: variableName, label: 'label' }]);
   });
 });

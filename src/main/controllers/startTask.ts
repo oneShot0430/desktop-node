@@ -19,7 +19,7 @@ import initExpressApp from '../node/initExpressApp';
 
 import getStakingAccountPublicKey from './getStakingAccountPubKey';
 import { getTaskSource } from './getTaskSource';
-import { getPairedVariablesNamesWithValues } from './taskVariables';
+import { getTaskPairedVariablesNamesWithValues } from './taskVariables';
 
 // eslint-disable-next-line
 const bufferlayout = require('buffer-layout');
@@ -124,7 +124,7 @@ async function executeTasks(
   const secret = await cryptoRandomString({ length: 20 });
 
   const options: ForkOptions = {
-    env: await getPairedVariablesNamesWithValues({} as Event, {
+    env: await getTaskPairedVariablesNamesWithValues({} as Event, {
       taskAccountPubKey: selectedTask.taskId,
     }),
     silent: true,

@@ -1,15 +1,17 @@
 import {
   PauseFill,
   PlayFill,
-  HistoryClockLine,
   CurrencyMoneyLine,
   Icon,
+  CloseLine,
+  InformationCircleLine,
 } from '@_koii/koii-styleguide';
-import React, { useMemo, useState } from 'react';
-import { useQueryClient } from 'react-query';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
+import React, { MutableRefObject, useMemo, useRef, useState } from 'react';
+import { useQuery, useQueryClient } from 'react-query';
 
+import { TaskInfo } from 'renderer/components/AvailableTasks/components/TaskInfo';
 import { RoundTime } from 'renderer/components/RoundTime';
-import { SourceCodeButton } from 'renderer/components/SourceCodeButton';
 import {
   Button,
   Tooltip,
@@ -23,9 +25,16 @@ import {
   useEditStakeAmountModal,
   useTaskStake,
   useMetadata,
+  useOnClickOutside,
 } from 'renderer/features/common';
 import { useEarnedReward } from 'renderer/features/common/hooks/useEarnedReward';
-import { stopTask, startTask, TaskService, getLogs } from 'renderer/services';
+import {
+  stopTask,
+  startTask,
+  TaskService,
+  QueryKeys,
+  getTaskPairedVariablesNamesWithLabels,
+} from 'renderer/services';
 import { Task } from 'renderer/types';
 import { getCreatedAtDate, getKoiiFromRoe } from 'utils';
 
@@ -42,7 +51,8 @@ export function TaskItem({
   index,
   columnsLayout,
 }: PropsType) {
-  const [loading, setLoading] = useState<boolean>(false);
+  const [shouldDisplayInfo, setShouldDisplayInfo] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { taskName, taskManager, isRunning, publicKey, roundTime } = task;
   const { showModal: showEditStakeAmountModal } = useEditStakeAmountModal({
     task,
@@ -56,7 +66,12 @@ export function TaskItem({
   const isFirstRowInTable = index === 0;
   const nodeStatus = useMemo(() => TaskService.getStatus(task), [task]);
 
-  const { metadata } = useMetadata(task.metadataCID);
+  const { metadata, isLoadingMetadata } = useMetadata(task.metadataCID);
+
+  const { data: pairedVariables, isLoading: isLoadingPairedVariables } =
+    useQuery(QueryKeys.StoredTaskPairedTaskVariables, () =>
+      getTaskPairedVariablesNamesWithLabels(task.publicKey)
+    );
 
   const handleToggleTask = async () => {
     try {
@@ -74,15 +89,27 @@ export function TaskItem({
     }
   };
 
-  const handleOutputLogsToConsole = () => getLogs(task.publicKey);
-
   const createdAt = useMemo(
     () => getCreatedAtDate(metadata?.createdAt),
     [metadata]
   );
 
+  const ref = useRef<HTMLDivElement>(null);
+
+  const [parent] = useAutoAnimate();
+
+  const closeAccordionView = () => setShouldDisplayInfo(false);
+
+  useOnClickOutside(
+    ref as MutableRefObject<HTMLDivElement>,
+    closeAccordionView
+  );
+
   return (
-    <TableRow columnsLayout={columnsLayout} className="py-3.5">
+    <TableRow
+      columnsLayout={columnsLayout}
+      className={`py-2.5 gap-y-0 ${!isRunning ? 'bg-[#FFEE81]/20' : ''}`}
+    >
       <div>
         {loading ? (
           <div>
@@ -98,22 +125,37 @@ export function TaskItem({
               icon={
                 <Icon
                   source={isRunning ? PauseFill : PlayFill}
-                  className="text-black h-[15px] w-[15px]"
+                  size={18}
+                  className={isRunning ? 'text-finniePurple' : 'text-white'}
                 />
               }
               onClick={handleToggleTask}
-              className={`${
-                isRunning ? 'bg-finnieRed' : 'bg-finnieTeal'
-              } rounded-full w-8 h-8`}
+              className="rounded-full w-8 h-8"
             />
           </Tooltip>
         )}
       </div>
-
-      <SourceCodeButton
-        repositoryUrl={metadata?.repositoryUrl || ''}
-        iconSize={24}
-      />
+      <div>
+        <Tooltip
+          placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
+          tooltipContent="Open task details"
+        >
+          <div className="flex flex-col items-center justify-start w-10">
+            <Button
+              onClick={() =>
+                setShouldDisplayInfo((shouldDisplayInfo) => !shouldDisplayInfo)
+              }
+              icon={
+                <Icon
+                  source={shouldDisplayInfo ? CloseLine : InformationCircleLine}
+                  size={36}
+                />
+              }
+              onlyIcon
+            />
+          </div>
+        </Tooltip>
+      </div>
 
       <div className="text-xs flex flex-col gap-1">
         <div>{taskName}</div>
@@ -143,26 +185,37 @@ export function TaskItem({
             onClick={showEditStakeAmountModal}
             onlyIcon
             icon={
-              <Icon source={CurrencyMoneyLine} className="text-black h-8 w-8" />
-            }
-            className="bg-finnieTeal-100 py-0.75 pl-1 !pr-[0.5px] rounded-full"
-          />
-        </Tooltip>
-        <Tooltip
-          placement={`${isFirstRowInTable ? 'bottom' : 'top'}-left`}
-          tooltipContent="Output logs to console"
-        >
-          <Button
-            onClick={handleOutputLogsToConsole}
-            onlyIcon
-            icon={
               <Icon
-                source={HistoryClockLine}
-                className="text-finnieTeal-100 h-9 w-9"
+                source={CurrencyMoneyLine}
+                className="text-white h-10 w-10"
               />
             }
+            className="py-0.75 !pr-[0.5px] rounded-full"
           />
         </Tooltip>
+      </div>
+
+      <div
+        className={`w-full col-span-9 overflow-y-auto ${
+          shouldDisplayInfo
+            ? 'opacity-1 pt-6 max-h-[360px]'
+            : 'opacity-0 max-h-0'
+        } transition-all duration-500 ease-in-out`}
+      >
+        <div ref={parent} className="flex w-full">
+          {shouldDisplayInfo &&
+          (isLoadingMetadata || isLoadingPairedVariables) ? (
+            <div className="m-auto">
+              <LoadingSpinner />
+            </div>
+          ) : (
+            <TaskInfo
+              variables={pairedVariables}
+              info={metadata}
+              shouldDisplayToolsInUse
+            />
+          )}
+        </div>
       </div>
     </TableRow>
   );

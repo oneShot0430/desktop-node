@@ -13,7 +13,7 @@ import { TaskItem } from './components/TaskItem';
 
 const tableHeaders = [
   { title: 'Start/Stop' },
-  { title: '' },
+  { title: 'Info' },
   { title: 'Task Name & Start Time' },
   { title: 'Creator' },
   {
@@ -23,7 +23,7 @@ const tableHeaders = [
   { title: 'Stake' },
   { title: 'Round' },
   { title: 'Status' },
-  { title: 'Actions' },
+  { title: 'Add/Withdraw' },
 ];
 
 const columnsLayout = 'grid-cols-my-node';
@@ -34,7 +34,7 @@ export function MyNode() {
 
   const { data: mainAccountPubKey, isLoading: isLoadingMainAccount } = useQuery(
     QueryKeys.MainAccount,
-    () => getMainAccountPublicKey()
+    getMainAccountPublicKey
   );
 
   const {

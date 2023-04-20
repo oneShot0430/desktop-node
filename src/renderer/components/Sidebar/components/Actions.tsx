@@ -7,10 +7,7 @@ import {
 import * as React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import {
-  useCreateTaskModal,
-  useFundNewAccountModal,
-} from 'renderer/features/common';
+import { useFundNewAccountModal } from 'renderer/features/common';
 import { AppRoute } from 'renderer/types/routes';
 
 export function Actions() {
@@ -19,8 +16,8 @@ export function Actions() {
   const { showModal: showFundModal } = useFundNewAccountModal();
 
   const isAddTaskView = location.pathname === AppRoute.AddTask;
-  const { showModal: showCreateTaskModal } = useCreateTaskModal();
 
+  const navigateToMyNode = () => navigate(AppRoute.MyNode);
   const navigateToAvailableTasks = () => navigate(AppRoute.AddTask);
 
   const handleAddFundsClick = () => {
@@ -29,27 +26,18 @@ export function Actions() {
 
   return (
     <div className="flex flex-col gap-4">
-      {isAddTaskView ? (
-        <button
-          onClick={showCreateTaskModal}
-          className="flex gap-2.5 flex-col items-center justify-center rounded bg-finnieOrange w-[186px] h-[108px] text-finnieBlue-light-secondary"
-        >
-          <div>
-            <Icon source={WebCursorXlLine} className="m-auto h-9 w-9" />
-          </div>
-          <div>Create New Task</div>
-        </button>
-      ) : (
-        <button
-          onClick={navigateToAvailableTasks}
-          className="flex gap-2.5 flex-col items-center justify-center rounded bg-finnieTeal w-[186px] h-[108px] text-finnieBlue-light-secondary"
-        >
-          <div>
-            <Icon source={AddLine} className="m-auto h-9 w-9" />
-          </div>
-          <div>Add Task</div>
-        </button>
-      )}
+      <button
+        onClick={isAddTaskView ? navigateToMyNode : navigateToAvailableTasks}
+        className="flex gap-2.5 flex-col items-center justify-center rounded w-[186px] h-[108px] text-finnieBlue-light-secondary bg-finnieTeal"
+      >
+        <div>
+          <Icon
+            source={isAddTaskView ? WebCursorXlLine : AddLine}
+            className="m-auto h-9 w-9"
+          />
+        </div>
+        <div>{isAddTaskView ? 'My Node' : 'Add Task'}</div>
+      </button>
 
       <button
         onClick={handleAddFundsClick}
