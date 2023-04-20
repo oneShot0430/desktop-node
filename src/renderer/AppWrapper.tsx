@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo } from 'react';
-import { useQuery, useQueryClient } from 'react-query';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useQueryClient } from 'react-query';
 import { Outlet, useLocation } from 'react-router-dom';
 
 import { MainLayout, LoadingScreen } from './components';
@@ -12,19 +12,43 @@ import {
   initializeTasks,
 } from './services';
 
+const NODE_INITALIZED = 'NODE_INITALIZED';
+
 function AppWrapper(): JSX.Element {
   const queryClient = useQueryClient();
   const location = useLocation();
+  const [initializingNode, setInitializingNode] = useState(true);
+  const [initError, setInitError] = useState<string | null>(null);
 
   const isOnboarding = useMemo(
     () => location.pathname.includes('onboarding'),
     [location]
   );
 
-  const { isLoading: initializingNode, error } = useQuery(
-    [QueryKeys.NodeInitialized],
-    () => initializeTasks()
-  );
+  useEffect(() => {
+    const setValue = 'true';
+
+    const initializeNode = async () => {
+      try {
+        await initializeTasks();
+        // Save the initialized state in sessionStorage
+        sessionStorage.setItem(NODE_INITALIZED, setValue);
+      } catch (error) {
+        setInitError(error as string);
+      } finally {
+        setInitializingNode(false);
+      }
+    };
+
+    // Check if the node was already initialized
+    const nodeInitialized = sessionStorage.getItem(NODE_INITALIZED);
+
+    if (nodeInitialized !== setValue) {
+      initializeNode();
+    } else {
+      setInitializingNode(false);
+    }
+  }, []);
 
   // started prefetching required data while node is initialising
   useEffect(() => {
@@ -44,8 +68,8 @@ function AppWrapper(): JSX.Element {
     prefetchQueries();
   }, [queryClient]);
 
-  if (error) {
-    return <LoadingScreen initError={error as string} />;
+  if (initError) {
+    return <LoadingScreen initError={initError as string} />;
   }
 
   if (initializingNode) {
