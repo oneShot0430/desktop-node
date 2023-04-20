@@ -51,6 +51,8 @@ const endpointToControllerMap: Record<
   [Endpoints.SWITCH_NETWORK]: controllers.switchNetwork,
   [Endpoints.GET_NETWORK_URL]: controllers.getNetworkUrl,
   [Endpoints.INITIALIZE_TASKS]: controllers.initializeTasks,
+  [Endpoints.GET_TASK_PAIRED_VARIABLES_NAMES_WITH_LABELS]:
+    controllers.getTaskPairedVariablesNamesWithLabels,
 };
 
 const initHandlers = (): void => {

@@ -204,6 +204,14 @@ export const getStoredPairedTaskVariables = async () => {
   return window.main.getStoredPairedTaskVariables();
 };
 
+export const getTaskPairedVariablesNamesWithLabels = async (
+  taskAccountPubKey: string
+) => {
+  return window.main.getTaskPairedVariablesNamesWithLabels({
+    taskAccountPubKey,
+  });
+};
+
 export const editTaskVariable = async ({
   id,
   label,

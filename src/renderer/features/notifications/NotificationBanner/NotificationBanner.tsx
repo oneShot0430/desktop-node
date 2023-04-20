@@ -45,7 +45,7 @@ export function NotificationBanner({ variant }: PropsType) {
     <div className={classNames}>
       <BackButton color="blue" />
       <div className="max-w-[65%]">{action.message}</div>
-      <div className="flex items-center gap-4 w-max">
+      <div className="flex items-center gap-6 w-max">
         {action && (
           <Button
             label={action.label}
@@ -55,13 +55,13 @@ export function NotificationBanner({ variant }: PropsType) {
             labelClassesOverrides="font-semibold w-max"
           />
         )}
-        <div
+        <button
           className="cursor-pointer"
           title="close"
           onClick={removeNotification}
         >
-          <Icon source={CloseLine} className="h-12 w-12" />
-        </div>
+          <Icon source={CloseLine} className="h-9 w-9" />
+        </button>
       </div>
     </div>
   );

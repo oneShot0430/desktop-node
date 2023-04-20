@@ -3,6 +3,7 @@ import {
   Icon,
   PlayFill,
   InformationCircleLine,
+  PauseFill,
 } from '@_koii/koii-styleguide';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import React, {
@@ -19,8 +20,6 @@ import { useQueryClient } from 'react-query';
 
 import GearFill from 'assets/svgs/gear-fill.svg';
 import GearLine from 'assets/svgs/gear-line.svg';
-import PlayIcon from 'assets/svgs/play-icon.svg';
-import StopTealIcon from 'assets/svgs/stop-icon-teal.svg';
 import { RequirementTag, RequirementType } from 'models';
 import { RoundTime } from 'renderer/components/RoundTime';
 import {
@@ -49,8 +48,6 @@ import {
 } from 'renderer/services';
 import { Task } from 'renderer/types';
 import { getCreatedAtDate, getKoiiFromRoe } from 'utils';
-
-import { parseRoundTime } from '../../../utils';
 
 import { SuccessMessage } from './SuccessMessage';
 import { TaskInfo } from './TaskInfo';
@@ -166,6 +163,8 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     setIsTaskValidToRun(isTaskValid);
 
     const getErrorMessage = () => {
+      if (isRunning) return '';
+
       const conditions = [
         { condition: hasEnoughKoii, errorMessage: 'have enough KOII to stake' },
         {
@@ -203,6 +202,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     const errorMessage = getErrorMessage();
     setErrorMessage(errorMessage);
   }, [
+    isRunning,
     isTaskToolsValid,
     minStake,
     valueToStake,
@@ -244,24 +244,6 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     setValueToStake(value);
     setMeetsMinimumStake(value >= minStake);
   };
-
-  const parsedRoundTime = parseRoundTime(roundTime);
-
-  const getTaskPlayButtonIcon = useCallback(() => {
-    if (isRunning) {
-      return <StopTealIcon className="mt-px -mb-1" />;
-    }
-
-    return isTaskValidToRun ? (
-      <PlayIcon className="mt-1 -mb-1" />
-    ) : (
-      <Icon
-        source={PlayFill}
-        size={18}
-        className="cursor-not-allowed text-gray ml-4 my-4"
-      />
-    );
-  }, [isRunning, isTaskValidToRun]);
 
   const getTaskDetailsComponent = useCallback(() => {
     if (
@@ -313,7 +295,11 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     errorMessage || (isRunning ? 'Stop task' : 'Start task');
 
   return !startTaskSucceeded ? (
-    <TableRow columnsLayout={columnsLayout} className="py-2 gap-y-0" ref={ref}>
+    <TableRow
+      columnsLayout={columnsLayout}
+      className="py-2 gap-y-0 -mr-3"
+      ref={ref}
+    >
       <div>
         <Tooltip
           placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
@@ -357,10 +343,12 @@ function TaskItem({ task, index, columnsLayout }: Props) {
         <div>{`Top Stake: ${getKoiiFromRoe(topStake)}`}</div>
       </div>
 
-      <RoundTime
-        tooltipPlacement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
-        roundTime={roundTime}
-      />
+      <div className="-ml-1">
+        <RoundTime
+          tooltipPlacement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
+          roundTime={roundTime}
+        />
+      </div>
 
       <div>
         <EditStakeInput
@@ -373,28 +361,26 @@ function TaskItem({ task, index, columnsLayout }: Props) {
       </div>
 
       <div>
-        <div>
-          <Tooltip
-            placement={`${isFirstRowInTable ? 'bottom' : 'top'}-left`}
-            tooltipContent={gearTooltipContent}
-          >
-            <div className="flex flex-col items-center justify-start w-10">
-              <Button
-                onMouseDown={() => handleToggleView('settings')}
-                disabled={!globalAndTaskVariables?.length}
-                icon={
-                  <Icon source={GearIcon} size={36} className={gearIconColor} />
-                }
-                onlyIcon
-              />
-            </div>
-          </Tooltip>
-        </div>
+        <Tooltip
+          placement={`${isFirstRowInTable ? 'bottom' : 'top'}-left`}
+          tooltipContent={gearTooltipContent}
+        >
+          <div className="flex flex-col items-center justify-start w-10">
+            <Button
+              onMouseDown={() => handleToggleView('settings')}
+              disabled={!globalAndTaskVariables?.length}
+              icon={
+                <Icon source={GearIcon} size={36} className={gearIconColor} />
+              }
+              onlyIcon
+            />
+          </div>
+        </Tooltip>
       </div>
 
       <div>
         {loading ? (
-          <div className="pl-2 py-[0.57rem]">
+          <div className="py-[0.57rem]">
             <LoadingSpinner size={LoadingSpinnerSize.Large} />
           </div>
         ) : (
@@ -404,9 +390,19 @@ function TaskItem({ task, index, columnsLayout }: Props) {
           >
             <Button
               onlyIcon
-              icon={getTaskPlayButtonIcon()}
+              icon={
+                <Icon
+                  source={isRunning ? PauseFill : PlayFill}
+                  size={18}
+                  className={`ml-2 my-4 ${
+                    isTaskValidToRun || isRunning
+                      ? 'text-finnieTeal'
+                      : 'text-gray-500 cursor-not-allowed'
+                  }`}
+                />
+              }
               onClick={isRunning ? handleStopTask : handleStartTask}
-              disabled={!isTaskValidToRun}
+              disabled={!isRunning && !isTaskValidToRun}
             />
           </Tooltip>
         )}
