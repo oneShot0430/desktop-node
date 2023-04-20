@@ -290,3 +290,8 @@ export const switchNetwork = async () => {
 export const getNetworkUrl = async () => {
   return window.main.getNetworkUrl();
 };
+
+export const initializeTasks = async () => {
+  console.log('INITIALIZING TASKS');
+  return window.main.initializeTasks();
+};

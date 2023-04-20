@@ -18,9 +18,12 @@ export class KoiiTaskService {
   public STARTED_TASKS: IRunningTasks<ITaskNodeBase> = {};
 
   /**
-   * @todo: Running tasks should be fetched when node is initialised!
+   * @dev: this functions is preparing the Desktop Node to work in a few crucial steps:
+   * 1. Fetch all tasks from the Task program
+   * 2. Get the state of the tasks from the database
+   * 3. Watch for changes in the tasks
    */
-  async initializeTaskNode() {
+  async initializeTasks() {
     this.tasks = await fetchAllTasks({} as Event);
     await this.getTasksStateFromDb();
     this.watchTasks();

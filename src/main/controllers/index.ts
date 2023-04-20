@@ -28,6 +28,7 @@ export { default as withdrawStake } from './withdrawStake';
 export { default as getAccountBalance } from './getAccountBalance';
 export { switchNetwork } from './switchNetwork';
 export { getNetworkUrl } from './getNetworkUrl';
+export { initializeTasks } from './initializeTasks';
 export * from './taskVariables';
 
 export * from './types';

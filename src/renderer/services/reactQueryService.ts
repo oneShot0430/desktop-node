@@ -18,4 +18,5 @@ export enum QueryKeys {
   StoredTaskPairedTaskVariables = 'StoredTaskPairedTaskVariables',
   TaskMetadata = 'TaskMetadata',
   GetNetworkUrl = 'GetNetworkUrl',
+  NodeInitialized = 'NodeInitialized',
 }
