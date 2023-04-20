@@ -2,7 +2,7 @@ import { Event } from 'electron';
 
 import {
   ErrorType,
-  GetTaskPairedVariablesNamesWithValuesParamType,
+  GetPairedTaskVariableDataParamType,
   GetPairedTaskVariableDataReturnType,
 } from 'models';
 import { throwDetailedError } from 'utils';
@@ -13,7 +13,7 @@ import { getStoredPairedTaskVariables } from './getStoredPairedTaskVariables';
 import { getStoredTaskVariables } from './getStoredTaskVariables';
 
 export const getPairedTaskVariableData = async (
-  payload: GetTaskPairedVariablesNamesWithValuesParamType
+  payload: GetPairedTaskVariableDataParamType
 ): Promise<GetPairedTaskVariableDataReturnType> => {
   // payload validation
   if (!payload?.taskAccountPubKey) {
