@@ -92,24 +92,30 @@ export function Dropdown({
             leaveTo="opacity-0"
           >
             <Listbox.Options className="absolute z-50 w-full py-1 mt-1 overflow-auto text-base text-white rounded-md shadow-lg top-9 bg-purple-5 max-h-60 focus:outline-none sm:text-sm">
-              {items.map((item, itemIndex) => (
-                <Listbox.Option
-                  key={item?.id ?? itemIndex}
-                  className={({ active }) =>
-                    `relative cursor-default select-none ${
-                      active && 'bg-purple-1 text-finnieTeal-100'
-                    }`
-                  }
-                  value={item}
-                  disabled={item?.disabled}
-                >
-                  {({ selected }) => (
-                    <span className={getItemClasses(selected, item)}>
-                      {item?.label}
-                    </span>
-                  )}
-                </Listbox.Option>
-              ))}
+              {!items.length ? (
+                <div className="text-gray-500 cursor-not-allowed flex justify-center py-2">
+                  No items
+                </div>
+              ) : (
+                items.map((item) => (
+                  <Listbox.Option
+                    key={item.id}
+                    className={({ active }) =>
+                      `relative cursor-default select-none ${
+                        active && 'bg-purple-1 text-finnieTeal-100'
+                      }`
+                    }
+                    value={item}
+                    disabled={item.disabled}
+                  >
+                    {({ selected }) => (
+                      <span className={getItemClasses(selected, item)}>
+                        {item.label}
+                      </span>
+                    )}
+                  </Listbox.Option>
+                ))
+              )}
             </Listbox.Options>
           </Transition>
         </div>

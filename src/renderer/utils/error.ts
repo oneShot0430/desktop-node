@@ -77,4 +77,5 @@ export const errorTypeToContent = {
   [ErrorType.DUPLICATE_ACCOUNT]:
     'A wallet with the same mnemonic already exists',
   [ErrorType.NO_VALID_ACCOUNT_NAME]: '',
+  [ErrorType.NODE_INITIALIZATION_FAILED]: '',
 };

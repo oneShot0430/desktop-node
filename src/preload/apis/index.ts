@@ -20,6 +20,7 @@ import getTasksById from './getTasksById';
 import getTaskSource from './getTaskSource';
 import getTaskVariablesNames from './getTaskVariablesNames';
 import getUserConfig from './getUserConfig';
+import initializeTasks from './initializeTasks';
 import openBrowserWindow from './openBrowserWindow';
 import removeAccountByName from './removeAccountByName';
 import setActiveAccount from './setActiveAccount';
@@ -76,4 +77,5 @@ export default {
   getAccountBalance,
   switchNetwork,
   getNetworkUrl,
+  initializeTasks,
 };

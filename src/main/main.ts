@@ -5,8 +5,6 @@ import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 
 import initHandlers from './initHandlers';
-import { loadAndExecuteTasks } from './node';
-import koiiTasks from './services/koiiTasks';
 import { resolveHtmlPath } from './util';
 
 class AppUpdater {
@@ -99,9 +97,6 @@ const createWindow = async () => {
         if (!mainWindow) {
           throw new Error('"mainWindow" is not defined');
         }
-
-        await koiiTasks.initializeTaskNode();
-        await loadAndExecuteTasks();
 
         if (process.env.START_MINIMIZED) {
           mainWindow.minimize();

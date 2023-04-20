@@ -181,3 +181,19 @@ input[type='number'] {
 .dot:nth-child(3) {
   animation-delay: -0.66s;
 }
+
+.progress-bar {
+  animation-name: progress;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes progress {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
