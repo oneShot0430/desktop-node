@@ -1,6 +1,8 @@
+import { GetTaskPairedVariablesNamesWithValuesParamType } from './getTaskPairedVariablesNamesWithValues';
 import { TaskPairing, TaskVariables } from './types';
 
-export { GetTaskPairedVariablesNamesWithValuesParamType as GetPairedTaskVariableDataParamType } from './getTaskPairedVariablesNamesWithValues';
+export type GetPairedTaskVariableDataParamType =
+  GetTaskPairedVariablesNamesWithValuesParamType;
 export type GetPairedTaskVariableDataReturnType = {
   taskPairings: TaskPairing;
   taskVariables: TaskVariables;
