@@ -343,14 +343,14 @@ function TaskItem({ task, index, columnsLayout }: Props) {
         <div>{`Top Stake: ${getKoiiFromRoe(topStake)}`}</div>
       </div>
 
-      <div className="-ml-1">
+      <div className="-ml-2.5 lg:ml-0">
         <RoundTime
           tooltipPlacement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
           roundTime={roundTime}
         />
       </div>
 
-      <div>
+      <div className="-ml-2.5 lg:ml-0 xl:ml-1.5">
         <EditStakeInput
           meetsMinimumStake={meetsMinimumStake}
           stake={alreadyStakedTokensAmount || valueToStake}
@@ -360,7 +360,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
         />
       </div>
 
-      <div>
+      <div className="-ml-2.5 lg:ml-0 xl:ml-1.5">
         <Tooltip
           placement={`${isFirstRowInTable ? 'bottom' : 'top'}-left`}
           tooltipContent={gearTooltipContent}
@@ -378,7 +378,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
         </Tooltip>
       </div>
 
-      <div>
+      <div className="-ml-2.5 lg:ml-0 xl:ml-1.5">
         {loading ? (
           <div className="py-[0.57rem]">
             <LoadingSpinner size={LoadingSpinnerSize.Large} />
@@ -394,7 +394,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
                 <Icon
                   source={isRunning ? PauseFill : PlayFill}
                   size={18}
-                  className={`ml-2 my-4 ${
+                  className={`w-full flex my-4 ${
                     isTaskValidToRun || isRunning
                       ? 'text-finnieTeal'
                       : 'text-gray-500 cursor-not-allowed'
