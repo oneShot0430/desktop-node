@@ -1,4 +1,3 @@
-import { sum } from 'lodash';
 import {
   Task as TaskRaw,
   FetchAllTasksParam,
@@ -259,8 +258,9 @@ export const claimTaskReward = async (taskAccountPubKey: string) => {
 };
 
 export const claimRewards = async (): Promise<number> => {
+  const stakingAccountPublicKey = await getStakingAccountPublicKey();
   const getPendingRewardsByTask = (task: Task) =>
-    sum(Object.values(task.availableBalances));
+    task.availableBalances[stakingAccountPublicKey];
   // we keep it as an array for now to have handy not only the rewards themselves but also the number of tasks
   const rewardsNotClaimedByTask: number[] = [];
   const tasks = await fetchMyTasks({ limit: Infinity, offset: 0 });

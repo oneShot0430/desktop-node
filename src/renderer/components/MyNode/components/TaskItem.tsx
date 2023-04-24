@@ -210,6 +210,7 @@ export function TaskItem({
             </div>
           ) : (
             <TaskInfo
+              publicKey={task.publicKey}
               variables={pairedVariables}
               info={metadata}
               shouldDisplayToolsInUse

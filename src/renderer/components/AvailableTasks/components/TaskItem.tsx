@@ -254,7 +254,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     }
 
     if (accordionView === 'info') {
-      return <TaskInfo info={metadata} />;
+      return <TaskInfo publicKey={task.publicKey} info={metadata} />;
     }
 
     if (accordionView === 'settings') {

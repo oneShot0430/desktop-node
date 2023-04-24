@@ -20,13 +20,13 @@ export function TaskSettings({
 }: PropsType) {
   return (
     <div className="flex flex-col w-full">
-      <div className="flex gap-1 mb-4 text-sm font-semibold">
+      <div className="flex gap-2 mb-4 text-xs font-semibold items-center">
         CONFIGURE YOUR TASK SETTINGS
         <Tooltip
           placement="right"
           tooltipContent="Task settings are additional integrations from other tools necessary to run the task"
         >
-          <Icon size={14} source={TooltipChatQuestionLeftLine} />
+          <Icon size={20} source={TooltipChatQuestionLeftLine} />
         </Tooltip>
       </div>
 
