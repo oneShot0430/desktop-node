@@ -5,6 +5,7 @@ import { RequirementType, TaskMetadata } from 'models/task';
 import { SourceCodeButton } from 'renderer/components/SourceCodeButton';
 
 type PropsType = {
+  publicKey: string;
   info?: TaskMetadata;
   variables?: TaskPairing[];
   shouldDisplayToolsInUse?: boolean;
@@ -13,6 +14,7 @@ type PropsType = {
 const NOT_AVAILABLE = 'N/A';
 
 export function TaskInfo({
+  publicKey,
   info,
   variables,
   shouldDisplayToolsInUse,
@@ -29,14 +31,19 @@ export function TaskInfo({
   );
 
   return (
-    <div className="flex flex-col w-full pr-3">
+    <div className="flex flex-col w-full pl-3 pr-5 gap-4">
       <div>
-        <div className="mb-3 text-base font-semibold">Task description:</div>
+        <div className="mb-2 text-base font-semibold">Task ID:</div>
         <div className="flex justify-between gap-16 mb-4">
-          <p>{info?.description ?? NOT_AVAILABLE}</p>
-
-          <SourceCodeButton repositoryUrl={info?.repositoryUrl || ''} />
+          <p>{publicKey}</p>
+          <div className="-mt-8">
+            <SourceCodeButton repositoryUrl={info?.repositoryUrl || ''} />
+          </div>
         </div>
+      </div>
+      <div className="-mt-8">
+        <div className="mb-2 text-base font-semibold">Task description:</div>
+        <p className="mb-4">{info?.description ?? NOT_AVAILABLE}</p>
       </div>
       <div className="mb-6 w-full">
         <div className="mb-2 text-base font-semibold">Node Specifications:</div>

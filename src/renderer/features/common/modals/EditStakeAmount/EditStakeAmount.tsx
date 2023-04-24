@@ -2,6 +2,7 @@ import { create, useModal } from '@ebay/nice-modal-react';
 import React, { useCallback, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
+import { GetTaskNodeInfoResponse } from 'models';
 import { Button } from 'renderer/components/ui';
 import { Modal, ModalContent, ModalTopBar } from 'renderer/features/modals';
 import {
@@ -38,7 +39,6 @@ type PropsType = {
 export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
   task,
 }) {
-  const queryCache = useQueryClient();
   const { taskName, taskManager, publicKey } = task;
   const queryClient = useQueryClient();
   const modal = useModal();
@@ -61,53 +61,29 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
         await queryClient.cancelQueries({
           queryKey: [QueryKeys.TaskStake, publicKey],
         });
+      },
 
-        const previousStakeAmount = queryClient.getQueryData([
-          QueryKeys.TaskStake,
-          publicKey,
-        ]);
-
-        const previousNodeInfo = queryClient.getQueryData([
-          QueryKeys.taskNodeInfo,
-        ]);
-
+      onSuccess: () => {
         queryClient.setQueryData(
           [QueryKeys.TaskStake, publicKey],
-          // TODO: Get rid on `any`
-          (oldStakeAmount: any) => {
-            const totalStake = stakeAmount + oldStakeAmount;
+          (oldStakeAmount?: number) => {
+            const totalStake = (oldStakeAmount || 0) + (stakeAmount || 0);
             return totalStake;
           }
         );
 
-        queryClient.setQueryData(
+        queryClient.setQueryData<GetTaskNodeInfoResponse>(
           [QueryKeys.taskNodeInfo],
-          // TODO: Get rid on `any`
-          (oldNodeData: any) => {
+          (oldNodeData?: GetTaskNodeInfoResponse) => {
             const newNodeInfodata = {
-              ...oldNodeData,
-              totalStaked: oldNodeData.totalStaked + stakeAmount,
-              totalKOII: oldNodeData.totalKOII - (stakeAmount as number),
+              totalKOII: (oldNodeData?.totalKOII || 0) - (stakeAmount || 0),
+              totalStaked: (oldNodeData?.totalStaked || 0) + (stakeAmount || 0),
+              pendingRewards: oldNodeData?.pendingRewards || 0,
             };
 
             return newNodeInfodata;
           }
         );
-
-        return { previousStakeAmount, previousNodeInfo };
-      },
-
-      onError: (_err, _newData, context) => {
-        if (context) {
-          queryClient.setQueryData(
-            [QueryKeys.TaskStake, publicKey],
-            context.previousStakeAmount
-          );
-          queryClient.setQueryData(
-            [QueryKeys.taskNodeInfo],
-            context.previousNodeInfo
-          );
-        }
       },
     }
   );
@@ -117,16 +93,9 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
       await queryClient.cancelQueries({
         queryKey: [QueryKeys.TaskStake, publicKey],
       });
+    },
 
-      const previousStakeAmount = queryClient.getQueryData([
-        QueryKeys.TaskStake,
-        publicKey,
-      ]);
-
-      const previousNodeInfo = queryClient.getQueryData([
-        QueryKeys.taskNodeInfo,
-      ]);
-
+    onSuccess: () => {
       queryClient.setQueryData([QueryKeys.TaskStake, publicKey], () => {
         /**
          * @dev
@@ -134,31 +103,19 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
          */
         return 0;
       });
-      // TODO: Get rid on `any`
-      queryClient.setQueryData([QueryKeys.taskNodeInfo], (oldNodeData: any) => {
-        const newNodeInfodata = {
-          ...oldNodeData,
-          totalStaked: oldNodeData.totalStaked - taskStake,
-          pendingRewards: oldNodeData.pendingRewards + taskStake,
-        };
+      queryClient.setQueryData(
+        [QueryKeys.taskNodeInfo],
+        (oldNodeData?: GetTaskNodeInfoResponse) => {
+          const newNodeInfodata = {
+            totalKOII: oldNodeData?.totalKOII || 0,
+            totalStaked: (oldNodeData?.totalStaked || 0) - (taskStake || 0),
+            pendingRewards:
+              (oldNodeData?.pendingRewards || 0) + (taskStake || 0),
+          };
 
-        return newNodeInfodata;
-      });
-
-      return { previousStakeAmount, previousNodeInfo };
-    },
-
-    onError: (err, newData, context) => {
-      if (context) {
-        queryClient.setQueryData(
-          [QueryKeys.TaskStake, publicKey],
-          context.previousStakeAmount
-        );
-        queryClient.setQueryData(
-          [QueryKeys.taskNodeInfo],
-          context.previousNodeInfo
-        );
-      }
+          return newNodeInfodata;
+        }
+      );
     },
   });
 
@@ -180,12 +137,10 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
 
   const handleAddStakeSuccess = () => {
     setView(View.StakeSuccess);
-    queryCache.invalidateQueries([QueryKeys.taskNodeInfo]);
   };
 
   const handleWithdrawStakeSuccess = () => {
     setView(View.WithdrawSuccess);
-    queryCache.invalidateQueries([QueryKeys.taskNodeInfo]);
   };
 
   const getTitle = useCallback(() => {
