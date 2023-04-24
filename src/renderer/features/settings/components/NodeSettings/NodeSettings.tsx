@@ -7,7 +7,8 @@ import { QueryKeys, getNetworkUrl, switchNetwork } from 'renderer/services';
 
 import { SettingSwitch } from './SettingSwitch';
 
-const lastCommitSha = process.env.COMMIT_SHA;
+const lastCommitSha =
+  (typeof process !== 'undefined' && process.env.COMMIT_SHA) || '';
 
 export function NodeSettings() {
   const [hasFlippedSwitch, setHasFlippedSwitch] = useState(false);
