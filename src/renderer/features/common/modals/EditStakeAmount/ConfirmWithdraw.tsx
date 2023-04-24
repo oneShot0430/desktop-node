@@ -32,7 +32,7 @@ export function ConfirmWithdraw({
   };
   return (
     <div className="flex flex-col items-center justify-center pt-10 text-finnieBlue-dark">
-      <div className="mb-3">Confirm the withdrawal amount::</div>
+      <div className="mb-3">Confirm the withdrawal amount:</div>
       <div className="text-4xl text-center text-finnieBlue-dark">
         {withdrawAmount} KOII
       </div>
