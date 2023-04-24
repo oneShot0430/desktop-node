@@ -2,14 +2,14 @@ variables:
   USE_HARD_LINKS: 'false'
   FF_USE_FASTZIP: 'true'
   TRANSFER_METER_FREQUENCY: 2s
-  ARTIFACT_COMPRESSION_LEVEL: "fastest"
-  CACHE_COMPRESSION_LEVEL: "fastest"
+  ARTIFACT_COMPRESSION_LEVEL: 'fastest'
+  CACHE_COMPRESSION_LEVEL: 'fastest'
   DOCKER_DRIVER: overlay2
 
 # Windows runners
 .koii-windows-runner:
   tags:
-  - koii-desktop-node-runner
+    - koii-desktop-node-runner
 
 stages:
   - prepare
@@ -130,6 +130,8 @@ stages:
         - node_modules/
         - release/app/node_modules/
         - src/node_modules/
+  before_script:
+    - echo "COMMIT_SHA=${CI_COMMIT_SHORT_SHA::8}" >> ".env"
 
 ####################################################################################################
 ######################################## PREPARE ###################################################
