@@ -92,13 +92,15 @@ export const AccountItem = memo(
     const error = removingAccountError || setAccountActiveError;
     const rowClasses = `rounded ${
       isDefault ? 'bg-finnieTeal-100/[.3]' : 'bg-finnieTeal-100'
-    } bg-opacity-5 grid grid-cols-accounts gap-y-6 gap-x-2 !py-4 border-none`;
+    } bg-opacity-5 grid grid-cols-accounts gap-y-6 !py-4 border-none`;
     const StarIcon = isDefault ? FavoriteStarFill : FavoriteStarLine;
     const accountBalanceInKoii = getKoiiFromRoe(accountBalance);
 
     return (
       <div className="w-full mb-4 pr-2 text-white">
-        <div className="pb-2 pl-[7%] text-xl font-semibold">{accountName}</div>
+        <div className="pb-2 pl-[5.5%] text-xl font-semibold">
+          {accountName}
+        </div>
         {error && <ErrorMessage error={error} />}
 
         <TableRow columnsLayout={columnsLayout} className={rowClasses}>

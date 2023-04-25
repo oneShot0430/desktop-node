@@ -295,11 +295,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     errorMessage || (isRunning ? 'Stop task' : 'Start task');
 
   return !startTaskSucceeded ? (
-    <TableRow
-      columnsLayout={columnsLayout}
-      className="py-2 gap-y-0 -mr-3"
-      ref={ref}
-    >
+    <TableRow columnsLayout={columnsLayout} className="py-2 gap-y-0" ref={ref}>
       <div>
         <Tooltip
           placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
@@ -322,13 +318,13 @@ function TaskItem({ task, index, columnsLayout }: Props) {
         </Tooltip>
       </div>
 
-      <div className="flex flex-col gap-2 text-xs">
+      <div className="flex flex-col gap-2 text-xs justify-self-start">
         <div>{taskName}</div>
         <div className="text-finnieTeal">{createdAt}</div>
       </div>
 
       <div
-        className="flex flex-col gap-2 text-xs min-w-[160px]"
+        className="flex flex-col gap-2 text-xs min-w-[160px] w-full justify-self-start"
         title={taskManager}
       >
         <div className="truncate">{`Creator: ${task.taskManager}`}</div>
@@ -343,74 +339,68 @@ function TaskItem({ task, index, columnsLayout }: Props) {
         <div>{`Top Stake: ${getKoiiFromRoe(topStake)}`}</div>
       </div>
 
-      <div className="-ml-2.5 lg:ml-0">
-        <RoundTime
-          tooltipPlacement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
-          roundTime={roundTime}
-        />
-      </div>
+      <RoundTime
+        tooltipPlacement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
+        roundTime={roundTime}
+      />
 
-      <div className="-ml-2.5 lg:ml-0 xl:ml-1.5">
-        <EditStakeInput
-          meetsMinimumStake={meetsMinimumStake}
-          stake={alreadyStakedTokensAmount || valueToStake}
-          minStake={minStake as number}
-          onChange={handleStakeValueChange}
-          disabled={isEditStakeInputDisabled}
-        />
-      </div>
+      <EditStakeInput
+        meetsMinimumStake={meetsMinimumStake}
+        stake={alreadyStakedTokensAmount || valueToStake}
+        minStake={minStake as number}
+        onChange={handleStakeValueChange}
+        disabled={isEditStakeInputDisabled}
+      />
 
-      <div className="-ml-2.5 lg:ml-0 xl:ml-1.5">
+      <Tooltip
+        placement={`${isFirstRowInTable ? 'bottom' : 'top'}-left`}
+        tooltipContent={gearTooltipContent}
+      >
+        <div className="flex flex-col items-center justify-start w-10">
+          <Button
+            onMouseDown={() => handleToggleView('settings')}
+            disabled={!globalAndTaskVariables?.length}
+            icon={
+              <Icon source={GearIcon} size={36} className={gearIconColor} />
+            }
+            onlyIcon
+          />
+        </div>
+      </Tooltip>
+
+      {loading ? (
+        <div className="py-[0.57rem]">
+          <LoadingSpinner size={LoadingSpinnerSize.Large} />
+        </div>
+      ) : (
         <Tooltip
           placement={`${isFirstRowInTable ? 'bottom' : 'top'}-left`}
-          tooltipContent={gearTooltipContent}
+          tooltipContent={runButtonTooltipContent}
         >
-          <div className="flex flex-col items-center justify-start w-10">
-            <Button
-              onMouseDown={() => handleToggleView('settings')}
-              disabled={!globalAndTaskVariables?.length}
-              icon={
-                <Icon source={GearIcon} size={36} className={gearIconColor} />
-              }
-              onlyIcon
-            />
-          </div>
+          <Button
+            onlyIcon
+            icon={
+              <Icon
+                source={isRunning ? PauseFill : PlayFill}
+                size={18}
+                className={`w-full flex my-4 ${
+                  isTaskValidToRun || isRunning
+                    ? 'text-finnieTeal'
+                    : 'text-gray-500 cursor-not-allowed'
+                }`}
+              />
+            }
+            onClick={isRunning ? handleStopTask : handleStartTask}
+            disabled={!isRunning && !isTaskValidToRun}
+          />
         </Tooltip>
-      </div>
-
-      <div className="-ml-2.5 lg:ml-0 xl:ml-1.5">
-        {loading ? (
-          <div className="py-[0.57rem]">
-            <LoadingSpinner size={LoadingSpinnerSize.Large} />
-          </div>
-        ) : (
-          <Tooltip
-            placement={`${isFirstRowInTable ? 'bottom' : 'top'}-left`}
-            tooltipContent={runButtonTooltipContent}
-          >
-            <Button
-              onlyIcon
-              icon={
-                <Icon
-                  source={isRunning ? PauseFill : PlayFill}
-                  size={18}
-                  className={`w-full flex my-4 ${
-                    isTaskValidToRun || isRunning
-                      ? 'text-finnieTeal'
-                      : 'text-gray-500 cursor-not-allowed'
-                  }`}
-                />
-              }
-              onClick={isRunning ? handleStopTask : handleStartTask}
-              disabled={!isRunning && !isTaskValidToRun}
-            />
-          </Tooltip>
-        )}
-      </div>
+      )}
 
       <div
-        className={`w-full col-span-9 max-h-[360px] overflow-y-auto ${
-          accordionView !== null ? 'opacity-1 pt-6' : 'opacity-0'
+        className={`w-full col-span-9 overflow-y-auto ${
+          accordionView !== null
+            ? 'opacity-1 pt-6 max-h-[360px]'
+            : 'opacity-0 max-h-0'
         } transition-all duration-500 ease-in-out`}
       >
         <div ref={parent} className="flex w-full">

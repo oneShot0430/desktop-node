@@ -11,7 +11,7 @@ import TaskItem from './components/TaskItem';
 
 const tableHeaders = [
   { title: 'Info' },
-  { title: 'Task Name & Start Time' },
+  { title: 'Task Name & Start Time', alignLeft: true },
   { title: '' },
   { title: '' },
   { title: 'Round' },
@@ -20,7 +20,7 @@ const tableHeaders = [
   { title: 'Run Task' },
 ];
 
-const columnsLayout = 'grid-cols-available-tasks';
+const columnsLayout = 'grid-cols-available-tasks place-items-center';
 const pageSize = 10;
 
 export function AvailableTasks() {

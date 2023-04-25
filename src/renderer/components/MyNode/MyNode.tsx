@@ -12,10 +12,10 @@ import { Task } from 'renderer/types';
 import { TaskItem } from './components/TaskItem';
 
 const tableHeaders = [
-  { title: 'Start/Stop' },
+  { title: 'Start / Stop' },
   { title: 'Info' },
-  { title: 'Task Name & Start Time' },
-  { title: 'Creator' },
+  { title: 'Task Name & Start Time', alignLeft: true },
+  { title: 'Creator', alignLeft: true },
   {
     title: 'Earned',
     tooltip: 'Total KOII earned for running this Task',
@@ -23,10 +23,10 @@ const tableHeaders = [
   { title: 'Stake' },
   { title: 'Round' },
   { title: 'Status' },
-  { title: 'Add/Withdraw' },
+  { title: 'Add / Withdraw' },
 ];
 
-const columnsLayout = 'grid-cols-my-node';
+const columnsLayout = 'grid-cols-my-node place-items-center';
 const pageSize = 10;
 
 export function MyNode() {

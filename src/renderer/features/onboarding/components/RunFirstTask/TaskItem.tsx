@@ -40,7 +40,7 @@ function TaskItem({
         {creator}
       </div>
 
-      <div className="col-span-5 col-start-13 2xl:col-start-15 2xl:col-span-3">
+      <div className="col-span-5 col-start-13 2xl:col-start-15 2xl:col-span-3 mt-1">
         <EditStakeInput
           stake={stakeValue}
           onChange={handleStakeInputChange}
@@ -49,13 +49,16 @@ function TaskItem({
         />
       </div>
 
-      <div className="m-auto cursor-pointer text-finnieRed" onClick={onRemove}>
+      <button
+        className="m-auto cursor-pointer text-finnieRed"
+        onClick={onRemove}
+      >
         <Tooltip placement="top-left" tooltipContent="Remove task">
           <div className="w-6 mr-2">
             <CloseIcon />
           </div>
         </Tooltip>
-      </div>
+      </button>
     </div>
   );
 }
