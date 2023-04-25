@@ -41,7 +41,7 @@ function RunFirstTask() {
           <div className="mb-2 text-xs text-left w-full grid grid-cols-first-task">
             <div className="col-start-2 col-span-5">Task Name</div>
             <div className="col-span-6">Creator</div>
-            <div className="col-start-13 col-span-5 2xl:col-start-15 2xl:col-span-3">
+            <div className="col-start-13 col-span-5 2xl:col-start-15 2xl:col-span-3 ml-7">
               Stake
             </div>
           </div>

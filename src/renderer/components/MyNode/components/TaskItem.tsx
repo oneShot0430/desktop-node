@@ -109,6 +109,7 @@ export function TaskItem({
     <TableRow
       columnsLayout={columnsLayout}
       className={`py-2.5 gap-y-0 ${!isRunning ? 'bg-[#FFEE81]/20' : ''}`}
+      ref={ref}
     >
       <div>
         {loading ? (
@@ -157,11 +158,14 @@ export function TaskItem({
         </Tooltip>
       </div>
 
-      <div className="text-xs flex flex-col gap-1">
+      <div className="text-xs flex flex-col gap-1 justify-self-start ">
         <div>{taskName}</div>
         <div className="text-finnieTeal">{createdAt}</div>
       </div>
-      <div className="overflow-hidden text-ellipsis pr-8" title={taskManager}>
+      <div
+        className="overflow-hidden text-ellipsis w-full justify-self-start"
+        title={taskManager}
+      >
         {taskManager}
       </div>
       <div>{earnedRewardInKoii}</div>

@@ -10,7 +10,7 @@ interface Props {
 
 export const TableRow = forwardRef<HTMLDivElement, Props>(
   ({ children, columnsLayout, className = '' }, ref) => {
-    const classes = `grid gap-4 text-white items-center text-sm border-white border-b align-middle items-center  ${className} ${columnsLayout}`;
+    const classes = `grid text-white items-center text-sm border-white border-b align-middle items-center  ${className} ${columnsLayout}`;
 
     return (
       <div ref={ref} className={classes}>
