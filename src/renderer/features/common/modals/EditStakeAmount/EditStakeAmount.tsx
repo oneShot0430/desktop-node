@@ -167,7 +167,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
   const showBackButton = view !== View.SelectAction;
   const title = getTitle();
 
-  // const earnedRewardInKoii = getKoiiFromRoe(taskEarnedReward as number);
+  const earnedRewardInKoii = getKoiiFromRoe(taskEarnedReward as number);
   const myStakeInKoii = getKoiiFromRoe(taskStake);
 
   return (
@@ -238,7 +238,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
 
             <div className="flex flex-col justify-center mb-[40px] text-base">
               <p>
-                {`You’ve earned ${taskEarnedReward} KOII by staking ${myStakeInKoii} tokens on this task.`}
+                {`You’ve earned ${earnedRewardInKoii} KOII by staking ${myStakeInKoii} tokens on this task.`}
               </p>
               <p>You can withdraw your stake or add more now.</p>
             </div>
