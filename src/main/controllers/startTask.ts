@@ -1,6 +1,7 @@
-import { ChildProcess, fork, ForkOptions } from 'child_process';
+import { fork, ForkOptions } from 'child_process';
 import { Event } from 'electron';
 import * as fsSync from 'fs';
+import { Transform } from 'stream';
 
 import { PublicKey, Keypair } from '@_koi/web3.js';
 import { DEFAULT_K2_NETWORK_URL } from 'config/node';
@@ -21,11 +22,18 @@ import getStakingAccountPublicKey from './getStakingAccountPubKey';
 import { getTaskSource } from './getTaskSource';
 import { getTaskPairedVariablesNamesWithValues } from './taskVariables';
 
-// eslint-disable-next-line
-const bufferlayout = require('buffer-layout');
 const OPERATION_MODE = 'service';
 let LAST_USED_PORT = 10000;
-
+const logTimestampFormat: DateTimeFormatOptions = {
+  weekday: 'short',
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+  hour: 'numeric',
+  minute: 'numeric',
+  second: 'numeric',
+  hour12: true,
+};
 const startTask = async (_: Event, payload: TaskStartStopParam) => {
   const { taskAccountPubKey } = payload;
 
@@ -59,32 +67,6 @@ const startTask = async (_: Event, payload: TaskStartStopParam) => {
       expressAppPort,
       secret
     );
-
-    // koiiTasks.runTimers();
-
-    // const taskSrc = await loadTaskSource(
-    //   src,
-    //   new Namespace(
-    //     taskAccountPubKey,
-    //     expressApp,
-    //     OPERATION_MODE,
-    //     mainSystemAccount,
-    //     {
-    //       task_id: taskInfo.publicKey,
-    //       task_name: taskInfo.data.taskName,
-    //       task_manager: taskInfo.data.taskManager,
-    //       task_audit_program: taskInfo.data.taskAuditProgram,
-    //       stake_pot_account: taskInfo.data.stakePotAccount,
-    //       bounty_amount_per_round: taskInfo.data.bountyAmountPerRound,
-    //     }
-    //   )
-    // );
-    // console.log('SETTING UP TASK');
-    // await taskSrc.setup();
-    // console.log('STARTING EXECUTING TASK');
-    // const cronArray = await taskSrc.execute();
-    // console.log('CRON ARRAY', cronArray);
-    // await koiiTasks.taskStarted(taskAccountPubKey, cronArray);
   } catch (err) {
     console.error('ERR-:', err);
     throw new Error(err as string);
@@ -156,8 +138,36 @@ async function executeTasks(
     ],
     options
   );
-  childTaskProcess.stdout?.pipe(logFile);
-  childTaskProcess.stderr?.pipe(logFile);
+  childTaskProcess.stdout
+    ?.pipe(
+      new Transform({
+        transform(data, encoding, callback) {
+          const timestamp = new Date().toLocaleString(
+            'en-US',
+            logTimestampFormat
+          );
+          const message = `[${timestamp}] ${data.toString()}`;
+          this.push(message);
+          callback();
+        },
+      })
+    )
+    .pipe(logFile);
+  childTaskProcess.stderr
+    ?.pipe(
+      new Transform({
+        transform(data, encoding, callback) {
+          const timestamp = new Date().toLocaleString(
+            'en-US',
+            logTimestampFormat
+          );
+          const message = `[${timestamp}] ERROR: ${data.toString()}`;
+          this.push(message);
+          callback();
+        },
+      })
+    )
+    .pipe(logFile);
   childTaskProcess.on('error', (err) => {
     console.error('Error starting child process:', err);
   });
@@ -198,71 +208,6 @@ async function executeTasks(
   };
 }
 
-// const loadTaskSource = async (src: string, namespace: Namespace) => {
-//   // TODO: change below path to /var/log/namespace.task_id
-//   // await fsPromises
-//   //   .mkdir(`namespace/${namespace.taskData.task_id}`, { recursive: true })
-//   //   .catch(console.error);
-//   // const log_file = fsSync.createWriteStream(
-//   //   `namespace/${namespace.taskData.task_id}/task.log`,
-//   //   { flags: 'w' }
-//   // );
-//   // const logger = {
-//   //   log: (...d: any) => {
-//   //     log_file.write(util.format(...d) + '\n');
-//   //   },
-//   //   error: (...d: any) => {
-//   //     log_file.write('ERROR: {' + util.format(...d) + '}\n');
-//   //   },
-//   // };
-//   // const loadedTask = new Function(`
-//   //     const [namespace, require, logger] = arguments;
-//   //     const console = logger;
-//   //     ${src};
-//   //     return {setup, execute};
-//   //   `);
-
-//   // /*
-
-//   //   */
-//   // const _require = (module: string) => {
-//   //   switch (module) {
-//   //     case 'arweave':
-//   //       return Arweave;
-//   //     case 'axios':
-//   //       return axios;
-//   //     case '@_koi/web3.js':
-//   //       return web3;
-//   //     case 'crypto':
-//   //       return () => {
-//   //         /* */
-//   //       };
-//   //     case 'tweetnacl':
-//   //       return nacl;
-//   //     case 'bs58':
-//   //       return bs58;
-//   //     case 'node-cron':
-//   //       return cron;
-//   //     case 'bodyParser':
-//   //       return bodyParser;
-//   //     case 'bufferlayout':
-//   //       return bufferlayout;
-//   //     case 'dotenv':
-//   //       return dotenv;
-//   //     case 'smartweave':
-//   //       return smartweave;
-//   //     case 'base64':
-//   //       return base64;
-//   //     case 'cheerio':
-//   //       return cheerio;
-//   //     case 'puppeteer':
-//   //       return puppeteer;
-//   //   }
-//   // };
-
-//   // TODO: Instead of passing require change to _require and allow only selected node modules
-//   // return loadedTask(namespace, _require, logger);
-// };
 interface ISelectedTasks {
   taskName: string;
   taskId: string;
@@ -272,13 +217,27 @@ interface ISelectedTasks {
   bountyAmountPerRound?: number;
   stakeList?: any;
 }
-interface IRunningTasks {
-  [key: string]: {
-    namespace: Namespace;
-    child: ChildProcess;
-    expressAppPort: number;
-    secret: string;
-  };
+interface DateTimeFormatOptions {
+  localeMatcher?: 'best fit' | 'lookup' | undefined;
+  weekday?: 'long' | 'short' | 'narrow' | undefined;
+  era?: 'long' | 'short' | 'narrow' | undefined;
+  year?: 'numeric' | '2-digit' | undefined;
+  month?: 'numeric' | '2-digit' | 'long' | 'short' | 'narrow' | undefined;
+  day?: 'numeric' | '2-digit' | undefined;
+  hour?: 'numeric' | '2-digit' | undefined;
+  minute?: 'numeric' | '2-digit' | undefined;
+  second?: 'numeric' | '2-digit' | undefined;
+  timeZoneName?:
+    | 'short'
+    | 'long'
+    | 'shortOffset'
+    | 'longOffset'
+    | 'shortGeneric'
+    | 'longGeneric'
+    | undefined;
+  formatMatcher?: 'best fit' | 'basic' | undefined;
+  hour12?: boolean | undefined;
+  timeZone?: string | undefined;
 }
 
 export default startTask;
