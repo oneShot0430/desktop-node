@@ -180,6 +180,7 @@ async function executeTasks(
     } else {
       console.log('Child process exited successfully');
     }
+    koiiTasks.taskStopped(selectedTask.taskId);
   });
   const namespace = new Namespace({
     taskTxId: selectedTask.taskId,
