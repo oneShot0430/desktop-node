@@ -1,4 +1,7 @@
-import React, { useEffect, useMemo } from 'react';
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+import { AddLine, Icon } from '@_koii/koii-styleguide';
+import React, { RefObject, useEffect, useMemo } from 'react';
 
 import { Dropdown, DropdownItem } from 'renderer/components/ui';
 
@@ -8,6 +11,9 @@ type PropsType = {
   tool: string;
   description?: string;
   defaultVariableId?: string;
+  onOpenAddTaskVariableModal: (
+    dropdownRef: RefObject<HTMLButtonElement>
+  ) => void;
   onSecretSelected?: (tool: string, desktopVariableId: string) => void;
   onInit?: (tool: string, desktopVariableId: string) => void;
 };
@@ -18,7 +24,9 @@ export function NodeTool({
   onSecretSelected,
   defaultVariableId,
   onInit,
+  onOpenAddTaskVariableModal,
 }: PropsType) {
+  const dropdownRef = React.useRef<HTMLButtonElement>(null);
   const { storedTaskVariablesQuery } = useStoredTaskVariables();
   const { data: taskVariables, isLoading } = storedTaskVariablesQuery;
 
@@ -62,8 +70,20 @@ export function NodeTool({
       </div>
       <div className="flex items-start gap-3 pt-[2px]">
         <Dropdown
+          ref={dropdownRef}
           defaultValue={defaultValue}
           items={dropdownItems}
+          emptyListItemSlot={
+            <div>
+              <div
+                className="flex justify-start pl-3 py-2 items-center text-green-2 gap-2 curs w-fit cursor-pointer"
+                onClick={() => onOpenAddTaskVariableModal(dropdownRef)}
+              >
+                <Icon source={AddLine} size={18} />
+                <span>Add New</span>
+              </div>
+            </div>
+          }
           /**
            * @dev
            * We don't need to show the validation error here yet, because we don't have

@@ -6,7 +6,7 @@ import {
   CloseLine,
   Icon,
 } from '@_koii/koii-styleguide';
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, RefObject } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { useMutation } from 'react-query';
 
@@ -28,6 +28,9 @@ type PropsType = {
   onToolsValidation?: (isValid: boolean) => void;
   tools?: RequirementTag[];
   onPairingSuccess: () => void;
+  onOpenAddTaskVariableModal: (
+    dropdownRef: RefObject<HTMLButtonElement>
+  ) => void;
 };
 
 export function NodeTools({
@@ -35,6 +38,7 @@ export function NodeTools({
   onToolsValidation,
   tools,
   onPairingSuccess,
+  onOpenAddTaskVariableModal,
 }: PropsType) {
   const [isAllVariablesPaired, setIsAllVariablesPaired] = useState(false);
 
@@ -158,6 +162,7 @@ export function NodeTools({
               key={index}
               defaultVariableId={pairedVariablesForTask[value as string]}
               description={description}
+              onOpenAddTaskVariableModal={onOpenAddTaskVariableModal}
             />
           ))}
           <div className="flex justify-end">

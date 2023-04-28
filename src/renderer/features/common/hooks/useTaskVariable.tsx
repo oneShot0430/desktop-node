@@ -38,10 +38,13 @@ export const useTaskVariable = ({ onSuccess, taskVariable }: Params = {}) => {
     onSuccess?.();
   };
 
-  const { mutate: storeTaskVariable, error: errorStoringTaskVariable } =
-    useMutation<void, Error, TaskVariableData>(storeTaskVariableService, {
-      onSuccess: handleSuccess,
-    });
+  const {
+    mutate: storeTaskVariable,
+    error: errorStoringTaskVariable,
+    isLoading: storingTaskVariable,
+  } = useMutation<void, Error, TaskVariableData>(storeTaskVariableService, {
+    onSuccess: handleSuccess,
+  });
 
   const { mutate: editTaskVariable, error: errorEditingTaskVariable } =
     useMutation<void, Error, TaskVariableDataWithId>(editTaskVariableService, {
@@ -83,6 +86,7 @@ export const useTaskVariable = ({ onSuccess, taskVariable }: Params = {}) => {
     handleToolKeyChange,
     label,
     value,
+    storingTaskVariable,
     storedTaskVariables,
     errorStoringTaskVariable,
     errorEditingTaskVariable,

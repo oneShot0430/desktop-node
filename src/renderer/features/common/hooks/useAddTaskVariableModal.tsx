@@ -3,8 +3,8 @@ import { show } from '@ebay/nice-modal-react';
 import { AddTaskVariable } from '../modals/AddTaskVariable';
 
 export const useAddTaskVariableModal = () => {
-  const showModal = () => {
-    show(AddTaskVariable);
+  const showModal = (): Promise<boolean> => {
+    return show(AddTaskVariable);
   };
 
   return {
