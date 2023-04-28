@@ -7,3 +7,5 @@ export const getKoiiFromRoe = (roe: number) =>
   toMax3Decimals(roe / ROE_PER_KOII);
 
 export const getRoeFromKoii = (koii: number) => koii * ROE_PER_KOII;
+
+export const getFullKoiiFromRoe = (roe: number) => roe / ROE_PER_KOII;
