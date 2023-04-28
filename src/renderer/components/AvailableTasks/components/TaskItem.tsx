@@ -15,6 +15,7 @@ import React, {
   useRef,
   MutableRefObject,
   ReactNode,
+  RefObject,
 } from 'react';
 import { useQueryClient } from 'react-query';
 
@@ -38,6 +39,7 @@ import {
   useAccountBalance,
   useMetadata,
   useAllStoredPairedTaskVariables,
+  useAddTaskVariableModal,
 } from 'renderer/features';
 import {
   TaskService,
@@ -60,6 +62,9 @@ interface Props {
 }
 
 function TaskItem({ task, index, columnsLayout }: Props) {
+  const [isAddTaskSettingModalOpen, setIsAddTaskSettingModalOpen] =
+    useState<boolean>(false);
+  const { showModal: showAddTaskVariableModal } = useAddTaskVariableModal();
   const { taskName, publicKey, taskManager, isRunning, roundTime } = task;
   const queryCache = useQueryClient();
   const [accordionView, setAccordionView] = useState<
@@ -93,8 +98,11 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   const [parent] = useAutoAnimate();
 
   const closeAccordionView = useCallback(() => {
+    if (isAddTaskSettingModalOpen) {
+      return;
+    }
     setAccordionView(null);
-  }, []);
+  }, [isAddTaskSettingModalOpen]);
 
   useOnClickOutside(
     ref as MutableRefObject<HTMLDivElement>,
@@ -245,6 +253,23 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     setMeetsMinimumStake(value >= minStake);
   };
 
+  const handleOpenAddTaskVariableModal = useCallback(
+    (dropdownRef: RefObject<HTMLButtonElement>) => {
+      setIsAddTaskSettingModalOpen((prev) => !prev);
+      showAddTaskVariableModal().then((wasVariableAdded) => {
+        setIsAddTaskSettingModalOpen(false);
+        // focus dropdown after creating new variable
+        console.log('@@@dropdownRef', dropdownRef);
+        if (wasVariableAdded) {
+          setTimeout(() => {
+            dropdownRef?.current?.click();
+          }, 100);
+        }
+      });
+    },
+    [showAddTaskVariableModal]
+  );
+
   const getTaskDetailsComponent = useCallback(() => {
     if (
       (accordionView === 'info' || accordionView === 'settings') &&
@@ -264,6 +289,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
           onToolsValidation={handleTaskToolsValidationCheck}
           taskVariables={globalAndTaskVariables}
           onPairingSuccess={closeAccordionView}
+          onOpenAddTaskVariableModal={handleOpenAddTaskVariableModal}
         />
       );
     }
@@ -271,17 +297,19 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     return null;
   }, [
     accordionView,
-    task,
+    isLoadingMetadata,
+    task.publicKey,
     metadata,
     globalAndTaskVariables,
-    isLoadingMetadata,
     closeAccordionView,
+    handleOpenAddTaskVariableModal,
   ]);
 
   const createdAt = useMemo(
     () => getCreatedAtDate(metadata?.createdAt),
     [metadata]
   );
+
   const GearIcon = globalAndTaskVariables?.length ? GearFill : GearLine;
   const gearIconColor = isTaskToolsValid
     ? 'text-finnieEmerald-light'

@@ -1,17 +1,27 @@
-import { Icon, CloseLine, BrowseInternetLine } from '@_koii/koii-styleguide';
+import { Icon, CloseLine, SettingsLine } from '@_koii/koii-styleguide';
 import { create, useModal } from '@ebay/nice-modal-react';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import { Button, ErrorMessage } from 'renderer/components/ui';
 import { useTaskVariable } from 'renderer/features/common/hooks/useTaskVariable';
 import { Modal, ModalContent } from 'renderer/features/modals';
+import { useStoredTaskVariables } from 'renderer/features/node-tools';
 import { Theme } from 'renderer/types/common';
 
 const baseInputClassName =
   'px-6 py-2 text-sm rounded-md bg-finnieBlue-light-tertiary focus:ring-2 focus:ring-finnieTeal focus:outline-none focus:bg-finnieBlue-light-secondary';
 
 export const AddTaskVariable = create(function AddTaskVariable() {
+  const {
+    storedTaskVariablesQuery: { refetch },
+  } = useStoredTaskVariables();
   const modal = useModal();
+
+  const onAddTaskVariableSucces = async () => {
+    await refetch();
+    modal.resolve(true);
+    modal.remove();
+  };
 
   const {
     handleAddTaskVariable,
@@ -21,31 +31,32 @@ export const AddTaskVariable = create(function AddTaskVariable() {
     labelError,
     value,
     errorStoringTaskVariable,
-  } = useTaskVariable({ onSuccess: modal.remove });
+    storingTaskVariable,
+  } = useTaskVariable({ onSuccess: onAddTaskVariableSucces });
+
+  const closeModal = useCallback(() => {
+    modal.resolve(false);
+    modal.remove();
+  }, [modal]);
 
   return (
     <Modal>
       <ModalContent
         theme={Theme.Dark}
-        className="text-left px-12 pt-3 pb-6 w-max h-fit rounded text-white flex flex-col gap-6"
+        className="text-left p-5 pl-10 w-max h-fit rounded text-white flex flex-col gap-4 min-w-[740px]"
       >
-        <div className="w-full flex justify-center items-center gap-4 text-2xl  font-semibold">
-          <Icon source={BrowseInternetLine} className="w-9 h-9 m-2" />
-          <span>Add a Node Tool</span>
+        <div className="w-full flex justify-center items-center gap-4 text-2xl font-semibold pt-2">
+          <Icon source={SettingsLine} className="h-8 w-8" />
+          <span>Add a Task Setting</span>
           <Icon
             source={CloseLine}
-            className="w-8 h-8 -mr-8 ml-auto cursor-pointer"
-            onClick={modal.remove}
+            className="h-8 w-8 ml-auto cursor-pointer"
+            onClick={closeModal}
           />
         </div>
 
-        <p className="mr-12">
-          After you get the Tool, come back and enter it here. Make sure to add
-          a descriptive
-          <br /> label for future reference.
-        </p>
-
-        <div className="flex flex-col">
+        <p className="mr-12">Add information about your Task Setting</p>
+        <div className="flex flex-col mb-2">
           <label className="mb-0.5 text-left">TOOL LABEL</label>
           <input
             className={`${baseInputClassName} w-56`}
@@ -61,8 +72,8 @@ export const AddTaskVariable = create(function AddTaskVariable() {
           </div>
         </div>
 
-        <div className="flex flex-col">
-          <label className="mb-0.5 text-left">TOOL KEY</label>
+        <div className="flex flex-col mb-2">
+          <label className="mb-0.5 text-left">TOOL KEY INPUT</label>
           <input
             className={`${baseInputClassName} w-full`}
             type="text"
@@ -82,10 +93,11 @@ export const AddTaskVariable = create(function AddTaskVariable() {
         </div>
 
         <Button
-          label="Add Node Tool"
+          label="Save Settings"
           onClick={handleAddTaskVariable}
           disabled={!!labelError || !label || !value}
           className="m-auto font-semibold bg-finnieGray-tertiary text-finnieBlue-light w-56 h-12"
+          loading={storingTaskVariable}
         />
       </ModalContent>
     </Modal>

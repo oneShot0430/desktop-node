@@ -1,13 +1,16 @@
 import { TooltipChatQuestionLeftLine, Icon } from '@_koii/koii-styleguide';
-import React from 'react';
+import React, { RefObject } from 'react';
 
 import { RequirementTag } from 'models/task';
 import { Tooltip } from 'renderer/components/ui';
 import { NodeTools } from 'renderer/features/node-tools';
 
 type PropsType = {
-  taskVariables?: RequirementTag[];
   taskPubKey: string;
+  onOpenAddTaskVariableModal: (
+    dropdownRef: RefObject<HTMLButtonElement>
+  ) => void;
+  taskVariables?: RequirementTag[];
   onToolsValidation?: (isValid: boolean) => void;
   onPairingSuccess: () => void;
 };
@@ -17,6 +20,7 @@ export function TaskSettings({
   taskPubKey,
   onToolsValidation,
   onPairingSuccess,
+  onOpenAddTaskVariableModal,
 }: PropsType) {
   return (
     <div className="flex flex-col w-full">
@@ -30,14 +34,13 @@ export function TaskSettings({
         </Tooltip>
       </div>
 
-      {!!taskVariables?.length && (
-        <NodeTools
-          tools={taskVariables}
-          taskPubKey={taskPubKey}
-          onToolsValidation={onToolsValidation}
-          onPairingSuccess={onPairingSuccess}
-        />
-      )}
+      <NodeTools
+        tools={taskVariables}
+        taskPubKey={taskPubKey}
+        onToolsValidation={onToolsValidation}
+        onPairingSuccess={onPairingSuccess}
+        onOpenAddTaskVariableModal={onOpenAddTaskVariableModal}
+      />
     </div>
   );
 }
