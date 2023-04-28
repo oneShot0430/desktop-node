@@ -3,14 +3,14 @@ import React, { useState } from 'react';
 import { StatBlock } from './StatBlock';
 
 type SummaryProps = {
-  totalKoii: number;
+  totalBalance: number;
   totalStaked: number;
   pendingRewards: number;
   isLoading: boolean;
 };
 
 export function Summary({
-  totalKoii,
+  totalBalance,
   totalStaked,
   pendingRewards,
   isLoading,
@@ -27,7 +27,7 @@ export function Summary({
   return (
     <div className="flex flex-col gap-4 relative">
       <StatBlock
-        value={totalKoii}
+        value={totalBalance}
         type="totalKoii"
         isLoading={isLoading}
         shouldAnimate={shouldAnimate}

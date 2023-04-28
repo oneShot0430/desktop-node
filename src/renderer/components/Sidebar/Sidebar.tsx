@@ -6,7 +6,6 @@ import {
   useNotificationsContext,
 } from 'renderer/features/notifications';
 import { getTaskNodeInfo, QueryKeys } from 'renderer/services';
-import { getKoiiFromRoe } from 'utils';
 
 import { useUserAppConfig } from '../../features/common/hooks/useUserAppConfig';
 
@@ -41,16 +40,12 @@ export function Sidebar() {
     }
   );
 
-  const totalBalanceInKoii = getKoiiFromRoe(data?.totalKOII as number);
-  const totalStakedInKoii = getKoiiFromRoe(data?.totalStaked as number);
-  const pendingRewardsInKoii = getKoiiFromRoe(data?.pendingRewards as number);
-
   return (
     <div className="flex flex-col pr-[22px] gap-4">
       <Summary
-        totalKoii={totalBalanceInKoii}
-        totalStaked={totalStakedInKoii}
-        pendingRewards={pendingRewardsInKoii}
+        totalBalance={data?.totalKOII || 0}
+        totalStaked={data?.totalStaked || 0}
+        pendingRewards={data?.pendingRewards || 0}
         isLoading={isLoading}
       />
       <Actions />
