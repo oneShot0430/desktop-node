@@ -1,4 +1,5 @@
-import React, { useMemo, useState } from 'react';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
+import React, { useMemo } from 'react';
 import { useInfiniteQuery } from 'react-query';
 
 import NoAvailbleTasks from 'assets/svgs/no-available-tasks.svg';
@@ -24,27 +25,36 @@ const columnsLayout = 'grid-cols-available-tasks place-items-center';
 const pageSize = 10;
 
 export function AvailableTasks() {
-  const [hasMore, setHasMore] = useState(true);
-
-  const { data, isLoading, error, fetchNextPage } = useInfiniteQuery<
-    Task[],
-    Error
-  >(
+  const {
+    data,
+    isLoading,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery(
     [QueryKeys.availableTaskList],
-    ({ pageParam = 0 }) =>
-      fetchAvailableTasks({ limit: pageSize, offset: pageParam * pageSize }),
+    ({ pageParam = 0 }) => {
+      return fetchAvailableTasks({
+        limit: pageSize,
+        offset: pageParam * pageSize,
+      });
+    },
     {
-      getNextPageParam: (lastPageData, allPages) => {
-        const checkHasMore = lastPageData.length > 0;
-        if (hasMore !== checkHasMore) {
-          setHasMore(checkHasMore);
-        }
-        return checkHasMore ? allPages.length + 1 : undefined;
+      getNextPageParam: (lastResponse, allPages) => {
+        const hasMore = lastResponse.hasNext;
+        const nextPage = allPages.length;
+
+        return hasMore ? nextPage : undefined;
       },
     }
   );
 
-  const allRows = (data?.pages || []).flat();
+  const [animationRef] = useAutoAnimate();
+
+  const allRows: Task[] = (data?.pages || [])
+    .map(({ content }) => content)
+    .flat();
 
   const hasNoTasks = useMemo(() => {
     return !isLoading && isEmpty(allRows);
@@ -52,23 +62,16 @@ export function AvailableTasks() {
 
   return (
     <InfiniteScrollTable
+      animationRef={animationRef}
+      isFetchingNextPage={isFetchingNextPage}
       columnsLayout={columnsLayout}
       headers={tableHeaders}
       isLoading={isLoading}
-      error={error}
-      hasMore={hasMore}
+      error={error as Error}
+      hasMore={!!hasNextPage}
       update={fetchNextPage}
     >
-      {allRows.map((task, index) => (
-        <TaskItem
-          columnsLayout={columnsLayout}
-          key={task.publicKey}
-          index={index}
-          task={task}
-        />
-      ))}
-
-      {hasNoTasks && (
+      {hasNoTasks && !hasNextPage && (
         <div className="w-full h-full flex justify-center items-center text-white mt-[50px]">
           <div className="w-[363px] h-[363px] flex flex-col justify-center items-center">
             <NoAvailbleTasks />
@@ -79,6 +82,15 @@ export function AvailableTasks() {
           </div>
         </div>
       )}
+
+      {allRows.map((task, index) => (
+        <TaskItem
+          columnsLayout={columnsLayout}
+          key={task.publicKey}
+          index={index}
+          task={task}
+        />
+      ))}
     </InfiniteScrollTable>
   );
 }

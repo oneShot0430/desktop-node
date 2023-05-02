@@ -6,7 +6,7 @@ import { TaskStartStopParam } from 'models/api';
 const stopTask = async (event: Event, payload: TaskStartStopParam) => {
   const { taskAccountPubKey } = payload;
 
-  koiiTasks.taskStopped(taskAccountPubKey);
+  await koiiTasks.taskStopped(taskAccountPubKey);
   return true;
 };
 

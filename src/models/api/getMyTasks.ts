@@ -1,4 +1,3 @@
-export interface GetMyTasksParam {
-  offset: number;
-  limit: number;
-}
+import { PaginationParameters } from '../pagination';
+
+export type GetMyTasksParam = PaginationParameters;

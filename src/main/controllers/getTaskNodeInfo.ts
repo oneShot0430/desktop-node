@@ -15,9 +15,9 @@ const getTaskNodeInfo = async (_: Event): Promise<GetTaskNodeInfoResponse> => {
     const stakingPubKey = await getStakingAccountPubKey();
     let totalStaked = 0;
     let pendingRewards = 0;
-    KoiiTasks.getAllTasks().forEach((e) => {
-      totalStaked += e.data.stakeList[stakingPubKey] || 0;
-      pendingRewards += e.data.availableBalances[stakingPubKey] || 0;
+    KoiiTasks.runningTasksData.forEach((task) => {
+      totalStaked += task.stake_list[stakingPubKey] || 0;
+      pendingRewards += task.available_balances[stakingPubKey] || 0;
     });
 
     return {

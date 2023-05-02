@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useInfiniteQuery, useQuery } from 'react-query';
 
 import { InfiniteScrollTable } from 'renderer/components/ui';
@@ -30,8 +30,6 @@ const columnsLayout = 'grid-cols-my-node place-items-center';
 const pageSize = 10;
 
 export function MyNode() {
-  const [hasMore, setHasMore] = useState(true);
-
   const { data: mainAccountPubKey, isLoading: isLoadingMainAccount } = useQuery(
     QueryKeys.MainAccount,
     getMainAccountPublicKey
@@ -42,30 +40,35 @@ export function MyNode() {
     data,
     error,
     fetchNextPage,
-  } = useInfiniteQuery<Task[], Error>(
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery(
     QueryKeys.taskList,
-    ({ pageParam = 0 }) =>
-      fetchMyTasks({ limit: pageSize, offset: pageParam * pageSize }),
+    ({ pageParam = 0 }) => {
+      return fetchMyTasks({ limit: pageSize, offset: pageParam * pageSize });
+    },
     {
-      getNextPageParam: (lastPageData, allPages) => {
-        const checkHasMore = lastPageData.length > 0;
-        if (hasMore !== checkHasMore) {
-          setHasMore(checkHasMore);
-        }
-        return checkHasMore ? allPages.length + 1 : undefined;
+      getNextPageParam: (lastResponse, allPages) => {
+        const hasMore = lastResponse.hasNext;
+        const nextPage = allPages.length;
+
+        return hasMore ? nextPage : undefined;
       },
     }
   );
 
-  const allRows = (data?.pages || []).flat();
+  const allRows: Task[] = (data?.pages || [])
+    .map(({ content }) => content)
+    .flat();
 
   return (
     <InfiniteScrollTable
+      isFetchingNextPage={isFetchingNextPage}
       columnsLayout={columnsLayout}
       headers={tableHeaders}
       isLoading={isLoadingTasks || isLoadingMainAccount}
-      error={error}
-      hasMore={hasMore}
+      error={error as Error}
+      hasMore={!!hasNextPage}
       update={fetchNextPage}
     >
       {allRows.map((task, index) => (

@@ -1,5 +1,3 @@
-export interface FetchAllTasksParam {
-  offset?: number;
-  limit?: number;
-  raw?: boolean;
-}
+import { PaginationParameters } from '../pagination';
+
+export type FetchAllTasksParam = PaginationParameters;

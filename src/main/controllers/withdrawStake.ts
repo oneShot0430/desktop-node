@@ -20,6 +20,7 @@ import {
   getMainSystemAccountKeypair,
   getStakingAccountKeypair,
 } from '../node/helpers';
+import koiiTasks from '../services/koiiTasks';
 
 const withdrawStake = async (
   event: Event,
@@ -50,6 +51,8 @@ const withdrawStake = async (
       new Transaction().add(instruction),
       [mainSystemAccount, stakingAccKeypair]
     );
+
+    await koiiTasks.fetchRunningTaskData();
 
     return res;
   } catch (e: any) {

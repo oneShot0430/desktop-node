@@ -10,6 +10,7 @@ type PropsType = {
 };
 
 export function LoadingScreen({ initError }: PropsType): JSX.Element {
+  // TODO(Chris) Use string value of initError?
   return (
     <div className="relative overflow-y-auto flex flex-col justify-center items-center gap-5 h-full bg-gradient-to-b from-finnieBlue-dark-secondary to-finnieBlue text-white overflow-hidden">
       <WelcomeWheelBackground className="absolute top-0 -left-[40%] h-[40%] scale-110" />

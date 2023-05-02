@@ -1,28 +1,52 @@
 import { Event } from 'electron';
-import fs from 'fs';
 
 import koiiTasks from 'main/services/koiiTasks';
-import { Task } from 'models';
+import { PaginatedResponse, Task } from 'models';
 import { GetAvailableTasksParam } from 'models/api';
 
-import { getAppDataPath } from '../node/helpers/getAppDataPath';
+import { parseRawK2TaskData } from '../node/helpers/parseRawK2TaskData';
 
-const getAvailableTasks = (
+const getAvailableTasks = async (
   event: Event,
   payload: GetAvailableTasksParam
-): Task[] => {
+): Promise<PaginatedResponse<Task>> => {
   const { offset, limit } = payload;
-  const tasks = koiiTasks.getAllTasks();
-  const files = fs.readdirSync(`${getAppDataPath()}/namespace`, {
-    withFileTypes: true,
-  });
-  const directoriesInDIrectory = files
-    .filter((item) => item.isDirectory())
-    .map((item) => item.name);
+  console.log('FETCHING AVAILABLE TASKS', payload);
 
-  return tasks
-    .filter((e) => !directoriesInDIrectory.includes(e.publicKey))
-    .slice(offset, offset + limit);
+  const idsSlice = koiiTasks.allTaskPubkeys.slice(offset, offset + limit);
+  const runningIds = koiiTasks.runningTasksData.map(({ task_id }) => task_id);
+
+  const filteredIdsSlice = idsSlice.filter(
+    (pubKey) => !runningIds.includes(pubKey)
+  );
+
+  const tasks: Task[] = (
+    await koiiTasks.fetchDataBundleAndValidateIfTasks(filteredIdsSlice)
+  )
+    .map((rawTaskData) => {
+      if (!rawTaskData) {
+        return null;
+      }
+
+      return {
+        publicKey: rawTaskData.task_id,
+        data: parseRawK2TaskData(rawTaskData),
+      };
+    })
+    .filter(
+      (task): task is Task =>
+        task !== null && task.data.isWhitelisted && task.data.isActive
+    );
+
+  console.log('FETCHED CHUNK OF AVAILABLE TASKS', tasks);
+
+  const response: PaginatedResponse<Task> = {
+    content: tasks,
+    hasNext: idsSlice.length === limit,
+    itemsCount: koiiTasks.allTaskPubkeys.length,
+  };
+
+  return response;
 };
 
 export default getAvailableTasks;

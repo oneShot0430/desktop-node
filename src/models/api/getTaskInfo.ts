@@ -4,4 +4,4 @@ export interface GetTaskInfoParam {
   taskAccountPubKey: string;
 }
 
-export type GetTaskInfoResponse = Omit<TaskData, 'isRunning'>;
+export type GetTaskInfoResponse = TaskData;

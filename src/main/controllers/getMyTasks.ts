@@ -1,25 +1,33 @@
 import { Event } from 'electron';
-import fs from 'fs';
 
 import koiiTasks from 'main/services/koiiTasks';
-import { Task } from 'models';
+import { PaginatedResponse, Task } from 'models';
 import { GetMyTasksParam } from 'models/api';
 
-import { getAppDataPath } from '../node/helpers/getAppDataPath';
+import { parseRawK2TaskData } from '../node/helpers/parseRawK2TaskData';
 
-const getMyTasks = (event: Event, payload: GetMyTasksParam): Task[] => {
+const getMyTasks = async (
+  event: Event,
+  payload: GetMyTasksParam
+): Promise<PaginatedResponse<Task>> => {
+  console.log('GETTING MY TASKS');
   const { offset, limit } = payload;
-  const tasks = koiiTasks.getAllTasks();
-  const files = fs.readdirSync(`${getAppDataPath()}/namespace`, {
-    withFileTypes: true,
-  });
-  const directoriesInDIrectory = files
-    .filter((item) => item.isDirectory())
-    .map((item) => item.name);
+  const tasks = koiiTasks.runningTasksData;
+  console.log('MY TASKS', tasks);
 
-  return tasks
-    .filter((e) => directoriesInDIrectory.includes(e.publicKey))
-    .slice(offset, offset + limit);
+  const slicedTasks = tasks.slice(offset, offset + limit).map((rawTaskData) => {
+    return {
+      publicKey: rawTaskData.task_id,
+      data: parseRawK2TaskData(rawTaskData, true),
+    };
+  });
+
+  const response: PaginatedResponse<Task> = {
+    content: slicedTasks,
+    hasNext: slicedTasks.length === limit,
+    itemsCount: koiiTasks.runningTasksData.length,
+  };
+  return response;
 };
 
 export default getMyTasks;

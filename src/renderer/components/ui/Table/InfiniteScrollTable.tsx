@@ -1,13 +1,14 @@
-import React, { useEffect, ReactNode } from 'react';
-import InfiniteScroll from 'react-infinite-scroll-component';
+import React, { useEffect, ReactNode, RefCallback } from 'react';
+import { useInView } from 'react-intersection-observer';
 
-import { Table } from 'renderer/components/ui/Table/Table';
+import { DotsLoader } from 'renderer/components/ui/DotsLoader';
 
-import { LoadingSpinner } from '../LoadingSpinner';
-
+import { Table } from './Table';
 import { TableHeader, ColumnsLayout } from './TableHeaders';
 
 interface PropsType {
+  animationRef?: RefCallback<HTMLDivElement>;
+  isFetchingNextPage: boolean;
   headers: TableHeader[];
   columnsLayout: ColumnsLayout;
   children: ReactNode[];
@@ -17,9 +18,9 @@ interface PropsType {
   error?: Error | null;
 }
 
-const tableWrapperId = 'infiniteTableWrapper';
-
 export function InfiniteScrollTable({
+  animationRef,
+  isFetchingNextPage,
   headers,
   columnsLayout,
   children,
@@ -28,36 +29,28 @@ export function InfiniteScrollTable({
   isLoading,
   error,
 }: PropsType) {
+  const { ref: tableBottomRef, inView } = useInView({
+    threshold: 0,
+  });
+
   useEffect(() => {
-    const root = document.getElementById(tableWrapperId);
-    if (
-      !isLoading &&
-      hasMore &&
-      root &&
-      root.scrollHeight <= root.clientHeight
-    ) {
+    if (!isLoading && hasMore && inView && !isFetchingNextPage) {
       update();
     }
-  }, [isLoading, hasMore, update]);
+  }, [isLoading, hasMore, update, inView, isFetchingNextPage]);
 
   return (
-    <Table
-      headers={headers}
-      columnsLayout={columnsLayout}
-      isLoading={isLoading}
-      error={error}
-    >
-      <div id={tableWrapperId}>
-        <InfiniteScroll
-          className="!overflow-hidden min-h-table"
-          dataLength={children.length}
-          next={update}
-          hasMore={hasMore}
-          loader={<LoadingSpinner />}
-          scrollableTarget={tableWrapperId}
-        >
-          {children}
-        </InfiniteScroll>
+    <Table headers={headers} columnsLayout={columnsLayout} error={error}>
+      <div ref={animationRef} className="!overflow-hidden min-h-[500px]">
+        {children}
+
+        <div ref={tableBottomRef} className="h-4 my-8 relative">
+          {(hasMore || isLoading) && (
+            <div className="w-fit mx-auto scale-75">
+              <DotsLoader />
+            </div>
+          )}
+        </div>
       </div>
     </Table>
   );

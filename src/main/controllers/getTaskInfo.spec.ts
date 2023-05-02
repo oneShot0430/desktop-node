@@ -1,6 +1,6 @@
 import { PublicKey } from '@_koi/web3.js';
 import sdk from 'main/services/sdk';
-import { GetTaskInfoParam, RawTaskData } from 'models';
+import { GetTaskInfoParam, RawTaskData, TaskData } from 'models';
 
 import { getTaskInfo } from './getTaskInfo';
 
@@ -18,6 +18,7 @@ const k2ConnectionGetAccountInfoMock = sdk.k2Connection
   .getAccountInfo as jest.Mock;
 
 const testRawTaskData: RawTaskData = {
+  task_id: k2PublicKeyExample,
   task_name: 'task',
   task_manager: new PublicKey(k2PublicKeyExample),
   is_whitelisted: true,
@@ -52,7 +53,7 @@ const testRawTaskData: RawTaskData = {
   allowed_failed_distributions: 123,
 };
 
-const expectedResult = {
+const expectedResult: TaskData = {
   availableBalances: {},
   bountyAmountPerRound: 10,
   currentRound: 1,
@@ -61,39 +62,6 @@ const expectedResult = {
   isWhitelisted: true,
   metadataCID: 'test',
   minimumStakeAmount: 123,
-  raw: {
-    allowed_failed_distributions: 123,
-    audit_window: 123,
-    available_balances: {},
-    bounty_amount_per_round: 10,
-    current_round: 1,
-    distribution_rewards_submission: {},
-    distributions_audit_record: {},
-    distributions_audit_trigger: {},
-    ip_address_list: {},
-    is_active: true,
-    is_migrated: false,
-    is_whitelisted: true,
-    koii_vars: 'string',
-    migrated_to: 'string',
-    minimum_stake_amount: 123,
-    round_time: 123,
-    stake_list: {},
-    stake_pot_account: '7Ds4GdPPGb2DNEwT6is31i1KkR2WqusttB55T4QgGUvg',
-    starting_slot: 123,
-    submission_window: 123,
-    submissions: {},
-    submissions_audit_trigger: {},
-    task_audit_program: 'txId',
-    task_description: 'string',
-    task_executable_network: 'IPFS',
-    task_manager: '7Ds4GdPPGb2DNEwT6is31i1KkR2WqusttB55T4QgGUvg',
-    task_metadata: 'test',
-    task_name: 'task',
-    task_vars: 'string',
-    total_bounty_amount: 100,
-    total_stake_amount: 0,
-  },
   roundTime: 123,
   stakeList: {},
   stakePotAccount: '7Ds4GdPPGb2DNEwT6is31i1KkR2WqusttB55T4QgGUvg',

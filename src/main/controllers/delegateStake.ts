@@ -28,6 +28,7 @@ import {
   getMainSystemAccountKeypair,
   getStakingAccountKeypair,
 } from '../node/helpers';
+import koiiTasks from '../services/koiiTasks';
 
 import { getTaskInfo } from './getTaskInfo';
 
@@ -108,6 +109,9 @@ const delegateStake = async (
         new Transaction().add(instruction),
         [mainSystemAccount, stakingAccKeypair]
       );
+
+      await koiiTasks.fetchRunningTaskData();
+
       return response;
     } catch (e: any) {
       console.error(e);
@@ -192,6 +196,9 @@ const delegateStake = async (
         new Transaction().add(instruction),
         [mainSystemAccount, stakingAccKeypair]
       );
+
+      await koiiTasks.fetchRunningTaskData();
+
       console.log('Staking complete');
 
       return response;

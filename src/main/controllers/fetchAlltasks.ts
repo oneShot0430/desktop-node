@@ -24,9 +24,10 @@ async function fetchAllTasks(
   const tasks: Task[] = taskAccountInfo
     .map((rawData) => {
       try {
-        const rawTaskData = JSON.parse(
-          rawData.account.data.toString()
-        ) as RawTaskData;
+        const rawTaskData = {
+          ...(JSON.parse(rawData.account.data.toString()) as object),
+          task_id: rawData.pubkey.toBase58(),
+        } as RawTaskData;
         const taskData = parseRawK2TaskData(rawTaskData);
         const task: Task = {
           publicKey: rawData.pubkey.toBase58(),

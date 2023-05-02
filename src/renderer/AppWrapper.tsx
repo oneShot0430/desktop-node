@@ -11,6 +11,7 @@ import {
   getUserConfig,
   initializeTasks,
 } from './services';
+import { getErrorToDisplay } from './utils';
 
 const NODE_INITALIZED = 'NODE_INITALIZED';
 
@@ -18,7 +19,7 @@ function AppWrapper(): JSX.Element {
   const queryClient = useQueryClient();
   const location = useLocation();
   const [initializingNode, setInitializingNode] = useState(true);
-  const [initError, setInitError] = useState<string | null>(null);
+  const [initError, setInitError] = useState<string | undefined>(undefined);
 
   const isOnboarding = useMemo(
     () => location.pathname.includes('onboarding'),
@@ -33,8 +34,9 @@ function AppWrapper(): JSX.Element {
         await initializeTasks();
         // Save the initialized state in sessionStorage
         sessionStorage.setItem(NODE_INITALIZED, setValue);
-      } catch (error) {
-        setInitError(error as string);
+      } catch (error: any) {
+        console.error(error);
+        setInitError(getErrorToDisplay(error));
       } finally {
         setInitializingNode(false);
       }

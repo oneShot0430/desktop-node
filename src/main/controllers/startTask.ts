@@ -3,14 +3,16 @@ import { Event } from 'electron';
 import * as fsSync from 'fs';
 import { Transform } from 'stream';
 
-import { PublicKey, Keypair } from '@_koi/web3.js';
+import { Keypair } from '@_koi/web3.js';
+import { TaskData as TaskNodeTaskData } from '@koii-network/task-node';
 import { DEFAULT_K2_NETWORK_URL } from 'config/node';
 import cryptoRandomString from 'crypto-random-string';
+import { Express } from 'express';
 import db from 'main/db';
 import { getK2NetworkUrl } from 'main/node/helpers/k2NetworkUrl';
 import { Namespace } from 'main/node/helpers/Namespace';
 import koiiTasks from 'main/services/koiiTasks';
-import { ErrorType } from 'models';
+import { ErrorType, RawTaskData } from 'models';
 import { TaskStartStopParam } from 'models/api';
 import { throwDetailedError } from 'utils';
 
@@ -34,14 +36,15 @@ const logTimestampFormat: DateTimeFormatOptions = {
   second: 'numeric',
   hour12: true,
 };
+
 const startTask = async (_: Event, payload: TaskStartStopParam) => {
   const { taskAccountPubKey } = payload;
 
   const mainSystemAccount = await getMainSystemAccountKeypair();
 
-  const taskInfo = koiiTasks.getTaskByPublicKey(taskAccountPubKey);
-  console.log({ taskInfo });
-  console.log('koiiTasks.getAllTasks()', koiiTasks.getAllTasks());
+  const taskInfo: RawTaskData | null =
+    await koiiTasks.fetchDataAndValidateIfTask(taskAccountPubKey);
+
   if (!taskInfo) {
     console.error("Task doesn't exist");
     return throwDetailedError({
@@ -49,17 +52,21 @@ const startTask = async (_: Event, payload: TaskStartStopParam) => {
       type: ErrorType.TASK_NOT_FOUND,
     });
   }
+
+  console.log('STARTED TASK DATA', taskInfo);
   const expressApp = await initExpressApp();
   try {
-    console.log('LOADING TASK:', taskInfo.publicKey);
-    await loadTask({ ...taskInfo.data, taskId: taskInfo.publicKey });
+    console.log('LOADING TASK:', taskAccountPubKey);
+    await loadTask({ taskAuditProgram: taskInfo.task_audit_program });
+
     const { namespace, child, expressAppPort, secret } = await executeTasks(
-      { ...taskInfo.data, taskId: taskInfo.publicKey },
+      { ...taskInfo, task_id: taskAccountPubKey },
       expressApp,
       OPERATION_MODE,
       mainSystemAccount
     );
-    console.log('TASK STARTED:', taskInfo.publicKey);
+
+    console.log('TASK STARTED:', taskAccountPubKey);
     await koiiTasks.taskStarted(
       taskAccountPubKey,
       namespace,
@@ -79,7 +86,7 @@ const startTask = async (_: Event, payload: TaskStartStopParam) => {
  * @param {any} expressApp
  * @returns {any[]} Array of executable tasks
  */
-async function loadTask({ taskAuditProgram }: ISelectedTasks) {
+async function loadTask({ taskAuditProgram }: { taskAuditProgram: string }) {
   console.log('taskAuditProgram', taskAuditProgram);
 
   const sourceCode = await getTaskSource({} as Event, { taskAuditProgram });
@@ -98,36 +105,36 @@ async function loadTask({ taskAuditProgram }: ISelectedTasks) {
  * @param {any[]} executableTasks Array of executable tasks
  */
 async function executeTasks(
-  selectedTask: ISelectedTasks,
-  expressApp: any,
+  selectedTask: Required<TaskNodeTaskData> & {
+    stake_list: Record<string, number>;
+  },
+  expressApp: Express,
   operationMode: string,
   mainSystemAccount: Keypair
 ) {
-  const secret = await cryptoRandomString({ length: 20 });
+  const secret = cryptoRandomString({ length: 20 });
 
   const options: ForkOptions = {
     env: await getTaskPairedVariablesNamesWithValues({} as Event, {
-      taskAccountPubKey: selectedTask.taskId,
+      taskAccountPubKey: selectedTask.task_id,
     }),
     silent: true,
   };
 
-  // TODO: Get the task stake here
-  // const STAKE = Number(process.env.TASK_STAKES?.split(',') || 0);
   const stakingAccPubkey = await getStakingAccountPublicKey();
-  const STAKE = selectedTask.stakeList[stakingAccPubkey];
-  fsSync.mkdirSync(`${getAppDataPath()}/namespace/${selectedTask.taskId}`, {
+  const STAKE = selectedTask.stake_list[stakingAccPubkey];
+  fsSync.mkdirSync(`${getAppDataPath()}/namespace/${selectedTask.task_id}`, {
     recursive: true,
   });
   const logFile = fsSync.createWriteStream(
-    `${getAppDataPath()}/namespace/${selectedTask.taskId}/task.log`,
+    `${getAppDataPath()}/namespace/${selectedTask.task_id}/task.log`,
     { flags: 'a+' }
   );
   const childTaskProcess = fork(
-    `${getAppDataPath()}/executables/${selectedTask.taskAuditProgram}.js`,
+    `${getAppDataPath()}/executables/${selectedTask.task_audit_program}.js`,
     [
-      `${selectedTask.taskName}`,
-      `${selectedTask.taskId}`,
+      `${selectedTask.task_name}`,
+      `${selectedTask.task_id}`,
       `${LAST_USED_PORT}`,
       `${operationMode}`,
       `${mainSystemAccount.publicKey.toBase58()}`,
@@ -138,39 +145,40 @@ async function executeTasks(
     ],
     options
   );
+
+  const messageTransform = (
+    formatter: (timestamp: string, messageContent: string) => string
+  ): Transform =>
+    new Transform({
+      transform(data, encoding, callback) {
+        const timestamp = new Date().toLocaleString(
+          'en-US',
+          logTimestampFormat
+        );
+        const message = formatter(timestamp, data.toString());
+        this.push(message);
+        callback();
+      },
+    });
+
   childTaskProcess.stdout
     ?.pipe(
-      new Transform({
-        transform(data, encoding, callback) {
-          const timestamp = new Date().toLocaleString(
-            'en-US',
-            logTimestampFormat
-          );
-          const message = `[${timestamp}] ${data.toString()}`;
-          this.push(message);
-          callback();
-        },
-      })
+      messageTransform((timestamp, message) => `[${timestamp}] ${message}`)
     )
     .pipe(logFile);
+
   childTaskProcess.stderr
     ?.pipe(
-      new Transform({
-        transform(data, encoding, callback) {
-          const timestamp = new Date().toLocaleString(
-            'en-US',
-            logTimestampFormat
-          );
-          const message = `[${timestamp}] ERROR: ${data.toString()}`;
-          this.push(message);
-          callback();
-        },
-      })
+      messageTransform(
+        (timestamp, message) => `[${timestamp}] ERROR: ${message}`
+      )
     )
     .pipe(logFile);
+
   childTaskProcess.on('error', (err) => {
     console.error('Error starting child process:', err);
   });
+
   childTaskProcess.on('exit', (code, signal) => {
     if (code !== 0) {
       console.error(
@@ -180,24 +188,16 @@ async function executeTasks(
     } else {
       console.log('Child process exited successfully');
     }
-    koiiTasks.taskStopped(selectedTask.taskId);
+    koiiTasks.taskStopped(selectedTask.task_id);
   });
+
   const namespace = new Namespace({
-    taskTxId: selectedTask.taskId,
+    taskTxId: selectedTask.task_id,
     serverApp: expressApp,
     mainSystemAccount,
     db,
     rpcUrl: getK2NetworkUrl(),
-    taskData: {
-      task_name: selectedTask.taskName,
-      task_id: selectedTask.taskId,
-      task_audit_program: selectedTask.taskAuditProgram,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      task_manager: new PublicKey(selectedTask.taskManager!),
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      stake_pot_account: new PublicKey(selectedTask.stakePotAccount!),
-      bounty_amount_per_round: selectedTask.bountyAmountPerRound,
-    },
+    taskData: selectedTask,
   });
 
   LAST_USED_PORT += 1;
@@ -209,15 +209,6 @@ async function executeTasks(
   };
 }
 
-interface ISelectedTasks {
-  taskName: string;
-  taskId: string;
-  taskAuditProgram: string;
-  taskManager?: string;
-  stakePotAccount?: string;
-  bountyAmountPerRound?: number;
-  stakeList?: any;
-}
 interface DateTimeFormatOptions {
   localeMatcher?: 'best fit' | 'lookup' | undefined;
   weekday?: 'long' | 'short' | 'narrow' | undefined;
