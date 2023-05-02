@@ -48,6 +48,10 @@ export class KoiiTaskService {
       selectedTasks,
       runningTasks: this.STARTED_TASKS,
       tasksCurrentRounds: Array(selectedTasks.length).fill(0),
+      tasksLastUpdatedSubmission: Array(selectedTasks.length).fill(0),
+      tasksLastUpdatedAudit: Array(selectedTasks.length).fill(0),
+      tasksLastUpdatedDistribution: Array(selectedTasks.length).fill(0),
+      tasksLastUpdatedDistributionAudit: Array(selectedTasks.length).fill(0),
     });
   }
 
