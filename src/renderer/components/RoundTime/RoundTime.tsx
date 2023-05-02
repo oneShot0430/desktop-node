@@ -1,8 +1,9 @@
 import { Icon } from '@_koii/koii-styleguide';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import HistoryIcon from 'assets/svgs/history-icon.svg';
 import { Tooltip, Placement } from 'renderer/components/ui';
+import { getAverageSlotTime } from 'renderer/services';
 import { formatRoundTimeWithFullUnit, parseRoundTime } from 'renderer/utils';
 
 type PropsType = {
@@ -10,8 +11,26 @@ type PropsType = {
   roundTime: number;
 };
 
+type ParsedRoundTimeType = {
+  unit: 'd' | 'h' | 'm' | 's';
+  value: number;
+};
+
 export function RoundTime({ tooltipPlacement, roundTime }: PropsType) {
-  const parsedRoundTime = parseRoundTime(roundTime);
+  const [parsedRoundTime, setParsedRoundTime] = useState<ParsedRoundTimeType>({
+    value: 0,
+    unit: 's',
+  });
+
+  useEffect(() => {
+    const getParsedRoundTime = async () => {
+      const averageSlotTime = await getAverageSlotTime();
+      const parsedRoundTime = parseRoundTime(roundTime * averageSlotTime);
+      setParsedRoundTime(parsedRoundTime);
+    };
+    getParsedRoundTime();
+  }, [roundTime]);
+
   const fullTime = formatRoundTimeWithFullUnit(parsedRoundTime);
 
   return (

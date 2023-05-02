@@ -6,6 +6,7 @@ import generateSeedPhrase from './generateSeedPhrase';
 import getAccountBalance from './getAccountBalance';
 import getAllAccounts from './getAllAccounts';
 import getAvailableTasks from './getAvailableTasks';
+import getAverageSlotTime from './getAverageSlotTime';
 import getEarnedRewardByNode from './getEarnedRewardByNode';
 import getMainAccountPubKey from './getMainAccountPubKey';
 import getMyTasks from './getMyTasks';
@@ -80,4 +81,5 @@ export default {
   switchNetwork,
   getNetworkUrl,
   initializeTasks,
+  getAverageSlotTime,
 };

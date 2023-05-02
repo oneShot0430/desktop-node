@@ -65,7 +65,7 @@ export function AddTaskVariable() {
           icon={<Icon source={SettingsLine} className="w-5" />}
           onClick={handleAddTaskVariable}
           disabled={!!labelError || !label || !value}
-          className="font-semibold bg-finnieGray-tertiary text-finnieBlue-light text-[14px] leading-[14px] min-w-[200px] h-9 self-end"
+          className="font-semibold bg-white text-finnieBlue-light text-[14px] leading-[14px] min-w-[200px] h-9 self-end"
         />
       </div>
     </div>
