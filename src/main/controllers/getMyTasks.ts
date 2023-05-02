@@ -1,5 +1,7 @@
 import { Event } from 'electron';
+import * as fsSync from 'fs';
 
+import { getAppDataPath } from 'main/node/helpers/getAppDataPath';
 import koiiTasks from 'main/services/koiiTasks';
 import { PaginatedResponse, Task } from 'models';
 import { GetMyTasksParam } from 'models/api';
@@ -16,9 +18,15 @@ const getMyTasks = async (
   console.log('MY TASKS', tasks);
 
   const slicedTasks = tasks.slice(offset, offset + limit).map((rawTaskData) => {
+    const taskLogPath = `${getAppDataPath()}/namespace/${
+      rawTaskData.task_id
+    }/task.log`;
+    const taskLog = fsSync.readFileSync(taskLogPath, 'utf-8');
+    const hasError = taskLog.includes('error');
+
     return {
       publicKey: rawTaskData.task_id,
-      data: parseRawK2TaskData(rawTaskData, true),
+      data: parseRawK2TaskData({ rawTaskData, isRunning: true, hasError }),
     };
   });
 

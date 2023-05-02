@@ -21,7 +21,7 @@ export const getTasksById = async (
 
       return {
         publicKey: rawTaskData.task_id,
-        data: parseRawK2TaskData(rawTaskData),
+        data: parseRawK2TaskData({ rawTaskData }),
       };
     })
     .filter((e): e is Task => Boolean(e));

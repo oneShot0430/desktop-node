@@ -9,8 +9,6 @@ type PropsType = {
   totalKoiiStaked: number;
   currentTopStake: number;
   myCurrentStake: number;
-  state: string;
-  myTotalRewards: number;
 };
 
 function PropertyRow({ label, value }: { label: string; value: string }) {
@@ -31,8 +29,6 @@ export function TaskDetails({
   totalKoiiStaked,
   currentTopStake,
   myCurrentStake,
-  state,
-  myTotalRewards,
 }: PropsType) {
   return (
     <div>
@@ -56,11 +52,6 @@ export function TaskDetails({
       <PropertyRow
         label="My current stake"
         value={`${getKoiiFromRoe(myCurrentStake)} KOII`}
-      />
-      <PropertyRow label="State" value={state} />
-      <PropertyRow
-        label="My total rewards"
-        value={`${getKoiiFromRoe(myTotalRewards)} KOII`}
       />
     </div>
   );

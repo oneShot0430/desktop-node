@@ -63,8 +63,10 @@ export const getTaskInfo = async (
   }
   console.log('PARTIAL RAW DATA', partialRawTaskData);
   return parseRawK2TaskData({
-    ...partialRawTaskData,
-    task_id: taskAccountPubKey,
+    rawTaskData: {
+      ...partialRawTaskData,
+      task_id: taskAccountPubKey,
+    },
   });
 };
 

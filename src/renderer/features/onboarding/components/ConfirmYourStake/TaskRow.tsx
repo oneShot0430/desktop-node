@@ -1,13 +1,10 @@
 import React, { useState, useMemo } from 'react';
-import { useQuery } from 'react-query';
 import { twMerge } from 'tailwind-merge';
 
 import CheckmarkIconSvg from 'assets/svgs/checkmark-teal-icon.svg';
 import CodeIconSvg from 'assets/svgs/code-icon.svg';
 import EditIconSvg from 'assets/svgs/edit-icon.svg';
 import { Button, EditStakeInput } from 'renderer/components/ui';
-import { useTaskDetailsModal } from 'renderer/features/common';
-import { getMainAccountPublicKey, QueryKeys } from 'renderer/services';
 import { TaskWithStake } from 'renderer/types';
 import { getKoiiFromRoe } from 'utils';
 
@@ -30,15 +27,6 @@ export function TaskRow({
   const stakeInKoii = useMemo(() => getKoiiFromRoe(stake), [stake]);
 
   const meetsMinimumStake = useMemo(() => stake >= minStake, [stake, minStake]);
-
-  const { data: mainAccountPubKey } = useQuery(QueryKeys.MainAccount, () =>
-    getMainAccountPublicKey()
-  );
-
-  const { showModal } = useTaskDetailsModal({
-    task,
-    accountPublicKey: mainAccountPubKey as string,
-  });
 
   const handleEditInputChange = (newStake: number) => setStake(newStake);
 
@@ -76,7 +64,7 @@ export function TaskRow({
     >
       <div className="w-[70%]">
         <div className="flex flex-row items-center gap-2">
-          <CodeIconSvg className="cursor-pointer" onClick={showModal} />
+          <CodeIconSvg className="mt-0.5" />
           <span>{taskName}</span>
         </div>
       </div>

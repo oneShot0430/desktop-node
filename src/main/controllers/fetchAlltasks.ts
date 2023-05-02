@@ -28,7 +28,7 @@ async function fetchAllTasks(
           ...(JSON.parse(rawData.account.data.toString()) as object),
           task_id: rawData.pubkey.toBase58(),
         } as RawTaskData;
-        const taskData = parseRawK2TaskData(rawTaskData);
+        const taskData = parseRawK2TaskData({ rawTaskData });
         const task: Task = {
           publicKey: rawData.pubkey.toBase58(),
           data: taskData,

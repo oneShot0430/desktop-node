@@ -101,7 +101,14 @@ export interface TaskData {
   availableBalances: Record<string, ROE>;
   stakeList: Record<string, ROE>;
   isRunning: boolean;
+  hasError: boolean;
   metadataCID: string;
   minimumStakeAmount: ROE;
   roundTime: number;
+  submissions: Record<
+    string,
+    Record<string, { submission_value: string; slot: number; round: number }>
+  >;
+  distributionsAuditTrigger: Record<string, Record<string, AuditTriggerState>>;
+  submissionsAuditTrigger: Record<string, Record<string, AuditTriggerState>>;
 }

@@ -19,8 +19,9 @@ import {
   LoadingSpinnerSize,
   TableRow,
   ColumnsLayout,
-  NodeStatusCell,
+  Status,
 } from 'renderer/components/ui';
+import { useStakingAccount } from 'renderer/features';
 import {
   useEditStakeAmountModal,
   useTaskStake,
@@ -61,10 +62,15 @@ export function TaskItem({
   const { earnedReward } = useEarnedReward({ task, publicKey });
   const { taskStake } = useTaskStake({ task, publicKey: accountPublicKey });
 
+  const { data: stakingAccountPublicKey = '' } = useStakingAccount();
+
   const earnedRewardInKoii = getKoiiFromRoe(earnedReward);
   const myStakeInKoii = getKoiiFromRoe(taskStake);
   const isFirstRowInTable = index === 0;
-  const nodeStatus = useMemo(() => TaskService.getStatus(task), [task]);
+  const nodeStatus = useMemo(
+    () => TaskService.getStatus(task, stakingAccountPublicKey),
+    [task, stakingAccountPublicKey]
+  );
 
   const { metadata, isLoadingMetadata } = useMetadata(task.metadataCID);
 
@@ -175,10 +181,7 @@ export function TaskItem({
         roundTime={roundTime}
       />
       <div>
-        <NodeStatusCell
-          status={nodeStatus}
-          isFirstRowInTable={isFirstRowInTable}
-        />
+        <Status status={nodeStatus} isFirstRowInTable={isFirstRowInTable} />
       </div>
       <div className="flex flex-row items-center gap-4">
         <Tooltip
