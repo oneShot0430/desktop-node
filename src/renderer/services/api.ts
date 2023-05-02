@@ -80,6 +80,11 @@ export const getMainAccountPublicKey = (): Promise<string> => {
   });
 };
 
+export const getAverageSlotTime = (): Promise<number> => {
+  return window.main.getAverageSlotTime().then((averageSlotTime) => {
+    return averageSlotTime;
+  });
+};
 export const getStakingAccountPublicKey = (): Promise<string> => {
   return window.main.getStakingAccountPubKey().then((pubkey) => {
     console.log('GETTING STAKING ACCOUNT PUBKEY', pubkey);

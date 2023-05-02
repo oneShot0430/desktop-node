@@ -48,6 +48,7 @@ const endpointToControllerMap: Record<
   [Endpoints.GET_STORED_PAIRED_TASK_VARIABLES]:
     controllers.getStoredPairedTaskVariables,
   [Endpoints.GET_ACCOUNT_BALANCE]: controllers.getAccountBalance,
+  [Endpoints.GET_AVERAGE_SLOT_TIME]: controllers.getAverageSlotTime,
   [Endpoints.SWITCH_NETWORK]: controllers.switchNetwork,
   [Endpoints.GET_NETWORK_URL]: controllers.getNetworkUrl,
   [Endpoints.INITIALIZE_TASKS]: controllers.initializeTasks,
