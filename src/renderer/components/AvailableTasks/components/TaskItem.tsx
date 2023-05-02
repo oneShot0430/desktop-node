@@ -397,7 +397,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
       </Tooltip>
 
       {loading ? (
-        <div className="py-[0.57rem]">
+        <div className="py-[0.72rem]">
           <LoadingSpinner size={LoadingSpinnerSize.Large} />
         </div>
       ) : (

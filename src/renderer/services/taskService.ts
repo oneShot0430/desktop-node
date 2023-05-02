@@ -28,28 +28,44 @@ export class TaskService {
     return Object.values(task.stakeList).length;
   }
 
-  static getStatus(task: Task): TaskStatus | null {
-    // if (!task.status) {
-    return null;
-    // }
+  static getStatus(task: Task, mainAccountStakingKey: string): TaskStatus {
+    const allSubmissions = Object.values(task.submissions);
+    const submissionsFromCurrentAccount = allSubmissions.filter((submission) =>
+      Object.keys(submission).some((key) => key === mainAccountStakingKey)
+    );
+    const last3Submissions = allSubmissions.slice(-3);
+    const hasSubmissionsOnlyInLast1Or2Rounds =
+      last3Submissions[last3Submissions.length - 1] &&
+      mainAccountStakingKey in last3Submissions[last3Submissions.length - 1] &&
+      (last3Submissions.length < 3 ||
+        (last3Submissions[last3Submissions.length - 3] &&
+          !(
+            mainAccountStakingKey in
+            last3Submissions[last3Submissions.length - 3]
+          )));
+    const hasSubmissionsInAllLast3Rounds = last3Submissions.every(
+      (round) => mainAccountStakingKey in round
+    );
+    const hasSubmissionsInSomeOfLast3Rounds = last3Submissions.some(
+      (round) => mainAccountStakingKey in round
+    );
+    const nodeHasBeenFlaggedAsMalicious =
+      mainAccountStakingKey in task.distributionsAuditTrigger ||
+      mainAccountStakingKey in task.submissionsAuditTrigger;
+    const taskIsComplete = task.totalBountyAmount < task.bountyAmountPerRound;
+    const { hasError } = task;
 
-    // if (!isNil(task.status.AcceptingSubmissions))
-    //   return TaskStatus.ACCEPTING_SUBMISSIONS;
-    // if (!isNil(task.status.Voting)) return TaskStatus.VOTING;
-    // if (!isNil(task.status.Completed)) return TaskStatus.COMPLETED;
-    // return TaskStatus.COMPLETED;
+    if (hasError) return TaskStatus.ERROR;
+    if (nodeHasBeenFlaggedAsMalicious) return TaskStatus.FLAGGED;
+    if (taskIsComplete) return TaskStatus.COMPLETE;
+    if (!task.isRunning && hasSubmissionsInSomeOfLast3Rounds)
+      return TaskStatus.COOLING_DOWN;
+    if (!task.isRunning) return TaskStatus.STOPPED;
+    if (!submissionsFromCurrentAccount?.length)
+      return TaskStatus.PRE_SUBMISSION;
+    if (hasSubmissionsOnlyInLast1Or2Rounds) return TaskStatus.WARMING_UP;
+    else if (hasSubmissionsInAllLast3Rounds) return TaskStatus.ACTIVE;
+
+    return TaskStatus.PRE_SUBMISSION;
   }
 }
-
-export const TaskStatusToLabeMap: Record<TaskStatus, string> = {
-  [TaskStatus.VOTING]: 'Voting',
-  [TaskStatus.ACCEPTING_SUBMISSIONS]: 'Accepting Submissions',
-  [TaskStatus.COMPLETED]: 'Completed',
-};
-
-export const getTaskStatusLabel = (
-  status: TaskStatus | null | undefined
-): string => {
-  if (status === null || status === undefined) return 'Unknown';
-  return TaskStatusToLabeMap[status];
-};

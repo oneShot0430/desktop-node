@@ -1,7 +1,8 @@
 import React from 'react';
 import { useQuery } from 'react-query';
 
-import { TableRow, NodeStatusCell } from 'renderer/components/ui';
+import { TableRow, Status } from 'renderer/components/ui';
+import { useStakingAccount } from 'renderer/features';
 import { useTaskStake, useTaskDetailsModal } from 'renderer/features/common';
 import {
   getMainAccountPublicKey,
@@ -16,13 +17,16 @@ export function HistoryRow({ task }: { task: Task }) {
    */
   const { data: mainAccountPubKey = '', isLoading: loadingMainAccount } =
     useQuery(QueryKeys.MainAccount, () => getMainAccountPublicKey());
+
+  const { data: stakingAccountPublicKey = '' } = useStakingAccount();
+
   const { taskStake } = useTaskStake({ task, publicKey: mainAccountPubKey });
   const { taskName, publicKey } = task;
 
   const nodes = TaskService.getNodesCount(task);
   const topStake = TaskService.getTopStake(task);
 
-  const nodeStatus = TaskService.getStatus(task);
+  const nodeStatus = TaskService.getStatus(task, stakingAccountPublicKey);
 
   const { showModal } = useTaskDetailsModal({
     task,
@@ -42,7 +46,7 @@ export function HistoryRow({ task }: { task: Task }) {
         <div className="text-finnieTeal">date string</div>
       </div>
       <div>TBD</div>
-      <NodeStatusCell status={nodeStatus} />
+      <Status status={nodeStatus} />
       <div>{nodes}</div>
       <div>{topStake}</div>
       <div>{taskStake}</div>

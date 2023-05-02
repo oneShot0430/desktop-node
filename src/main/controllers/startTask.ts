@@ -128,7 +128,7 @@ async function executeTasks(
   });
   const logFile = fsSync.createWriteStream(
     `${getAppDataPath()}/namespace/${selectedTask.task_id}/task.log`,
-    { flags: 'a+' }
+    { flags: 'w' }
   );
   const childTaskProcess = fork(
     `${getAppDataPath()}/executables/${selectedTask.task_audit_program}.js`,

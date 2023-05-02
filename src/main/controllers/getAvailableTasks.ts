@@ -30,7 +30,7 @@ const getAvailableTasks = async (
 
       return {
         publicKey: rawTaskData.task_id,
-        data: parseRawK2TaskData(rawTaskData),
+        data: parseRawK2TaskData({ rawTaskData }),
       };
     })
     .filter(
