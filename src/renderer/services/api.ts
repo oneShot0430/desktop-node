@@ -1,12 +1,12 @@
 import {
   Task as TaskRaw,
-  FetchAllTasksParam,
   GetAvailableTasksParam,
   GetMyTasksParam,
   TaskVariableData,
   TaskVariableDataWithId,
   StoreUserConfigParam,
   PairTaskVariableParamType,
+  PaginatedResponse,
 } from 'models';
 import { Task } from 'renderer/types';
 import { getKoiiFromRoe } from 'utils';
@@ -14,14 +14,6 @@ import { getKoiiFromRoe } from 'utils';
 function parseTask({ data, publicKey }: TaskRaw): Task {
   return { publicKey, ...data };
 }
-
-export const fetchAllTasks = async (
-  params: FetchAllTasksParam
-): Promise<Task[]> => {
-  const tasks = await window.main.getTasks(params);
-  console.log('FETCHING TASKS', tasks);
-  return tasks.map(parseTask);
-};
 
 export const getTasksById = (tasksIds: string[]) => {
   return window.main.getTasksById({ tasksIds }).then((tasks) => {
@@ -32,18 +24,26 @@ export const getTasksById = (tasksIds: string[]) => {
 
 export const fetchMyTasks = async (
   params: GetMyTasksParam
-): Promise<Task[]> => {
-  const tasks = await window.main.getMyTasks(params);
-  console.log('FETCHING MY TASKS', tasks);
-  return tasks.map(parseTask);
+): Promise<PaginatedResponse<Task>> => {
+  console.log('FETCHING MY TASKS', params);
+  const response = await window.main.getMyTasks(params);
+  console.log('FETCHED MY TASKS', params, response);
+  return {
+    ...response,
+    content: response.content.map(parseTask),
+  };
 };
 
 export const fetchAvailableTasks = async (
   params: GetAvailableTasksParam
-): Promise<Task[]> => {
-  const tasks = await window.main.getAvailableTasks(params);
-  console.log('FETCHING AVAILABLE TASKS', tasks);
-  return tasks.map(parseTask);
+): Promise<PaginatedResponse<Task>> => {
+  console.log('FETCHING AVAILABLE TASKS', params);
+  const response = await window.main.getAvailableTasks(params);
+  console.log('FETCHED AVAILABLE TASKS', params, response);
+  return {
+    ...response,
+    content: response.content.map(parseTask),
+  };
 };
 
 export const getRewardEarned = async (task: Task): Promise<number> => {
@@ -268,7 +268,7 @@ export const claimRewards = async (): Promise<number> => {
     task.availableBalances[stakingAccountPublicKey];
   // we keep it as an array for now to have handy not only the rewards themselves but also the number of tasks
   const rewardsNotClaimedByTask: number[] = [];
-  const tasks = await fetchMyTasks({ limit: Infinity, offset: 0 });
+  const tasks = (await fetchMyTasks({ limit: Infinity, offset: 0 })).content;
 
   const tasksWithClaimableRewards = tasks.filter(getPendingRewardsByTask);
   const promisesToClaimRewards = tasksWithClaimableRewards.map(async (task) => {

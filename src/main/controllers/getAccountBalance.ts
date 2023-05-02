@@ -6,6 +6,7 @@ import sdk from 'main/services/sdk';
 const getAccountBalance = async (
   event: Event,
   pubkey: string
-): Promise<number> => sdk.k2Connection.getBalance(new PublicKey(pubkey));
+): Promise<number> =>
+  sdk.k2Connection.getBalance(new PublicKey(pubkey), 'processed');
 
 export default getAccountBalance;

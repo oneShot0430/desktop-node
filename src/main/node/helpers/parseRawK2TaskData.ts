@@ -1,7 +1,10 @@
 import { PublicKey } from '@_koi/web3.js';
 import { TaskData, RawTaskData } from 'models';
 
-export function parseRawK2TaskData(rawTaskData: RawTaskData): TaskData {
+export function parseRawK2TaskData(
+  rawTaskData: RawTaskData,
+  isRunning = false
+): TaskData {
   return {
     taskName: rawTaskData.task_name,
     taskManager: new PublicKey(rawTaskData.task_manager).toBase58(),
@@ -14,9 +17,8 @@ export function parseRawK2TaskData(rawTaskData: RawTaskData): TaskData {
     currentRound: rawTaskData.current_round,
     availableBalances: rawTaskData.available_balances,
     stakeList: rawTaskData.stake_list,
-    isRunning: false,
+    isRunning,
     metadataCID: rawTaskData.task_metadata,
-    raw: rawTaskData,
     minimumStakeAmount: rawTaskData.minimum_stake_amount,
     roundTime: rawTaskData.round_time,
   };

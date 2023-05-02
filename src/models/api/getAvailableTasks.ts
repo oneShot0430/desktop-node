@@ -1,4 +1,3 @@
-export interface GetAvailableTasksParam {
-  offset: number;
-  limit: number;
-}
+import { PaginationParameters } from 'models/pagination';
+
+export type GetAvailableTasksParam = PaginationParameters;

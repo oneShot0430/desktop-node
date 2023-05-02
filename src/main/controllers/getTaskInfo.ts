@@ -37,10 +37,13 @@ export const getTaskInfo = async (
       type: ErrorType.TASK_NOT_FOUND,
     });
 
-  let rawTaskData;
+  let partialRawTaskData;
 
   try {
-    rawTaskData = JSON.parse(accountInfo.data.toString()) as RawTaskData;
+    partialRawTaskData = JSON.parse(accountInfo.data.toString()) as Omit<
+      RawTaskData,
+      'task_id'
+    >;
   } catch (e: any) {
     return throwDetailedError({
       detailed: `Error during Task parsing${
@@ -50,7 +53,7 @@ export const getTaskInfo = async (
     });
   }
 
-  if (!rawTaskData) {
+  if (!partialRawTaskData) {
     return throwDetailedError({
       detailed: `Task data not found${
         context ? ` in context of ${context}` : ''
@@ -58,8 +61,11 @@ export const getTaskInfo = async (
       type: ErrorType.TASK_NOT_FOUND,
     });
   }
-  console.log(rawTaskData);
-  return parseRawK2TaskData(rawTaskData);
+  console.log('PARTIAL RAW DATA', partialRawTaskData);
+  return parseRawK2TaskData({
+    ...partialRawTaskData,
+    task_id: taskAccountPubKey,
+  });
 };
 
 export const validateTask = getTaskInfo;

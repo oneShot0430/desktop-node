@@ -8,6 +8,7 @@ import {
   getStakingAccountKeypair,
 } from '../node/helpers';
 import { namespaceInstance } from '../node/helpers/Namespace';
+import koiiTasks from '../services/koiiTasks';
 
 import { getTaskInfo } from './getTaskInfo';
 
@@ -31,6 +32,8 @@ const claimReward = async (
     stakingAccKeypair,
     taskStateInfoPublicKey
   );
+
+  await koiiTasks.fetchRunningTaskData();
 
   return response;
 };

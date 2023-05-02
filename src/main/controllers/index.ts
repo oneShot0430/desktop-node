@@ -13,7 +13,6 @@ export { default as getStakingAccountPubKey } from './getStakingAccountPubKey';
 export { getTaskInfo } from './getTaskInfo';
 export { default as getTaskLogs } from './getTaskLogs';
 export { default as getTaskNodeInfo } from './getTaskNodeInfo';
-export { default as getTasks } from './getTasks';
 export { getTasksById } from './getTasksById';
 export { getTaskSource } from './getTaskSource';
 export { getTaskMetadata } from './getTaskMetadata';

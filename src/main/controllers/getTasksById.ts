@@ -4,13 +4,26 @@ import koiiTasks from 'main/services/koiiTasks';
 import { Task } from 'models';
 import { GetTasksByIdParam } from 'models/api';
 
-export const getTasksById = (
+import { parseRawK2TaskData } from '../node/helpers/parseRawK2TaskData';
+
+export const getTasksById = async (
   event: Event,
   payload: GetTasksByIdParam
-): Task[] => {
+): Promise<Task[]> => {
   const { tasksIds } = payload || {};
-  const response = tasksIds
-    .map((e) => koiiTasks.getTaskByPublicKey(e))
+  const response: Task[] = (
+    await koiiTasks.fetchDataBundleAndValidateIfTasks(tasksIds)
+  )
+    .map((rawTaskData) => {
+      if (!rawTaskData) {
+        return null;
+      }
+
+      return {
+        publicKey: rawTaskData.task_id,
+        data: parseRawK2TaskData(rawTaskData),
+      };
+    })
     .filter((e): e is Task => Boolean(e));
   return response;
 };

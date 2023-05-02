@@ -2,15 +2,16 @@ import startTask from '../controllers/startTask';
 import koiiTasks from '../services/koiiTasks';
 
 const executeTasks = async (): Promise<void> => {
-  const executableTasks = koiiTasks.getRunningTasks();
+  const executableTaskPubkeys = await koiiTasks.getRunningTaskPubkeysFromDB();
+  console.log('STARTING TASKS: ', executableTaskPubkeys);
 
-  const promises = executableTasks.map(async (task) => {
-    return startTask({} as Event, { taskAccountPubKey: task.publicKey });
+  const promises = executableTaskPubkeys.map((publicKey) => {
+    return startTask({} as Event, { taskAccountPubKey: publicKey });
   });
 
   await Promise.all(promises);
   // run timers after tasks execution
-  koiiTasks.runTimers();
+  await koiiTasks.runTimers();
 };
 
 export default executeTasks;

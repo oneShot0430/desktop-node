@@ -10,7 +10,6 @@ const endpointToControllerMap: Record<
   Endpoints,
   (event: Event, ...args: any[]) => unknown
 > = {
-  [Endpoints.GET_TASKS]: controllers.getTasks,
   [Endpoints.GET_MY_TASKS]: controllers.getMyTasks,
   [Endpoints.GET_AVAILABLE_TASKS]: controllers.getAvailableTasks,
   [Endpoints.GET_TASK_SOURCE]: controllers.getTaskSource,

@@ -7,6 +7,7 @@ interface AuditTriggerState {
 }
 
 export interface RawTaskData {
+  task_id: string;
   task_name: string;
   task_manager: PublicKey;
   is_whitelisted: boolean;
@@ -101,7 +102,6 @@ export interface TaskData {
   stakeList: Record<string, ROE>;
   isRunning: boolean;
   metadataCID: string;
-  raw: RawTaskData;
   minimumStakeAmount: ROE;
   roundTime: number;
 }
