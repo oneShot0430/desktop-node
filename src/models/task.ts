@@ -8,6 +8,8 @@ interface AuditTriggerState {
 
 export interface RawTaskData {
   task_id: string;
+  is_running?: boolean;
+
   task_name: string;
   task_manager: PublicKey;
   is_whitelisted: boolean;

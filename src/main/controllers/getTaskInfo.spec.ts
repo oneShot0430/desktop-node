@@ -19,6 +19,8 @@ const k2ConnectionGetAccountInfoMock = sdk.k2Connection
 
 const testRawTaskData: RawTaskData = {
   task_id: k2PublicKeyExample,
+  is_running: false,
+
   task_name: 'task',
   task_manager: new PublicKey(k2PublicKeyExample),
   is_whitelisted: true,
