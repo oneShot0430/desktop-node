@@ -14,7 +14,7 @@ const getAvailableTasks = async (
   console.log('FETCHING AVAILABLE TASKS', payload);
 
   const idsSlice = koiiTasks.allTaskPubkeys.slice(offset, offset + limit);
-  const runningIds = koiiTasks.runningTasksData.map(({ task_id }) => task_id);
+  const runningIds = koiiTasks.getStartedTasks().map(({ task_id }) => task_id);
 
   const filteredIdsSlice = idsSlice.filter(
     (pubKey) => !runningIds.includes(pubKey)

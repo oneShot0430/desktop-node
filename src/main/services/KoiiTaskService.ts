@@ -25,7 +25,7 @@ export class KoiiTaskService {
 
   public allTaskPubkeys: string[] = [];
 
-  public runningTasksData: RawTaskData[] = [];
+  private startedTasksData: Omit<RawTaskData, 'is_running'>[] = [];
 
   /**
    * @dev: this functions is preparing the Desktop Node to work in a few crucial steps:
@@ -42,7 +42,7 @@ export class KoiiTaskService {
   }
 
   async runTimers() {
-    const selectedTasks = this.runningTasksData;
+    const selectedTasks = this.startedTasksData;
 
     await runTimers({
       selectedTasks,
@@ -60,6 +60,13 @@ export class KoiiTaskService {
       this.fetchAllTaskIds();
       this.fetchRunningTaskData();
     }, 15000);
+  }
+
+  getStartedTasks(): RawTaskData[] {
+    return this.startedTasksData.map((task) => ({
+      ...task,
+      is_running: Boolean(this.STARTED_TASKS[task.task_id]),
+    }));
   }
 
   async taskStarted(
@@ -92,8 +99,6 @@ export class KoiiTaskService {
     this.STARTED_TASKS[taskAccountPubKey].child.kill();
     delete this.STARTED_TASKS[taskAccountPubKey];
 
-    await this.removeRunningTaskPubKey(taskAccountPubKey);
-    await this.fetchRunningTaskData();
     await this.runTimers();
   }
 
@@ -243,7 +248,7 @@ export class KoiiTaskService {
     const currentlyRunningTaskIds: Array<string> =
       await this.getRunningTaskPubkeysFromDB();
 
-    this.runningTasksData = (
+    this.startedTasksData = (
       await Promise.all(
         currentlyRunningTaskIds.map(async (pubkey) => {
           const task = await this.fetchDataAndValidateIfTask(pubkey).catch(

@@ -37,7 +37,10 @@ const logTimestampFormat: DateTimeFormatOptions = {
   hour12: true,
 };
 
-const startTask = async (_: Event, payload: TaskStartStopParam) => {
+const startTask = async (
+  _: Event,
+  payload: TaskStartStopParam
+): Promise<void> => {
   const { taskAccountPubKey } = payload;
 
   const mainSystemAccount = await getMainSystemAccountKeypair();
