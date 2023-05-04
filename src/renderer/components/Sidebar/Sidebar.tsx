@@ -1,6 +1,7 @@
 import React from 'react';
 import { useQuery } from 'react-query';
 
+import { NODE_INFO_REFETCH_INTERVAL } from 'config/refetchIntervals';
 import {
   AppNotification,
   useNotificationsContext,
@@ -22,7 +23,7 @@ export function Sidebar() {
     [QueryKeys.taskNodeInfo],
     getTaskNodeInfo,
     {
-      refetchInterval: 1000 * 60 * 5,
+      refetchInterval: NODE_INFO_REFETCH_INTERVAL,
       onSettled: (nodeInfo) => {
         if (
           (nodeInfo?.pendingRewards as number) > 0 &&

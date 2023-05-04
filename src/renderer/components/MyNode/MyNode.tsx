@@ -1,13 +1,10 @@
 import React from 'react';
-import { useInfiniteQuery, useQuery } from 'react-query';
+import { useQuery } from 'react-query';
 
+import { TASK_REFETCH_INTERVAL } from 'config/refetchIntervals';
 import { InfiniteScrollTable } from 'renderer/components/ui';
-import {
-  fetchMyTasks,
-  getMainAccountPublicKey,
-  QueryKeys,
-} from 'renderer/services';
-import { Task } from 'renderer/types';
+import { useStartedTasks } from 'renderer/features/common/hooks/useStartedTasks';
+import { getMainAccountPublicKey, QueryKeys } from 'renderer/services';
 
 import { TaskItem } from './components/TaskItem';
 
@@ -36,40 +33,26 @@ export function MyNode() {
   );
 
   const {
-    isLoading: isLoadingTasks,
-    data,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useInfiniteQuery(
-    QueryKeys.taskList,
-    ({ pageParam = 0 }) => {
-      return fetchMyTasks({ limit: pageSize, offset: pageParam * pageSize });
-    },
-    {
-      getNextPageParam: (lastResponse, allPages) => {
-        const hasMore = lastResponse.hasNext;
-        const nextPage = allPages.length;
-
-        return hasMore ? nextPage : undefined;
-      },
-    }
-  );
-
-  const allRows: Task[] = (data?.pages || [])
-    .map(({ content }) => content)
-    .flat();
+    isFetchingNextTasks,
+    isLoadingTasks,
+    tasksError,
+    hasMoreTasks,
+    fetchNextTasks,
+    allRows,
+  } = useStartedTasks({
+    pageSize,
+    refetchInterval: TASK_REFETCH_INTERVAL,
+  });
 
   return (
     <InfiniteScrollTable
-      isFetchingNextPage={isFetchingNextPage}
+      isFetchingNextPage={isFetchingNextTasks}
       columnsLayout={columnsLayout}
       headers={tableHeaders}
       isLoading={isLoadingTasks || isLoadingMainAccount}
-      error={error as Error}
-      hasMore={!!hasNextPage}
-      update={fetchNextPage}
+      error={tasksError as Error}
+      hasMore={!!hasMoreTasks}
+      update={fetchNextTasks}
     >
       {allRows.map((task, index) => (
         <TaskItem

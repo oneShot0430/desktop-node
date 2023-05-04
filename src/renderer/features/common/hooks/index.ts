@@ -7,6 +7,9 @@ export { useTaskVariable } from './useTaskVariable';
 export { useOnClickOutside } from './useOnClickOutside';
 export { useMetadata } from './useMetadata';
 export { useKeyInput } from './useKeyInput';
+export { useTasksInfiniteScroll } from './useTaskInfinitieScroll';
+export { useStartedTasks } from './useStartedTasks';
+export { useAvailableTasks } from './useAvailableTasks';
 
 // modals
 export { useCreateTaskModal } from './useCreateTaskModal';

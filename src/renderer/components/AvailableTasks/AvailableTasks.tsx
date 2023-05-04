@@ -1,12 +1,11 @@
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import React, { useMemo } from 'react';
-import { useInfiniteQuery } from 'react-query';
 
 import NoAvailbleTasks from 'assets/svgs/no-available-tasks.svg';
+import { TASK_REFETCH_INTERVAL } from 'config/refetchIntervals';
 import isEmpty from 'lodash/isEmpty';
 import { InfiniteScrollTable } from 'renderer/components/ui';
-import { fetchAvailableTasks, QueryKeys } from 'renderer/services';
-import { Task } from 'renderer/types';
+import { useAvailableTasks } from 'renderer/features';
 
 import TaskItem from './components/TaskItem';
 
@@ -26,52 +25,32 @@ const pageSize = 10;
 
 export function AvailableTasks() {
   const {
-    data,
-    isLoading,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useInfiniteQuery(
-    [QueryKeys.availableTaskList],
-    ({ pageParam = 0 }) => {
-      return fetchAvailableTasks({
-        limit: pageSize,
-        offset: pageParam * pageSize,
-      });
-    },
-    {
-      getNextPageParam: (lastResponse, allPages) => {
-        const hasMore = lastResponse.hasNext;
-        const nextPage = allPages.length;
-
-        return hasMore ? nextPage : undefined;
-      },
-    }
-  );
+    allRows,
+    isLoadingTasks,
+    isFetchingNextTasks,
+    tasksError,
+    hasMoreTasks,
+    fetchNextTasks,
+  } = useAvailableTasks({ pageSize, refetchInterval: TASK_REFETCH_INTERVAL });
 
   const [animationRef] = useAutoAnimate();
 
-  const allRows: Task[] = (data?.pages || [])
-    .map(({ content }) => content)
-    .flat();
-
   const hasNoTasks = useMemo(() => {
-    return !isLoading && isEmpty(allRows);
-  }, [allRows, isLoading]);
+    return !isLoadingTasks && isEmpty(allRows);
+  }, [allRows, isLoadingTasks]);
 
   return (
     <InfiniteScrollTable
       animationRef={animationRef}
-      isFetchingNextPage={isFetchingNextPage}
+      isFetchingNextPage={isFetchingNextTasks}
       columnsLayout={columnsLayout}
       headers={tableHeaders}
-      isLoading={isLoading}
-      error={error as Error}
-      hasMore={!!hasNextPage}
-      update={fetchNextPage}
+      isLoading={isLoadingTasks}
+      error={tasksError as Error}
+      hasMore={!!hasMoreTasks}
+      update={fetchNextTasks}
     >
-      {hasNoTasks && !hasNextPage && (
+      {hasNoTasks && !hasMoreTasks && (
         <div className="w-full h-full flex justify-center items-center text-white mt-[50px]">
           <div className="w-[363px] h-[363px] flex flex-col justify-center items-center">
             <NoAvailbleTasks />
