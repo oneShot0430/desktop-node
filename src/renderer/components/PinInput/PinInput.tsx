@@ -5,8 +5,8 @@ import PinInput from 'react-pin-input';
 import { Button } from '../ui/Button';
 
 type PropsType = Readonly<{
-  onChange: (pin: string) => void;
-  onComplete?: () => void;
+  onChange?: (pin: string) => void;
+  onComplete?: (pin: string) => void;
   initialValue?: string | number;
   showHideButton?: boolean;
   focus?: boolean;
