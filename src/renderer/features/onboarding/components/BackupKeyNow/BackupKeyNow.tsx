@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { ShowSeedPhrase } from 'renderer/components/ShowSeedPhrase';
 import { Button } from 'renderer/components/ui/Button';
+import { useFundNewAccountModal } from 'renderer/features/common';
 import { AppRoute } from 'renderer/types/routes';
 
 import { useOnboardingContext } from '../../context/onboarding-context';
@@ -16,13 +17,19 @@ export function BackupKeyNow() {
     setPhraseRevealed(true);
   };
 
-  console.log('newSeedPhrase`', newSeedPhrase);
+  const { showModal } = useFundNewAccountModal();
+
+  const handleSkip = () => {
+    showModal().then(() => {
+      navigate(AppRoute.OnboardingSeeBalance);
+    });
+  };
 
   const handleConfirmClick = () => {
     const skipThisStep = !phraseRevealed;
 
     if (skipThisStep) {
-      navigate(AppRoute.OnboardingCreateFirstTask);
+      handleSkip();
     } else {
       navigate(AppRoute.OnboardingConfirmSecretPhrase);
     }
