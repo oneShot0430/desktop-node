@@ -12,7 +12,7 @@ export function ShowBalance({ balance }: PropsType) {
   const navigate = useNavigate();
   useEffect(() => {
     setTimeout(() => {
-      navigate(AppRoute.OnboardingBackupKeyNow);
+      navigate(AppRoute.OnboardingCreateFirstTask);
     }, 5000);
   }, [navigate]);
 

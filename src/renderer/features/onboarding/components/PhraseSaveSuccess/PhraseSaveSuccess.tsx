@@ -7,10 +7,19 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Button } from 'renderer/components/ui/Button';
+import { useFundNewAccountModal } from 'renderer/features/common';
 import { AppRoute } from 'renderer/types/routes';
 
 export function PhraseSaveSuccess() {
   const navigate = useNavigate();
+
+  const { showModal } = useFundNewAccountModal();
+
+  const handleContinue = () => {
+    showModal().then(() => {
+      navigate(AppRoute.OnboardingSeeBalance);
+    });
+  };
 
   return (
     <div className="flex flex-col items-center pt-[160px]">
@@ -35,9 +44,7 @@ export function PhraseSaveSuccess() {
 
         <div className="absolute left-0 right-0 z-50 bottom-16">
           <Button
-            onClick={() => {
-              navigate(AppRoute.OnboardingCreateFirstTask);
-            }}
+            onClick={handleContinue}
             label="Next"
             className="font-semibold bg-finnieGray-light text-finnieBlue-light w-[220px] h-[38px] mx-auto"
           />

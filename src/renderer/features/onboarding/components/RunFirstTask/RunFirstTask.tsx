@@ -1,9 +1,10 @@
-import { Icon, CurrencyMoneyLine } from '@_koii/koii-styleguide';
+import { Icon } from '@_koii/koii-styleguide';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import RestoreIconSvg from 'assets/svgs/onboarding/restore-orange-icon.svg';
 import BgShape from 'assets/svgs/onboarding/shape_1.svg';
+import { FundButton } from 'renderer/components/FundButton';
 import { Button } from 'renderer/components/ui';
 import { useMainAccountBalance } from 'renderer/features/settings';
 import { AppRoute } from 'renderer/types/routes';
@@ -85,8 +86,8 @@ function RunFirstTask() {
             onClick={handleContinue}
           />
           <div className="flex flex-row items-center gap-2 mt-2 text-sm text-finnieEmerald-light">
-            <Icon source={CurrencyMoneyLine} />
-            {`Total balance: ${balanceInKoii} KOII`}
+            Total balance: {balanceInKoii} KOII
+            <FundButton />
           </div>
         </div>
       </div>

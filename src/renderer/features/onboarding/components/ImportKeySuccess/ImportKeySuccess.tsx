@@ -3,6 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Button } from 'renderer/components/ui';
+import { useFundNewAccountModal } from 'renderer/features/common';
 import { AppRoute } from 'renderer/types/routes';
 
 import { useOnboardingContext } from '../../context/onboarding-context';
@@ -16,6 +17,14 @@ function ImportKeySuccess() {
         .trim()
         .substring(systemKey.length - 5)}`
     : '';
+
+  const { showModal } = useFundNewAccountModal();
+
+  const handleContinue = () => {
+    showModal().then(() => {
+      navigate(AppRoute.OnboardingSeeBalance);
+    });
+  };
 
   return (
     <div className="flex pl-[105px]">
@@ -37,7 +46,7 @@ function ImportKeySuccess() {
         <Button
           label="Next"
           className="font-semibold bg-finnieGray-light text-finnieBlue-light w-[240px] h-[48px]"
-          onClick={() => navigate(AppRoute.OnboardingCreateFirstTask)}
+          onClick={handleContinue}
         />
       </div>
     </div>

@@ -5,11 +5,11 @@ import {
   DeleteTrashXlLine,
   CheckSuccessLine,
   Icon,
-  CurrencyMoneyLine,
 } from '@_koii/koii-styleguide';
 import React, { memo, useState } from 'react';
 
 import DotsSvg from 'assets/svgs/dots.svg';
+import { FundButton } from 'renderer/components/FundButton';
 import {
   LoadingSpinner,
   LoadingSpinnerSize,
@@ -19,11 +19,7 @@ import {
   TableRow,
   ColumnsLayout,
 } from 'renderer/components/ui';
-import {
-  useFundNewAccountModal,
-  useClipboard,
-  useDeleteAccountModal,
-} from 'renderer/features/common';
+import { useClipboard, useDeleteAccountModal } from 'renderer/features/common';
 import { getKoiiFromRoe } from 'utils';
 
 import { useAccount, useAccountBalance } from '../../hooks';
@@ -67,10 +63,6 @@ export const AccountItem = memo(
 
     const { showModal: showConfirmModal } = useDeleteAccountModal({
       accountName,
-    });
-
-    const { showModal: showFundModal } = useFundNewAccountModal({
-      accountPublicKey: mainPublicKey,
     });
 
     const handleDeleteAccount = async () => {
@@ -156,19 +148,7 @@ export const AccountItem = memo(
 
           <div>
             {accountBalanceInKoii < 1 && (
-              <Tooltip placement="top-left" tooltipContent="Add Funds">
-                <Button
-                  onClick={showFundModal}
-                  onlyIcon
-                  icon={
-                    <Icon
-                      source={CurrencyMoneyLine}
-                      className="-mr-0.5 w-5 h-5 text-black"
-                    />
-                  }
-                  className="rounded-full w-6.5 h-6.5 bg-finnieTeal-100"
-                />
-              </Tooltip>
+              <FundButton accountPublicKey={mainPublicKey} />
             )}
           </div>
 

@@ -11,3 +11,4 @@ export * from './BackButton';
 export * from './SourceCodeButton';
 export * from './RoundTime';
 export * from './LoadingScreen';
+export * from './FundButton';
