@@ -4,8 +4,9 @@ import { useNavigate } from 'react-router-dom';
 
 import LinesVerticalTeal from 'assets/svgs/onboarding/lines-vertical-teal.svg';
 import { PinInput } from 'renderer/components/PinInput';
-import { Button } from 'renderer/components/ui';
+import { Button, Tooltip } from 'renderer/components/ui';
 import { openBrowserWindow } from 'renderer/services';
+import { Theme } from 'renderer/types/common';
 import { AppRoute } from 'renderer/types/routes';
 
 import { useUserAppConfig } from '../../../common/hooks/useUserAppConfig';
@@ -15,6 +16,7 @@ function CreatePin() {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [pin, setPin] = useState('');
   const [pinConfirm, setPinConfirm] = useState('');
+  const [focus, setFocus] = useState(true);
   const navigate = useNavigate();
   const { handleSaveUserAppConfig } = useUserAppConfig({
     onConfigSaveSuccess: () =>
@@ -48,6 +50,11 @@ function CreatePin() {
     openBrowserWindow('https://www.koii.network/TOU_June_22_2021.pdf');
   };
 
+  const handlePinSubmit = (pin: string) => {
+    setFocus(false);
+    setPin(pin);
+  };
+
   return (
     <div className="relative h-full overflow-hidden bg-finnieBlue-dark-secondary">
       <ContentRightWrapper>
@@ -55,17 +62,33 @@ function CreatePin() {
           <div className="z-50">
             <div className="mb-5 text-lg">
               Create an{' '}
-              <span className="underline underline-offset-4 text-finnieTeal">
-                Access PIN
-              </span>{' '}
+              <Tooltip
+                placement="top-right"
+                theme={Theme.Light}
+                tooltipContent={
+                  <p className="max-w-[450px] xl:max-w-xl">
+                    You&apos;ll use this PIN to unlock your node. If you forget
+                    it, you can always reinstall your account using a secret
+                    phrase
+                  </p>
+                }
+              >
+                <span className="underline underline-offset-4 text-finnieTeal">
+                  Access PIN
+                </span>
+              </Tooltip>{' '}
               to secure the Node.
             </div>
-            <PinInput focus onChange={(pin) => setPin(pin)} />
+            <PinInput focus onComplete={handlePinSubmit} />
           </div>
 
           <div>
             <div className="mt-8 mb-5">Confirm your Access PIN.</div>
-            <PinInput onChange={(pin) => setPinConfirm(pin)} />
+            <PinInput
+              focus={!pinConfirm && !focus}
+              onChange={(pin) => setPinConfirm(pin)}
+              key={pin}
+            />
             <div className="pt-4 text-xs text-finnieOrange">
               {!pinIsMatching && pinsLengtIsMatching ? (
                 <span>Those PINs don’t match. Let’s try again.</span>
@@ -84,7 +107,11 @@ function CreatePin() {
               id="link-checkbox"
               type="checkbox"
               className="w-3 h-3 terms-checkbox"
-              onChange={(e) => setTermsAccepted(e.target.checked)}
+              onKeyDown={(e) =>
+                e.key === 'Enter' && setTermsAccepted(!termsAccepted)
+              }
+              checked={termsAccepted}
+              onChange={(e) => setTermsAccepted(!termsAccepted)}
             />
             <label
               htmlFor="link-checkbox"
