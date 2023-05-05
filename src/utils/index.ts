@@ -5,6 +5,7 @@ import {
 } from './currencyConversion';
 import { throwDetailedError } from './error';
 import { getCreatedAtDate } from './getCreatedAtDate';
+import getProgramAccountFilter from './getProgramAccountFilter';
 import mainErrorHandler from './mainErrorHandler';
 import { formatUrl, isValidUrl } from './url';
 
@@ -17,4 +18,5 @@ export {
   getCreatedAtDate,
   formatUrl,
   isValidUrl,
+  getProgramAccountFilter,
 };
