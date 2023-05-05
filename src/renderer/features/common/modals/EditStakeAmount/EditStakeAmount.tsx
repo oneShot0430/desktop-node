@@ -2,7 +2,6 @@ import { create, useModal } from '@ebay/nice-modal-react';
 import React, { useCallback, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
-import { GetTaskNodeInfoResponse } from 'models';
 import { Button } from 'renderer/components/ui';
 import { Modal, ModalContent, ModalTopBar } from 'renderer/features/modals';
 import {
@@ -34,10 +33,12 @@ enum View {
 
 type PropsType = {
   task: Task;
+  onStakeActionSuccess?: () => Promise<unknown>;
 };
 
 export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
   task,
+  onStakeActionSuccess,
 }) {
   const { taskName, taskManager, publicKey } = task;
   const queryClient = useQueryClient();
@@ -48,6 +49,14 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
 
   const stakeAmountInKoii = getKoiiFromRoe(stakeAmount as number);
   const minStake = task.minimumStakeAmount;
+
+  const invalidateStaleData = async () => {
+    await Promise.all([
+      queryClient.invalidateQueries([QueryKeys.TaskStake, publicKey]),
+      queryClient.invalidateQueries([QueryKeys.taskNodeInfo]),
+      queryClient.invalidateQueries([QueryKeys.taskList]),
+    ]);
+  };
 
   const { data: taskEarnedReward } = useQuery(
     [QueryKeys.taskReward, task.publicKey],
@@ -62,28 +71,9 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
           queryKey: [QueryKeys.TaskStake, publicKey],
         });
       },
-
-      onSuccess: () => {
-        queryClient.setQueryData(
-          [QueryKeys.TaskStake, publicKey],
-          (oldStakeAmount?: number) => {
-            const totalStake = (oldStakeAmount || 0) + (stakeAmount || 0);
-            return totalStake;
-          }
-        );
-
-        queryClient.setQueryData<GetTaskNodeInfoResponse>(
-          [QueryKeys.taskNodeInfo],
-          (oldNodeData?: GetTaskNodeInfoResponse) => {
-            const newNodeInfodata = {
-              totalKOII: (oldNodeData?.totalKOII || 0) - (stakeAmount || 0),
-              totalStaked: (oldNodeData?.totalStaked || 0) + (stakeAmount || 0),
-              pendingRewards: oldNodeData?.pendingRewards || 0,
-            };
-
-            return newNodeInfodata;
-          }
-        );
+      onSuccess: async () => {
+        await invalidateStaleData();
+        await onStakeActionSuccess?.();
       },
     }
   );
@@ -95,27 +85,9 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
       });
     },
 
-    onSuccess: () => {
-      queryClient.setQueryData([QueryKeys.TaskStake, publicKey], () => {
-        /**
-         * @dev
-         * Trying to withdraw all stake, so the value is always 0 after successful withdraw
-         */
-        return 0;
-      });
-      queryClient.setQueryData(
-        [QueryKeys.taskNodeInfo],
-        (oldNodeData?: GetTaskNodeInfoResponse) => {
-          const newNodeInfodata = {
-            totalKOII: oldNodeData?.totalKOII || 0,
-            totalStaked: (oldNodeData?.totalStaked || 0) - (taskStake || 0),
-            pendingRewards:
-              (oldNodeData?.pendingRewards || 0) + (taskStake || 0),
-          };
-
-          return newNodeInfodata;
-        }
-      );
+    onSuccess: async () => {
+      await invalidateStaleData();
+      await onStakeActionSuccess?.();
     },
   });
 

@@ -21,8 +21,6 @@ export const useDefaultTasks = () => {
     () => getTasksById(tasksAllowedOnOnboarding)
   );
 
-  console.log('###verifiedTasks', verifiedTasks);
-
   return {
     verifiedTasks,
     isLoading,

@@ -6,11 +6,15 @@ import { EditStakeAmount } from '../modals/EditStakeAmount';
 
 type ParamsType = {
   task: Task;
+  onStakeActionSuccess?: () => Promise<unknown>;
 };
 
-export const useEditStakeAmountModal = ({ task }: ParamsType) => {
+export const useEditStakeAmountModal = ({
+  task,
+  onStakeActionSuccess,
+}: ParamsType) => {
   const showModal = () => {
-    show(EditStakeAmount, { task });
+    show(EditStakeAmount, { task, onStakeActionSuccess });
   };
 
   return {

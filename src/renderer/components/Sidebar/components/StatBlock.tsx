@@ -32,6 +32,7 @@ type StatProps = {
   isLoading: boolean;
   displayConfetti?: () => void;
   shouldAnimate?: boolean;
+  enableNodeInfoRefetch?: (value: boolean) => void;
 };
 
 export function StatBlock({
@@ -40,6 +41,7 @@ export function StatBlock({
   isLoading,
   displayConfetti,
   shouldAnimate,
+  enableNodeInfoRefetch,
 }: StatProps) {
   const roundedValue = getKoiiFromRoe(value);
   const fullValue = getFullKoiiFromRoe(value);
@@ -90,7 +92,11 @@ export function StatBlock({
         </div>
       </Tooltip>
       {isPendingRewardsBlock && (
-        <ClaimRewards value={roundedValue} displayConfetti={displayConfetti} />
+        <ClaimRewards
+          value={roundedValue}
+          displayConfetti={displayConfetti}
+          enableNodeInfoRefetch={enableNodeInfoRefetch}
+        />
       )}
       {/* {shouldAnimate && (
         <div className="absolute w-40 h-40 -top-14 -right-6">
