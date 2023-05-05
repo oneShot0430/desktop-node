@@ -111,6 +111,12 @@ export function TaskItem({
     closeAccordionView
   );
 
+  const minStake = getKoiiFromRoe(task.minimumStakeAmount);
+
+  const tooltipContent =
+    myStakeInKoii > 0
+      ? `${isRunning ? 'Stop' : 'Start'} task`
+      : `You need to stake at least ${minStake} KOII on this task to run it.`;
   return (
     <TableRow
       columnsLayout={columnsLayout}
@@ -124,20 +130,26 @@ export function TaskItem({
           </div>
         ) : (
           <Tooltip
-            tooltipContent={`${isRunning ? 'Stop' : 'Start'} task`}
+            tooltipContent={tooltipContent}
             placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
           >
             <Button
               onlyIcon
               icon={
                 <Icon
-                  source={isRunning ? PauseFill : PlayFill}
+                  source={isRunning && myStakeInKoii > 0 ? PauseFill : PlayFill}
                   size={18}
-                  className={isRunning ? 'text-finniePurple' : 'text-white'}
+                  className={`${
+                    isRunning && myStakeInKoii > 0
+                      ? 'text-finniePurple'
+                      : 'text-white'
+                  }
+                  ${!(myStakeInKoii > 0) && 'opacity-60'}`}
                 />
               }
               onClick={handleToggleTask}
               className="rounded-full w-8 h-8"
+              disabled={!(myStakeInKoii > 0)}
             />
           </Tooltip>
         )}
