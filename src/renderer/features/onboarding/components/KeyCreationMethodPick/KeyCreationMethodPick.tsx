@@ -3,7 +3,7 @@ import React, { memo, useState, ChangeEventHandler } from 'react';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
-import RewardsSvg from 'assets/svgs/onboarding/rewards-icon.svg';
+import CreateAccountSvg from 'assets/svgs/onboarding/create-new-account-icon.svg';
 import { ErrorMessage } from 'renderer/components/ui/ErrorMessage';
 import { useAccounts } from 'renderer/features/settings';
 import {
@@ -105,13 +105,19 @@ function KeyCreationMethodPick() {
               disabled={!!error}
             >
               <div className="flex flex-col items-center justify-center w-full h-full rounded-full bg-finnieBlue-light-secondary">
-                <Icon source={RewardsSvg} className="h-20 w-20 -ml-3 -mt-1" />
+                <Icon
+                  source={CreateAccountSvg}
+                  className="h-[65px] w-[65px] -mt-1"
+                />
               </div>
             </button>
-            Create a New Account
+            <div>Create a New Account</div>
+            <div className=" text-xs text-[#FFC78F]">
+              Most people choose this option.
+            </div>
           </div>
 
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center h-[236px]">
             <button
               className="w-[180px] h-[180px] p-2 border-2 border-dashed border-finnieTeal rounded-full mb-4 cursor-pointer z-30"
               onClick={handleClickImport}
