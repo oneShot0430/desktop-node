@@ -17,6 +17,7 @@ import React, {
   ReactNode,
   RefObject,
 } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 import { useQueryClient } from 'react-query';
 
 import GearFill from 'assets/svgs/gear-fill.svg';
@@ -229,11 +230,18 @@ function TaskItem({ task, index, columnsLayout }: Props) {
         await stakeOnTask(publicKey, valueToStake);
       }
       await startTask(publicKey);
+      setStartTaskSucceeded(true);
     } catch (error) {
       console.error(error);
+      toast.error('Task running failed. Please try again!', {
+        icon: <CloseLine className="h-5 w-5" />,
+        style: {
+          backgroundColor: '#FFA6A6',
+          paddingRight: 0,
+        },
+      });
     } finally {
       queryCache.invalidateQueries([QueryKeys.taskNodeInfo]);
-      setStartTaskSucceeded(true);
       setLoading(false);
     }
   };
@@ -435,6 +443,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
           {getTaskDetailsComponent()}
         </div>
       </div>
+      <Toaster />
     </TableRow>
   ) : (
     <SuccessMessage />
