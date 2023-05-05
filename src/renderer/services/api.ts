@@ -208,6 +208,10 @@ export const getStoredPairedTaskVariables = async () => {
   return window.main.getStoredPairedTaskVariables();
 };
 
+export const getCurrentSlot = async () => {
+  return window.main.getCurrentSlot();
+};
+
 export const getTaskPairedVariablesNamesWithLabels = async (
   taskAccountPubKey: string
 ) => {

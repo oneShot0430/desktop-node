@@ -214,6 +214,7 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
             onConfirmWithdraw={handleWithdraw}
             withdrawAmount={myStakeInKoii}
             koiiBalance={balance as number}
+            task={task}
           />
         )}
         {view === View.StakeSuccess && (

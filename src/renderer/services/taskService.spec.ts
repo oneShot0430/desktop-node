@@ -23,6 +23,7 @@ describe('TaskService.getStatus', () => {
     minimumStakeAmount: 2000000000,
     roundTime: 600,
     submissions: {},
+    startingSlot: 123,
     distributionsAuditTrigger: {},
     submissionsAuditTrigger: {},
   };
