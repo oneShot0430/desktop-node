@@ -10,7 +10,7 @@ import {
 } from '@koii-network/task-node';
 import { isString } from 'lodash';
 import { ErrorType, RawTaskData } from 'models';
-import { throwDetailedError } from 'utils';
+import { throwDetailedError, getProgramAccountFilter } from 'utils';
 
 import config from '../../config';
 import { TASK_CONTRACT_ID } from '../../config/node';
@@ -111,11 +111,10 @@ export class KoiiTaskService {
             offset: 0,
             length: 0,
           },
+          filters: [getProgramAccountFilter],
         }
       )
-    )
-      .map(({ pubkey }) => pubkey.toBase58())
-      .filter((pubkey) => !pubkey.includes('stakepotaccount'));
+    ).map(({ pubkey }) => pubkey.toBase58());
     console.log(`Fetched ${this.allTaskPubkeys.length} Tasks Public Keys`);
   }
 

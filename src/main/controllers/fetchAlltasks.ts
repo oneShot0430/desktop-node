@@ -1,6 +1,7 @@
 import { PublicKey } from '@_koi/web3.js';
 import config from 'config';
 import { Task, FetchAllTasksParam, RawTaskData } from 'models';
+import { getProgramAccountFilter } from 'utils';
 
 import { parseRawK2TaskData } from '../node/helpers/parseRawK2TaskData';
 import sdk from '../services/sdk';
@@ -11,7 +12,10 @@ async function fetchAllTasks(
 ): Promise<Task[]> {
   const { offset, limit } = payload || {};
   let taskAccountInfo = await sdk.k2Connection.getProgramAccounts(
-    new PublicKey(config.node.TASK_CONTRACT_ID)
+    new PublicKey(config.node.TASK_CONTRACT_ID),
+    {
+      filters: [getProgramAccountFilter],
+    }
   );
   if (taskAccountInfo === null) {
     // eslint-disable-next-line no-throw-literal
