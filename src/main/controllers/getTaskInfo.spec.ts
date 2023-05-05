@@ -67,6 +67,7 @@ const expectedResult: TaskData = {
   minimumStakeAmount: 123,
   roundTime: 123,
   stakeList: {},
+  startingSlot: 123,
   submissions: {},
   distributionsAuditTrigger: {},
   submissionsAuditTrigger: {},

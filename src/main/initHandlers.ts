@@ -50,6 +50,7 @@ const endpointToControllerMap: Record<
   [Endpoints.GET_AVERAGE_SLOT_TIME]: controllers.getAverageSlotTime,
   [Endpoints.SWITCH_NETWORK]: controllers.switchNetwork,
   [Endpoints.GET_NETWORK_URL]: controllers.getNetworkUrl,
+  [Endpoints.GET_CURRENT_SLOT]: controllers.getCurrentSlot,
   [Endpoints.INITIALIZE_TASKS]: controllers.initializeTasks,
   [Endpoints.GET_TASK_PAIRED_VARIABLES_NAMES_WITH_LABELS]:
     controllers.getTaskPairedVariablesNamesWithLabels,

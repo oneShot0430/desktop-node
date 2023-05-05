@@ -21,6 +21,7 @@ export function parseRawK2TaskData({
     currentRound: rawTaskData.current_round,
     availableBalances: rawTaskData.available_balances,
     stakeList: rawTaskData.stake_list,
+    startingSlot: rawTaskData.starting_slot,
     isRunning: rawTaskData.is_running ?? false,
     hasError,
     metadataCID: rawTaskData.task_metadata,

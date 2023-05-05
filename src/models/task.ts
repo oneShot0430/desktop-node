@@ -107,6 +107,7 @@ export interface TaskData {
   metadataCID: string;
   minimumStakeAmount: ROE;
   roundTime: number;
+  startingSlot: number;
   submissions: Record<
     string,
     Record<string, { submission_value: string; slot: number; round: number }>
