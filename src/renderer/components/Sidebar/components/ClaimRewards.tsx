@@ -3,9 +3,11 @@ import {
   ButtonVariant,
   ButtonSize,
   Icon,
+  CheckSuccessLine,
 } from '@_koii/koii-styleguide';
 import React, { useState } from 'react';
-import { useQueryClient, useMutation } from 'react-query';
+import toast, { Toaster } from 'react-hot-toast';
+import { useMutation, useQueryClient } from 'react-query';
 
 import NoBordersCheckMarkIcon from 'assets/svgs/checkmark-icon-no-borders.svg';
 import NoBordersCloseIcon from 'assets/svgs/close-icons/close-icon-no-borders.svg';
@@ -18,10 +20,16 @@ import { Theme } from 'renderer/types/common';
 interface PropsType {
   value: number;
   displayConfetti?: () => void;
+  enableNodeInfoRefetch?: (value: boolean) => void;
 }
 
-export function ClaimRewards({ value, displayConfetti }: PropsType) {
+export function ClaimRewards({
+  value,
+  displayConfetti,
+  enableNodeInfoRefetch,
+}: PropsType) {
   const [hasClickedClaim, setHasClickedClaim] = useState<boolean>(false);
+
   const [hasErrorClaimingRewards, setHasErrorClaimingRewards] =
     useState<boolean>(false);
 
@@ -38,22 +46,35 @@ export function ClaimRewards({ value, displayConfetti }: PropsType) {
 
   const { mutate: claimPendingRewards, isLoading: isClaimingRewards } =
     useMutation(claimRewards, {
-      onSuccess: (rewardsNotClaimed) => {
+      onSuccess: async (rewardsNotClaimed) => {
+        enableNodeInfoRefetch?.(false);
         queryClient.setQueryData(
           [QueryKeys.taskNodeInfo],
           (oldNodeData: any) => ({
             ...oldNodeData,
-            totalKOII:
-              oldNodeData.totalKOII +
-              oldNodeData.pendingRewards -
-              rewardsNotClaimed,
-            pendingRewards: rewardsNotClaimed,
+            pendingRewards: 0,
           })
         );
+        queryClient.invalidateQueries([QueryKeys.taskList]);
+
+        // lock Sidebar updates for 20sec
+        setTimeout(() => {
+          enableNodeInfoRefetch?.(true);
+        }, 25000);
+
         displayConfetti?.();
+
         if (rewardsNotClaimed) {
           displayErrorTemporarily();
         }
+
+        toast.success('Congrats! Your total KOII will be updated shortly.', {
+          icon: <CheckSuccessLine className="h-5 w-5" />,
+          style: {
+            backgroundColor: '#BEF0ED',
+            paddingRight: 0,
+          },
+        });
       },
       onError: () => {
         displayErrorTemporarily();
@@ -124,6 +145,7 @@ export function ClaimRewards({ value, displayConfetti }: PropsType) {
           </div>
         </Tooltip>
       )}
+      <Toaster />
     </div>
   );
 }

@@ -55,16 +55,21 @@ function AppWrapper(): JSX.Element {
   // started prefetching required data while node is initialising
   useEffect(() => {
     const prefetchQueries = async () => {
-      await Promise.all([
-        queryClient.prefetchQuery({
-          queryKey: [QueryKeys.UserSettings],
-          queryFn: getUserConfig,
-        }),
-        queryClient.prefetchQuery({
-          queryKey: [QueryKeys.Accounts],
-          queryFn: getAllAccounts,
-        }),
-      ]);
+      try {
+        await Promise.all([
+          queryClient.prefetchQuery({
+            queryKey: [QueryKeys.UserSettings],
+            queryFn: getUserConfig,
+          }),
+          queryClient.prefetchQuery({
+            queryKey: [QueryKeys.Accounts],
+            queryFn: getAllAccounts,
+          }),
+        ]);
+      } catch (error: any) {
+        console.error(error);
+        setInitError(getErrorToDisplay(error));
+      }
     };
 
     prefetchQueries();

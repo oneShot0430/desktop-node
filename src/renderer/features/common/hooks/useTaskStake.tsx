@@ -14,6 +14,7 @@ export const useTaskStake = ({ task, enabled }: UseMyStakeParamsType) => {
     data: taskStake = 0,
     isLoading,
     error,
+    refetch,
   } = useQuery(
     [QueryKeys.TaskStake, task.publicKey],
     () => TaskService.getMyStake(task),
@@ -21,6 +22,7 @@ export const useTaskStake = ({ task, enabled }: UseMyStakeParamsType) => {
   );
 
   return {
+    refetchTaskStake: refetch,
     taskStake,
     loadingTaskStake: isLoading,
     loadingTaskStakeError: error,

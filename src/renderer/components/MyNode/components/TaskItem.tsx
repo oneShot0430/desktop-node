@@ -7,7 +7,13 @@ import {
   InformationCircleLine,
 } from '@_koii/koii-styleguide';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import React, { MutableRefObject, useMemo, useRef, useState } from 'react';
+import React, {
+  MutableRefObject,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
 import { TaskInfo } from 'renderer/components/AvailableTasks/components/TaskInfo';
@@ -28,13 +34,13 @@ import {
   useMetadata,
   useOnClickOutside,
 } from 'renderer/features/common';
-import { useEarnedReward } from 'renderer/features/common/hooks/useEarnedReward';
 import {
   stopTask,
   startTask,
   TaskService,
   QueryKeys,
   getTaskPairedVariablesNamesWithLabels,
+  getRewardEarned,
 } from 'renderer/services';
 import { Task } from 'renderer/types';
 import { getCreatedAtDate, getKoiiFromRoe } from 'utils';
@@ -53,14 +59,24 @@ export function TaskItem({
   columnsLayout,
 }: PropsType) {
   const [shouldDisplayInfo, setShouldDisplayInfo] = useState(false);
+  const [earnedReward, setEarnedReward] = useState(0);
   const [loading, setLoading] = useState(false);
   const { taskName, taskManager, isRunning, publicKey, roundTime } = task;
+  const { taskStake, refetchTaskStake } = useTaskStake({
+    task,
+    publicKey: accountPublicKey,
+  });
   const { showModal: showEditStakeAmountModal } = useEditStakeAmountModal({
     task,
+    onStakeActionSuccess: refetchTaskStake,
   });
   const queryCache = useQueryClient();
-  const { earnedReward } = useEarnedReward({ task, publicKey });
-  const { taskStake } = useTaskStake({ task, publicKey: accountPublicKey });
+
+  useEffect(() => {
+    getRewardEarned(task).then((reward) => {
+      setEarnedReward(reward);
+    });
+  });
 
   const { data: stakingAccountPublicKey = '' } = useStakingAccount();
 
