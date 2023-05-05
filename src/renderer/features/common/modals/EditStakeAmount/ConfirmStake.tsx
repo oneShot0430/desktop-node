@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import { Button, ErrorMessage } from 'renderer/components/ui';
+import { startTask } from 'renderer/services';
 import { ErrorContext } from 'renderer/utils';
 import { getKoiiFromRoe } from 'utils';
 
@@ -9,6 +10,8 @@ type PropsType = Readonly<{
   onConfirmAddStake: () => Promise<void>;
   koiiBalance: number;
   onSuccess: () => void;
+  isRunning: boolean;
+  publicKey: string;
 }>;
 
 export function ConfirmStake({
@@ -16,6 +19,8 @@ export function ConfirmStake({
   stakeAmount,
   koiiBalance,
   onSuccess,
+  isRunning,
+  publicKey,
 }: PropsType) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error>();
@@ -24,7 +29,9 @@ export function ConfirmStake({
     try {
       setIsLoading(true);
       await onConfirmAddStake();
-
+      if (!isRunning) {
+        await startTask(publicKey);
+      }
       onSuccess();
     } catch (error: any) {
       setError(error);
@@ -32,6 +39,7 @@ export function ConfirmStake({
       setIsLoading(false);
     }
   };
+
   return (
     <div className="flex flex-col items-center justify-center pt-10 text-finnieBlue-dark">
       <div className="mb-3">Confirm your stake amount:</div>
@@ -43,7 +51,7 @@ export function ConfirmStake({
       )}
       <div className="py-2 mb-3 text-xs text-finnieTeal-700">{`${koiiBalance} KOII available in your balance`}</div>
       <Button
-        label="Confirm Stake"
+        label={isRunning ? 'Confirm Stake' : 'Run Task'}
         onClick={handleConfirmAddStake}
         loading={isLoading}
         className="text-white"

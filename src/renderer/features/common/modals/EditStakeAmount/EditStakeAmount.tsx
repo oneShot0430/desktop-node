@@ -206,6 +206,8 @@ export const EditStakeAmount = create<PropsType>(function EditStakeAmount({
             onConfirmAddStake={handleAddStake}
             stakeAmount={stakeAmount as number}
             koiiBalance={balance as number}
+            isRunning={task.isRunning}
+            publicKey={publicKey}
           />
         )}
         {view === View.WithdrawConfirm && (
