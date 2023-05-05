@@ -1,7 +1,7 @@
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import loadingIcon from 'assets/animations/loading-icon.gif';
+import loadingIcon from 'assets/animations/loading-animation.gif';
 
 export enum LoadingSpinnerSize {
   Small = 'Small',
