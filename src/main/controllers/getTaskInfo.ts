@@ -61,7 +61,6 @@ export const getTaskInfo = async (
       type: ErrorType.TASK_NOT_FOUND,
     });
   }
-  console.log('PARTIAL RAW DATA', partialRawTaskData);
   return parseRawK2TaskData({
     rawTaskData: {
       ...partialRawTaskData,

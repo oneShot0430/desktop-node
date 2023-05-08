@@ -10,8 +10,6 @@ const executeTasks = async (): Promise<void> => {
   });
 
   await Promise.all(promises);
-  // run timers after tasks execution
-  await koiiTasks.runTimers();
 };
 
 export default executeTasks;

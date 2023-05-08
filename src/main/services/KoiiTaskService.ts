@@ -42,9 +42,10 @@ export class KoiiTaskService {
   }
 
   async runTimers() {
-    const selectedTasks = this.startedTasksData;
-
-    await runTimers({
+    const selectedTasks = this.startedTasksData.filter((task) => {
+      return !!this.STARTED_TASKS[task.task_id];
+    });
+    return runTimers({
       selectedTasks,
       runningTasks: this.STARTED_TASKS,
       tasksCurrentRounds: Array(selectedTasks.length).fill(0),
@@ -98,6 +99,10 @@ export class KoiiTaskService {
 
     this.STARTED_TASKS[taskAccountPubKey].child.kill();
     delete this.STARTED_TASKS[taskAccountPubKey];
+
+    this.startedTasksData = this.startedTasksData.filter((task) => {
+      return task.task_id !== taskAccountPubKey;
+    });
 
     await this.runTimers();
   }
