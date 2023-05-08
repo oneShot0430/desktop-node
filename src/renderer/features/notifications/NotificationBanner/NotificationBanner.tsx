@@ -50,9 +50,10 @@ export function NotificationBanner({ variant }: PropsType) {
           <Button
             label={action.label}
             onClick={action.onClick}
-            variant={ButtonVariant.SecondaryDark}
+            variant={ButtonVariant.PrimaryDark}
             size={ButtonSize.SM}
             labelClassesOverrides="font-semibold w-max"
+            buttonClassesOverrides="bg-finnieBlue"
           />
         )}
         <button
