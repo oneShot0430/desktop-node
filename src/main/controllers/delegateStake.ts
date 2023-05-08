@@ -165,6 +165,7 @@ const delegateStake = async (
 
     const data = encodeData(TASK_INSTRUCTION_LAYOUTS.Stake, {
       stakeAmount: stakeAmount * LAMPORTS_PER_SOL,
+      ipAddress: new TextEncoder().encode(padStringWithSpaces('', 64)),
     });
 
     const instruction = new TransactionInstruction({

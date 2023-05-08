@@ -3,10 +3,12 @@ import { Event } from 'electron';
 import * as fsSync from 'fs';
 import { Transform } from 'stream';
 
+import detectPort from 'detect-port';
+
 import { Keypair } from '@_koi/web3.js';
 import { TaskData as TaskNodeTaskData } from '@koii-network/task-node';
 import { DEFAULT_K2_NETWORK_URL } from 'config/node';
-import cryptoRandomString from 'crypto-random-string';
+// import cryptoRandomString from 'crypto-random-string';
 import { Express } from 'express';
 import db from 'main/db';
 import { getK2NetworkUrl } from 'main/node/helpers/k2NetworkUrl';
@@ -16,7 +18,10 @@ import { ErrorType, RawTaskData } from 'models';
 import { TaskStartStopParam } from 'models/api';
 import { throwDetailedError } from 'utils';
 
-import { getMainSystemAccountKeypair } from '../node/helpers';
+import {
+  getMainSystemAccountKeypair,
+  getStakingAccountKeypair,
+} from '../node/helpers';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
 import initExpressApp from '../node/initExpressApp';
 
@@ -25,8 +30,7 @@ import { getTaskSource } from './getTaskSource';
 import { getTaskPairedVariablesNamesWithValues } from './taskVariables';
 
 const OPERATION_MODE = 'service';
-let LAST_USED_PORT = 10000;
-const logTimestampFormat: DateTimeFormatOptions = {
+const logTimestampFormat: Intl.DateTimeFormatOptions = {
   weekday: 'short',
   month: 'short',
   day: 'numeric',
@@ -56,7 +60,15 @@ const startTask = async (
     });
   }
 
-  console.log('STARTED TASK DATA', taskInfo);
+  const stakingAccKeypair = await getStakingAccountKeypair();
+  const stakingPubkey = stakingAccKeypair.publicKey.toBase58();
+
+  // if stake is undefined or 0 -> stop
+  if (!taskInfo.stake_list[stakingPubkey]) {
+    return;
+  }
+
+  console.log('STARTED TASK DATA', taskInfo?.task_name);
   const expressApp = await initExpressApp();
   try {
     console.log('LOADING TASK:', taskAccountPubKey);
@@ -90,15 +102,16 @@ const startTask = async (
  * @returns {any[]} Array of executable tasks
  */
 async function loadTask({ taskAuditProgram }: { taskAuditProgram: string }) {
-  console.log('taskAuditProgram', taskAuditProgram);
+  const executablesDirectoryPath = `${getAppDataPath()}/executables`;
+  const presumedSourceCodePath = `${executablesDirectoryPath}/${taskAuditProgram}.js`;
 
-  const sourceCode = await getTaskSource({} as Event, { taskAuditProgram });
-  if (sourceCode) {
-    fsSync.mkdirSync(`${getAppDataPath()}/executables`, { recursive: true });
-    fsSync.writeFileSync(
-      `${getAppDataPath()}/executables/${taskAuditProgram}.js`,
-      sourceCode
-    );
+  if (!fsSync.existsSync(presumedSourceCodePath)) {
+    const sourceCode: string = await getTaskSource({} as Event, {
+      taskAuditProgram,
+    });
+
+    fsSync.mkdirSync(executablesDirectoryPath, { recursive: true });
+    fsSync.writeFileSync(presumedSourceCodePath, sourceCode);
   }
 }
 
@@ -115,8 +128,11 @@ async function executeTasks(
   operationMode: string,
   mainSystemAccount: Keypair
 ) {
-  const secret = cryptoRandomString({ length: 20 });
+  const availablePort = await detectPort();
+  console.log('@@@ AV PORT', availablePort);
 
+  // TODO: [Ghazanfer] Figure out why every IPC call is being made twice and update below code accordingly
+  const secret = 'secret';
   const options: ForkOptions = {
     env: await getTaskPairedVariablesNamesWithValues({} as Event, {
       taskAccountPubKey: selectedTask.task_id,
@@ -138,7 +154,7 @@ async function executeTasks(
     [
       `${selectedTask.task_name}`,
       `${selectedTask.task_id}`,
-      `${LAST_USED_PORT}`,
+      `${availablePort}`,
       `${operationMode}`,
       `${mainSystemAccount.publicKey.toBase58()}`,
       `${secret}`,
@@ -203,36 +219,12 @@ async function executeTasks(
     taskData: selectedTask,
   });
 
-  LAST_USED_PORT += 1;
   return {
     namespace,
     child: childTaskProcess,
-    expressAppPort: LAST_USED_PORT,
+    expressAppPort: availablePort,
     secret,
   };
-}
-
-interface DateTimeFormatOptions {
-  localeMatcher?: 'best fit' | 'lookup' | undefined;
-  weekday?: 'long' | 'short' | 'narrow' | undefined;
-  era?: 'long' | 'short' | 'narrow' | undefined;
-  year?: 'numeric' | '2-digit' | undefined;
-  month?: 'numeric' | '2-digit' | 'long' | 'short' | 'narrow' | undefined;
-  day?: 'numeric' | '2-digit' | undefined;
-  hour?: 'numeric' | '2-digit' | undefined;
-  minute?: 'numeric' | '2-digit' | undefined;
-  second?: 'numeric' | '2-digit' | undefined;
-  timeZoneName?:
-    | 'short'
-    | 'long'
-    | 'shortOffset'
-    | 'longOffset'
-    | 'shortGeneric'
-    | 'longGeneric'
-    | undefined;
-  formatMatcher?: 'best fit' | 'basic' | undefined;
-  hour12?: boolean | undefined;
-  timeZone?: string | undefined;
 }
 
 export default startTask;

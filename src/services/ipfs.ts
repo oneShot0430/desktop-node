@@ -1,7 +1,7 @@
-import axios from 'axios';
 import config from 'config';
 import { getStoredTaskVariables } from 'main/controllers/taskVariables/getStoredTaskVariables';
 import { ErrorType } from 'models';
+import fetch from 'node-fetch';
 import { throwDetailedError } from 'utils';
 import { Web3Storage } from 'web3.storage';
 
@@ -50,16 +50,13 @@ async function retrieveThroughClient(
   return textDecoder.decode(await files[0].arrayBuffer());
 }
 
-async function retrieveThroughHttpGateway<T>(
+async function retrieveThroughHttpGateway(
   cid: string,
   fileName = ''
-): Promise<T> {
+): Promise<string> {
   console.log('use IPFS HTTP gateway');
-  const { data: fileContent } = await axios.get<T>(
-    `${config.node.IPFS_GATEWAY_URL}/${cid}/${fileName}`,
-    {
-      transformResponse: [], // disable auto JSON parse
-    }
-  );
+  const fileContent = await fetch(
+    `${config.node.IPFS_GATEWAY_URL}/${cid}/${fileName}`
+  ).then((res) => res.text());
   return fileContent;
 }

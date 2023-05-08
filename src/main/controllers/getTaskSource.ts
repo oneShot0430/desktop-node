@@ -14,6 +14,14 @@ export const getTaskSource = async (
       taskAuditProgram,
       'main.js'
     );
+
+    if (!sourceCode) {
+      return throwDetailedError({
+        detailed: `No Task source found of ID ${taskAuditProgram} to fetch`,
+        type: ErrorType.NO_TASK_SOURCECODE,
+      });
+    }
+
     return sourceCode;
   } catch (e: any) {
     console.error(e);
