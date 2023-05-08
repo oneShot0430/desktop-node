@@ -1,12 +1,13 @@
 import { SeedSecretPhraseXlLine, Icon } from '@_koii/koii-styleguide';
 import React, { memo, useState, ChangeEventHandler } from 'react';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
 import CreateAccountSvg from 'assets/svgs/onboarding/create-new-account-icon.svg';
 import { ErrorMessage } from 'renderer/components/ui/ErrorMessage';
 import { useAccounts } from 'renderer/features/settings';
 import {
+  QueryKeys,
   createNodeWallets,
   generateSeedPhrase,
   setActiveAccount,
@@ -25,7 +26,6 @@ function KeyCreationMethodPick() {
   const createNewKey = async (accountName: string) => {
     const seedPhrase = await generateSeedPhrase();
     const resp = await createNodeWallets(seedPhrase, accountName);
-
     return {
       seedPhrase,
       mainAccountPubKey: resp.mainAccountPubKey,
@@ -33,11 +33,14 @@ function KeyCreationMethodPick() {
     };
   };
 
+  const queryCache = useQueryClient();
+
   const seedPhraseGenerateMutation = useMutation(createNewKey, {
     onSuccess: async ({ seedPhrase, mainAccountPubKey, accountName }) => {
       await setActiveAccount(accountName);
       setNewSeedPhrase(seedPhrase);
       setSystemKey(mainAccountPubKey);
+      queryCache.invalidateQueries(QueryKeys.MainAccount);
       navigate(AppRoute.OnboardingCreateNewKey);
     },
     onError: (error) => {

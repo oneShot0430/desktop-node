@@ -7,7 +7,6 @@ import {
   ChevronArrowLine,
 } from '@_koii/koii-styleguide';
 import React, { useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
 
 import KoiiLogo from 'assets/svgs/koii-logo-white.svg';
 import { Button } from 'renderer/components/ui/Button';
@@ -23,7 +22,6 @@ type PropsType = {
 };
 
 function OnboardingLayout({ children }: PropsType) {
-  const { data: mainAccountPubKey } = useMainAccount();
   const {
     handleBackButtonClick,
     showOnboardingBackButton,
@@ -31,11 +29,11 @@ function OnboardingLayout({ children }: PropsType) {
     navigate,
   } = useBackButtonHandler();
 
-  const location = useLocation();
+  const { data: mainAccountPubKey } = useMainAccount();
+
   const displaySkipButton = useMemo(
-    () =>
-      location.pathname !== AppRoute.OnboardingCreatePin && mainAccountPubKey,
-    [location.pathname, mainAccountPubKey]
+    () => currentPath !== AppRoute.OnboardingCreatePin && mainAccountPubKey,
+    [currentPath, mainAccountPubKey]
   );
 
   const { handleSaveUserAppConfig } = useUserAppConfig({
