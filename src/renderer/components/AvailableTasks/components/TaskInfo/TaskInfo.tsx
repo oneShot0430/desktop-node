@@ -35,7 +35,7 @@ export function TaskInfo({
       <div>
         <div className="mb-2 text-base font-semibold">Task ID:</div>
         <div className="flex justify-between gap-16 mb-4">
-          <p>{publicKey}</p>
+          <p className="select-text">{publicKey}</p>
           <div className="-mt-8">
             <SourceCodeButton repositoryUrl={info?.repositoryUrl || ''} />
           </div>
@@ -43,13 +43,13 @@ export function TaskInfo({
       </div>
       <div className="-mt-8">
         <div className="mb-2 text-base font-semibold">Task description:</div>
-        <p className="mb-4">{info?.description ?? NOT_AVAILABLE}</p>
+        <p className="mb-4 select-text">{info?.description ?? NOT_AVAILABLE}</p>
       </div>
       <div className="mb-6 w-full">
         <div className="mb-2 text-base font-semibold">Node Specifications:</div>
         <div className="grid grid-flow-col grid-rows-2 gap-y-2 gap-x-12">
           {specs?.map(({ type, value }, index) => (
-            <div key={index}>
+            <div key={index} className="select-text">
               {type}: {value ?? NOT_AVAILABLE}
             </div>
           ))}
@@ -63,9 +63,11 @@ export function TaskInfo({
                   key={name}
                   className="flex justify-between w-full my-3 items-center"
                 >
-                  <div className="font-semibold text-xs">{name}</div>
+                  <div className="font-semibold text-xs select-text">
+                    {name}
+                  </div>
 
-                  <div className="px-6 py-2 mr-6 text-sm rounded-md bg-finnieBlue-light-tertiary w-80">
+                  <div className="px-6 py-2 mr-6 text-sm rounded-md bg-finnieBlue-light-tertiary w-80 select-text">
                     {label}
                   </div>
                 </div>

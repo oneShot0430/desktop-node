@@ -17,11 +17,16 @@ export function LoadingScreen({ initError }: PropsType): JSX.Element {
 
       <Icon source={KoiiLogo} className="h-[156px] w-[156px]" />
       <h1 className="text-[40px] leading-[48px] text-center">
-        Welcome to the Koii Node
+        Welcome to the New Internet.
       </h1>
-      <p className="text-lg text-center flex flex-col justify-center">
-        <span>You’re powering the next generation of</span>
-        <span className="text-finnieTeal">the attention economy.</span>
+      <p className="text-lg text-center flex justify-center max-w-xl">
+        <p>
+          <span className="text-finnieTeal mr-1">
+            Koii nodes power better apps.
+          </span>
+          Earn tokens by providing the resources you already have to your
+          community.
+        </p>
       </p>
 
       <WelcomeLinesDiagonal className="absolute bottom-0 -right-[22.5%] h-full" />
