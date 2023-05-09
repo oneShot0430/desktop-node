@@ -69,7 +69,7 @@ export function ConfirmWithdraw({
 
     getParsedRoundTime();
     verifyWithdrawalAvailability();
-  }, [task, totalRoundTime, nodeStatus, stakingAccountPublicKey]);
+  }, [task, nodeStatus, stakingAccountPublicKey]);
 
   const handleConfirmWithdrawStake = async () => {
     try {
