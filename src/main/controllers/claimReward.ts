@@ -33,7 +33,7 @@ const claimReward = async (
     taskStateInfoPublicKey
   );
 
-  await koiiTasks.fetchRunningTaskData();
+  await koiiTasks.fetchStartedTaskData();
 
   return response;
 };

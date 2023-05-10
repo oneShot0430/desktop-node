@@ -22,7 +22,9 @@ export class NodeNamespace extends TaskNodeBase {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  async getMainSystemAccountPubKey(db: IDatabase): Promise<Keypair> {
+  async getMainSystemAccountPubKey(db?: IDatabase): Promise<Keypair> {
+    if (!db) throw new Error('No database provided');
+
     const activeAccount = await db.get(ACTIVE_ACCOUNT);
 
     if (!activeAccount) {
