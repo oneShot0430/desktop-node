@@ -10,7 +10,7 @@ import {
   TaskData as TaskNodeTaskData,
   ITaskNodeBase,
 } from '@koii-network/task-node';
-import { DEFAULT_K2_NETWORK_URL } from 'config/node';
+import { DEFAULT_K2_NETWORK_URL, SERVER_PORT } from 'config/node';
 // import cryptoRandomString from 'crypto-random-string';
 import { Express } from 'express';
 import db from 'main/db';
@@ -169,6 +169,7 @@ async function executeTasks(
       `${getK2NetworkUrl() || DEFAULT_K2_NETWORK_URL}`,
       `${process.env.SERVICE_URL}`,
       `${STAKE}`,
+      `${SERVER_PORT}`,
     ],
     options
   );
