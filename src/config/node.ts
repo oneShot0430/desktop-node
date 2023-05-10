@@ -7,7 +7,7 @@ export const BUNDLER_URL = 'https://mainnet.koii.live';
 
 export const RESTORE_KOHAKU = true;
 
-export const SERVER_PORT = 8080;
+export const SERVER_PORT = 30017;
 
 export const ARWEAVE_GATEWAY_URL = 'https://arweave.net';
 export const IPFS_GATEWAY_URL = 'https://ipfs.io/ipfs';
