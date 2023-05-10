@@ -1,4 +1,4 @@
-import { fork, ForkOptions } from 'child_process';
+import { ChildProcess, fork, ForkOptions } from 'child_process';
 import { Event } from 'electron';
 import * as fsSync from 'fs';
 import { Transform } from 'stream';
@@ -6,7 +6,10 @@ import { Transform } from 'stream';
 import detectPort from 'detect-port';
 
 import { Keypair } from '@_koi/web3.js';
-import { TaskData as TaskNodeTaskData } from '@koii-network/task-node';
+import {
+  TaskData as TaskNodeTaskData,
+  ITaskNodeBase,
+} from '@koii-network/task-node';
 import { DEFAULT_K2_NETWORK_URL } from 'config/node';
 // import cryptoRandomString from 'crypto-random-string';
 import { Express } from 'express';
@@ -82,7 +85,7 @@ const startTask = async (
     );
 
     console.log('TASK STARTED:', taskAccountPubKey);
-    await koiiTasks.taskStarted(
+    await koiiTasks.startTask(
       taskAccountPubKey,
       namespace,
       child,
@@ -127,7 +130,12 @@ async function executeTasks(
   expressApp: Express,
   operationMode: string,
   mainSystemAccount: Keypair
-) {
+): Promise<{
+  namespace: ITaskNodeBase;
+  child: ChildProcess;
+  expressAppPort: number;
+  secret: string;
+}> {
   const availablePort = await detectPort();
   console.log('@@@ AV PORT', availablePort);
 
@@ -207,7 +215,13 @@ async function executeTasks(
     } else {
       console.log('Child process exited successfully');
     }
-    koiiTasks.taskStopped(selectedTask.task_id);
+    if (koiiTasks.RUNNING_TASKS[selectedTask.task_id]) {
+      /**
+       * The "on exit" event is triggered when the task is stopped,
+       * so we don't need to call the stopTask method again
+       */
+      koiiTasks.stopTask(selectedTask.task_id);
+    }
   });
 
   const namespace = new Namespace({

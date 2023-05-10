@@ -58,11 +58,11 @@ export default (): Express => {
     proxy(
       function (req: any) {
         const taskId = req.params.taskid;
-        if (koiiTasks.STARTED_TASKS[taskId]) {
+        if (koiiTasks.RUNNING_TASKS[taskId]) {
           console.log(
-            `http://localhost:${koiiTasks.STARTED_TASKS[taskId].expressAppPort}`
+            `http://localhost:${koiiTasks.RUNNING_TASKS[taskId].expressAppPort}`
           );
-          return `http://localhost:${koiiTasks.STARTED_TASKS[taskId].expressAppPort}`;
+          return `http://localhost:${koiiTasks.RUNNING_TASKS[taskId].expressAppPort}`;
         }
         return 'http://localhost:8080';
       },
@@ -92,7 +92,7 @@ function taskChecker(req: any, res: any, next: any) {
     return res.json({
       taskId,
     });
-  if (koiiTasks.STARTED_TASKS[taskId]) {
+  if (koiiTasks.RUNNING_TASKS[taskId]) {
     return next();
   }
   return res.status(422).send({ message: `Task ${taskId} not running` });

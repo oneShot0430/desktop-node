@@ -21,7 +21,7 @@ import { namespaceInstance } from '../node/helpers/Namespace';
 import sdk from './sdk';
 
 export class KoiiTaskService {
-  public STARTED_TASKS: IRunningTasks<ITaskNodeBase> = {};
+  public RUNNING_TASKS: IRunningTasks<ITaskNodeBase> = {};
 
   public allTaskPubkeys: string[] = [];
 
@@ -35,71 +35,75 @@ export class KoiiTaskService {
    */
   async initializeTasks() {
     await this.fetchAllTaskIds();
-    await this.synchroniseFileSystemTasksWithDB();
-    await this.fetchRunningTaskData();
+    // await this.synchroniseFileSystemTasksWithDB();
+    await this.fetchStartedTaskData();
 
     this.watchTasks();
   }
 
   async runTimers() {
-    const selectedTasks = this.startedTasksData.filter((task) => {
-      return !!this.STARTED_TASKS[task.task_id];
+    /**
+     * @todo: get it from the database
+     */
+    const startedTasks = this.startedTasksData.filter((task) => {
+      return !!this.RUNNING_TASKS[task.task_id];
     });
+
     runTimers({
-      selectedTasks,
-      runningTasks: this.STARTED_TASKS,
-      tasksCurrentRounds: Array(selectedTasks.length).fill(0),
-      tasksLastUpdatedSubmission: Array(selectedTasks.length).fill(0),
-      tasksLastUpdatedAudit: Array(selectedTasks.length).fill(0),
-      tasksLastUpdatedDistribution: Array(selectedTasks.length).fill(0),
-      tasksLastUpdatedDistributionAudit: Array(selectedTasks.length).fill(0),
+      selectedTasks: startedTasks,
+      runningTasks: this.RUNNING_TASKS,
+      tasksCurrentRounds: Array(startedTasks.length).fill(0),
+      tasksLastUpdatedSubmission: Array(startedTasks.length).fill(0),
+      tasksLastUpdatedAudit: Array(startedTasks.length).fill(0),
+      tasksLastUpdatedDistribution: Array(startedTasks.length).fill(0),
+      tasksLastUpdatedDistributionAudit: Array(startedTasks.length).fill(0),
     });
   }
 
   private watchTasks() {
     setInterval(() => {
       this.fetchAllTaskIds();
-      this.fetchRunningTaskData();
+      this.fetchStartedTaskData();
     }, 15000);
   }
 
   getStartedTasks(): RawTaskData[] {
     return this.startedTasksData.map((task) => ({
       ...task,
-      is_running: Boolean(this.STARTED_TASKS[task.task_id]),
+      is_running: Boolean(this.RUNNING_TASKS[task.task_id]),
     }));
   }
 
-  async taskStarted(
+  async startTask(
     taskAccountPubKey: string,
-    namespace: any,
+    namespace: ITaskNodeBase,
     childTaskProcess: ChildProcess,
     expressAppPort: number,
     secret: string
   ): Promise<void> {
-    this.STARTED_TASKS[taskAccountPubKey] = {
+    this.RUNNING_TASKS[taskAccountPubKey] = {
       namespace,
       child: childTaskProcess,
       expressAppPort,
       secret,
     };
 
-    await this.addNewRunningTaskPubKey(taskAccountPubKey);
-    await this.fetchRunningTaskData();
+    await this.addRunningTaskPubKey(taskAccountPubKey);
+    await this.fetchStartedTaskData();
     await this.runTimers();
   }
 
-  async taskStopped(taskAccountPubKey: string) {
-    if (!this.STARTED_TASKS[taskAccountPubKey]) {
+  async stopTask(taskAccountPubKey: string) {
+    if (!this.RUNNING_TASKS[taskAccountPubKey]) {
       return throwDetailedError({
         detailed: 'No such task is running',
         type: ErrorType.NO_RUNNING_TASK,
       });
     }
 
-    this.STARTED_TASKS[taskAccountPubKey].child.kill();
-    delete this.STARTED_TASKS[taskAccountPubKey];
-
+    this.RUNNING_TASKS[taskAccountPubKey].child.kill();
+    delete this.RUNNING_TASKS[taskAccountPubKey];
+    await this.removeRunningTaskPubKey(taskAccountPubKey);
     await this.runTimers();
   }
 
@@ -119,9 +123,9 @@ export class KoiiTaskService {
     console.log(`Fetched ${this.allTaskPubkeys.length} Tasks Public Keys`);
   }
 
-  private async addNewRunningTaskPubKey(pubkey: string) {
+  private async addRunningTaskPubKey(pubkey: string) {
     const currentlyRunningTaskIds: Array<string> = Array.from(
-      new Set([...(await this.getRunningTaskPubkeysFromDB()), pubkey])
+      new Set([...(await this.getRunningTaskPubKeys()), pubkey])
     );
     await namespaceInstance.storeSet(
       SystemDbKeys.RunningTasks,
@@ -129,28 +133,34 @@ export class KoiiTaskService {
     );
   }
 
+  /**
+   * @dev store running tasks
+   */
   private async removeRunningTaskPubKey(pubkey: string) {
     const currentlyRunningTaskIds: Array<string> =
-      await this.getRunningTaskPubkeysFromDB();
+      await this.getRunningTaskPubKeys();
+    const isTaskRunning = currentlyRunningTaskIds.includes(pubkey);
 
-    const index = currentlyRunningTaskIds.indexOf(pubkey);
+    if (isTaskRunning) {
+      const actualRunningTaskIds = currentlyRunningTaskIds.filter(
+        (taskPubKey) => {
+          return taskPubKey !== pubkey;
+        }
+      );
 
-    if (index < 0) {
-      return throwDetailedError({
-        detailed: 'No such task is running',
-        type: ErrorType.NO_RUNNING_TASK,
-      });
+      await namespaceInstance.storeSet(
+        SystemDbKeys.RunningTasks,
+        JSON.stringify(actualRunningTaskIds)
+      );
+    } else {
+      /**
+       * @dev we cant throw error here, because it iwll interrupt the stopTask process
+       */
+      console.error(`Task ${pubkey} is not running`);
     }
-
-    const actualRunningTaskIds = currentlyRunningTaskIds.splice(index, 1);
-
-    await namespaceInstance.storeSet(
-      SystemDbKeys.RunningTasks,
-      JSON.stringify(actualRunningTaskIds)
-    );
   }
 
-  async getRunningTaskPubkeysFromDB(): Promise<string[]> {
+  async getRunningTaskPubKeys(): Promise<string[]> {
     const runningTasksStr: string | undefined =
       await namespaceInstance.storeGet(SystemDbKeys.RunningTasks);
     try {
@@ -162,14 +172,36 @@ export class KoiiTaskService {
     }
   }
 
-  async getRunningTaskPubkeysFromFileSystem(): Promise<string[]> {
+  async getStartedTasksPubKeys(): Promise<string[]> {
     const files = fs.readdirSync(`${getAppDataPath()}/namespace`, {
       withFileTypes: true,
     });
-    const directoriesInDirectory = files
+
+    const startedTasksPubKeys = files
       .filter((item) => item.isDirectory())
+      /**
+       * @dev we are using the name of the directory as the task pubkey
+       */
       .map((item) => item.name);
-    return directoriesInDirectory; // directories are pubkey of loaded Tasks
+    return startedTasksPubKeys;
+  }
+
+  removeTaskFromStartedTasks(taskPubKey: string) {
+    // if is running, stop it
+    if (this.RUNNING_TASKS[taskPubKey]) {
+      this.RUNNING_TASKS[taskPubKey].child.kill();
+      delete this.RUNNING_TASKS[taskPubKey];
+    }
+
+    // remove from started tasks data
+    this.startedTasksData = this.startedTasksData.filter(
+      (task) => task.task_id !== taskPubKey
+    );
+
+    // remove from filesystem
+    fs.rmdirSync(`${getAppDataPath()}/namespace/${taskPubKey}`, {
+      recursive: true,
+    });
   }
 
   async fetchDataAndValidateIfTask(
@@ -232,29 +264,22 @@ export class KoiiTaskService {
     return parsedData as Omit<RawTaskData, 'task_id'>;
   }
 
-  async synchroniseFileSystemTasksWithDB() {
-    const runningTaskPubkeysFromFileSystem =
-      await this.getRunningTaskPubkeysFromFileSystem();
-
-    const runningTaskPubKeysFromDB = await this.getRunningTaskPubkeysFromDB();
-    runningTaskPubkeysFromFileSystem.forEach((pubkey) => {
-      if (!runningTaskPubKeysFromDB.includes(pubkey)) {
-        this.addNewRunningTaskPubKey(pubkey);
-      }
-    });
-  }
-
-  async fetchRunningTaskData() {
-    const currentlyRunningTaskIds: Array<string> =
-      await this.getRunningTaskPubkeysFromDB();
+  async fetchStartedTaskData() {
+    const startedTasksPubKeys: Array<string> =
+      await this.getStartedTasksPubKeys();
 
     this.startedTasksData = (
       await Promise.all(
-        currentlyRunningTaskIds.map(async (pubkey) => {
+        startedTasksPubKeys.map(async (pubkey) => {
           const task = await this.fetchDataAndValidateIfTask(pubkey).catch(
             async (err) => {
               if (isString(err) && err.includes(ErrorType.TASK_NOT_FOUND)) {
                 await this.removeRunningTaskPubKey(pubkey);
+                /**
+                 * @todo: additionaly remove the task from filesystem
+                 * removeTaskFromStartedTasks(pubkey);
+                 * should be tested after task remove is implemented from ui
+                 */
                 return null;
               }
               return null;
@@ -266,6 +291,11 @@ export class KoiiTaskService {
               `DETECTED NOT ACTIVE TASK WITH ID ${pubkey} - DROPPING`
             );
             await this.removeRunningTaskPubKey(pubkey);
+            /**
+             * @todo: additionaly remove the task from filesystem
+             * removeTaskFromStartedTasks(pubkey);
+             * should be tested after task remove is implemented from ui
+             */
             return null;
           }
 

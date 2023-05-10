@@ -110,7 +110,7 @@ const delegateStake = async (
         [mainSystemAccount, stakingAccKeypair]
       );
 
-      await koiiTasks.fetchRunningTaskData();
+      await koiiTasks.fetchStartedTaskData();
 
       return response;
     } catch (e: any) {
@@ -198,7 +198,7 @@ const delegateStake = async (
         [mainSystemAccount, stakingAccKeypair]
       );
 
-      await koiiTasks.fetchRunningTaskData();
+      await koiiTasks.fetchStartedTaskData();
 
       console.log('Staking complete');
 

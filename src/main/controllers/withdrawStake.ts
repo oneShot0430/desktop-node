@@ -52,7 +52,7 @@ const withdrawStake = async (
       [mainSystemAccount, stakingAccKeypair]
     );
 
-    await koiiTasks.fetchRunningTaskData();
+    await koiiTasks.fetchStartedTaskData();
 
     return res;
   } catch (e: any) {
