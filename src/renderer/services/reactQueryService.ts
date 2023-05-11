@@ -20,4 +20,5 @@ export enum QueryKeys {
   TaskMetadata = 'TaskMetadata',
   GetNetworkUrl = 'GetNetworkUrl',
   NodeInitialized = 'NodeInitialized',
+  AppVersion = 'AppVersion',
 }

@@ -319,3 +319,8 @@ export const openLogfileFolder = async (taskPublicKey: string) => {
     taskAccountPublicKey: taskPublicKey,
   });
 };
+
+export const getVersion = async () => {
+  console.log('CHECKING VERSION');
+  return window.main.getVersion();
+};

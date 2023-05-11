@@ -11,7 +11,26 @@ class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
     autoUpdater.logger = log;
+    console.log('Checking for update');
     autoUpdater.checkForUpdatesAndNotify();
+
+    autoUpdater.on('update-downloaded', (info) => {
+      console.log('Update downloaded');
+      dialog
+        .showMessageBox({
+          type: 'question',
+          buttons: ['Install and Restart', 'Later'],
+          defaultId: 0,
+          message:
+            'A new update has been downloaded. Would you like to install and restart the app now?',
+        })
+        .then((selection) => {
+          if (selection.response === 0) {
+            // User clicked 'Install and Restart'
+            autoUpdater.quitAndInstall();
+          }
+        });
+    });
   }
 }
 

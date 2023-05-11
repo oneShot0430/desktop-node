@@ -21,6 +21,7 @@ import getTasksById from './getTasksById';
 import getTaskSource from './getTaskSource';
 import getTaskVariablesNames from './getTaskVariablesNames';
 import getUserConfig from './getUserConfig';
+import getVersion from './getVersion';
 import initializeTasks from './initializeTasks';
 import openBrowserWindow from './openBrowserWindow';
 import openLogfileFolder from './openLogfileFolder';
@@ -84,4 +85,5 @@ export default {
   getCurrentSlot,
   getAverageSlotTime,
   openLogfileFolder,
+  getVersion,
 };
