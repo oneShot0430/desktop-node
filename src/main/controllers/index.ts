@@ -30,6 +30,7 @@ export { default as getCurrentSlot } from './getCurrentSlot';
 export { switchNetwork } from './switchNetwork';
 export { getNetworkUrl } from './getNetworkUrl';
 export { initializeTasks } from './initializeTasks';
+export { openLogfileFolder } from './openLogfileFolder';
 export * from './taskVariables';
 
 export * from './types';

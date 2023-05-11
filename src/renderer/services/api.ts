@@ -312,3 +312,10 @@ export const initializeTasks = async () => {
   console.log('INITIALIZING TASKS');
   return window.main.initializeTasks();
 };
+
+export const openLogfileFolder = async (taskPublicKey: string) => {
+  if (!taskPublicKey) return false;
+  return window.main.openLogfileFolder({
+    taskAccountPublicKey: taskPublicKey,
+  });
+};
