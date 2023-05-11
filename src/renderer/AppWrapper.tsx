@@ -31,9 +31,9 @@ function AppWrapper(): JSX.Element {
 
     const initializeNode = async () => {
       try {
-        await initializeTasks();
-        // Save the initialized state in sessionStorage
+        // Indicate the initialization API call in sessionStorage
         sessionStorage.setItem(NODE_INITALIZED, setValue);
+        await initializeTasks();
       } catch (error: any) {
         console.error(error);
         setInitError(getErrorToDisplay(error));
