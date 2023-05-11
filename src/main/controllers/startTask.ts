@@ -205,6 +205,7 @@ async function executeTasks(
 
   childTaskProcess.on('error', (err) => {
     console.error('Error starting child process:', err);
+    koiiTasks.stopTask(selectedTask.task_id, true);
   });
 
   childTaskProcess.on('exit', (code, signal) => {
@@ -221,7 +222,7 @@ async function executeTasks(
        * The "on exit" event is triggered when the task is stopped,
        * so we don't need to call the stopTask method again
        */
-      koiiTasks.stopTask(selectedTask.task_id);
+      koiiTasks.stopTask(selectedTask.task_id, true);
     }
   });
 

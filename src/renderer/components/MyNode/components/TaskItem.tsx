@@ -129,10 +129,12 @@ export function TaskItem({
 
   const minStake = getKoiiFromRoe(task.minimumStakeAmount);
 
-  const tooltipContent =
-    myStakeInKoii > 0
-      ? `${isRunning ? 'Stop' : 'Start'} task`
-      : `You need to stake at least ${minStake} KOII on this task to run it.`;
+  const tooltipContent = !task.isWhitelisted
+    ? 'This task has been removed. Please unstake your tokens.'
+    : myStakeInKoii > 0
+    ? `${isRunning ? 'Stop' : 'Start'} task`
+    : `You need to stake at least ${minStake} KOII on this task to run it.`;
+
   return (
     <TableRow
       columnsLayout={columnsLayout}
@@ -165,7 +167,7 @@ export function TaskItem({
               }
               onClick={handleToggleTask}
               className="rounded-full w-8 h-8"
-              disabled={!(myStakeInKoii > 0)}
+              disabled={!(myStakeInKoii > 0) || !task.isWhitelisted}
             />
           </Tooltip>
         )}

@@ -93,7 +93,10 @@ export class KoiiTaskService {
     await this.runTimers();
   }
 
-  async stopTask(taskAccountPubKey: string) {
+  async stopTask(
+    taskAccountPubKey: string,
+    skipRemoveFromRunningTasks?: boolean
+  ) {
     if (!this.RUNNING_TASKS[taskAccountPubKey]) {
       return throwDetailedError({
         detailed: 'No such task is running',
@@ -103,7 +106,11 @@ export class KoiiTaskService {
 
     this.RUNNING_TASKS[taskAccountPubKey].child.kill();
     delete this.RUNNING_TASKS[taskAccountPubKey];
-    await this.removeRunningTaskPubKey(taskAccountPubKey);
+
+    if (!skipRemoveFromRunningTasks) {
+      await this.removeRunningTaskPubKey(taskAccountPubKey);
+    }
+
     await this.runTimers();
   }
 
