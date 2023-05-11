@@ -3,12 +3,14 @@ import { useQuery, useQueryClient } from 'react-query';
 
 import { TESTNET_RPC_URL } from 'config/node';
 import { useConfirmNetworkSwitchModal } from 'renderer/features/common/hooks';
-import { QueryKeys, getNetworkUrl, switchNetwork } from 'renderer/services';
+import {
+  QueryKeys,
+  getNetworkUrl,
+  switchNetwork,
+  getVersion,
+} from 'renderer/services';
 
 import { SettingSwitch } from './SettingSwitch';
-
-const lastCommitSha =
-  (typeof process !== 'undefined' && process.env.COMMIT_SHA) || '';
 
 export function NodeSettings() {
   const [hasFlippedSwitch, setHasFlippedSwitch] = useState(false);
@@ -18,6 +20,8 @@ export function NodeSettings() {
     QueryKeys.GetNetworkUrl,
     getNetworkUrl
   );
+
+  const { data: appVersion = '' } = useQuery(QueryKeys.AppVersion, getVersion);
 
   const toggleNetwork = () => {
     setHasFlippedSwitch((switchState) => !switchState);
@@ -52,7 +56,7 @@ export function NodeSettings() {
         onSwitch={toggleNetwork}
         labels={['TESTNET', 'DEVNET']}
       />
-      <div>version: {lastCommitSha}</div>
+      <div>version: {appVersion}</div>
     </div>
   );
 }

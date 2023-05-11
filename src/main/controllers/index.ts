@@ -32,5 +32,6 @@ export { getNetworkUrl } from './getNetworkUrl';
 export { initializeTasks } from './initializeTasks';
 export { openLogfileFolder } from './openLogfileFolder';
 export * from './taskVariables';
+export * from './getVersion';
 
 export * from './types';
