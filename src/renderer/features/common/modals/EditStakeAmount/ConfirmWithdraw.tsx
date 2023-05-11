@@ -29,7 +29,6 @@ export function ConfirmWithdraw({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error>();
   const [canWithdrawStake, setCanWithdrawStake] = useState(false);
-  const [totalRoundTime, setTotalRoundTime] = useState(task.roundTime);
   const [parsedRoundTime, setParsedRoundTime] = useState<ParsedRoundTimeType>({
     value: 0,
     unit: 's',
@@ -63,7 +62,6 @@ export function ConfirmWithdraw({
       const parsedRoundTime = parseRoundTime(
         task.roundTime * averageSlotTime * roundsLeft
       );
-      setTotalRoundTime(task.roundTime * averageSlotTime);
       setParsedRoundTime(parsedRoundTime);
     };
 

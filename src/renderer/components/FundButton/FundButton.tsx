@@ -21,10 +21,10 @@ export function FundButton({ accountPublicKey }: PropsType) {
         icon={
           <Icon
             source={CurrencyMoneyLine}
-            className="-mt-0.5 -mr-0.5 w-5 h-5 text-black"
+            className="-mt-0.5 -mr-0.5 w-5 h-5 text-finnieTeal-100"
           />
         }
-        className="rounded-full w-6.5 h-6.5 bg-finnieTeal-100"
+        className="rounded-full w-6.5 h-6.5 bg-transparent"
       />
     </Tooltip>
   );

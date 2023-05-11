@@ -64,8 +64,8 @@ export function NodeTool({
 
   return (
     <div className="flex justify-between w-full my-3">
-      <div className="flex flex-col gap-1">
-        <div className="font-semibold text-finnieTeal">{tool}</div>
+      <div className="flex flex-col gap-1 max-w-[60%]">
+        <div className="font-semibold text-finnieTeal break-all">{tool}</div>
         {description && <div className="text-xs">{description}</div>}
       </div>
       <div className="flex items-start gap-3 pt-[2px]">
