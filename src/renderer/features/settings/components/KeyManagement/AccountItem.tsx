@@ -130,10 +130,10 @@ export const AccountItem = memo(
                 icon={
                   <Icon
                     source={copiedMainKey ? CheckSuccessLine : CopyLine}
-                    className="text-black h-4 w-4"
+                    className="h-4 w-4 text-white"
                   />
                 }
-                className="rounded-full w-6.5 h-6.5 bg-finnieTeal-100"
+                className="rounded-full w-6.5 h-6.5 bg-transparent outline-none"
               />
             </Tooltip>
             {/* <Button
@@ -142,15 +142,19 @@ export const AccountItem = memo(
           /> */}
           </div>
 
-          <span>
-            {accountBalanceLoadingError ? '-' : accountBalanceInKoii} KOII
+          <span className="flex gap-2.5 items-center ml-3">
+            <span>
+              {accountBalanceLoadingError ? '-' : accountBalanceInKoii} KOII
+            </span>
+
+            <span>
+              {accountBalanceInKoii < 1 && (
+                <FundButton accountPublicKey={mainPublicKey} />
+              )}
+            </span>
           </span>
 
-          <div>
-            {accountBalanceInKoii < 1 && (
-              <FundButton accountPublicKey={mainPublicKey} />
-            )}
-          </div>
+          <span />
 
           <div className="mr-4 ml-auto">
             {!isDefault &&
@@ -164,10 +168,10 @@ export const AccountItem = memo(
                     icon={
                       <Icon
                         source={DeleteTrashXlLine}
-                        className="w-5 h-5 text-black"
+                        className="w-5 h-5 text-finnieRed"
                       />
                     }
-                    className="w-6.5 h-6.5 rounded-full bg-finnieRed mr-0"
+                    className="w-6.5 h-6.5 rounded-full bg-transparent outline-none mr-0"
                   />
                 </Tooltip>
               ))}
@@ -192,10 +196,10 @@ export const AccountItem = memo(
                 icon={
                   <Icon
                     source={copiedStakingKey ? CheckSuccessLine : CopyLine}
-                    className="text-black h-4 w-4"
+                    className="text-black h-4 w-4 text-white"
                   />
                 }
-                className="rounded-full w-6.5 h-6.5 bg-finnieTeal-100"
+                className="rounded-full w-6.5 h-6.5 bg-transparent outline-none"
               />
             </Tooltip>
             {/* <Button
