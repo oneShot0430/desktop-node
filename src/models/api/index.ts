@@ -23,3 +23,4 @@ export * from './taskVariables';
 export * from './getTaskVariablesNames';
 export * from './getTaskSource';
 export * from './getTaskMetadata';
+export * from './openLogfileFolder';
