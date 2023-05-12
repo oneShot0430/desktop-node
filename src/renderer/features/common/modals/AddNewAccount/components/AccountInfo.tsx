@@ -50,10 +50,10 @@ export function AccountInfo({ keyType, address }: PropsType) {
                   icon={
                     <Icon
                       source={hasCopiedKey ? CheckSuccessLine : CopyLine}
-                      className="text-black h-4 w-4"
+                      className="text-finnieTeal-100 h-4 w-4"
                     />
                   }
-                  className="rounded-full w-6.5 h-6.5 bg-finnieTeal-100"
+                  className="rounded-full w-6.5 h-6.5 bg-transparent"
                 />
               </Tooltip>
             </div>

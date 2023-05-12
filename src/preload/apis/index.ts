@@ -10,6 +10,7 @@ import getAvailableTasks from './getAvailableTasks';
 import getAverageSlotTime from './getAverageSlotTime';
 import getCurrentSlot from './getCurrentSlot';
 import getEarnedRewardByNode from './getEarnedRewardByNode';
+import getEncryptedSecretPhrase from './getEncryptedSecretPhrase';
 import getMainAccountPubKey from './getMainAccountPubKey';
 import getMyTasks from './getMyTasks';
 import getNetworkUrl from './getNetworkUrl';
@@ -88,4 +89,5 @@ export default {
   getAverageSlotTime,
   openLogfileFolder,
   getVersion,
+  getEncryptedSecretPhrase,
 };

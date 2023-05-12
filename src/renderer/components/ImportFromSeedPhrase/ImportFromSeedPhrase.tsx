@@ -1,3 +1,4 @@
+import { encrypt } from '@metamask/browser-passworder';
 import React, { useState, ChangeEvent } from 'react';
 import { twMerge } from 'tailwind-merge';
 
@@ -16,6 +17,7 @@ type PropsType = {
   onImportFail?: (error: string) => void;
   setImportedWalletAsDefault?: boolean;
   className?: string;
+  accountPin: string;
 };
 
 function ImportFromSeedPhrase({
@@ -25,6 +27,7 @@ function ImportFromSeedPhrase({
   confirmActionLabel,
   setImportedWalletAsDefault = false,
   className,
+  accountPin,
 }: PropsType) {
   const [phrases, setPhrases] = useState(new Array(12).fill(''));
   const [error, setError] = useState<Error | string>('');
@@ -54,7 +57,15 @@ function ImportFromSeedPhrase({
     if (allPhrasesAreProvided) {
       setError('');
       try {
-        const accounts = await createNodeWallets(keyPhraseString, accountName);
+        const encryptedSecretPhrase: string = await encrypt(
+          accountPin,
+          keyPhraseString
+        );
+        const accounts = await createNodeWallets(
+          keyPhraseString,
+          accountName,
+          encryptedSecretPhrase
+        );
 
         if (setImportedWalletAsDefault) {
           await setActiveAccount(accountName);

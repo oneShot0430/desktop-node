@@ -6,4 +6,5 @@ export interface CreateNodeWalletsResponse {
 export interface CreateNodeWalletsParam {
   mnemonic: string;
   accountName: string;
+  encryptedSecretPhrase: string;
 }

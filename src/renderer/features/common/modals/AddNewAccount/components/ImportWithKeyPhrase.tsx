@@ -12,15 +12,20 @@ import { Theme } from 'renderer/types/common';
 type PropsType = Readonly<{
   onClose: () => void;
   onImportSuccess: (keys: AccountsType) => void;
+  accountPin: string;
 }>;
 
-function ImportWithKeyPhrase({ onClose, onImportSuccess }: PropsType) {
+function ImportWithKeyPhrase({
+  onClose,
+  onImportSuccess,
+  accountPin,
+}: PropsType) {
   const queryCache = useQueryClient();
 
   const [accountName, setAccountName] = useState('');
 
   return (
-    <ModalContent theme={Theme.Dark} className="w-fit h-fit">
+    <ModalContent theme={Theme.Dark} className="w-[700px] h-fit pt-4 pb-6">
       <div className="text-white ">
         <div className="flex justify-between p-3">
           <div className="flex items-center justify-between gap-6 pl-6">
@@ -57,6 +62,7 @@ function ImportWithKeyPhrase({ onClose, onImportSuccess }: PropsType) {
             onImportSuccess({ stakingAccountPubKey, mainAccountPubKey });
           }}
           confirmActionLabel="Import Account"
+          accountPin={accountPin}
           className="px-8 bg-finnieBlue-light-4"
         />
       </div>

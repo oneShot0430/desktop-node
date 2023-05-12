@@ -19,7 +19,7 @@ type LocationStateType = {
 
 function ImportKey() {
   const navigate = useNavigate();
-  const { setSystemKey } = useOnboardingContext();
+  const { setSystemKey, newAccountPin } = useOnboardingContext();
   const location = useLocation();
   const { accountName } = location.state as LocationStateType;
 
@@ -54,6 +54,7 @@ function ImportKey() {
             setImportedWalletAsDefault
             onImportSuccess={handleImportSuccess}
             confirmActionLabel="Confirm"
+            accountPin={newAccountPin}
           />
         </div>
       </ContentRightWrapper>

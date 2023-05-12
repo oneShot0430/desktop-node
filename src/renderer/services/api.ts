@@ -85,6 +85,15 @@ export const getAverageSlotTime = (): Promise<number> => {
     return averageSlotTime;
   });
 };
+
+export const getEncryptedSecretPhrase = (pubKey: string) => {
+  return window.main
+    .getEncryptedSecretPhrase(pubKey)
+    .then((encryptedSecretPhrase) => {
+      return encryptedSecretPhrase;
+    });
+};
+
 export const getStakingAccountPublicKey = (): Promise<string> => {
   return window.main.getStakingAccountPubKey().then((pubkey) => {
     console.log('GETTING STAKING ACCOUNT PUBKEY', pubkey);
@@ -131,9 +140,17 @@ export const getLogs = (taskAccountPubKey: string, noOfLines = 500) => {
     });
 };
 
-export const createNodeWallets = (mnemonic: string, accountName: string) => {
+export const createNodeWallets = (
+  mnemonic: string,
+  accountName: string,
+  encryptedSecretPhrase: string
+) => {
   console.log('CREATING ACCOUNT WALLETS', accountName);
-  return window.main.createNodeWallets({ mnemonic, accountName });
+  return window.main.createNodeWallets({
+    mnemonic,
+    accountName,
+    encryptedSecretPhrase,
+  });
 };
 
 export const generateSeedPhrase = (): Promise<string> => {

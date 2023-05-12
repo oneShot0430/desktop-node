@@ -5,6 +5,8 @@ import { derivePath } from 'ed25519-hd-key';
 
 import { Keypair } from '@_koi/web3.js';
 import * as bip39 from 'bip39';
+import { SystemDbKeys } from 'config/systemDbKeys';
+import { namespaceInstance } from 'main/node/helpers/Namespace';
 import { ErrorType } from 'models';
 import { CreateNodeWalletsParam, CreateNodeWalletsResponse } from 'models/api';
 import { throwDetailedError } from 'utils';
@@ -16,13 +18,14 @@ const createNodeWallets = async (
   payload: CreateNodeWalletsParam
 ): Promise<CreateNodeWalletsResponse> => {
   console.log('IN CREATE WALLET  API');
-  const { mnemonic, accountName } = payload;
+  const { mnemonic, accountName, encryptedSecretPhrase } = payload;
   if (!mnemonic) {
     return throwDetailedError({
       detailed: 'Please provide a mnemonic to generate wallets',
       type: ErrorType.NO_MNEMONIC,
     });
   }
+
   if (!accountName) {
     return throwDetailedError({
       detailed: 'Please provide an account name to generate wallets',
@@ -116,6 +119,39 @@ const createNodeWallets = async (
         });
       }
     });
+
+    // add seed phrase to db
+    const allEncryptedSecretPhraseString: string | undefined =
+      await namespaceInstance.storeGet(SystemDbKeys.EncyptedSecretPhraseMap);
+
+    try {
+      const allEncryptedSecretPhrase: Record<string, string> =
+        allEncryptedSecretPhraseString
+          ? (JSON.parse(allEncryptedSecretPhraseString) as Record<
+              string,
+              string
+            >)
+          : {};
+
+      const publicKey = mainWallet.publicKey.toBase58();
+
+      allEncryptedSecretPhrase[publicKey] = encryptedSecretPhrase;
+
+      const stringifiedAllEncryptedSecretPhrase = JSON.stringify(
+        allEncryptedSecretPhrase
+      );
+      await namespaceInstance.storeSet(
+        SystemDbKeys.EncyptedSecretPhraseMap,
+        stringifiedAllEncryptedSecretPhrase
+      );
+    } catch (error: any) {
+      console.error(error);
+      return throwDetailedError({
+        detailed: `Error during saving seed phrase: ${error}`,
+        type: ErrorType.GENERIC,
+      });
+    }
+
     return {
       stakingWalletPubKey: stakingWallet.publicKey.toBase58(),
       mainAccountPubKey: mainWallet.publicKey.toBase58(),
