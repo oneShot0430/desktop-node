@@ -1,9 +1,11 @@
 type timeUnits = 'd' | 'h' | 'm' | 's';
 
-export function parseRoundTime(value: number): {
+export interface ParsedRoundTime {
   value: number;
   unit: 'd' | 'h' | 'm' | 's';
-} {
+}
+
+export function parseRoundTime(value: number): ParsedRoundTime {
   const days = value / (24 * 60 * 60 * 1000);
   if (days > 1) return { value: days, unit: 'd' };
 

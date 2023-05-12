@@ -130,12 +130,18 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   const isFirstRowInTable = index === 0;
   const nodes = useMemo(() => TaskService.getNodesCount(task), [task]);
   const topStake = useMemo(() => TaskService.getTopStake(task), [task]);
-  const bountyPerRoundInKoii = useMemo(
+  const totalBountyInKoii = useMemo(
     () => getKoiiFromRoe(task.totalBountyAmount),
     [task.totalBountyAmount]
   );
   const isEditStakeInputDisabled =
     alreadyStakedTokensAmount !== 0 || loadingTaskStake;
+  const details = {
+    nodes,
+    minStake: getKoiiFromRoe(minStake),
+    topStake,
+    bounty: totalBountyInKoii,
+  };
 
   const { metadata, isLoadingMetadata } = useMetadata(task.metadataCID);
 
@@ -287,7 +293,13 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     }
 
     if (accordionView === 'info') {
-      return <TaskInfo publicKey={task.publicKey} info={metadata} />;
+      return (
+        <TaskInfo
+          publicKey={task.publicKey}
+          metadata={metadata}
+          details={details}
+        />
+      );
     }
 
     if (accordionView === 'settings') {
@@ -364,7 +376,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
         title={taskManager}
       >
         <div className="truncate">{`Creator: ${task.taskManager}`}</div>
-        <div className="truncate">{`Bounty: ${bountyPerRoundInKoii}`}</div>
+        <div className="truncate">{`Bounty: ${totalBountyInKoii}`}</div>
       </div>
 
       <div

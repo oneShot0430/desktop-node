@@ -4,20 +4,19 @@ import React, { useEffect, useState } from 'react';
 import HistoryIcon from 'assets/svgs/history-icon.svg';
 import { Tooltip, Placement } from 'renderer/components/ui';
 import { getAverageSlotTime } from 'renderer/services';
-import { formatRoundTimeWithFullUnit, parseRoundTime } from 'renderer/utils';
+import {
+  formatRoundTimeWithFullUnit,
+  parseRoundTime,
+  ParsedRoundTime,
+} from 'renderer/utils';
 
 type PropsType = {
   tooltipPlacement: Placement;
   roundTime: number;
 };
 
-type ParsedRoundTimeType = {
-  unit: 'd' | 'h' | 'm' | 's';
-  value: number;
-};
-
 export function RoundTime({ tooltipPlacement, roundTime }: PropsType) {
-  const [parsedRoundTime, setParsedRoundTime] = useState<ParsedRoundTimeType>({
+  const [parsedRoundTime, setParsedRoundTime] = useState<ParsedRoundTime>({
     value: 0,
     unit: 's',
   });

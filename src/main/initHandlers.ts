@@ -28,6 +28,7 @@ const endpointToControllerMap: Record<
   [Endpoints.GENERATE_SEED_PHRASE]: controllers.generateSeedPhrase,
   [Endpoints.SET_ACTIVE_ACCOUNT]: controllers.setActiveAccount,
   [Endpoints.GET_ALL_ACCOUNTS]: controllers.getAllAccounts,
+  [Endpoints.GET_ACTIVE_ACCOUNT_NAME]: controllers.getActiveAccountName,
   [Endpoints.STORE_USER_CONFIG]: controllers.storeUserConfig,
   [Endpoints.GET_USER_CONFIG]: controllers.getUserConfig,
   [Endpoints.GET_TASKS_BY_ID]: controllers.getTasksById,
