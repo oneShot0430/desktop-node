@@ -1,6 +1,9 @@
 import { namespaceInstance } from 'main/node/helpers/Namespace';
 import { getUserConfigResponse } from 'models/api';
 
+import { ErrorType } from '../../models';
+import { throwDetailedError } from '../../utils';
+
 const USER_CONFIG = 'USER_CONFIG';
 
 const getUserConfig = async (): Promise<getUserConfigResponse> => {
@@ -12,9 +15,12 @@ const getUserConfig = async (): Promise<getUserConfigResponse> => {
       userConfigStringified
     ) as getUserConfigResponse;
     return userConfig;
-  } catch (err) {
-    console.log('ERROR', err);
-    throw err;
+  } catch (err: any) {
+    console.error('GET USER CONFIG', err);
+    return throwDetailedError({
+      detailed: err,
+      type: ErrorType.GENERIC,
+    });
   }
 };
 

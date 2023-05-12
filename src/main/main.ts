@@ -5,12 +5,13 @@ import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 
 import initHandlers from './initHandlers';
+import { configureLogger } from './logger';
 import { resolveHtmlPath } from './util';
 
 class AppUpdater {
   constructor() {
-    log.transports.file.level = 'info';
     autoUpdater.logger = log;
+
     console.log('Checking for update');
     autoUpdater.checkForUpdatesAndNotify();
 
@@ -134,6 +135,7 @@ const createWindow = async () => {
     mainWindow = null;
   });
 
+  configureLogger();
   new AppUpdater();
 };
 

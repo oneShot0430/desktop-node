@@ -49,7 +49,6 @@ const createNodeWallets = async (
         type: ErrorType.NO_VALID_ACCOUNT_NAME,
       });
     }
-    console.log('WALLET PATH', stakingWalletFilePath);
     const stakingSeed = bip39.mnemonicToSeedSync(mnemonic, '');
     const stakingWalletPath = "m/44'/501'/99'/0'";
     const stakingWallet = Keypair.fromSeed(
@@ -64,7 +63,6 @@ const createNodeWallets = async (
         type: ErrorType.NO_VALID_ACCOUNT_NAME,
       });
     }
-    console.log('WALLET PATH', mainWalletFilePath);
     const mainSeed = bip39.mnemonicToSeedSync(mnemonic, '');
     const mainWalletPath = "m/44'/501'/0'";
     const mainWallet = Keypair.fromSeed(
@@ -122,9 +120,12 @@ const createNodeWallets = async (
       stakingWalletPubKey: stakingWallet.publicKey.toBase58(),
       mainAccountPubKey: mainWallet.publicKey.toBase58(),
     };
-  } catch (err) {
-    console.log(err);
-    throw err;
+  } catch (err: any) {
+    console.log('ERROR during Account creation', err);
+    return throwDetailedError({
+      detailed: err,
+      type: ErrorType.GENERIC,
+    });
   }
 };
 
