@@ -18,7 +18,7 @@
   ],
   "mac": {
     "category": "public.app-category.productivity",
-    "target": ["dmg", "zip"],
+    "target": ["dmg"],
     "type": "distribution",
     "artifactName": "koii-desktop-node-${version}-${os}-${arch}.${ext}",
     "hardenedRuntime": true,
@@ -42,22 +42,10 @@
     ],
     "sign": false
   },
-  "pkg": {
-    "isRelocatable": false,
-    "overwriteAction": "upgrade"
-  },
   "win": {
     "target": [
       {
         "target": "nsis",
-        "arch": ["x64", "ia32"]
-      },
-      {
-        "target": "msi",
-        "arch": ["x64", "ia32"]
-      },
-      {
-        "target": "zip",
         "arch": ["x64", "ia32"]
       }
     ],
@@ -88,7 +76,7 @@
     "menuCategory": false
   },
   "linux": {
-    "target": ["AppImage", "tar.gz", "deb", "rpm", "snap"],
+    "target": ["AppImage", "tar.gz", "deb", "rpm"],
     "executableName": "koii-desktop-node-desktop",
     "category": "GNOME;GTK;Network;",
     "desktop": {
@@ -99,9 +87,6 @@
   },
   "rpm": {
     "fpm": ["--rpm-rpmbuild-define=_build_id_links none"]
-  },
-  "snap": {
-    "publish": ["github"]
   },
   "afterSign": ".erb/scripts/notarize.js",
   "publish": [
