@@ -3,6 +3,8 @@ import fs from 'fs';
 
 import { RemoveAccountByNameParam } from 'models/api';
 
+import { ErrorType } from '../../models';
+import { throwDetailedError } from '../../utils';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
 
 const removeAccountByName = async (
@@ -18,9 +20,12 @@ const removeAccountByName = async (
       `${getAppDataPath()}/wallets/${accountName}_mainSystemWallet.json`
     );
     return true;
-  } catch (err) {
-    console.log('ERROR', err);
-    throw Error('No account exists with the specified name');
+  } catch (err: any) {
+    console.log('ERROR REMOVE ACCOUNT', err);
+    return throwDetailedError({
+      detailed: err,
+      type: ErrorType.GENERIC,
+    });
   }
 };
 

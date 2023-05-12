@@ -84,7 +84,6 @@ const startTask = async (
       mainSystemAccount
     );
 
-    console.log('TASK STARTED:', taskAccountPubKey);
     await koiiTasks.startTask(
       taskAccountPubKey,
       namespace,
@@ -92,9 +91,13 @@ const startTask = async (
       expressAppPort,
       secret
     );
-  } catch (err) {
-    console.error('ERR-:', err);
-    throw new Error(err as string);
+    console.log('TASK STARTED:', taskAccountPubKey);
+  } catch (err: any) {
+    console.error('ERROR STARTING TASK', err);
+    return throwDetailedError({
+      detailed: err,
+      type: ErrorType.TASK_START,
+    });
   }
 };
 

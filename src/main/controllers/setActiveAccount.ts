@@ -22,7 +22,7 @@ const setActiveAccount = async (
 
     return true;
   } catch (err) {
-    console.log('ERROR', err);
+    console.log('ERROR DURING SETTING ACTIVE ACCOUNT', err);
     return false;
   }
 };

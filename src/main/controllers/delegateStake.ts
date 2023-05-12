@@ -126,11 +126,6 @@ const delegateStake = async (
       });
     }
   } else {
-    console.log(
-      mainSystemAccount.publicKey.toBase58(),
-      stakingAccKeypair.publicKey.toBase58(),
-      taskState.stakePotAccount
-    );
     const createSubmitterAccTransaction = new Transaction().add(
       SystemProgram.createAccount({
         fromPubkey: mainSystemAccount.publicKey,

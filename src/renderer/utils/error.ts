@@ -46,7 +46,11 @@ export const getErrorToDisplay = (
   return error?.message;
 };
 
-export const errorTypeToContent = {
+export const errorTypeToContent: Record<
+  ErrorType,
+  | string
+  | { mainMessage: string; contextToSuffix: Record<ErrorContext, string> }
+> = {
   [ErrorType.CONTRACT_ID_NOT_FOUND]: 'Something went wrong. Please try again',
   [ErrorType.NO_ACTIVE_ACCOUNT]: {
     mainMessage: 'Select an account',
@@ -79,4 +83,5 @@ export const errorTypeToContent = {
   [ErrorType.NO_VALID_ACCOUNT_NAME]: '',
   [ErrorType.NODE_INITIALIZATION_FAILED]:
     'Node initialization failed. Please restart the Desktop Node.',
+  [ErrorType.TASK_START]: 'Task failed to start.',
 };
