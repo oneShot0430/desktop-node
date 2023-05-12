@@ -49,6 +49,7 @@ const endpointToControllerMap: Record<
     controllers.getStoredPairedTaskVariables,
   [Endpoints.GET_ACCOUNT_BALANCE]: controllers.getAccountBalance,
   [Endpoints.GET_AVERAGE_SLOT_TIME]: controllers.getAverageSlotTime,
+  [Endpoints.GET_ENCRYPTED_SECRET_PHRASE]: controllers.getEncryptedSecretPhrase,
   [Endpoints.SWITCH_NETWORK]: controllers.switchNetwork,
   [Endpoints.GET_NETWORK_URL]: controllers.getNetworkUrl,
   [Endpoints.GET_CURRENT_SLOT]: controllers.getCurrentSlot,

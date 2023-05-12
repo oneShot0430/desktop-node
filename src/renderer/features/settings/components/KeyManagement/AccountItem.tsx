@@ -4,6 +4,7 @@ import {
   CopyLine,
   DeleteTrashXlLine,
   CheckSuccessLine,
+  KeyUnlockLine,
   Icon,
 } from '@_koii/koii-styleguide';
 import React, { memo, useState } from 'react';
@@ -20,6 +21,7 @@ import {
   ColumnsLayout,
 } from 'renderer/components/ui';
 import { useClipboard, useDeleteAccountModal } from 'renderer/features/common';
+import { useExportSecretPhrase } from 'renderer/features/common/hooks/useExportSecretPhrase';
 import { getKoiiFromRoe } from 'utils';
 
 import { useAccount, useAccountBalance } from '../../hooks';
@@ -64,6 +66,15 @@ export const AccountItem = memo(
     const { showModal: showConfirmModal } = useDeleteAccountModal({
       accountName,
     });
+
+    const { showModal: showExportSecretPhraseModal } = useExportSecretPhrase({
+      accountName,
+      publicKey: mainPublicKey,
+    });
+
+    const handleExportSecretPhrase = async () => {
+      showExportSecretPhraseModal();
+    };
 
     const handleDeleteAccount = async () => {
       const isConfirmed = await showConfirmModal();
@@ -136,10 +147,11 @@ export const AccountItem = memo(
                 className="rounded-full w-6.5 h-6.5 bg-transparent outline-none"
               />
             </Tooltip>
-            {/* <Button
-            icon={<KeyIconSvg className="w-3.5 h-3.5" />}
-            className="invisible w-6 h-6 rounded-full bg-finnieEmerald-light"
-          /> */}
+            <Button
+              icon={<KeyUnlockLine className="w-3.5 h-3.5 text-white" />}
+              className=" w-6 h-6 rounded-full bg-transparent"
+              onClick={handleExportSecretPhrase}
+            />
           </div>
 
           <span className="flex gap-2.5 items-center ml-3">
@@ -206,6 +218,7 @@ export const AccountItem = memo(
             icon={<KeyIconSvg className="w-3.5 h-3.5" />}
             className="invisible w-6 h-6 rounded-full bg-finnieEmerald-light"
           /> */}
+            <div className="w-6" />
           </div>
         </TableRow>
       </div>

@@ -9,4 +9,5 @@ export enum Steps {
   KeyCreated,
   ShowSeedPhrase,
   AccountImported,
+  ImportNewAccount,
 }

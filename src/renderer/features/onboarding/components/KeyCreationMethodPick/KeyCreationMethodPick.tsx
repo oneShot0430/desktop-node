@@ -1,4 +1,5 @@
 import { SeedSecretPhraseXlLine, Icon } from '@_koii/koii-styleguide';
+import { encrypt } from '@metamask/browser-passworder';
 import React, { memo, useState, ChangeEventHandler } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
@@ -20,12 +21,22 @@ function KeyCreationMethodPick() {
   const [accountName, setAccountName] = useState<string>('');
   const [error, setError] = useState<Error | string>('');
   const navigate = useNavigate();
-  const { setNewSeedPhrase, setSystemKey } = useOnboardingContext();
+  const { setNewSeedPhrase, setSystemKey, newAccountPin } =
+    useOnboardingContext();
   const { accounts } = useAccounts();
 
   const createNewKey = async (accountName: string) => {
     const seedPhrase = await generateSeedPhrase();
-    const resp = await createNodeWallets(seedPhrase, accountName);
+    const encryptedSecretPhrase: string = await encrypt(
+      newAccountPin,
+      seedPhrase
+    );
+
+    const resp = await createNodeWallets(
+      seedPhrase,
+      accountName,
+      encryptedSecretPhrase
+    );
     return {
       seedPhrase,
       mainAccountPubKey: resp.mainAccountPubKey,

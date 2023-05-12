@@ -10,6 +10,7 @@ import { Theme } from 'renderer/types/common';
 import { AppRoute } from 'renderer/types/routes';
 
 import { useUserAppConfig } from '../../../common/hooks/useUserAppConfig';
+import { useOnboardingContext } from '../../context/onboarding-context';
 import { ContentRightWrapper } from '../ContentRightWrapper';
 
 function CreatePin() {
@@ -23,9 +24,12 @@ function CreatePin() {
       navigate(AppRoute.OnboardingPickKeyCreationMethod),
   });
 
+  const { setNewAccountPin } = useOnboardingContext();
+
   const handlePinCreate = async () => {
     const saltRounds = 10;
     const hashedPin = await hash(pin, saltRounds);
+    setNewAccountPin(pin);
     handleSaveUserAppConfig({
       settings: { pin: hashedPin },
     });

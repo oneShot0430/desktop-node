@@ -24,3 +24,4 @@ export * from './getTaskVariablesNames';
 export * from './getTaskSource';
 export * from './getTaskMetadata';
 export * from './openLogfileFolder';
+export * from './getEncryptedSecretPhrase';

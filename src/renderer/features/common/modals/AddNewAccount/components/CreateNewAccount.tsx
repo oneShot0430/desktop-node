@@ -1,5 +1,5 @@
 import { Icon, KeyUnlockLine, CloseLine } from '@_koii/koii-styleguide';
-import { compare } from 'bcryptjs';
+import * as encryptor from '@metamask/browser-passworder';
 import React, { useCallback, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
@@ -14,6 +14,7 @@ import {
   QueryKeys,
 } from 'renderer/services';
 import { Theme } from 'renderer/types/common';
+import { validatePin } from 'renderer/utils';
 
 import { CreateKeyPayload, Steps } from '../types';
 
@@ -29,23 +30,23 @@ export function CreateNewAccount({ onClose, setNextStep }: PropsType) {
   const queryCache = useQueryClient();
   const { settings } = useUserSettings();
 
-  const validatePin = async (pin: string) => {
-    if (pin.length === 6) {
-      const pinMatchesStoredHash = await compare(pin, settings?.pin || '');
-      return pinMatchesStoredHash;
-    }
-    return false;
-  };
-
   const handleCreateNewKey = async () => {
-    const isPinValid = await validatePin(pin);
+    const isPinValid = await validatePin(pin, settings?.pin);
 
     try {
       if (isPinValid) {
         const seedPhrase = await generateSeedPhrase();
+        const encryptedSecretPhrase: string = await encryptor.encrypt(
+          pin,
+          seedPhrase
+        );
 
         const { stakingWalletPubKey, mainAccountPubKey } =
-          await createNodeWallets(seedPhrase, accountName);
+          await createNodeWallets(
+            seedPhrase,
+            accountName,
+            encryptedSecretPhrase
+          );
 
         setNextStep(Steps.ShowSeedPhrase, {
           keys: {

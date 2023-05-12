@@ -28,7 +28,7 @@ function ImportAccount({ onClose, setNextStep }: PropsType) {
       <div className="flex flex-col items-start gap-2 pt-4 pl-12">
         <div className="text-xl font-semibold text-white">Add New Account</div>
         <AddAccountAction
-          onClick={() => setNextStep(Steps.ImportWithKeyPhrase)}
+          onClick={() => setNextStep(Steps.ImportNewAccount)}
           ref={ref}
           title="Import with a seed phrase"
           description="Import an existing wallet using a 12-word seed phrase"
