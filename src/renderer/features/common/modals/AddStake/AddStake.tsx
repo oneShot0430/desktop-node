@@ -34,7 +34,7 @@ export const AddStake = create<PropsType>(function AddStake({ task }) {
   const [error, setError] = useState('');
 
   const stakeAndRun = async () => {
-    await stakeOnTask(publicKey, stakeAmount);
+    await stakeOnTask(publicKey, getRoeFromKoii(stakeAmount));
     if (!isRunning) {
       await startTask(publicKey);
     }

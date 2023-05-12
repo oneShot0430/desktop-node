@@ -99,9 +99,10 @@ export const withdrawStake = (taskAccountPubKey: string) => {
 
 export const stakeOnTask = (taskAccountPubKey: string, stakeAmount: number) => {
   console.log('STAKING ON', stakeAmount, taskAccountPubKey);
+  const stakeAmountInKoii = getKoiiFromRoe(stakeAmount);
   return window.main.delegateStake({
     taskAccountPubKey,
-    stakeAmount,
+    stakeAmount: stakeAmountInKoii,
   });
 };
 
