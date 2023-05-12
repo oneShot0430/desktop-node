@@ -99,16 +99,14 @@ export const withdrawStake = (taskAccountPubKey: string) => {
 
 export const stakeOnTask = (taskAccountPubKey: string, stakeAmount: number) => {
   console.log('STAKING ON', stakeAmount, taskAccountPubKey);
-  // TO DO: expect amount in ROE instead of KOII from the BE
-  const stakeAmountInKoii = getKoiiFromRoe(stakeAmount);
   return window.main.delegateStake({
     taskAccountPubKey,
-    stakeAmount: stakeAmountInKoii,
+    stakeAmount,
   });
 };
 
 export const startTask = (taskAccountPubKey: string) => {
-  console.log('STARTING TASK', taskAccountPubKey);
+  console.log('@@@ STARTING TASK', taskAccountPubKey);
   return window.main.startTask({ taskAccountPubKey });
 };
 
@@ -318,6 +316,10 @@ export const openLogfileFolder = async (taskPublicKey: string) => {
   return window.main.openLogfileFolder({
     taskAccountPublicKey: taskPublicKey,
   });
+};
+
+export const getActiveAccountName = async () => {
+  return window.main.getActiveAccountName();
 };
 
 export const getVersion = async () => {

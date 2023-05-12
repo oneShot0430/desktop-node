@@ -1,10 +1,10 @@
 import {
   PauseFill,
   PlayFill,
-  CurrencyMoneyLine,
   Icon,
   CloseLine,
   InformationCircleLine,
+  ClickXlLine,
 } from '@_koii/koii-styleguide';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import React, {
@@ -14,6 +14,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { toast } from 'react-hot-toast';
 import { useQuery, useQueryClient } from 'react-query';
 
 import { TaskInfo } from 'renderer/components/AvailableTasks/components/TaskInfo';
@@ -29,7 +30,8 @@ import {
 } from 'renderer/components/ui';
 import { useStakingAccount } from 'renderer/features';
 import {
-  useEditStakeAmountModal,
+  useAddStakeModal,
+  useUnstakeModal,
   useTaskStake,
   useMetadata,
   useOnClickOutside,
@@ -41,9 +43,13 @@ import {
   QueryKeys,
   getTaskPairedVariablesNamesWithLabels,
   getRewardEarned,
+  openLogfileFolder,
+  getActiveAccountName,
 } from 'renderer/services';
-import { Task } from 'renderer/types';
+import { Task, TaskStatus } from 'renderer/types';
 import { getCreatedAtDate, getKoiiFromRoe } from 'utils';
+
+import { OptionsDropdown } from './OptionsDropdown';
 
 type PropsType = {
   task: Task;
@@ -59,17 +65,32 @@ export function TaskItem({
   columnsLayout,
 }: PropsType) {
   const [shouldDisplayInfo, setShouldDisplayInfo] = useState(false);
-  const [earnedReward, setEarnedReward] = useState(0);
+  const [shouldDisplayActions, setShouldDisplayActions] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [earnedReward, setEarnedReward] = useState(0);
+
   const { taskName, taskManager, isRunning, publicKey, roundTime } = task;
+
   const { taskStake, refetchTaskStake } = useTaskStake({
     task,
     publicKey: accountPublicKey,
   });
-  const { showModal: showEditStakeAmountModal } = useEditStakeAmountModal({
+  const { showModal: showAddStake } = useAddStakeModal({
     task,
-    onStakeActionSuccess: refetchTaskStake,
   });
+  const { showModal: showUnstake } = useUnstakeModal({
+    task,
+  });
+  const showAddStakeModal = () => {
+    showAddStake().then(() => {
+      refetchTaskStake();
+    });
+  };
+  const showUnstakeModal = () => {
+    showUnstake().then(() => {
+      refetchTaskStake();
+    });
+  };
   const queryCache = useQueryClient();
 
   useEffect(() => {
@@ -82,11 +103,14 @@ export function TaskItem({
 
   const earnedRewardInKoii = getKoiiFromRoe(earnedReward);
   const myStakeInKoii = getKoiiFromRoe(taskStake);
+  const totalBountyInKoii = getKoiiFromRoe(task.totalBountyAmount);
   const isFirstRowInTable = index === 0;
-  const nodeStatus = useMemo(
+  const taskStatus = useMemo(
     () => TaskService.getStatus(task, stakingAccountPublicKey),
     [task, stakingAccountPublicKey]
   );
+  const nodes = useMemo(() => TaskService.getNodesCount(task), [task]);
+  const topStake = useMemo(() => TaskService.getTopStake(task), [task]);
 
   const { metadata, isLoadingMetadata } = useMetadata(task.metadataCID);
 
@@ -94,6 +118,10 @@ export function TaskItem({
     useQuery(QueryKeys.StoredTaskPairedTaskVariables, () =>
       getTaskPairedVariablesNamesWithLabels(task.publicKey)
     );
+  const { data: accountName = '' } = useQuery(
+    QueryKeys.MainAccountName,
+    getActiveAccountName
+  );
 
   const handleToggleTask = async () => {
     try {
@@ -116,19 +144,52 @@ export function TaskItem({
     [metadata]
   );
 
-  const ref = useRef<HTMLDivElement>(null);
-
   const [parent] = useAutoAnimate();
 
+  const infoRef = useRef<HTMLDivElement>(null);
+  const optionsDropdownRef = useRef<HTMLDivElement>(null);
+
   const closeAccordionView = () => setShouldDisplayInfo(false);
+  const closeOptionsDropdown = () => setShouldDisplayActions(false);
+  const openTaskLogs = () => {
+    const openedTheLogs = openLogfileFolder(task.publicKey);
+    if (!openedTheLogs) {
+      toast.error('Unable to open the logs folder. Try Again', {
+        icon: <CloseLine className="h-5 w-5" />,
+        style: {
+          backgroundColor: '#FFA6A6',
+          paddingRight: 0,
+        },
+      });
+    }
+  };
 
   useOnClickOutside(
-    ref as MutableRefObject<HTMLDivElement>,
+    infoRef as MutableRefObject<HTMLDivElement>,
     closeAccordionView
+  );
+  useOnClickOutside(
+    optionsDropdownRef as MutableRefObject<HTMLDivElement>,
+    closeOptionsDropdown
   );
 
   const minStake = getKoiiFromRoe(task.minimumStakeAmount);
+  const details = {
+    nodes,
+    minStake,
+    topStake: getKoiiFromRoe(topStake),
+    bounty: totalBountyInKoii,
+  };
 
+  const containerClasses = `py-2.5 gap-y-0 ${
+    taskStatus === TaskStatus.FLAGGED
+      ? 'bg-[#FF4141]/25'
+      : taskStatus === TaskStatus.ERROR
+      ? 'bg-[#FF4141]/20'
+      : !isRunning
+      ? 'bg-[#FFA54B]/25'
+      : ''
+  }`;
   const tooltipContent = !task.isWhitelisted
     ? 'This task has been removed. Please unstake your tokens.'
     : myStakeInKoii > 0
@@ -138,8 +199,8 @@ export function TaskItem({
   return (
     <TableRow
       columnsLayout={columnsLayout}
-      className={`py-2.5 gap-y-0 ${!isRunning ? 'bg-[#FFEE81]/20' : ''}`}
-      ref={ref}
+      className={containerClasses}
+      ref={infoRef}
     >
       <div>
         {loading ? (
@@ -172,7 +233,7 @@ export function TaskItem({
           </Tooltip>
         )}
       </div>
-      <div>
+      <div className="flex gap-3 justify-self-start">
         <Tooltip
           placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
           tooltipContent="Open task details"
@@ -184,52 +245,73 @@ export function TaskItem({
               }
               icon={
                 <Icon
-                  source={shouldDisplayInfo ? CloseLine : InformationCircleLine}
+                  source={InformationCircleLine}
                   size={36}
+                  className={
+                    shouldDisplayInfo ? 'text-finnieTeal' : 'text-white'
+                  }
                 />
               }
               onlyIcon
             />
           </div>
         </Tooltip>
-      </div>
-
-      <div className="text-xs flex flex-col gap-1 justify-self-start ">
-        <div>{taskName}</div>
-        <div className="text-finnieTeal">{createdAt}</div>
+        <div className="text-xs flex flex-col gap-1 justify-self-start">
+          <div>{taskName}</div>
+          <div className="text-finnieTeal">{createdAt}</div>
+        </div>
       </div>
       <div
-        className="overflow-hidden text-ellipsis w-full justify-self-start"
+        className="flex flex-col gap-2 text-xs min-w-[130px] w-full justify-self-start"
         title={taskManager}
       >
-        {taskManager}
+        <div className="truncate">{`Creator: ${task.taskManager}`}</div>
+        <div className="truncate">{`Account: ${accountName}`}</div>
       </div>
-      <div>{earnedRewardInKoii}</div>
-      <div>{myStakeInKoii}</div>
+      <div
+        className="flex flex-col gap-2 text-xs min-w-[50px] w-fit mx-auto"
+        title={taskManager}
+      >
+        <div className="truncate">{`Staked: ${myStakeInKoii}`}</div>
+        <div className="truncate">{`Bounty: ${totalBountyInKoii}`}</div>
+      </div>
+      <div className="flex flex-col gap-2 text-xs w-fit" title={taskManager}>
+        <div className="truncate">All time: soon</div>
+        <div className="truncate">{`To claim: ${earnedRewardInKoii}`}</div>
+      </div>
       <RoundTime
         tooltipPlacement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
         roundTime={roundTime}
       />
       <div>
-        <Status status={nodeStatus} isFirstRowInTable={isFirstRowInTable} />
+        <Status status={taskStatus} isFirstRowInTable={isFirstRowInTable} />
       </div>
-      <div className="flex flex-row items-center gap-4">
-        <Tooltip
-          placement={`${isFirstRowInTable ? 'bottom' : 'top'}-left`}
-          tooltipContent="Edit stake amount"
-        >
-          <Button
-            onClick={showEditStakeAmountModal}
-            onlyIcon
-            icon={
-              <Icon
-                source={CurrencyMoneyLine}
-                className="text-white h-10 w-10"
-              />
-            }
-            className="py-0.75 !pr-[0.5px] rounded-full"
+      <div
+        ref={optionsDropdownRef}
+        className="flex flex-row items-center gap-4 relative"
+      >
+        <Button
+          onClick={() =>
+            setShouldDisplayActions(
+              (shouldDisplayActions) => !shouldDisplayActions
+            )
+          }
+          onlyIcon
+          icon={<Icon source={ClickXlLine} className="text-white h-10 w-10" />}
+          className={`py-0.75 !pr-[0.5px] rounded-full ${
+            shouldDisplayActions ? 'bg-[#454580]' : 'bg-transparent'
+          } h-12 w-12`}
+        />
+        {shouldDisplayActions && (
+          <OptionsDropdown
+            addStake={showAddStakeModal}
+            unstake={showUnstakeModal}
+            openLogs={openTaskLogs}
+            runOrStopTask={handleToggleTask}
+            task={task}
+            status={taskStatus}
           />
-        </Tooltip>
+        )}
       </div>
 
       <div
@@ -249,7 +331,8 @@ export function TaskItem({
             <TaskInfo
               publicKey={task.publicKey}
               variables={pairedVariables}
-              info={metadata}
+              metadata={metadata}
+              details={details}
               shouldDisplayToolsInUse
             />
           )}

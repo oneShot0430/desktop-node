@@ -13,7 +13,8 @@ export { useAvailableTasks } from './useAvailableTasks';
 
 // modals
 export { useCreateTaskModal } from './useCreateTaskModal';
-export { useEditStakeAmountModal } from './useEditStakeAmountModal';
+export { useAddStakeModal } from './useAddStakeModal';
+export { useUnstakeModal } from './useUnstakeModal';
 export { useFundNewAccountModal } from './useFundAccountModal';
 export { useNotEnoughFunds } from './useNotEnoughFunds';
 export { useTaskDetailsModal } from './useTaskDetailsModal';

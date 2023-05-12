@@ -2,19 +2,16 @@ import { show } from '@ebay/nice-modal-react';
 
 import { Task } from 'renderer/types';
 
-import { EditStakeAmount } from '../modals/EditStakeAmount';
+import { AddStake } from '../modals/AddStake';
 
 type ParamsType = {
   task: Task;
   onStakeActionSuccess?: () => Promise<unknown>;
 };
 
-export const useEditStakeAmountModal = ({
-  task,
-  onStakeActionSuccess,
-}: ParamsType) => {
+export const useAddStakeModal = ({ task }: ParamsType) => {
   const showModal = () => {
-    show(EditStakeAmount, { task, onStakeActionSuccess });
+    return show(AddStake, { task });
   };
 
   return {

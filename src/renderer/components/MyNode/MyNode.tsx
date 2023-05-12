@@ -9,18 +9,16 @@ import { getMainAccountPublicKey, QueryKeys } from 'renderer/services';
 import { TaskItem } from './components/TaskItem';
 
 const tableHeaders = [
-  { title: 'Start / Stop' },
-  { title: 'Info' },
-  { title: 'Task Name & Start Time', alignLeft: true },
-  { title: 'Creator', alignLeft: true },
+  { title: 'Run' },
+  { title: 'Task Info', alignLeft: true },
+  { title: '' },
   {
-    title: 'Earned',
-    tooltip: 'Total KOII earned for running this Task',
+    title: '',
   },
-  { title: 'Stake' },
+  { title: 'Rewards' },
   { title: 'Round' },
   { title: 'Status' },
-  { title: 'Add / Withdraw' },
+  { title: 'Options' },
 ];
 
 const columnsLayout = 'grid-cols-my-node place-items-center';

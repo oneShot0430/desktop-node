@@ -4,6 +4,7 @@ import createNodeWallets from './createNodeWallets';
 import delegateStake from './delegateStake';
 import generateSeedPhrase from './generateSeedPhrase';
 import getAccountBalance from './getAccountBalance';
+import getActiveAccountName from './getActiveAccountName';
 import getAllAccounts from './getAllAccounts';
 import getAvailableTasks from './getAvailableTasks';
 import getAverageSlotTime from './getAverageSlotTime';
@@ -64,6 +65,7 @@ export default {
   generateSeedPhrase,
   setActiveAccount,
   getAllAccounts,
+  getActiveAccountName,
   storeUserConfig,
   getUserConfig,
   getTasksById,
