@@ -1,4 +1,5 @@
 import { shell } from 'electron';
+import { join } from 'path';
 
 import { isString } from 'lodash';
 import { getAppDataPath } from 'main/node/helpers/getAppDataPath';
@@ -14,7 +15,11 @@ export const openLogfileFolder = async (
     const { taskAccountPublicKey } = payload;
     if (!isString(taskAccountPublicKey)) return false;
 
-    const logfilePath = `${getAppDataPath()}/namespace/${taskAccountPublicKey}`;
+    const logfilePath = join(
+      getAppDataPath(),
+      'namespace',
+      taskAccountPublicKey
+    );
     const result = await shell.openPath(logfilePath);
 
     if (result === FAILED_TO_OPEN) return false;
