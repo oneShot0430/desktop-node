@@ -3,7 +3,11 @@ import { useQuery } from 'react-query';
 
 import { TableRow, Status } from 'renderer/components/ui';
 import { useStakingAccount } from 'renderer/features';
-import { useTaskStake, useTaskDetailsModal } from 'renderer/features/common';
+import {
+  useTaskStake,
+  useTaskDetailsModal,
+  useTaskStatus,
+} from 'renderer/features/common';
 import {
   getMainAccountPublicKey,
   QueryKeys,
@@ -26,7 +30,10 @@ export function HistoryRow({ task }: { task: Task }) {
   const nodes = TaskService.getNodesCount(task);
   const topStake = TaskService.getTopStake(task);
 
-  const nodeStatus = TaskService.getStatus(task, stakingAccountPublicKey);
+  const { taskStatus } = useTaskStatus({
+    task,
+    stakingAccountPublicKey,
+  });
 
   const { showModal } = useTaskDetailsModal({
     task,
@@ -46,7 +53,7 @@ export function HistoryRow({ task }: { task: Task }) {
         <div className="text-finnieTeal">date string</div>
       </div>
       <div>TBD</div>
-      <Status status={nodeStatus} />
+      <Status status={taskStatus} />
       <div>{nodes}</div>
       <div>{topStake}</div>
       <div>{taskStake}</div>

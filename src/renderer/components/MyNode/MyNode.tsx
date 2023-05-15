@@ -59,6 +59,7 @@ export function MyNode() {
           task={task}
           accountPublicKey={mainAccountPubKey as string}
           columnsLayout={columnsLayout}
+          totalItems={allRows.length}
         />
       ))}
     </InfiniteScrollTable>

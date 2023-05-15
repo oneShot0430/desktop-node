@@ -1,7 +1,7 @@
 import { max, sum } from 'lodash';
 import { Task, TaskStatus } from 'renderer/types';
 
-import { getStakingAccountPublicKey } from './api';
+import { getStakingAccountPublicKey, getCurrentSlot } from './api';
 
 export class TaskService {
   static getTotalStaked(task: Task): number {
@@ -28,35 +28,58 @@ export class TaskService {
     return Object.values(task.stakeList).length;
   }
 
-  static getStatus(task: Task, mainAccountStakingKey: string): TaskStatus {
+  static async getStatus(
+    task: Task,
+    stakingAccountPublicKey: string
+  ): Promise<TaskStatus> {
     const allSubmissions = Object.values(task.submissions);
     const submissionsFromCurrentAccount = allSubmissions.filter((submission) =>
-      Object.keys(submission).some((key) => key === mainAccountStakingKey)
+      Object.keys(submission).some((key) => key === stakingAccountPublicKey)
     );
     const last3Submissions = allSubmissions.slice(-3);
+    const lastRoundWithSubmissions = Object.values(
+      allSubmissions?.slice(-1)?.flat()?.[0] || {}
+    )[0]?.round;
+    const currentSlot = await getCurrentSlot();
+    const currentRound = Math.floor(
+      (currentSlot - task.startingSlot) / task.roundTime
+    );
+    const numberOfLatestConsecutiveRoundsWithoutSubmissions =
+      currentRound - lastRoundWithSubmissions;
+
     const hasSubmissionsOnlyInLast1Or2Rounds =
+      numberOfLatestConsecutiveRoundsWithoutSubmissions < 2 &&
       last3Submissions[last3Submissions.length - 1] &&
-      mainAccountStakingKey in last3Submissions[last3Submissions.length - 1] &&
+      stakingAccountPublicKey in
+        last3Submissions[last3Submissions.length - 1] &&
       (last3Submissions.length < 3 ||
         (last3Submissions[last3Submissions.length - 3] &&
           !(
-            mainAccountStakingKey in
+            stakingAccountPublicKey in
             last3Submissions[last3Submissions.length - 3]
           )));
-    const hasSubmissionsInAllLast3Rounds = last3Submissions.every(
-      (round) => mainAccountStakingKey in round
-    );
-    const hasSubmissionsInSomeOfLast3Rounds = last3Submissions.some(
-      (round) => mainAccountStakingKey in round
-    );
+    const hasSubmissionsInAllLast3Rounds =
+      numberOfLatestConsecutiveRoundsWithoutSubmissions < 2 &&
+      last3Submissions.every((round) => stakingAccountPublicKey in round);
+    const hasSubmissionsInSomeOfLast3Rounds =
+      (numberOfLatestConsecutiveRoundsWithoutSubmissions < 2 &&
+        last3Submissions.some((round) => stakingAccountPublicKey in round)) ||
+      (numberOfLatestConsecutiveRoundsWithoutSubmissions === 2 &&
+        last3Submissions
+          .slice(-2)
+          .some((round) => stakingAccountPublicKey in round)) ||
+      (numberOfLatestConsecutiveRoundsWithoutSubmissions === 3 &&
+        last3Submissions
+          .slice(-1)
+          .some((round) => stakingAccountPublicKey in round));
     const nodeHasBeenFlaggedAsMalicious =
-      mainAccountStakingKey in task.distributionsAuditTrigger ||
-      mainAccountStakingKey in task.submissionsAuditTrigger;
+      stakingAccountPublicKey in task.distributionsAuditTrigger ||
+      stakingAccountPublicKey in task.submissionsAuditTrigger;
     const taskIsComplete = task.totalBountyAmount < task.bountyAmountPerRound;
     const { hasError } = task;
 
-    if (hasError) return TaskStatus.ERROR;
     if (nodeHasBeenFlaggedAsMalicious) return TaskStatus.FLAGGED;
+    if (hasError) return TaskStatus.ERROR;
     if (taskIsComplete) return TaskStatus.COMPLETE;
     if (!task.isRunning && hasSubmissionsInSomeOfLast3Rounds)
       return TaskStatus.COOLING_DOWN;

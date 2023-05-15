@@ -11,8 +11,10 @@ import React from 'react';
 
 import CoolDown from 'assets/svgs/cooldown-line.svg';
 import WarmUp from 'assets/svgs/warmup-line.svg';
-import { Tooltip, Placement } from 'renderer/components/ui/Tooltip';
 import { TaskStatus } from 'renderer/types';
+
+import { LoadingSpinner } from '../LoadingSpinner';
+import { Tooltip, Placement } from '../Tooltip';
 
 const statuses = {
   [TaskStatus.PRE_SUBMISSION]: {
@@ -60,15 +62,18 @@ const statuses = {
 type PropsType = {
   status: TaskStatus;
   isFirstRowInTable?: boolean;
+  isLoading?: boolean;
 };
 
-export function Status({ status, isFirstRowInTable }: PropsType) {
+export function Status({ status, isFirstRowInTable, isLoading }: PropsType) {
   const { icon: StatusIcon, tooltip, iconColor } = statuses[status];
   const tooltipPlacement: Placement = `${
     isFirstRowInTable ? 'bottom' : 'top'
   }-left`;
 
-  return (
+  return isLoading ? (
+    <LoadingSpinner />
+  ) : (
     <Tooltip tooltipContent={tooltip} placement={tooltipPlacement}>
       <Icon source={StatusIcon} className={`h-8 w-8 ${iconColor}`} />
     </Tooltip>
