@@ -35,6 +35,7 @@ import {
   useTaskStake,
   useMetadata,
   useOnClickOutside,
+  useTaskStatus,
 } from 'renderer/features/common';
 import {
   stopTask,
@@ -56,6 +57,7 @@ type PropsType = {
   accountPublicKey: string;
   index: number;
   columnsLayout: ColumnsLayout;
+  totalItems: number;
 };
 
 export function TaskItem({
@@ -63,6 +65,7 @@ export function TaskItem({
   accountPublicKey,
   index,
   columnsLayout,
+  totalItems,
 }: PropsType) {
   const [shouldDisplayInfo, setShouldDisplayInfo] = useState(false);
   const [shouldDisplayActions, setShouldDisplayActions] = useState(false);
@@ -100,15 +103,17 @@ export function TaskItem({
   });
 
   const { data: stakingAccountPublicKey = '' } = useStakingAccount();
+  const { taskStatus, isLoadingStatus } = useTaskStatus({
+    task,
+    stakingAccountPublicKey,
+  });
 
   const earnedRewardInKoii = getKoiiFromRoe(earnedReward);
   const myStakeInKoii = getKoiiFromRoe(taskStake);
   const totalBountyInKoii = getKoiiFromRoe(task.totalBountyAmount);
   const isFirstRowInTable = index === 0;
-  const taskStatus = useMemo(
-    () => TaskService.getStatus(task, stakingAccountPublicKey),
-    [task, stakingAccountPublicKey]
-  );
+  const optionsDropdownIsInverted = totalItems > 5 && index > totalItems - 3;
+
   const nodes = useMemo(() => TaskService.getNodesCount(task), [task]);
   const topStake = useMemo(() => TaskService.getTopStake(task), [task]);
 
@@ -284,7 +289,11 @@ export function TaskItem({
         roundTime={roundTime}
       />
       <div>
-        <Status status={taskStatus} isFirstRowInTable={isFirstRowInTable} />
+        <Status
+          status={taskStatus}
+          isFirstRowInTable={isFirstRowInTable}
+          isLoading={isLoadingStatus}
+        />
       </div>
       <div
         ref={optionsDropdownRef}
@@ -310,6 +319,7 @@ export function TaskItem({
             runOrStopTask={handleToggleTask}
             task={task}
             status={taskStatus}
+            isInverted={optionsDropdownIsInverted}
           />
         )}
       </div>

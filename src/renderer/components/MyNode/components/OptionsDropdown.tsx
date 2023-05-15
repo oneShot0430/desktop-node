@@ -23,6 +23,7 @@ type PropsType = {
   openLogs: () => void;
   task: Task;
   status: TaskStatus;
+  isInverted: boolean;
 };
 
 export function OptionsDropdown({
@@ -32,10 +33,16 @@ export function OptionsDropdown({
   openLogs,
   task,
   status,
+  isInverted,
 }: PropsType) {
   const isArchiveDisabled = true;
   const isCoolingDown = status === TaskStatus.COOLING_DOWN;
   const baseItemClasses = 'flex gap-2 text-white cursor-pointer';
+  const containerClasses = `z-10 ${
+    isInverted
+      ? 'bg-[url(assets/svgs/options-bg-inverted.png)] -top-[217px] bg-bottom'
+      : 'bg-[url(assets/svgs/options-bg.png)] top-12'
+  }  bg-cover text-base absolute -right-[21px] w-[290px] h-[216px] pl-4 rounded-xl flex flex-col justify-evenly`;
   const disabledItemClasses = '!text-[#949494] !cursor-not-allowed';
   const unstakeWhenRunningMessage = (
     <span className="bg-gray-light/20 text-gray-light text-xs rounded p-1 ml-auto mr-2">
@@ -62,8 +69,14 @@ export function OptionsDropdown({
   const { taskStake } = useTaskStake({ task });
 
   return (
-    <div className="z-10 bg-[url(assets/svgs/options-bg.png)] bg-cover text-base absolute top-12 -right-[19px] w-[290px] h-[216px] pl-4 rounded-xl flex flex-col justify-evenly">
-      <button onClick={addStake} className={baseItemClasses}>
+    <div className={containerClasses}>
+      <button
+        onClick={addStake}
+        className={`${baseItemClasses} ${
+          !task.isWhitelisted ? disabledItemClasses : ''
+        }`}
+        disabled={!task.isWhitelisted}
+      >
         <Icon source={CurrencyIcon} className="text-white" />
         Add Stake
       </button>
@@ -85,9 +98,11 @@ export function OptionsDropdown({
       <button
         onClick={runOrStopTask}
         className={`${baseItemClasses} ${
-          !task.isRunning && !taskStake ? disabledItemClasses : ''
+          (!task.isRunning && !taskStake) || !task.isWhitelisted
+            ? disabledItemClasses
+            : ''
         }`}
-        disabled={!task.isRunning && !taskStake}
+        disabled={(!task.isRunning && !taskStake) || !task.isWhitelisted}
       >
         <Icon source={task.isRunning ? PauseCircle : PlayCircle} />
         {task.isRunning ? 'Stop Task' : 'Start Task'}

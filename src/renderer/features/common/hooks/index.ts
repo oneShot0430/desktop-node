@@ -10,6 +10,7 @@ export { useKeyInput } from './useKeyInput';
 export { useTasksInfiniteScroll } from './useTaskInfinitieScroll';
 export { useStartedTasks } from './useStartedTasks';
 export { useAvailableTasks } from './useAvailableTasks';
+export { useTaskStatus } from './useTaskStatus';
 
 // modals
 export { useCreateTaskModal } from './useCreateTaskModal';

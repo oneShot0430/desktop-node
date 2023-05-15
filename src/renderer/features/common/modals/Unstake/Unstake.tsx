@@ -5,17 +5,13 @@ import { useMutation } from 'react-query';
 import { Button, ErrorMessage } from 'renderer/components/ui';
 import { Modal, ModalContent, ModalTopBar } from 'renderer/features/modals';
 import { useStakingAccount } from 'renderer/features/settings/hooks';
-import {
-  TaskService,
-  getAverageSlotTime,
-  stopTask,
-  withdrawStake,
-} from 'renderer/services';
+import { getAverageSlotTime, stopTask, withdrawStake } from 'renderer/services';
 import { Task, TaskStatus } from 'renderer/types';
 import { parseRoundTime, ParsedRoundTime } from 'renderer/utils';
 import { getKoiiFromRoe } from 'utils';
 
 import { useTaskStake } from '../../hooks/useTaskStake';
+import { useTaskStatus } from '../../hooks/useTaskStatus';
 
 type PropsType = {
   task: Task;
@@ -60,7 +56,11 @@ export const Unstake = create<PropsType>(function AddStake({ task }) {
   });
 
   const { data: stakingAccountPublicKey = '' } = useStakingAccount();
-  const taskStatus = TaskService.getStatus(task, stakingAccountPublicKey);
+
+  const { taskStatus } = useTaskStatus({
+    task,
+    stakingAccountPublicKey,
+  });
 
   useEffect(() => {
     const verifyWithdrawalAvailability = async () => {
