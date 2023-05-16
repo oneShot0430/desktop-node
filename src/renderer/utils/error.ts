@@ -84,4 +84,5 @@ export const errorTypeToContent: Record<
   [ErrorType.NODE_INITIALIZATION_FAILED]:
     'Node initialization failed. Please restart the Desktop Node.',
   [ErrorType.TASK_START]: 'Task failed to start.',
+  [ErrorType.TOO_MANY_REQUESTS]: 'Too many requests. Please try again later.',
 };

@@ -14,6 +14,7 @@ export const useTaskVariablesNames = ({
     () => getTaskVariablesNames(taskPubKey),
     {
       enabled: !!taskPubKey,
+      staleTime: Infinity,
     }
   );
 

@@ -7,8 +7,12 @@ export const useMetadata = (metadataCID: string) => {
     data: metadata,
     isLoading: isLoadingMetadata,
     error: metadataError,
-  } = useQuery([QueryKeys.TaskMetadata, metadataCID], () =>
-    getTaskMetadata(metadataCID)
+  } = useQuery(
+    [QueryKeys.TaskMetadata, metadataCID],
+    () => getTaskMetadata(metadataCID),
+    {
+      staleTime: Infinity,
+    }
   );
   return { metadata, isLoadingMetadata, metadataError };
 };
