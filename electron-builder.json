@@ -18,7 +18,7 @@
   ],
   "mac": {
     "category": "public.app-category.productivity",
-    "target": ["dmg"],
+    "target": ["dmg", "zip"],
     "type": "distribution",
     "artifactName": "koii-desktop-node-${version}-${os}-${arch}.${ext}",
     "hardenedRuntime": true,
