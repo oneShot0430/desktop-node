@@ -1,8 +1,9 @@
 import { Event } from 'electron';
 
 import { PublicKey } from '@_koi/web3.js';
-import { ClaimRewardParam, ClaimRewardResponse } from 'models';
+import { ClaimRewardParam, ClaimRewardResponse, ErrorType } from 'models';
 
+import { throwDetailedError } from '../../utils';
 import {
   getMainSystemAccountKeypair,
   getStakingAccountKeypair,
@@ -26,16 +27,26 @@ const claimReward = async (
   const taskState = await getTaskInfo({} as Event, { taskAccountPubKey });
   const statePotPubKey = new PublicKey(taskState.stakePotAccount);
 
-  const response = await namespaceInstance.claimReward(
-    statePotPubKey,
-    mainSystemAccountKeyPair.publicKey,
-    stakingAccKeypair,
-    taskStateInfoPublicKey
-  );
+  try {
+    console.log(`Claiming reward for Task: ${taskAccountPubKey}`);
+    const response = await namespaceInstance.claimReward(
+      statePotPubKey,
+      mainSystemAccountKeyPair.publicKey,
+      stakingAccKeypair,
+      taskStateInfoPublicKey
+    );
 
-  await koiiTasks.fetchStartedTaskData();
+    await koiiTasks.fetchStartedTaskData();
 
-  return response;
+    return response;
+  } catch (err: any) {
+    console.error(`Failed to claim the reward for Task: ${taskAccountPubKey}`);
+    console.error(err);
+    return throwDetailedError({
+      detailed: err,
+      type: ErrorType.GENERIC,
+    });
+  }
 };
 
 export default claimReward;

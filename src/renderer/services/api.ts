@@ -297,6 +297,8 @@ export const claimRewards = async (): Promise<number> => {
         taskAccountPubKey: task.publicKey,
       });
     } catch (error) {
+      console.error(`Error while claiming reward for Task: ${task.publicKey}`);
+      console.error(error);
       const pendingReward = getPendingRewardsByTask(task);
       rewardsNotClaimedByTask.push(pendingReward);
     }
