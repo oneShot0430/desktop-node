@@ -69,6 +69,7 @@ export function ClaimRewards({
         }
 
         toast.success('Congrats! Your total KOII will be updated shortly.', {
+          duration: 1500,
           icon: <CheckSuccessLine className="h-5 w-5" />,
           style: {
             backgroundColor: '#BEF0ED',

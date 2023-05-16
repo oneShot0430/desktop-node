@@ -240,6 +240,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     } catch (error) {
       console.error(error);
       toast.error('Task running failed. Please try again!', {
+        duration: 1500,
         icon: <CloseLine className="h-5 w-5" />,
         style: {
           backgroundColor: '#FFA6A6',
