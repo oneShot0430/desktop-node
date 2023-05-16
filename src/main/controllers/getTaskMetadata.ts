@@ -18,9 +18,21 @@ export const getTaskMetadata = async (
   }
 
   try {
-    const metadata = JSON.parse(
-      await fetchFromIPFSOrArweave(payload.metadataCID, 'metadata.json')
+    const tooManyRequestsErrorRegex = /<[^>]*>429 Too Many Requests<[^>]*>/g;
+
+    const result = await fetchFromIPFSOrArweave(
+      payload.metadataCID,
+      'metadata.json'
     );
+
+    if (tooManyRequestsErrorRegex.test(result)) {
+      return throwDetailedError({
+        detailed: '429 Too Many Requests',
+        type: ErrorType.TOO_MANY_REQUESTS,
+      });
+    }
+
+    const metadata = JSON.parse(result);
     return metadata as TaskMetadata;
   } catch (e: any) {
     console.error(e);
