@@ -11,6 +11,7 @@ export { useTasksInfiniteScroll } from './useTaskInfinitieScroll';
 export { useStartedTasks } from './useStartedTasks';
 export { useAvailableTasks } from './useAvailableTasks';
 export { useTaskStatus } from './useTaskStatus';
+export { useUnstakingAvailability } from './useUnstakingAvailability';
 
 // modals
 export { useCreateTaskModal } from './useCreateTaskModal';

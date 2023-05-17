@@ -18,7 +18,7 @@ import React, {
   RefObject,
 } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
-import { useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 
 import GearFill from 'assets/svgs/gear-fill.svg';
 import GearLine from 'assets/svgs/gear-line.svg';
@@ -76,7 +76,6 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   const [isTaskValidToRun, setIsTaskValidToRun] = useState(false);
   const [valueToStake, setValueToStake] = useState<number>(0);
   const [meetsMinimumStake, setMeetsMinimumStake] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | ReactNode>('');
   const [startTaskSucceeded, setStartTaskSucceeded] = useState(false);
 
@@ -230,28 +229,30 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   }, [validateTask]);
 
   const handleStartTask = async () => {
-    try {
-      setLoading(true);
-      if (alreadyStakedTokensAmount === 0) {
-        await stakeOnTask(publicKey, valueToStake);
-      }
-      await startTask(publicKey);
-      setStartTaskSucceeded(true);
-    } catch (error) {
-      console.error(error);
-      toast.error('Task running failed. Please try again!', {
-        duration: 1500,
-        icon: <CloseLine className="h-5 w-5" />,
-        style: {
-          backgroundColor: '#FFA6A6',
-          paddingRight: 0,
-        },
-      });
-    } finally {
-      queryCache.invalidateQueries([QueryKeys.taskNodeInfo]);
-      setLoading(false);
+    if (alreadyStakedTokensAmount === 0) {
+      await stakeOnTask(publicKey, valueToStake);
     }
+    await startTask(publicKey);
   };
+
+  const { mutate: stakeAndRun, isLoading: isStakingAndRunning } = useMutation(
+    handleStartTask,
+    {
+      onSuccess: () => setStartTaskSucceeded(true),
+      onSettled: () => queryCache.invalidateQueries([QueryKeys.taskNodeInfo]),
+      onError: (error) => {
+        console.error(error);
+        toast.error('Task running failed. Please try again!', {
+          duration: 1500,
+          icon: <CloseLine className="h-5 w-5" />,
+          style: {
+            backgroundColor: '#FFA6A6',
+            paddingRight: 0,
+          },
+        });
+      },
+    }
+  );
 
   const handleStopTask = async () => {
     try {
@@ -417,7 +418,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
         </div>
       </Tooltip>
 
-      {loading ? (
+      {isStakingAndRunning ? (
         <div className="py-[0.72rem]">
           <LoadingSpinner size={LoadingSpinnerSize.Large} />
         </div>
@@ -439,7 +440,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
                 }`}
               />
             }
-            onClick={isRunning ? handleStopTask : handleStartTask}
+            onClick={isRunning ? handleStopTask : () => stakeAndRun()}
             disabled={!isRunning && !isTaskValidToRun}
           />
         </Tooltip>

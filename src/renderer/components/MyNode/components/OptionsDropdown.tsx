@@ -1,20 +1,26 @@
 import {
   Icon,
   RemoveLine,
-  ShareArrowLine,
   TooltipChatQuestionLeftLine,
 } from '@_koii/koii-styleguide';
 import React from 'react';
+import { useMutation, useQueryClient } from 'react-query';
 
 import Archive from 'assets/svgs/archive.svg';
 import CurrencyIcon from 'assets/svgs/currency.svg';
 import Output from 'assets/svgs/output.svg';
 import PauseCircle from 'assets/svgs/pause-circle.svg';
 import PlayCircle from 'assets/svgs/play-circle.svg';
-import { Tooltip } from 'renderer/components/ui';
-import { useTaskStake } from 'renderer/features';
-import { Task, TaskStatus } from 'renderer/types';
-import { Theme } from 'renderer/types/common';
+import {
+  useStakingAccount,
+  useTaskStake,
+  useUnstakingAvailability,
+} from 'renderer/features';
+import {
+  QueryKeys,
+  archiveTask as archiveTaskService,
+} from 'renderer/services';
+import { Task } from 'renderer/types';
 
 type PropsType = {
   addStake: () => void;
@@ -22,7 +28,6 @@ type PropsType = {
   runOrStopTask: () => void;
   openLogs: () => void;
   task: Task;
-  status: TaskStatus;
   isInverted: boolean;
 };
 
@@ -32,11 +37,29 @@ export function OptionsDropdown({
   runOrStopTask,
   openLogs,
   task,
-  status,
   isInverted,
 }: PropsType) {
-  const isArchiveDisabled = true;
-  const isCoolingDown = status === TaskStatus.COOLING_DOWN;
+  const queryCache = useQueryClient();
+
+  const { mutate: archiveTask } = useMutation(
+    () => archiveTaskService(task.publicKey),
+    {
+      onSuccess: () => queryCache.invalidateQueries([QueryKeys.taskList]),
+    }
+  );
+
+  const { taskStake } = useTaskStake({ task });
+
+  const { data: stakingAccountPublicKey = '' } = useStakingAccount();
+
+  const { canUnstake } = useUnstakingAvailability({
+    task,
+    stakingAccountPublicKey,
+  });
+
+  const isRunPauseButtonDisabled =
+    !task.isRunning && (!taskStake || !task.isWhitelisted);
+  const isArchiveDisabled = task.isRunning || !!taskStake;
   const baseItemClasses = 'flex gap-2 text-white cursor-pointer';
   const containerClasses = `z-10 ${
     isInverted
@@ -44,20 +67,13 @@ export function OptionsDropdown({
       : 'bg-[url(assets/svgs/options-bg.png)] top-12'
   }  bg-cover text-base absolute -right-[21px] w-[290px] h-[216px] pl-4 rounded-xl flex flex-col justify-evenly`;
   const disabledItemClasses = '!text-[#949494] !cursor-not-allowed';
+  const baseHintClasses =
+    'bg-gray-light/20 text-gray-light text-xs rounded p-1 ml-auto mr-2';
   const unstakeWhenRunningMessage = (
-    <span className="bg-gray-light/20 text-gray-light text-xs rounded p-1 ml-auto mr-2">
-      <Icon
-        source={ShareArrowLine}
-        className="text-white h-2.5 w-2.5 rotate-90 scale-y-[-1] mr-1.5"
-      />
-      Stop Task to Unstake
-    </span>
+    <span className={baseHintClasses}>Stop Task to Unstake</span>
   );
   const unstakeWhenCoolingDownMessage = (
-    <button
-      onClick={unstake}
-      className="bg-gray-light/20 text-gray-light text-xs rounded px-2 py-1 ml-auto mr-2"
-    >
+    <button onClick={unstake} className={baseHintClasses}>
       Wait 3 rounds
       <Icon
         source={TooltipChatQuestionLeftLine}
@@ -65,11 +81,27 @@ export function OptionsDropdown({
       />
     </button>
   );
-
-  const { taskStake } = useTaskStake({ task });
+  const archiveWhenRunningMessage = (
+    <span className={baseHintClasses}>Stop Task to Archive</span>
+  );
+  const archiveWithStakeMessage = (
+    <button onClick={unstake} className={baseHintClasses}>
+      Unstake to Archive
+    </button>
+  );
 
   return (
     <div className={containerClasses}>
+      <button
+        onClick={runOrStopTask}
+        className={`${baseItemClasses} ${
+          isRunPauseButtonDisabled ? disabledItemClasses : ''
+        }`}
+        disabled={isRunPauseButtonDisabled}
+      >
+        <Icon source={task.isRunning ? PauseCircle : PlayCircle} />
+        {task.isRunning ? 'Stop Task' : 'Start Task'}
+      </button>
       <button
         onClick={addStake}
         className={`${baseItemClasses} ${
@@ -77,46 +109,39 @@ export function OptionsDropdown({
         }`}
         disabled={!task.isWhitelisted}
       >
-        <Icon source={CurrencyIcon} className="text-white" />
+        <Icon source={CurrencyIcon} />
         Add Stake
       </button>
       <button
         onClick={unstake}
-        disabled={task.isRunning}
+        disabled={!canUnstake}
         className={`${baseItemClasses} ${
-          task.isRunning || isCoolingDown ? disabledItemClasses : ''
+          !canUnstake ? disabledItemClasses : ''
         }`}
       >
         <Icon source={RemoveLine} />
         Unstake
         {task.isRunning
           ? unstakeWhenRunningMessage
-          : isCoolingDown
+          : !canUnstake
           ? unstakeWhenCoolingDownMessage
           : null}
       </button>
       <button
-        onClick={runOrStopTask}
         className={`${baseItemClasses} ${
-          (!task.isRunning && !taskStake) || !task.isWhitelisted
-            ? disabledItemClasses
-            : ''
+          isArchiveDisabled ? disabledItemClasses : ''
         }`}
-        disabled={(!task.isRunning && !taskStake) || !task.isWhitelisted}
+        disabled={isArchiveDisabled}
+        onClick={() => archiveTask()}
       >
-        <Icon source={task.isRunning ? PauseCircle : PlayCircle} />
-        {task.isRunning ? 'Stop Task' : 'Start Task'}
+        <Icon source={Archive} />
+        Archive
+        {task.isRunning
+          ? archiveWhenRunningMessage
+          : taskStake
+          ? archiveWithStakeMessage
+          : null}
       </button>
-      <Tooltip tooltipContent="Coming soon" theme={Theme.Light}>
-        <button
-          className={`${baseItemClasses} ${
-            isArchiveDisabled ? disabledItemClasses : ''
-          }`}
-        >
-          <Icon source={Archive} />
-          Archive Task
-        </button>
-      </Tooltip>
       <button className={baseItemClasses} onClick={openLogs}>
         <Icon source={Output} />
         Output Logs

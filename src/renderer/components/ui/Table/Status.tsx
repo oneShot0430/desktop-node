@@ -52,6 +52,11 @@ const statuses = {
     iconColor: 'text-[#FFA54B]',
     tooltip: "Something's wrong. Try running this task again.",
   },
+  [TaskStatus.BLACKLISTED]: {
+    icon: WarningTriangleLine,
+    iconColor: 'text-[#FFA54B]',
+    tooltip: 'This task has been removed. Please unstake your tokens.',
+  },
   [TaskStatus.FLAGGED]: {
     icon: FlagReportLine,
     iconColor: 'text-finnieRed',

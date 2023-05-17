@@ -58,6 +58,7 @@ const endpointToControllerMap: Record<
     controllers.getTaskPairedVariablesNamesWithLabels,
   [Endpoints.OPEN_LOGFILE_FOLDER]: controllers.openLogfileFolder,
   [Endpoints.GET_VERSION]: controllers.getVersion,
+  [Endpoints.ARCHIVE_TASK]: controllers.archiveTask,
 };
 
 const initHandlers = (): void => {

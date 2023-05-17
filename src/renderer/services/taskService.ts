@@ -32,6 +32,7 @@ export class TaskService {
     task: Task,
     stakingAccountPublicKey: string
   ): Promise<TaskStatus> {
+    const isBlackListed = !task.isWhitelisted;
     const allSubmissions = Object.values(task.submissions);
     const submissionsFromCurrentAccount = allSubmissions.filter((submission) =>
       Object.keys(submission).some((key) => key === stakingAccountPublicKey)
@@ -78,6 +79,7 @@ export class TaskService {
     const taskIsComplete = task.totalBountyAmount < task.bountyAmountPerRound;
     const { hasError } = task;
 
+    if (isBlackListed) return TaskStatus.BLACKLISTED;
     if (nodeHasBeenFlaggedAsMalicious) return TaskStatus.FLAGGED;
     if (hasError) return TaskStatus.ERROR;
     if (taskIsComplete) return TaskStatus.COMPLETE;
@@ -90,5 +92,37 @@ export class TaskService {
     else if (hasSubmissionsInAllLast3Rounds) return TaskStatus.ACTIVE;
 
     return TaskStatus.PRE_SUBMISSION;
+  }
+
+  static async getUnstakingAvailability(
+    task: Task,
+    stakingAccountPublicKey: string
+  ): Promise<boolean> {
+    const allSubmissions = Object.values(task.submissions);
+    const last3Submissions = allSubmissions.slice(-3);
+    const lastRoundWithSubmissions = Object.values(
+      allSubmissions?.slice(-1)?.flat()?.[0] || {}
+    )[0]?.round;
+    const currentSlot = await getCurrentSlot();
+    const currentRound = Math.floor(
+      (currentSlot - task.startingSlot) / task.roundTime
+    );
+    const numberOfLatestConsecutiveRoundsWithoutSubmissions =
+      currentRound - lastRoundWithSubmissions;
+    const hasSubmissionsInSomeOfLast3Rounds =
+      (numberOfLatestConsecutiveRoundsWithoutSubmissions < 2 &&
+        last3Submissions.some((round) => stakingAccountPublicKey in round)) ||
+      (numberOfLatestConsecutiveRoundsWithoutSubmissions === 2 &&
+        last3Submissions
+          .slice(-2)
+          .some((round) => stakingAccountPublicKey in round)) ||
+      (numberOfLatestConsecutiveRoundsWithoutSubmissions === 3 &&
+        last3Submissions
+          .slice(-1)
+          .some((round) => stakingAccountPublicKey in round));
+    const unstakeIsAvailable =
+      !task.isRunning && !hasSubmissionsInSomeOfLast3Rounds;
+
+    return unstakeIsAvailable;
   }
 }
