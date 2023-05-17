@@ -23,4 +23,5 @@ export enum QueryKeys {
   NodeInitialized = 'NodeInitialized',
   AppVersion = 'AppVersion',
   TaskStatus = 'TaskStatus',
+  UnstakingAvailability = 'UnstakingAvailability',
 }

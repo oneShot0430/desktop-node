@@ -72,7 +72,7 @@ export function TaskItem({
   const [loading, setLoading] = useState(false);
   const [earnedReward, setEarnedReward] = useState(0);
 
-  const { taskName, taskManager, isRunning, publicKey, roundTime } = task;
+  const { taskName, isRunning, publicKey, roundTime } = task;
 
   const { taskStake, refetchTaskStake } = useTaskStake({
     task,
@@ -189,7 +189,7 @@ export function TaskItem({
   const containerClasses = `py-2.5 gap-y-0 ${
     taskStatus === TaskStatus.FLAGGED
       ? 'bg-[#FF4141]/25'
-      : taskStatus === TaskStatus.ERROR
+      : [TaskStatus.ERROR, TaskStatus.BLACKLISTED].includes(taskStatus)
       ? 'bg-[#FF4141]/20'
       : !isRunning
       ? 'bg-[#FFA54B]/25'
@@ -266,21 +266,15 @@ export function TaskItem({
           <div className="text-finnieTeal">{createdAt}</div>
         </div>
       </div>
-      <div
-        className="flex flex-col gap-2 text-xs min-w-[130px] w-full justify-self-start"
-        title={taskManager}
-      >
+      <div className="flex flex-col gap-2 text-xs min-w-[130px] w-full justify-self-start">
         <div className="truncate">{`Creator: ${task.taskManager}`}</div>
         <div className="truncate">{`Account: ${accountName}`}</div>
       </div>
-      <div
-        className="flex flex-col gap-2 text-xs min-w-[50px] w-fit mx-auto"
-        title={taskManager}
-      >
+      <div className="flex flex-col gap-2 text-xs min-w-[50px] w-fit mx-auto">
         <div className="truncate">{`Staked: ${myStakeInKoii}`}</div>
         <div className="truncate">{`Bounty: ${totalBountyInKoii}`}</div>
       </div>
-      <div className="flex flex-col gap-2 text-xs w-fit" title={taskManager}>
+      <div className="flex flex-col gap-2 text-xs w-fit">
         <div className="truncate">All time: soon</div>
         <div className="truncate">{`To claim: ${earnedRewardInKoii}`}</div>
       </div>
@@ -318,7 +312,6 @@ export function TaskItem({
             openLogs={openTaskLogs}
             runOrStopTask={handleToggleTask}
             task={task}
-            status={taskStatus}
             isInverted={optionsDropdownIsInverted}
           />
         )}

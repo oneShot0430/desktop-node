@@ -35,5 +35,6 @@ export { initializeTasks } from './initializeTasks';
 export { openLogfileFolder } from './openLogfileFolder';
 export * from './taskVariables';
 export * from './getVersion';
+export * from './archiveTask';
 
 export * from './types';

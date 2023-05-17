@@ -16,4 +16,5 @@ export enum TaskStatus {
   COMPLETE = 'COMPLETE',
   ERROR = 'ERROR',
   FLAGGED = 'FLAGGED',
+  BLACKLISTED = 'BLACKLISTED',
 }

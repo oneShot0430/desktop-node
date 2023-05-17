@@ -1,3 +1,4 @@
+import archiveTask from './archiveTask';
 import checkWalletExists from './checkWalletExists';
 import claimReward from './claimReward';
 import createNodeWallets from './createNodeWallets';
@@ -90,4 +91,5 @@ export default {
   openLogfileFolder,
   getVersion,
   getEncryptedSecretPhrase,
+  archiveTask,
 };

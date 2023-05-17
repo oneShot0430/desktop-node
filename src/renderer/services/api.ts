@@ -346,3 +346,7 @@ export const getVersion = async () => {
   console.log('CHECKING VERSION');
   return window.main.getVersion();
 };
+
+export const archiveTask = async (taskPubKey: string) => {
+  return window.main.archiveTask({ taskPubKey });
+};
