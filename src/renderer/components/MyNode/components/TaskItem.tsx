@@ -270,7 +270,7 @@ export function TaskItem({
         <div className="truncate">{`Creator: ${task.taskManager}`}</div>
         <div className="truncate">{`Account: ${accountName}`}</div>
       </div>
-      <div className="flex flex-col gap-2 text-xs min-w-[50px] w-fit mx-auto">
+      <div className="flex flex-col gap-2 text-xs min-w-[50px] w-fit text-left mr-auto ml-[20%] xl:ml-[40%] 2xl:ml-[50%]">
         <div className="truncate">{`Staked: ${myStakeInKoii}`}</div>
         <div className="truncate">{`Bounty: ${totalBountyInKoii}`}</div>
       </div>

@@ -17,7 +17,7 @@ type PropsType = {
   shouldDisplayToolsInUse?: boolean;
 };
 
-const NOT_AVAILABLE = 'N/A';
+const NOT_AVAILABLE = '-';
 
 export function TaskInfo({
   publicKey,
@@ -61,10 +61,14 @@ export function TaskInfo({
         <div className="basis-1/2">
           <div className="mb-2 text-base font-semibold">Details:</div>
           <div className="grid grid-cols-2 gap-y-2 gap-x-12">
-            <div className="select-text">Nodes: {nodes}</div>
-            <div className="select-text">Bounty: {bounty}</div>
-            <div className="select-text">Min stake: {minStake}</div>
-            <div className="select-text">Top stake: {topStake}</div>
+            <div className="select-text">Nodes: {nodes ?? NOT_AVAILABLE}</div>
+            <div className="select-text">Bounty: {bounty ?? NOT_AVAILABLE}</div>
+            <div className="select-text">
+              Min stake: {minStake ?? NOT_AVAILABLE}
+            </div>
+            <div className="select-text">
+              Top stake: {topStake ?? NOT_AVAILABLE}
+            </div>
           </div>
         </div>
 

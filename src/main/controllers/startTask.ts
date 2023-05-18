@@ -67,11 +67,12 @@ const startTask = async (
   const stakingPubkey = stakingAccKeypair.publicKey.toBase58();
 
   // if stake is undefined or 0 -> stop
-  if (!taskInfo.stake_list[stakingPubkey]) {
+  if (!taskInfo.stake_list[stakingPubkey] || !taskInfo.is_whitelisted) {
     return;
   }
 
   console.log('STARTED TASK DATA', taskInfo?.task_name);
+
   const expressApp = await initExpressApp();
   try {
     console.log('LOADING TASK:', taskAccountPubKey);
