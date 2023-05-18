@@ -33,12 +33,12 @@ function RunFirstTask() {
     navigate(AppRoute.OnboardingConfirmStake, { state: selectedTasks });
 
   return (
-    <div className="relative h-full overflow-hidden bg-finnieBlue-dark-secondary">
+    <div className="relative h-full bg-finnieBlue-dark-secondary">
       <div className="px-8 h-full flex flex-col">
         <div className="text-lg mt-20 mb-12">
           Start running verified tasks with just one click
         </div>
-        <div className="overflow-x-auto">
+        <div className="overflow-y-auto h-full">
           <div className="mb-2 text-xs text-left w-full grid grid-cols-first-task">
             <div className="col-start-2 col-span-5">Task Name</div>
             <div className="col-span-6">Creator</div>
@@ -50,33 +50,32 @@ function RunFirstTask() {
           {loadingVerifiedTasks ? (
             <div>Loading...</div>
           ) : (
-            selectedTasks.map(
-              ({ publicKey, taskName, taskManager, minStake }, index) => (
-                <div className="mb-4" key={index}>
-                  <TaskItem
-                    stakeValue={stakePerTask[publicKey] ?? 0}
-                    name={taskName}
-                    creator={taskManager}
-                    minStake={minStake}
-                    onStakeInputChange={(newStake) => {
-                      handleStakeInputChange(newStake, publicKey);
-                      setIsRunButtonDisabled(newStake < minStake);
-                    }}
-                    onRemove={() => handleTaskRemove(publicKey)}
-                  />
-                </div>
-              )
-            )
+            selectedTasks.map((task, index) => (
+              <div className="mb-4" key={index}>
+                <TaskItem
+                  stakeValue={stakePerTask[task?.publicKey] ?? 0}
+                  onStakeInputChange={(newStake) => {
+                    handleStakeInputChange(newStake, task.publicKey);
+                    setIsRunButtonDisabled(newStake < task.minStake);
+                  }}
+                  onRemove={() => handleTaskRemove(task.publicKey)}
+                  index={index}
+                  task={task}
+                />
+              </div>
+            ))
           )}
         </div>
 
         <div className="flex flex-row justify-between pl-2.5 mt-4">
-          <Button
-            label="Restore Original"
-            className="bg-transparent text-finnieOrange"
-            icon={<Icon source={RestoreIconSvg} />}
-            onClick={handleRestoreTasks}
-          />
+          {!isRunButtonDisabled && (
+            <Button
+              label="Restore Original"
+              className="bg-transparent text-finnieOrange"
+              icon={<Icon source={RestoreIconSvg} />}
+              onClick={handleRestoreTasks}
+            />
+          )}
         </div>
         <div className="flex flex-col items-center mt-auto mb-6">
           <Button

@@ -24,7 +24,7 @@ export function AddTaskVariable() {
         Add a Task Setting
       </span>
 
-      <div className="flex gap-5">
+      <div className="flex gap-5 items-end">
         <div className="flex flex-col mr-4">
           <label className="mb-1 text-left">LABEL</label>
           <input

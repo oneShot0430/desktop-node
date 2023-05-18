@@ -2,7 +2,6 @@ import React, { useState, useMemo } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import CheckmarkIconSvg from 'assets/svgs/checkmark-teal-icon.svg';
-import CodeIconSvg from 'assets/svgs/code-icon.svg';
 import EditIconSvg from 'assets/svgs/edit-icon.svg';
 import { Button, EditStakeInput } from 'renderer/components/ui';
 import { TaskWithStake } from 'renderer/types';
@@ -31,8 +30,8 @@ export function TaskRow({
   const handleEditInputChange = (newStake: number) => setStake(newStake);
 
   const stakeButtonClasses = twMerge(
-    'rounded-full w-6 h-6',
-    !isEditingStake && 'bg-finnieTeal-100'
+    'rounded-full w-6 h-6 bg-transparent',
+    !isEditingStake && 'text-finnieTeal-100'
   );
 
   const stakeButtonIcon = isEditingStake ? (
@@ -64,7 +63,7 @@ export function TaskRow({
     >
       <div className="w-[70%]">
         <div className="flex flex-row items-center gap-2">
-          <CodeIconSvg className="mt-0.5" />
+          {/* <CodeIconSvg className="mt-0.5" /> */}
           <span>{taskName}</span>
         </div>
       </div>
