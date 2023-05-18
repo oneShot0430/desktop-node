@@ -449,7 +449,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
       <div
         className={`w-full col-span-9 overflow-y-auto ${
           accordionView !== null
-            ? 'opacity-1 pt-6 max-h-[360px]'
+            ? 'opacity-1 pt-6 max-h-auto'
             : 'opacity-0 max-h-0'
         } transition-all duration-500 ease-in-out`}
       >

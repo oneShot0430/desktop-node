@@ -15,6 +15,7 @@ type PropsType = {
   };
   variables?: TaskPairing[];
   shouldDisplayToolsInUse?: boolean;
+  showSourceCode?: boolean;
 };
 
 const NOT_AVAILABLE = 'N/A';
@@ -25,6 +26,7 @@ export function TaskInfo({
   details: { nodes, minStake, topStake, bounty },
   variables,
   shouldDisplayToolsInUse,
+  showSourceCode = true,
 }: PropsType) {
   const specs = metadata?.requirementsTags?.filter(({ type }) =>
     [
@@ -46,19 +48,21 @@ export function TaskInfo({
             {publicKey}
           </p>
           <div className="-mt-8">
-            <SourceCodeButton repositoryUrl={metadata?.repositoryUrl || ''} />
+            {showSourceCode && metadata?.repositoryUrl && (
+              <SourceCodeButton repositoryUrl={metadata?.repositoryUrl || ''} />
+            )}
           </div>
         </div>
       </div>
-      <div className="-mt-8">
+      <div className={`${showSourceCode ? '-mt-8' : ''}`}>
         <div className="mb-2 text-base font-semibold">Description:</div>
-        <p className="mb-4 select-text">
+        <p className="mb-4 select-text text-sm">
           {metadata?.description ?? NOT_AVAILABLE}
         </p>
       </div>
 
-      <div className="mb-6 w-full flex">
-        <div className="basis-1/2">
+      <div className="mb-6 w-full flex justify-between">
+        <div className="max-w-[48%] w-full">
           <div className="mb-2 text-base font-semibold">Details:</div>
           <div className="grid grid-cols-2 gap-y-2 gap-x-12">
             <div className="select-text">Nodes: {nodes}</div>
@@ -68,7 +72,7 @@ export function TaskInfo({
           </div>
         </div>
 
-        <div className="basis-1/2">
+        <div className="max-w-[48%] w-full">
           <div className="mb-2 text-base font-semibold">Specifications:</div>
           <div className="grid grid-cols-2 gap-y-2 gap-x-12">
             {specs?.map(({ type, value }, index) => (
