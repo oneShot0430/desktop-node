@@ -58,16 +58,11 @@
     "icon": "assets/icon.ico"
   },
   "nsis": {
-    "oneClick": false,
-    "perMachine": false,
-    "allowElevation": true,
+    "oneClick": true,
     "installerIcon": "assets/icon.ico",
     "uninstallerIcon": "assets/icon.ico",
-    "allowToChangeInstallationDirectory": true,
     "uninstallDisplayName": "${productName} ${version}",
-    "include": "build/installer.nsh",
     "deleteAppDataOnUninstall": false,
-    "displayLanguageSelector": false,
     "unicode": true,
     "warningsAsErrors": true,
     "runAfterFinish": true,
