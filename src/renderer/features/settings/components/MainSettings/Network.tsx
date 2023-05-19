@@ -12,7 +12,7 @@ import {
 
 import { SettingSwitch } from './SettingSwitch';
 
-export function NodeSettings() {
+export function Network() {
   const [hasFlippedSwitch, setHasFlippedSwitch] = useState(false);
   const queryClient = useQueryClient();
 
@@ -45,10 +45,8 @@ export function NodeSettings() {
     : networkUrl === TESTNET_RPC_URL;
 
   return (
-    <div className="flex flex-col gap-10 text-white">
-      <span className="text-2xl font-semibold text-left">
-        Choose Node Network
-      </span>
+    <div className="flex flex-col gap-5">
+      <span className="font-semibold">Choose Node Network</span>
       <SettingSwitch
         id="network"
         isLoading={isLoadingNetworkUrl}

@@ -1,3 +1,5 @@
+import axios from 'axios';
+import { FAUCET_API_URL } from 'config/faucet';
 import {
   Task as TaskRaw,
   GetAvailableTasksParam,
@@ -329,6 +331,18 @@ export const getNetworkUrl = async () => {
 export const initializeTasks = async () => {
   console.log('INITIALIZING TASKS');
   return window.main.initializeTasks();
+};
+
+export const getReferralCode = async (walletAddress: string) => {
+  if (walletAddress) {
+    const {
+      data: { code },
+    } = await axios.get<{ code: string }>(
+      `${FAUCET_API_URL}/get-referral-code/${walletAddress}`
+    );
+
+    return code;
+  }
 };
 
 export const openLogfileFolder = async (taskPublicKey: string) => {

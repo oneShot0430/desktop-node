@@ -9,6 +9,5 @@ export type AccountType = {
 export enum Tab {
   AccountsTable = 'AccountsTable',
   TaskSettings = 'TaskSettings',
-  NodeLogs = 'NodeLogs',
-  NetworkSettings = 'NetworkSettings',
+  MainSettings = 'MainSettings',
 }
