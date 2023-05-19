@@ -52,7 +52,7 @@ export function RentExemptionFlowBanner({
           title="close"
           onClick={() => removeNotificationById(id)}
         >
-          <Icon source={CloseLine} className="h-9 w-9" />
+          <Icon source={CloseLine} className="h-5.5 w-5.5" />
         </button>
       </div>
     </div>

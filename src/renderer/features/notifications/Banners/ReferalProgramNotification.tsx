@@ -1,13 +1,6 @@
-import {
-  Icon,
-  CloseLine,
-  Button,
-  ButtonVariant,
-  ButtonSize,
-} from '@_koii/koii-styleguide';
-import React from 'react';
+import { Icon, CloseLine, Button, ButtonSize } from '@_koii/koii-styleguide';
+import React, { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { twMerge } from 'tailwind-merge';
 
 import { AppRoute } from 'renderer/types/routes';
 
@@ -18,38 +11,36 @@ export function ReferalProgramNotification({
   backButtonSlot,
 }: {
   id: string;
-  backButtonSlot?: React.ReactNode;
+  backButtonSlot?: ReactNode;
 }) {
   const { removeNotificationById } = useNotificationsContext();
   const navigate = useNavigate();
 
-  const classNames = twMerge(
-    'flex justify-between w-full px-4 mx-auto px-4 items-center gap-4',
-    'bg-finnieTeal text-finnieBlue'
-  );
+  const close = () => removeNotificationById(id);
+  const onCTAClick = () => {
+    navigate(AppRoute.Settings);
+    close();
+  };
 
   return (
-    <div className={classNames}>
-      {backButtonSlot}
+    <div className="flex justify-end w-full px-4 mx-auto items-center gap-3 bg-finnieTeal text-finnieBlue">
+      <div className="mr-auto">{backButtonSlot}</div>
+
       <div className="max-w-[65%]">
         Refer a friend and win 5 extra tokens for each person who joins the
         network.
       </div>
-      <div className="flex items-center gap-6 w-max">
+      <div className="flex items-center gap-4 w-max">
         <Button
           label="Get the Code"
-          onClick={() => navigate(AppRoute.Settings)}
-          variant={ButtonVariant.GhostDark}
-          size={ButtonSize.MD}
+          onClick={onCTAClick}
+          size={ButtonSize.SM}
           labelClassesOverrides="font-semibold w-max"
+          buttonClassesOverrides="px-2 bg-transparent text-purple-3 border-2 border-purple-3 hover:bg-purple-3 hover:text-white"
         />
 
-        <button
-          className="cursor-pointer"
-          title="close"
-          onClick={() => removeNotificationById(id)}
-        >
-          <Icon source={CloseLine} className="h-9 w-9" />
+        <button className="cursor-pointer" title="close" onClick={close}>
+          <Icon source={CloseLine} className="h-5.5 w-5.5" />
         </button>
       </div>
     </div>

@@ -77,7 +77,7 @@ export function FirstNodeReward({
         />
 
         <button className="cursor-pointer" title="close" onClick={handleClose}>
-          <Icon source={CloseLine} className="h-9 w-9" />
+          <Icon source={CloseLine} className="h-5.5 w-5.5" />
         </button>
       </div>
     </div>
