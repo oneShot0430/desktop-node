@@ -6,6 +6,7 @@ import {
   CheckSuccessLine,
   KeyUnlockLine,
   Icon,
+  LockLine,
 } from '@_koii/koii-styleguide';
 import React, { memo, useState } from 'react';
 
@@ -22,6 +23,7 @@ import {
 } from 'renderer/components/ui';
 import { useClipboard, useDeleteAccountModal } from 'renderer/features/common';
 import { useExportSecretPhrase } from 'renderer/features/common/hooks/useExportSecretPhrase';
+import { Theme } from 'renderer/types/common';
 import { getKoiiFromRoe } from 'utils';
 
 import { useAccount, useAccountBalance } from '../../hooks';
@@ -46,6 +48,11 @@ export const AccountItem = memo(
 
     const { accountBalance = 0, accountBalanceLoadingError } =
       useAccountBalance(mainPublicKey);
+
+    const {
+      accountBalance: stakingAccountBalance = 0,
+      accountBalanceLoadingError: stakingAccountBalanceLoadingError,
+    } = useAccountBalance(stakingPublicKey);
 
     const { copyToClipboard: copyMainKeyToClipboard, copied: copiedMainKey } =
       useClipboard();
@@ -98,6 +105,7 @@ export const AccountItem = memo(
     } bg-opacity-5 grid grid-cols-accounts gap-y-6 !py-4 border-none`;
     const StarIcon = isDefault ? FavoriteStarFill : FavoriteStarLine;
     const accountBalanceInKoii = getKoiiFromRoe(accountBalance);
+    const stakingAccountBalanceInKoii = getKoiiFromRoe(stakingAccountBalance);
 
     return (
       <div className="w-full mb-4 pr-2 text-white">
@@ -214,12 +222,30 @@ export const AccountItem = memo(
                 className="rounded-full w-6.5 h-6.5 bg-transparent outline-none"
               />
             </Tooltip>
-            {/* <Button
-            icon={<KeyIconSvg className="w-3.5 h-3.5" />}
-            className="invisible w-6 h-6 rounded-full bg-finnieEmerald-light"
-          /> */}
+
             <div className="w-6" />
           </div>
+
+          <span className="flex gap-2.5 items-center ml-3">
+            <span>
+              {stakingAccountBalanceLoadingError
+                ? '-'
+                : stakingAccountBalanceInKoii}{' '}
+              KOII
+            </span>
+
+            <Tooltip
+              theme={Theme.Light}
+              tooltipContent={
+                <p className="w-[292px]">
+                  This balance covers network fees. The key may be blocked from
+                  the network if balance gets too low
+                </p>
+              }
+            >
+              <Icon source={LockLine} className="h-4 w-4 text-white mb-1" />
+            </Tooltip>
+          </span>
         </TableRow>
       </div>
     );

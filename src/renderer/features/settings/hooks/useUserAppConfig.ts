@@ -13,6 +13,7 @@ export const useUserAppConfig = ({ onConfigSaveSuccess }: ParamsType) => {
     data: userConfig,
     isLoading: isUserConfigLoading,
     error: userConfigError,
+    refetch: refetchUserConfig,
   } = useQuery([QueryKeys.UserSettings], getUserConfig);
 
   const setUserAppConfig = useCallback(
@@ -54,5 +55,6 @@ export const useUserAppConfig = ({ onConfigSaveSuccess }: ParamsType) => {
     userConfigError,
     isSavingUserConfig,
     saveUserConfigError,
+    refetchUserConfig,
   };
 };
