@@ -1,15 +1,11 @@
 import React, { createContext, useContext, useState } from 'react';
 
-export interface AppNotification {
-  message: string;
-  buttonLabel: string;
-  action: () => void;
-}
+import { AppNotification } from '../types';
 
 export interface NotificationsContextType {
-  pendingNotifications: AppNotification[];
-  addNotification: (notification: AppNotification) => void;
-  removeNotification: () => void;
+  pendingNotifications: Map<string, AppNotification>;
+  addNotification: (id: string, notification: AppNotification) => void;
+  removeNotificationById: (id: string) => void;
 }
 
 type NotificationsPropsType = {
@@ -33,19 +29,25 @@ export const useNotificationsContext = () => {
 
 export function NotificationsProvider({ children }: NotificationsPropsType) {
   const [pendingNotifications, setPendingNotifications] = useState<
-    AppNotification[]
-  >([]);
+    Map<string, AppNotification>
+  >(new Map());
 
-  const addNotification = (notification: AppNotification) => {
-    setPendingNotifications((prev) => [notification, ...prev]);
+  const addNotification = (id: string, notification: AppNotification) => {
+    setPendingNotifications((prev) => new Map(prev.set(id, notification)));
   };
 
-  const removeNotification = () => {
-    setPendingNotifications((prev) => prev.slice(1));
+  const removeNotificationById = (id: string) => {
+    setPendingNotifications((prev) => {
+      const newMap = new Map(prev);
+      newMap.delete(id);
+      return newMap;
+    });
   };
+
   return (
     <NotificationsContext.Provider
-      value={{ pendingNotifications, addNotification, removeNotification }}
+      // eslint-disable-next-line react/jsx-no-constructed-context-values
+      value={{ pendingNotifications, addNotification, removeNotificationById }}
     >
       {children}
     </NotificationsContext.Provider>

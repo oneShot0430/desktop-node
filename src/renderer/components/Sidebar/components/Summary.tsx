@@ -1,22 +1,35 @@
 import React, { useState } from 'react';
+import { Toaster } from 'react-hot-toast';
 import { useQuery } from 'react-query';
-import { useNavigate } from 'react-router-dom';
 
 import { NODE_INFO_REFETCH_INTERVAL } from 'config/refetchIntervals';
 import { useUserAppConfig } from 'renderer/features';
-import { useNotificationsContext } from 'renderer/features/notifications';
+import { AppNotification } from 'renderer/features/notifications';
+import { useNotificationsContext } from 'renderer/features/notifications/context';
 import { QueryKeys, getTaskNodeInfo } from 'renderer/services';
-import { AppRoute } from 'renderer/types/routes';
 
 import { StatBlock } from './StatBlock';
 
 export function Summary() {
   const { addNotification } = useNotificationsContext();
   const [enableQuery, setEnableQuery] = useState(true);
-  const { userConfig, handleSaveUserAppConfig } = useUserAppConfig({});
-  const firstRewardNotificationDisplayed =
-    !!userConfig?.firstRewardNotificationDisplayed;
-  const navigate = useNavigate();
+  const { handleSaveUserAppConfig, refetchUserConfig } = useUserAppConfig({});
+
+  const showFirstNodeRewardNotification = async () => {
+    const { data } = await refetchUserConfig();
+
+    if (data) {
+      const { firstRewardNotificationDisplayed } = data;
+      if (!firstRewardNotificationDisplayed) {
+        addNotification('firstNodeReward', AppNotification.FirstNodeReward);
+        handleSaveUserAppConfig({
+          settings: {
+            firstRewardNotificationDisplayed: true,
+          },
+        });
+      }
+    }
+  };
 
   const { data, isLoading } = useQuery(
     [QueryKeys.taskNodeInfo],
@@ -25,23 +38,8 @@ export function Summary() {
       enabled: enableQuery,
       refetchInterval: NODE_INFO_REFETCH_INTERVAL,
       onSettled: (nodeInfo) => {
-        if (
-          (nodeInfo?.pendingRewards as number) > 0 &&
-          !firstRewardNotificationDisplayed
-        ) {
-          const firstRewardNotification = {
-            message:
-              "You've earned your first node reward! Run more tasks to easily increase your rewards.",
-            buttonLabel: 'See tasks',
-            action: () => navigate(AppRoute.AddTask),
-          };
-          // set notification for very first node reward
-          addNotification(firstRewardNotification);
-          handleSaveUserAppConfig({
-            settings: {
-              firstRewardNotificationDisplayed: true,
-            },
-          });
+        if ((nodeInfo?.pendingRewards as number) > 0) {
+          showFirstNodeRewardNotification();
         }
       },
     }
@@ -77,6 +75,7 @@ export function Summary() {
         shouldAnimate={shouldAnimate}
         enableNodeInfoRefetch={setEnableQuery}
       />
+      <Toaster />
     </div>
   );
 }

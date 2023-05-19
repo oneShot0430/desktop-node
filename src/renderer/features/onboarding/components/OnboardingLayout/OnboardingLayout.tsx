@@ -10,7 +10,10 @@ import React, { useMemo } from 'react';
 
 import KoiiLogo from 'assets/svgs/koii-logo-white.svg';
 import { Button } from 'renderer/components/ui/Button';
-import { useNotificationsContext } from 'renderer/features/notifications';
+import {
+  AppNotification,
+  useNotificationsContext,
+} from 'renderer/features/notifications';
 import { useMainAccount, useUserAppConfig } from 'renderer/features/settings';
 import { AppRoute } from 'renderer/types/routes';
 
@@ -39,17 +42,13 @@ function OnboardingLayout({ children }: PropsType) {
     [currentPath, mainAccountPubKey]
   );
 
-  const referralProgramNotification = {
-    message:
-      'Refer a friend and win 5 extra tokens for each person who joins the network',
-    buttonLabel: 'Get the Code',
-    action: () => navigate(AppRoute.Settings),
-  };
-
   const { handleSaveUserAppConfig } = useUserAppConfig({
     onConfigSaveSuccess: () => {
       navigate(AppRoute.MyNode, { state: { noBackButton: true } });
-      addNotification(referralProgramNotification);
+      addNotification(
+        'referralProgramNotification',
+        AppNotification.ReferalProgramNotification
+      );
     },
   });
 
