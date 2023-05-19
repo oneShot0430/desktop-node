@@ -17,8 +17,8 @@ import React, {
   ReactNode,
   RefObject,
 } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
-import { useMutation, useQueryClient } from 'react-query';
+import { Toaster } from 'react-hot-toast';
+import { useQueryClient } from 'react-query';
 
 import GearFill from 'assets/svgs/gear-fill.svg';
 import GearLine from 'assets/svgs/gear-line.svg';
@@ -41,14 +41,9 @@ import {
   useMetadata,
   useAllStoredPairedTaskVariables,
   useAddTaskVariableModal,
+  useTasksContext,
 } from 'renderer/features';
-import {
-  TaskService,
-  stopTask,
-  stakeOnTask,
-  startTask,
-  QueryKeys,
-} from 'renderer/services';
+import { TaskService, stopTask } from 'renderer/services';
 import { Task } from 'renderer/types';
 import { getCreatedAtDate, getKoiiFromRoe } from 'utils';
 
@@ -77,7 +72,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   const [valueToStake, setValueToStake] = useState<number>(0);
   const [meetsMinimumStake, setMeetsMinimumStake] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | ReactNode>('');
-  const [startTaskSucceeded, setStartTaskSucceeded] = useState(false);
+  const { startTaskMutation, startTaskSucceeded } = useTasksContext();
 
   const { data: mainAccountPubKey = '' } = useMainAccount();
 
@@ -228,32 +223,6 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     validateTask();
   }, [validateTask]);
 
-  const handleStartTask = async () => {
-    if (alreadyStakedTokensAmount === 0) {
-      await stakeOnTask(publicKey, valueToStake);
-    }
-    await startTask(publicKey);
-  };
-
-  const { mutate: stakeAndRun, isLoading: isStakingAndRunning } = useMutation(
-    handleStartTask,
-    {
-      onSuccess: () => setStartTaskSucceeded(true),
-      onSettled: () => queryCache.invalidateQueries([QueryKeys.taskNodeInfo]),
-      onError: (error) => {
-        console.error(error);
-        toast.error('Task running failed. Please try again!', {
-          duration: 1500,
-          icon: <CloseLine className="h-5 w-5" />,
-          style: {
-            backgroundColor: '#FFA6A6',
-            paddingRight: 0,
-          },
-        });
-      },
-    }
-  );
-
   const handleStopTask = async () => {
     try {
       await stopTask(publicKey);
@@ -322,6 +291,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     isLoadingMetadata,
     task.publicKey,
     metadata,
+    details,
     globalAndTaskVariables,
     closeAccordionView,
     handleOpenAddTaskVariableModal,
@@ -418,7 +388,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
         </div>
       </Tooltip>
 
-      {isStakingAndRunning ? (
+      {startTaskMutation.isLoading ? (
         <div className="py-[0.72rem]">
           <LoadingSpinner size={LoadingSpinnerSize.Large} />
         </div>
@@ -440,7 +410,16 @@ function TaskItem({ task, index, columnsLayout }: Props) {
                 }`}
               />
             }
-            onClick={isRunning ? handleStopTask : () => stakeAndRun()}
+            onClick={
+              isRunning
+                ? handleStopTask
+                : () =>
+                    startTaskMutation.mutate({
+                      publicKey,
+                      valueToStake,
+                      alreadyStakedTokensAmount,
+                    })
+            }
             disabled={!isRunning && !isTaskValidToRun}
           />
         </Tooltip>
