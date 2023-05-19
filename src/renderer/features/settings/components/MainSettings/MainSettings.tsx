@@ -1,18 +1,20 @@
 import React from 'react';
+import { useQuery } from 'react-query';
+
+import { QueryKeys, getVersion } from 'renderer/services';
 
 import { Network } from './Network';
 import { Referral } from './Referral';
 
-const lastCommitSha =
-  (typeof process !== 'undefined' && process.env.COMMIT_SHA) || '';
-
 export function MainSettings() {
+  const { data: appVersion = '' } = useQuery(QueryKeys.AppVersion, getVersion);
+
   return (
     <div className="flex flex-col gap-7 text-white h-full text-sm">
       <Referral />
       <Network />
 
-      {lastCommitSha && <div className="">version: {lastCommitSha}</div>}
+      <div className="mt-[136px]">Version {appVersion}</div>
     </div>
   );
 }
