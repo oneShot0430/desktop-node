@@ -5,6 +5,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { MainLayout, LoadingScreen } from './components';
 import { OnboardingLayout } from './features/onboarding/components/OnboardingLayout';
 import { OnboardingProvider } from './features/onboarding/context/onboarding-context';
+import { TasksProvider } from './features/tasks';
 import {
   QueryKeys,
   getAllAccounts,
@@ -85,9 +86,11 @@ function AppWrapper(): JSX.Element {
 
   if (!isOnboarding) {
     return (
-      <MainLayout>
-        <Outlet />
-      </MainLayout>
+      <TasksProvider>
+        <MainLayout>
+          <Outlet />
+        </MainLayout>
+      </TasksProvider>
     );
   }
 

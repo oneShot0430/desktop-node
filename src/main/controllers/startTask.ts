@@ -49,7 +49,6 @@ const startTask = async (
   payload: TaskStartStopParam
 ): Promise<void> => {
   const { taskAccountPubKey } = payload;
-
   const mainSystemAccount = await getMainSystemAccountKeypair();
 
   const taskInfo: RawTaskData | null =
