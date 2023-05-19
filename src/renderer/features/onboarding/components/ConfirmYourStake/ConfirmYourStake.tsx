@@ -13,6 +13,7 @@ import {
   useNotEnoughFunds,
   useRunMultipleTasks,
 } from 'renderer/features/common';
+import { useNotificationsContext } from 'renderer/features/notifications';
 import {
   useMainAccountBalance,
   useUserAppConfig,
@@ -35,9 +36,20 @@ function ConfirmYourStake() {
   );
   const [isRunButtonDisabled, setIsRunButtonDisabled] = useState<boolean>();
 
+  const { addNotification } = useNotificationsContext();
+
+  const referralProgramNotification = {
+    message:
+      'Refer a friend and win 5 extra tokens for each person who joins the network',
+    buttonLabel: 'Get the Code',
+    action: () => navigate(AppRoute.Settings),
+  };
+
   const { data: balance = 0, isLoading } = useMainAccountBalance();
-  const handleRunTasksSuccess = () =>
+  const handleRunTasksSuccess = () => {
     handleSaveUserAppConfig({ settings: { onboardingCompleted: true } });
+    addNotification(referralProgramNotification);
+  };
   const balanceInKoii = getKoiiFromRoe(balance);
 
   const { runAllTasks, runTasksLoading, runTasksError } = useRunMultipleTasks({

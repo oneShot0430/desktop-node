@@ -1,67 +1,42 @@
-import {
-  Icon,
-  CloseLine,
-  Button,
-  ButtonVariant,
-  ButtonSize,
-} from '@_koii/koii-styleguide';
-import React, { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { twMerge } from 'tailwind-merge';
-
-import { AppRoute } from 'renderer/types/routes';
+import { Icon, CloseLine, Button, ButtonSize } from '@_koii/koii-styleguide';
+import React from 'react';
 
 import { BackButton } from '../../../components/BackButton';
 import { AppNotification, useNotificationsContext } from '../context';
 
 type PropsType = {
-  variant: AppNotification;
+  notification: AppNotification;
 };
 
-export function NotificationBanner({ variant }: PropsType) {
-  const navigate = useNavigate();
+export function NotificationBanner({
+  notification: { message, buttonLabel, action },
+}: PropsType) {
   const { removeNotification } = useNotificationsContext();
 
-  const handleSeeTasksAction = useCallback(() => {
+  const executeActionAndClose = () => {
     removeNotification();
-    navigate(AppRoute.AddTask);
-  }, [navigate, removeNotification]);
-
-  const action = {
-    [AppNotification.FirstNodeReward]: {
-      label: 'See tasks',
-      onClick: handleSeeTasksAction,
-      message:
-        "You've earned your first node reward! Run more tasks to easily increase your rewards.",
-    },
-  }[variant];
-
-  const classNames = twMerge(
-    'flex justify-between w-full px-4 mx-auto px-4 items-center gap-4',
-    variant === AppNotification.FirstNodeReward && 'bg-green-2 text-finnieBlue'
-  );
+    action();
+  };
 
   return (
-    <div className={classNames}>
+    <div className="flex justify-between w-full px-3 mx-auto items-center gap-4 bg-green-2 text-finnieBlue">
       <BackButton color="blue" />
-      <div className="max-w-[65%]">{action.message}</div>
-      <div className="flex items-center gap-6 w-max">
-        {action && (
-          <Button
-            label={action.label}
-            onClick={action.onClick}
-            variant={ButtonVariant.PrimaryDark}
-            size={ButtonSize.SM}
-            labelClassesOverrides="font-semibold w-max"
-            buttonClassesOverrides="bg-finnieBlue"
-          />
-        )}
+      <div className="text-right w-full">{message}</div>
+      <div className="flex items-center gap-4 w-max">
+        <Button
+          label={buttonLabel}
+          onClick={executeActionAndClose}
+          size={ButtonSize.SM}
+          labelClassesOverrides="font-semibold w-max"
+          buttonClassesOverrides="px-2 bg-transparent text-purple-3 border-2 border-purple-3 hover:bg-purple-3 hover:text-white"
+        />
+
         <button
           className="cursor-pointer"
           title="close"
           onClick={removeNotification}
         >
-          <Icon source={CloseLine} className="h-9 w-9" />
+          <Icon source={CloseLine} className="h-5.5 w-5.5" />
         </button>
       </div>
     </div>

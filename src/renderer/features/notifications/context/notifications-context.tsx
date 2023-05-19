@@ -1,7 +1,9 @@
 import React, { createContext, useContext, useState } from 'react';
 
-export enum AppNotification {
-  FirstNodeReward = 'FirstNodeReward',
+export interface AppNotification {
+  message: string;
+  buttonLabel: string;
+  action: () => void;
 }
 
 export interface NotificationsContextType {

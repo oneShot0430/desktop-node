@@ -18,6 +18,7 @@ module.exports = {
         table: '6rem',
       },
       width: {
+        5.5: '22px',
         22.5: '5.6rem',
         125: '31.25rem',
       },

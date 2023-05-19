@@ -31,7 +31,7 @@ function CreatePin() {
     const hashedPin = await hash(pin, saltRounds);
     setNewAccountPin(pin);
     handleSaveUserAppConfig({
-      settings: { pin: hashedPin },
+      settings: { pin: hashedPin, hasCopiedReferralCode: false },
     });
   };
 
