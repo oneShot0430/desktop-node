@@ -1,8 +1,11 @@
 import {
   Icon,
-  CurrencyMoneyLine,
   CloseLine,
   ChevronArrowLine,
+  CopyLine,
+  CheckSuccessLine,
+  CurrencyMoneyLine,
+  WalletLine,
 } from '@_koii/koii-styleguide';
 import { create, useModal } from '@ebay/nice-modal-react';
 import QRCode from 'qrcode.react';
@@ -30,7 +33,7 @@ export const AddFunds = create(function AddFunds({
   onGoBack,
 }: Props) {
   const modal = useModal();
-  const { copyToClipboard } = useClipboard();
+  const { copyToClipboard, copied: hasCopiedKey } = useClipboard();
 
   const { data: mainAccountPubKey = '' } = useQuery(
     ['main-account'],
@@ -59,7 +62,7 @@ export const AddFunds = create(function AddFunds({
   );
   const hasClaimedAllMethods = methodsClaimed === 4;
   const title = hasClaimedAllMethods
-    ? 'Scan the QR code or copy the address to send tokens to your node account.'
+    ? 'Move KOII with Finnie. Copy your address to send your account some love.'
     : methodsClaimed > 0
     ? 'Return to the Faucet to get the rest of your free KOII.'
     : 'Go to the Faucet for some free KOII to get started.';
@@ -83,6 +86,13 @@ export const AddFunds = create(function AddFunds({
     closeModal();
   };
 
+  const openFinnieAndClose = () => {
+    const urlToFinnie =
+      'https://chrome.google.com/webstore/detail/finnie/cjmkndjhnagcfbpiemnkdpomccnjblmj';
+    openBrowserWindow(urlToFinnie);
+    closeModal();
+  };
+
   const closeAndGoBack = () => {
     onGoBack?.();
     modal.resolve();
@@ -91,7 +101,7 @@ export const AddFunds = create(function AddFunds({
 
   return (
     <Modal>
-      <ModalContent className="w-[416px] h-[430px] text-finnieBlue rounded-xl py-2">
+      <ModalContent className="w-[416px] h-auto text-finnieBlue rounded-xl py-2 pb-4">
         <div className={headerClasses}>
           {onGoBack && (
             <Icon
@@ -107,39 +117,64 @@ export const AddFunds = create(function AddFunds({
           />
         </div>
 
-        <div className="flex flex-col items-center w-full h-full">
-          <div className="mb-3 text-lg leading-8 text-center">{title}</div>
+        <div className="flex flex-col items-center w-full h-full px-3 pt-3">
+          <div className="mb-3 text-base leading-5 text-center">{title}</div>
 
           {hasClaimedAllMethods ? (
-            <QRCode value={currentAccountPubKey} renderAs="canvas" size={240} />
+            <>
+              <div className="mt-4 mb-2 text-xs select-text">
+                {currentAccountPubKey}
+              </div>
+
+              <Button
+                onClick={copyToClipboardAndClose}
+                label={hasCopiedKey ? 'Copied' : 'Copy'}
+                className="text-white bg-purple-4 w-[110px] py-1.5 text-sm mt-3 rounded"
+                icon={
+                  <Icon
+                    source={hasCopiedKey ? CheckSuccessLine : CopyLine}
+                    className="h-6 w-6"
+                  />
+                }
+              />
+
+              <Button
+                onClick={openFinnieAndClose}
+                label="Get the Finnie Wallet"
+                className=" bg-transparent w-auto underline text-sm leading-4 py-1.5 text-sm mt-3 rounded"
+                icon={<Icon source={WalletLine} className="h-6 w-6" />}
+              />
+            </>
           ) : (
             <>
               <Button
                 onClick={openFaucetAndClose}
                 label="Get My Free Tokens"
-                className="text-white bg-purple-4 w-[276px] h-[52px] mb-14 rounded-md"
+                className="text-white bg-purple-4 w-[276px] h-[52px] mb-4 rounded-md"
                 icon={<Icon source={CurrencyMoneyLine} className="mb-0.5" />}
               />
 
-              <div className="mb-3">Or send KOII directly to this account.</div>
+              <div className="mb-3">
+                Scan the QR code or copy the address to send tokens to your node
+                account.
+              </div>
 
               <QRCode
                 value={currentAccountPubKey}
                 renderAs="canvas"
                 size={80}
               />
+              <div className="mt-4 mb-2 text-xs select-text">
+                {currentAccountPubKey}
+              </div>
+              <Button
+                onClick={copyToClipboardAndClose}
+                label="copy"
+                aria-label="copy"
+                className="w-[72px] h-6 rounded-xl text-xs border border-finnieBlue bg-transparent text-finnieBlue-dark"
+              />
             </>
           )}
-
-          <div className="mt-4 mb-2 text-xs select-text">
-            {currentAccountPubKey}
-          </div>
-
-          <Button
-            onClick={copyToClipboardAndClose}
-            label="copy"
-            className="w-[72px] h-6 rounded-xl text-xs border border-finnieBlue bg-transparent text-finnieBlue-dark"
-          />
         </div>
       </ModalContent>
     </Modal>

@@ -106,7 +106,7 @@ describe('AddFunds', () => {
     await userEvent.click(addFundsButton);
 
     const copyForAllMethodsCompleted = await screen.findByText(
-      /Scan the QR code or copy the address to send tokens to your node account./i
+      /Move KOII with Finnie. Copy your address to send your account some love./i
     );
 
     expect(copyForAllMethodsCompleted).toBeInTheDocument();
@@ -142,7 +142,9 @@ describe('AddFunds', () => {
     const addFundsButton = screen.getByText(/Add Funds/i);
     await userEvent.click(addFundsButton);
 
-    const copyButton = await screen.findByText(/copy/i);
+    const copyButton = await screen.getByRole('button', {
+      name: /copy/i,
+    });
     await userEvent.click(copyButton);
 
     expect(copyToClipboard).toHaveBeenCalledWith(publicKey);
