@@ -83,6 +83,8 @@ export const AddStake = create<PropsType>(function AddStake({ task }) {
   const title =
     step === Step.Add
       ? 'Enter the amount you want to add to your stake.'
+      : isStaking
+      ? "Sit tight, we're adding your treasure to the pile."
       : 'Confirm your stake to run this task.';
 
   const buttonLabel = step === Step.Add ? 'Add Stake' : 'Run Task';
