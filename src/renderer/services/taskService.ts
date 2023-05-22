@@ -120,8 +120,9 @@ export class TaskService {
         last3Submissions
           .slice(-1)
           .some((round) => stakingAccountPublicKey in round));
+    const taskStake = task.stakeList[stakingAccountPublicKey] || 0;
     const unstakeIsAvailable =
-      !task.isRunning && !hasSubmissionsInSomeOfLast3Rounds;
+      !task.isRunning && !hasSubmissionsInSomeOfLast3Rounds && !!taskStake;
 
     return unstakeIsAvailable;
   }

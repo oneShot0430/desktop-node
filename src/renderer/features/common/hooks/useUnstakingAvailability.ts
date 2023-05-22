@@ -20,7 +20,6 @@ export const useUnstakingAvailability = ({
         enabled: !!stakingAccountPublicKey,
       }
     );
-
   return {
     canUnstake,
     isLoadingUnstakingAvailability,

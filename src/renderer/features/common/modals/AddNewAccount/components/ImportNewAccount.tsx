@@ -79,7 +79,7 @@ export function ImportNewAccount({
           <Button
             disabled={accountPin.length !== 6}
             onClick={handleValidateUser}
-            label="Reveal Secret Phrase"
+            label="Enter Secret Phrase"
             className="font-semibold bg-white text-finnieBlue-light w-[220px] h-[48px]"
           />
         </div>
