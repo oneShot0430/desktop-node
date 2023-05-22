@@ -236,6 +236,7 @@ export const AccountItem = memo(
 
             <Tooltip
               theme={Theme.Light}
+              placement="top-left"
               tooltipContent={
                 <p className="w-[292px]">
                   This balance covers network fees. The key may be blocked from
