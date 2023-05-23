@@ -111,10 +111,13 @@ function TaskItem({ task, index, columnsLayout }: Props) {
       enabled: !!mainAccountPubKey,
     });
 
-  const handleToggleView = (view: 'info' | 'settings') => {
-    const newView = accordionView === view ? null : view;
-    setAccordionView(newView);
-  };
+  const handleToggleView = useCallback(
+    (view: 'info' | 'settings') => {
+      const newView = accordionView === view ? null : view;
+      setAccordionView(newView);
+    },
+    [accordionView]
+  );
 
   const handleTaskToolsValidationCheck = (isValid: boolean) => {
     setIsTaskToolsValid(isValid);
@@ -130,12 +133,15 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   );
   const isEditStakeInputDisabled =
     alreadyStakedTokensAmount !== 0 || loadingTaskStake;
-  const details = {
-    nodes,
-    minStake: getKoiiFromRoe(minStake),
-    topStake,
-    bounty: totalBountyInKoii,
-  };
+  const details = useMemo(
+    () => ({
+      nodes,
+      minStake: getKoiiFromRoe(minStake),
+      topStake,
+      bounty: totalBountyInKoii,
+    }),
+    [nodes, minStake, topStake, totalBountyInKoii]
+  );
 
   const { metadata, isLoadingMetadata } = useMetadata(task.metadataCID);
 
@@ -281,6 +287,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
           taskVariables={globalAndTaskVariables}
           onPairingSuccess={closeAccordionView}
           onOpenAddTaskVariableModal={handleOpenAddTaskVariableModal}
+          moveToTaskInfo={() => handleToggleView('info')}
         />
       );
     }
@@ -295,6 +302,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     globalAndTaskVariables,
     closeAccordionView,
     handleOpenAddTaskVariableModal,
+    handleToggleView,
   ]);
 
   const createdAt = useMemo(
@@ -426,7 +434,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
       )}
 
       <div
-        className={`w-full col-span-9 overflow-y-auto ${
+        className={`w-full col-span-9 overflow-y-auto overflow-x-hidden ${
           accordionView !== null
             ? 'opacity-1 pt-6 max-h-auto'
             : 'opacity-0 max-h-0'
