@@ -185,6 +185,9 @@ export function TaskItem({
     topStake: getKoiiFromRoe(topStake),
     bounty: totalBountyInKoii,
   };
+  const taskIsDelistedAndStopped = !task.isWhitelisted && !isRunning;
+  const isPlayPauseButtonDisabled =
+    !(myStakeInKoii > 0) || taskIsDelistedAndStopped;
 
   const containerClasses = `py-2.5 gap-y-0 ${
     taskStatus === TaskStatus.FLAGGED
@@ -195,8 +198,10 @@ export function TaskItem({
       ? 'bg-[#FFA54B]/25'
       : ''
   }`;
-  const tooltipContent = !task.isWhitelisted
-    ? 'This task has been removed. Please unstake your tokens.'
+  const tooltipContent = taskIsDelistedAndStopped
+    ? "This task has been delisted, but don't worry! Your tokens are safe and will be ready to unstake after 3 rounds."
+    : !task.isWhitelisted
+    ? "This task has been delisted, but don't worry! Your tokens are safe. Pause the task and the tokens will be ready to unstake after 3 rounds."
     : myStakeInKoii > 0
     ? `${isRunning ? 'Stop' : 'Start'} task`
     : `You need to stake at least ${minStake} KOII on this task to run it.`;
@@ -228,12 +233,12 @@ export function TaskItem({
                       ? 'text-finniePurple'
                       : 'text-white'
                   }
-                  ${!(myStakeInKoii > 0) && 'opacity-60'}`}
+                  ${isPlayPauseButtonDisabled && 'opacity-60'}`}
                 />
               }
               onClick={handleToggleTask}
               className="rounded-full w-8 h-8"
-              disabled={!(myStakeInKoii > 0) || !task.isWhitelisted}
+              disabled={isPlayPauseButtonDisabled}
             />
           </Tooltip>
         )}
@@ -287,6 +292,7 @@ export function TaskItem({
           status={taskStatus}
           isFirstRowInTable={isFirstRowInTable}
           isLoading={isLoadingStatus}
+          isRunning={isRunning}
         />
       </div>
       <div

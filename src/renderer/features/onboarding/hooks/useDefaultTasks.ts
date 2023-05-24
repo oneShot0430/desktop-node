@@ -3,7 +3,7 @@ import { useQuery } from 'react-query';
 import { QueryKeys, getTasksById } from 'renderer/services';
 
 const tasksAllowedOnOnboarding = [
-  'HFvWYY9tLFKWEmKsAExofWfxWxEEix7ezBjzz2JdsrwA',
+  '2yGvW9wNiAXsZZEpx1hTjDuSY9tXpnicDUdtBMp8hyCU',
 ];
 
 export const useDefaultTasks = () => {
