@@ -5,6 +5,7 @@ import {
   TransactionInstruction,
   Transaction,
   sendAndConfirmTransaction,
+  SYSVAR_CLOCK_PUBKEY,
 } from '@_koi/web3.js';
 import {
   TASK_INSTRUCTION_LAYOUTS,
@@ -40,6 +41,7 @@ const withdrawStake = async (
         isWritable: true,
       },
       { pubkey: stakingAccKeypair.publicKey, isSigner: true, isWritable: true },
+      { pubkey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false },
     ],
     programId: TASK_CONTRACT_ID,
     data,
