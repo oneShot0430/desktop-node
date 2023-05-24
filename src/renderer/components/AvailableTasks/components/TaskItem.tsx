@@ -137,7 +137,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     () => ({
       nodes,
       minStake: getKoiiFromRoe(minStake),
-      topStake,
+      topStake: getKoiiFromRoe(topStake),
       bounty: totalBountyInKoii,
     }),
     [nodes, minStake, topStake, totalBountyInKoii]

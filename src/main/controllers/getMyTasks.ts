@@ -5,6 +5,7 @@ import { getAppDataPath } from 'main/node/helpers/getAppDataPath';
 import koiiTasks from 'main/services/koiiTasks';
 import { PaginatedResponse, Task } from 'models';
 import { GetMyTasksParam } from 'models/api';
+import { checkErrorInLastLogTimestamp } from 'utils';
 
 import { parseRawK2TaskData } from '../node/helpers/parseRawK2TaskData';
 
@@ -22,8 +23,8 @@ const getMyTasks = async (
       const taskLogPath = `${getAppDataPath()}/namespace/${
         rawTaskData.task_id
       }/task.log`;
-      const taskLog = fsSync.readFileSync(taskLogPath, 'utf-8');
-      const hasError = taskLog.includes('error');
+      const taskLogs = fsSync.readFileSync(taskLogPath, 'utf-8');
+      const hasError = checkErrorInLastLogTimestamp(taskLogs);
 
       return {
         publicKey: rawTaskData.task_id,

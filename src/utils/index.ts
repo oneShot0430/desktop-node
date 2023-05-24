@@ -1,3 +1,4 @@
+import { checkErrorInLastLogTimestamp } from './checkErrorInLastLogTimestamp';
 import {
   getKoiiFromRoe,
   getRoeFromKoii,
@@ -19,4 +20,5 @@ export {
   formatUrl,
   isValidUrl,
   getProgramAccountFilter,
+  checkErrorInLastLogTimestamp,
 };
