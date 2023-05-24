@@ -55,7 +55,8 @@ const statuses = {
   [TaskStatus.BLACKLISTED]: {
     icon: WarningTriangleLine,
     iconColor: 'text-[#FFA54B]',
-    tooltip: 'This task has been removed. Please unstake your tokens.',
+    tooltip:
+      "This task has been delisted, but don't worry! Your tokens are safe and will be ready to unstake after 3 rounds.",
   },
   [TaskStatus.FLAGGED]: {
     icon: FlagReportLine,
@@ -68,18 +69,28 @@ type PropsType = {
   status: TaskStatus;
   isFirstRowInTable?: boolean;
   isLoading?: boolean;
+  isRunning?: boolean;
 };
 
-export function Status({ status, isFirstRowInTable, isLoading }: PropsType) {
+export function Status({
+  status,
+  isFirstRowInTable,
+  isLoading,
+  isRunning,
+}: PropsType) {
   const { icon: StatusIcon, tooltip, iconColor } = statuses[status];
   const tooltipPlacement: Placement = `${
     isFirstRowInTable ? 'bottom' : 'top'
   }-left`;
+  const tooltipMessage =
+    status === TaskStatus.BLACKLISTED && isRunning
+      ? "This task has been delisted, but don't worry! Your tokens are safe. Pause the task and the tokens will be ready to unstake after 3 rounds."
+      : tooltip;
 
   return isLoading ? (
     <LoadingSpinner />
   ) : (
-    <Tooltip tooltipContent={tooltip} placement={tooltipPlacement}>
+    <Tooltip tooltipContent={tooltipMessage} placement={tooltipPlacement}>
       <Icon source={StatusIcon} className={`h-8 w-8 ${iconColor}`} />
     </Tooltip>
   );
