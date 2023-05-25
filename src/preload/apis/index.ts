@@ -28,6 +28,7 @@ import getVersion from './getVersion';
 import initializeTasks from './initializeTasks';
 import openBrowserWindow from './openBrowserWindow';
 import openLogfileFolder from './openLogfileFolder';
+import openNodeLogfileFolder from './openNodeLogfileFolder';
 import removeAccountByName from './removeAccountByName';
 import setActiveAccount from './setActiveAccount';
 import startTask from './startTask';
@@ -89,6 +90,7 @@ export default {
   getCurrentSlot,
   getAverageSlotTime,
   openLogfileFolder,
+  openNodeLogfileFolder,
   getVersion,
   getEncryptedSecretPhrase,
   archiveTask,

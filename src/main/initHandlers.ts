@@ -57,6 +57,7 @@ const endpointToControllerMap: Record<
   [Endpoints.GET_TASK_PAIRED_VARIABLES_NAMES_WITH_LABELS]:
     controllers.getTaskPairedVariablesNamesWithLabels,
   [Endpoints.OPEN_LOGFILE_FOLDER]: controllers.openLogfileFolder,
+  [Endpoints.OPEN_NODE_LOGFILE_FOLDER]: controllers.openNodeLogfileFolder,
   [Endpoints.GET_VERSION]: controllers.getVersion,
   [Endpoints.ARCHIVE_TASK]: controllers.archiveTask,
 };
