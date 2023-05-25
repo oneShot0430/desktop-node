@@ -33,6 +33,7 @@ export { switchNetwork } from './switchNetwork';
 export { getNetworkUrl } from './getNetworkUrl';
 export { initializeTasks } from './initializeTasks';
 export { openLogfileFolder } from './openLogfileFolder';
+export * from './openNodeLogfileFolder';
 export * from './taskVariables';
 export * from './getVersion';
 export * from './archiveTask';

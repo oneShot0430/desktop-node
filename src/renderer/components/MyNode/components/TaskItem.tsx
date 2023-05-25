@@ -156,8 +156,8 @@ export function TaskItem({
 
   const closeAccordionView = () => setShouldDisplayInfo(false);
   const closeOptionsDropdown = () => setShouldDisplayActions(false);
-  const openTaskLogs = () => {
-    const openedTheLogs = openLogfileFolder(task.publicKey);
+  const openTaskLogs = async () => {
+    const openedTheLogs: boolean = await openLogfileFolder(task.publicKey);
     if (!openedTheLogs) {
       toast.error('Unable to open the logs folder. Try Again', {
         icon: <CloseLine className="h-5 w-5" />,
