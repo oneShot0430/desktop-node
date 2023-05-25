@@ -5,6 +5,7 @@ import { QueryKeys, getVersion } from 'renderer/services';
 
 import { Network } from './Network';
 import { Referral } from './Referral';
+import { ReportBug } from './ReportBug';
 
 export function MainSettings() {
   const { data: appVersion = '' } = useQuery(QueryKeys.AppVersion, getVersion);
@@ -14,7 +15,10 @@ export function MainSettings() {
       <Referral />
       <Network />
 
-      <div className="mt-[136px]">Version {appVersion}</div>
+      <div className="mt-[120px] flex w-full justify-between">
+        <div className="mt-4">Version {appVersion}</div>
+        <ReportBug />
+      </div>
     </div>
   );
 }

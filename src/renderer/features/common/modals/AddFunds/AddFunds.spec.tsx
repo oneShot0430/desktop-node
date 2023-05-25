@@ -17,8 +17,9 @@ const baseFaucetState: StatusResponse = {
   walletAddress: publicKey,
   discordValidation: ValidationStatus.NOT_CLAIMED,
   emailValidation: ValidationStatus.NOT_CLAIMED,
-  phoneValidation: ValidationStatus.NOT_CLAIMED,
+  githubValidation: ValidationStatus.NOT_CLAIMED,
   twitterValidation: ValidationStatus.NOT_CLAIMED,
+  referral: ValidationStatus.NOT_CLAIMED,
 };
 
 jest.mock('renderer/services', () => ({
@@ -97,7 +98,7 @@ describe('AddFunds', () => {
       ...baseFaucetState,
       discordValidation: ValidationStatus.CLAIMED,
       emailValidation: ValidationStatus.CLAIMED,
-      phoneValidation: ValidationStatus.CLAIMED,
+      githubValidation: ValidationStatus.CLAIMED,
       twitterValidation: ValidationStatus.CLAIMED,
     };
     renderWithFaucetStateMock(faucetState);

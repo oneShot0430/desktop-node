@@ -8,7 +8,8 @@ export enum ValidationStatus {
 export interface StatusResponse {
   discordValidation: ValidationStatus;
   emailValidation: ValidationStatus;
-  phoneValidation: ValidationStatus;
+  githubValidation: ValidationStatus;
   twitterValidation: ValidationStatus;
+  referral: ValidationStatus;
   walletAddress: string;
 }

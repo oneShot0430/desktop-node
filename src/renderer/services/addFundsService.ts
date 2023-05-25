@@ -6,9 +6,12 @@ const { FAUCET_API_URL } = config.faucet;
 
 export const getFaucetStatus = async (walletAddress: string) => {
   if (walletAddress) {
-    const { data } = await axios.get<StatusResponse>(
+    const {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      data: { referral, ...faucetStatus },
+    } = await axios.get<StatusResponse>(
       `${FAUCET_API_URL}/get-user-faucet-state/${walletAddress}`
     );
-    return data;
+    return faucetStatus;
   }
 };
