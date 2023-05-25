@@ -1,8 +1,12 @@
+import { Icon, HistoryClockLine } from '@_koii/koii-styleguide';
 import React from 'react';
 
+import { EXPLORER_ADDRESS_URL } from 'config/explorer';
 import { TaskPairing } from 'models';
 import { RequirementType, TaskMetadata } from 'models/task';
 import { SourceCodeButton } from 'renderer/components/SourceCodeButton';
+import { Button } from 'renderer/components/ui';
+import { openBrowserWindow } from 'renderer/services';
 
 type PropsType = {
   publicKey: string;
@@ -39,14 +43,25 @@ export function TaskInfo({
     ].includes(type)
   );
 
+  const inspectTaskInExplorer = () =>
+    openBrowserWindow(`${EXPLORER_ADDRESS_URL}${publicKey}`);
+
   return (
     <div className="flex flex-col w-full pl-3 pr-5 gap-4">
       <div>
         <div className="mb-2 text-base font-semibold">Task ID:</div>
         <div className="flex justify-between gap-16 mb-4">
-          <p className="text-finnieTeal-100 underline select-text">
-            {publicKey}
-          </p>
+          <div className="flex items-start gap-6">
+            <p className="text-finnieTeal-100 underline select-text">
+              {publicKey}
+            </p>
+            <Button
+              onClick={inspectTaskInExplorer}
+              icon={<Icon source={HistoryClockLine} size={18} />}
+              label="See History"
+              className="bg-transparent h-fit w-fit underline font-light"
+            />
+          </div>
           <div className="-mt-8">
             {showSourceCode && metadata?.repositoryUrl && (
               <SourceCodeButton repositoryUrl={metadata?.repositoryUrl || ''} />
