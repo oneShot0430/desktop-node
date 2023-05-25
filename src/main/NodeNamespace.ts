@@ -7,9 +7,9 @@ import {
   IDatabase,
 } from '@koii-network/task-node';
 
-import { getAppDataPath } from './node/helpers/getAppDataPath';
+import { SystemDbKeys } from '../config/systemDbKeys';
 
-const ACTIVE_ACCOUNT = 'ACTIVE_ACCOUNT';
+import { getAppDataPath } from './node/helpers/getAppDataPath';
 
 // FIXME(Chris): use methods from wallets.ts
 export class NodeNamespace extends TaskNodeBase {
@@ -25,7 +25,7 @@ export class NodeNamespace extends TaskNodeBase {
   async getMainSystemAccountPubKey(db?: IDatabase): Promise<Keypair> {
     if (!db) throw new Error('No database provided');
 
-    const activeAccount = await db.get(ACTIVE_ACCOUNT);
+    const activeAccount = await db.get(SystemDbKeys.ActiveAccount);
 
     if (!activeAccount) {
       throw new Error('No active account found');
@@ -48,7 +48,7 @@ export class NodeNamespace extends TaskNodeBase {
   async getSubmitterAccount(): Promise<Keypair | null> {
     let submitterAccount: Keypair | null;
     try {
-      const activeAccount = await this.storeGetRaw(ACTIVE_ACCOUNT);
+      const activeAccount = await this.storeGetRaw(SystemDbKeys.ActiveAccount);
       const STAKING_WALLET_PATH = `${getAppDataPath()}/namespace/${activeAccount}_stakingWallet.json`;
       if (!fs.existsSync(STAKING_WALLET_PATH)) return null;
       submitterAccount = Keypair.fromSecretKey(
@@ -71,7 +71,7 @@ export class NodeNamespace extends TaskNodeBase {
     let distributionAccount: Keypair | null;
 
     try {
-      const activeAccount = await this.storeGetRaw(ACTIVE_ACCOUNT);
+      const activeAccount = await this.storeGetRaw(SystemDbKeys.ActiveAccount);
       /**
        * @dev - This is the path to the staking wallet, but we will use it as the distribution wallet
        */

@@ -4,8 +4,10 @@ import path from 'path';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 
+import { getAllAccounts, setActiveAccount } from './controllers';
 import initHandlers from './initHandlers';
 import { configureLogger } from './logger';
+import { getCurrentActiveAccountName } from './node/helpers';
 import { resolveHtmlPath } from './util';
 
 class AppUpdater {
@@ -64,8 +66,22 @@ const installExtensions = async () => {
     )
     .catch(console.log);
 };
+
 const main = async (): Promise<void> => {
   initHandlers();
+
+  await getCurrentActiveAccountName().catch(async () => {
+    console.warn(
+      'NO ACTIVE ACCOUNT IN DB - setting first available account as active'
+    );
+    const allAccounts = await getAllAccounts();
+
+    if (allAccounts[0]) {
+      await setActiveAccount({} as Event, {
+        accountName: allAccounts[0].accountName,
+      });
+    }
+  });
 };
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.

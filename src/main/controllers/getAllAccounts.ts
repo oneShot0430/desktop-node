@@ -1,18 +1,14 @@
-import { Event } from 'electron';
 import fs from 'fs';
 import path from 'path';
 
 import { Keypair } from '@_koi/web3.js';
-import { SystemDbKeys } from 'config/systemDbKeys';
 import { getAppDataPath } from 'main/node/helpers/getAppDataPath';
-import { namespaceInstance } from 'main/node/helpers/Namespace';
 import sdk from 'main/services/sdk';
 import { getAllAccountsResponse } from 'models/api';
 
-const getAllAccounts = async (
-  event: Event,
-  payload: any
-): Promise<getAllAccountsResponse> => {
+import { getCurrentActiveAccountName } from '../node/helpers';
+
+export const getAllAccounts = async (): Promise<getAllAccountsResponse> => {
   if (!fs.existsSync(`${getAppDataPath()}/namespace`))
     fs.mkdirSync(`${getAppDataPath()}/namespace`);
   if (!fs.existsSync(`${getAppDataPath()}/wallets`))
@@ -30,9 +26,10 @@ const getAllAccounts = async (
     .filter((item) => item.isFile() && path.extname(item.name) === '.json')
     .map((item) => item.name);
   const accounts: getAllAccountsResponse = [];
-  const activeAccount = await namespaceInstance.storeGet(
-    SystemDbKeys.ActiveAccount
-  );
+
+  const activeAccount: string | null =
+    await getCurrentActiveAccountName().catch(() => null);
+
   const promisesArr: Array<Promise<number>> = [];
 
   mainWalletfilesInDirectory.forEach((e) => {
@@ -83,5 +80,3 @@ const getAllAccounts = async (
 
   return accounts;
 };
-
-export default getAllAccounts;

@@ -17,8 +17,10 @@ export function getMainSystemWalletPath(activeAccount: string): string {
   return `${getAppDataPath()}/wallets/${activeAccount}_mainSystemWallet.json`;
 }
 
-export function getCurrentActiveAccountName(): Promise<string> {
-  const ACTIVE_ACCOUNT = namespaceInstance.storeGet(SystemDbKeys.ActiveAccount);
+export async function getCurrentActiveAccountName(): Promise<string> {
+  const ACTIVE_ACCOUNT = await namespaceInstance.storeGet(
+    SystemDbKeys.ActiveAccount
+  );
   if (!ACTIVE_ACCOUNT) {
     throwDetailedError({
       detailed: 'Please select an active account',
