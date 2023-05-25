@@ -4,7 +4,7 @@ export { default as claimReward } from './claimReward';
 export { default as createNodeWallets } from './createNodeWallets';
 export { default as delegateStake } from './delegateStake';
 export { default as generateSeedPhrase } from './generateSeedPhrase';
-export { default as getAllAccounts } from './getAllAccounts';
+export { getAllAccounts } from './getAllAccounts';
 export { default as getActiveAccountName } from './getActiveAccountName';
 export { default as getAvailableTasks } from './getAvailableTasks';
 export { default as getEarnedRewardByNode } from './getEarnedRewardByNode';
