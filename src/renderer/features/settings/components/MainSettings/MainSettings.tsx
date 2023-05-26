@@ -17,7 +17,7 @@ export function MainSettings() {
       <Network />
       <NodeLogs />
 
-      <div className="mt-[120px] flex w-full justify-between">
+      <div className="mt-[18px] flex w-full justify-between">
         <div className="mt-4">Version {appVersion}</div>
         <ReportBug />
       </div>
