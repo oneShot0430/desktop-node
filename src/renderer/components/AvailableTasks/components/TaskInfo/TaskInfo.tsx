@@ -49,7 +49,7 @@ export function TaskInfo({
   return (
     <div className="flex flex-col w-full pl-3 pr-5 gap-4">
       <div>
-        <div className="mb-2 text-base font-semibold">Task ID:</div>
+        <div className="mb-2 text-base font-semibold">Task ID</div>
         <div className="flex justify-between gap-16 mb-4">
           <div className="flex items-start gap-6">
             <p className="text-finnieTeal-100 underline select-text">
@@ -70,7 +70,7 @@ export function TaskInfo({
         </div>
       </div>
       <div className={`${showSourceCode ? '-mt-8' : ''}`}>
-        <div className="mb-2 text-base font-semibold">Description:</div>
+        <div className="mb-2 text-base font-semibold">Description</div>
         <p className="mb-4 select-text text-sm">
           {metadata?.description ?? NOT_AVAILABLE}
         </p>
@@ -78,7 +78,7 @@ export function TaskInfo({
 
       <div className="mb-6 w-full flex justify-between">
         <div className="max-w-[48%] w-full">
-          <div className="mb-2 text-base font-semibold">Details:</div>
+          <div className="mb-2 text-base font-semibold">Details</div>
           <div className="grid grid-cols-2 gap-y-2 gap-x-12">
             <div className="select-text">Nodes: {nodes ?? NOT_AVAILABLE}</div>
             <div className="select-text">Bounty: {bounty ?? NOT_AVAILABLE}</div>
@@ -92,7 +92,7 @@ export function TaskInfo({
         </div>
 
         <div className="max-w-[48%] w-full">
-          <div className="mb-2 text-base font-semibold">Specifications:</div>
+          <div className="mb-2 text-base font-semibold">Specifications</div>
           <div className="grid grid-cols-2 gap-y-2 gap-x-12">
             {specs?.map(({ type, value }, index) => (
               <div key={index} className="select-text">
@@ -104,9 +104,9 @@ export function TaskInfo({
       </div>
 
       {shouldDisplayToolsInUse && !!variables?.length && (
-        <div className="mt-6">
-          <div className="mb-2 text-base font-semibold">Tools in Use:</div>
-          <div className="grid grid-flow-col grid-rows-2 gap-y-2 gap-x-12">
+        <div>
+          <div className="mb-2 text-base font-semibold">Settings</div>
+          <div className="flex flex-col">
             {variables?.map(({ name, label }) => (
               <div
                 key={name}

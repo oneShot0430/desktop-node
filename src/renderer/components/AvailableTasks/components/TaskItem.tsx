@@ -434,9 +434,10 @@ function TaskItem({ task, index, columnsLayout }: Props) {
       )}
 
       <div
-        className={`w-full col-span-9 overflow-y-auto overflow-x-hidden ${
+        className={`w-full col-span-9 overflow-y-auto overflow-x-hidden inner-scrollbar ${
           accordionView !== null
-            ? 'opacity-1 pt-6 max-h-auto'
+            ? // 4000px is just a simbolic value of a ridiculously high height, the animation needs absolute max-h values to work properly (fit/max/etc won't work)
+              'opacity-1 pt-6 max-h-[4000px]'
             : 'opacity-0 max-h-0'
         } transition-all duration-500 ease-in-out`}
       >
