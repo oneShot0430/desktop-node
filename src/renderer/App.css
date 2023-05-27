@@ -197,3 +197,7 @@ input[type='number'] {
     width: 100%;
   }
 }
+
+.inner-scrollbar::-webkit-scrollbar {
+  display: none;
+}

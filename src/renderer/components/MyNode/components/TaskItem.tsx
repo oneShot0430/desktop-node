@@ -322,9 +322,8 @@ export function TaskItem({
           />
         )}
       </div>
-
       <div
-        className={`w-full col-span-9 overflow-y-auto ${
+        className={`w-full col-span-9 overflow-y-auto inner-scrollbar ${
           shouldDisplayInfo
             ? 'opacity-1 pt-6 max-h-[360px]'
             : 'opacity-0 max-h-0'
