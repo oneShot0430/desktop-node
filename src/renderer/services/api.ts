@@ -155,6 +155,17 @@ export const createNodeWallets = (
   });
 };
 
+export const createNodeWalletsFromJson = (
+  jsonKey: number[],
+  accountName: string
+) => {
+  console.log('CREATING ACCOUNT WALLETS', accountName);
+  return window.main.createNodeWalletsFromJson({
+    accountName,
+    jsonKey,
+  });
+};
+
 export const generateSeedPhrase = (): Promise<string> => {
   return window.main.generateSeedPhrase().then((mnemonic) => {
     console.log('GENERATING SEED PHRASE', mnemonic);

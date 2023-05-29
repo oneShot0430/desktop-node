@@ -4,27 +4,27 @@ import React from 'react';
 import { ModalContent } from 'renderer/features/modals';
 import { Theme } from 'renderer/types/common';
 
-import { Steps, KeysType } from '../types';
+import { Steps, KeyType } from '../types';
 
 import { AccountInfo } from './AccountInfo';
 
 type PropsType = Readonly<{
   onClose: () => void;
-  newKeys: KeysType;
+  newKey: KeyType;
   setNextStep: (step: Steps) => void;
 }>;
 
-export function AccountSuccessfullyImported({ onClose, newKeys }: PropsType) {
+export function AccountSuccessfullyImported({ onClose, newKey }: PropsType) {
   return (
-    <ModalContent theme={Theme.Dark} className="pb-6 text-white w-[680px]">
+    <ModalContent theme={Theme.Dark} className="pb-7 pt-2 text-white w-[791px]">
       <div className="flex justify-between w-full p-3">
         <div className="flex items-center justify-between pl-6">
           <Icon
             source={CheckSuccessLine}
-            className="w-16 h-16 m-2 text-finnieEmerald-light"
+            className="w-8 h-8 m-2 text-finnieEmerald-light"
           />
           <span className="text-[24px] pl-5 text-white">
-            New key successfully imported!
+            Your Account was successfully imported!
           </span>
         </div>
 
@@ -36,14 +36,17 @@ export function AccountSuccessfullyImported({ onClose, newKeys }: PropsType) {
         {/*  not sure */}
       </div>
 
-      <div className="px-[62px] text-left leading-8 mb-4">
-        Here are your imported keys! You can select which keys to use in the key
-        management settings.
+      <div className="px-12 text-base text-left leading-8 mb-4">
+        Keep your address at hand so you can easily fund your key and start
+        running tasks. You can choose which account to use when running task in
+        key management panel.
       </div>
 
-      <div className="flex flex-col items-center justify-center gap-8 px-12 w-full">
-        <AccountInfo keyType="system" address={newKeys?.system ?? ''} />
-        <AccountInfo keyType="task" address={newKeys?.task ?? ''} />
+      <div className="flex flex-col items-center justify-center gap-8 px-12 w-full pb-2">
+        <AccountInfo
+          accountName={newKey.accountName}
+          address={newKey?.system ?? ''}
+        />
       </div>
     </ModalContent>
   );

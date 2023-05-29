@@ -26,7 +26,7 @@ type PropsType = Readonly<{
 export function CreateNewAccount({ onClose, setNextStep }: PropsType) {
   const [pin, setPin] = useState('');
   const [error, setError] = useState<Error | string>('');
-  const [accountName, setAccounttName] = useState('');
+  const [accountName, setAccountName] = useState('');
   const queryCache = useQueryClient();
   const { settings } = useUserSettings();
 
@@ -50,7 +50,7 @@ export function CreateNewAccount({ onClose, setNextStep }: PropsType) {
 
         setNextStep(Steps.ShowSeedPhrase, {
           keys: {
-            task: stakingWalletPubKey,
+            accountName,
             system: mainAccountPubKey,
           },
           seedPhrase,
@@ -71,7 +71,7 @@ export function CreateNewAccount({ onClose, setNextStep }: PropsType) {
 
   const handleWalletNameChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      setAccounttName(e.target.value);
+      setAccountName(e.target.value);
     },
     []
   );

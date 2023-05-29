@@ -6,7 +6,7 @@ import { ErrorMessage, Button } from 'renderer/components/ui';
 import { createNodeWallets, setActiveAccount } from 'renderer/services';
 
 export interface AccountsType {
-  stakingAccountPubKey: string;
+  accountName: string;
   mainAccountPubKey: string;
 }
 
@@ -73,7 +73,7 @@ function ImportFromSeedPhrase({
 
         onImportSuccess({
           mainAccountPubKey: accounts.mainAccountPubKey,
-          stakingAccountPubKey: accounts.stakingWalletPubKey,
+          accountName,
         });
       } catch (error: any) {
         setError(error);

@@ -1,6 +1,6 @@
-export type KeysType = { system: string; task: string };
+export type KeyType = { system: string; accountName: string };
 
-export type CreateKeyPayload = { keys: KeysType; seedPhrase: string };
+export type CreateKeyPayload = { keys: KeyType; seedPhrase: string };
 
 export enum Steps {
   ImportKey,
@@ -10,4 +10,5 @@ export enum Steps {
   ShowSeedPhrase,
   AccountImported,
   ImportNewAccount,
+  ImportWithKeyFile,
 }

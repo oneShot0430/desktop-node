@@ -25,6 +25,8 @@ const endpointToControllerMap: Record<
   [Endpoints.GET_STAKING_ACCOUNT_PUBKEY]: controllers.getStakingAccountPubKey,
   [Endpoints.CLAIM_REWARD]: controllers.claimReward,
   [Endpoints.CREATE_NODE_WALLETS]: controllers.createNodeWallets,
+  [Endpoints.CREATE_NODE_WALLETS_FROM_JSON]:
+    controllers.createNodeWalletsFromJson,
   [Endpoints.GENERATE_SEED_PHRASE]: controllers.generateSeedPhrase,
   [Endpoints.SET_ACTIVE_ACCOUNT]: controllers.setActiveAccount,
   [Endpoints.GET_ALL_ACCOUNTS]: controllers.getAllAccounts,
