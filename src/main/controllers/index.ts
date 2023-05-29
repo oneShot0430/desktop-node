@@ -2,6 +2,7 @@ export { default as addTask } from './addTask';
 export { default as checkWalletExists } from './checkWalletExists';
 export { default as claimReward } from './claimReward';
 export { default as createNodeWallets } from './createNodeWallets';
+export { default as createNodeWalletsFromJson } from './createNodeWalletsFromJson';
 export { default as delegateStake } from './delegateStake';
 export { default as generateSeedPhrase } from './generateSeedPhrase';
 export { getAllAccounts } from './getAllAccounts';

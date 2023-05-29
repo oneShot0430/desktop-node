@@ -1,41 +1,31 @@
 import {
-  TooltipChatQuestionLeftLine,
   CopyLine,
   Icon,
   CheckSuccessLine,
+  KeyUnlockLine,
 } from '@_koii/koii-styleguide';
 import React, { useRef } from 'react';
-import { twMerge } from 'tailwind-merge';
 
 import { Tooltip, Button } from 'renderer/components/ui';
 import { useClipboard } from 'renderer/features/common/hooks';
 
-type KeyType = 'system' | 'task';
 type PropsType = Readonly<{
-  keyType: KeyType;
+  accountName: string;
   address: string;
 }>;
 
-export function AccountInfo({ keyType, address }: PropsType) {
+export function AccountInfo({ accountName, address }: PropsType) {
   const addressRef = useRef<HTMLSpanElement>(null);
-
-  const titleClasses = twMerge(
-    'font-semibold text-finnieEmerald-light flex justify-start items-center gap-1',
-    keyType === 'task' && 'text-finnieOrange'
-  );
 
   const { copyToClipboard, copied: hasCopiedKey } = useClipboard();
 
   const handleCopyPublicKey = () => copyToClipboard(address);
 
-  const isTaskKey = keyType === 'system';
-
   return (
-    <div className="bg-finnieBlue-light-tertiary p-4 flex flex-col items-start rounded-md w-[100%]">
-      <div className={titleClasses}>
-        {`${isTaskKey ? 'System' : 'Task'} Key Address`}
-
-        <Icon source={TooltipChatQuestionLeftLine} className="h-4 w-4" />
+    <div className="bg-finnieBlue-light-tertiary text-lg shadow leading-8 p-4 gap-1 flex flex-col items-start rounded-md w-[100%]">
+      <div className="font-bold text-lg text-finnieEmerald-light flex justify-start items-center gap-2">
+        <Icon source={KeyUnlockLine} className="h-4 w-4" />
+        <p>{accountName}</p>
       </div>
       <div className="flex justify-start">
         {address && (

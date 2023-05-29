@@ -8,19 +8,20 @@ import { AccountSuccessfullyImported } from './components/AccountSuccessfullyImp
 import { CreateNewAccount } from './components/CreateNewAccount';
 import ImportKey from './components/ImportAccount';
 import { ImportNewAccount } from './components/ImportNewAccount';
+import ImportWithKeyFile from './components/ImportWithKeyFile';
 import ImportWithKeyPhrase from './components/ImportWithKeyPhrase';
 import ShowSeedPhrase from './components/ShowSeedPhrase';
-import { KeysType, Steps, CreateKeyPayload } from './types';
+import { KeyType, Steps, CreateKeyPayload } from './types';
 
 export const AddNewAccount = create(function AddNewAccount() {
   const modal = useModal();
   const [currentStep, setCurrentStep] = useState(Steps.ImportKey);
-  const [newKeys, setNewKeys] = useState<KeysType>();
+  const [newKey, setNewKey] = useState<KeyType>();
   const [seedPhrase, setSeedPhrase] = useState('');
   const [accountPin, setAccountPin] = useState('');
 
   const handleCreatedNewKeyStep = (step: Steps, payload: CreateKeyPayload) => {
-    setNewKeys(payload.keys);
+    setNewKey(payload.keys);
     setSeedPhrase(payload.seedPhrase);
     setCurrentStep(step);
   };
@@ -38,9 +39,10 @@ export const AddNewAccount = create(function AddNewAccount() {
         <ImportWithKeyPhrase
           onClose={handleClose}
           accountPin={accountPin}
-          onImportSuccess={({ stakingAccountPubKey, mainAccountPubKey }) => {
-            setNewKeys({
-              task: stakingAccountPubKey,
+          setNextStep={setCurrentStep}
+          onImportSuccess={({ accountName, mainAccountPubKey }) => {
+            setNewKey({
+              accountName,
               system: mainAccountPubKey,
             });
             setCurrentStep(Steps.AccountImported);
@@ -57,14 +59,14 @@ export const AddNewAccount = create(function AddNewAccount() {
         <AccountCreated
           onClose={handleClose}
           setNextStep={setCurrentStep}
-          newKeys={newKeys as KeysType}
+          newKey={newKey as KeyType}
         />
       ),
       [Steps.AccountImported]: (
         <AccountSuccessfullyImported
           onClose={handleClose}
           setNextStep={setCurrentStep}
-          newKeys={newKeys as KeysType}
+          newKey={newKey as KeyType}
         />
       ),
       [Steps.ShowSeedPhrase]: (
@@ -80,6 +82,18 @@ export const AddNewAccount = create(function AddNewAccount() {
           setNextStep={setCurrentStep}
           accountPin={accountPin}
           setAccountPin={setAccountPin}
+        />
+      ),
+      [Steps.ImportWithKeyFile]: (
+        <ImportWithKeyFile
+          onClose={handleClose}
+          onImportSuccess={({ accountName, mainAccountPubKey }) => {
+            setNewKey({
+              accountName,
+              system: mainAccountPubKey,
+            });
+            setCurrentStep(Steps.AccountImported);
+          }}
         />
       ),
     };

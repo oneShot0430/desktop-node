@@ -2,6 +2,7 @@ import archiveTask from './archiveTask';
 import checkWalletExists from './checkWalletExists';
 import claimReward from './claimReward';
 import createNodeWallets from './createNodeWallets';
+import createNodeWalletsFromJson from './createNodeWalletsFromJson';
 import delegateStake from './delegateStake';
 import generateSeedPhrase from './generateSeedPhrase';
 import getAccountBalance from './getAccountBalance';
@@ -65,6 +66,7 @@ export default {
   getAvailableTasks,
   claimReward,
   createNodeWallets,
+  createNodeWalletsFromJson,
   generateSeedPhrase,
   setActiveAccount,
   getAllAccounts,
