@@ -67,7 +67,14 @@ const startTask = async (
 
   // if stake is undefined or 0 -> stop
   if (!taskInfo.stake_list[stakingPubkey] || !taskInfo.is_whitelisted) {
-    return;
+    console.log(
+      "Can't start task, because it is either not whitelisted or staked"
+    );
+
+    return throwDetailedError({
+      detailed: `Can't start task ${taskAccountPubKey}, because it is either not whitelisted or staked`,
+      type: ErrorType.TASK_START,
+    });
   }
 
   console.log('STARTED TASK DATA', taskInfo?.task_name);

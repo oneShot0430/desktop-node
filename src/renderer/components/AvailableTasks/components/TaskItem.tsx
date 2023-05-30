@@ -17,7 +17,7 @@ import React, {
   ReactNode,
   RefObject,
 } from 'react';
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import { useQueryClient } from 'react-query';
 
 import GearFill from 'assets/svgs/gear-fill.svg';
@@ -41,7 +41,7 @@ import {
   useMetadata,
   useAllStoredPairedTaskVariables,
   useAddTaskVariableModal,
-  useTasksContext,
+  useStartingTasksContext,
 } from 'renderer/features';
 import { TaskService, stopTask } from 'renderer/services';
 import { Task } from 'renderer/types';
@@ -69,10 +69,12 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   const [isGlobalToolsValid, setIsGlobalToolsValid] = useState(false);
   const [isTaskToolsValid, setIsTaskToolsValid] = useState(false);
   const [isTaskValidToRun, setIsTaskValidToRun] = useState(false);
+  const [taskStartSucceeded, setTaskStartSucceeded] = useState(false);
   const [valueToStake, setValueToStake] = useState<number>(0);
   const [meetsMinimumStake, setMeetsMinimumStake] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | ReactNode>('');
-  const { startTaskMutation, startTaskSucceeded } = useTasksContext();
+  const { executeTask, getTaskStartPromise, getIsTaskLoading } =
+    useStartingTasksContext();
 
   const { data: mainAccountPubKey = '' } = useMainAccount();
 
@@ -155,6 +157,24 @@ function TaskItem({ task, index, columnsLayout }: Props) {
       ) || [],
     [metadata?.requirementsTags]
   );
+
+  useEffect(() => {
+    getTaskStartPromise(publicKey)
+      ?.then(() => {
+        setTaskStartSucceeded(true);
+      })
+      .catch(() => {
+        setTaskStartSucceeded(false);
+        toast.error(`Task ${taskName} running failed. Please try again!`, {
+          duration: 1500,
+          icon: <CloseLine className="h-5 w-5" />,
+          style: {
+            backgroundColor: '#FFA6A6',
+            paddingRight: 0,
+          },
+        });
+      });
+  }, [getTaskStartPromise, publicKey, task.publicKey, taskName]);
 
   useEffect(() => {
     const validateAllVariablesWerePaired = () => {
@@ -250,7 +270,6 @@ function TaskItem({ task, index, columnsLayout }: Props) {
       showAddTaskVariableModal().then((wasVariableAdded) => {
         setIsAddTaskSettingModalOpen(false);
         // focus dropdown after creating new variable
-        console.log('@@@dropdownRef', dropdownRef);
         if (wasVariableAdded) {
           setTimeout(() => {
             dropdownRef?.current?.click();
@@ -322,7 +341,9 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   const runButtonTooltipContent =
     errorMessage || (isRunning ? 'Stop task' : 'Start task');
 
-  return !startTaskSucceeded ? (
+  return taskStartSucceeded ? (
+    <SuccessMessage />
+  ) : (
     <TableRow columnsLayout={columnsLayout} className="py-2 gap-y-0" ref={ref}>
       <div>
         <Tooltip
@@ -396,7 +417,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
         </div>
       </Tooltip>
 
-      {startTaskMutation.isLoading ? (
+      {getIsTaskLoading(publicKey) ? (
         <div className="py-[0.72rem]">
           <LoadingSpinner size={LoadingSpinnerSize.Large} />
         </div>
@@ -422,7 +443,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
               isRunning
                 ? handleStopTask
                 : () =>
-                    startTaskMutation.mutate({
+                    executeTask({
                       publicKey,
                       valueToStake,
                       alreadyStakedTokensAmount,
@@ -447,8 +468,6 @@ function TaskItem({ task, index, columnsLayout }: Props) {
       </div>
       <Toaster />
     </TableRow>
-  ) : (
-    <SuccessMessage />
   );
 }
 
