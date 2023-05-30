@@ -47,7 +47,12 @@ export function Unlock(): JSX.Element {
         Enter your security PIN code to unlock your Node
       </p>
 
-      <PinInput focus onChange={handlePinChange} showHideButton={false} />
+      <PinInput
+        focus
+        onChange={handlePinChange}
+        showHideButton
+        showHideIconSize={28}
+      />
       <div className="text-xs text-finnieOrange h-4">
         {hasPinError && <span>The PINs don’t match. Let’s try again.</span>}
       </div>
