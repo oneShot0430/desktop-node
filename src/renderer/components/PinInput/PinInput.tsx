@@ -9,6 +9,7 @@ type PropsType = Readonly<{
   onComplete?: (pin: string) => void;
   initialValue?: string | number;
   showHideButton?: boolean;
+  showHideIconSize?: number;
   focus?: boolean;
   className?: string;
 }>;
@@ -19,6 +20,7 @@ function PinInputComponent({
   initialValue,
   showHideButton = true,
   focus = false,
+  showHideIconSize = 20,
 }: PropsType) {
   const [showPinInput, setShowPinInput] = useState(false);
 
@@ -44,8 +46,9 @@ function PinInputComponent({
           className="bg-transparent rounded-[50%] w-[24px] h-[24px] cursor-pointer"
           icon={
             <Icon
+              size={showHideIconSize}
               source={ShowOrHideInputIcon}
-              className="text-finnieTeal-100 w-5 h-5"
+              className="text-finnieTeal-100"
             /> // not sure
           }
           onClick={() => setShowPinInput(!showPinInput)}
