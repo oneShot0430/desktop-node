@@ -74,7 +74,18 @@ export function NodeTool({
           defaultValue={defaultValue}
           items={dropdownItems}
           emptyListItemSlot={
-            <div>
+            <div className="hover:bg-purple-1 hovertext-finnieTeal-100">
+              <div
+                className="flex justify-start pl-3 py-2 items-center text-green-2 gap-2 curs w-fit cursor-pointer"
+                onClick={() => onOpenAddTaskVariableModal(dropdownRef)}
+              >
+                <Icon source={AddLine} size={18} />
+                <span>Add New</span>
+              </div>
+            </div>
+          }
+          customItem={
+            <div className="hover:bg-purple-1 hovertext-finnieTeal-100">
               <div
                 className="flex justify-start pl-3 py-2 items-center text-green-2 gap-2 curs w-fit cursor-pointer"
                 onClick={() => onOpenAddTaskVariableModal(dropdownRef)}

@@ -18,6 +18,7 @@ export type DropdownProps = {
   defaultValue?: DropdownItem | null;
   validationError?: string;
   emptyListItemSlot?: React.ReactNode;
+  customItem?: React.ReactNode;
 };
 
 /**
@@ -33,12 +34,15 @@ export const Dropdown = forwardRef<HTMLButtonElement, DropdownProps>(
       defaultValue = null,
       validationError,
       emptyListItemSlot,
+      customItem,
     }: DropdownProps,
     ref
   ) => {
     const [selected, setSelected] = useState<DropdownItem | null>(defaultValue);
     const handleItemSelect = useCallback(
       (item: DropdownItem) => {
+        if (item.disabled) return;
+
         onSelect?.(item);
         setSelected(item);
       },
@@ -68,6 +72,27 @@ export const Dropdown = forwardRef<HTMLButtonElement, DropdownProps>(
         No items
       </div>
     );
+
+    const dropdownItems = items.map((item) => (
+      <Listbox.Option
+        key={item.id}
+        className={({ active }) =>
+          `relative cursor-default select-none ${
+            active && 'bg-purple-1 text-finnieTeal-100'
+          }`
+        }
+        value={item}
+        disabled={item.disabled}
+      >
+        {({ selected }) => (
+          <span className={getItemClasses(selected, item)}>{item.label}</span>
+        )}
+      </Listbox.Option>
+    ));
+
+    // if (customItem) {
+    //   dropdownItems.push(customItem as React.ReactElement);
+    // }
 
     return (
       <div className="h-full w-72" data-testid="koii_dropdown_test_id">
@@ -105,26 +130,8 @@ export const Dropdown = forwardRef<HTMLButtonElement, DropdownProps>(
               leaveTo="opacity-0"
             >
               <Listbox.Options className="absolute z-50 w-full py-1 mt-1 overflow-auto text-base text-white rounded-md shadow-lg top-9 bg-purple-5 max-h-60 focus:outline-none sm:text-sm">
-                {!items.length
-                  ? emptyListItem
-                  : items.map((item) => (
-                      <Listbox.Option
-                        key={item.id}
-                        className={({ active }) =>
-                          `relative cursor-default select-none ${
-                            active && 'bg-purple-1 text-finnieTeal-100'
-                          }`
-                        }
-                        value={item}
-                        disabled={item.disabled}
-                      >
-                        {({ selected }) => (
-                          <span className={getItemClasses(selected, item)}>
-                            {item.label}
-                          </span>
-                        )}
-                      </Listbox.Option>
-                    ))}
+                {!items.length ? emptyListItem : dropdownItems}
+                {customItem}
               </Listbox.Options>
             </Transition>
           </div>
