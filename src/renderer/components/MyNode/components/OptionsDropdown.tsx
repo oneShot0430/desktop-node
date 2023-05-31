@@ -123,7 +123,7 @@ export function OptionsDropdown({
         Unstake
         {task.isRunning
           ? unstakeWhenRunningMessage
-          : !canUnstake
+          : !canUnstake && !!taskStake
           ? unstakeWhenCoolingDownMessage
           : null}
       </button>
