@@ -105,7 +105,7 @@ function CreatePin() {
           </div>
         </div>
 
-        <div className="flex flex-col items-end pt-14">
+        <div className="flex flex-col items-start pt-14">
           <div className="items-center relative inline-block">
             <input
               id="link-checkbox"
