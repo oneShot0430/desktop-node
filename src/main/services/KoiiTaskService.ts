@@ -293,18 +293,19 @@ export class KoiiTaskService {
             }
           );
 
-          if (task && !task.is_active) {
-            console.log(
-              `DETECTED NOT ACTIVE TASK WITH ID ${pubkey} - DROPPING`
-            );
-            await this.removeRunningTaskPubKey(pubkey);
-            /**
-             * @todo: additionaly remove the task from filesystem
-             * removeTaskFromStartedTasks(pubkey);
-             * should be tested after task remove is implemented from ui
-             */
-            return null;
-          }
+          // TODO(Chris) we need to refine this flow
+          // if (task && !task.is_active) {
+          //   console.log(
+          //     `DETECTED NOT ACTIVE TASK WITH ID ${pubkey} - DROPPING`
+          //   );
+          //   await this.removeRunningTaskPubKey(pubkey);
+          //   /**
+          //    * @todo: additionaly remove the task from filesystem
+          //    * removeTaskFromStartedTasks(pubkey);
+          //    * should be tested after task remove is implemented from ui
+          //    */
+          //   return null;
+          // }
 
           return task;
         })
