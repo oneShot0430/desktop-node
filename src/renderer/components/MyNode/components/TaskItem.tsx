@@ -120,7 +120,7 @@ export function TaskItem({
   const { metadata, isLoadingMetadata } = useMetadata(task.metadataCID);
 
   const { data: pairedVariables, isLoading: isLoadingPairedVariables } =
-    useQuery(QueryKeys.StoredTaskPairedTaskVariables, () =>
+    useQuery([QueryKeys.StoredTaskPairedTaskVariables, task.publicKey], () =>
       getTaskPairedVariablesNamesWithLabels(task.publicKey)
     );
   const { data: accountName = '' } = useQuery(
