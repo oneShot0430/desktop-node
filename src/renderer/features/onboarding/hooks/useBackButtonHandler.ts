@@ -6,6 +6,7 @@ import { AppRoute } from 'renderer/types/routes';
 const viewsWithBackButton = [
   AppRoute.OnboardingSeeBalance,
   AppRoute.OnboardingBackupKeyNow,
+  AppRoute.OnboardingConfirmSecretPhrase,
   AppRoute.OnboardingImportKey,
   AppRoute.OnboardingConfirmStake,
 ];
