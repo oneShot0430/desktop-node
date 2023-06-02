@@ -185,14 +185,17 @@ export function TaskItem({
     topStake: getKoiiFromRoe(topStake),
     bounty: totalBountyInKoii,
   };
+  const isBountyEmpty = task.totalBountyAmount < task.bountyAmountPerRound;
+
   const taskIsDelistedAndStopped = !task.isWhitelisted && !isRunning;
   const isPlayPauseButtonDisabled =
-    !(myStakeInKoii > 0) || taskIsDelistedAndStopped;
+    !(myStakeInKoii > 0) || taskIsDelistedAndStopped || isBountyEmpty;
 
   const containerClasses = `py-2.5 gap-y-0 ${
     taskStatus === TaskStatus.FLAGGED
       ? 'bg-[#FF4141]/25'
-      : [TaskStatus.ERROR, TaskStatus.BLACKLISTED].includes(taskStatus)
+      : [TaskStatus.ERROR, TaskStatus.BLACKLISTED].includes(taskStatus) ||
+        isBountyEmpty
       ? 'bg-[#FF4141]/20'
       : !isRunning
       ? 'bg-[#FFA54B]/25'
@@ -202,6 +205,8 @@ export function TaskItem({
     ? "This task has been delisted, but don't worry! Your tokens are safe and will be ready to unstake after 3 rounds."
     : !task.isWhitelisted
     ? "This task has been delisted, but don't worry! Your tokens are safe. Pause the task and the tokens will be ready to unstake after 3 rounds."
+    : isBountyEmpty
+    ? 'This task is inactive because the bounty is empty. The creator needs to refill the bounty before you can run it again.'
     : myStakeInKoii > 0
     ? `${isRunning ? 'Stop' : 'Start'} task`
     : `You need to stake at least ${minStake} KOII on this task to run it.`;

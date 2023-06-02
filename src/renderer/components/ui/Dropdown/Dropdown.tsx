@@ -18,6 +18,7 @@ export type DropdownProps = {
   defaultValue?: DropdownItem | null;
   validationError?: string;
   emptyListItemSlot?: React.ReactNode;
+  bottom?: boolean;
   customItem?: React.ReactNode;
 };
 
@@ -34,6 +35,7 @@ export const Dropdown = forwardRef<HTMLButtonElement, DropdownProps>(
       defaultValue = null,
       validationError,
       emptyListItemSlot,
+      bottom,
       customItem,
     }: DropdownProps,
     ref
@@ -47,6 +49,15 @@ export const Dropdown = forwardRef<HTMLButtonElement, DropdownProps>(
         setSelected(item);
       },
       [onSelect]
+    );
+
+    const optionsClasses = twMerge(
+      'absolute z-50 w-full py-1 mt-1 overflow-auto text-base text-white rounded-md shadow-lg bg-purple-5 max-h-60 focus:outline-none sm:text-sm',
+      bottom ? 'top-9' : 'bottom-10'
+      /**
+       * @dev when this component will go to styleguide, this logic should be abstracted away and probably we should make
+       * possible to add dropdown items using "slot pattern"
+       */
     );
 
     const getItemClasses = useCallback(
@@ -129,7 +140,7 @@ export const Dropdown = forwardRef<HTMLButtonElement, DropdownProps>(
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options className="absolute z-50 w-full py-1 mt-1 overflow-auto text-base text-white rounded-md shadow-lg top-9 bg-purple-5 max-h-60 focus:outline-none sm:text-sm">
+              <Listbox.Options className={optionsClasses}>
                 {!items.length ? emptyListItem : dropdownItems}
                 {customItem}
               </Listbox.Options>

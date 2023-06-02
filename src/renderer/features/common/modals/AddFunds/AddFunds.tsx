@@ -8,7 +8,6 @@ import {
   WalletLine,
 } from '@_koii/koii-styleguide';
 import { create, useModal } from '@ebay/nice-modal-react';
-import QRCode from 'qrcode.react';
 import React from 'react';
 import { useQuery } from 'react-query';
 
@@ -155,15 +154,8 @@ export const AddFunds = create(function AddFunds({
               />
 
               <div className="mb-3">
-                Scan the QR code or copy the address to send tokens to your node
-                account.
+                Copy the address to send tokens to your node account.
               </div>
-
-              <QRCode
-                value={currentAccountPubKey}
-                renderAs="canvas"
-                size={80}
-              />
               <div className="mt-4 mb-2 text-xs select-text">
                 {currentAccountPubKey}
               </div>

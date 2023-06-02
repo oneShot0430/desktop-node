@@ -82,6 +82,9 @@ export const errorTypeToContent: Record<
   [ErrorType.DUPLICATE_ACCOUNT]:
     'A wallet with the same mnemonic already exists',
   [ErrorType.NO_VALID_ACCOUNT_NAME]: '',
+  [ErrorType.ACCOUNT_NAME_EXISTS]:
+    'Wallet with same account name already exists',
+  [ErrorType.JSON_KEY_EXISTS]: 'A wallet with the same key already exists',
   [ErrorType.NODE_INITIALIZATION_FAILED]:
     'Node initialization failed. Please restart the Desktop Node.',
   [ErrorType.TASK_START]: 'Task failed to start.',

@@ -49,8 +49,8 @@ const createNodeWalletsFromJson = async (
     const stakingWalletFilePath = `${getAppDataPath()}/namespace/${accountName}_stakingWallet.json`;
     if (fs.existsSync(stakingWalletFilePath)) {
       return throwDetailedError({
-        detailed: `Staking wallet with same account name "${accountName}" already exists`,
-        type: ErrorType.NO_VALID_ACCOUNT_NAME,
+        detailed: `Wallet with same account name "${accountName}" already exists`,
+        type: ErrorType.ACCOUNT_NAME_EXISTS,
       });
     }
     const keyPhraseString = jsonKey.join(' ');
@@ -60,18 +60,16 @@ const createNodeWalletsFromJson = async (
     const stakingWallet = Keypair.fromSeed(
       derivePath(stakingWalletPath, stakingSeed.toString('hex')).key
     );
-    console.log(stakingWallet, 'StakingWallet');
 
     // Creating MainAccount
     const mainWalletFilePath = `${getAppDataPath()}/wallets/${accountName}_mainSystemWallet.json`;
     if (fs.existsSync(mainWalletFilePath)) {
       return throwDetailedError({
-        detailed: `Main wallet with same account name "${accountName}" already exists`,
-        type: ErrorType.NO_VALID_ACCOUNT_NAME,
+        detailed: `Wallet with same account name "${accountName}" already exists`,
+        type: ErrorType.ACCOUNT_NAME_EXISTS,
       });
     }
     const mainWallet = Keypair.fromSecretKey(Buffer.from(jsonKey, 'base64'));
-    console.log(mainWallet, 'mAINWallet');
 
     // Verify a wallet created from the same mnemonic doesn't exist
     const stakingWalletFileContent = JSON.stringify(
@@ -89,23 +87,14 @@ const createNodeWalletsFromJson = async (
     });
     if (walletAlreadyExists) {
       return throwDetailedError({
-        detailed: 'A wallet with the same mnemonic already exists',
-        type: ErrorType.DUPLICATE_ACCOUNT,
+        detailed: 'A wallet with the same key already exists',
+        type: ErrorType.JSON_KEY_EXISTS,
       });
     }
-
-    console.log(
-      'Generating Staking wallet from mnemonic',
-      stakingWallet.publicKey.toBase58()
-    );
-    console.log(
-      'Generating Main wallet from mnemonic',
-      mainWallet.publicKey.toBase58()
-    );
     fs.writeFile(stakingWalletFilePath, stakingWalletFileContent, (err) => {
       if (err) {
         console.error(err);
-        throwDetailedError({
+        return throwDetailedError({
           detailed: err.message,
           type: ErrorType.GENERIC,
         });
@@ -114,7 +103,7 @@ const createNodeWalletsFromJson = async (
     fs.writeFile(mainWalletFilePath, mainWalletFileContent, (err) => {
       if (err) {
         console.error(err);
-        throwDetailedError({
+        return throwDetailedError({
           detailed: err.message,
           type: ErrorType.GENERIC,
         });
@@ -126,11 +115,8 @@ const createNodeWalletsFromJson = async (
       mainAccountPubKey: mainWallet.publicKey.toBase58(),
     };
   } catch (err: any) {
-    console.log('ERROR during Account creation', err);
-    return throwDetailedError({
-      detailed: err,
-      type: ErrorType.GENERIC,
-    });
+    console.log('ERROR during Account creations', err);
+    throw err;
   }
 };
 
