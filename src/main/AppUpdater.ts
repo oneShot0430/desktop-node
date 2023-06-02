@@ -1,4 +1,4 @@
-import { BrowserWindow } from 'electron';
+import { BrowserWindow, dialog } from 'electron';
 
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
@@ -45,15 +45,24 @@ function setListeners() {
     console.log('Update downloaded');
     console.log(info);
     // Check for the user configuration again before deciding to install
-    getUserConfig()
-      .then((appConfig) => {
-        if (appConfig?.autoUpdatesEnabled) {
-          autoUpdater.quitAndInstall();
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    getUserConfig().then((appConfig) => {
+      if (appConfig?.autoUpdatesEnabled) {
+        dialog
+          .showMessageBox({
+            type: 'question',
+            buttons: ['Restart & Update', 'Update Later'],
+            defaultId: 0,
+            message:
+              'Get the latest update. Do you want to restart and update now?',
+          })
+          .then((selection) => {
+            if (selection.response === 0) {
+              // User clicked 'Restart & Update'
+              autoUpdater.quitAndInstall();
+            }
+          });
+      }
+    });
   });
 }
 
