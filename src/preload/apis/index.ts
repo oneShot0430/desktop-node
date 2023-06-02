@@ -4,6 +4,7 @@ import claimReward from './claimReward';
 import createNodeWallets from './createNodeWallets';
 import createNodeWalletsFromJson from './createNodeWalletsFromJson';
 import delegateStake from './delegateStake';
+import downloadAppUpdate from './downloadAppUpdate';
 import generateSeedPhrase from './generateSeedPhrase';
 import getAccountBalance from './getAccountBalance';
 import getActiveAccountName from './getActiveAccountName';
@@ -27,6 +28,7 @@ import getTaskVariablesNames from './getTaskVariablesNames';
 import getUserConfig from './getUserConfig';
 import getVersion from './getVersion';
 import initializeTasks from './initializeTasks';
+import onAppUpdate from './onAppUpdate';
 import openBrowserWindow from './openBrowserWindow';
 import openLogfileFolder from './openLogfileFolder';
 import openNodeLogfileFolder from './openNodeLogfileFolder';
@@ -96,4 +98,6 @@ export default {
   getVersion,
   getEncryptedSecretPhrase,
   archiveTask,
+  downloadAppUpdate,
+  onAppUpdate,
 };
