@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { AppTopBar } from 'renderer/components/AppTopBar';
-import { saveUserConfig } from 'renderer/services';
+import { saveUserConfig, switchUpdateChannel } from 'renderer/services';
 import { AppRoute } from 'renderer/types/routes';
 
 import Header from '../Header';
@@ -17,13 +17,18 @@ function MainLayout({ children }: MainLayoutProps): JSX.Element {
 
   // TODO: Remove after release
   useEffect(() => {
-    (window as typeof window & { resetOnboarding(): void }).resetOnboarding =
-      async () => {
+    Object.assign(window, {
+      async resetOnboarding() {
         await saveUserConfig({
           settings: { onboardingCompleted: false },
         });
         navigate(AppRoute.OnboardingCreatePin);
-      };
+      },
+
+      async switchToAlphaUpdates() {
+        await switchUpdateChannel('alpha');
+      },
+    });
   }, [navigate]);
 
   return (

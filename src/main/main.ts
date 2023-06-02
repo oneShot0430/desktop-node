@@ -1,7 +1,7 @@
 import { app, BrowserWindow, dialog } from 'electron';
 import path from 'path';
 
-import { AppUpdater } from './AppUpdater';
+import { initializeAppUpdater } from './AppUpdater';
 import { getAllAccounts, setActiveAccount } from './controllers';
 import initHandlers from './initHandlers';
 import { configureLogger } from './logger';
@@ -98,6 +98,9 @@ const createWindow = async () => {
   // );
   // mainWindow.webContents.openDevTools({ mode: 'detach' });
 
+  configureLogger();
+  await initializeAppUpdater();
+
   await main()
     .then(async () => {
       mainWindow?.on('ready-to-show', async () => {
@@ -121,9 +124,6 @@ const createWindow = async () => {
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
-
-  configureLogger();
-  new AppUpdater();
 };
 
 // This method will be called when Electron has finished

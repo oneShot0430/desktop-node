@@ -4,7 +4,9 @@ export interface UserAppConfig {
   firstRewardNotificationDisplayed?: boolean;
   autoUpdatesEnabled?: boolean;
   hasCopiedReferralCode?: boolean;
+  alphaUpdatesEnabled?: boolean;
 }
+
 export interface StoreUserConfigParam {
   settings: UserAppConfig;
 }
