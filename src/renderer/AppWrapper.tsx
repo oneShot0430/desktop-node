@@ -3,6 +3,10 @@ import { useQueryClient } from 'react-query';
 import { Outlet, useLocation } from 'react-router-dom';
 
 import { MainLayout, LoadingScreen } from './components';
+import {
+  AppNotification,
+  useNotificationsContext,
+} from './features/notifications';
 import { OnboardingLayout } from './features/onboarding/components/OnboardingLayout';
 import { OnboardingProvider } from './features/onboarding/context/onboarding-context';
 import { StartingTasksProvider } from './features/tasks';
@@ -17,6 +21,8 @@ import { getErrorToDisplay } from './utils';
 const NODE_INITALIZED = 'NODE_INITALIZED';
 
 function AppWrapper(): JSX.Element {
+  const { addNotification } = useNotificationsContext();
+
   const queryClient = useQueryClient();
   const location = useLocation();
   const [initializingNode, setInitializingNode] = useState(true);
@@ -26,6 +32,16 @@ function AppWrapper(): JSX.Element {
     () => location.pathname.includes('onboarding'),
     [location]
   );
+
+  useEffect(() => {
+    const destroy = window.main.onAppUpdate(() => {
+      addNotification('updateAvailable', AppNotification.UpdateAvailable);
+    });
+
+    return () => {
+      destroy();
+    };
+  }, [addNotification]);
 
   useEffect(() => {
     const setValue = 'true';

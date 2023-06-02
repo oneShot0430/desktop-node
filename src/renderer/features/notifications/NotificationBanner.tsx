@@ -3,6 +3,7 @@ import React from 'react';
 import { FirstNodeReward } from './Banners/FirstNodeRewardBanner';
 import { ReferalProgramNotification } from './Banners/ReferalProgramNotification';
 import { RentExemptionFlowBanner } from './Banners/RentExemptionFlowBanner';
+import { UpdateAvailableNotification } from './Banners/UpdateAvailableNotification';
 import { AppNotification } from './types';
 
 type PropsType = {
@@ -25,6 +26,12 @@ export function NotificationBanner({
     ),
     [AppNotification.ReferalProgramNotification]: (
       <ReferalProgramNotification
+        backButtonSlot={backButtonComponent}
+        id={id}
+      />
+    ),
+    [AppNotification.UpdateAvailable]: (
+      <UpdateAvailableNotification
         backButtonSlot={backButtonComponent}
         id={id}
       />

@@ -375,3 +375,7 @@ export const getVersion = async () => {
 export const archiveTask = async (taskPubKey: string) => {
   return window.main.archiveTask({ taskPubKey });
 };
+
+export const downloadAppUpdate = async () => {
+  return window.main.downloadAppUpdate();
+};

@@ -1,5 +1,5 @@
-import { useCallback } from 'react';
-import { useMutation, useQuery } from 'react-query';
+import { useCallback, useState } from 'react';
+import { useQueryClient, useMutation, useQuery } from 'react-query';
 
 import { StoreUserConfigParam } from 'models/api';
 import { getUserConfig, QueryKeys, saveUserConfig } from 'renderer/services';
@@ -9,15 +9,23 @@ type ParamsType = {
 };
 
 export const useUserAppConfig = ({ onConfigSaveSuccess }: ParamsType) => {
+  const [isMutating, setIsMutating] = useState(false);
+  const queryClient = useQueryClient();
+
   const {
     data: userConfig,
     isLoading: isUserConfigLoading,
     error: userConfigError,
     refetch: refetchUserConfig,
-  } = useQuery([QueryKeys.UserSettings], getUserConfig);
+  } = useQuery([QueryKeys.UserSettings], getUserConfig, {
+    onSuccess: () => {
+      if (isMutating) setIsMutating(false);
+    },
+  });
 
-  const setUserAppConfig = useCallback(
+  const userConfigMutation = useMutation(
     async (config: Partial<StoreUserConfigParam>) => {
+      setIsMutating(true);
       const currentUserConfig = (await getUserConfig()) || {};
       const newConfig: StoreUserConfigParam = {
         settings: {
@@ -26,20 +34,21 @@ export const useUserAppConfig = ({ onConfigSaveSuccess }: ParamsType) => {
         },
       };
 
-      saveUserConfig(newConfig);
+      await saveUserConfig(newConfig);
     },
-    []
+    {
+      onSuccess: () => {
+        onConfigSaveSuccess?.();
+        queryClient.invalidateQueries([QueryKeys.UserSettings]);
+      },
+    }
   );
 
   const {
     mutate,
     isLoading: isSavingUserConfig,
     error: saveUserConfigError,
-  } = useMutation(setUserAppConfig, {
-    onSuccess: () => {
-      onConfigSaveSuccess?.();
-    },
-  });
+  } = userConfigMutation;
 
   const handleSaveUserAppConfig = useCallback(
     (config: Partial<StoreUserConfigParam>) => {
@@ -49,6 +58,7 @@ export const useUserAppConfig = ({ onConfigSaveSuccess }: ParamsType) => {
   );
 
   return {
+    isMutating,
     userConfig,
     handleSaveUserAppConfig,
     isUserConfigLoading,
@@ -56,5 +66,6 @@ export const useUserAppConfig = ({ onConfigSaveSuccess }: ParamsType) => {
     isSavingUserConfig,
     saveUserConfigError,
     refetchUserConfig,
+    userConfigMutation,
   };
 };

@@ -1,15 +1,14 @@
+import { SystemDbKeys } from 'config/systemDbKeys';
 import { namespaceInstance } from 'main/node/helpers/Namespace';
 import { getUserConfigResponse } from 'models/api';
 
 import { ErrorType } from '../../models';
 import { throwDetailedError } from '../../utils';
 
-const USER_CONFIG = 'USER_CONFIG';
-
 const getUserConfig = async (): Promise<getUserConfigResponse> => {
   try {
     const userConfigStringified: string = await namespaceInstance.storeGet(
-      USER_CONFIG
+      SystemDbKeys.UserConfig
     );
     const userConfig = JSON.parse(
       userConfigStringified

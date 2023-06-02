@@ -62,6 +62,7 @@ const endpointToControllerMap: Record<
   [Endpoints.OPEN_NODE_LOGFILE_FOLDER]: controllers.openNodeLogfileFolder,
   [Endpoints.GET_VERSION]: controllers.getVersion,
   [Endpoints.ARCHIVE_TASK]: controllers.archiveTask,
+  [Endpoints.DOWNLOAD_APP_UPDATE]: controllers.downloadAppUpdate,
 };
 
 const initHandlers = (): void => {

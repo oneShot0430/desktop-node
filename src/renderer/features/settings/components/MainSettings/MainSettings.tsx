@@ -3,6 +3,7 @@ import { useQuery } from 'react-query';
 
 import { QueryKeys, getVersion } from 'renderer/services';
 
+import { Autoupdates } from './AutoUpdates';
 import { Network } from './Network';
 import { NodeLogs } from './NodeLogs';
 import { Referral } from './Referral';
@@ -15,6 +16,7 @@ export function MainSettings() {
     <div className="flex flex-col gap-7 text-white h-full text-sm">
       <Referral />
       <Network />
+      <Autoupdates />
       <NodeLogs />
 
       <div className="mt-[18px] flex w-full justify-between">
