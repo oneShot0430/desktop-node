@@ -165,6 +165,7 @@ export function NodeTools({
               defaultVariableId={pairedVariablesForTask[value as string]}
               description={description}
               onOpenAddTaskVariableModal={onOpenAddTaskVariableModal}
+              bottom={!(index > 0 && index === tools.length - 1)}
             />
           ))}
           <div className="flex justify-end">
