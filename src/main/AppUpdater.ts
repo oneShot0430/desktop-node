@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this */
 import { BrowserWindow } from 'electron';
 
 import log from 'electron-log';
@@ -10,53 +9,60 @@ import { getUserConfig } from './controllers';
 
 const CHECK_INTERVAL = 6 * 1000 * 60 * 60;
 
-export class AppUpdater {
-  public interval: NodeJS.Timer | null = null;
+export async function initializeAppUpdater() {
+  await configureUpdater();
+  createCheckForTheUpdatesInterval();
+  setListeners();
+}
 
-  constructor() {
-    autoUpdater.logger = log;
-    autoUpdater.autoDownload = false;
-    // Get the user configuration
-    this.createCheckForTheUpdatesInterval();
+async function configureUpdater() {
+  autoUpdater.logger = log;
+  autoUpdater.autoDownload = false;
 
-    autoUpdater.on('update-available', () => {
-      getUserConfig()
-        .then((appConfig) => {
-          const mainWindow = BrowserWindow.getFocusedWindow();
-          if (appConfig?.autoUpdatesEnabled) {
-            // if auto updates are enabled, download the update
-            autoUpdater.downloadUpdate();
-          } else if (mainWindow) {
-            // if auto updates are disabled, inform the user about the update
-            mainWindow.webContents.send(RendererEndpoints.UPDATE_AVAILABLE);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    });
+  const userConfig = await getUserConfig();
+  autoUpdater.channel = userConfig?.alphaUpdatesEnabled ? 'alpha' : 'latest';
+}
 
-    autoUpdater.on('update-downloaded', (info) => {
-      console.log('Update downloaded');
-      console.log(info);
-      // Check for the user configuration again before deciding to install
-      getUserConfig()
-        .then((appConfig) => {
-          if (appConfig?.autoUpdatesEnabled) {
-            autoUpdater.quitAndInstall();
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    });
-  }
+function setListeners() {
+  autoUpdater.on('update-available', () => {
+    getUserConfig()
+      .then((appConfig) => {
+        const mainWindow = BrowserWindow.getFocusedWindow();
+        if (appConfig?.autoUpdatesEnabled) {
+          // if auto updates are enabled, download the update
+          autoUpdater.downloadUpdate();
+        } else if (mainWindow) {
+          // if auto updates are disabled, inform the user about the update
+          mainWindow.webContents.send(RendererEndpoints.UPDATE_AVAILABLE);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  });
 
-  createCheckForTheUpdatesInterval() {
-    if (!this.interval) {
-      this.interval = setInterval(() => {
-        autoUpdater.checkForUpdates();
-      }, CHECK_INTERVAL);
-    }
+  autoUpdater.on('update-downloaded', (info) => {
+    console.log('Update downloaded');
+    console.log(info);
+    // Check for the user configuration again before deciding to install
+    getUserConfig()
+      .then((appConfig) => {
+        if (appConfig?.autoUpdatesEnabled) {
+          autoUpdater.quitAndInstall();
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  });
+}
+
+let interval: NodeJS.Timer | null = null;
+
+function createCheckForTheUpdatesInterval() {
+  if (!interval) {
+    interval = setInterval(() => {
+      autoUpdater.checkForUpdates();
+    }, CHECK_INTERVAL);
   }
 }

@@ -16,6 +16,7 @@
   "extraResources": [
     "assets/**"
   ],
+  "generateUpdatesFilesForAllChannels": true,
   "mac": {
     "category": "public.app-category.productivity",
     "target": ["dmg", "zip"],

@@ -203,6 +203,16 @@ export const saveUserConfig = (config: StoreUserConfigParam) => {
   });
 };
 
+export const switchUpdateChannel = (channel: string) => {
+  const alphaUpdatesEnabled: boolean = channel === 'alpha';
+  return window.main
+    .storeUserConfig({ settings: { alphaUpdatesEnabled } })
+    .then((res) => {
+      console.log('SAVING USER CONFIG', res);
+      return res;
+    });
+};
+
 export const removeAccount = (accountName: string) => {
   return window.main.removeAccountByName({ accountName }).then((res) => {
     console.log('REMOVING ACCOUNT', res);
