@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import { AddLine, Icon } from '@_koii/koii-styleguide';
 import React, { RefObject, useEffect, useMemo } from 'react';
 
@@ -12,7 +10,8 @@ type PropsType = {
   description?: string;
   defaultVariableId?: string;
   onOpenAddTaskVariableModal: (
-    dropdownRef: RefObject<HTMLButtonElement>
+    dropdownRef: RefObject<HTMLButtonElement>,
+    tool: string
   ) => void;
   onSecretSelected?: (tool: string, desktopVariableId: string) => void;
   onInit?: (tool: string, desktopVariableId: string) => void;
@@ -76,26 +75,15 @@ export function NodeTool({
           defaultValue={defaultValue}
           items={dropdownItems}
           bottom={bottom}
-          emptyListItemSlot={
-            <div className="hover:bg-purple-1 hovertext-finnieTeal-100">
-              <div
-                className="flex justify-start pl-3 py-2 items-center text-green-2 gap-2 curs w-fit cursor-pointer"
-                onClick={() => onOpenAddTaskVariableModal(dropdownRef)}
-              >
-                <Icon source={AddLine} size={18} />
-                <span>Add New</span>
-              </div>
-            </div>
-          }
           customItem={
             <div className="hover:bg-purple-1 hovertext-finnieTeal-100">
-              <div
+              <button
                 className="flex justify-start pl-3 py-2 items-center text-green-2 gap-2 curs w-fit cursor-pointer"
-                onClick={() => onOpenAddTaskVariableModal(dropdownRef)}
+                onClick={() => onOpenAddTaskVariableModal(dropdownRef, tool)}
               >
                 <Icon source={AddLine} size={18} />
                 <span>Add New</span>
-              </div>
+              </button>
             </div>
           }
           /**

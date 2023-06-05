@@ -29,7 +29,8 @@ type PropsType = {
   tools?: RequirementTag[];
   onPairingSuccess: () => void;
   onOpenAddTaskVariableModal: (
-    dropdownRef: RefObject<HTMLButtonElement>
+    dropdownRef: RefObject<HTMLButtonElement>,
+    tool: string
   ) => void;
 };
 
