@@ -85,6 +85,10 @@ body {
   height: 100%;
 }
 
+body * {
+  user-select: text;
+}
+
 #root {
   height: 100%;
 }

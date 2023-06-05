@@ -2,6 +2,7 @@ import { Icon, CloseLine, SettingsLine } from '@_koii/koii-styleguide';
 import { create, useModal } from '@ebay/nice-modal-react';
 import React, { useCallback } from 'react';
 
+import { TaskVariableDataWithId } from 'models';
 import { Button, ErrorMessage } from 'renderer/components/ui';
 import { useTaskVariable } from 'renderer/features/common/hooks/useTaskVariable';
 import { Modal, ModalContent } from 'renderer/features/modals';
@@ -11,7 +12,13 @@ import { Theme } from 'renderer/types/common';
 const baseInputClassName =
   'px-6 py-2 text-sm rounded-md bg-finnieBlue-light-tertiary focus:ring-2 focus:ring-finnieTeal focus:outline-none focus:bg-finnieBlue-light-secondary';
 
-export const AddTaskVariable = create(function AddTaskVariable() {
+interface Props {
+  presetLabel: string;
+}
+
+export const AddTaskVariable = create(function AddTaskVariable({
+  presetLabel,
+}: Props) {
   const {
     storedTaskVariablesQuery: { refetch },
   } = useStoredTaskVariables();
@@ -32,7 +39,10 @@ export const AddTaskVariable = create(function AddTaskVariable() {
     value,
     errorStoringTaskVariable,
     storingTaskVariable,
-  } = useTaskVariable({ onSuccess: onAddTaskVariableSucces });
+  } = useTaskVariable({
+    onSuccess: onAddTaskVariableSucces,
+    taskVariable: { label: presetLabel } as TaskVariableDataWithId,
+  });
 
   const closeModal = useCallback(() => {
     modal.resolve(false);
@@ -57,8 +67,11 @@ export const AddTaskVariable = create(function AddTaskVariable() {
 
         <p className="mr-12">Add information about your Task Setting</p>
         <div className="flex flex-col mb-2">
-          <label className="mb-0.5 text-left">TOOL LABEL</label>
+          <label htmlFor="setting-label" className="mb-0.5 text-left">
+            LABEL
+          </label>
           <input
+            id="setting-label"
             className={`${baseInputClassName} w-56`}
             type="text"
             value={label}
@@ -73,13 +86,16 @@ export const AddTaskVariable = create(function AddTaskVariable() {
         </div>
 
         <div className="flex flex-col mb-2">
-          <label className="mb-0.5 text-left">TOOL KEY INPUT</label>
+          <label htmlFor="setting-input" className="mb-0.5 text-left">
+            KEY INPUT
+          </label>
           <input
+            id="setting-input"
             className={`${baseInputClassName} w-full`}
             type="text"
             value={value}
             onChange={handleToolKeyChange}
-            placeholder="Paste Tool here"
+            placeholder="Type key here"
           />
         </div>
 

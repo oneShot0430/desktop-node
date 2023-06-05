@@ -8,7 +8,8 @@ import { NodeTools } from 'renderer/features/node-tools';
 type PropsType = {
   taskPubKey: string;
   onOpenAddTaskVariableModal: (
-    dropdownRef: RefObject<HTMLButtonElement>
+    dropdownRef: RefObject<HTMLButtonElement>,
+    tool: string
   ) => void;
   taskVariables?: RequirementTag[];
   onToolsValidation?: (isValid: boolean) => void;

@@ -265,9 +265,9 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   };
 
   const handleOpenAddTaskVariableModal = useCallback(
-    (dropdownRef: RefObject<HTMLButtonElement>) => {
+    (dropdownRef: RefObject<HTMLButtonElement>, tool: string) => {
       setIsAddTaskSettingModalOpen((prev) => !prev);
-      showAddTaskVariableModal().then((wasVariableAdded) => {
+      showAddTaskVariableModal(tool).then((wasVariableAdded) => {
         setIsAddTaskSettingModalOpen(false);
         // focus dropdown after creating new variable
         if (wasVariableAdded) {
