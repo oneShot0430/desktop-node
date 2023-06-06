@@ -28,6 +28,10 @@ function MainLayout({ children }: MainLayoutProps): JSX.Element {
       async switchToAlphaUpdates() {
         await switchUpdateChannel('alpha');
       },
+
+      async switchToLatestUpdates() {
+        await switchUpdateChannel('latest');
+      },
     });
   }, [navigate]);
 
