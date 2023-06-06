@@ -24,22 +24,37 @@ type PropsType = {
 
 export function SettingsHeader({ onTabChange, activeTab }: PropsType) {
   const isActiveTab = useCallback(
-    (tabName: Tab) => activeTab === tabName && 'border-finnieTeal border-b-4',
+    (tabName: Tab) =>
+      activeTab === tabName ? 'border-finnieTeal border-b-2 bg-green-dark' : '',
     [activeTab]
   );
 
   return (
-    <div className="flex items-center px-3 py-3 mb-6 text-white bg-finnieTeal bg-opacity-30 gap-7">
-      <div className="flex items-center gap-[109px]">
-        {tabs.map(({ value, label }) => (
-          <button
-            key={value}
-            onClick={() => onTabChange(value)}
-            className={`pb-px cursor-pointer ${isActiveTab(value)}`}
-          >
-            {label}
-          </button>
-        ))}
+    <div className="flex items-center h-13 mb-6 text-white bg-finnieTeal bg-opacity-30 gap-7 pl-10">
+      <div className="flex items-center gap-4">
+        {tabs.map(({ value: tabName, label }) => {
+          const isActive = activeTab === tabName;
+
+          return (
+            <button
+              key={tabName}
+              onClick={() => onTabChange(tabName)}
+              className={`h-13 px-6 pt-1 cursor-pointer transition-colors duration-200 ease-in-out ${
+                isActive
+                  ? ''
+                  : 'hover:bg-finnieTeal hover:bg-opacity-20 animated-border'
+              } ${isActiveTab(tabName)}`}
+            >
+              <span
+                className={`transition-all duration-200 ease-in-out ${
+                  isActive ? 'font-bold' : ''
+                }`}
+              >
+                {label}
+              </span>
+            </button>
+          );
+        })}
       </div>
     </div>
   );

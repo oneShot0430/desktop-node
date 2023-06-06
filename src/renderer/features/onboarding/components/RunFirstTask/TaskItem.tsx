@@ -5,7 +5,7 @@ import {
   CheckSuccessLine,
 } from '@_koii/koii-styleguide';
 import React, { useState, useMemo } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 import CloseIcon from 'assets/svgs/close-icons/close-icon.svg';
 import { TaskInfo } from 'renderer/components/AvailableTasks/components/TaskInfo';
@@ -136,7 +136,6 @@ function TaskItem({
           showSourceCode={false}
         />
       )}
-      <Toaster />
     </div>
   );
 }

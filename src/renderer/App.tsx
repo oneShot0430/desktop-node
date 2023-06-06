@@ -2,6 +2,7 @@ import { Buffer } from 'buffer';
 
 import NiceModal from '@ebay/nice-modal-react';
 import React from 'react';
+import { Toaster } from 'react-hot-toast';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import './App.css';
@@ -24,6 +25,7 @@ function App(): JSX.Element {
         <NiceModal.Provider>
           <NotificationsProvider>
             <AppRoutes />
+            <Toaster />
           </NotificationsProvider>
         </NiceModal.Provider>
       </AppProvider>

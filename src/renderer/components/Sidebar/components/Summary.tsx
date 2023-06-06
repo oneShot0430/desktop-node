@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Toaster } from 'react-hot-toast';
 import { useQuery } from 'react-query';
 
 import { NODE_INFO_REFETCH_INTERVAL } from 'config/refetchIntervals';
@@ -75,7 +74,6 @@ export function Summary() {
         shouldAnimate={shouldAnimate}
         enableNodeInfoRefetch={setEnableQuery}
       />
-      <Toaster />
     </div>
   );
 }

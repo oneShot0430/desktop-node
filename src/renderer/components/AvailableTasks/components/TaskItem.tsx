@@ -17,7 +17,7 @@ import React, {
   ReactNode,
   RefObject,
 } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { useQueryClient } from 'react-query';
 
 import GearFill from 'assets/svgs/gear-fill.svg';
@@ -466,7 +466,6 @@ function TaskItem({ task, index, columnsLayout }: Props) {
           {getTaskDetailsComponent()}
         </div>
       </div>
-      <Toaster />
     </TableRow>
   );
 }
