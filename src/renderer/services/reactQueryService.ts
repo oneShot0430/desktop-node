@@ -25,4 +25,5 @@ export enum QueryKeys {
   AppVersion = 'AppVersion',
   TaskStatus = 'TaskStatus',
   UnstakingAvailability = 'UnstakingAvailability',
+  PendingRewardsByTask = 'PendingRewardsByTask',
 }

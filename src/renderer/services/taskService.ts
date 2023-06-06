@@ -28,6 +28,13 @@ export class TaskService {
     return Object.values(task.stakeList).length;
   }
 
+  static getPendingRewardsByTask(
+    task: Task,
+    stakingAccountPublicKey: string
+  ): number {
+    return task.availableBalances[stakingAccountPublicKey];
+  }
+
   static async getStatus(
     task: Task,
     stakingAccountPublicKey: string
