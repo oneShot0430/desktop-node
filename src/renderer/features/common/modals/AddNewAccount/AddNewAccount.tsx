@@ -3,8 +3,7 @@ import React, { useState } from 'react';
 
 import { Modal } from 'renderer/features/modals';
 
-import { AccountCreated } from './components/AccountCreated';
-import { AccountSuccessfullyImported } from './components/AccountSuccessfullyImported';
+import { AccountCreatedOrImported } from './components/AccountCreatedOrImported';
 import { CreateNewAccount } from './components/CreateNewAccount';
 import ImportKey from './components/ImportAccount';
 import { ImportNewAccount } from './components/ImportNewAccount';
@@ -56,17 +55,17 @@ export const AddNewAccount = create(function AddNewAccount() {
         />
       ),
       [Steps.KeyCreated]: (
-        <AccountCreated
+        <AccountCreatedOrImported
           onClose={handleClose}
-          setNextStep={setCurrentStep}
           newKey={newKey as KeyType}
+          title="Your Account was successfully created!"
         />
       ),
       [Steps.AccountImported]: (
-        <AccountSuccessfullyImported
+        <AccountCreatedOrImported
           onClose={handleClose}
-          setNextStep={setCurrentStep}
           newKey={newKey as KeyType}
+          title="Your Account was successfully imported!"
         />
       ),
       [Steps.ShowSeedPhrase]: (
