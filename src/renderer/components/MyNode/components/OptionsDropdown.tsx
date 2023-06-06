@@ -1,9 +1,11 @@
 import {
+  CheckSuccessLine,
   Icon,
   RemoveLine,
   TooltipChatQuestionLeftLine,
 } from '@_koii/koii-styleguide';
 import React from 'react';
+import { toast } from 'react-hot-toast';
 import { useMutation, useQueryClient } from 'react-query';
 
 import Archive from 'assets/svgs/archive.svg';
@@ -18,6 +20,7 @@ import {
 } from 'renderer/features';
 import {
   QueryKeys,
+  TaskService,
   archiveTask as archiveTaskService,
 } from 'renderer/services';
 import { Task } from 'renderer/types';
@@ -41,16 +44,37 @@ export function OptionsDropdown({
 }: PropsType) {
   const queryCache = useQueryClient();
 
+  const { data: stakingAccountPublicKey = '' } = useStakingAccount();
+
+  const pendingRewards = TaskService.getPendingRewardsByTask(
+    task,
+    stakingAccountPublicKey
+  );
+
   const { mutate: archiveTask } = useMutation(
     () => archiveTaskService(task.publicKey),
     {
-      onSuccess: () => queryCache.invalidateQueries([QueryKeys.taskList]),
+      onSuccess: () => {
+        if (pendingRewards) {
+          toast.success(
+            'We sent the pending rewards from this task to your account.',
+            {
+              duration: 1500,
+              icon: <CheckSuccessLine className="h-5 w-5" />,
+              style: {
+                backgroundColor: '#BEF0ED',
+                paddingRight: 0,
+              },
+            }
+          );
+        }
+        queryCache.invalidateQueries([QueryKeys.taskList]);
+      },
+      retry: 10,
     }
   );
 
   const { taskStake } = useTaskStake({ task });
-
-  const { data: stakingAccountPublicKey = '' } = useStakingAccount();
 
   const { canUnstake } = useUnstakingAvailability({
     task,
