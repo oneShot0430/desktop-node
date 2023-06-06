@@ -6,7 +6,7 @@ import {
   CheckSuccessLine,
 } from '@_koii/koii-styleguide';
 import React, { useState } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from 'react-query';
 
 import NoBordersCheckMarkIcon from 'assets/svgs/checkmark-icon-no-borders.svg';
@@ -146,7 +146,6 @@ export function ClaimRewards({
           </div>
         </Tooltip>
       )}
-      <Toaster />
     </div>
   );
 }

@@ -11,24 +11,21 @@ export function Autoupdates() {
 
   return (
     <div className="flex flex-col gap-5">
-      <span className="font-semibold text-left">Automatic Updates</span>
-      <div className="pl-10">
-        <AutomaticUpdatesSwitch
-          id="autoupdates"
-          isChecked={!!autoUpdatesEnabled}
-          onSwitch={() => {
-            const newAutoUpdatesEnabled = !autoUpdatesEnabled;
+      <AutomaticUpdatesSwitch
+        id="autoupdates"
+        isChecked={!!autoUpdatesEnabled}
+        onSwitch={() => {
+          const newAutoUpdatesEnabled = !autoUpdatesEnabled;
 
-            userConfigMutation.mutate({
-              settings: {
-                autoUpdatesEnabled: newAutoUpdatesEnabled,
-              },
-            });
-          }}
-          labels={['OFF', 'ON']}
-          disabled={isMutating}
-        />
-      </div>
+          userConfigMutation.mutate({
+            settings: {
+              autoUpdatesEnabled: newAutoUpdatesEnabled,
+            },
+          });
+        }}
+        labels={['OFF', 'ON']}
+        disabled={isMutating}
+      />
     </div>
   );
 }

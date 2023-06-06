@@ -39,7 +39,6 @@ export function Network() {
 
   return (
     <div className="flex flex-col gap-5">
-      <span className="font-semibold">Choose Node Network</span>
       <SettingSwitch
         id="network"
         isLoading={isLoadingNetworkUrl}

@@ -7,7 +7,7 @@ import {
   Icon,
 } from '@_koii/koii-styleguide';
 import React, { useState, useEffect, useMemo, RefObject } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { useMutation } from 'react-query';
 
 import { RequirementTag } from 'models/task';
@@ -191,7 +191,6 @@ export function NodeTools({
           </div>
         </>
       )}
-      <Toaster />
     </div>
   );
 }
