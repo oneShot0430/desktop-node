@@ -330,7 +330,8 @@ export function TaskItem({
       <div
         className={`w-full col-span-9 overflow-y-auto inner-scrollbar ${
           shouldDisplayInfo
-            ? 'opacity-1 pt-6 max-h-[360px]'
+            ? // 9000px is just a simbolic value of a ridiculously high height, the animation needs absolute max-h values to work properly (fit/max/etc won't work)
+              'opacity-1 pt-6 max-h-[9000px]'
             : 'opacity-0 max-h-0'
         } transition-all duration-500 ease-in-out`}
       >
