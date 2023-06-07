@@ -20,11 +20,7 @@ async function configureUpdater() {
   autoUpdater.autoDownload = false;
 
   const userConfig = await getUserConfig();
-  autoUpdater.allowPrerelease = !!userConfig?.alphaUpdatesEnabled;
-  console.log(
-    'use auto-update for prereleases (alpha updates): ',
-    autoUpdater.allowPrerelease
-  );
+  autoUpdater.channel = userConfig?.alphaUpdatesEnabled ? 'alpha' : 'latest';
 }
 
 function setListeners() {
