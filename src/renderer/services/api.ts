@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 import { FAUCET_API_URL } from 'config/faucet';
 import {
   Task as TaskRaw,

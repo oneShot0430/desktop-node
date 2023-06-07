@@ -1,5 +1,6 @@
-import { INode } from '@koii-network/task-node';
 import axios from 'axios';
+
+import { INode } from '@koii-network/task-node';
 import { getK2NetworkUrl } from 'main/node/helpers/k2NetworkUrl';
 
 import db from '../../db';

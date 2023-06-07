@@ -1,10 +1,10 @@
 import { Event } from 'electron';
 import fs from 'fs';
 
-import { derivePath } from 'ed25519-hd-key';
-
 import { Keypair } from '@_koi/web3.js';
 import * as bip39 from 'bip39';
+import { STAKING_DERIVATION_PATH } from 'config/node';
+import { derivePath } from 'ed25519-hd-key';
 import { ErrorType } from 'models';
 import {
   CreateNodeWalletsFromJsonParam,
@@ -56,7 +56,7 @@ const createNodeWalletsFromJson = async (
     const keyPhraseString = jsonKey.join(' ');
 
     const stakingSeed = bip39.mnemonicToSeedSync(keyPhraseString, '');
-    const stakingWalletPath = "m/44'/501'/99'/0'";
+    const stakingWalletPath = STAKING_DERIVATION_PATH;
     const stakingWallet = Keypair.fromSeed(
       derivePath(stakingWalletPath, stakingSeed.toString('hex')).key
     );

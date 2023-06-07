@@ -31,6 +31,7 @@ function ImportFromSeedPhrase({
 }: PropsType) {
   const [phrases, setPhrases] = useState(new Array(12).fill(''));
   const [error, setError] = useState<Error | string>('');
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement>,
@@ -57,6 +58,7 @@ function ImportFromSeedPhrase({
     if (allPhrasesAreProvided) {
       setError('');
       try {
+        setLoading(true);
         const encryptedSecretPhrase: string = await encrypt(
           accountPin,
           keyPhraseString
@@ -70,13 +72,14 @@ function ImportFromSeedPhrase({
         if (setImportedWalletAsDefault) {
           await setActiveAccount(accountName);
         }
-
+        setLoading(false);
         onImportSuccess({
           mainAccountPubKey: accounts.mainAccountPubKey,
           accountName,
         });
       } catch (error: any) {
         setError(error);
+        setLoading(false);
         if (onImportFail) {
           onImportFail(error);
         }
@@ -121,6 +124,7 @@ function ImportFromSeedPhrase({
           onClick={handleImportFromPhrase}
           label={confirmActionLabel}
           className="font-semibold bg-white text-finnieBlue-light w-[240px] h-[48px]"
+          loading={loading}
         />
       </div>
     </div>
