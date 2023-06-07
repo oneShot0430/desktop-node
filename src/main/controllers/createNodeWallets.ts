@@ -1,11 +1,12 @@
 import { Event } from 'electron';
 import fs from 'fs';
 
-import { derivePath } from 'ed25519-hd-key';
-
 import { Keypair } from '@_koi/web3.js';
+import { K2Tool } from '@_koii/sdk/k2';
 import * as bip39 from 'bip39';
+import { STAKING_DERIVATION_PATH } from 'config/node';
 import { SystemDbKeys } from 'config/systemDbKeys';
+import { derivePath } from 'ed25519-hd-key';
 import { namespaceInstance } from 'main/node/helpers/Namespace';
 import { ErrorType } from 'models';
 import { CreateNodeWalletsParam, CreateNodeWalletsResponse } from 'models/api';
@@ -17,7 +18,6 @@ const createNodeWallets = async (
   event: Event,
   payload: CreateNodeWalletsParam
 ): Promise<CreateNodeWalletsResponse> => {
-  console.log('IN CREATE WALLET  API');
   const { mnemonic, accountName, encryptedSecretPhrase } = payload;
   if (!mnemonic) {
     return throwDetailedError({
@@ -53,24 +53,29 @@ const createNodeWallets = async (
       });
     }
     const stakingSeed = bip39.mnemonicToSeedSync(mnemonic, '');
-    const stakingWalletPath = "m/44'/501'/99'/0'";
+    const stakingWalletPath = STAKING_DERIVATION_PATH;
     const stakingWallet = Keypair.fromSeed(
       derivePath(stakingWalletPath, stakingSeed.toString('hex')).key
     );
 
     // Creating MainAccount
     const mainWalletFilePath = `${getAppDataPath()}/wallets/${accountName}_mainSystemWallet.json`;
+    const k2Tool = new K2Tool();
     if (fs.existsSync(mainWalletFilePath)) {
       return throwDetailedError({
         detailed: `Main wallet with same account name "${accountName}" already exists`,
         type: ErrorType.NO_VALID_ACCOUNT_NAME,
       });
     }
-    const mainSeed = bip39.mnemonicToSeedSync(mnemonic, '');
-    const mainWalletPath = "m/44'/501'/0'";
-    const mainWallet = Keypair.fromSeed(
-      derivePath(mainWalletPath, mainSeed.toString('hex')).key
-    );
+
+    await k2Tool.importWallet(mnemonic, 'seedphrase');
+    const mainWallet = k2Tool.keypair;
+
+    if (!mainWallet?.secretKey)
+      return throwDetailedError({
+        detailed: 'Wallet import failed',
+        type: ErrorType.GENERIC,
+      });
 
     // Verify a wallet created from the same mnemonic doesn't exist
     const stakingWalletFileContent = JSON.stringify(
