@@ -47,6 +47,7 @@ import { TaskService, stopTask } from 'renderer/services';
 import { Task } from 'renderer/types';
 import { getCreatedAtDate, getKoiiFromRoe } from 'utils';
 
+import { Address } from './Address';
 import { SuccessMessage } from './SuccessMessage';
 import { TaskInfo } from './TaskInfo';
 import { TaskSettings } from './TaskSettings';
@@ -66,7 +67,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   const [accordionView, setAccordionView] = useState<
     'info' | 'settings' | null
   >(null);
-  const [isGlobalToolsValid, setIsGlobalToolsValid] = useState(false);
+  // const [isGlobalToolsValid, setIsGlobalToolsValid] = useState(false);
   const [isTaskToolsValid, setIsTaskToolsValid] = useState(false);
   const [isTaskValidToRun, setIsTaskValidToRun] = useState(false);
   const [taskStartSucceeded, setTaskStartSucceeded] = useState(false);
@@ -182,7 +183,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
 
       const allVariablesWerePaired =
         (globalAndTaskVariables?.length || 0) === numberOfPairedVariables;
-      setIsGlobalToolsValid(allVariablesWerePaired);
+      // setIsGlobalToolsValid(allVariablesWerePaired);
       setIsTaskToolsValid(allVariablesWerePaired);
     };
 
@@ -376,7 +377,9 @@ function TaskItem({ task, index, columnsLayout }: Props) {
         className="flex flex-col gap-2 text-xs min-w-[160px] w-full justify-self-start"
         title={taskManager}
       >
-        <div className="truncate">{`Creator: ${task.taskManager}`}</div>
+        <div className="truncate">
+          Creator: <Address address={task.taskManager} />
+        </div>
         <div className="truncate">{`Bounty: ${totalBountyInKoii}`}</div>
       </div>
 
