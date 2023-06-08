@@ -11,6 +11,7 @@ import {
 import React, { memo, useState } from 'react';
 
 import DotsSvg from 'assets/svgs/dots.svg';
+import { Address } from 'renderer/components/AvailableTasks/components/Address';
 import { FundButton } from 'renderer/components/FundButton';
 import {
   LoadingSpinner,
@@ -139,9 +140,10 @@ export const AccountItem = memo(
           icon={<EditIconSvg />}
           className="invisible w-6 h-6 rounded-full bg-finnieTeal-100"
         /> */}
-          <span className="overflow-hidden text-ellipsis" title={mainPublicKey}>
-            {mainPublicKey}
-          </span>
+          <Address
+            address={mainPublicKey}
+            className="pr-2 overflow-hidden text-ellipsis"
+          />
           <div className="flex justify-center gap-4">
             <Tooltip tooltipContent={copiedMainKey ? 'Copied' : 'Copy'}>
               <Button
@@ -203,12 +205,10 @@ export const AccountItem = memo(
           icon={<EditIconSvg />}
           className="invisible w-6 h-6 rounded-full bg-finnieTeal-100"
         /> */}
-          <div
-            className="overflow-hidden text-ellipsis"
-            title={stakingPublicKey}
-          >
-            {stakingPublicKey}
-          </div>
+          <Address
+            address={stakingPublicKey}
+            className="pr-2 overflow-hidden text-ellipsis"
+          />
           <div className="flex justify-center gap-4">
             <Tooltip tooltipContent={copiedStakingKey ? 'Copied' : 'Copy'}>
               <Button

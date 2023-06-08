@@ -6,6 +6,7 @@ import {
 } from '@_koii/koii-styleguide';
 import React, { useRef } from 'react';
 
+import { Address } from 'renderer/components/AvailableTasks/components/Address';
 import { Tooltip, Button } from 'renderer/components/ui';
 import { useClipboard } from 'renderer/features/common/hooks';
 
@@ -31,8 +32,9 @@ export function AccountInfo({ accountName, address }: PropsType) {
         {address && (
           <>
             <span ref={addressRef} className="pr-2">
-              {address}
+              <Address address={address} />
             </span>
+
             <div className="flex justify-center gap-4">
               <Tooltip tooltipContent={hasCopiedKey ? 'Copied' : 'Copy'}>
                 <Button

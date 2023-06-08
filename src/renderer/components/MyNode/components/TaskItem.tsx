@@ -17,6 +17,7 @@ import React, {
 import { toast } from 'react-hot-toast';
 import { useQuery, useQueryClient } from 'react-query';
 
+import { Address } from 'renderer/components/AvailableTasks/components/Address';
 import { TaskInfo } from 'renderer/components/AvailableTasks/components/TaskInfo';
 import { RoundTime } from 'renderer/components/RoundTime';
 import {
@@ -277,7 +278,9 @@ export function TaskItem({
         </div>
       </div>
       <div className="flex flex-col gap-2 text-xs min-w-[130px] w-full justify-self-start">
-        <div className="truncate">{`Creator: ${task.taskManager}`}</div>
+        <div className="truncate">
+          Creator: <Address address={task.taskManager} />
+        </div>
         <div className="truncate">{`Account: ${accountName}`}</div>
       </div>
       <div className="flex flex-col gap-2 text-xs min-w-[50px] w-fit text-left mr-auto ml-[20%] xl:ml-[40%] 2xl:ml-[50%]">
