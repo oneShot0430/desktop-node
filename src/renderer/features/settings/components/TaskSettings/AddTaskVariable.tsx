@@ -48,7 +48,7 @@ export function AddTaskVariable() {
             type="text"
             value={value}
             onChange={handleToolKeyChange}
-            placeholder="Paste Tool here"
+            placeholder="Type key here"
           />
           <div className="h-12 -mb-10 -mt-2">
             {errorStoringTaskVariable && (

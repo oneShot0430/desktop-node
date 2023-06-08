@@ -11,18 +11,14 @@ type PropsType = {
 };
 
 export function SourceCodeButton({ repositoryUrl }: PropsType) {
+  const fullUrl = formatUrl(repositoryUrl);
+  const isValidRepositoryUrl = isValidUrl(fullUrl);
   const buttonClasses = `w-[54px] flex flex-col items-center ${
     repositoryUrl ? 'cursor-pointer' : 'cursor-not-allowed'
   }`;
-
-  const fullUrl = formatUrl(repositoryUrl);
-  const isValidRepositoryUrl = isValidUrl(fullUrl);
-  const content = (
-    <>
-      <Icon source={SourceCode} size={44} />
-      <span className="text-center">Source Code</span>
-    </>
-  );
+  const tooltipContent = isValidRepositoryUrl
+    ? 'Source Code'
+    : 'Repository URL is missing or invalid';
 
   const showSourceCodeInRepository = () => {
     openBrowserWindow(fullUrl);
@@ -34,16 +30,9 @@ export function SourceCodeButton({ repositoryUrl }: PropsType) {
       onClick={showSourceCodeInRepository}
       disabled={!isValidRepositoryUrl}
     >
-      {isValidRepositoryUrl ? (
-        content
-      ) : (
-        <Tooltip
-          tooltipContent="Repository URL is missing or invalid"
-          placement="top-left"
-        >
-          {content}
-        </Tooltip>
-      )}
+      <Tooltip tooltipContent={tooltipContent} placement="top-left">
+        <Icon source={SourceCode} size={30} className="stroke-[1.3px]" />
+      </Tooltip>
     </button>
   );
 }

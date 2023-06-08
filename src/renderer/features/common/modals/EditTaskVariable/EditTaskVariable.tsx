@@ -51,7 +51,7 @@ export const EditTaskVariable = create<Params>(function EditTaskVariable({
 
         <p className="mr-12">Edit information about your Task Setting</p>
         <div className="flex flex-col mb-2">
-          <label className="mb-0.5 text-left">TOOL LABEL</label>
+          <label className="mb-0.5 text-left">LABEL</label>
           <input
             className={`${baseInputClassName} w-56`}
             type="text"
@@ -67,13 +67,13 @@ export const EditTaskVariable = create<Params>(function EditTaskVariable({
         </div>
 
         <div className="flex flex-col mb-2">
-          <label className="mb-0.5 text-left">TOOL KEY INPUT</label>
+          <label className="mb-0.5 text-left">KEY INPUT</label>
           <input
             className={`${baseInputClassName} w-full`}
             type="text"
             value={value}
             onChange={handleToolKeyChange}
-            placeholder="Paste Tool here"
+            placeholder="Type key here"
           />
         </div>
 

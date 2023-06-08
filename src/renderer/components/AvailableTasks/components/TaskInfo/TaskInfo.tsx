@@ -5,6 +5,7 @@ import { RequirementType, TaskMetadata } from 'models/task';
 import { SourceCodeButton } from 'renderer/components/SourceCodeButton';
 
 import { Address } from '../Address';
+import { Tooltip } from 'renderer/components/ui';
 
 type PropsType = {
   publicKey: string;
@@ -45,21 +46,19 @@ export function TaskInfo({
     <div className="flex flex-col w-full pl-3 pr-5 gap-4">
       <div>
         <div className="mb-2 text-base font-semibold">Task ID</div>
-        <div className="flex justify-between gap-16 mb-4">
-          <div className="flex items-start gap-6">
-            <Address
-              address={publicKey}
-              className="text-finnieTeal-100 select-text"
-            />
-          </div>
-          <div className="-mt-8">
+        <div className="flex items-end mb-4 text-finnieTeal-100">
+          <Tooltip tooltipContent="Inspect Task" placement="top-left">
+            <Address address={publicKey} className=" select-text" />
+          </Tooltip>
+
+          <div className="-mb-1">
             {showSourceCode && metadata?.repositoryUrl && (
               <SourceCodeButton repositoryUrl={metadata?.repositoryUrl || ''} />
             )}
           </div>
         </div>
       </div>
-      <div className={`${showSourceCode ? '-mt-8' : ''}`}>
+      <div>
         <div className="mb-2 text-base font-semibold">Description</div>
         <p className="mb-4 select-text text-sm">
           {metadata?.description ?? NOT_AVAILABLE}
