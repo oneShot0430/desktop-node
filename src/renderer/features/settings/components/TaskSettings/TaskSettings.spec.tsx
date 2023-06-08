@@ -188,7 +188,7 @@ describe('TaskSettings', () => {
 
       expect(addButton).toBeDisabled();
 
-      const variableKeyInput = screen.getByPlaceholderText(/Paste Tool here/i);
+      const variableKeyInput = screen.getByPlaceholderText(/Type key here/i);
 
       await user.type(variableKeyInput, newTaskVariableData.value);
 
@@ -202,7 +202,7 @@ describe('TaskSettings', () => {
 
       await user.type(variableLabelInput, newTaskVariableData.label);
 
-      const variableKeyInput = screen.getByPlaceholderText(/Paste Tool here/i);
+      const variableKeyInput = screen.getByPlaceholderText(/Type key here/i);
 
       await user.type(variableKeyInput, newTaskVariableData.value);
 
@@ -349,7 +349,7 @@ describe('Edit task variable', () => {
     await user.type(variableLabelInput, newTaskVariableData.label);
 
     const variableKeyInput =
-      within(editModal).getByPlaceholderText(/Paste Tool here/i);
+      within(editModal).getByPlaceholderText(/Type key here/i);
 
     await user.clear(variableKeyInput);
     await user.type(variableKeyInput, newTaskVariableData.value);

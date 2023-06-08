@@ -1,6 +1,6 @@
 {
   "name": "desktop-node",
-  "version": "0.2.18-alpha",
+  "version": "0.2.19-alpha",
   "description": "Desktop GUI and runtime for earning Koii tokens by running Koii Tasks",
   "license": "MIT",
   "author": {
