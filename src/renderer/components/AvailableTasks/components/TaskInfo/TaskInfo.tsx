@@ -3,9 +3,9 @@ import React from 'react';
 import { TaskPairing } from 'models';
 import { RequirementType, TaskMetadata } from 'models/task';
 import { SourceCodeButton } from 'renderer/components/SourceCodeButton';
+import { Tooltip } from 'renderer/components/ui';
 
 import { Address } from '../Address';
-import { Tooltip } from 'renderer/components/ui';
 
 type PropsType = {
   publicKey: string;
