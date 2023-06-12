@@ -4,15 +4,22 @@ import {
   ButtonSize,
   Icon,
   CheckSuccessLine,
+  CloseLine,
 } from '@_koii/koii-styleguide';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from 'react-query';
 
 import ShareIcon from 'assets/svgs/share-icon.svg';
-import { ErrorType } from 'models';
+import { ErrorType, GetTaskNodeInfoResponse } from 'models';
 import { Tooltip, ErrorMessage, DotsLoader } from 'renderer/components/ui';
-import { QueryKeys, claimRewards } from 'renderer/services';
+import {
+  QueryKeys,
+  claimRewards,
+  fetchMyTasks,
+  getStakingAccountPublicKey,
+} from 'renderer/services';
+import { Task } from 'renderer/types';
 import { Theme } from 'renderer/types/common';
 
 interface PropsType {
@@ -26,41 +33,65 @@ export function ClaimRewards({
   displayConfetti,
   enableNodeInfoRefetch,
 }: PropsType) {
+  const tasksWithClaimableRewardsRef = useRef<number>(0);
+
   const [hasErrorClaimingRewards, setHasErrorClaimingRewards] =
     useState<boolean>(false);
 
-  const displayErrorTemporarily = () => {
+  const handleClickClaim = async () => {
+    const stakingAccountPublicKey = await getStakingAccountPublicKey();
+    const getPendingRewardsByTask = (task: Task) =>
+      task.availableBalances[stakingAccountPublicKey];
+    const tasks = (await fetchMyTasks({ limit: Infinity, offset: 0 })).content;
+    const tasksWithClaimableRewards = tasks.filter(getPendingRewardsByTask);
+    // We need to set a ref to later compare to the number of rewards that were actually claimed, because with each request's retry the
+    // number of tasks with rewards to claim could change and we need to compare it with the initial number of them
+    tasksWithClaimableRewardsRef.current = tasksWithClaimableRewards.length;
+    claimPendingRewards();
+  };
+  const handleFailure = () => {
     setHasErrorClaimingRewards(true);
     setTimeout(() => {
       setHasErrorClaimingRewards(false);
-    }, 4000);
+    }, 5500);
+  };
+  const handlePartialFailure = () => {
+    toast.error(
+      'Not all rewards were claimed successfully, please try again.',
+      {
+        duration: 1500,
+        icon: <CloseLine className="h-5 w-5" />,
+        style: {
+          backgroundColor: '#FFA6A6',
+          paddingRight: 0,
+        },
+      }
+    );
   };
 
   const queryClient = useQueryClient();
 
   const { mutate: claimPendingRewards, isLoading: isClaimingRewards } =
     useMutation(claimRewards, {
-      onSuccess: async (rewardsNotClaimed) => {
+      onSuccess: async () => {
         enableNodeInfoRefetch?.(false);
-        queryClient.setQueryData(
-          [QueryKeys.taskNodeInfo],
-          (oldNodeData: any) => ({
-            ...oldNodeData,
-            pendingRewards: 0,
-          })
-        );
+        queryClient.setQueryData<
+          (oldNodeData: GetTaskNodeInfoResponse) => GetTaskNodeInfoResponse
+        >([QueryKeys.taskNodeInfo], (oldNodeData: GetTaskNodeInfoResponse) => ({
+          ...oldNodeData,
+          pendingRewards: 0,
+        }));
+
         queryClient.invalidateQueries([QueryKeys.taskList]);
 
-        // lock Sidebar updates for 20sec
+        // lock Sidebar updates for 25sec
         setTimeout(() => {
+          console.log('@@@ enableNodeInfoRefetch');
           enableNodeInfoRefetch?.(true);
+          queryClient.invalidateQueries([QueryKeys.taskList]);
         }, 25000);
 
         displayConfetti?.();
-
-        if (rewardsNotClaimed) {
-          displayErrorTemporarily();
-        }
 
         toast.success('Congrats! Your total KOII will be updated shortly.', {
           duration: 1500,
@@ -71,7 +102,17 @@ export function ClaimRewards({
           },
         });
       },
-      onError: displayErrorTemporarily,
+      onError: (error: Error) => {
+        const numberOfUnclaimedRewards = Number(error.message);
+        const notAllRewardsWereClaimed =
+          numberOfUnclaimedRewards < tasksWithClaimableRewardsRef.current;
+        if (notAllRewardsWereClaimed) {
+          handlePartialFailure();
+        } else {
+          handleFailure();
+        }
+      },
+      retry: 3,
     });
 
   return (
@@ -89,7 +130,7 @@ export function ClaimRewards({
           tooltipContent="Click here to claim all pending Task rewards."
         >
           <Button
-            onClick={() => claimPendingRewards()}
+            onClick={handleClickClaim}
             variant={ButtonVariant.Secondary}
             size={ButtonSize.SM}
             label="Claim Rewards"

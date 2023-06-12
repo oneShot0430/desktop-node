@@ -306,15 +306,15 @@ export const claimTaskReward = async (taskAccountPubKey: string) => {
   return window.main.claimReward({ taskAccountPubKey });
 };
 
-export const claimRewards = async (): Promise<number> => {
+export const claimRewards = async (): Promise<void> => {
   const stakingAccountPublicKey = await getStakingAccountPublicKey();
-  const getPendingRewardsByTask = (task: Task) =>
-    task.availableBalances[stakingAccountPublicKey];
-  // we keep it as an array for now to have handy not only the rewards themselves but also the number of tasks
-  const rewardsNotClaimedByTask: number[] = [];
   const tasks = (await fetchMyTasks({ limit: Infinity, offset: 0 })).content;
+  const tasksWithClaimableRewards = tasks.filter(
+    (task) => task.availableBalances[stakingAccountPublicKey]
+  );
 
-  const tasksWithClaimableRewards = tasks.filter(getPendingRewardsByTask);
+  let numberOfFailedClaims = 0;
+
   const promisesToClaimRewards = tasksWithClaimableRewards.map(async (task) => {
     try {
       await window.main.claimReward({
@@ -323,22 +323,14 @@ export const claimRewards = async (): Promise<number> => {
     } catch (error) {
       console.error(`Error while claiming reward for Task: ${task.publicKey}`);
       console.error(error);
-      const pendingReward = getPendingRewardsByTask(task);
-      rewardsNotClaimedByTask.push(pendingReward);
+      numberOfFailedClaims += 1;
     }
   });
 
   await Promise.all(promisesToClaimRewards);
-  const allTasksFailed = rewardsNotClaimedByTask.length === tasks.length;
-  const rewardsNotClaimed = rewardsNotClaimedByTask.reduce(
-    (reward, accumulator) => reward + accumulator,
-    0
-  );
 
-  if (allTasksFailed) {
-    throw rewardsNotClaimedByTask;
-  } else {
-    return rewardsNotClaimed;
+  if (numberOfFailedClaims) {
+    throw Error(String(numberOfFailedClaims));
   }
 };
 
