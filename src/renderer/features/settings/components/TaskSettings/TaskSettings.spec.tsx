@@ -73,7 +73,7 @@ const inspectModalDescription =
 const editModalDescription = 'Edit information about your Task Setting';
 const deleteModalDescription = 'Are you sure you want to delete Task Setting';
 const duplicatedLabelErrorMessage =
-  'You already have a tool registered with that label';
+  'You already have a tool registered with that label.';
 
 const existingTaskVariablesData = [
   {

@@ -12,5 +12,5 @@ export function ErrorMessage({ error, context, className = '' }: PropsType) {
   const errorMessage = getErrorToDisplay(error, context);
   const classNames = `py-3 text-sm text-finnieRed ${className}`;
 
-  return <div className={classNames}>{errorMessage}</div>;
+  return <div className={classNames}>{errorMessage}.</div>;
 }

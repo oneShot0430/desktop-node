@@ -37,7 +37,7 @@ export function EnterNodePassword({
         const encryptedSecretPhrase = await getEncryptedSecretPhrase(publicKey);
         if (!encryptedSecretPhrase) {
           return setError(
-            "It looks like this key wasn't generated with a secret phrase."
+            "It looks like this key wasn't generated with a secret phrase"
           );
         }
         const seedPhrase: string = (await decrypt(
