@@ -9,8 +9,6 @@ import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from 'react-query';
 
-import NoBordersCheckMarkIcon from 'assets/svgs/checkmark-icon-no-borders.svg';
-import NoBordersCloseIcon from 'assets/svgs/close-icons/close-icon-no-borders.svg';
 import ShareIcon from 'assets/svgs/share-icon.svg';
 import { ErrorType } from 'models';
 import { Tooltip, ErrorMessage, DotsLoader } from 'renderer/components/ui';
@@ -28,13 +26,9 @@ export function ClaimRewards({
   displayConfetti,
   enableNodeInfoRefetch,
 }: PropsType) {
-  const [hasClickedClaim, setHasClickedClaim] = useState<boolean>(false);
-
   const [hasErrorClaimingRewards, setHasErrorClaimingRewards] =
     useState<boolean>(false);
 
-  const handleClickClaim = () => setHasClickedClaim(true);
-  const handleGoBack = () => setHasClickedClaim(false);
   const displayErrorTemporarily = () => {
     setHasErrorClaimingRewards(true);
     setTimeout(() => {
@@ -77,16 +71,8 @@ export function ClaimRewards({
           },
         });
       },
-      onError: () => {
-        displayErrorTemporarily();
-      },
-      onSettled: () => {
-        setHasClickedClaim(false);
-      },
+      onError: displayErrorTemporarily,
     });
-
-  const buttonsBaseClasses =
-    'w-9 h-9 cursor-pointer hover:text-white active:bg-finniePurple active:text-white rounded-full transition transition-300';
 
   return (
     <div className="w-full ml-0.5 mb-1 flex justify-center mt-auto">
@@ -95,40 +81,15 @@ export function ClaimRewards({
           error={ErrorType.GENERIC}
           className="text-xs text-center text-finnieRed"
         />
-      ) : hasClickedClaim ? (
-        isClaimingRewards ? (
-          <DotsLoader />
-        ) : (
-          <div className="flex justify-center gap-8">
-            <Tooltip
-              theme={Theme.Light}
-              tooltipContent="Go back. Your rewards will not be transferred."
-            >
-              <Icon
-                source={NoBordersCloseIcon}
-                className={`${buttonsBaseClasses} bg-finnieRed hover:bg-finnieRed-500`}
-                onClick={handleGoBack}
-              />
-            </Tooltip>
-            <Tooltip
-              theme={Theme.Light}
-              tooltipContent="Confirm. Rewards will transfer to your account."
-            >
-              <Icon
-                source={NoBordersCheckMarkIcon}
-                className={`${buttonsBaseClasses} bg-finnieEmerald-light hover:bg-finnieEmerald`}
-                onClick={() => claimPendingRewards()}
-              />
-            </Tooltip>
-          </div>
-        )
+      ) : isClaimingRewards ? (
+        <DotsLoader />
       ) : value ? (
         <Tooltip
           theme={Theme.Light}
           tooltipContent="Click here to claim all pending Task rewards."
         >
           <Button
-            onClick={handleClickClaim}
+            onClick={() => claimPendingRewards()}
             variant={ButtonVariant.Secondary}
             size={ButtonSize.SM}
             label="Claim Rewards"
