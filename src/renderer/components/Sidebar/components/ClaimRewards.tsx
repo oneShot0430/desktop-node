@@ -112,7 +112,7 @@ export function ClaimRewards({
           handleFailure();
         }
       },
-      retry: 3,
+      retry: 10,
     });
 
   return (
