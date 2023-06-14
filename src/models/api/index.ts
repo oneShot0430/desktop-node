@@ -27,3 +27,5 @@ export * from './openLogfileFolder';
 export * from './getEncryptedSecretPhrase';
 export * from './archiveTask';
 export * from './createNodeWalletsFromJson';
+export * from './storeAllTimeRewards';
+export * from './getAllTimeRewards';

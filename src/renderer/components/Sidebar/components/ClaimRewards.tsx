@@ -13,6 +13,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import ShareIcon from 'assets/svgs/share-icon.svg';
 import { ErrorType, GetTaskNodeInfoResponse } from 'models';
 import { Tooltip, ErrorMessage, DotsLoader } from 'renderer/components/ui';
+import { useMyNodeContext } from 'renderer/features';
 import {
   QueryKeys,
   claimRewards,
@@ -38,6 +39,16 @@ export function ClaimRewards({
   const [hasErrorClaimingRewards, setHasErrorClaimingRewards] =
     useState<boolean>(false);
 
+  const queryClient = useQueryClient();
+
+  const { setFetchMyTasksEnabled } = useMyNodeContext();
+
+  const enableRefecthingSidebarAndMyNode = () => {
+    setTimeout(() => {
+      enableNodeInfoRefetch?.(true);
+      setFetchMyTasksEnabled(true);
+    }, 25000);
+  };
   const handleClickClaim = async () => {
     const stakingAccountPublicKey = await getStakingAccountPublicKey();
     const getPendingRewardsByTask = (task: Task) =>
@@ -56,6 +67,7 @@ export function ClaimRewards({
     }, 5500);
   };
   const handlePartialFailure = () => {
+    enableRefecthingSidebarAndMyNode();
     toast.error(
       'Not all rewards were claimed successfully, please try again.',
       {
@@ -68,44 +80,37 @@ export function ClaimRewards({
       }
     );
   };
-
-  const queryClient = useQueryClient();
+  const handleSuccess = () => {
+    enableNodeInfoRefetch?.(false);
+    queryClient.setQueryData<
+      (oldNodeData: GetTaskNodeInfoResponse) => GetTaskNodeInfoResponse
+    >([QueryKeys.taskNodeInfo], (oldNodeData: GetTaskNodeInfoResponse) => ({
+      ...oldNodeData,
+      pendingRewards: 0,
+    }));
+    enableRefecthingSidebarAndMyNode();
+    displayConfetti?.();
+    toast.success('Congrats! Your total KOII will be updated shortly.', {
+      duration: 1500,
+      icon: <CheckSuccessLine className="h-5 w-5" />,
+      style: {
+        backgroundColor: '#BEF0ED',
+        paddingRight: 0,
+      },
+    });
+  };
 
   const { mutate: claimPendingRewards, isLoading: isClaimingRewards } =
     useMutation(claimRewards, {
-      onSuccess: async () => {
-        enableNodeInfoRefetch?.(false);
-        queryClient.setQueryData<
-          (oldNodeData: GetTaskNodeInfoResponse) => GetTaskNodeInfoResponse
-        >([QueryKeys.taskNodeInfo], (oldNodeData: GetTaskNodeInfoResponse) => ({
-          ...oldNodeData,
-          pendingRewards: 0,
-        }));
-
-        queryClient.invalidateQueries([QueryKeys.taskList]);
-
-        // lock Sidebar updates for 25sec
-        setTimeout(() => {
-          console.log('@@@ enableNodeInfoRefetch');
-          enableNodeInfoRefetch?.(true);
-          queryClient.invalidateQueries([QueryKeys.taskList]);
-        }, 25000);
-
-        displayConfetti?.();
-
-        toast.success('Congrats! Your total KOII will be updated shortly.', {
-          duration: 1500,
-          icon: <CheckSuccessLine className="h-5 w-5" />,
-          style: {
-            backgroundColor: '#BEF0ED',
-            paddingRight: 0,
-          },
-        });
+      onMutate: () => {
+        setFetchMyTasksEnabled(false);
       },
+      onSuccess: handleSuccess,
       onError: (error: Error) => {
-        const numberOfUnclaimedRewards = Number(error.message);
+        const tasksWithUnclaimedRewards = Number(error.message);
         const notAllRewardsWereClaimed =
-          numberOfUnclaimedRewards < tasksWithClaimableRewardsRef.current;
+          tasksWithUnclaimedRewards < tasksWithClaimableRewardsRef.current;
+
         if (notAllRewardsWereClaimed) {
           handlePartialFailure();
         } else {

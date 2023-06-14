@@ -18,7 +18,6 @@ const endpointToControllerMap: Record<
   [Endpoints.GET_TASK_INFO]: controllers.getTaskInfo,
   [Endpoints.START_TASK]: controllers.startTask,
   [Endpoints.STOP_TASK]: controllers.stopTask,
-  [Endpoints.GET_EARNED_REWARD_BY_NODE]: controllers.getEarnedRewardByNode,
   [Endpoints.CHECK_WALLET_EXISTS]: controllers.checkWalletExists,
   [Endpoints.GET_MAIN_ACCOUNT_PUBKEY]: controllers.getMainAccountPubKey,
   [Endpoints.GET_TASK_LOGS]: controllers.getTaskLogs,
@@ -63,6 +62,8 @@ const endpointToControllerMap: Record<
   [Endpoints.GET_VERSION]: controllers.getVersion,
   [Endpoints.ARCHIVE_TASK]: controllers.archiveTask,
   [Endpoints.DOWNLOAD_APP_UPDATE]: controllers.downloadAppUpdate,
+  [Endpoints.STORE_ALL_TIME_REWARDS]: controllers.storeAllTimeRewards,
+  [Endpoints.GET_ALL_TIME_REWARDS_BY_TASK]: controllers.getAllTimeRewardsByTask,
   [Endpoints.VALIDATE_PUBLIC_KEY]: controllers.isValidWalletAddress,
 };
 

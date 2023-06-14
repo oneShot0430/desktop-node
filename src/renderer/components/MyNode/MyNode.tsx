@@ -3,6 +3,7 @@ import { useQuery } from 'react-query';
 
 import { TASK_REFETCH_INTERVAL } from 'config/refetchIntervals';
 import { InfiniteScrollTable } from 'renderer/components/ui';
+import { useMyNodeContext } from 'renderer/features';
 import { useStartedTasks } from 'renderer/features/common/hooks/useStartedTasks';
 import { getMainAccountPublicKey, QueryKeys } from 'renderer/services';
 
@@ -30,6 +31,8 @@ export function MyNode() {
     getMainAccountPublicKey
   );
 
+  const { fetchMyTasksEnabled } = useMyNodeContext();
+
   const {
     isFetchingNextTasks,
     isLoadingTasks,
@@ -40,6 +43,7 @@ export function MyNode() {
   } = useStartedTasks({
     pageSize,
     refetchInterval: TASK_REFETCH_INTERVAL,
+    enabled: fetchMyTasksEnabled,
   });
 
   return (

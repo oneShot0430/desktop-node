@@ -44,9 +44,9 @@ import {
   TaskService,
   QueryKeys,
   getTaskPairedVariablesNamesWithLabels,
-  getRewardEarned,
   openLogfileFolder,
   getActiveAccountName,
+  getAllTimeRewards,
 } from 'renderer/services';
 import { Task, TaskStatus } from 'renderer/types';
 import { getCreatedAtDate, getKoiiFromRoe } from 'utils';
@@ -71,7 +71,8 @@ export function TaskItem({
   const [shouldDisplayInfo, setShouldDisplayInfo] = useState(false);
   const [shouldDisplayActions, setShouldDisplayActions] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [earnedReward, setEarnedReward] = useState(0);
+  const [pendingRewards, setPendingRewards] = useState(0);
+  const [claimedRewards, setClaimedRewards] = useState(0);
 
   const { taskName, isRunning, publicKey, roundTime } = task;
 
@@ -97,21 +98,25 @@ export function TaskItem({
   };
   const queryCache = useQueryClient();
 
-  useEffect(() => {
-    getRewardEarned(task).then((reward) => {
-      setEarnedReward(reward);
-    });
-  });
-
   const { data: stakingAccountPublicKey = '' } = useStakingAccount();
   const { taskStatus, isLoadingStatus } = useTaskStatus({
     task,
     stakingAccountPublicKey,
   });
 
-  const earnedRewardInKoii = getKoiiFromRoe(earnedReward);
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const myStakeInKoii = getKoiiFromRoe(taskStake!);
+  useEffect(() => {
+    getAllTimeRewards(task.publicKey).then((reward) => {
+      setClaimedRewards(reward);
+    });
+    const pendingRewards =
+      TaskService.getPendingRewardsByTask(task, stakingAccountPublicKey) || 0;
+    setPendingRewards(pendingRewards);
+  }, [task, stakingAccountPublicKey]);
+
+  const allTimeRewards = claimedRewards + pendingRewards;
+  const allTimeRewardsInKoii = getKoiiFromRoe(allTimeRewards);
+  const pendingRewardsInKoii = getKoiiFromRoe(pendingRewards);
+  const myStakeInKoii = getKoiiFromRoe(taskStake);
   const totalBountyInKoii = getKoiiFromRoe(task.totalBountyAmount);
   const isFirstRowInTable = index === 0;
   const optionsDropdownIsInverted = totalItems > 5 && index > totalItems - 3;
@@ -291,11 +296,11 @@ export function TaskItem({
         <div className="truncate">{`Bounty: ${totalBountyInKoii}`}</div>
       </div>
       <div className="flex flex-col gap-2 text-xs w-fit">
-        <div className="truncate">All time: soon</div>
-        <div className="truncate">{`To claim: ${earnedRewardInKoii}`}</div>
+        <div className="truncate mx-auto">{`All time: ${allTimeRewardsInKoii}`}</div>
+        <div className="truncate mx-auto">{`To claim: ${pendingRewardsInKoii}`}</div>
       </div>
       <RoundTime
-        tooltipPlacement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
+        tooltipPlacement={`${isFirstRowInTable ? 'bottom' : 'top'}-left`}
         roundTime={roundTime}
       />
       <div>

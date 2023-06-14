@@ -9,6 +9,7 @@ type UseTasksInfiniteScrollParams = {
   pageSize: number;
   refetchInterval?: number;
   fetchFunction: (params: GetMyTasksParam) => Promise<PaginatedResponse<Task>>;
+  enabled?: boolean;
 };
 
 export const useTasksInfiniteScroll = ({
@@ -16,6 +17,7 @@ export const useTasksInfiniteScroll = ({
   pageSize,
   refetchInterval,
   fetchFunction,
+  enabled = true,
 }: UseTasksInfiniteScrollParams) => {
   const {
     isLoading: isLoadingTasks,
@@ -37,6 +39,7 @@ export const useTasksInfiniteScroll = ({
         const nextPage = allPages.length;
         return hasMore ? nextPage : undefined;
       },
+      enabled,
     }
   );
 
