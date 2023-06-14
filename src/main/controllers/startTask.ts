@@ -48,7 +48,7 @@ const startTask = async (
   _: Event,
   payload: TaskStartStopParam
 ): Promise<void> => {
-  const { taskAccountPubKey } = payload;
+  const { taskAccountPubKey, force } = payload;
   const mainSystemAccount = await getMainSystemAccountKeypair();
 
   const taskInfo: RawTaskData | null =
@@ -66,13 +66,21 @@ const startTask = async (
   const stakingPubkey = stakingAccKeypair.publicKey.toBase58();
 
   // if stake is undefined or 0 -> stop
-  if (!taskInfo.stake_list[stakingPubkey] || !taskInfo.is_whitelisted) {
-    console.log(
-      "Can't start task, because it is either not whitelisted or staked"
-    );
+  if (!taskInfo.stake_list[stakingPubkey]) {
+    console.log("Can't start task, because it is not staked");
 
     return throwDetailedError({
-      detailed: `Can't start task ${taskAccountPubKey}, because it is either not whitelisted or staked`,
+      detailed: `Can't start task ${taskAccountPubKey}, because it is not staked`,
+      type: ErrorType.TASK_START,
+    });
+  }
+
+  // if task is not whitelisted -> stop, unless force is true
+  if (!taskInfo.is_whitelisted && !force) {
+    console.log("Can't start task, because it is not whitelisted");
+
+    return throwDetailedError({
+      detailed: `Can't start task ${taskAccountPubKey}, because it is not whitelisted`,
       type: ErrorType.TASK_START,
     });
   }

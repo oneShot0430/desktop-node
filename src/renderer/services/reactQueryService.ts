@@ -25,5 +25,6 @@ export enum QueryKeys {
   AppVersion = 'AppVersion',
   TaskStatus = 'TaskStatus',
   UnstakingAvailability = 'UnstakingAvailability',
+  PrivateTask = 'PrivateTask',
   PendingRewardsByTask = 'PendingRewardsByTask',
 }

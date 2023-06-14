@@ -33,9 +33,9 @@ export function Table({
   if (error) return <ErrorMessage error={error} />;
 
   return (
-    <div className="flex flex-col flex-grow h-full min-h-0">
+    <div className="min-h-0 h-full overflow-y-auto">
       <TableHeaders headers={headers} columnsLayout={columnsLayout} />
-      <div className="overflow-y-auto min-h-table">{children}</div>
+      <div className="min-h-table">{children}</div>
     </div>
   );
 }

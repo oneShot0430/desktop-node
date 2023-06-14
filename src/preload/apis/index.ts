@@ -28,6 +28,7 @@ import getTaskVariablesNames from './getTaskVariablesNames';
 import getUserConfig from './getUserConfig';
 import getVersion from './getVersion';
 import initializeTasks from './initializeTasks';
+import isValidWalletAddress from './isValidWalletAddress';
 import onAppUpdate from './onAppUpdate';
 import openBrowserWindow from './openBrowserWindow';
 import openLogfileFolder from './openLogfileFolder';
@@ -100,4 +101,5 @@ export default {
   archiveTask,
   downloadAppUpdate,
   onAppUpdate,
+  isValidWalletAddress,
 };

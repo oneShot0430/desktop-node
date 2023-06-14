@@ -26,9 +26,6 @@ export function EditStakeInput({
     'w-[92px] rounded-sm text-right text-finnieBlue-dark p-[3px] border-2 border-transparent focus:border-finnieEmerald focus:outline-none',
     hasError && 'border-finnieRed focus:border-finnieRed'
   );
-  const minStakeLabelClasses = `text-xs text-center ${
-    hasError ? 'text-finnieRed' : 'text-finnieEmerald-light'
-  }`;
   const stakeInKoii = getKoiiFromRoe(stake);
   const minStakeInKoii = getKoiiFromRoe(minStake);
   const value =
@@ -43,6 +40,11 @@ export function EditStakeInput({
     setHasEnteredAValue(true);
   };
 
+  const labelClasses = twMerge(
+    'text-xs text-center h-4 min-h-4 pt-1',
+    hasError ? 'text-finnieRed' : 'text-finnieEmerald-light'
+  );
+
   return (
     <div className="flex flex-col items-center w-fit">
       <input
@@ -54,7 +56,9 @@ export function EditStakeInput({
         className={inputClasses}
         disabled={disabled}
       />
-      <div className={minStakeLabelClasses}>minimum: {minStakeInKoii}</div>
+      <div className={labelClasses}>
+        {!!minStakeInKoii && `minimum: ${minStakeInKoii}`}
+      </div>
     </div>
   );
 }

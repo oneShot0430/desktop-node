@@ -146,7 +146,9 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     [nodes, minStake, topStake, totalBountyInKoii]
   );
 
-  const { metadata, isLoadingMetadata } = useMetadata(task.metadataCID);
+  const { metadata, isLoadingMetadata } = useMetadata({
+    metadataCID: task.metadataCID,
+  });
 
   const globalAndTaskVariables: RequirementTag[] = useMemo(
     () =>
@@ -293,7 +295,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
       return (
         <TaskInfo
           publicKey={task.publicKey}
-          metadata={metadata}
+          metadata={metadata ?? undefined}
           details={details}
         />
       );

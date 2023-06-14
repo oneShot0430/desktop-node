@@ -41,15 +41,19 @@ export function InfiniteScrollTable({
 
   return (
     <Table headers={headers} columnsLayout={columnsLayout} error={error}>
-      <div ref={animationRef} className="!overflow-hidden min-h-[500px]">
-        {children}
-
+      <div
+        ref={animationRef}
+        className="!overflow-hidden min-h-[440px] flex flex-col"
+      >
+        <div className="">{children}</div>
         <div ref={tableBottomRef} className="h-4 my-8 relative">
-          {(hasMore || isLoading) && (
-            <div className="w-fit mx-auto scale-75">
-              <DotsLoader />
-            </div>
-          )}
+          <div
+            className={`${
+              hasMore || isLoading ? '' : 'hidden'
+            } w-fit mx-auto scale-75`}
+          >
+            <DotsLoader />
+          </div>
         </div>
       </div>
     </Table>
