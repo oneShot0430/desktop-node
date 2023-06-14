@@ -3,4 +3,5 @@ export enum SystemDbKeys {
   RunningTasks = 'runningTasks',
   EncyptedSecretPhraseMap = 'ENCRYPTED_SEED_PHRASE_MAP',
   UserConfig = 'USER_CONFIG',
+  AllTimeRewards = 'ALL_TIME_REWARDS',
 }

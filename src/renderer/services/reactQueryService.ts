@@ -27,4 +27,5 @@ export enum QueryKeys {
   UnstakingAvailability = 'UnstakingAvailability',
   PrivateTask = 'PrivateTask',
   PendingRewardsByTask = 'PendingRewardsByTask',
+  AllTimeRewards = 'AllTimeRewards',
 }

@@ -9,7 +9,7 @@ import {
 } from './features/notifications';
 import { OnboardingLayout } from './features/onboarding/components/OnboardingLayout';
 import { OnboardingProvider } from './features/onboarding/context/onboarding-context';
-import { StartingTasksProvider } from './features/tasks';
+import { StartingTasksProvider, MyNodeProvider } from './features/tasks';
 import {
   QueryKeys,
   getAllAccounts,
@@ -103,9 +103,11 @@ function AppWrapper(): JSX.Element {
   if (!isOnboarding) {
     return (
       <StartingTasksProvider>
-        <MainLayout>
-          <Outlet />
-        </MainLayout>
+        <MyNodeProvider>
+          <MainLayout>
+            <Outlet />
+          </MainLayout>
+        </MyNodeProvider>
       </StartingTasksProvider>
     );
   }

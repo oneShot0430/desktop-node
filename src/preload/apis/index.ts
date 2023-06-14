@@ -9,10 +9,10 @@ import generateSeedPhrase from './generateSeedPhrase';
 import getAccountBalance from './getAccountBalance';
 import getActiveAccountName from './getActiveAccountName';
 import getAllAccounts from './getAllAccounts';
+import getAllTimeRewardsByTask from './getAllTimeRewardsByTask';
 import getAvailableTasks from './getAvailableTasks';
 import getAverageSlotTime from './getAverageSlotTime';
 import getCurrentSlot from './getCurrentSlot';
-import getEarnedRewardByNode from './getEarnedRewardByNode';
 import getEncryptedSecretPhrase from './getEncryptedSecretPhrase';
 import getMainAccountPubKey from './getMainAccountPubKey';
 import getMyTasks from './getMyTasks';
@@ -37,6 +37,7 @@ import removeAccountByName from './removeAccountByName';
 import setActiveAccount from './setActiveAccount';
 import startTask from './startTask';
 import stopTask from './stopTask';
+import storeAllTimeRewards from './storeAllTimeRewards';
 import storeUserConfig from './storeUserConfig';
 import switchNetwork from './switchNetwork';
 import {
@@ -58,7 +59,6 @@ export default {
   delegateStake,
   startTask,
   stopTask,
-  getEarnedRewardByNode,
   checkWalletExists,
   getMainAccountPubKey,
   getTaskLogs,
@@ -101,5 +101,7 @@ export default {
   archiveTask,
   downloadAppUpdate,
   onAppUpdate,
+  getAllTimeRewardsByTask,
+  storeAllTimeRewards,
   isValidWalletAddress,
 };

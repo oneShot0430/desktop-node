@@ -8,7 +8,6 @@ export { default as generateSeedPhrase } from './generateSeedPhrase';
 export { getAllAccounts } from './getAllAccounts';
 export { default as getActiveAccountName } from './getActiveAccountName';
 export { default as getAvailableTasks } from './getAvailableTasks';
-export { default as getEarnedRewardByNode } from './getEarnedRewardByNode';
 export { default as getMainAccountPubKey } from './getMainAccountPubKey';
 export { default as getMyTasks } from './getMyTasks';
 export { default as getStakingAccountPubKey } from './getStakingAccountPubKey';
@@ -40,5 +39,7 @@ export * from './openNodeLogfileFolder';
 export * from './taskVariables';
 export * from './getVersion';
 export * from './archiveTask';
+export * from './storeAllTimeRewards';
+export * from './getAllTimeRewardsByTask';
 
 export * from './types';

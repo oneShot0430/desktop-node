@@ -25,7 +25,7 @@ export const useTaskStake = ({ task, enabled }: UseMyStakeParamsType) => {
 
   return {
     refetchTaskStake: refetch,
-    taskStake,
+    taskStake: taskStake || 0,
     loadingTaskStake: isLoading,
     loadingTaskStakeError: error,
   };

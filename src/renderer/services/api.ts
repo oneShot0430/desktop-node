@@ -49,15 +49,6 @@ export const fetchAvailableTasks = async (
   };
 };
 
-export const getRewardEarned = async (task: Task): Promise<number> => {
-  const result =
-    (await window.main.getEarnedRewardByNode({
-      available_balances: task.availableBalances,
-    })) || 0;
-  console.log('GETTING REWARD', result, task.publicKey);
-  return result;
-};
-
 export const getMainAccountBalance = (): Promise<number> => {
   return window.main
     .getMainAccountPubKey()
@@ -309,23 +300,36 @@ export const claimTaskReward = async (taskAccountPubKey: string) => {
 export const claimRewards = async (): Promise<void> => {
   const stakingAccountPublicKey = await getStakingAccountPublicKey();
   const tasks = (await fetchMyTasks({ limit: Infinity, offset: 0 })).content;
-  const tasksWithClaimableRewards = tasks.filter(
-    (task) => task.availableBalances[stakingAccountPublicKey]
-  );
-
+  const getPendingRewardsByTask = (task: Task) =>
+    task.availableBalances[stakingAccountPublicKey];
+  const tasksWithClaimableRewards = tasks.filter(getPendingRewardsByTask);
   let numberOfFailedClaims = 0;
 
-  const promisesToClaimRewards = tasksWithClaimableRewards.map(async (task) => {
-    try {
-      await window.main.claimReward({
-        taskAccountPubKey: task.publicKey,
-      });
-    } catch (error) {
-      console.error(`Error while claiming reward for Task: ${task.publicKey}`);
-      console.error(error);
-      numberOfFailedClaims += 1;
+  const promisesToClaimRewards = tasksWithClaimableRewards.map(
+    async (task, index) => {
+      const pendingReward = getPendingRewardsByTask(task);
+      try {
+        // if (index === 0) {
+        //   throw Error('test error');
+        // } else {
+        await window.main.claimReward({
+          taskAccountPubKey: task.publicKey,
+        });
+        console.log('@@@ Storing all time rewards for: ', task.publicKey);
+        await window.main.storeAllTimeRewards({
+          taskId: task.publicKey,
+          newReward: pendingReward,
+        });
+        // }
+      } catch (error) {
+        console.error(
+          `Error while claiming reward for Task: ${task.publicKey}`
+        );
+        console.error(error);
+        numberOfFailedClaims += 1;
+      }
     }
-  });
+  );
 
   await Promise.all(promisesToClaimRewards);
 
@@ -381,4 +385,8 @@ export const archiveTask = async (taskPubKey: string) => {
 
 export const downloadAppUpdate = async () => {
   return window.main.downloadAppUpdate();
+};
+
+export const getAllTimeRewards = async (taskPubKey: string) => {
+  return window.main.getAllTimeRewardsByTask({ taskId: taskPubKey });
 };
