@@ -15,6 +15,7 @@ export function NodeLogs() {
         variant={ButtonVariant.Secondary}
         size={ButtonSize.SM}
         label="Get Logs"
+        buttonClassesOverrides="!border-white !text-white"
       />
     </div>
   );

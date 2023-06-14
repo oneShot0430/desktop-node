@@ -36,3 +36,9 @@ npm-debug.log.*
 
 **/.npmrc
 test-output
+
+# git-lfs local hooks
+.husky/post-checkout
+.husky/post-commit
+.husky/post-merge
+.husky/pre-push
