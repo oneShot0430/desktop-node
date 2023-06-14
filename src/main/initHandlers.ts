@@ -63,6 +63,7 @@ const endpointToControllerMap: Record<
   [Endpoints.GET_VERSION]: controllers.getVersion,
   [Endpoints.ARCHIVE_TASK]: controllers.archiveTask,
   [Endpoints.DOWNLOAD_APP_UPDATE]: controllers.downloadAppUpdate,
+  [Endpoints.VALIDATE_PUBLIC_KEY]: controllers.isValidWalletAddress,
 };
 
 const initHandlers = (): void => {

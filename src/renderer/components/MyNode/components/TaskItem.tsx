@@ -110,7 +110,8 @@ export function TaskItem({
   });
 
   const earnedRewardInKoii = getKoiiFromRoe(earnedReward);
-  const myStakeInKoii = getKoiiFromRoe(taskStake);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const myStakeInKoii = getKoiiFromRoe(taskStake!);
   const totalBountyInKoii = getKoiiFromRoe(task.totalBountyAmount);
   const isFirstRowInTable = index === 0;
   const optionsDropdownIsInverted = totalItems > 5 && index > totalItems - 3;
@@ -118,7 +119,9 @@ export function TaskItem({
   const nodes = useMemo(() => TaskService.getNodesCount(task), [task]);
   const topStake = useMemo(() => TaskService.getTopStake(task), [task]);
 
-  const { metadata, isLoadingMetadata } = useMetadata(task.metadataCID);
+  const { metadata, isLoadingMetadata } = useMetadata({
+    metadataCID: task.metadataCID,
+  });
 
   const { data: pairedVariables, isLoading: isLoadingPairedVariables } =
     useQuery([QueryKeys.StoredTaskPairedTaskVariables, task.publicKey], () =>
@@ -348,7 +351,7 @@ export function TaskItem({
             <TaskInfo
               publicKey={task.publicKey}
               variables={pairedVariables}
-              metadata={metadata}
+              metadata={metadata ?? undefined}
               details={details}
               shouldDisplayToolsInUse
             />

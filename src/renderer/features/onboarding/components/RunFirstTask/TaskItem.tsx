@@ -33,7 +33,9 @@ function TaskItem({
 }: PropsType) {
   const [meetsMinimumStake, setMeetsMinimumStake] = useState<boolean>(false);
   const [accordionView, setAccordionView] = useState<boolean>(false);
-  const { metadata, isLoadingMetadata } = useMetadata(task.metadataCID);
+  const { metadata } = useMetadata({
+    metadataCID: task.metadataCID,
+  });
   const { copyToClipboard } = useClipboard();
 
   const isFirstRowInTable = index === 0;
@@ -131,7 +133,7 @@ function TaskItem({
       {accordionView && (
         <TaskInfo
           publicKey={task.publicKey}
-          metadata={metadata}
+          metadata={metadata ?? undefined}
           details={details}
           showSourceCode={false}
         />

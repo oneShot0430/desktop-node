@@ -70,7 +70,8 @@ export const TaskDetailsModal = create<TaskDetailsModalPropsType>(
                   nodesParticipating={nodes}
                   totalKoiiStaked={totalStake}
                   currentTopStake={topStake}
-                  myCurrentStake={taskStake}
+                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  myCurrentStake={taskStake!}
                 />
               </div>
             </div>

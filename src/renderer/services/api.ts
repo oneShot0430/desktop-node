@@ -118,9 +118,9 @@ export const stakeOnTask = (taskAccountPubKey: string, stakeAmount: number) => {
   });
 };
 
-export const startTask = (taskAccountPubKey: string) => {
-  console.log('STARTING TASK', taskAccountPubKey);
-  return window.main.startTask({ taskAccountPubKey });
+export const startTask = (taskAccountPubKey: string, force?: boolean) => {
+  console.log(`${force ? 'FORCE' : ''} STARTING TASK`, taskAccountPubKey);
+  return window.main.startTask({ taskAccountPubKey, force });
 };
 
 export const stopTask = (taskAccountPubKey: string) => {

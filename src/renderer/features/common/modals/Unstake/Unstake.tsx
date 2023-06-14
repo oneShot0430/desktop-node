@@ -22,8 +22,7 @@ export const Unstake = create<PropsType>(function AddStake({ task }) {
   const { publicKey, isRunning } = task;
 
   const { taskStake, refetchTaskStake } = useTaskStake({ task });
-  const myStakeInKoii = getKoiiFromRoe(taskStake);
-
+  const myStakeInKoii = getKoiiFromRoe(taskStake || 0);
   const [totalRoundTime, setTotalRoundTime] = useState(task.roundTime);
   const [parsedRoundTime, setParsedRoundTime] = useState<ParsedRoundTime>({
     value: 0,

@@ -5,7 +5,8 @@ import { stakeOnTask, startTask } from 'renderer/services';
 type StartTaskArgs = {
   publicKey: string;
   valueToStake: number;
-  alreadyStakedTokensAmount: number;
+  alreadyStakedTokensAmount: number | null;
+  force?: boolean;
 };
 
 interface TasksContext {
@@ -22,13 +23,14 @@ type PropsType = {
 
 const runTask = async ({
   publicKey,
-  alreadyStakedTokensAmount,
+  alreadyStakedTokensAmount = 0,
   valueToStake,
+  force = false,
 }: StartTaskArgs) => {
   if (alreadyStakedTokensAmount === 0) {
     await stakeOnTask(publicKey, valueToStake);
   }
-  await startTask(publicKey);
+  await startTask(publicKey, force);
 };
 
 type TaskStartingPromise = ReturnType<typeof runTask>;
