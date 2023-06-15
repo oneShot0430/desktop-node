@@ -49,7 +49,7 @@ export function InfiniteScrollTable({
         <div ref={tableBottomRef} className="h-4 my-8 relative">
           <div
             className={`${
-              hasMore || isLoading ? '' : 'hidden'
+              hasMore || isFetchingNextPage ? '' : 'hidden'
             } w-fit mx-auto scale-75`}
           >
             <DotsLoader />

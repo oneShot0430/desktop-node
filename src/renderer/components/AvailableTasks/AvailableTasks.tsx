@@ -1,9 +1,9 @@
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import React, { useMemo } from 'react';
+import React from 'react';
 
-import NoAvailbleTasks from 'assets/svgs/no-available-tasks.svg';
+import EmptyAvailableTasks from 'assets/animations/empty-available-tasks.gif';
+import LoadingAvailableTasks from 'assets/animations/loading-available-tasks.gif';
 import { TASK_REFETCH_INTERVAL } from 'config/refetchIntervals';
-import isEmpty from 'lodash/isEmpty';
 import { InfiniteScrollTable } from 'renderer/components/ui';
 import { useAvailableTasks } from 'renderer/features';
 
@@ -38,9 +38,8 @@ export function AvailableTasks() {
 
   const [animationRef] = useAutoAnimate();
 
-  const hasNoTasks = useMemo(() => {
-    return !isLoadingTasks && isEmpty(allRows);
-  }, [allRows, isLoadingTasks]);
+  const thereAreNoTasks =
+    !isLoadingTasks && !isFetchingNextTasks && !allRows.length;
 
   return (
     <div style={{ height: 'calc(100% - 60px)' }}>
@@ -54,10 +53,18 @@ export function AvailableTasks() {
         hasMore={!!hasMoreTasks}
         update={fetchNextTasks}
       >
-        {hasNoTasks && !hasMoreTasks && (
-          <div className="w-full h-full flex justify-center items-center text-white mt-[50px]">
+        {isLoadingTasks && (
+          <div className="w-full h-full flex justify-center items-center text-white">
             <div className="w-[363px] h-[363px] flex flex-col justify-center items-center">
-              <NoAvailbleTasks />
+              <img src={LoadingAvailableTasks} alt="No available tasks" />
+            </div>
+          </div>
+        )}
+
+        {thereAreNoTasks && (
+          <div className="w-full h-full flex justify-center items-center text-white">
+            <div className="w-[363px] h-[363px] flex flex-col justify-center items-center">
+              <img src={EmptyAvailableTasks} alt="No available tasks" />
               <div className="text-center mt-[18px] text-sm">
                 You are running all tasks that are currently available for your
                 device. More tasks are added all the time, so check back soon!
