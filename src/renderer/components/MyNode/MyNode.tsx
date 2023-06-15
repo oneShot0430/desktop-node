@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 import EmptyMyNode from 'assets/animations/empty-my-node.json';
 import { TASK_REFETCH_INTERVAL } from 'config/refetchIntervals';
-import { InfiniteScrollTable } from 'renderer/components/ui';
+import { InfiniteScrollTable, LoadingSpinner } from 'renderer/components/ui';
 import { useMyNodeContext } from 'renderer/features';
 import { useStartedTasks } from 'renderer/features/common/hooks/useStartedTasks';
 import { getMainAccountPublicKey, QueryKeys } from 'renderer/services';
@@ -66,13 +66,14 @@ export function MyNode() {
       hasMore={!!hasMoreTasks}
       update={fetchNextTasks}
     >
+      {isLoadingTasks && <LoadingSpinner className="h-40 w-40 mt-40 mx-auto" />}
+
       {thereAreNoTasks && (
         <div className="text-white mx-auto mt-14 flex flex-col items-center text-sm">
           <Lottie animationData={EmptyMyNode} className="w-66" />
           <p className="mb-4">
             You aren&apos;t runing any tasks right now. Let&apos;s fix that!
           </p>
-
           <Button
             onClick={goToAvailableTasks}
             variant={ButtonVariant.Secondary}
@@ -82,6 +83,7 @@ export function MyNode() {
           />
         </div>
       )}
+
       {allRows.map((task, index) => (
         <TaskItem
           key={task.publicKey}
