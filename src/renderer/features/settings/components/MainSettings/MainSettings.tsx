@@ -3,7 +3,7 @@ import { useQuery } from 'react-query';
 
 import { QueryKeys, getVersion } from 'renderer/services';
 
-import { Autoupdates } from './AutoUpdates';
+import { AutoUpdates } from './AutoUpdates';
 import { Network } from './Network';
 import { NodeLogs } from './NodeLogs';
 import { Referral } from './Referral';
@@ -14,7 +14,7 @@ export function MainSettings() {
   const { data: appVersion = '' } = useQuery(QueryKeys.AppVersion, getVersion);
 
   return (
-    <div className="flex flex-col gap-6 text-white h-full text-sm">
+    <div className="flex flex-col h-full gap-6 text-sm text-white">
       <Referral />
       <div className="flex justify-start gap-4">
         <SwitchWrapper
@@ -23,13 +23,13 @@ export function MainSettings() {
         />
         <SwitchWrapper
           title="Automatic Updates"
-          switchComponentSlot={<Autoupdates />}
+          switchComponentSlot={<AutoUpdates />}
         />
       </div>
 
       <NodeLogs />
 
-      <div className="mt-2 flex w-full justify-between">
+      <div className="flex justify-between w-full mt-2">
         <div className="mt-4">Version {appVersion}</div>
         <ReportBug />
       </div>

@@ -28,7 +28,8 @@ function setListeners() {
     getUserConfig()
       .then((appConfig) => {
         const mainWindow = BrowserWindow.getFocusedWindow();
-        if (appConfig?.autoUpdatesEnabled) {
+        if (!appConfig?.autoUpdatesDisabled) {
+          // If autoUpdatesDisabled is not set, autoupdates are enabled
           // if auto updates are enabled, download the update
           autoUpdater.downloadUpdate();
         } else if (mainWindow) {
@@ -46,7 +47,8 @@ function setListeners() {
     console.log(info);
     // Check for the user configuration again before deciding to install
     getUserConfig().then((appConfig) => {
-      if (appConfig?.autoUpdatesEnabled) {
+      if (!appConfig?.autoUpdatesDisabled) {
+        // If autoUpdatesDisabled is not set, autoupdates are enabled
         dialog
           .showMessageBox({
             type: 'question',
@@ -55,6 +57,7 @@ function setListeners() {
             message:
               'Get the latest update. Do you want to restart and update now?',
           })
+          // eslint-disable-next-line promise/no-nesting
           .then((selection) => {
             if (selection.response === 0) {
               // User clicked 'Restart & Update'

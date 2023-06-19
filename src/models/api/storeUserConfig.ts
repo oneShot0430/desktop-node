@@ -2,7 +2,7 @@ export interface UserAppConfig {
   onboardingCompleted?: boolean;
   pin?: string;
   firstRewardNotificationDisplayed?: boolean;
-  autoUpdatesEnabled?: boolean;
+  autoUpdatesDisabled?: boolean;
   hasCopiedReferralCode?: boolean;
   alphaUpdatesEnabled?: boolean;
 }

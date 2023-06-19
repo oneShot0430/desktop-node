@@ -170,7 +170,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
         setTaskStartSucceeded(false);
         toast.error(`Task ${taskName} running failed. Please try again!`, {
           duration: 1500,
-          icon: <CloseLine className="h-5 w-5" />,
+          icon: <CloseLine className="w-5 h-5" />,
           style: {
             backgroundColor: '#FFA6A6',
             paddingRight: 0,

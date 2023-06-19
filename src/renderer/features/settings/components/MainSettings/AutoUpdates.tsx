@@ -4,26 +4,26 @@ import { useUserAppConfig } from '../../hooks';
 
 import { AutomaticUpdatesSwitch } from './AutomaticUpdatesSwitch';
 
-export function Autoupdates() {
+export function AutoUpdates() {
   const { userConfig, userConfigMutation, isMutating } = useUserAppConfig({});
 
-  const autoUpdatesEnabled = userConfig?.autoUpdatesEnabled;
+  const autoUpdatesDisabled = userConfig?.autoUpdatesDisabled;
 
   return (
     <div className="flex flex-col gap-5">
       <AutomaticUpdatesSwitch
-        id="autoupdates"
-        isChecked={!!autoUpdatesEnabled}
+        id="autoUpdates"
+        isChecked={!autoUpdatesDisabled} // If autoUpdatesDisabled is not set or is false, isChecked will be true (updates enabled)
         onSwitch={() => {
-          const newAutoUpdatesEnabled = !autoUpdatesEnabled;
+          const newAutoUpdatesDisabled = !autoUpdatesDisabled;
 
           userConfigMutation.mutate({
             settings: {
-              autoUpdatesEnabled: newAutoUpdatesEnabled,
+              autoUpdatesDisabled: newAutoUpdatesDisabled,
             },
           });
         }}
-        labels={['OFF', 'ON']}
+        labels={['OFF', 'ON']} // Switched labels to match the new logic
         disabled={isMutating}
       />
     </div>
