@@ -9,6 +9,7 @@ import {
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import React, {
   MutableRefObject,
+  RefObject,
   useEffect,
   useMemo,
   useRef,
@@ -37,6 +38,7 @@ import {
   useMetadata,
   useOnClickOutside,
   useTaskStatus,
+  useAddTaskVariableModal,
 } from 'renderer/features/common';
 import {
   stopTask,
@@ -73,8 +75,12 @@ export function TaskItem({
   const [loading, setLoading] = useState(false);
   const [pendingRewards, setPendingRewards] = useState(0);
   const [claimedRewards, setClaimedRewards] = useState(0);
+  const [isAddTaskSettingModalOpen, setIsAddTaskSettingModalOpen] =
+    useState(false);
 
   const { taskName, isRunning, publicKey, roundTime } = task;
+
+  const { showModal: showAddTaskSettingModal } = useAddTaskVariableModal();
 
   const { taskStake, refetchTaskStake } = useTaskStake({
     task,
@@ -153,6 +159,21 @@ export function TaskItem({
     }
   };
 
+  const handleOpenAddTaskVariableModal = async (
+    dropdownRef: RefObject<HTMLButtonElement>,
+    settingName: string
+  ) => {
+    setIsAddTaskSettingModalOpen((isOpen) => !isOpen);
+    const wasSettingAdded = await showAddTaskSettingModal(settingName);
+    setIsAddTaskSettingModalOpen(false);
+    // focus on dropdown after creating new setting
+    if (wasSettingAdded) {
+      setTimeout(() => {
+        dropdownRef?.current?.click();
+      }, 100);
+    }
+  };
+
   const createdAt = useMemo(
     () => getCreatedAtDate(metadata?.createdAt),
     [metadata]
@@ -163,7 +184,8 @@ export function TaskItem({
   const infoRef = useRef<HTMLDivElement>(null);
   const optionsDropdownRef = useRef<HTMLDivElement>(null);
 
-  const closeAccordionView = () => setShouldDisplayInfo(false);
+  const closeAccordionView = () =>
+    !isAddTaskSettingModalOpen && setShouldDisplayInfo(false);
   const closeOptionsDropdown = () => setShouldDisplayActions(false);
   const openTaskLogs = async () => {
     const openedTheLogs: boolean = await openLogfileFolder(task.publicKey);
@@ -358,6 +380,8 @@ export function TaskItem({
               variables={pairedVariables}
               metadata={metadata ?? undefined}
               details={details}
+              isRunning={isRunning}
+              onOpenAddTaskVariableModal={handleOpenAddTaskVariableModal}
               shouldDisplayToolsInUse
             />
           )}
