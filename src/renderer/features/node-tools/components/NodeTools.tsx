@@ -6,7 +6,13 @@ import {
   CloseLine,
   Icon,
 } from '@_koii/koii-styleguide';
-import React, { useState, useEffect, useMemo, RefObject } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  RefObject,
+  useCallback,
+} from 'react';
 import toast from 'react-hot-toast';
 import { useMutation } from 'react-query';
 
@@ -41,8 +47,6 @@ export function NodeTools({
   onPairingSuccess,
   onOpenAddTaskVariableModal,
 }: PropsType) {
-  const [isAllVariablesPaired, setIsAllVariablesPaired] = useState(false);
-
   const {
     storedPairedTaskVariablesQuery: {
       data: pairedVariables,
@@ -53,23 +57,20 @@ export function NodeTools({
     enabled: !!taskPubKey,
   });
 
+  const [areAllVariablesSelected, setAreAllVariablesSelected] = useState(false);
   const [selectedTools, setSelectedTools] = useState<Record<string, string>>(
     {}
   );
 
-  useEffect(() => {
-    /**
-     * @dev validate if all variables are paired
-     */
-    if (tools) {
-      const isAllVariablesPaired = tools?.every(
-        ({ value }) => !!selectedTools[value as string]
-      );
+  const checkifAllVariablesSelected = useCallback(
+    () => !!tools?.every(({ value }) => !!selectedTools[value as string]),
+    [tools, selectedTools]
+  );
 
-      setIsAllVariablesPaired(isAllVariablesPaired);
-      onToolsValidation?.(isAllVariablesPaired);
-    }
-  }, [onToolsValidation, selectedTools, tools]);
+  useEffect(() => {
+    const areAllVariablesSelected = checkifAllVariablesSelected();
+    setAreAllVariablesSelected(areAllVariablesSelected);
+  }, [setAreAllVariablesSelected, checkifAllVariablesSelected]);
 
   const handleToolPick = (tool: string, desktopVariableId: string) => {
     setSelectedTools({ ...selectedTools, [tool]: desktopVariableId });
@@ -78,7 +79,7 @@ export function NodeTools({
   const handleInit = (tool: string, desktopVariableId: string) => {
     /**
      * @dev
-     * We need to set the default value for the tool which are not yet paired,
+     * We need to set the default value for the tool which are not yet selected,
      * so we can validate the form and show the "Confirm" button
      */
     setSelectedTools((selected) => ({
@@ -108,6 +109,10 @@ export function NodeTools({
 
   const onSuccess = () => {
     onPairingSuccess();
+
+    // As at this specific stage we have just successfully paired, if all variables are selected means they are paired too
+    const areAllVariablesPaired = checkifAllVariablesSelected();
+    onToolsValidation?.(areAllVariablesPaired);
 
     toast.success('Task settings successfully paired', {
       duration: 1500,
@@ -182,7 +187,7 @@ export function NodeTools({
                 )
               }
               onClick={() => pairTaskVariables()}
-              disabled={!isAllVariablesPaired || isPairingTasksVariables}
+              disabled={!areAllVariablesSelected || isPairingTasksVariables}
               /**
                * @todo implement loading state for style guide Button
                */
