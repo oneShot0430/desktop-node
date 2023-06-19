@@ -26,6 +26,7 @@ export type DropdownProps = {
   emptyListItemSlot?: React.ReactNode;
   bottom?: boolean;
   customItem?: React.ReactNode;
+  className?: string;
 };
 
 /**
@@ -43,6 +44,7 @@ export const Dropdown = forwardRef<HTMLButtonElement, DropdownProps>(
       emptyListItemSlot,
       bottom,
       customItem,
+      className,
     }: DropdownProps,
     ref
   ) => {
@@ -66,7 +68,7 @@ export const Dropdown = forwardRef<HTMLButtonElement, DropdownProps>(
     );
 
     const optionsClasses = twMerge(
-      'absolute z-50 w-full py-1 mt-1 overflow-auto text-base text-white rounded-md shadow-lg bg-purple-5 max-h-60 focus:outline-none sm:text-sm',
+      'absolute !cursor-pointer z-50 w-full py-1 mt-1 overflow-auto text-base text-white rounded-md shadow-lg bg-purple-5 max-h-60 focus:outline-none sm:text-sm',
       bottom ? 'top-9' : 'bottom-10'
       /**
        * @dev when this component will go to styleguide, this logic should be abstracted away and probably we should make
@@ -102,7 +104,7 @@ export const Dropdown = forwardRef<HTMLButtonElement, DropdownProps>(
       <Listbox.Option
         key={item.id}
         className={({ active }) =>
-          `relative cursor-default select-none ${
+          `relative cursor-pointer select-none ${
             active && 'bg-purple-1 text-finnieTeal-100'
           }`
         }
@@ -119,14 +121,16 @@ export const Dropdown = forwardRef<HTMLButtonElement, DropdownProps>(
     //   dropdownItems.push(customItem as React.ReactElement);
     // }
 
+    const containerClasses = twMerge(className, 'h-full w-72');
+
     return (
-      <div className="h-full w-72" data-testid="koii_dropdown_test_id">
+      <div className={containerClasses} data-testid="koii_dropdown_test_id">
         <Listbox value={selected} onChange={handleItemSelect}>
           <div className="relative">
             <Listbox.Button
               ref={ref}
               placeholder={placeholderText}
-              className="relative w-full py-2 pl-3 pr-10 text-sm text-left rounded-lg shadow-md cursor-default text-gray bg-purple-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-finnieTeal sm:text-sm"
+              className="relative cursor-pointer w-full py-2 pl-3 pr-10 text-sm text-left rounded-lg shadow-md text-gray bg-purple-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-finnieTeal sm:text-sm"
             >
               {selected ? (
                 <span className="block text-white truncate">

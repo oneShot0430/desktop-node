@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { RefObject } from 'react';
 
 import { TaskPairing } from 'models';
 import { RequirementType, TaskMetadata } from 'models/task';
@@ -6,6 +6,8 @@ import { SourceCodeButton } from 'renderer/components/SourceCodeButton';
 import { Tooltip } from 'renderer/components/ui';
 
 import { Address } from '../Address';
+
+import { Setting } from './Setting';
 
 type PropsType = {
   publicKey: string;
@@ -19,6 +21,11 @@ type PropsType = {
   variables?: TaskPairing[];
   shouldDisplayToolsInUse?: boolean;
   showSourceCode?: boolean;
+  isRunning?: boolean;
+  onOpenAddTaskVariableModal?: (
+    dropdownRef: RefObject<HTMLButtonElement>,
+    settingName: string
+  ) => void;
 };
 
 const NOT_AVAILABLE = '-';
@@ -30,6 +37,8 @@ export function TaskInfo({
   variables,
   shouldDisplayToolsInUse,
   showSourceCode = true,
+  isRunning,
+  onOpenAddTaskVariableModal,
 }: PropsType) {
   const specs = metadata?.requirementsTags?.filter(({ type }) =>
     [
@@ -97,16 +106,14 @@ export function TaskInfo({
           <div className="mb-2 text-base font-semibold">Settings</div>
           <div className="flex flex-col">
             {variables?.map(({ name, label }) => (
-              <div
+              <Setting
+                publicKey={publicKey}
+                isRunning={isRunning}
                 key={name}
-                className="flex justify-between w-full my-3 items-center"
-              >
-                <div className="font-semibold text-xs">{name}</div>
-
-                <div className="px-6 py-2 mr-6 text-sm rounded-md bg-finnieBlue-light-tertiary w-80">
-                  {label}
-                </div>
-              </div>
+                name={name}
+                label={label}
+                onOpenAddTaskVariableModal={onOpenAddTaskVariableModal}
+              />
             ))}
           </div>
         </div>
