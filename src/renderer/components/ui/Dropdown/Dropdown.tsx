@@ -1,6 +1,12 @@
 import { ChevronArrowLine, Icon } from '@_koii/koii-styleguide';
 import { Listbox, Transition } from '@headlessui/react';
-import React, { Fragment, forwardRef, useCallback, useState } from 'react';
+import React, {
+  Fragment,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { ErrorMessage } from '../ErrorMessage';
@@ -41,6 +47,14 @@ export const Dropdown = forwardRef<HTMLButtonElement, DropdownProps>(
     ref
   ) => {
     const [selected, setSelected] = useState<DropdownItem | null>(defaultValue);
+
+    // Sets default even if it comes as undefined in the first render
+    useEffect(() => {
+      if (defaultValue) {
+        setSelected(defaultValue);
+      }
+    }, [defaultValue]);
+
     const handleItemSelect = useCallback(
       (item: DropdownItem) => {
         if (item.disabled) return;
