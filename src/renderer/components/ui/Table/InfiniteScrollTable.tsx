@@ -1,7 +1,7 @@
 import React, { useEffect, ReactNode, RefCallback } from 'react';
 import { useInView } from 'react-intersection-observer';
 
-import { DotsLoader } from 'renderer/components/ui/DotsLoader';
+import { LoadingSpinner, LoadingSpinnerSize } from '../LoadingSpinner';
 
 import { Table } from './Table';
 import { TableHeader, ColumnsLayout } from './TableHeaders';
@@ -16,6 +16,7 @@ interface PropsType {
   hasMore: boolean;
   isLoading?: boolean;
   error?: Error | null;
+  items?: number;
 }
 
 export function InfiniteScrollTable({
@@ -28,6 +29,7 @@ export function InfiniteScrollTable({
   hasMore,
   isLoading,
   error,
+  items,
 }: PropsType) {
   const { ref: tableBottomRef, inView } = useInView({
     threshold: 0,
@@ -49,10 +51,10 @@ export function InfiniteScrollTable({
         <div ref={tableBottomRef} className="h-4 my-8 relative">
           <div
             className={`${
-              hasMore || isFetchingNextPage ? '' : 'hidden'
+              !!items && (hasMore || isFetchingNextPage) ? '' : 'hidden'
             } w-fit mx-auto scale-75`}
           >
-            <DotsLoader />
+            <LoadingSpinner size={LoadingSpinnerSize.Large} />
           </div>
         </div>
       </div>

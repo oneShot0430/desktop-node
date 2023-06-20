@@ -39,7 +39,7 @@ export function AvailableTasks() {
   const [animationRef] = useAutoAnimate();
 
   const thereAreNoTasks =
-    !isLoadingTasks && !isFetchingNextTasks && !allRows.length;
+    !isLoadingTasks && !isFetchingNextTasks && !hasMoreTasks && !allRows.length;
 
   return (
     <div style={{ height: 'calc(100% - 60px)' }}>
@@ -52,8 +52,9 @@ export function AvailableTasks() {
         error={tasksError as Error}
         hasMore={!!hasMoreTasks}
         update={fetchNextTasks}
+        items={allRows.length}
       >
-        {isLoadingTasks && (
+        {(isLoadingTasks || isFetchingNextTasks) && !allRows.length && (
           <div className="w-full h-full flex justify-center items-center text-white">
             <div className="w-[363px] h-[363px] flex flex-col justify-center items-center">
               <img src={LoadingAvailableTasks} alt="No available tasks" />
