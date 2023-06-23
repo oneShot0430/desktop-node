@@ -31,7 +31,7 @@ export function AutomaticUpdatesSwitch({
           id={id}
           isChecked={isChecked}
           onSwitch={onSwitch}
-          checkedClass="bg-green-400"
+          checkedClass="bg-finnieEmerald-light"
           disabled={disabled}
         />
       )}
