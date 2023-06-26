@@ -4,6 +4,7 @@ import * as fsSync from 'fs';
 import { Transform } from 'stream';
 
 import detectPort from 'detect-port';
+import * as rfs from 'rotating-file-stream';
 
 import { Keypair } from '@_koi/web3.js';
 import {
@@ -171,10 +172,26 @@ async function executeTasks(
   fsSync.mkdirSync(`${getAppDataPath()}/namespace/${selectedTask.task_id}`, {
     recursive: true,
   });
-  const logFile = fsSync.createWriteStream(
-    `${getAppDataPath()}/namespace/${selectedTask.task_id}/task.log`,
-    { flags: 'w' }
-  );
+
+  const logFile = rfs.createStream('task.log', {
+    size: '3M', // Maximum file size
+    compress: 'gzip', // Compress rotated files using gzip
+    path: `${getAppDataPath()}/namespace/${selectedTask.task_id}`, // Directory path for log files
+  });
+
+  // Event listener for the rotation event
+  logFile.on('rotated', (filename) => {
+    // Delete the previous log file when rotation occurs
+    if (filename.includes('log.gz')) {
+      fsSync.unlink(filename, (err) => {
+        if (err) {
+          console.error(`Error deleting log file ${filename}:`, err);
+        } else {
+          console.log(`Deleted log file ${filename}`);
+        }
+      });
+    }
+  });
   const childTaskProcess = fork(
     `${getAppDataPath()}/executables/${selectedTask.task_audit_program}.js`,
     [
@@ -193,7 +210,11 @@ async function executeTasks(
   );
 
   const messageTransform = (
-    formatter: (timestamp: string, messageContent: string) => string
+    formatter: (
+      timestamp: string,
+      messageContent: string,
+      isError: boolean
+    ) => string
   ): Transform =>
     new Transform({
       transform(data, encoding, callback) {
@@ -201,7 +222,8 @@ async function executeTasks(
           'en-US',
           logTimestampFormat
         );
-        const message = formatter(timestamp, data.toString());
+        const isErrorMessage = data.toString().toLowerCase().includes('error');
+        const message = formatter(timestamp, data.toString(), isErrorMessage);
         this.push(message);
         callback();
       },
@@ -215,9 +237,10 @@ async function executeTasks(
 
   childTaskProcess.stderr
     ?.pipe(
-      messageTransform(
-        (timestamp, message) => `[${timestamp}] ERROR: ${message}`
-      )
+      messageTransform((timestamp, message, isError) => {
+        const label = isError ? 'ERROR' : 'WARNING';
+        return `[${timestamp}] ${label}: ${message}`;
+      })
     )
     .pipe(logFile);
 
