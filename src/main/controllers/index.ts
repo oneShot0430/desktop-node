@@ -41,5 +41,7 @@ export * from './getVersion';
 export * from './archiveTask';
 export * from './storeAllTimeRewards';
 export * from './getAllTimeRewardsByTask';
+export * from './enableStayAwake';
+export * from './disableStayAwake';
 
 export * from './types';

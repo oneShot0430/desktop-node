@@ -390,3 +390,11 @@ export const downloadAppUpdate = async () => {
 export const getAllTimeRewards = async (taskPubKey: string) => {
   return window.main.getAllTimeRewardsByTask({ taskId: taskPubKey });
 };
+
+export const enableStayAwake = async () => {
+  return window.main.enableStayAwake();
+};
+
+export const disableStayAwake = async () => {
+  return window.main.disableStayAwake();
+};
