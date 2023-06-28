@@ -1,7 +1,7 @@
 import { Button, ButtonSize, ButtonVariant } from '@_koii/koii-styleguide';
 import Lottie from '@novemberfiveco/lottie-react-light';
-import React from 'react';
-import { useQuery } from 'react-query';
+import React, { useEffect } from 'react';
+import { useQuery, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
 import EmptyMyNode from 'assets/animations/empty-my-node.json';
@@ -55,6 +55,14 @@ export function MyNode() {
 
   const goToAvailableTasks = () => navigate(AppRoute.AddTask);
   const thereAreNoTasks = !isLoadingTasks && !allRows.length;
+
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    window.main.onSystemWakeUp(() => {
+      queryClient.invalidateQueries([QueryKeys.taskList]);
+    });
+  }, [queryClient]);
 
   return (
     <InfiniteScrollTable

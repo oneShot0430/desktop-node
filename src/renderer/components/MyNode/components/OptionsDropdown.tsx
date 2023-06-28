@@ -87,7 +87,7 @@ export function OptionsDropdown({
   const baseItemClasses = 'flex gap-2 text-white cursor-pointer';
   const containerClasses = `z-10 ${
     isInverted
-      ? 'bg-[url(assets/svgs/options-bg-inverted.png)] -top-[217px] bg-bottom'
+      ? 'bg-[url(assets/svgs/options-bg-inverted.png)] -top-[216px] bg-bottom'
       : 'bg-[url(assets/svgs/options-bg.png)] top-12'
   }  bg-cover text-base absolute -right-[21px] w-[290px] h-[216px] pl-4 rounded-xl flex flex-col justify-evenly`;
   const disabledItemClasses = '!text-[#949494] !cursor-not-allowed';

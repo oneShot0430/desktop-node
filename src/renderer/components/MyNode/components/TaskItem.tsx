@@ -125,7 +125,7 @@ export function TaskItem({
   const myStakeInKoii = getKoiiFromRoe(taskStake);
   const totalBountyInKoii = getKoiiFromRoe(task.totalBountyAmount);
   const isFirstRowInTable = index === 0;
-  const optionsDropdownIsInverted = totalItems > 5 && index > totalItems - 3;
+  const optionsDropdownIsInverted = totalItems > 3 && index > totalItems - 2;
 
   const nodes = useMemo(() => TaskService.getNodesCount(task), [task]);
   const topStake = useMemo(() => TaskService.getTopStake(task), [task]);

@@ -4,7 +4,9 @@ import claimReward from './claimReward';
 import createNodeWallets from './createNodeWallets';
 import createNodeWalletsFromJson from './createNodeWalletsFromJson';
 import delegateStake from './delegateStake';
+import disableStayAwake from './disableStayAwake';
 import downloadAppUpdate from './downloadAppUpdate';
+import enableStayAwake from './enableStayAwake';
 import generateSeedPhrase from './generateSeedPhrase';
 import getAccountBalance from './getAccountBalance';
 import getActiveAccountName from './getActiveAccountName';
@@ -30,6 +32,7 @@ import getVersion from './getVersion';
 import initializeTasks from './initializeTasks';
 import isValidWalletAddress from './isValidWalletAddress';
 import onAppUpdate from './onAppUpdate';
+import onSystemWakeUp from './onSystemWakeUp';
 import openBrowserWindow from './openBrowserWindow';
 import openLogfileFolder from './openLogfileFolder';
 import openNodeLogfileFolder from './openNodeLogfileFolder';
@@ -104,4 +107,7 @@ export default {
   getAllTimeRewardsByTask,
   storeAllTimeRewards,
   isValidWalletAddress,
+  disableStayAwake,
+  enableStayAwake,
+  onSystemWakeUp,
 };

@@ -6,6 +6,7 @@ import { getAllAccounts, setActiveAccount } from './controllers';
 import initHandlers from './initHandlers';
 import { configureLogger } from './logger';
 import { getCurrentActiveAccountName } from './node/helpers';
+import { setUpPowerStateManagement } from './powerMonitor';
 import { resolveHtmlPath } from './util';
 
 let mainWindow: BrowserWindow | null = null;
@@ -78,9 +79,9 @@ const createWindow = async () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     show: false,
-    height: 720,
+    height: 750,
     width: 1152,
-    minHeight: 720,
+    minHeight: 750,
     minWidth: 1152,
     icon: getAssetPath('icon.png'),
     webPreferences: {
@@ -100,6 +101,8 @@ const createWindow = async () => {
 
   configureLogger();
   await initializeAppUpdater();
+
+  await setUpPowerStateManagement();
 
   await main()
     .then(async () => {
