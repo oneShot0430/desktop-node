@@ -9,6 +9,8 @@ import { getUserConfig } from './controllers';
 
 const CHECK_INTERVAL = 6 * 1000 * 60 * 60;
 
+let interval: NodeJS.Timer | null = null;
+
 export async function initializeAppUpdater() {
   await configureUpdater();
   createCheckForTheUpdatesInterval();
@@ -45,31 +47,24 @@ function setListeners() {
   autoUpdater.on('update-downloaded', (info) => {
     console.log('Update downloaded');
     console.log(info);
-    // Check for the user configuration again before deciding to install
-    getUserConfig().then((appConfig) => {
-      if (!appConfig?.autoUpdatesDisabled) {
-        // If autoUpdatesDisabled is not set, autoupdates are enabled
-        dialog
-          .showMessageBox({
-            type: 'question',
-            buttons: ['Restart & Update', 'Update Later'],
-            defaultId: 0,
-            message:
-              'Get the latest update. Do you want to restart and update now?',
-          })
-          // eslint-disable-next-line promise/no-nesting
-          .then((selection) => {
-            if (selection.response === 0) {
-              // User clicked 'Restart & Update'
-              autoUpdater.quitAndInstall();
-            }
-          });
-      }
-    });
+
+    dialog
+      .showMessageBox({
+        type: 'question',
+        buttons: ['Restart & Update', 'Update Later'],
+        defaultId: 0,
+        message:
+          'Get the latest update. Do you want to restart and update now?',
+      })
+      // eslint-disable-next-line promise/no-nesting
+      .then((selection) => {
+        if (selection.response === 0) {
+          // User clicked 'Restart & Update'
+          autoUpdater.quitAndInstall();
+        }
+      });
   });
 }
-
-let interval: NodeJS.Timer | null = null;
 
 function createCheckForTheUpdatesInterval() {
   if (!interval) {
@@ -77,4 +72,9 @@ function createCheckForTheUpdatesInterval() {
       autoUpdater.checkForUpdates();
     }, CHECK_INTERVAL);
   }
+
+  // runs the first check 25sec after the app initialization
+  setTimeout(() => {
+    autoUpdater.checkForUpdates();
+  }, 25000);
 }
