@@ -83,6 +83,7 @@ module.exports = {
     'consistent-return': 'warn',
     'no-restricted-syntax': 'off',
     'no-await-in-loop': 'off',
+    '@typescript-eslint/no-empty-interface': 'warn',
   },
   parser: '@typescript-eslint/parser',
   settings: {

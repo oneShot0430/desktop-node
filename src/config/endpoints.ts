@@ -52,6 +52,7 @@ export enum Endpoints {
   VALIDATE_PUBLIC_KEY = 'VALIDATE_PUBLIC_KEY',
   ENABLE_STAY_AWAKE = 'ENABLE_STAY_AWAKE',
   DISABLE_STAY_AWAKE = 'DISABLE_STAY_AWAKE',
+  GET_MAIN_LOGS = 'GET_MAIN_LOGS',
 }
 
 export enum RendererEndpoints {

@@ -134,6 +134,10 @@ export const getLogs = (taskAccountPubKey: string, noOfLines = 500) => {
     });
 };
 
+export const getMainLogs = () => {
+  return window.main.getMainLogs({});
+};
+
 export const createNodeWallets = (
   mnemonic: string,
   accountName: string,
