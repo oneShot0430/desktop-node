@@ -67,6 +67,7 @@ const endpointToControllerMap: Record<
   [Endpoints.VALIDATE_PUBLIC_KEY]: controllers.isValidWalletAddress,
   [Endpoints.ENABLE_STAY_AWAKE]: controllers.enableStayAwake,
   [Endpoints.DISABLE_STAY_AWAKE]: controllers.disableStayAwake,
+  [Endpoints.GET_MAIN_LOGS]: controllers.getMainLogs,
 };
 
 const initHandlers = (): void => {

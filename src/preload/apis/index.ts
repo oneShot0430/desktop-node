@@ -17,6 +17,7 @@ import getAverageSlotTime from './getAverageSlotTime';
 import getCurrentSlot from './getCurrentSlot';
 import getEncryptedSecretPhrase from './getEncryptedSecretPhrase';
 import getMainAccountPubKey from './getMainAccountPubKey';
+import getMainLogs from './getMainLogs';
 import getMyTasks from './getMyTasks';
 import getNetworkUrl from './getNetworkUrl';
 import getStakingAccountPubKey from './getStakingAccountPubKey';
@@ -110,4 +111,5 @@ export default {
   disableStayAwake,
   enableStayAwake,
   onSystemWakeUp,
+  getMainLogs,
 };

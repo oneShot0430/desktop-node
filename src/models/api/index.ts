@@ -29,3 +29,4 @@ export * from './archiveTask';
 export * from './createNodeWalletsFromJson';
 export * from './storeAllTimeRewards';
 export * from './getAllTimeRewards';
+export * from './getMainLogs';

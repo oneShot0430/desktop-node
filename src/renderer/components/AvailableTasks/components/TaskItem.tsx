@@ -17,7 +17,6 @@ import React, {
   ReactNode,
   RefObject,
 } from 'react';
-import toast from 'react-hot-toast';
 import { useQueryClient } from 'react-query';
 
 import GearFill from 'assets/svgs/gear-fill.svg';
@@ -48,6 +47,7 @@ import { Task } from 'renderer/types';
 import { getCreatedAtDate, getKoiiFromRoe } from 'utils';
 
 import { Address } from './Address';
+import { FailedMessage } from './FailedMessage';
 import { SuccessMessage } from './SuccessMessage';
 import { TaskInfo } from './TaskInfo';
 import { TaskSettings } from './TaskSettings';
@@ -71,6 +71,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   const [isTaskToolsValid, setIsTaskToolsValid] = useState(false);
   const [isTaskValidToRun, setIsTaskValidToRun] = useState(false);
   const [taskStartSucceeded, setTaskStartSucceeded] = useState(false);
+  const [taskStartFailed, setTaskStartFailed] = useState(false);
   const [valueToStake, setValueToStake] = useState<number>(0);
   const [meetsMinimumStake, setMeetsMinimumStake] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | ReactNode>('');
@@ -165,17 +166,11 @@ function TaskItem({ task, index, columnsLayout }: Props) {
     getTaskStartPromise(publicKey)
       ?.then(() => {
         setTaskStartSucceeded(true);
+        setTaskStartFailed(false);
       })
       .catch(() => {
         setTaskStartSucceeded(false);
-        toast.error(`Task ${taskName} running failed. Please try again!`, {
-          duration: 1500,
-          icon: <CloseLine className="w-5 h-5" />,
-          style: {
-            backgroundColor: '#FFA6A6',
-            paddingRight: 0,
-          },
-        });
+        setTaskStartFailed(true);
       });
   }, [getTaskStartPromise, publicKey, task.publicKey, taskName]);
 
@@ -344,134 +339,157 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   const runButtonTooltipContent =
     errorMessage || (isRunning ? 'Stop task' : 'Start task');
 
-  return taskStartSucceeded ? (
-    <SuccessMessage />
-  ) : (
-    <TableRow columnsLayout={columnsLayout} className="py-2 gap-y-0" ref={ref}>
-      <div>
+  const taskStartCompleted = useMemo(() => {
+    if (!taskStartSucceeded && !taskStartFailed) return null;
+    if (taskStartSucceeded) return <SuccessMessage />;
+    return (
+      <FailedMessage
+        runTaskAgain={() => {
+          executeTask({
+            publicKey,
+            valueToStake,
+            alreadyStakedTokensAmount,
+          });
+          setTaskStartFailed(false);
+        }}
+      />
+    );
+  }, [taskStartSucceeded, taskStartFailed]);
+
+  return (
+    taskStartCompleted || (
+      <TableRow
+        columnsLayout={columnsLayout}
+        className="py-2 gap-y-0"
+        ref={ref}
+      >
+        <div>
+          <Tooltip
+            placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
+            tooltipContent="Open task details"
+          >
+            <div className="flex flex-col items-center justify-start w-10">
+              <Button
+                onClick={() => handleToggleView('info')}
+                icon={
+                  <Icon
+                    source={
+                      accordionView === 'info'
+                        ? CloseLine
+                        : InformationCircleLine
+                    }
+                    size={36}
+                  />
+                }
+                onlyIcon
+              />
+            </div>
+          </Tooltip>
+        </div>
+
+        <div className="flex flex-col gap-2 text-xs justify-self-start">
+          <div>{taskName}</div>
+          <div className="text-finnieTeal">{createdAt}</div>
+        </div>
+
+        <div
+          className="flex flex-col gap-2 text-xs min-w-[160px] w-full justify-self-start"
+          title={taskManager}
+        >
+          <div className="truncate">
+            Creator: <Address address={task.taskManager} />
+          </div>
+          <div className="truncate">{`Bounty: ${totalBountyInKoii}`}</div>
+        </div>
+
+        <div
+          className="flex flex-col gap-2 overflow-hidden text-xs"
+          title={taskManager}
+        >
+          <div>{`Nodes: ${nodes}`}</div>
+          <div>{`Top Stake: ${getKoiiFromRoe(topStake)}`}</div>
+        </div>
+
+        <RoundTime
+          tooltipPlacement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
+          roundTime={roundTime}
+        />
+
+        <EditStakeInput
+          meetsMinimumStake={meetsMinimumStake}
+          stake={alreadyStakedTokensAmount || valueToStake}
+          minStake={minStake as number}
+          onChange={handleStakeValueChange}
+          disabled={isEditStakeInputDisabled}
+        />
+
         <Tooltip
-          placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
-          tooltipContent="Open task details"
+          placement={`${isFirstRowInTable ? 'bottom' : 'top'}-left`}
+          tooltipContent={gearTooltipContent}
         >
           <div className="flex flex-col items-center justify-start w-10">
             <Button
-              onClick={() => handleToggleView('info')}
+              onMouseDown={() => handleToggleView('settings')}
+              disabled={!globalAndTaskVariables?.length}
               icon={
-                <Icon
-                  source={
-                    accordionView === 'info' ? CloseLine : InformationCircleLine
-                  }
-                  size={36}
-                />
+                <Icon source={GearIcon} size={36} className={gearIconColor} />
               }
               onlyIcon
             />
           </div>
         </Tooltip>
-      </div>
 
-      <div className="flex flex-col gap-2 text-xs justify-self-start">
-        <div>{taskName}</div>
-        <div className="text-finnieTeal">{createdAt}</div>
-      </div>
+        {getIsTaskLoading(publicKey) ? (
+          <div className="py-[0.72rem]">
+            <LoadingSpinner size={LoadingSpinnerSize.Large} />
+          </div>
+        ) : (
+          <Tooltip
+            placement={`${isFirstRowInTable ? 'bottom' : 'top'}-left`}
+            tooltipContent={runButtonTooltipContent}
+          >
+            <Button
+              onlyIcon
+              icon={
+                <Icon
+                  source={isRunning ? PauseFill : PlayFill}
+                  size={18}
+                  className={`w-full flex my-4 ${
+                    isTaskValidToRun || isRunning
+                      ? 'text-finnieTeal'
+                      : 'text-gray-500 cursor-not-allowed'
+                  }`}
+                />
+              }
+              onClick={
+                isRunning
+                  ? handleStopTask
+                  : () =>
+                      executeTask({
+                        publicKey,
+                        valueToStake,
+                        alreadyStakedTokensAmount,
+                      })
+              }
+              disabled={!isRunning && !isTaskValidToRun}
+            />
+          </Tooltip>
+        )}
 
-      <div
-        className="flex flex-col gap-2 text-xs min-w-[160px] w-full justify-self-start"
-        title={taskManager}
-      >
-        <div className="truncate">
-          Creator: <Address address={task.taskManager} />
-        </div>
-        <div className="truncate">{`Bounty: ${totalBountyInKoii}`}</div>
-      </div>
-
-      <div
-        className="flex flex-col gap-2 overflow-hidden text-xs"
-        title={taskManager}
-      >
-        <div>{`Nodes: ${nodes}`}</div>
-        <div>{`Top Stake: ${getKoiiFromRoe(topStake)}`}</div>
-      </div>
-
-      <RoundTime
-        tooltipPlacement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
-        roundTime={roundTime}
-      />
-
-      <EditStakeInput
-        meetsMinimumStake={meetsMinimumStake}
-        stake={alreadyStakedTokensAmount || valueToStake}
-        minStake={minStake as number}
-        onChange={handleStakeValueChange}
-        disabled={isEditStakeInputDisabled}
-      />
-
-      <Tooltip
-        placement={`${isFirstRowInTable ? 'bottom' : 'top'}-left`}
-        tooltipContent={gearTooltipContent}
-      >
-        <div className="flex flex-col items-center justify-start w-10">
-          <Button
-            onMouseDown={() => handleToggleView('settings')}
-            disabled={!globalAndTaskVariables?.length}
-            icon={
-              <Icon source={GearIcon} size={36} className={gearIconColor} />
-            }
-            onlyIcon
-          />
-        </div>
-      </Tooltip>
-
-      {getIsTaskLoading(publicKey) ? (
-        <div className="py-[0.72rem]">
-          <LoadingSpinner size={LoadingSpinnerSize.Large} />
-        </div>
-      ) : (
-        <Tooltip
-          placement={`${isFirstRowInTable ? 'bottom' : 'top'}-left`}
-          tooltipContent={runButtonTooltipContent}
+        <div
+          className={`w-full col-span-9 overflow-y-auto overflow-x-hidden inner-scrollbar ${
+            accordionView !== null
+              ? // 9000px is just a simbolic value of a ridiculously high height, the animation needs absolute max-h values to work properly (fit/max/etc won't work)
+                'opacity-1 pt-6 max-h-[9000px]'
+              : 'opacity-0 max-h-0'
+          } transition-all duration-500 ease-in-out`}
         >
-          <Button
-            onlyIcon
-            icon={
-              <Icon
-                source={isRunning ? PauseFill : PlayFill}
-                size={18}
-                className={`w-full flex my-4 ${
-                  isTaskValidToRun || isRunning
-                    ? 'text-finnieTeal'
-                    : 'text-gray-500 cursor-not-allowed'
-                }`}
-              />
-            }
-            onClick={
-              isRunning
-                ? handleStopTask
-                : () =>
-                    executeTask({
-                      publicKey,
-                      valueToStake,
-                      alreadyStakedTokensAmount,
-                    })
-            }
-            disabled={!isRunning && !isTaskValidToRun}
-          />
-        </Tooltip>
-      )}
-
-      <div
-        className={`w-full col-span-9 overflow-y-auto overflow-x-hidden inner-scrollbar ${
-          accordionView !== null
-            ? // 9000px is just a simbolic value of a ridiculously high height, the animation needs absolute max-h values to work properly (fit/max/etc won't work)
-              'opacity-1 pt-6 max-h-[9000px]'
-            : 'opacity-0 max-h-0'
-        } transition-all duration-500 ease-in-out`}
-      >
-        <div ref={parent} className="flex w-full">
-          {getTaskDetailsComponent()}
+          <div ref={parent} className="flex w-full">
+            {getTaskDetailsComponent()}
+          </div>
         </div>
-      </div>
-    </TableRow>
+      </TableRow>
+    )
   );
 }
 
