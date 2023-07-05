@@ -27,6 +27,7 @@ desktopKoiiNodeDB
 wallets
 namespace
 executables
+appdata
 desktop-node.iml
 .idea
 npm-debug.log.*
