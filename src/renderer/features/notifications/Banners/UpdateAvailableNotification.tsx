@@ -7,7 +7,7 @@ import {
   ButtonVariant,
   ButtonSize,
 } from '@_koii/koii-styleguide';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { downloadAppUpdate } from 'renderer/services';
@@ -23,6 +23,22 @@ export function UpdateAvailableNotification({
 }) {
   const { removeNotificationById } = useNotificationsContext();
   const [isDownloading, setIsDownloading] = React.useState(false);
+  const [isDownloaded, setIsDownloaded] = React.useState(false);
+
+  useEffect(() => {
+    const destroy = window.main.onAppDownloaded(() => {
+      setIsDownloading(() => false);
+      setIsDownloaded(() => true);
+
+      setTimeout(() => {
+        removeNotificationById(id);
+      }, 5000);
+    });
+
+    return () => {
+      destroy();
+    };
+  }, [id, isDownloaded, removeNotificationById]);
 
   const classNames = twMerge(
     'flex justify-between w-full px-4 mx-auto px-4 items-center gap-4',
@@ -31,36 +47,41 @@ export function UpdateAvailableNotification({
 
   const handleUpdateDownload = () => {
     setIsDownloading(true);
-    downloadAppUpdate()
-      .then(() => {
-        setIsDownloading(false);
-        removeNotificationById(id);
-      })
-      .catch((err) => {
-        console.error(err);
-        setIsDownloading(false);
-      });
+    downloadAppUpdate().catch((err) => {
+      console.error(err);
+    });
   };
+
+  const getContent = () => {
+    if (isDownloading) {
+      return 'New version is downloading...';
+    }
+
+    if (isDownloaded) {
+      return 'New version is ready to install!';
+    }
+
+    return (
+      <Button
+        label="Update Now"
+        onClick={handleUpdateDownload}
+        variant={ButtonVariant.GhostDark}
+        size={ButtonSize.MD}
+        labelClassesOverrides="font-semibold w-max"
+      />
+    );
+  };
+
+  const showBannerMianContent = !isDownloading && !isDownloaded;
 
   return (
     <div className={classNames}>
       {backButtonSlot}
       <div className="max-w-[65%]">
-        A new version of the node is ready for you!
+        {showBannerMianContent && 'A new version of the node is ready for you!'}
       </div>
       <div className="flex items-center gap-6 w-max">
-        {isDownloading ? (
-          'New version is downloading...'
-        ) : (
-          <Button
-            label="Update Now"
-            onClick={handleUpdateDownload}
-            variant={ButtonVariant.GhostDark}
-            size={ButtonSize.MD}
-            labelClassesOverrides="font-semibold w-max"
-          />
-        )}
-
+        {getContent()}
         <button
           className="cursor-pointer"
           title="close"

@@ -65,7 +65,7 @@ export function MyNode() {
   }, [queryClient]);
 
   return (
-    <div className="relative w-full">
+    <div className="relative flex flex-col flex-grow w-full min-h-0">
       <InfiniteScrollTable
         isFetchingNextPage={isFetchingNextTasks}
         columnsLayout={columnsLayout}
@@ -76,14 +76,14 @@ export function MyNode() {
         update={fetchNextTasks}
       >
         {isLoadingTasks && (
-          <LoadingSpinner className="h-40 w-40 mt-40 mx-auto" />
+          <LoadingSpinner className="w-40 h-40 mx-auto mt-40" />
         )}
 
         {thereAreNoTasks && (
-          <div className="text-white mx-auto mt-14 flex flex-col items-center text-sm">
+          <div className="flex flex-col items-center mx-auto text-sm text-white mt-14">
             <Lottie animationData={EmptyMyNode} className="w-66" />
             <p className="mb-4">
-              You aren&apos;t runing any tasks right now. Let&apos;s fix that!
+              You aren&apos;t running any tasks right now. Let&apos;s fix that!
             </p>
             <Button
               onClick={goToAvailableTasks}
