@@ -2,7 +2,6 @@ import {
   Icon,
   CurrencyMoneyLine,
   ClickXlLine,
-  WebCursorXlLine,
   LockLine,
   ChevronArrowLine,
 } from '@_koii/koii-styleguide';
@@ -13,6 +12,7 @@ import { Button } from 'renderer/components/ui/Button';
 import {
   AppNotification,
   useNotificationsContext,
+  NotificationPlacement,
 } from 'renderer/features/notifications';
 import { useMainAccount, useUserAppConfig } from 'renderer/features/settings';
 import { AppRoute } from 'renderer/types/routes';
@@ -47,7 +47,8 @@ function OnboardingLayout({ children }: PropsType) {
       navigate(AppRoute.MyNode, { state: { noBackButton: true } });
       addNotification(
         'referralProgramNotification',
-        AppNotification.ReferalProgramNotification
+        AppNotification.ReferalProgramNotification,
+        NotificationPlacement.TopBar
       );
     },
   });
@@ -71,7 +72,7 @@ function OnboardingLayout({ children }: PropsType) {
             Welcome to the Koii Node
           </div>
           <div className="text-finnieEmerald">
-            Get set up in just 4 quick & easy steps.
+            Get started in just three simple steps.
           </div>
         </div>
 
@@ -90,11 +91,6 @@ function OnboardingLayout({ children }: PropsType) {
           />
           <StepListItem
             isActive={currentPath === AppRoute.OnboardingCreateFirstTask}
-            text="Select your first tasks."
-            iconSlot={<Icon source={WebCursorXlLine} className="m-1 h-9 w-9" />}
-          />
-          <StepListItem
-            isActive={currentPath === AppRoute.OnboardingConfirmStake}
             text="Confirm your stake and go!"
             iconSlot={<Icon source={ClickXlLine} className="m-1 h-9 w-9" />}
           />

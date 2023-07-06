@@ -1,48 +1,128 @@
-import { Icon } from '@_koii/koii-styleguide';
-import React, { useState } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import RestoreIconSvg from 'assets/svgs/onboarding/restore-orange-icon.svg';
 import BgShape from 'assets/svgs/onboarding/shape_1.svg';
+import config from 'config';
 import { FundButton } from 'renderer/components/FundButton';
-import { Button } from 'renderer/components/ui';
-import { useMainAccountBalance } from 'renderer/features/settings';
+import { Button, ErrorMessage } from 'renderer/components/ui';
+import {
+  useRunMultipleTasks,
+  useNotEnoughFunds,
+} from 'renderer/features/common';
+import {
+  useNotificationsContext,
+  AppNotification,
+  NotificationPlacement,
+} from 'renderer/features/notifications';
+import {
+  useMainAccountBalance,
+  useUserAppConfig,
+} from 'renderer/features/settings';
+import { TaskWithStake } from 'renderer/types';
 import { AppRoute } from 'renderer/types/routes';
+import { ErrorContext } from 'renderer/utils';
 import { getKoiiFromRoe } from 'utils';
 
 import { useRunFirstTasksLogic } from './hooks';
 import TaskItem from './TaskItem';
 
 function RunFirstTask() {
-  const [isRunButtonDisabled, setIsRunButtonDisabled] = useState<boolean>(true);
-
-  const navigate = useNavigate();
+  const [isRunButtonDisabled, setIsRunButtonDisabled] =
+    useState<boolean>(false);
   const {
     selectedTasks,
     loadingVerifiedTasks,
     stakePerTask,
+    totalStaked,
     handleStakeInputChange,
     handleTaskRemove,
-    handleRestoreTasks,
   } = useRunFirstTasksLogic();
 
-  const { data: mainAccountBalance = 0 } = useMainAccountBalance();
-  const balanceInKoii = getKoiiFromRoe(mainAccountBalance);
+  const [tasksToRun, setTasksToRun] = useState(
+    selectedTasks as TaskWithStake[]
+  );
 
-  const handleContinue = () =>
-    navigate(AppRoute.OnboardingConfirmStake, { state: selectedTasks });
+  const { TASK_FEE } = config.node;
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setTasksToRun(selectedTasks);
+  }, [selectedTasks]);
+
+  const { data: mainAccountBalance = 0, isLoading } = useMainAccountBalance();
+  const balanceInKoii = getKoiiFromRoe(mainAccountBalance);
+  const totalStakeInKoii = useMemo(
+    () => getKoiiFromRoe(totalStaked),
+    [totalStaked]
+  );
+
+  const { addNotification } = useNotificationsContext();
+  const { handleSaveUserAppConfig } = useUserAppConfig({
+    onConfigSaveSuccess: () =>
+      navigate(AppRoute.MyNode, {
+        state: { noBackButton: true },
+      }),
+  });
+  const handleRunTasksSuccess = () => {
+    handleSaveUserAppConfig({ settings: { onboardingCompleted: true } });
+    addNotification(
+      'referralProgramNotification',
+      AppNotification.ReferalProgramNotification,
+      NotificationPlacement.TopBar
+    );
+    addNotification(
+      'firstTaskRunningNotification',
+      AppNotification.FirstTaskRunningNotification,
+      NotificationPlacement.Bottom
+    );
+  };
+
+  const { runAllTasks, runTasksLoading, runTasksError } = useRunMultipleTasks({
+    tasksToRun,
+    onRunAllTasksSuccessCallback: handleRunTasksSuccess,
+  });
+  const tasksFee = TASK_FEE * tasksToRun.length;
+  const tasksFeeInKoii = getKoiiFromRoe(tasksFee);
+  const totalKoiiToUse = totalStakeInKoii + tasksFeeInKoii;
+  const { showNotEnoughFunds } = useNotEnoughFunds();
+  const handleConfirm = () => {
+    if (balanceInKoii < totalKoiiToUse) {
+      showNotEnoughFunds();
+    } else {
+      runAllTasks();
+    }
+  };
+  const updateStake = (publicKey: string, newStake: number) => {
+    const updatedTasks = tasksToRun.map((task) => {
+      const updatedTask = {
+        ...task,
+        ...(task.publicKey === publicKey && { stake: newStake }),
+      };
+
+      return updatedTask;
+    });
+
+    setTasksToRun(updatedTasks);
+  };
 
   return (
-    <div className="relative h-full bg-finnieBlue-dark-secondary">
-      <div className="px-8 h-full flex flex-col">
-        <div className="text-lg mt-20 mb-12">
-          Start running verified tasks with just one click
+    <div className="relative h-full flex-col justify-center items-center bg-finnieBlue-dark-secondary">
+      <div className="px-8 pt-6 h-full flex flex-col items-center justify-center">
+        <p className="text-2xl leading-8 mb-2 text-finnieEmerald-light">
+          Get Started
+        </p>
+        <div className="text-base mb-5 text-center max-w-[587px]">
+          After your node makes a submission, the stake is locked until three
+          rounds after the task is paused. This task has a round time of about
+          10 minutes.
         </div>
-        <div className="overflow-y-auto h-full">
-          <div className="mb-2 text-xs text-left w-full grid grid-cols-first-task">
-            <div className="col-start-2 col-span-5">Task Name</div>
+        <div className="overflow-y-auto overflow-x-hidden h-full w-full">
+          <div className="mb-2 text-xs text-left w-full grid grid-cols-first-task text-finnieEmerald-light">
+            <div className=" col-span-2 mx-auto">Info</div>
+            <div className=" col-span-6">Task</div>
             <div className="col-span-6">Creator</div>
-            <div className="col-start-13 col-span-5 2xl:col-start-15 2xl:col-span-3 ml-7">
+            <div className=" col-span-4 2xl:col-start-15 2xl:col-span-4">
               Stake
             </div>
           </div>
@@ -51,11 +131,12 @@ function RunFirstTask() {
             <div>Loading...</div>
           ) : (
             selectedTasks.map((task, index) => (
-              <div className="mb-4" key={index}>
+              <div className="mb-4 w-full" key={index}>
                 <TaskItem
                   stakeValue={stakePerTask[task?.publicKey] ?? 0}
                   onStakeInputChange={(newStake) => {
                     handleStakeInputChange(newStake, task.publicKey);
+                    updateStake(task.publicKey, newStake);
                     setIsRunButtonDisabled(newStake < task.minStake);
                   }}
                   onRemove={() => handleTaskRemove(task.publicKey)}
@@ -65,29 +146,37 @@ function RunFirstTask() {
               </div>
             ))
           )}
+          <div className="flex justify-between font-semibold text-base leading-5 px-4 items-center">
+            <div className="flex gap-2">
+              <p className="text-orange-2">Task Fees</p>
+              <p>~0.01 KOII</p>
+            </div>
+            <div className="flex gap-2">
+              <p className="text-finnieEmerald-light">Total KOII staked</p>
+              <p>{totalStakeInKoii} KOII</p>
+            </div>
+          </div>
         </div>
-
-        <div className="flex flex-row justify-between pl-2.5 mt-4">
-          {!isRunButtonDisabled && (
-            <Button
-              label="Restore Original"
-              className="bg-transparent text-finnieOrange"
-              icon={<Icon source={RestoreIconSvg} />}
-              onClick={handleRestoreTasks}
-            />
-          )}
-        </div>
-        <div className="flex flex-col items-center mt-auto mb-6">
-          <Button
-            className="font-semibold bg-finnieGray-light text-finnieBlue-light w-56 h-[38px]"
-            label="Run Tasks"
-            disabled={isRunButtonDisabled}
-            onClick={handleContinue}
-          />
-          <div className="flex flex-row items-center gap-2 mt-2 text-sm text-finnieEmerald-light">
-            Total balance: {balanceInKoii} KOII
+        <div className="flex flex-col items-center mt-auto mb-10">
+          <div className="flex flex-row items-center gap-2 mb-1.5 text-sm text-finnieEmerald-light">
+            {`Total balance: ${
+              isLoading ? 'Loading balance...' : balanceInKoii
+            } KOII`}
             <FundButton />
           </div>
+          <Button
+            className="font-semibold bg-finnieGray-light text-finnieBlue-light w-56 h-[38px]"
+            label={runTasksLoading ? 'Running tasks...' : 'Confirm'}
+            disabled={runTasksLoading || isRunButtonDisabled}
+            onClick={handleConfirm}
+          />
+          {runTasksError?.map((error, index) => (
+            <ErrorMessage
+              key={index}
+              error={error}
+              context={ErrorContext.START_TASK}
+            />
+          ))}
         </div>
       </div>
       <BgShape className="absolute top-0 right-0" />

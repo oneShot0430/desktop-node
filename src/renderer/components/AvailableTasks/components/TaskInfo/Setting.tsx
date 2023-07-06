@@ -69,7 +69,7 @@ export function Setting({
           publicKey,
         ]);
         toast.success('Task setting successfully paired.', {
-          duration: 1500,
+          duration: 4500,
           icon: <CheckSuccessLine className="h-5 w-5" />,
           style: {
             backgroundColor: '#BEF0ED',
@@ -102,7 +102,7 @@ export function Setting({
       },
       onError: () => {
         toast.error('Task setting pairing failed. Try Again.', {
-          duration: 1500,
+          duration: 4500,
           icon: <CloseLine className="h-5 w-5" />,
           style: {
             backgroundColor: '#FFA6A6',

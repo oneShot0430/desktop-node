@@ -1,19 +1,22 @@
 import React from 'react';
 
 import RefreshIcon from 'assets/svgs/refresh-icon.svg';
-import { NotificationBanner } from 'renderer/features/notifications';
+import {
+  NotificationBanner,
+  NotificationPlacement,
+} from 'renderer/features/notifications';
 import { useNotificationsContext } from 'renderer/features/notifications/context';
 
 import { BackButton } from '../BackButton';
 import { Button, Tooltip } from '../ui';
 
 export function AppTopBar() {
-  const { pendingNotifications } = useNotificationsContext();
+  const { getNextNotification } = useNotificationsContext();
 
   // Get the first entry (a [key, value] tuple) from the Map
-  const displayedNotificationEntry = Array.from(
-    pendingNotifications.entries()
-  )[0];
+  const displayedNotificationEntry = getNextNotification(
+    NotificationPlacement.TopBar
+  );
 
   const handleNodeRefresh = () => {
     window.location.reload();
@@ -23,8 +26,8 @@ export function AppTopBar() {
     <div className="flex justify-between w-full mx-auto h-[80px] py-2">
       {displayedNotificationEntry ? (
         <NotificationBanner
-          id={displayedNotificationEntry[0]}
-          variant={displayedNotificationEntry[1]}
+          id={displayedNotificationEntry.id}
+          variant={displayedNotificationEntry.notification}
           backButtonComponent={<BackButton color="blue" />}
         />
       ) : (

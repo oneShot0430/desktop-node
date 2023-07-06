@@ -200,7 +200,7 @@ export function AddPrivateTask({ columnsLayout, onClose }: Props) {
         toast.error(
           `Task ${task?.taskName} running failed. Please try again!`,
           {
-            duration: 1500,
+            duration: 4500,
             icon: <CloseLine className="h-5 w-5" />,
             style: {
               backgroundColor: '#FFA6A6',

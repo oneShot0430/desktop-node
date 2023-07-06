@@ -16,6 +16,7 @@ import {
 import {
   AppNotification,
   useNotificationsContext,
+  NotificationPlacement,
 } from 'renderer/features/notifications';
 import {
   useMainAccountBalance,
@@ -46,7 +47,13 @@ function ConfirmYourStake() {
     handleSaveUserAppConfig({ settings: { onboardingCompleted: true } });
     addNotification(
       'referralProgramNotification',
-      AppNotification.ReferalProgramNotification
+      AppNotification.ReferalProgramNotification,
+      NotificationPlacement.TopBar
+    );
+    addNotification(
+      'firstTaskRunningNotification',
+      AppNotification.FirstTaskRunningNotification,
+      NotificationPlacement.Bottom
     );
   };
   const balanceInKoii = getKoiiFromRoe(balance);

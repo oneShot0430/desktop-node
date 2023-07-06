@@ -29,23 +29,22 @@ function CreateNewKey() {
       </div>
 
       <div className="w-full">
-        <p>Back up your account now or skip to fund your account</p>
-        <p>and start running tasks right away.</p>
+        <p>Fund your account with free tokens from the Koii</p>
+        <p>Faucet and start running tasks right away.</p>
 
         <p className="mt-4">You can back up your secret phrase at any time.</p>
       </div>
 
-      <div className="flex justify-between w-full gap-10 mt-6">
+      <div className="flex flex-col items-center justify-between w-full gap-4 mt-6">
         <Button
-          label="Back Up Now"
-          onClick={() => navigate(AppRoute.OnboardingBackupKeyNow)}
-          className="font-semibold bg-transparent text-white w-[240px] h-[48px] border border-white"
-        />
-
-        <Button
-          label="Fund Key"
+          label="Fund Account"
           onClick={handleOpenQR}
           className="font-semibold bg-finnieGray-light text-finnieBlue-light w-[240px] h-[48px]"
+        />
+        <Button
+          label="Back Up My Secret Phrase"
+          onClick={() => navigate(AppRoute.OnboardingBackupKeyNow)}
+          className="font-semibold bg-transparent text-white w-auto h-[48px] px-6 py-[14px] hover:underline"
         />
       </div>
     </ContentRightWrapper>

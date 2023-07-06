@@ -10,7 +10,9 @@ jest.mock('renderer/services', () => ({
   ...jest.requireActual('renderer/services'),
 }));
 
-const pinErrorMessage = 'The PINs don’t match. Let’s try again.';
+const pinErrorMessage =
+  'Oops! That PIN isn’t quite right. Double check it and try again.';
+
 const pin = '111111';
 const hashedPin =
   '$2a$10$A6AnKXS0/0eikAGxI9PpL.qwnVJ/x2PDGgH.oJ.8IeKdWszLcQ0Bu';

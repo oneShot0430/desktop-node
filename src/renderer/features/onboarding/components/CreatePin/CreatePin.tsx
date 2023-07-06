@@ -95,7 +95,9 @@ function CreatePin() {
             />
             <div className="pt-4 text-xs text-finnieOrange">
               {!pinIsMatching && pinsLengtIsMatching ? (
-                <span>Those PINs don’t match. Let’s try again.</span>
+                <span>
+                  Oops! These PINs don’t match. Double check it and try again.
+                </span>
               ) : (
                 <span>
                   If you forgot your PIN you’ll need to reimport your wallet.

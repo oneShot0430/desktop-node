@@ -59,7 +59,7 @@ export function OptionsDropdown({
           toast.success(
             'We sent the pending rewards from this task to your account.',
             {
-              duration: 1500,
+              duration: 4500,
               icon: <CheckSuccessLine className="h-5 w-5" />,
               style: {
                 backgroundColor: '#BEF0ED',
@@ -81,8 +81,9 @@ export function OptionsDropdown({
     stakingAccountPublicKey,
   });
 
+  const isTaskDelisted = !task.isWhitelisted || !task.isActive;
   const isRunPauseButtonDisabled =
-    !task.isRunning && (!taskStake || !task.isWhitelisted);
+    !task.isRunning && (!taskStake || isTaskDelisted);
   const isArchiveDisabled = task.isRunning || !!taskStake;
   const baseItemClasses = 'flex gap-2 text-white cursor-pointer';
   const containerClasses = `z-10 ${
@@ -129,9 +130,9 @@ export function OptionsDropdown({
       <button
         onClick={addStake}
         className={`${baseItemClasses} ${
-          !task.isWhitelisted ? disabledItemClasses : ''
+          isTaskDelisted ? disabledItemClasses : ''
         }`}
-        disabled={!task.isWhitelisted}
+        disabled={isTaskDelisted}
       >
         <Icon source={CurrencyIcon} />
         Add Stake

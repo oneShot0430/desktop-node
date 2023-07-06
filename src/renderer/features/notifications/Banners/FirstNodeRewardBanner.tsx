@@ -14,7 +14,7 @@ import { useRentExemptionFlow } from 'renderer/features/common/hooks/useRentExem
 import { AppRoute } from 'renderer/types/routes';
 
 import { useNotificationsContext } from '../context';
-import { AppNotification } from '../types';
+import { AppNotification, NotificationPlacement } from '../types';
 
 export function FirstNodeReward({
   backButtonSlot,
@@ -31,7 +31,11 @@ export function FirstNodeReward({
     await getStakingWalletAirdrop()
       .then((res) => {
         console.log(res.message);
-        addNotification('runExemptionFlow', AppNotification.RunExemptionFlow);
+        addNotification(
+          'runExemptionFlow',
+          AppNotification.RunExemptionFlow,
+          NotificationPlacement.TopBar
+        );
       })
       .catch((err) => {
         console.log(err.message);

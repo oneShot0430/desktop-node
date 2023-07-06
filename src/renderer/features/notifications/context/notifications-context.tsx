@@ -1,10 +1,22 @@
 import React, { createContext, useContext, useState } from 'react';
 
-import { AppNotification } from '../types';
+import { AppNotification, NotificationPlacement } from '../types';
+
+type PendingNotification = {
+  notification: AppNotification;
+  type: NotificationPlacement;
+  id: string;
+};
 
 export interface NotificationsContextType {
-  pendingNotifications: Map<string, AppNotification>;
-  addNotification: (id: string, notification: AppNotification) => void;
+  addNotification: (
+    id: string,
+    notification: AppNotification,
+    type: NotificationPlacement
+  ) => void;
+  getNextNotification: (
+    type: NotificationPlacement
+  ) => PendingNotification | undefined;
   removeNotificationById: (id: string) => void;
 }
 
@@ -29,25 +41,38 @@ export const useNotificationsContext = () => {
 
 export function NotificationsProvider({ children }: NotificationsPropsType) {
   const [pendingNotifications, setPendingNotifications] = useState<
-    Map<string, AppNotification>
-  >(new Map());
+    PendingNotification[]
+  >([]);
 
-  const addNotification = (id: string, notification: AppNotification) => {
-    setPendingNotifications((prev) => new Map(prev.set(id, notification)));
+  const addNotification = (
+    id: string,
+    notification: AppNotification,
+    type: NotificationPlacement
+  ) => {
+    setPendingNotifications((prev) => [...prev, { id, notification, type }]);
   };
 
   const removeNotificationById = (id: string) => {
-    setPendingNotifications((prev) => {
-      const newMap = new Map(prev);
-      newMap.delete(id);
-      return newMap;
-    });
+    const updatedNotification = pendingNotifications.filter(
+      (notification) => notification.id !== id
+    );
+    setPendingNotifications(updatedNotification);
+  };
+
+  const getNextNotification = (type: NotificationPlacement) => {
+    return pendingNotifications.find(
+      (notification) => notification.type === type
+    );
   };
 
   return (
     <NotificationsContext.Provider
       // eslint-disable-next-line react/jsx-no-constructed-context-values
-      value={{ pendingNotifications, addNotification, removeNotificationById }}
+      value={{
+        addNotification,
+        removeNotificationById,
+        getNextNotification,
+      }}
     >
       {children}
     </NotificationsContext.Provider>

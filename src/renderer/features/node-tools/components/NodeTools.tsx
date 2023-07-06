@@ -115,7 +115,7 @@ export function NodeTools({
     onToolsValidation?.(areAllVariablesPaired);
 
     toast.success('Task settings successfully paired', {
-      duration: 1500,
+      duration: 4500,
       icon: <CheckSuccessLine className="h-5 w-5" />,
       style: {
         backgroundColor: '#BEF0ED',
@@ -126,7 +126,7 @@ export function NodeTools({
 
   const onError = () => {
     toast.error('Task settings pairing failed. Try Again', {
-      duration: 1500,
+      duration: 4500,
       icon: <CloseLine className="h-5 w-5" />,
       style: {
         backgroundColor: '#FFA6A6',

@@ -3,7 +3,10 @@ import { useQuery } from 'react-query';
 
 import { NODE_INFO_REFETCH_INTERVAL } from 'config/refetchIntervals';
 import { useUserAppConfig } from 'renderer/features';
-import { AppNotification } from 'renderer/features/notifications';
+import {
+  AppNotification,
+  NotificationPlacement,
+} from 'renderer/features/notifications';
 import { useNotificationsContext } from 'renderer/features/notifications/context';
 import { QueryKeys, getTaskNodeInfo } from 'renderer/services';
 
@@ -20,7 +23,11 @@ export function Summary() {
     if (data) {
       const { firstRewardNotificationDisplayed } = data;
       if (!firstRewardNotificationDisplayed) {
-        addNotification('firstNodeReward', AppNotification.FirstNodeReward);
+        addNotification(
+          'firstNodeReward',
+          AppNotification.FirstNodeReward,
+          NotificationPlacement.TopBar
+        );
         handleSaveUserAppConfig({
           settings: {
             firstRewardNotificationDisplayed: true,

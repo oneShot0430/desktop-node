@@ -16,6 +16,7 @@ import getAvailableTasks from './getAvailableTasks';
 import getAverageSlotTime from './getAverageSlotTime';
 import getCurrentSlot from './getCurrentSlot';
 import getEncryptedSecretPhrase from './getEncryptedSecretPhrase';
+import getIsTaskRunning from './getIsTaskRunning';
 import getMainAccountPubKey from './getMainAccountPubKey';
 import getMainLogs from './getMainLogs';
 import getMyTasks from './getMyTasks';
@@ -108,6 +109,7 @@ export default {
   getAllTimeRewardsByTask,
   storeAllTimeRewards,
   isValidWalletAddress,
+  getIsTaskRunning,
   disableStayAwake,
   enableStayAwake,
   onSystemWakeUp,

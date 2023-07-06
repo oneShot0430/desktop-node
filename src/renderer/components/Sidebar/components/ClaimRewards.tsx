@@ -6,13 +6,13 @@ import {
   CheckSuccessLine,
   CloseLine,
 } from '@_koii/koii-styleguide';
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from 'react-query';
 
 import ShareIcon from 'assets/svgs/share-icon.svg';
-import { ErrorType, GetTaskNodeInfoResponse } from 'models';
-import { Tooltip, ErrorMessage, DotsLoader } from 'renderer/components/ui';
+import { GetTaskNodeInfoResponse } from 'models';
+import { Tooltip, DotsLoader } from 'renderer/components/ui';
 import { useMyNodeContext } from 'renderer/features';
 import {
   QueryKeys,
@@ -36,9 +36,6 @@ export function ClaimRewards({
 }: PropsType) {
   const tasksWithClaimableRewardsRef = useRef<number>(0);
 
-  const [hasErrorClaimingRewards, setHasErrorClaimingRewards] =
-    useState<boolean>(false);
-
   const queryClient = useQueryClient();
 
   const { setFetchMyTasksEnabled } = useMyNodeContext();
@@ -61,17 +58,21 @@ export function ClaimRewards({
     claimPendingRewards();
   };
   const handleFailure = () => {
-    setHasErrorClaimingRewards(true);
-    setTimeout(() => {
-      setHasErrorClaimingRewards(false);
-    }, 5500);
+    toast.error('Something went wrong. Please try again.', {
+      duration: 4500,
+      icon: <CloseLine className="h-5 w-5" />,
+      style: {
+        backgroundColor: '#FFA6A6',
+        paddingRight: 0,
+      },
+    });
   };
   const handlePartialFailure = () => {
     enableRefecthingSidebarAndMyNode();
     toast.error(
       'Not all rewards were claimed successfully, please try again.',
       {
-        duration: 1500,
+        duration: 4500,
         icon: <CloseLine className="h-5 w-5" />,
         style: {
           backgroundColor: '#FFA6A6',
@@ -91,7 +92,7 @@ export function ClaimRewards({
     enableRefecthingSidebarAndMyNode();
     displayConfetti?.();
     toast.success('Congrats! Your total KOII will be updated shortly.', {
-      duration: 1500,
+      duration: 4500,
       icon: <CheckSuccessLine className="h-5 w-5" />,
       style: {
         backgroundColor: '#BEF0ED',
@@ -122,12 +123,7 @@ export function ClaimRewards({
 
   return (
     <div className="w-full ml-0.5 mb-1 flex justify-center mt-auto">
-      {hasErrorClaimingRewards ? (
-        <ErrorMessage
-          error={ErrorType.GENERIC}
-          className="text-xs text-center text-finnieRed"
-        />
-      ) : isClaimingRewards ? (
+      {isClaimingRewards ? (
         <DotsLoader />
       ) : value ? (
         <Tooltip

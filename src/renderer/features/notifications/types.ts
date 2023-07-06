@@ -3,4 +3,10 @@ export enum AppNotification {
   RunExemptionFlow = 'RunExemptionFlow',
   ReferalProgramNotification = 'ReferalProgramNotification',
   UpdateAvailable = 'UpdateAvailable',
+  FirstTaskRunningNotification = 'FirstTaskRunningNotification',
+}
+
+export enum NotificationPlacement {
+  TopBar = 'TopBar',
+  Bottom = 'Bottom',
 }
