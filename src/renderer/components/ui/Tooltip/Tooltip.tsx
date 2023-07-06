@@ -4,6 +4,18 @@ import { twMerge } from 'tailwind-merge';
 
 import { Theme } from 'renderer/types/common';
 
+const groupVariant = {
+  task: {
+    group: 'group/task',
+    hover: 'group-hover/task:opacity-100 group-hover/task:visible',
+  },
+  defaultGroup: {
+    group: 'group',
+    hover: 'group-hover:opacity-100 group-hover:visible',
+  },
+};
+
+type GroupVariant = keyof typeof groupVariant;
 type VerticalPlacement = 'top' | 'bottom';
 type HorizontalPlacement = 'left' | 'right';
 type CombinedPlacement = `${VerticalPlacement}-${HorizontalPlacement}`;
@@ -14,6 +26,8 @@ type PropsType = {
   tooltipContent: React.ReactNode;
   theme?: Theme;
   placement?: Placement;
+  groupName?: GroupVariant;
+  forceHide?: boolean;
 };
 
 export function Tooltip({
@@ -21,7 +35,12 @@ export function Tooltip({
   tooltipContent,
   theme = Theme.Dark,
   placement = 'top-right',
+  groupName,
+  forceHide,
 }: PropsType) {
+  const groupClasses =
+    (groupName && groupVariant[groupName]) || groupVariant.defaultGroup;
+
   const classesByPlacement = {
     right: 'left-full after:-left-[15px] after:top-[6px] after:rotate-90',
     left: 'right-full after:-right-[15px] after:top-[6px] after:-rotate-90',
@@ -41,8 +60,8 @@ export function Tooltip({
 
   const wrappingClasses = twMerge(
     'z-50 absolute max-w-xl transition-opacity opacity-0 duration-300 invisible',
-    // manualClose &&
-    'opacity-0 invisible group-hover:opacity-100 group-hover:visible',
+    'opacity-0 invisible',
+    !forceHide && groupClasses.hover,
     arrowClasses,
     classesByPlacement
   );
@@ -53,7 +72,12 @@ export function Tooltip({
   );
 
   return (
-    <div className="relative inline-block group">
+    <div
+      className={twMerge(
+        'relative inline-block',
+        !forceHide && groupClasses.group
+      )}
+    >
       <div className={wrappingClasses}>
         <div className={tooltipClasses} role="tooltip">
           {tooltipContent}

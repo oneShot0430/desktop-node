@@ -12,6 +12,7 @@ import React from 'react';
 import { useQuery } from 'react-query';
 
 import config from 'config';
+import { Address } from 'renderer/components/AvailableTasks/components/Address';
 import { Button } from 'renderer/components/ui';
 import { useClipboard } from 'renderer/features/common/hooks/useClipboard';
 import { Modal, ModalContent } from 'renderer/features/modals';
@@ -64,7 +65,7 @@ export const AddFunds = create(function AddFunds({
     ? 'Move KOII with Finnie. Copy your address to send your account some love.'
     : methodsClaimed > 0
     ? 'Return to the Faucet to get the rest of your free KOII.'
-    : 'Go to the Faucet for some free KOII to get started.';
+    : 'Go to the faucet to get some free KOII. At least 2 KOII will be enough to cover task fees and get you started!';
   const headerClasses = `w-full flex ${
     onGoBack ? 'justify-between' : 'justify-end'
   } py-2 px-4`;
@@ -100,7 +101,7 @@ export const AddFunds = create(function AddFunds({
 
   return (
     <Modal>
-      <ModalContent className="w-[416px] h-auto text-finnieBlue rounded-xl py-2 pb-4">
+      <ModalContent className="w-[432px] h-auto text-finnieBlue rounded-3xl py-2 pb-8">
         <div className={headerClasses}>
           {onGoBack && (
             <Icon
@@ -153,17 +154,25 @@ export const AddFunds = create(function AddFunds({
                 icon={<Icon source={CurrencyMoneyLine} className="mb-0.5" />}
               />
 
-              <div className="mb-3">
-                Copy the address to send tokens to your node account.
+              <div className="mb-4">
+                If you&apos;ve already claimed your free tokens, copy your
+                address.
               </div>
-              <div className="mt-4 mb-2 text-xs select-text">
-                {currentAccountPubKey}
-              </div>
+              <Address
+                address={currentAccountPubKey}
+                className="mb-4 text-sm text-green-dark select-text"
+              />
               <Button
                 onClick={copyToClipboardAndClose}
                 label="copy"
                 aria-label="copy"
                 className="w-[72px] h-6 rounded-xl text-xs border border-finnieBlue bg-transparent text-finnieBlue-dark"
+                icon={
+                  <Icon
+                    source={hasCopiedKey ? CheckSuccessLine : CopyLine}
+                    className="h-2.5 w-2.5"
+                  />
+                }
               />
             </>
           )}

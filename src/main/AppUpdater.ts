@@ -26,7 +26,8 @@ async function configureUpdater() {
 }
 
 function setListeners() {
-  autoUpdater.on('update-available', () => {
+  autoUpdater.on('update-available', (info) => {
+    console.log('############# Main Process Update available', info);
     getUserConfig()
       .then((appConfig) => {
         const mainWindow = BrowserWindow.getFocusedWindow();
@@ -60,6 +61,7 @@ function setListeners() {
       .then((selection) => {
         if (selection.response === 0) {
           // User clicked 'Restart & Update'
+
           autoUpdater.quitAndInstall();
         }
       });

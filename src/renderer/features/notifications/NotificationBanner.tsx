@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { FirstNodeReward } from './Banners/FirstNodeRewardBanner';
+import { FirstTaskRunningNotification } from './Banners/FirstTasksRunningNotification';
 import { ReferalProgramNotification } from './Banners/ReferalProgramNotification';
 import { RentExemptionFlowBanner } from './Banners/RentExemptionFlowBanner';
 import { UpdateAvailableNotification } from './Banners/UpdateAvailableNotification';
@@ -8,7 +9,7 @@ import { AppNotification } from './types';
 
 type PropsType = {
   variant: AppNotification;
-  backButtonComponent: React.ReactNode;
+  backButtonComponent?: React.ReactNode;
   id: string;
 };
 
@@ -35,6 +36,9 @@ export function NotificationBanner({
         backButtonSlot={backButtonComponent}
         id={id}
       />
+    ),
+    [AppNotification.FirstTaskRunningNotification]: (
+      <FirstTaskRunningNotification id={id} />
     ),
   };
 

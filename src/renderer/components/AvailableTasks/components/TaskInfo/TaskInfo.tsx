@@ -54,7 +54,9 @@ export function TaskInfo({
   return (
     <div className="flex flex-col w-full pl-3 pr-5 gap-4">
       <div>
-        <div className="mb-2 text-base font-semibold">Task ID</div>
+        <div className="mb-2 text-base font-semibold text-finnieEmerald-light">
+          Task ID
+        </div>
         <div className="flex items-end mb-4 text-finnieTeal-100">
           <Tooltip tooltipContent="Inspect Task" placement="top-left">
             <Address address={publicKey} className=" select-text" />
@@ -68,7 +70,9 @@ export function TaskInfo({
         </div>
       </div>
       <div>
-        <div className="mb-2 text-base font-semibold">Description</div>
+        <div className="mb-2 text-base font-semibold text-finnieEmerald-light">
+          Description
+        </div>
         <p className="mb-4 select-text text-sm">
           {metadata?.description ?? NOT_AVAILABLE}
         </p>
@@ -76,7 +80,9 @@ export function TaskInfo({
 
       <div className="mb-6 w-full flex justify-between">
         <div className="max-w-[48%] w-full">
-          <div className="mb-2 text-base font-semibold">Details</div>
+          <div className="mb-2 text-base font-semibold text-finnieEmerald-light">
+            Details
+          </div>
           <div className="grid grid-cols-2 gap-y-2 gap-x-12">
             <div className="select-text">Nodes: {nodes ?? NOT_AVAILABLE}</div>
             <div className="select-text">Bounty: {bounty ?? NOT_AVAILABLE}</div>
@@ -90,7 +96,9 @@ export function TaskInfo({
         </div>
 
         <div className="max-w-[48%] w-full">
-          <div className="mb-2 text-base font-semibold">Specifications</div>
+          <div className="mb-2 text-base font-semibold text-finnieEmerald-light">
+            Specifications
+          </div>
           <div className="grid grid-cols-2 gap-y-2 gap-x-12">
             {specs?.map(({ type, value }, index) => (
               <div key={index} className="select-text">

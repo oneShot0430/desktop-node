@@ -65,43 +65,47 @@ export function MyNode() {
   }, [queryClient]);
 
   return (
-    <InfiniteScrollTable
-      isFetchingNextPage={isFetchingNextTasks}
-      columnsLayout={columnsLayout}
-      headers={tableHeaders}
-      isLoading={isLoadingTasks || isLoadingMainAccount}
-      error={tasksError as Error}
-      hasMore={!!hasMoreTasks}
-      update={fetchNextTasks}
-    >
-      {isLoadingTasks && <LoadingSpinner className="h-40 w-40 mt-40 mx-auto" />}
+    <div className="relative w-full">
+      <InfiniteScrollTable
+        isFetchingNextPage={isFetchingNextTasks}
+        columnsLayout={columnsLayout}
+        headers={tableHeaders}
+        isLoading={isLoadingTasks || isLoadingMainAccount}
+        error={tasksError as Error}
+        hasMore={!!hasMoreTasks}
+        update={fetchNextTasks}
+      >
+        {isLoadingTasks && (
+          <LoadingSpinner className="h-40 w-40 mt-40 mx-auto" />
+        )}
 
-      {thereAreNoTasks && (
-        <div className="text-white mx-auto mt-14 flex flex-col items-center text-sm">
-          <Lottie animationData={EmptyMyNode} className="w-66" />
-          <p className="mb-4">
-            You aren&apos;t runing any tasks right now. Let&apos;s fix that!
-          </p>
-          <Button
-            onClick={goToAvailableTasks}
-            variant={ButtonVariant.Secondary}
-            size={ButtonSize.SM}
-            label="Available Tasks"
-            buttonClassesOverrides="!border-white !text-white"
+        {thereAreNoTasks && (
+          <div className="text-white mx-auto mt-14 flex flex-col items-center text-sm">
+            <Lottie animationData={EmptyMyNode} className="w-66" />
+            <p className="mb-4">
+              You aren&apos;t runing any tasks right now. Let&apos;s fix that!
+            </p>
+            <Button
+              onClick={goToAvailableTasks}
+              variant={ButtonVariant.Secondary}
+              size={ButtonSize.SM}
+              label="Available Tasks"
+              buttonClassesOverrides="!border-white !text-white"
+            />
+          </div>
+        )}
+
+        {allRows.map((task, index) => (
+          <TaskItem
+            key={task.publicKey}
+            index={index}
+            task={task}
+            accountPublicKey={mainAccountPubKey as string}
+            columnsLayout={columnsLayout}
+            totalItems={allRows.length}
           />
-        </div>
-      )}
-
-      {allRows.map((task, index) => (
-        <TaskItem
-          key={task.publicKey}
-          index={index}
-          task={task}
-          accountPublicKey={mainAccountPubKey as string}
-          columnsLayout={columnsLayout}
-          totalItems={allRows.length}
-        />
-      ))}
-    </InfiniteScrollTable>
+        ))}
+      </InfiniteScrollTable>
+    </div>
   );
 }

@@ -28,4 +28,5 @@ export enum QueryKeys {
   PrivateTask = 'PrivateTask',
   PendingRewardsByTask = 'PendingRewardsByTask',
   AllTimeRewards = 'AllTimeRewards',
+  IsRunning = 'IsRunning',
 }

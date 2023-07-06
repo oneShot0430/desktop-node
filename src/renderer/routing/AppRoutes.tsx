@@ -69,6 +69,7 @@ const routes = [
           },
           {
             path: AppRoute.OnboardingCreateOrImportKey,
+
             element: <CreateOrImportAccountWrapper />,
             children: [
               {

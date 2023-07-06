@@ -87,7 +87,7 @@ describe('AddFunds', () => {
     await userEvent.click(addFundsButton);
 
     const copyForNoMethodsCompleted = await screen.findByText(
-      /Go to the Faucet for some free KOII to get started./i
+      /Go to the faucet to get some free KOII. At least 2 KOII will be enough to cover task fees and get you started!/i
     );
 
     expect(copyForNoMethodsCompleted).toBeInTheDocument();

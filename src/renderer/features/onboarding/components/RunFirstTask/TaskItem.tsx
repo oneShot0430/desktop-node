@@ -1,20 +1,21 @@
 import {
-  CloseLine,
   Icon,
   InformationCircleLine,
   CheckSuccessLine,
+  EditPencilLine,
 } from '@_koii/koii-styleguide';
 import React, { useState, useMemo } from 'react';
 import toast from 'react-hot-toast';
 
-import CloseIcon from 'assets/svgs/close-icons/close-icon.svg';
 import { TaskInfo } from 'renderer/components/AvailableTasks/components/TaskInfo';
-import { EditStakeInput, Tooltip, Button } from 'renderer/components/ui';
+import { Tooltip, Button } from 'renderer/components/ui';
 import { useMetadata, useClipboard } from 'renderer/features/common';
 import { TaskService } from 'renderer/services';
 import { Task } from 'renderer/types';
 import { Theme } from 'renderer/types/common';
 import { getKoiiFromRoe } from 'utils';
+
+import { EditStakeInput } from './EditStakeInput';
 
 type PropsType = {
   stakeValue: number;
@@ -33,15 +34,23 @@ function TaskItem({
 }: PropsType) {
   const [meetsMinimumStake, setMeetsMinimumStake] = useState<boolean>(false);
   const [accordionView, setAccordionView] = useState<boolean>(false);
+  const [editStakeView, setEditStakeView] = useState<boolean>(false);
   const { metadata } = useMetadata({
     metadataCID: task.metadataCID,
   });
   const { copyToClipboard } = useClipboard();
 
+  const minStakeInKoii = getKoiiFromRoe(task.minimumStakeAmount);
+  const stakeValueInKoii = getKoiiFromRoe(stakeValue);
+
   const isFirstRowInTable = index === 0;
   const handleStakeInputChange = (newStake: number) => {
     setMeetsMinimumStake(newStake >= task.minimumStakeAmount);
     onStakeInputChange(newStake);
+  };
+
+  const handleChangeStakeView = () => {
+    setEditStakeView(!editStakeView);
   };
   const nodes = useMemo(() => TaskService.getNodesCount(task), [task]);
   const topStake = useMemo(() => TaskService.getTopStake(task), [task]);
@@ -53,13 +62,13 @@ function TaskItem({
   const details = {
     nodes,
     minStake: getKoiiFromRoe(task.minimumStakeAmount),
-    topStake,
+    topStake: getKoiiFromRoe(topStake),
     bounty: totalBountyInKoii,
   };
   const handleCopyCreatorAddress = () => {
     copyToClipboard(task.taskManager);
     toast.success('Creators address copied!', {
-      duration: 1500,
+      duration: 4500,
       icon: <CheckSuccessLine className="h-5 w-5" />,
       style: {
         backgroundColor: '#BEF0ED',
@@ -68,21 +77,24 @@ function TaskItem({
     });
   };
   return (
-    <div className="w-full">
-      <div className="grid w-full mb-4 text-sm text-left rounded-md bg-finnieBlue-light-secondary h-13 grid-cols-first-task place-content-center">
-        <div className="col-span-1 m-auto">
+    <div className="w-full max-w-[1100px]">
+      <div className="grid w-full text-sm text-left rounded-md bg-finnieBlue-light-secondary h-13 grid-cols-first-task grid-cols-first-task place-content-center">
+        <div className="col-span-2 m-auto">
           <Tooltip
             theme={Theme.Light}
             placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
             tooltipContent="Open task details"
           >
-            <div className="flex flex-col h-full items-center justify-start w-10">
+            <div className="flex flex-col h-full items-center justify-start">
               <Button
                 onClick={() => setAccordionView(!accordionView)}
                 icon={
                   <Icon
-                    source={accordionView ? CloseLine : InformationCircleLine}
+                    source={InformationCircleLine}
                     size={24}
+                    className={`${
+                      accordionView ? 'text-finnieEmerald-light' : 'text-white'
+                    }`}
                   />
                 }
                 className="outline-none"
@@ -92,14 +104,24 @@ function TaskItem({
           </Tooltip>
         </div>
 
-        <div className="col-span-5 my-auto mr-4">{task.taskName}</div>
-        <div className="col-span-5 flex items-center">
+        <div className="col-span-6 my-auto cursor-pointer">
+          <Tooltip
+            theme={Theme.Light}
+            placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
+            tooltipContent={
+              <p>This task was created by the Koii team and is safe to run.</p>
+            }
+          >
+            {task.taskName}
+          </Tooltip>
+        </div>
+        <div className="col-span-6 flex items-center">
           <Tooltip
             theme={Theme.Light}
             placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
             tooltipContent={<p>{task.taskManager}</p>}
           >
-            <div className="max-w-[100px] xl:max-w-[170px] w-full flex flex-col h-full overflow-hidden text-ellipsis">
+            <div className="max-w-[150px] xl:max-w-[200px] w-full flex flex-col h-full overflow-hidden text-ellipsis">
               <button
                 className="overflow-hidden text-ellipsis"
                 onClick={handleCopyCreatorAddress}
@@ -110,33 +132,43 @@ function TaskItem({
           </Tooltip>
         </div>
 
-        <div className="col-span-5 col-start-13 2xl:col-start-15 2xl:col-span-3 mt-1">
-          <EditStakeInput
-            stake={stakeValue}
-            onChange={handleStakeInputChange}
-            meetsMinimumStake={meetsMinimumStake}
-            minStake={task.minimumStakeAmount}
-          />
-        </div>
-
-        <button
-          className="m-auto cursor-pointer text-finnieRed"
-          onClick={onRemove}
-        >
-          <Tooltip placement="top-left" tooltipContent="Remove task">
-            <div className="w-6 mr-2">
-              <CloseIcon />
+        <div className="col-span-4 2xl:col-start-15 2xl:col-span-4">
+          {!editStakeView ? (
+            <div className="flex gap-1">
+              <p>{stakeValueInKoii} KOII</p>
+              <button
+                className=" cursor-pointer text-white"
+                onClick={handleChangeStakeView}
+              >
+                <div className="w-7">
+                  <EditPencilLine />
+                </div>
+              </button>
             </div>
-          </Tooltip>
-        </button>
+          ) : (
+            <EditStakeInput
+              stake={stakeValue}
+              onChange={handleStakeInputChange}
+              meetsMinimumStake={meetsMinimumStake}
+              handleChangeStakeView={handleChangeStakeView}
+            />
+          )}
+        </div>
+      </div>
+      <div className="grid grid-cols-first-task w-full mb-1.5">
+        <div className="text-xs leading-4 col-span-4 col-start-15 text-finnieEmerald-light">
+          minimum: {minStakeInKoii}
+        </div>
       </div>
       {accordionView && (
-        <TaskInfo
-          publicKey={task.publicKey}
-          metadata={metadata ?? undefined}
-          details={details}
-          showSourceCode={false}
-        />
+        <div className="bg-finnieBlue-light-secondary p-6 rounded-lg">
+          <TaskInfo
+            publicKey={task.publicKey}
+            metadata={metadata ?? undefined}
+            details={details}
+            showSourceCode={false}
+          />
+        </div>
       )}
     </div>
   );

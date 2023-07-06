@@ -39,7 +39,8 @@ export class TaskService {
     task: Task,
     stakingAccountPublicKey: string
   ): Promise<TaskStatus> {
-    const isBlackListed = !task.isWhitelisted;
+    // To do: when we introduce private tasks they could be blacklisted and should be runnable anyways, so we'll have to differentiate better between blacklisted and inactive
+    const isBlackListed = !task.isWhitelisted || !task.isActive;
     const allSubmissions = Object.values(task.submissions);
     const submissionsFromCurrentAccount = allSubmissions.filter((submission) =>
       Object.keys(submission).some((key) => key === stakingAccountPublicKey)

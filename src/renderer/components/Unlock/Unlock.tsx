@@ -54,7 +54,11 @@ export function Unlock(): JSX.Element {
         showHideIconSize={28}
       />
       <div className="text-xs text-finnieOrange h-4">
-        {hasPinError && <span>The PINs don’t match. Let’s try again.</span>}
+        {hasPinError && (
+          <span>
+            Oops! That PIN isn’t quite right. Double check it and try again.
+          </span>
+        )}
       </div>
 
       <WelcomeLinesDiagonal className="absolute bottom-0 -right-[22.5%] h-full" />

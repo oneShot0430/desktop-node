@@ -29,14 +29,18 @@ export const useRunFirstTasksLogic = () => {
     () =>
       selectedTasks.map((task) => {
         const minStake = task.minimumStakeAmount;
+        setStakePerTask({
+          ...stakePerTask,
+          [task.publicKey]: minStake,
+        });
 
         return {
           ...task,
-          stake: stakePerTask[task.publicKey] ?? 0,
+          stake: stakePerTask[task.publicKey] ?? minStake,
           minStake,
         };
       }),
-    [selectedTasks, stakePerTask]
+    [selectedTasks]
   );
 
   return {

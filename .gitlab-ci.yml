@@ -38,6 +38,8 @@ stages:
       when: always
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       when: always
+    - if: '$CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH'
+      when: manual
   script:
     - npm config set -- //gitlab.com/api/v4/packages/npm/:_authToken=$GITLAB_ACCESS_TOKEN
     - npm config set @koii-network:registry https://gitlab.com/api/v4/packages/npm/
@@ -72,6 +74,8 @@ stages:
       when: always
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       when: always
+    - if: '$CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH'
+      when: manual
   script:
     - npm run lint
   cache:
@@ -96,6 +100,8 @@ stages:
       when: always
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       when: always
+    - if: '$CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH'
+      when: manual
   script:
     - npm run test
   cache:
@@ -110,11 +116,13 @@ stages:
         - release/app/node_modules/
         - src/node_modules/
 
-.package_template: &package #when: on_success
+.package_template: &package
   interruptible: false
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       when: always
+    - if: '$CI_COMMIT_BRANCH =~ /^RELEASE_/'
+      when: manual
   stage: package
   cache:
     - key: npm

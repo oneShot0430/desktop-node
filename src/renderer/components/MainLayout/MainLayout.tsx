@@ -2,6 +2,11 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { AppTopBar } from 'renderer/components/AppTopBar';
+import {
+  useNotificationsContext,
+  NotificationBanner,
+  NotificationPlacement,
+} from 'renderer/features/notifications';
 import { saveUserConfig, switchUpdateChannel } from 'renderer/services';
 import { AppRoute } from 'renderer/types/routes';
 
@@ -14,6 +19,13 @@ type MainLayoutProps = {
 
 function MainLayout({ children }: MainLayoutProps): JSX.Element {
   const navigate = useNavigate();
+
+  const { getNextNotification } = useNotificationsContext();
+
+  // Get the first entry
+  const displayedNotificationEntry = getNextNotification(
+    NotificationPlacement.Bottom
+  );
 
   // TODO: Remove after release
   useEffect(() => {
@@ -35,9 +47,15 @@ function MainLayout({ children }: MainLayoutProps): JSX.Element {
     <div className="flex flex-col flex-grow bg-gradient-to-b from-finnieBlue-dark-secondary to-finnieBlue h-screen min-h-0">
       <Header />
       <AppTopBar />
-      <div className="flex flex-grow min-h-0 px-4">
+      <div className="flex flex-grow min-h-0 px-4 relative">
         <Sidebar />
         <div className="flex flex-col flex-grow min-h-0 pb-4">{children}</div>
+        {displayedNotificationEntry && (
+          <NotificationBanner
+            id={displayedNotificationEntry.id}
+            variant={displayedNotificationEntry.notification}
+          />
+        )}
       </div>
     </div>
   );

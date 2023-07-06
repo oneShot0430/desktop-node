@@ -309,31 +309,23 @@ export const claimRewards = async (): Promise<void> => {
   const tasksWithClaimableRewards = tasks.filter(getPendingRewardsByTask);
   let numberOfFailedClaims = 0;
 
-  const promisesToClaimRewards = tasksWithClaimableRewards.map(
-    async (task, index) => {
-      const pendingReward = getPendingRewardsByTask(task);
-      try {
-        // if (index === 0) {
-        //   throw Error('test error');
-        // } else {
-        await window.main.claimReward({
-          taskAccountPubKey: task.publicKey,
-        });
-        console.log('@@@ Storing all time rewards for: ', task.publicKey);
-        await window.main.storeAllTimeRewards({
-          taskId: task.publicKey,
-          newReward: pendingReward,
-        });
-        // }
-      } catch (error) {
-        console.error(
-          `Error while claiming reward for Task: ${task.publicKey}`
-        );
-        console.error(error);
-        numberOfFailedClaims += 1;
-      }
+  const promisesToClaimRewards = tasksWithClaimableRewards.map(async (task) => {
+    const pendingReward = getPendingRewardsByTask(task);
+    try {
+      await window.main.claimReward({
+        taskAccountPubKey: task.publicKey,
+      });
+      console.log('@@@ Storing all time rewards for: ', task.publicKey);
+      await window.main.storeAllTimeRewards({
+        taskId: task.publicKey,
+        newReward: pendingReward,
+      });
+    } catch (error) {
+      console.error(`Error while claiming reward for Task: ${task.publicKey}`);
+      console.error(error);
+      numberOfFailedClaims += 1;
     }
-  );
+  });
 
   await Promise.all(promisesToClaimRewards);
 
@@ -393,6 +385,10 @@ export const downloadAppUpdate = async () => {
 
 export const getAllTimeRewards = async (taskPubKey: string) => {
   return window.main.getAllTimeRewardsByTask({ taskId: taskPubKey });
+};
+
+export const getIsTaskRunning = async (taskPublicKey: string) => {
+  return window.main.getIsTaskRunning({ taskPublicKey });
 };
 
 export const enableStayAwake = async () => {

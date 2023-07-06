@@ -6,6 +6,7 @@ import { MainLayout, LoadingScreen } from './components';
 import {
   AppNotification,
   useNotificationsContext,
+  NotificationPlacement,
 } from './features/notifications';
 import { OnboardingLayout } from './features/onboarding/components/OnboardingLayout';
 import { OnboardingProvider } from './features/onboarding/context/onboarding-context';
@@ -35,7 +36,11 @@ function AppWrapper(): JSX.Element {
 
   useEffect(() => {
     const destroy = window.main.onAppUpdate(() => {
-      addNotification('updateAvailable', AppNotification.UpdateAvailable);
+      addNotification(
+        'updateAvailable',
+        AppNotification.UpdateAvailable,
+        NotificationPlacement.TopBar
+      );
     });
 
     return () => {

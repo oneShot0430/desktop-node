@@ -1,10 +1,15 @@
-import { SeedSecretPhraseXlLine, Icon } from '@_koii/koii-styleguide';
+import {
+  SeedSecretPhraseXlLine,
+  Icon,
+  TooltipChatQuestionLeftLine,
+} from '@_koii/koii-styleguide';
 import { encrypt } from '@metamask/browser-passworder';
 import React, { memo, useState, ChangeEventHandler } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
 import CreateAccountSvg from 'assets/svgs/onboarding/create-new-account-icon.svg';
+import { Tooltip } from 'renderer/components/ui';
 import { ErrorMessage } from 'renderer/components/ui/ErrorMessage';
 import { useAccounts } from 'renderer/features/settings';
 import {
@@ -90,10 +95,24 @@ function KeyCreationMethodPick() {
     <div className="max-w-lg xl:max-w-2xl m-auto pt-[100px]">
       <div className="flex flex-col pl-1 text-lg">
         <p className="mb-4">
-          To make sure everyone is playing fairly, each node must stake tokens
-          as collateral.
+          To ensure a fair playing field, every node is required to stake tokens
+          as collateral.{' '}
+          <Tooltip
+            placement="top-right"
+            tooltipContent={
+              <div className="max-w-[250px] w-full text-xs leading=4">
+                Staking refers to the act of locking up an amount of tokens as a
+                guarantee for participating in a blockchain network.
+              </div>
+            }
+          >
+            <Icon
+              source={TooltipChatQuestionLeftLine}
+              className="h-4 w-4 text-finnieEmerald-light ml-0.5 cursor-pointer"
+            />
+          </Tooltip>
         </p>
-        <p>Create a new account or import an existing Koii key.</p>
+        <p>Create a new account or import an existing one.</p>
       </div>
 
       <div className="my-6">
