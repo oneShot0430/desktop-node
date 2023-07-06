@@ -55,7 +55,7 @@ export function AvailableTasks() {
         items={allRows.length}
       >
         {(isLoadingTasks || isFetchingNextTasks) && !allRows.length && (
-          <div className="w-full h-full flex justify-center items-center text-white">
+          <div className="flex items-center justify-center w-full h-full text-white">
             <div className="w-[363px] h-[363px] flex flex-col justify-center items-center">
               <img src={LoadingAvailableTasks} alt="No available tasks" />
             </div>
@@ -63,7 +63,7 @@ export function AvailableTasks() {
         )}
 
         {thereAreNoTasks && (
-          <div className="w-full h-full flex justify-center items-center text-white">
+          <div className="flex items-center justify-center w-full h-full text-white">
             <div className="w-[363px] h-[363px] flex flex-col justify-center items-center">
               <img src={EmptyAvailableTasks} alt="No available tasks" />
               <div className="text-center mt-[18px] text-sm">

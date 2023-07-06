@@ -59,4 +59,5 @@ export enum Endpoints {
 export enum RendererEndpoints {
   UPDATE_AVAILABLE = 'UPDATE_AVAILABLE',
   SYSTEM_WAKE_UP = 'SYSTEM_WAKE_UP',
+  UPDATE_DOWNLOADED = 'UPDATE_DOWNLOADED',
 }

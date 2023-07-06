@@ -33,6 +33,7 @@ import getUserConfig from './getUserConfig';
 import getVersion from './getVersion';
 import initializeTasks from './initializeTasks';
 import isValidWalletAddress from './isValidWalletAddress';
+import onAppDownloaded from './onAppDownloaded';
 import onAppUpdate from './onAppUpdate';
 import onSystemWakeUp from './onSystemWakeUp';
 import openBrowserWindow from './openBrowserWindow';
@@ -114,4 +115,5 @@ export default {
   enableStayAwake,
   onSystemWakeUp,
   getMainLogs,
+  onAppDownloaded,
 };

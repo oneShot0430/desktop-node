@@ -5,7 +5,7 @@ import { Tooltip } from 'renderer/components/ui';
 import { QueryKeys, getVersion } from 'renderer/services';
 import { Theme } from 'renderer/types/common';
 
-import { AutoUpdates } from './AutoUpdates';
+// import { AutoUpdates } from './AutoUpdates';
 import { Network } from './Network';
 import { NodeLogs } from './NodeLogs';
 import { Referral } from './Referral';
@@ -22,10 +22,14 @@ export function MainSettings() {
       <div className="h-px bg-white w-full" />
       <div className="flex justify-start gap-4">
         <SwitchWrapper title="Choose Network" switchComponent={Network} />
-        <SwitchWrapper
+        {/**
+         * @todo: there is an issue with the wrong architecture version being downloaded on mac os
+         * uncomment this line when the issue is fixed
+         */}
+        {/* <SwitchWrapper
           title="Automatic Updates"
-          switchComponent={AutoUpdates}
-        />
+          switchComponentSlot={<AutoUpdates />}
+        /> */}
         <Tooltip
           tooltipContent="Keep my computer awake while running tasks"
           placement="top-left"
