@@ -2,7 +2,7 @@ import { CheckSuccessLine, CopyLine, Icon } from '@_koii/koii-styleguide';
 import React from 'react';
 import { useQuery } from 'react-query';
 
-import { LoadingSpinner, Tooltip } from 'renderer/components/ui';
+import { LoadingSpinner, Tooltip, Button } from 'renderer/components/ui';
 import { useClipboard } from 'renderer/features/common';
 import { QueryKeys, getReferralCode } from 'renderer/services';
 
@@ -18,10 +18,16 @@ export function Referral() {
 
   const { userConfig, handleSaveUserAppConfig } = useUserAppConfig({});
 
-  const { copyToClipboard, copied } = useClipboard();
+  const { copyToClipboard: copyCode, copied: codeCopied } = useClipboard();
+  const { copyToClipboard: copyLink, copied: linkCopied } = useClipboard();
 
   const copyReferralCode = () => {
-    copyToClipboard(referralCode);
+    copyCode(referralCode);
+    handleSaveUserAppConfig({ settings: { hasCopiedReferralCode: true } });
+  };
+
+  const copyReferralLink = () => {
+    copyLink(`https://www.koii.network/node?promo=${referralCode}`);
     handleSaveUserAppConfig({ settings: { hasCopiedReferralCode: true } });
   };
 
@@ -30,32 +36,50 @@ export function Referral() {
   return (
     <div className="font-light">
       <div className="flex gap-3">
-        <p className="font-semibold mb-4">Referral Code</p>
+        <p className="font-semibold mb-4">Referral Link</p>
         {shouldSeeTheNewTag && <span className="text-finnieOrange">NEW!</span>}
       </div>
       <p className="mb-2">
-        Get 5 extra tokens for each friend who joins the network.
+        Share your referral link and get 5 extra tokens for each friend who
+        joins the network.
       </p>
       <p>
-        With this code, they’ll get 5 bonus tokens from the faucet after
-        verifying Twitter and Discord accounts.
-      </p>
-      <p>
-        After they run a node for 7 days, you’ll get 5 and they’ll get 5 more.
+        With this link, they’ll get 5 bonus tokens from the faucet after
+        verifying Twitter and Discord accounts. After they run a node for 7
+        days, you’ll get 5 and they’ll get 5 more.
       </p>
       <div className="flex items-center mt-5 gap-6">
         {referralCode ? (
           <>
-            <div className="px-6 py-2 text-sm rounded-md bg-finnieBlue-light-tertiary w-fit">
-              {referralCode}
-            </div>
-
-            <Tooltip tooltipContent={copied ? 'Copied' : 'Copy'}>
+            <Tooltip
+              tooltipContent={linkCopied ? 'Referral link copied!' : 'Copy'}
+            >
+              <Button
+                label="Copy My Referral Link"
+                icon={
+                  <Icon
+                    onClick={copyReferralLink}
+                    source={linkCopied ? CheckSuccessLine : CopyLine}
+                    className={`text-blue cursor-pointer ${
+                      linkCopied ? 'h-5.5 w-5.5' : 'h-5 w-5'
+                    }`}
+                  />
+                }
+                onClick={copyReferralLink}
+                className="font-semibold bg-white text-finnieBlue-light text-[14px] leading-[14px] min-w-[250px] h-9 self-end"
+              />
+            </Tooltip>
+            <Tooltip tooltipContent="This code is for the faucet. If your friend uses your link, this code will be added to the automatically.">
+              <div className="px-6 py-2 text-sm rounded-md bg-finnieBlue-light-tertiary w-fit">
+                {referralCode}
+              </div>
+            </Tooltip>
+            <Tooltip tooltipContent={codeCopied ? 'Copied' : 'Copy'}>
               <Icon
                 onClick={copyReferralCode}
-                source={copied ? CheckSuccessLine : CopyLine}
+                source={codeCopied ? CheckSuccessLine : CopyLine}
                 className={`text-white cursor-pointer ${
-                  copied ? 'h-5.5 w-5.5' : 'h-5 w-5'
+                  codeCopied ? 'h-5.5 w-5.5' : 'h-5 w-5'
                 }`}
               />
             </Tooltip>
