@@ -34,7 +34,7 @@ const setUpPowerMonitoring = async () => {
     await initializeTasks();
     // delay notifying renderer process to allow the tasks to start
     setTimeout(() => {
-      appWindow.webContents.send(RendererEndpoints.SYSTEM_WAKE_UP);
+      appWindow?.webContents.send(RendererEndpoints.SYSTEM_WAKE_UP);
     }, 1500);
   });
 };
