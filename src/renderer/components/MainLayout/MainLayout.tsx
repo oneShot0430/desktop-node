@@ -44,7 +44,7 @@ function MainLayout({ children }: MainLayoutProps): JSX.Element {
   }, [navigate]);
 
   return (
-    <div className="flex flex-col flex-grow bg-gradient-to-b from-finnieBlue-dark-secondary to-finnieBlue h-screen min-h-0">
+    <div className="flex flex-col flex-grow bg-gradient-to-b from-finnieBlue-dark-secondary to-finnieBlue min-h-screen min-w-fit overflow-x-hidden">
       <Header />
       <AppTopBar />
       <div className="flex flex-grow min-h-0 px-4 relative">
