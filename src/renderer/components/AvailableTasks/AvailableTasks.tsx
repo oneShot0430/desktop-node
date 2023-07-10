@@ -42,7 +42,7 @@ export function AvailableTasks() {
     !isLoadingTasks && !isFetchingNextTasks && !hasMoreTasks && !allRows.length;
 
   return (
-    <div style={{ height: 'calc(100% - 60px)' }}>
+    <div className="relative flex flex-col flex-grow w-full min-h-0 h-0">
       <InfiniteScrollTable
         animationRef={animationRef}
         isFetchingNextPage={isFetchingNextTasks}

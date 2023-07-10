@@ -65,7 +65,7 @@ export function MyNode() {
   }, [queryClient]);
 
   return (
-    <div className="relative flex flex-col flex-grow w-full min-h-0">
+    <div className="relative flex flex-col flex-grow w-full min-h-0 h-0">
       <InfiniteScrollTable
         isFetchingNextPage={isFetchingNextTasks}
         columnsLayout={columnsLayout}
