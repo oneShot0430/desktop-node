@@ -44,12 +44,14 @@ function MainLayout({ children }: MainLayoutProps): JSX.Element {
   }, [navigate]);
 
   return (
-    <div className="flex flex-col flex-grow bg-gradient-to-b from-finnieBlue-dark-secondary to-finnieBlue min-h-screen min-w-fit overflow-x-hidden">
+    <div className="flex flex-col flex-grow min-h-screen overflow-x-hidden bg-gradient-to-b from-finnieBlue-dark-secondary to-finnieBlue min-w-fit">
       <Header />
       <AppTopBar />
-      <div className="flex flex-grow min-h-0 px-4 relative">
+      <div className="relative flex flex-grow min-h-0 px-4">
         <Sidebar />
-        <div className="flex flex-col flex-grow min-h-0 pb-4">{children}</div>
+        <div className="flex flex-col flex-grow min-h-0 h-[calc(100vh-172px)] pb-4">
+          {children}
+        </div>
         {displayedNotificationEntry && (
           <NotificationBanner
             id={displayedNotificationEntry.id}

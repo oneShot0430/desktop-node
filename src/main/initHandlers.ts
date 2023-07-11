@@ -65,10 +65,13 @@ const endpointToControllerMap: Record<
   [Endpoints.STORE_ALL_TIME_REWARDS]: controllers.storeAllTimeRewards,
   [Endpoints.GET_ALL_TIME_REWARDS_BY_TASK]: controllers.getAllTimeRewardsByTask,
   [Endpoints.VALIDATE_PUBLIC_KEY]: controllers.isValidWalletAddress,
+  [Endpoints.GET_RUNNED_PRIVATE_TASKS]: controllers.getRunnedPrivateTasks,
+  [Endpoints.SET_RUNNED_PRIVATE_TASKS]: controllers.setRunnedPrivateTask,
   [Endpoints.GET_IS_TASK_RUNNING]: controllers.getIsTaskRunning,
   [Endpoints.ENABLE_STAY_AWAKE]: controllers.enableStayAwake,
   [Endpoints.DISABLE_STAY_AWAKE]: controllers.disableStayAwake,
   [Endpoints.GET_MAIN_LOGS]: controllers.getMainLogs,
+  [Endpoints.GET_STARTED_TASKS_PUBKEYS]: controllers.getStartedTasksPubKeys,
 };
 
 const initHandlers = (): void => {

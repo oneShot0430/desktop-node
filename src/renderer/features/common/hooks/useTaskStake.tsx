@@ -20,7 +20,7 @@ export const useTaskStake = ({ task, enabled }: UseMyStakeParamsType) => {
     task ? [QueryKeys.TaskStake, task.publicKey] : '',
     // only perform the query if task is defined
     () => (task ? TaskService.getMyStake(task) : Promise.resolve(null)),
-    { enabled }
+    { enabled, cacheTime: 0 }
   );
 
   return {

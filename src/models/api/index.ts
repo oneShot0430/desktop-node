@@ -29,5 +29,6 @@ export * from './archiveTask';
 export * from './createNodeWalletsFromJson';
 export * from './storeAllTimeRewards';
 export * from './getAllTimeRewards';
+export * from './privateTasks';
 export * from './getIsTaskRunning';
 export * from './getMainLogs';

@@ -36,7 +36,6 @@ export function ConfirmSecretPhrase() {
             label="Confirm"
             className="font-semibold bg-finnieGray-light text-finnieBlue-light w-[240px] h-[48px] mt-4"
             onClick={() => {
-              console.log('###match', { phrase, newSeedPhrase });
               if (phrase === newSeedPhrase) {
                 navigate(AppRoute.OnboardingPhraseSaveSuccess);
               }

@@ -1,5 +1,6 @@
 import { TooltipChatQuestionLeftLine, Icon } from '@_koii/koii-styleguide';
 import React, { RefObject } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 import { RequirementTag } from 'models/task';
 import { Tooltip } from 'renderer/components/ui';
@@ -14,7 +15,8 @@ type PropsType = {
   taskVariables?: RequirementTag[];
   onToolsValidation?: (isValid: boolean) => void;
   onPairingSuccess: () => void;
-  moveToTaskInfo: () => void;
+  moveToTaskInfo?: () => void;
+  wrapperClasses?: string;
 };
 
 export function TaskSettings({
@@ -24,10 +26,13 @@ export function TaskSettings({
   onPairingSuccess,
   onOpenAddTaskVariableModal,
   moveToTaskInfo,
+  wrapperClasses = '',
 }: PropsType) {
+  const outerClasses = twMerge('flex flex-col w-full h-fit', wrapperClasses);
+
   return (
-    <div className="flex flex-col w-full">
-      <div className="flex gap-2 mb-1 text-xs font-bold items-center">
+    <div className={outerClasses}>
+      <div className="flex items-center gap-2 mb-1 text-xs font-bold">
         TASK SETTING CONFIGURATION
         <Tooltip
           placement="right"
@@ -36,13 +41,18 @@ export function TaskSettings({
           <Icon size={20} source={TooltipChatQuestionLeftLine} />
         </Tooltip>
       </div>
-      <div className="mb-4 font-normal">
-        Check the{' '}
-        <button className="text-finnieTeal underline" onClick={moveToTaskInfo}>
-          task creator&apos;s instructions
-        </button>{' '}
-        for configuring settings.
-      </div>
+      {moveToTaskInfo && (
+        <div className="mb-4 font-normal">
+          Check the{' '}
+          <button
+            className="underline text-finnieTeal"
+            onClick={moveToTaskInfo}
+          >
+            task creator&apos;s instructions
+          </button>{' '}
+          for configuring settings.
+        </div>
+      )}
 
       <NodeTools
         tools={taskVariables}

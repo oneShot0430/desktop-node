@@ -15,7 +15,7 @@ type PropsType = {
   ) => void;
   onSecretSelected?: (tool: string, desktopVariableId: string) => void;
   onInit?: (tool: string, desktopVariableId: string) => void;
-  bottom?: boolean;
+  dropDownPlacementBottom?: boolean;
 };
 
 export function NodeTool({
@@ -25,7 +25,7 @@ export function NodeTool({
   defaultVariableId,
   onInit,
   onOpenAddTaskVariableModal,
-  bottom,
+  dropDownPlacementBottom,
 }: PropsType) {
   const dropdownRef = React.useRef<HTMLButtonElement>(null);
   const { storedTaskVariablesQuery } = useStoredTaskVariables();
@@ -64,9 +64,9 @@ export function NodeTool({
   if (isLoading) return null;
 
   return (
-    <div className="flex relative justify-between w-full my-3">
+    <div className="relative flex justify-between w-full my-3">
       <div className="flex flex-col gap-1 max-w-[60%]">
-        <div className="font-semibold text-finnieTeal break-all">{tool}</div>
+        <div className="font-semibold break-all text-finnieTeal">{tool}</div>
         {description && <div className="text-xs">{description}</div>}
       </div>
       <div className="flex items-start gap-3 pt-[2px]">
@@ -74,11 +74,11 @@ export function NodeTool({
           ref={dropdownRef}
           defaultValue={defaultValue}
           items={dropdownItems}
-          bottom={bottom}
+          bottom={dropDownPlacementBottom}
           customItem={
             <div className="hover:bg-purple-1 hovertext-finnieTeal-100">
               <button
-                className="flex justify-start pl-3 py-2 items-center text-green-2 gap-2 curs w-fit cursor-pointer"
+                className="flex items-center justify-start gap-2 py-2 pl-3 cursor-pointer text-green-2 curs w-fit"
                 onClick={() => onOpenAddTaskVariableModal(dropdownRef, tool)}
               >
                 <Icon source={AddLine} size={18} />

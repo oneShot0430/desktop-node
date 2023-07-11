@@ -22,6 +22,7 @@ import getMainLogs from './getMainLogs';
 import getMyTasks from './getMyTasks';
 import getNetworkUrl from './getNetworkUrl';
 import getStakingAccountPubKey from './getStakingAccountPubKey';
+import getStartedTasksPubKeys from './getStartedTasksPubKeys';
 import getTaskInfo from './getTaskInfo';
 import getTaskLogs from './getTaskLogs';
 import getTaskMetadata from './getTaskMetadata';
@@ -39,6 +40,7 @@ import onSystemWakeUp from './onSystemWakeUp';
 import openBrowserWindow from './openBrowserWindow';
 import openLogfileFolder from './openLogfileFolder';
 import openNodeLogfileFolder from './openNodeLogfileFolder';
+import { getRunnedPrivateTasks, setRunnedPrivateTasks } from './privateTasks';
 import removeAccountByName from './removeAccountByName';
 import setActiveAccount from './setActiveAccount';
 import startTask from './startTask';
@@ -110,10 +112,13 @@ export default {
   getAllTimeRewardsByTask,
   storeAllTimeRewards,
   isValidWalletAddress,
+  getRunnedPrivateTasks,
+  setRunnedPrivateTasks,
   getIsTaskRunning,
   disableStayAwake,
   enableStayAwake,
   onSystemWakeUp,
   getMainLogs,
   onAppDownloaded,
+  getStartedTasksPubKeys,
 };

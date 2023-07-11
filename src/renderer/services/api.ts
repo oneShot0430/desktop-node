@@ -10,6 +10,7 @@ import {
   StoreUserConfigParam,
   PairTaskVariableParamType,
   PaginatedResponse,
+  RunningPrivateTasks,
 } from 'models';
 import { Task } from 'renderer/types';
 import { getKoiiFromRoe } from 'utils';
@@ -109,9 +110,9 @@ export const stakeOnTask = (taskAccountPubKey: string, stakeAmount: number) => {
   });
 };
 
-export const startTask = (taskAccountPubKey: string, force?: boolean) => {
-  console.log(`${force ? 'FORCE' : ''} STARTING TASK`, taskAccountPubKey);
-  return window.main.startTask({ taskAccountPubKey, force });
+export const startTask = (taskAccountPubKey: string, isPrivate?: boolean) => {
+  console.log(`${isPrivate ? 'FORCE' : ''} STARTING TASK`, taskAccountPubKey);
+  return window.main.startTask({ taskAccountPubKey, isPrivate });
 };
 
 export const stopTask = (taskAccountPubKey: string) => {
@@ -387,6 +388,15 @@ export const getAllTimeRewards = async (taskPubKey: string) => {
   return window.main.getAllTimeRewardsByTask({ taskId: taskPubKey });
 };
 
+export const getRunnedPrivateTasks = (): Promise<RunningPrivateTasks> => {
+  return window.main.getRunnedPrivateTasks();
+};
+
+export const setRunnedPrivateTasks = (privateTaskId: string): Promise<void> => {
+  return window.main.setRunnedPrivateTasks({
+    runnedPrivateTask: privateTaskId,
+  });
+};
 export const getIsTaskRunning = async (taskPublicKey: string) => {
   return window.main.getIsTaskRunning({ taskPublicKey });
 };
@@ -397,4 +407,8 @@ export const enableStayAwake = async () => {
 
 export const disableStayAwake = async () => {
   return window.main.disableStayAwake();
+};
+
+export const getStartedTasksPubKeys = async () => {
+  return window.main.getStartedTasksPubKeys();
 };

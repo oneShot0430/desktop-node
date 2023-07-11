@@ -49,7 +49,7 @@ const startTask = async (
   _: Event,
   payload: TaskStartStopParam
 ): Promise<void> => {
-  const { taskAccountPubKey, force } = payload;
+  const { taskAccountPubKey, isPrivate } = payload;
   const mainSystemAccount = await getMainSystemAccountKeypair();
 
   const taskInfo: RawTaskData | null =
@@ -76,8 +76,8 @@ const startTask = async (
     });
   }
 
-  // if task is not whitelisted -> stop, unless force is true
-  if (!taskInfo.is_whitelisted && !force) {
+  // if task is not whitelisted -> stop, unless isPrivate is true
+  if (!taskInfo.is_whitelisted && !isPrivate) {
     console.log("Can't start task, because it is not whitelisted");
 
     return throwDetailedError({
@@ -156,7 +156,6 @@ async function executeTasks(
   secret: string;
 }> {
   const availablePort = await detectPort();
-  console.log('@@@ AV PORT', availablePort);
 
   // TODO: [Ghazanfer] Figure out why every IPC call is being made twice and update below code accordingly
   const secret = 'secret';

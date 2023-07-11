@@ -70,6 +70,7 @@ type PropsType = {
   isFirstRowInTable?: boolean;
   isLoading?: boolean;
   isRunning?: boolean;
+  isPrivate?: boolean;
 };
 
 export function Status({
@@ -77,13 +78,14 @@ export function Status({
   isFirstRowInTable,
   isLoading,
   isRunning,
+  isPrivate,
 }: PropsType) {
   const { icon: StatusIcon, tooltip, iconColor } = statuses[status];
   const tooltipPlacement: Placement = `${
     isFirstRowInTable ? 'bottom' : 'top'
   }-left`;
   const tooltipMessage =
-    status === TaskStatus.BLACKLISTED && isRunning
+    status === TaskStatus.BLACKLISTED && isRunning && !isPrivate
       ? "This task has been delisted, but don't worry! Your tokens are safe. Pause the task and the tokens will be ready to unstake after 3 rounds."
       : tooltip;
 

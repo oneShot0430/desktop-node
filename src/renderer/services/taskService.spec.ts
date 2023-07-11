@@ -38,7 +38,11 @@ describe('TaskService.getStatus', () => {
       hasError: true,
     };
 
-    const result = await TaskService.getStatus(task, mainAccountStakingKey);
+    const result = await TaskService.getStatus(
+      task,
+      mainAccountStakingKey,
+      false
+    );
     expect(result).toBe(TaskStatus.ERROR);
   });
 
@@ -50,7 +54,11 @@ describe('TaskService.getStatus', () => {
       },
     };
 
-    const result = await TaskService.getStatus(task, mainAccountStakingKey);
+    const result = await TaskService.getStatus(
+      task,
+      mainAccountStakingKey,
+      false
+    );
     expect(result).toBe(TaskStatus.FLAGGED);
   });
 
@@ -61,7 +69,11 @@ describe('TaskService.getStatus', () => {
       bountyAmountPerRound: 20,
     };
 
-    const result = await TaskService.getStatus(task, mainAccountStakingKey);
+    const result = await TaskService.getStatus(
+      task,
+      mainAccountStakingKey,
+      false
+    );
     expect(result).toBe(TaskStatus.COMPLETE);
   });
 
@@ -79,7 +91,11 @@ describe('TaskService.getStatus', () => {
       },
     };
 
-    const result = await TaskService.getStatus(task, mainAccountStakingKey);
+    const result = await TaskService.getStatus(
+      task,
+      mainAccountStakingKey,
+      false
+    );
     expect(result).toBe(TaskStatus.COOLING_DOWN);
   });
 
@@ -97,7 +113,11 @@ describe('TaskService.getStatus', () => {
       },
     };
 
-    const result = await TaskService.getStatus(task, mainAccountStakingKey);
+    const result = await TaskService.getStatus(
+      task,
+      mainAccountStakingKey,
+      false
+    );
     expect(result).toBe(TaskStatus.STOPPED);
   });
 
@@ -116,7 +136,11 @@ describe('TaskService.getStatus', () => {
       },
     };
 
-    const result = await TaskService.getStatus(task, mainAccountStakingKey);
+    const result = await TaskService.getStatus(
+      task,
+      mainAccountStakingKey,
+      false
+    );
     expect(result).toBe(TaskStatus.PRE_SUBMISSION);
   });
 
@@ -135,7 +159,11 @@ describe('TaskService.getStatus', () => {
       },
     };
 
-    const result = await TaskService.getStatus(task, mainAccountStakingKey);
+    const result = await TaskService.getStatus(
+      task,
+      mainAccountStakingKey,
+      false
+    );
     expect(result).toBe(TaskStatus.WARMING_UP);
   });
 
@@ -168,7 +196,11 @@ describe('TaskService.getStatus', () => {
       },
     };
 
-    const result = await TaskService.getStatus(task, mainAccountStakingKey);
+    const result = await TaskService.getStatus(
+      task,
+      mainAccountStakingKey,
+      false
+    );
     expect(result).toBe(TaskStatus.ACTIVE);
   });
 
@@ -193,7 +225,11 @@ describe('TaskService.getStatus', () => {
       },
     };
 
-    const result = await TaskService.getStatus(task, mainAccountStakingKey);
+    const result = await TaskService.getStatus(
+      task,
+      mainAccountStakingKey,
+      false
+    );
     expect(result).toBe(TaskStatus.COOLING_DOWN);
   });
 });

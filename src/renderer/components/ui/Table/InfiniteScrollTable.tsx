@@ -1,5 +1,6 @@
 import React, { useEffect, ReactNode, RefCallback } from 'react';
 import { useInView } from 'react-intersection-observer';
+import { twMerge } from 'tailwind-merge';
 
 import { LoadingSpinner, LoadingSpinnerSize } from '../LoadingSpinner';
 
@@ -41,19 +42,24 @@ export function InfiniteScrollTable({
     }
   }, [isLoading, hasMore, update, inView, isFetchingNextPage]);
 
+  const showLoader = !!items && (hasMore || isFetchingNextPage);
+
+  const loaderClasses = twMerge(
+    'w-fit mx-auto scale-75',
+    showLoader ? '' : 'hidden'
+  );
+
+  const innerWrapperClasses = twMerge('relative h-4 my-8');
+
   return (
     <Table headers={headers} columnsLayout={columnsLayout} error={error}>
       <div
         ref={animationRef}
-        className="!overflow-hidden min-h-[440px] flex flex-col"
+        className="!overflow-hidden flex flex-col min-h-[440px]"
       >
-        <div className="">{children}</div>
-        <div ref={tableBottomRef} className="h-4 my-8 relative">
-          <div
-            className={`${
-              !!items && (hasMore || isFetchingNextPage) ? '' : 'hidden'
-            } w-fit mx-auto scale-75`}
-          >
+        <div>{children}</div>
+        <div ref={tableBottomRef} className={innerWrapperClasses}>
+          <div className={loaderClasses}>
             <LoadingSpinner size={LoadingSpinnerSize.Large} />
           </div>
         </div>
