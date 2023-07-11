@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { ColumnsLayout } from 'renderer/components/ui';
 
-import { AddPrivateTask } from './AddPrivateTask';
+import { AddPrivateTask } from './AddPrivateTask/AddPrivateTask';
 import { AdvancedButton } from './AdvancedButton';
 
 interface Props {
@@ -30,7 +30,7 @@ export function AdvancedOptions({ columnsLayout }: Props) {
         className={`transition-all duration-500 ease-in-out transform ${animationClasses}`}
       >
         {isAddPrivateTaskVisible && (
-          <div className="absolute -bottom-9 left-0 w-full z-50">
+          <div className="pb-[22px]">
             <AddPrivateTask
               columnsLayout={columnsLayout}
               onClose={handleAddPrivateTaskClose}
@@ -39,7 +39,7 @@ export function AdvancedOptions({ columnsLayout }: Props) {
         )}
       </div>
       {!isAddPrivateTaskVisible && (
-        <div className="pl-8 py-4">
+        <div className="pt-4 pb-6 pl-4">
           <AdvancedButton onClick={handleAdvancedButtonClick} />
         </div>
       )}

@@ -68,8 +68,8 @@ export const Dropdown = forwardRef<HTMLButtonElement, DropdownProps>(
     );
 
     const optionsClasses = twMerge(
-      'absolute !cursor-pointer z-50 w-full py-1 mt-1 overflow-auto text-base text-white rounded-md shadow-lg bg-purple-5 max-h-60 focus:outline-none sm:text-sm',
-      bottom ? 'top-9' : 'bottom-10'
+      'absolute !cursor-pointer z-50 w-full py-1 mt-1 overflow-auto text-base text-white rounded-md shadow-lg bg-purple-5 max-h-60 focus:outline-none sm:text-sm top-9'
+      // bottom ? 'top-9' : 'bottom-10'
       /**
        * @dev when this component will go to styleguide, this logic should be abstracted away and probably we should make
        * possible to add dropdown items using "slot pattern"
@@ -95,7 +95,7 @@ export const Dropdown = forwardRef<HTMLButtonElement, DropdownProps>(
     );
 
     const emptyListItem = emptyListItemSlot || (
-      <div className="text-gray-500 cursor-not-allowed flex justify-center py-2">
+      <div className="flex justify-center py-2 text-gray-500 cursor-not-allowed">
         No items
       </div>
     );
@@ -130,7 +130,7 @@ export const Dropdown = forwardRef<HTMLButtonElement, DropdownProps>(
             <Listbox.Button
               ref={ref}
               placeholder={placeholderText}
-              className="relative cursor-pointer w-full py-2 pl-3 pr-10 text-sm text-left rounded-lg shadow-md text-gray bg-purple-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-finnieTeal sm:text-sm"
+              className="relative w-full py-2 pl-3 pr-10 text-sm text-left rounded-lg shadow-md cursor-pointer text-gray bg-purple-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-finnieTeal sm:text-sm"
             >
               {selected ? (
                 <span className="block text-white truncate">

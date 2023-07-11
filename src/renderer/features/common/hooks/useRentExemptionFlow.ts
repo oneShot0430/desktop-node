@@ -22,7 +22,6 @@ export const useRentExemptionFlow = () => {
     }
 
     const response = await triggerRedemption({ mainWallet, stakingWallet });
-    console.log('@@@response', response);
     return response;
   }, []);
 

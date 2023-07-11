@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import EmptyMyNode from 'assets/animations/empty-my-node.json';
 import { TASK_REFETCH_INTERVAL } from 'config/refetchIntervals';
 import { InfiniteScrollTable, LoadingSpinner } from 'renderer/components/ui';
-import { useMyNodeContext } from 'renderer/features';
+import { useMyNodeContext, usePrivateTasks } from 'renderer/features';
 import { useStartedTasks } from 'renderer/features/common/hooks/useStartedTasks';
 import { getMainAccountPublicKey, QueryKeys } from 'renderer/services';
 import { AppRoute } from 'renderer/types/routes';
@@ -35,8 +35,11 @@ export function MyNode() {
     QueryKeys.MainAccount,
     getMainAccountPublicKey
   );
-
+  const { privateTasksQuery } = usePrivateTasks();
   const { fetchMyTasksEnabled } = useMyNodeContext();
+
+  const privateTasksLoaded = privateTasksQuery.isSuccess;
+  const privateTasksList = privateTasksQuery.data || [];
 
   const {
     isFetchingNextTasks,
@@ -48,7 +51,7 @@ export function MyNode() {
   } = useStartedTasks({
     pageSize,
     refetchInterval: TASK_REFETCH_INTERVAL,
-    enabled: fetchMyTasksEnabled,
+    enabled: fetchMyTasksEnabled && privateTasksLoaded,
   });
 
   const navigate = useNavigate();
@@ -95,16 +98,20 @@ export function MyNode() {
           </div>
         )}
 
-        {allRows.map((task, index) => (
-          <TaskItem
-            key={task.publicKey}
-            index={index}
-            task={task}
-            accountPublicKey={mainAccountPubKey as string}
-            columnsLayout={columnsLayout}
-            totalItems={allRows.length}
-          />
-        ))}
+        {allRows.map((task, index) => {
+          const isPrivate = privateTasksList.includes(task.publicKey);
+          return (
+            <TaskItem
+              key={task.publicKey}
+              index={index}
+              task={task}
+              accountPublicKey={mainAccountPubKey as string}
+              columnsLayout={columnsLayout}
+              totalItems={allRows.length}
+              isPrivate={isPrivate}
+            />
+          );
+        })}
       </InfiniteScrollTable>
     </div>
   );

@@ -477,7 +477,8 @@ function TaskItem({ task, index, columnsLayout }: Props) {
         )}
 
         <div
-          className={`w-full col-span-9 overflow-y-auto overflow-x-hidden inner-scrollbar ${
+          // FIXME: temporarly removed "overflow-x-hidden inner-scrollbar" because the dropdown is overflowed and hidden when placed on top select box
+          className={`w-full col-span-9 overflow-y-auto ${
             accordionView !== null
               ? // 9000px is just a simbolic value of a ridiculously high height, the animation needs absolute max-h values to work properly (fit/max/etc won't work)
                 'opacity-1 pt-6 max-h-[9000px]'

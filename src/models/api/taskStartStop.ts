@@ -1,4 +1,4 @@
 export interface TaskStartStopParam {
   taskAccountPubKey: string;
-  force?: boolean;
+  isPrivate?: boolean;
 }

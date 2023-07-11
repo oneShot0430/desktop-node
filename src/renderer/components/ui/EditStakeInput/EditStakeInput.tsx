@@ -9,6 +9,7 @@ interface PropsType {
   meetsMinimumStake: boolean;
   onChange: (newStake: number) => void;
   disabled?: boolean;
+  defaultValue?: number;
 }
 
 export function EditStakeInput({
@@ -17,6 +18,7 @@ export function EditStakeInput({
   meetsMinimumStake,
   onChange,
   disabled = false,
+  defaultValue,
 }: PropsType) {
   const [isPristine, setIsPristine] = useState<boolean>(true);
   const [hasEnteredAValue, setHasEnteredAValue] = useState<boolean>(false);
@@ -55,6 +57,7 @@ export function EditStakeInput({
         type="number"
         className={inputClasses}
         disabled={disabled}
+        defaultValue={defaultValue}
       />
       <div className={labelClasses}>
         {!!minStakeInKoii && `minimum: ${minStakeInKoii}`}

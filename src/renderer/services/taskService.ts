@@ -37,10 +37,13 @@ export class TaskService {
 
   static async getStatus(
     task: Task,
-    stakingAccountPublicKey: string
+    stakingAccountPublicKey: string,
+    isPrivate = false
   ): Promise<TaskStatus> {
-    // To do: when we introduce private tasks they could be blacklisted and should be runnable anyways, so we'll have to differentiate better between blacklisted and inactive
-    const isBlackListed = !task.isWhitelisted || !task.isActive;
+    /**
+     * @dev: allow to run the task if it's "private"
+     */
+    const isBlackListed = (!task.isWhitelisted || !task.isActive) && !isPrivate;
     const allSubmissions = Object.values(task.submissions);
     const submissionsFromCurrentAccount = allSubmissions.filter((submission) =>
       Object.keys(submission).some((key) => key === stakingAccountPublicKey)

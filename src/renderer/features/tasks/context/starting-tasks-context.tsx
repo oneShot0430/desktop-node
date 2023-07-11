@@ -6,7 +6,7 @@ type StartTaskArgs = {
   publicKey: string;
   valueToStake: number;
   alreadyStakedTokensAmount: number | null;
-  force?: boolean;
+  isPrivate?: boolean;
 };
 
 interface TasksContext {
@@ -25,12 +25,12 @@ const runTask = async ({
   publicKey,
   alreadyStakedTokensAmount = 0,
   valueToStake,
-  force = false,
+  isPrivate = false,
 }: StartTaskArgs) => {
   if (alreadyStakedTokensAmount === 0) {
     await stakeOnTask(publicKey, valueToStake);
   }
-  await startTask(publicKey, force);
+  await startTask(publicKey, isPrivate);
 };
 
 type TaskStartingPromise = ReturnType<typeof runTask>;

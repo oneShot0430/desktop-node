@@ -116,7 +116,7 @@ export function NodeTools({
 
     toast.success('Task settings successfully paired', {
       duration: 4500,
-      icon: <CheckSuccessLine className="h-5 w-5" />,
+      icon: <CheckSuccessLine className="w-5 h-5" />,
       style: {
         backgroundColor: '#BEF0ED',
         paddingRight: 0,
@@ -127,7 +127,7 @@ export function NodeTools({
   const onError = () => {
     toast.error('Task settings pairing failed. Try Again', {
       duration: 4500,
-      icon: <CloseLine className="h-5 w-5" />,
+      icon: <CloseLine className="w-5 h-5" />,
       style: {
         backgroundColor: '#FFA6A6',
         paddingRight: 0,
@@ -171,7 +171,10 @@ export function NodeTools({
               defaultVariableId={pairedVariablesForTask[value as string]}
               description={description}
               onOpenAddTaskVariableModal={onOpenAddTaskVariableModal}
-              bottom={!(index > 0 && index === tools.length - 1)}
+              // TODO: fixme: fix dropdown with React Portal
+              // dropDownPlacementBottom={
+              //   !(index > 0 && index === tools.length - 1)
+              // }
             />
           ))}
           <div className="flex justify-end">

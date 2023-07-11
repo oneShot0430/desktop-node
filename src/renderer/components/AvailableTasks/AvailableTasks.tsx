@@ -40,9 +40,10 @@ export function AvailableTasks() {
 
   const thereAreNoTasks =
     !isLoadingTasks && !isFetchingNextTasks && !hasMoreTasks && !allRows.length;
+  const showLoader = (isLoadingTasks || isFetchingNextTasks) && !allRows.length;
 
   return (
-    <div className="relative flex flex-col flex-grow w-full min-h-0 h-0">
+    <div className="relative flex flex-col flex-grow w-full h-0 min-h-0">
       <InfiniteScrollTable
         animationRef={animationRef}
         isFetchingNextPage={isFetchingNextTasks}
@@ -54,7 +55,7 @@ export function AvailableTasks() {
         update={fetchNextTasks}
         items={allRows.length}
       >
-        {(isLoadingTasks || isFetchingNextTasks) && !allRows.length && (
+        {showLoader && (
           <div className="flex items-center justify-center w-full h-full text-white">
             <div className="w-[363px] h-[363px] flex flex-col justify-center items-center">
               <img src={LoadingAvailableTasks} alt="No available tasks" />

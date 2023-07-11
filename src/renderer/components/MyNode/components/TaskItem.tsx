@@ -62,6 +62,7 @@ type PropsType = {
   index: number;
   columnsLayout: ColumnsLayout;
   totalItems: number;
+  isPrivate: boolean;
 };
 
 export function TaskItem({
@@ -70,6 +71,7 @@ export function TaskItem({
   index,
   columnsLayout,
   totalItems,
+  isPrivate,
 }: PropsType) {
   const [shouldDisplayInfo, setShouldDisplayInfo] = useState(false);
   const [shouldDisplayActions, setShouldDisplayActions] = useState(false);
@@ -209,7 +211,7 @@ export function TaskItem({
     const openedTheLogs: boolean = await openLogfileFolder(task.publicKey);
     if (!openedTheLogs) {
       toast.error('Unable to open the logs folder. Try Again', {
-        icon: <CloseLine className="h-5 w-5" />,
+        icon: <CloseLine className="w-5 h-5" />,
         style: {
           backgroundColor: '#FFA6A6',
           paddingRight: 0,
@@ -312,7 +314,7 @@ export function TaskItem({
                   />
                 }
                 onClick={handleToggleTask}
-                className="rounded-full w-8 h-8"
+                className="w-8 h-8 rounded-full"
                 disabled={isPlayPauseButtonDisabled}
               />
             </Tooltip>
@@ -346,7 +348,7 @@ export function TaskItem({
               />
             </div>
           </Tooltip>
-          <div className="text-xs flex flex-col gap-1 justify-self-start">
+          <div className="flex flex-col gap-1 text-xs justify-self-start">
             <div>{taskName}</div>
             <div className="text-finnieTeal">{createdAt}</div>
           </div>
@@ -362,8 +364,8 @@ export function TaskItem({
           <div className="truncate">{`Bounty: ${totalBountyInKoii}`}</div>
         </div>
         <div className="flex flex-col gap-2 text-xs w-fit">
-          <div className="truncate mx-auto">{`All time: ${allTimeRewardsInKoii}`}</div>
-          <div className="truncate mx-auto">{`To claim: ${pendingRewardsInKoii}`}</div>
+          <div className="mx-auto truncate">{`All time: ${allTimeRewardsInKoii}`}</div>
+          <div className="mx-auto truncate">{`To claim: ${pendingRewardsInKoii}`}</div>
         </div>
         <div {...propsManagingMainTooltipState}>
           <RoundTime
@@ -381,7 +383,7 @@ export function TaskItem({
         </div>
         <div
           ref={optionsDropdownRef}
-          className="flex flex-row items-center gap-4 relative"
+          className="relative flex flex-row items-center gap-4"
         >
           <Button
             onClick={() =>
@@ -391,7 +393,7 @@ export function TaskItem({
             }
             onlyIcon
             icon={
-              <Icon source={ClickXlLine} className="text-white h-10 w-10" />
+              <Icon source={ClickXlLine} className="w-10 h-10 text-white" />
             }
             className={`py-0.75 !pr-[0.5px] rounded-full ${
               shouldDisplayActions ? 'bg-[#454580]' : 'bg-transparent'

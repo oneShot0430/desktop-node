@@ -29,4 +29,5 @@ export enum QueryKeys {
   PendingRewardsByTask = 'PendingRewardsByTask',
   AllTimeRewards = 'AllTimeRewards',
   IsRunning = 'IsRunning',
+  StartedTasksPubKeys = 'StartedTasksPubKeys',
 }
