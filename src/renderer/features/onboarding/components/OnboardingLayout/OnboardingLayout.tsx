@@ -58,7 +58,7 @@ function OnboardingLayout({ children }: PropsType) {
 
   return (
     <div className="flex flex-row h-full text-white">
-      <div className="w-[650px] bg-finnieBlue-light-secondary items-center flex flex-col relative">
+      <div className="w-[610px] bg-finnieBlue-light-secondary items-center flex flex-col relative">
         {showOnboardingBackButton && (
           <Icon
             source={ChevronArrowLine}
