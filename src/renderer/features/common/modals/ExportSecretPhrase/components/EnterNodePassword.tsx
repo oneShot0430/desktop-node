@@ -47,7 +47,9 @@ export function EnterNodePassword({
         setSeedPhrase(seedPhrase);
         setNextStep(Steps.ShowSecretPhase);
       } else {
-        setError('Invalid PIN code');
+        setError(
+          "Whoops. That PIN isn't right. Double check it and try again."
+        );
       }
     } catch (error: any) {
       setError(error);
@@ -90,9 +92,11 @@ export function EnterNodePassword({
         </div>
       </div>
 
-      <div className="flex flex-col items-center px-4">
-        <ErrorMessage error={error} />
-      </div>
+      {error && (
+        <div className="flex flex-col items-center px-4">
+          <ErrorMessage error={error} />
+        </div>
+      )}
 
       <div className="flex justify-center pt-2">
         <Button
