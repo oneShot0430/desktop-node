@@ -98,17 +98,17 @@ function KeyCreationMethodPick() {
           To ensure a fair playing field, every node is required to stake tokens
           as collateral.{' '}
           <Tooltip
-            placement="top-right"
             tooltipContent={
-              <div className="max-w-[250px] w-full text-xs leading=4">
-                Staking refers to the act of locking up an amount of tokens as a
-                guarantee for participating in a blockchain network.
+              <div className="max-w-[250px] w-full text-xs leading-4">
+                By &ldquo; staking &rdquo; tokens, you are promising to
+                participate honestly in the network. Many Web3 projects use
+                staking as a way to ensure the security of their networks.
               </div>
             }
           >
             <Icon
               source={TooltipChatQuestionLeftLine}
-              className="h-4 w-4 text-finnieEmerald-light ml-0.5 cursor-pointer"
+              className="h-4 w-4 text-finnieEmerald-light ml-0.5 -mt-1 cursor-pointer"
             />
           </Tooltip>
         </p>

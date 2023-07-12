@@ -41,6 +41,8 @@ function RunFirstTask() {
   const [tasksToRun, setTasksToRun] = useState(
     selectedTasks as TaskWithStake[]
   );
+  const [showMinimumStakeError, setShowMinimumStakeError] =
+    useState<boolean>(false);
 
   const { TASK_FEE } = config.node;
 
@@ -108,56 +110,60 @@ function RunFirstTask() {
 
   return (
     <div className="relative h-full flex-col justify-center items-center bg-finnieBlue-dark-secondary">
-      <div className="px-8 pt-6 h-full flex flex-col items-center justify-center">
-        <p className="text-2xl leading-8 mb-2 text-finnieEmerald-light">
-          Get Started
-        </p>
-        <div className="text-base mb-5 text-center max-w-[587px]">
-          After your node makes a submission, the stake is locked until three
-          rounds after the task is paused. This task has a round time of about
-          10 minutes.
-        </div>
-        <div className="overflow-y-auto overflow-x-hidden h-full w-full">
-          <div className="mb-2 text-xs text-left w-full grid grid-cols-first-task text-finnieEmerald-light">
-            <div className=" col-span-2 mx-auto">Info</div>
-            <div className=" col-span-6">Task</div>
-            <div className="col-span-6">Creator</div>
-            <div className=" col-span-4 2xl:col-start-15 2xl:col-span-4">
-              Stake
+      <div className="px-8 py-6 h-full flex flex-col items-center justify-center">
+        <div className="max-h-[90%] flex flex-col h-full w-full items-center justify-center">
+          <div className="w-full max-h-full flex flex-col items-center justify-center text-center">
+            <p className="text-2xl leading-8 mb-2 text-finnieEmerald-light">
+              Get Started
+            </p>
+            <div className="text-base mb-5 text-center max-w-[587px]">
+              After your node makes a submission, the stake is locked until
+              three rounds after the task is paused. This task has a round time
+              of about 10 minutes.
             </div>
-          </div>
-
-          {loadingVerifiedTasks ? (
-            <div>Loading...</div>
-          ) : (
-            selectedTasks.map((task, index) => (
-              <div className="mb-4 w-full" key={index}>
-                <TaskItem
-                  stakeValue={stakePerTask[task?.publicKey] ?? 0}
-                  onStakeInputChange={(newStake) => {
-                    handleStakeInputChange(newStake, task.publicKey);
-                    updateStake(task.publicKey, newStake);
-                    setIsRunButtonDisabled(newStake < task.minStake);
-                  }}
-                  onRemove={() => handleTaskRemove(task.publicKey)}
-                  index={index}
-                  task={task}
-                />
+            <div className="mb-1 text-xs text-left w-full grid grid-cols-first-task text-finnieEmerald-light">
+              <div className=" col-span-2 mx-auto">Info</div>
+              <div className=" col-span-6">Task</div>
+              <div className="col-span-6">Creator</div>
+              <div className=" col-span-4 2xl:col-start-15 2xl:col-span-4">
+                Stake
               </div>
-            ))
-          )}
-          <div className="flex justify-between font-semibold text-base leading-5 px-4 items-center">
-            <div className="flex gap-2">
-              <p className="text-orange-2">Task Fees</p>
-              <p>~0.01 KOII</p>
             </div>
-            <div className="flex gap-2">
-              <p className="text-finnieEmerald-light">Total KOII staked</p>
-              <p>{totalStakeInKoii} KOII</p>
+            <div className="max-h-[80%] min-h-[40%] w-full h-full overflow-x-hidden overflow-y-auto">
+              {loadingVerifiedTasks ? (
+                <div>Loading...</div>
+              ) : (
+                selectedTasks.map((task, index) => (
+                  <div className="pb-2 w-full h-auto" key={index}>
+                    <TaskItem
+                      stakeValue={stakePerTask[task?.publicKey] ?? 0}
+                      onStakeInputChange={(newStake) => {
+                        handleStakeInputChange(newStake, task.publicKey);
+                        updateStake(task.publicKey, newStake);
+                        setIsRunButtonDisabled(newStake < task.minStake);
+                      }}
+                      onRemove={() => handleTaskRemove(task.publicKey)}
+                      index={index}
+                      task={task}
+                      setShowMinimumStakeError={setShowMinimumStakeError}
+                    />
+                  </div>
+                ))
+              )}
+            </div>
+            <div className="flex justify-between w-full mt-1 font-semibold text-base leading-5 px-4 items-center">
+              <div className="flex gap-2">
+                <p className="text-orange-2">Task Fees</p>
+                <p>~0.01 KOII</p>
+              </div>
+              <div className="flex gap-2">
+                <p className="text-finnieEmerald-light">Total KOII staked</p>
+                <p>{totalStakeInKoii} KOII</p>
+              </div>
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-center mt-auto mb-10">
+        <div className="flex flex-col items-center h-[10%] mt-auto">
           <div className="flex flex-row items-center gap-2 mb-1.5 text-sm text-finnieEmerald-light">
             {`Total balance: ${
               isLoading ? 'Loading balance...' : balanceInKoii
@@ -177,6 +183,11 @@ function RunFirstTask() {
               context={ErrorContext.START_TASK}
             />
           ))}
+          {showMinimumStakeError && (
+            <p className="pt-1 text-finnieRed text-xs">
+              Whoops! Make sure you stake at least 1.9 KOII on this task.
+            </p>
+          )}
         </div>
       </div>
       <BgShape className="absolute top-0 right-0" />

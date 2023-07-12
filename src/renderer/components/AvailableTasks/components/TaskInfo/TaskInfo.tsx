@@ -1,4 +1,5 @@
 import React, { RefObject } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 import { TaskPairing } from 'models';
 import { RequirementType, TaskMetadata } from 'models/task';
@@ -22,6 +23,7 @@ type PropsType = {
   shouldDisplayToolsInUse?: boolean;
   showSourceCode?: boolean;
   isRunning?: boolean;
+  isOnboardingTask?: boolean;
   onOpenAddTaskVariableModal?: (
     dropdownRef: RefObject<HTMLButtonElement>,
     settingName: string
@@ -39,6 +41,7 @@ export function TaskInfo({
   showSourceCode = true,
   isRunning,
   onOpenAddTaskVariableModal,
+  isOnboardingTask,
 }: PropsType) {
   const specs = metadata?.requirementsTags?.filter(({ type }) =>
     [
@@ -51,9 +54,21 @@ export function TaskInfo({
     ].includes(type)
   );
 
+  const gridClass = twMerge(
+    'grid grid-cols-2 gap-y-2',
+    isOnboardingTask ? 'gap-x-2' : 'gap-x-12'
+  );
+  const taskDetailsClass = twMerge(
+    ' w-full',
+    isOnboardingTask ? 'max-w-[60%] xl:max-w-[48%]' : 'max-w-[48%]'
+  );
+  const taskSpecificationClass = twMerge(
+    ' w-full text-start',
+    isOnboardingTask ? 'max-w-[40%] xl:max-w-[48%]' : 'max-w-[48%]'
+  );
   return (
     <div className="flex flex-col w-full pl-3 pr-5 gap-4">
-      <div>
+      <div className="text-start">
         <div className="mb-2 text-base font-semibold text-finnieEmerald-light">
           Task ID
         </div>
@@ -69,7 +84,7 @@ export function TaskInfo({
           </div>
         </div>
       </div>
-      <div>
+      <div className="text-start">
         <div className="mb-2 text-base font-semibold text-finnieEmerald-light">
           Description
         </div>
@@ -78,12 +93,12 @@ export function TaskInfo({
         </p>
       </div>
 
-      <div className="mb-6 w-full flex justify-between">
-        <div className="max-w-[48%] w-full">
-          <div className="mb-2 text-base font-semibold text-finnieEmerald-light">
+      <div className="mb-6 w-full flex justify-between text-start">
+        <div className={taskDetailsClass}>
+          <div className="mb-2 text-base text-start font-semibold text-finnieEmerald-light">
             Details
           </div>
-          <div className="grid grid-cols-2 gap-y-2 gap-x-12">
+          <div className={gridClass}>
             <div className="select-text">Nodes: {nodes ?? NOT_AVAILABLE}</div>
             <div className="select-text">Bounty: {bounty ?? NOT_AVAILABLE}</div>
             <div className="select-text">
@@ -95,11 +110,11 @@ export function TaskInfo({
           </div>
         </div>
 
-        <div className="max-w-[48%] w-full">
+        <div className={taskSpecificationClass}>
           <div className="mb-2 text-base font-semibold text-finnieEmerald-light">
             Specifications
           </div>
-          <div className="grid grid-cols-2 gap-y-2 gap-x-12">
+          <div className={gridClass}>
             {specs?.map(({ type, value }, index) => (
               <div key={index} className="select-text">
                 {type}: {value ?? NOT_AVAILABLE}

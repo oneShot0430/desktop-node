@@ -39,12 +39,12 @@ function CreateNewKey() {
         <Button
           label="Fund Account"
           onClick={handleOpenQR}
-          className="font-semibold bg-finnieGray-light text-finnieBlue-light w-[240px] h-[48px]"
+          className="font-semibold bg-finnieGray-light text-finnieBlue-light w-[260px] h-[48px]"
         />
         <Button
           label="Back Up My Secret Phrase"
           onClick={() => navigate(AppRoute.OnboardingBackupKeyNow)}
-          className="font-semibold bg-transparent text-white w-auto h-[48px] px-6 py-[14px] hover:underline"
+          className="font-semibold bg-transparent text-white w-auto h-[48px] px-6 py-[14px] underline hover:border-2 hover:border-white"
         />
       </div>
     </ContentRightWrapper>

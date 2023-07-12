@@ -1,5 +1,9 @@
 import { CheckSuccessLine } from '@_koii/koii-styleguide';
-import React, { ChangeEventHandler, useState } from 'react';
+import React, {
+  ChangeEventHandler,
+  useState,
+  KeyboardEventHandler,
+} from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { getKoiiFromRoe, getRoeFromKoii } from 'utils';
@@ -40,6 +44,12 @@ export function EditStakeInput({
     setHasEnteredAValue(true);
   };
 
+  const handleOnKeyDown: KeyboardEventHandler<HTMLInputElement> = (e) => {
+    if (e.key === 'Enter' && handleChangeStakeView && !hasError) {
+      handleChangeStakeView();
+    }
+  };
+
   return (
     <div className="flex flex-col items-center w-fit">
       <div className="flex">
@@ -48,6 +58,7 @@ export function EditStakeInput({
           value={value}
           placeholder="0"
           onChange={handleChange}
+          onKeyDown={handleOnKeyDown}
           type="number"
           className={inputClasses}
           disabled={disabled}
