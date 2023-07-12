@@ -20,7 +20,12 @@
   "generateUpdatesFilesForAllChannels": true,
   "mac": {
     "category": "public.app-category.productivity",
-    "target": ["dmg", "zip"],
+    "target": [
+      {
+        "target": "dmg",
+        "arch": ["x64", "arm64"]
+      }
+    ],
     "type": "distribution",
     "artifactName": "koii-desktop-node-${version}-${os}-${arch}.${ext}",
     "hardenedRuntime": true,
