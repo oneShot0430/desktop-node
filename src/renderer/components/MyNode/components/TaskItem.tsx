@@ -20,6 +20,7 @@ import { useQuery, useQueryClient } from 'react-query';
 
 import { Address } from 'renderer/components/AvailableTasks/components/Address';
 import { TaskInfo } from 'renderer/components/AvailableTasks/components/TaskInfo';
+import { getTooltipContent } from 'renderer/components/AvailableTasks/utils';
 import { RoundTime } from 'renderer/components/RoundTime';
 import {
   Button,
@@ -30,6 +31,7 @@ import {
   ColumnsLayout,
   Status,
 } from 'renderer/components/ui';
+import { DROPDOWN_MENU_ID } from 'renderer/components/ui/Dropdown/Dropdown';
 import { useMyNodeContext, useStakingAccount } from 'renderer/features';
 import {
   useAddStakeModal,
@@ -169,7 +171,7 @@ export function TaskItem({
       if (isRunning) {
         await stopTask(publicKey);
       } else {
-        await startTask(publicKey);
+        await startTask(publicKey, isPrivate);
       }
     } catch (error) {
       console.warn(error);
@@ -222,11 +224,13 @@ export function TaskItem({
 
   useOnClickOutside(
     infoRef as MutableRefObject<HTMLDivElement>,
-    closeAccordionView
+    closeAccordionView,
+    DROPDOWN_MENU_ID
   );
   useOnClickOutside(
     optionsDropdownRef as MutableRefObject<HTMLDivElement>,
-    closeOptionsDropdown
+    closeOptionsDropdown,
+    DROPDOWN_MENU_ID
   );
 
   const minStake = getKoiiFromRoe(task.minimumStakeAmount);
@@ -238,8 +242,11 @@ export function TaskItem({
   };
   const isBountyEmpty = task.totalBountyAmount < task.bountyAmountPerRound;
   const isTaskDelisted = !task.isWhitelisted || !task.isActive;
+  const isTaskNotRunning = !isRunning;
+  const hasNoStake = !(myStakeInKoii > 0);
+  const isDelistedPublicTask = isTaskDelisted && !isPrivate;
   const isPlayPauseButtonDisabled =
-    !isRunning && (!(myStakeInKoii > 0) || isTaskDelisted || isBountyEmpty);
+    isTaskNotRunning && (hasNoStake || isDelistedPublicTask || isBountyEmpty);
 
   const containerClasses = `py-2.5 gap-y-0 ${
     taskStatus === TaskStatus.FLAGGED
@@ -251,14 +258,14 @@ export function TaskItem({
       ? 'bg-[#FFA54B]/25'
       : ''
   }`;
-  const tooltipContent =
-    !isRunning && isTaskDelisted
-      ? "This task has been delisted, but don't worry! Your tokens are safe and will be ready to unstake after 3 rounds."
-      : isTaskDelisted
-      ? "This task has been delisted, but don't worry! Your tokens are safe. Pause the task and the tokens will be ready to unstake after 3 rounds."
-      : myStakeInKoii > 0
-      ? `${isRunning ? 'Stop' : 'Start'} task`
-      : `You need to stake at least ${minStake} KOII on this task to run it.`;
+
+  const tooltipContent = getTooltipContent({
+    isRunning,
+    isTaskDelisted,
+    myStakeInKoii,
+    minStake,
+    isPrivate,
+  });
 
   const handleHideMainTooltip = () => {
     setHideTooltip(true);

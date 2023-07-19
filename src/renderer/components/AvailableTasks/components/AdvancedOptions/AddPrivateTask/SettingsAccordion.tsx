@@ -1,6 +1,6 @@
 import React, { RefObject, forwardRef } from 'react';
 
-import { RequirementTag } from 'models';
+import { RequirementTag, TaskMetadata } from 'models';
 
 import { TaskSettings } from '../../TaskSettings';
 
@@ -14,6 +14,7 @@ type PropsType = {
     dropdownRef: RefObject<HTMLButtonElement>,
     tool: string
   ) => void;
+  metadata?: TaskMetadata | null;
 };
 
 export const SettingsAccordion = forwardRef<HTMLDivElement, PropsType>(
@@ -25,6 +26,7 @@ export const SettingsAccordion = forwardRef<HTMLDivElement, PropsType>(
       onTaskToolsValidationCheck,
       onCloseAccordionView,
       onOpenAddTaskVariableModal,
+      metadata,
     },
     ref
   ) => {
@@ -36,6 +38,7 @@ export const SettingsAccordion = forwardRef<HTMLDivElement, PropsType>(
       >
         <div ref={ref} className="flex w-full pl-4">
           <TaskSettings
+            metadata={metadata}
             taskPubKey={taskPubkey}
             onToolsValidation={onTaskToolsValidationCheck}
             taskVariables={globalAndTaskVariables}

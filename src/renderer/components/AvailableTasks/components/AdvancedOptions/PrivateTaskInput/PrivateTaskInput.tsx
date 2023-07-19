@@ -35,7 +35,7 @@ export function PrivateTaskInput({
         data-testid="private_task_input_close"
       />
       <InputField
-        className="w-[244px] mt-4"
+        className="w-[420px] mt-4"
         label=""
         name="private-task-pubKey"
         placeholder="Task ID"

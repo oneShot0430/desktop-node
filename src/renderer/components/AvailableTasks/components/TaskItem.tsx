@@ -13,9 +13,9 @@ import React, {
   useMemo,
   useEffect,
   useRef,
-  MutableRefObject,
   ReactNode,
   RefObject,
+  MutableRefObject,
 } from 'react';
 import { useQueryClient } from 'react-query';
 
@@ -32,15 +32,16 @@ import {
   ColumnsLayout,
   EditStakeInput,
 } from 'renderer/components/ui';
+import { DROPDOWN_MENU_ID } from 'renderer/components/ui/Dropdown/Dropdown';
 import {
   useMainAccount,
   useTaskStake,
-  useOnClickOutside,
   useAccountBalance,
   useMetadata,
   useAllStoredPairedTaskVariables,
   useAddTaskVariableModal,
   useStartingTasksContext,
+  useOnClickOutside,
 } from 'renderer/features';
 import { TaskService, stopTask } from 'renderer/services';
 import { Task } from 'renderer/types';
@@ -105,7 +106,8 @@ function TaskItem({ task, index, columnsLayout }: Props) {
 
   useOnClickOutside(
     ref as MutableRefObject<HTMLDivElement>,
-    closeAccordionView
+    closeAccordionView,
+    DROPDOWN_MENU_ID
   );
 
   const { taskStake: alreadyStakedTokensAmount, loadingTaskStake } =

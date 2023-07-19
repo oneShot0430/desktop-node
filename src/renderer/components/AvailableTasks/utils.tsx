@@ -45,7 +45,7 @@ export const getErrorMessage = ({
 export const showTaskRunErrorToast = (taskName: string | undefined) => {
   if (taskName === '') return;
   toast.error(`Task ${taskName} running failed. Please try again!`, {
-    duration: 1500,
+    duration: 3500,
     icon: <CloseLine className="w-5 h-5" />,
     style: {
       backgroundColor: '#FFA6A6',
@@ -53,3 +53,54 @@ export const showTaskRunErrorToast = (taskName: string | undefined) => {
     },
   });
 };
+
+type GetTooltipContentParamsType = {
+  isRunning?: boolean;
+  isTaskDelisted?: boolean;
+  myStakeInKoii?: number;
+  minStake?: number;
+  isPrivate?: boolean;
+};
+
+export function getTooltipContent({
+  isRunning,
+  isTaskDelisted,
+  myStakeInKoii = 0,
+  minStake = 0,
+  isPrivate,
+}: GetTooltipContentParamsType) {
+  if (!isPrivate) {
+    if (!isRunning && isTaskDelisted) {
+      return "This task has been delisted, but don't worry! Your tokens are safe and will be ready to unstake after 3 rounds.";
+    }
+    if (isTaskDelisted) {
+      return "This task has been delisted, but don't worry! Your tokens are safe. Pause the task and the tokens will be ready to unstake after 3 rounds.";
+    }
+  }
+  if (myStakeInKoii > 0) {
+    return isRunning ? 'Stop task' : 'Start task';
+  }
+  return `You need to stake at least ${minStake} KOII on this task to run it.`;
+}
+
+export function ErrorList({ errors }: { errors: string[] }) {
+  if (errors.length === 0) {
+    return null;
+  }
+
+  if (errors.length === 1) {
+    return <p>Make sure you {errors[0]}.</p>;
+  }
+
+  const errorListItems = errors.map((error, index) => (
+    <li key={index}>• {error}</li>
+  ));
+
+  return (
+    <div>
+      Make sure you:
+      <br />
+      <ul>{errorListItems}</ul>
+    </div>
+  );
+}

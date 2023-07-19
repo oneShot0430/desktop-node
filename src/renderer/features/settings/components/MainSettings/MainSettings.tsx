@@ -6,6 +6,7 @@ import { QueryKeys, getVersion } from 'renderer/services';
 import { Theme } from 'renderer/types/common';
 
 // import { AutoUpdates } from './AutoUpdates';
+import { AutoUpdates } from './AutoUpdates';
 import { Network } from './Network';
 import { NodeLogs } from './NodeLogs';
 import { Referral } from './Referral';
@@ -19,17 +20,14 @@ export function MainSettings() {
   return (
     <div className="flex flex-col h-full gap-6 text-sm text-white">
       <Referral />
-      <div className="h-px bg-white w-full" />
+      <div className="w-full h-px bg-white" />
       <div className="flex justify-start gap-4">
         <SwitchWrapper title="Choose Network" switchComponent={Network} />
-        {/**
-         * @todo: there is an issue with the wrong architecture version being downloaded on mac os
-         * uncomment this line when the issue is fixed
-         */}
-        {/* <SwitchWrapper
+
+        <SwitchWrapper
           title="Automatic Updates"
-          switchComponentSlot={<AutoUpdates />}
-        /> */}
+          switchComponent={AutoUpdates}
+        />
         <Tooltip
           tooltipContent="Keep my computer awake while running tasks"
           placement="top-left"
@@ -39,7 +37,7 @@ export function MainSettings() {
         </Tooltip>
       </div>
 
-      <div className="h-px bg-white w-full" />
+      <div className="w-full h-px bg-white" />
 
       <NodeLogs />
 

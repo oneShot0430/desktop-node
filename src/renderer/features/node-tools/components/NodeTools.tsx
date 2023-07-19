@@ -14,7 +14,7 @@ import React, {
   useCallback,
 } from 'react';
 import toast from 'react-hot-toast';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 
 import { RequirementTag } from 'models/task';
 import {
@@ -22,7 +22,7 @@ import {
   LoadingSpinner,
   LoadingSpinnerSize,
 } from 'renderer/components/ui';
-import { pairTaskVariable } from 'renderer/services';
+import { QueryKeys, pairTaskVariable } from 'renderer/services';
 
 import { getPairedTaskVariablesForTask } from '../helpers';
 import { useAllStoredPairedTaskVariables } from '../hooks';
@@ -47,6 +47,7 @@ export function NodeTools({
   onPairingSuccess,
   onOpenAddTaskVariableModal,
 }: PropsType) {
+  const queryCache = useQueryClient();
   const {
     storedPairedTaskVariablesQuery: {
       data: pairedVariables,
@@ -56,7 +57,6 @@ export function NodeTools({
   } = useAllStoredPairedTaskVariables({
     enabled: !!taskPubKey,
   });
-
   const [areAllVariablesSelected, setAreAllVariablesSelected] = useState(false);
   const [selectedTools, setSelectedTools] = useState<Record<string, string>>(
     {}
@@ -113,6 +113,7 @@ export function NodeTools({
     // As at this specific stage we have just successfully paired, if all variables are selected means they are paired too
     const areAllVariablesPaired = checkifAllVariablesSelected();
     onToolsValidation?.(areAllVariablesPaired);
+    queryCache.invalidateQueries([QueryKeys.StoredTaskVariables]);
 
     toast.success('Task settings successfully paired', {
       duration: 4500,
@@ -171,10 +172,6 @@ export function NodeTools({
               defaultVariableId={pairedVariablesForTask[value as string]}
               description={description}
               onOpenAddTaskVariableModal={onOpenAddTaskVariableModal}
-              // TODO: fixme: fix dropdown with React Portal
-              // dropDownPlacementBottom={
-              //   !(index > 0 && index === tools.length - 1)
-              // }
             />
           ))}
           <div className="flex justify-end">

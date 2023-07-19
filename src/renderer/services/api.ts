@@ -316,7 +316,6 @@ export const claimRewards = async (): Promise<void> => {
       await window.main.claimReward({
         taskAccountPubKey: task.publicKey,
       });
-      console.log('@@@ Storing all time rewards for: ', task.publicKey);
       await window.main.storeAllTimeRewards({
         taskId: task.publicKey,
         newReward: pendingReward,

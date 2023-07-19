@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { screen, within } from '@testing-library/react';
 import user from '@testing-library/user-event';
 import React from 'react';
@@ -241,6 +242,7 @@ describe('TaskSettings', () => {
       expect(variableItem).toBeInTheDocument();
     });
 
+    // eslint-disable-next-line jest/no-commented-out-tests
     // it('successfully deletes a task variable', async () => {
     //   const existingTaskVariableData = existingTaskVariablesData[0];
     //   render(<TaskSettings />);

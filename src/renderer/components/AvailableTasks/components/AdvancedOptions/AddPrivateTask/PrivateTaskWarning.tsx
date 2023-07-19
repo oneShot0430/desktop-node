@@ -7,7 +7,7 @@ type PropsType = {
 
 export function PrivateTaskWarning({ taskWarning }: PropsType) {
   return (
-    <div className="flex gap-2 items-center text-xs pl-4 pt-2 text-[#FFA54B]">
+    <div className="flex items-center gap-2 pt-2 pl-4 text-xs text-orange-2">
       <Icon source={WarningTriangleFill} size={16} className="ml-[1px]" />
       {taskWarning}
     </div>

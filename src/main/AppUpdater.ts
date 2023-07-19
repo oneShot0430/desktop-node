@@ -44,7 +44,6 @@ async function configureUpdater() {
 
 function setListeners(mainWindow: BrowserWindow | undefined) {
   autoUpdater.on('update-available', (info) => {
-    console.log('############# Main Process Update available', info);
     getUserConfig()
       .then((appConfig) => {
         // const mainWindow = BrowserWindow.getFocusedWindow();

@@ -15,7 +15,6 @@ type PropsType = {
   ) => void;
   onSecretSelected?: (tool: string, desktopVariableId: string) => void;
   onInit?: (tool: string, desktopVariableId: string) => void;
-  dropDownPlacementBottom?: boolean;
 };
 
 export function NodeTool({
@@ -25,7 +24,6 @@ export function NodeTool({
   defaultVariableId,
   onInit,
   onOpenAddTaskVariableModal,
-  dropDownPlacementBottom,
 }: PropsType) {
   const dropdownRef = React.useRef<HTMLButtonElement>(null);
   const { storedTaskVariablesQuery } = useStoredTaskVariables();
@@ -74,7 +72,6 @@ export function NodeTool({
           ref={dropdownRef}
           defaultValue={defaultValue}
           items={dropdownItems}
-          bottom={dropDownPlacementBottom}
           customItem={
             <div className="hover:bg-purple-1 hovertext-finnieTeal-100">
               <button
@@ -91,7 +88,7 @@ export function NodeTool({
            * We don't need to show the validation error here yet, because we don't have
            * the validation logic for the NodeTool component yet.
            */
-          validationError={undefined}
+          // validationError={undefined}
           onSelect={handleSecretSelected}
         />
       </div>

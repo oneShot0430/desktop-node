@@ -1,15 +1,11 @@
-import { ChevronArrowLine, Icon } from '@_koii/koii-styleguide';
-import { Listbox, Transition } from '@headlessui/react';
-import React, {
-  Fragment,
-  forwardRef,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import React, { forwardRef, useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { ErrorMessage } from '../ErrorMessage';
+import { DropdownItem } from './DropdownItem/DropdownItem';
+
+export const DROPDOWN_MENU_ID = 'koii_dropdown_menu';
+export const DEFAULT_PLACEHOLDER_TEXT = 'Select item';
 
 export type DropdownItem = {
   label: string;
@@ -22,76 +18,40 @@ export type DropdownProps = {
   placeholderText?: string;
   onSelect?: (item: DropdownItem) => void;
   defaultValue?: DropdownItem | null;
-  validationError?: string;
+  // validationError?: string;
   emptyListItemSlot?: React.ReactNode;
-  bottom?: boolean;
   customItem?: React.ReactNode;
   className?: string;
 };
 
-/**
- * @todo:
- * This component shoudl finally be moved to the @_koii/koii-styleguide
- */
 export const Dropdown = forwardRef<HTMLButtonElement, DropdownProps>(
   (
     {
-      items = [],
-      onSelect,
-      placeholderText = 'Select item',
+      items,
       defaultValue = null,
-      validationError,
-      emptyListItemSlot,
-      bottom,
+      placeholderText = DEFAULT_PLACEHOLDER_TEXT,
       customItem,
+      emptyListItemSlot,
       className,
-    }: DropdownProps,
+      onSelect,
+    },
     ref
   ) => {
     const [selected, setSelected] = useState<DropdownItem | null>(defaultValue);
 
-    // Sets default even if it comes as undefined in the first render
     useEffect(() => {
       if (defaultValue) {
         setSelected(defaultValue);
       }
     }, [defaultValue]);
 
-    const handleItemSelect = useCallback(
-      (item: DropdownItem) => {
-        if (item.disabled) return;
-
-        onSelect?.(item);
-        setSelected(item);
-      },
-      [onSelect]
-    );
-
-    const optionsClasses = twMerge(
-      'absolute !cursor-pointer z-50 w-full py-1 mt-1 overflow-auto text-base text-white rounded-md shadow-lg bg-purple-5 max-h-60 focus:outline-none sm:text-sm top-9'
-      // bottom ? 'top-9' : 'bottom-10'
-      /**
-       * @dev when this component will go to styleguide, this logic should be abstracted away and probably we should make
-       * possible to add dropdown items using "slot pattern"
-       */
-    );
-
-    const getItemClasses = useCallback(
-      (selected: boolean, item: DropdownItem) => {
-        const itemClasses = twMerge(
-          'block truncate py-1 pl-10 pr-4 font-normal text-white border-2 border-transparent',
-          selected &&
-            'border-2 border-purple-1 font-semibold rounded-lg text-finnieTeal-100',
-          item.disabled && 'text-gray-500 cursor-not-allowed'
-          /**
-           * @dev when this component will go to styleguide, this logic should be abstracted away and probably we should make
-           * possible to add dropdown items using "slot pattern"
-           */
-        );
-
-        return itemClasses;
-      },
-      []
+    const contentClasses = twMerge(
+      // base
+      'w-72 text-base text-white py-1 rounded-md p-[5px] bg-purple-5 focus:outline-none z-50 max-h-[320px] overflow-y-auto',
+      // shadows
+      'shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]',
+      // animations
+      'will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=bottom]:animate-slideUpAndFade'
     );
 
     const emptyListItem = emptyListItemSlot || (
@@ -100,71 +60,57 @@ export const Dropdown = forwardRef<HTMLButtonElement, DropdownProps>(
       </div>
     );
 
-    const dropdownItems = items.map((item) => (
-      <Listbox.Option
-        key={item.id}
-        className={({ active }) =>
-          `relative cursor-pointer select-none ${
-            active && 'bg-purple-1 text-finnieTeal-100'
-          }`
-        }
-        value={item}
-        disabled={item.disabled}
-      >
-        {({ selected }) => (
-          <span className={getItemClasses(selected, item)}>{item.label}</span>
-        )}
-      </Listbox.Option>
-    ));
-
-    // if (customItem) {
-    //   dropdownItems.push(customItem as React.ReactElement);
-    // }
-
     const containerClasses = twMerge(className, 'h-full w-72');
 
     return (
       <div className={containerClasses} data-testid="koii_dropdown_test_id">
-        <Listbox value={selected} onChange={handleItemSelect}>
-          <div className="relative">
-            <Listbox.Button
-              ref={ref}
-              placeholder={placeholderText}
-              className="relative w-full py-2 pl-3 pr-10 text-sm text-left rounded-lg shadow-md cursor-pointer text-gray bg-purple-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-finnieTeal sm:text-sm"
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger asChild>
+            <div>
+              <button
+                className="relative py-2 pl-3 pr-10 text-sm text-left rounded-lg shadow-md cursor-pointer w-72 text-gray bg-purple-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-finnieTeal sm:text-sm"
+                aria-label="Customise options"
+                ref={ref}
+              >
+                {selected ? (
+                  <span className="block text-white truncate">
+                    {selected.label}
+                  </span>
+                ) : (
+                  <span>{placeholderText}</span>
+                )}
+              </button>
+            </div>
+          </DropdownMenu.Trigger>
+
+          <DropdownMenu.Portal>
+            <DropdownMenu.Content
+              className={contentClasses}
+              sideOffset={5}
+              id={DROPDOWN_MENU_ID}
             >
-              {selected ? (
-                <span className="block text-white truncate">
-                  {selected.label}
-                </span>
-              ) : (
-                <span>{placeholderText}</span>
-              )}
-              <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none ">
-                <Icon
-                  source={ChevronArrowLine}
-                  className="w-4 h-4 m-1 rotate-180"
-                  aria-hidden="true"
-                />
-              </span>
-            </Listbox.Button>
-            {validationError ? (
-              <ErrorMessage error={validationError} className="pt-1 text-xs" />
-            ) : (
-              <div className="pt-2" />
-            )}
-            <Transition
-              as={Fragment}
-              leave="transition ease-in duration-100"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-            >
-              <Listbox.Options className={optionsClasses}>
-                {!items.length ? emptyListItem : dropdownItems}
-                {customItem}
-              </Listbox.Options>
-            </Transition>
-          </div>
-        </Listbox>
+              {items.length
+                ? items.map((item) => (
+                    <DropdownItem
+                      isSelected={selected?.id === item.id}
+                      key={item.id}
+                      label={item.label}
+                      onSelect={(e) => {
+                        e.stopPropagation();
+
+                        if (item.disabled) return;
+
+                        onSelect?.(item);
+                        setSelected(item);
+                      }}
+                    />
+                  ))
+                : emptyListItem}
+
+              {customItem}
+            </DropdownMenu.Content>
+          </DropdownMenu.Portal>
+        </DropdownMenu.Root>
       </div>
     );
   }

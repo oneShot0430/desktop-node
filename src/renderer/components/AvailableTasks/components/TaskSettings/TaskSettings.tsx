@@ -1,10 +1,13 @@
 import { TooltipChatQuestionLeftLine, Icon } from '@_koii/koii-styleguide';
+import { show } from '@ebay/nice-modal-react';
 import React, { RefObject } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { RequirementTag } from 'models/task';
+import { RequirementTag, TaskMetadata } from 'models/task';
 import { Tooltip } from 'renderer/components/ui';
 import { NodeTools } from 'renderer/features/node-tools';
+
+import { TaskMetadataModal } from './MetadataModal';
 
 type PropsType = {
   taskPubKey: string;
@@ -17,6 +20,7 @@ type PropsType = {
   onPairingSuccess: () => void;
   moveToTaskInfo?: () => void;
   wrapperClasses?: string;
+  metadata?: TaskMetadata | null;
 };
 
 export function TaskSettings({
@@ -27,8 +31,15 @@ export function TaskSettings({
   onOpenAddTaskVariableModal,
   moveToTaskInfo,
   wrapperClasses = '',
+  metadata,
 }: PropsType) {
   const outerClasses = twMerge('flex flex-col w-full h-fit', wrapperClasses);
+
+  const showMetadataModal = () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    show(TaskMetadataModal, { metadata });
+  };
 
   return (
     <div className={outerClasses}>
@@ -41,18 +52,17 @@ export function TaskSettings({
           <Icon size={20} source={TooltipChatQuestionLeftLine} />
         </Tooltip>
       </div>
-      {moveToTaskInfo && (
-        <div className="mb-4 font-normal">
-          Check the{' '}
-          <button
-            className="underline text-finnieTeal"
-            onClick={moveToTaskInfo}
-          >
-            task creator&apos;s instructions
-          </button>{' '}
-          for configuring settings.
-        </div>
-      )}
+
+      <div className="mb-4 font-normal">
+        Check the{' '}
+        <button
+          className="underline text-finnieTeal"
+          onClick={moveToTaskInfo || showMetadataModal}
+        >
+          task creator&apos;s instructions
+        </button>{' '}
+        for configuring settings.
+      </div>
 
       <NodeTools
         tools={taskVariables}

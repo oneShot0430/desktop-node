@@ -156,10 +156,10 @@ install_macos:
   tags:
     - koii-macos
 
-install_macos_intel:
-  <<: *npm_ci
-  tags:
-    - koii-macos-intel
+# install_macos_intel:
+#   <<: *npm_ci
+#   tags:
+#     - koii-macos-intel
 
 ####################################################################################################
 ########################################## TEST ####################################################
@@ -246,11 +246,11 @@ package_macos:
   tags:
     - koii-macos
 
-package_macos_intel:
-  <<: *package
-  before_script:
-    - chmod +x node_modules/.bin/*
-  script:
-    - npm run release
-  tags:
-    - koii-macos-intel
+# package_macos_intel:
+#   <<: *package
+#   before_script:
+#     - chmod +x node_modules/.bin/*
+#   script:
+#     - npm run release
+#   tags:
+#     - koii-macos-intel

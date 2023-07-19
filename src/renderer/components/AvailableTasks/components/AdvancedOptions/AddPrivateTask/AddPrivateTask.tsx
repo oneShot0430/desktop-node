@@ -5,13 +5,14 @@ import React, {
   useMemo,
   useEffect,
   useRef,
-  MutableRefObject,
   RefObject,
+  MutableRefObject,
 } from 'react';
 import { useQueryClient } from 'react-query';
 
 import { RequirementTag, RequirementType } from 'models';
 import {
+  ErrorList,
   getErrorMessage,
   showTaskRunErrorToast,
 } from 'renderer/components/AvailableTasks/utils';
@@ -22,9 +23,9 @@ import {
   ColumnsLayout,
   EditStakeInput,
 } from 'renderer/components/ui';
+import { DROPDOWN_MENU_ID } from 'renderer/components/ui/Dropdown/Dropdown';
 import {
   useMainAccount,
-  useOnClickOutside,
   useAccountBalance,
   useMetadata,
   useAllStoredPairedTaskVariables,
@@ -33,13 +34,14 @@ import {
   usePrivateTasks,
   useStartingTasksContext,
   useStartedTasksPubKeys,
+  useOnClickOutside,
 } from 'renderer/features';
 import { stopTask } from 'renderer/services';
 import { isValidWalletAddress } from 'renderer/utils';
+import { getKoiiFromRoe } from 'utils';
 
 import { StartPauseTaskButton } from '../../StartPauseTaskButton/StartPauseTaskButton';
 import { SuccessMessage } from '../../SuccessMessage';
-import { TaskErrorMessage } from '../../TaskErrorMessage';
 import { PrivateTaskInput } from '../PrivateTaskInput';
 import { useTaskById } from '../useTaskById';
 
@@ -57,8 +59,6 @@ interface Props {
   onClose: () => void;
 }
 
-// TODO: 1. handle the case if the task is already running
-// TODO: 2. Add error cases where warning is
 export function AddPrivateTask({ columnsLayout, onClose }: Props) {
   const { isLoading: loadingStartedTasks, data: startedTasks } =
     useStartedTasksPubKeys();
@@ -135,7 +135,8 @@ export function AddPrivateTask({ columnsLayout, onClose }: Props) {
 
   useOnClickOutside(
     ref as MutableRefObject<HTMLDivElement>,
-    closeAccordionView
+    closeAccordionView,
+    DROPDOWN_MENU_ID
   );
 
   const handleToggleView = useCallback(() => {
@@ -151,7 +152,6 @@ export function AddPrivateTask({ columnsLayout, onClose }: Props) {
     const isValid = await isValidWalletAddress(value);
 
     if (isValid) {
-      console.log(`Task ${value} is valid to run!`);
       setIsValidPublicKey(true);
     } else {
       setIsValidPublicKey(false);
@@ -193,7 +193,7 @@ export function AddPrivateTask({ columnsLayout, onClose }: Props) {
       ?.then(() => {
         setTaskStartSucceeded(true);
       })
-      .catch(() => {
+      .catch((error) => {
         setTaskStartSucceeded(false);
         showTaskRunErrorToast(task?.taskName);
       });
@@ -283,11 +283,6 @@ export function AddPrivateTask({ columnsLayout, onClose }: Props) {
         alreadyStakedTokensAmount,
       });
 
-      console.log('Task started successfully!');
-      console.log(
-        `Task is private! Adding ${taskPubkey} to private tasks list...`
-      );
-
       await addPrivateTask(taskPubkey);
     } catch (error) {
       console.error(error);
@@ -299,21 +294,27 @@ export function AddPrivateTask({ columnsLayout, onClose }: Props) {
     [alreadyStakedTokensAmount, loadingTaskStake, task]
   );
 
-  const getTooltipContent = useCallback(() => {
-    if (!task) return 'Provide the task public key to start the task.';
-    if (task?.isRunning) return 'Stop task';
-    if (errorMessage) return <TaskErrorMessage errors={errorMessage} />;
-    return 'Start task';
-  }, [task, errorMessage]);
-
-  const runButtonTooltipContent = getTooltipContent();
   const taskAlreadyAdded = useMemo(
     () => startedTasks?.includes(taskPubkey),
     [startedTasks, taskPubkey]
   );
 
+  const myStakeInKoii = getKoiiFromRoe(alreadyStakedTokensAmount);
+  const isActive = task?.isActive;
+  const startPauseDisabled = !isActive || !isTaskValidToRun || taskAlreadyAdded;
+
+  const runButtonTooltipContent = useMemo(
+    () =>
+      errorMessage.length > 0 ? (
+        <ErrorList errors={errorMessage} />
+      ) : (
+        'Start task'
+      ),
+    [errorMessage]
+  );
+
   return taskStartSucceeded ? (
-    <SuccessMessage />
+    <SuccessMessage iconWrapperClass="pl-5" />
   ) : (
     <div className="border-t-2 border-white">
       <div className="pb-2 rounded-b-lg bg-finniePurple bg-opacity-10">
@@ -359,10 +360,11 @@ export function AddPrivateTask({ columnsLayout, onClose }: Props) {
               onStopTask={handleStopTask}
               tooltipContent={runButtonTooltipContent}
               isTaskValidToRun={isTaskValidToRun}
-              disabled={taskAlreadyAdded}
+              disabled={startPauseDisabled}
             />
           )}
           <SettingsAccordion
+            metadata={metadata}
             ref={parent}
             taskPubkey={taskPubkey}
             isOpen={accordionView}

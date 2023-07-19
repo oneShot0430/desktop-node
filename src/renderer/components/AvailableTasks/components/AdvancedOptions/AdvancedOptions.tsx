@@ -25,7 +25,7 @@ export function AdvancedOptions({ columnsLayout }: Props) {
     : 'opacity-0 scale-95';
 
   return (
-    <div className="relative z-50 -mt-10">
+    <div className="z-50">
       <div
         className={`transition-all duration-500 ease-in-out transform ${animationClasses}`}
       >
