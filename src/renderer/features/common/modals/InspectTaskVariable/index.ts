@@ -1,1 +1,1 @@
-export * from './InspectTaskVariable';
+export * from './InspectTaskVariableModal';
