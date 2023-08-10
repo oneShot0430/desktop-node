@@ -3,10 +3,10 @@ import { Event } from 'electron';
 import { namespaceInstance } from 'main/node/helpers/Namespace';
 import { SetActiveAccountParam } from 'models/api';
 
-import { SystemDbKeys } from '../../config/systemDbKeys';
-import { getMainSystemAccountKeypair } from '../node/helpers';
+import { SystemDbKeys } from '../../../config/systemDbKeys';
+import { getMainSystemAccountKeypair } from '../../node/helpers';
 
-const setActiveAccount = async (
+export const setActiveAccount = async (
   event: Event,
   payload: SetActiveAccountParam
 ): Promise<boolean> => {

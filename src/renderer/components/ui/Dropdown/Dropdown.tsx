@@ -69,7 +69,7 @@ export const Dropdown = forwardRef<HTMLButtonElement, DropdownProps>(
             <div>
               <button
                 className="relative py-2 pl-3 pr-10 text-sm text-left rounded-lg shadow-md cursor-pointer w-72 text-gray bg-purple-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-finnieTeal sm:text-sm"
-                aria-label="Customise options"
+                aria-label="Customize options"
                 ref={ref}
               >
                 {selected ? (

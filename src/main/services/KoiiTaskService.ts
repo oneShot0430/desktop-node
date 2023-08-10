@@ -28,7 +28,7 @@ export class KoiiTaskService {
   private startedTasksData: Omit<RawTaskData, 'is_running'>[] = [];
 
   /**
-   * @dev: this functions is preparing the Desktop Node to work in a few crucial steps:
+   * @dev: this functions is preparing the Koii Node to work in a few crucial steps:
    * 1. Fetch all tasks from the Task program
    * 2. Get the state of the tasks from the database
    * 3. Watch for changes in the tasks
@@ -52,11 +52,6 @@ export class KoiiTaskService {
     runTimers({
       selectedTasks: startedTasks,
       runningTasks: this.RUNNING_TASKS,
-      tasksCurrentRounds: Array(startedTasks.length).fill(0),
-      tasksLastUpdatedSubmission: Array(startedTasks.length).fill(0),
-      tasksLastUpdatedAudit: Array(startedTasks.length).fill(0),
-      tasksLastUpdatedDistribution: Array(startedTasks.length).fill(0),
-      tasksLastUpdatedDistributionAudit: Array(startedTasks.length).fill(0),
     });
   }
 

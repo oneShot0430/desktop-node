@@ -103,6 +103,16 @@ module.exports = {
           5: '#454580',
         },
       },
+      backgroundImage: (theme) => ({
+        'gradient-dark':
+          'linear-gradient(90deg, rgba(3, 3, 50, 0.9) 0%, rgba(23, 23, 83, 0.9) 100%)',
+      }),
+      blur: {
+        4.5: '4.5px',
+      },
+      opacity: {
+        90: '0.9',
+      },
       fontSize: {
         '4xs': '7px',
         '2xs': '11px',

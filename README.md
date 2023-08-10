@@ -1,4 +1,4 @@
-# Desktop UI for Node
+# Koii UI for Node
 
 ## Description
 
@@ -20,7 +20,7 @@ git clone https://github.com/koii-network/desktop-node
 ```
 
 - NPM config\
-  Desktop Node uses private packages published in Gitlab private NPM registry.\
+  Koii Node uses private packages published in Gitlab private NPM registry.\
   To be able to properly install dependencies NPM need to be configured in following way:
 
 ```

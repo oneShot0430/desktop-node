@@ -45,7 +45,7 @@ export function BackButton({ color }: PropsType) {
           icon={
             <Icon
               source={ChevronArrowLine}
-              className="cursor-pointer w-9 h-9 -rotate-90"
+              className="-rotate-90 cursor-pointer w-9 h-9"
             />
           }
           onClick={handleBackButtonClick}

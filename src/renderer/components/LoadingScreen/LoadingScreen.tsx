@@ -34,7 +34,7 @@ export function LoadingScreen({ initError }: PropsType): JSX.Element {
           <p className="text-lg text-finnieRed text-center">
             <span>
               Something went wrong.
-              <br /> Please restart the Desktop Node
+              <br /> Please restart the Koii Node
             </span>
           </p>
         </div>

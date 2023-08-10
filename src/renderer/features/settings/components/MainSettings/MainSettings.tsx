@@ -42,7 +42,7 @@ export function MainSettings() {
       <NodeLogs />
 
       <div className="flex justify-between w-full mt-2">
-        <div className="mt-4">Version {appVersion}</div>
+        <div className="mt-2">Version {appVersion}</div>
         <ReportBug />
       </div>
     </div>
