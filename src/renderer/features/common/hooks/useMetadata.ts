@@ -48,6 +48,7 @@ export const useMetadata = ({
     () => fetchMetadata(metadataCID),
     {
       staleTime: Infinity,
+      retry: 10,
       ...queryOptions,
     }
   );

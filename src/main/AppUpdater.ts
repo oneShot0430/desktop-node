@@ -79,7 +79,7 @@ function setListeners(mainWindow: BrowserWindow | undefined) {
       dialog
         .showMessageBox({
           type: 'question',
-          title: 'Koii Desktop Node',
+          title: 'Koii Node',
           buttons: ['Update and Restart', 'Update Later'],
           defaultId: 0,
           message: 'Do you want to update and restart now?',

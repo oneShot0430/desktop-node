@@ -1,5 +1,5 @@
 {
-  "productName": "Koii Desktop Node",
+  "productName": "Koii Node",
   "appId": "com.koii.network.desktopnode",
   "asar": true,
   "asarUnpack": "**\\*.{node,dll}",
@@ -27,7 +27,7 @@
       }
     ],
     "type": "distribution",
-    "artifactName": "koii-desktop-node-${version}-${os}-${arch}.${ext}",
+    "artifactName": "koii-node-${version}-${os}-${arch}.${ext}",
     "hardenedRuntime": true,
     "gatekeeperAssess": false,
     "provisioningProfile": "build/comkoiinetworkdesktopnode.provisionprofile",
@@ -58,7 +58,7 @@
     ],
     "publisherName": "Koii Network",
     "legalTrademarks": "",
-    "artifactName": "koii-desktop-node-${version}-${os}-${arch}.${ext}",
+    "artifactName": "koii-node-${version}-${os}-${arch}.${ext}",
     "verifyUpdateCodeSignature": false,
     "signDlls": false,
     "icon": "assets/icon.ico"
@@ -78,13 +78,13 @@
   },
   "linux": {
     "target": ["AppImage", "tar.gz", "deb", "rpm"],
-    "executableName": "koii-desktop-node-desktop",
+    "executableName": "koii-node",
     "category": "GNOME;GTK;Network;",
     "desktop": {
-      "StartupWMClass": "Koii.desktop.node",
-      "MimeType": "x-scheme-handler/koii-desktop-node"
+      "StartupWMClass": "Koii.node",
+      "MimeType": "x-scheme-handler/koii-node"
     },
-    "artifactName": "koii-desktop-node-${version}-${os}-${arch}.${ext}"
+    "artifactName": "koii-node-${version}-${os}-${arch}.${ext}"
   },
   "rpm": {
     "fpm": ["--rpm-rpmbuild-define=_build_id_links none"]

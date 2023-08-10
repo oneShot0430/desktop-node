@@ -86,7 +86,7 @@ export const errorTypeToContent: Record<
     'Wallet with same account name already exists',
   [ErrorType.JSON_KEY_EXISTS]: 'A wallet with the same key already exists',
   [ErrorType.NODE_INITIALIZATION_FAILED]:
-    'Node initialization failed. Please restart the Desktop Node',
+    'Node initialization failed. Please restart the Koii Node',
   [ErrorType.TASK_START]: 'Task failed to start',
   [ErrorType.TOO_MANY_REQUESTS]: 'Too many requests. Please try again later',
   [ErrorType.PARTIAL_CLAIM_FAILURE]:

@@ -22,7 +22,7 @@ export { default as getAverageSlotTime } from './getAverageSlotTime';
 export { default as getEncryptedSecretPhrase } from './getEncryptedSecretPhrase';
 export { default as openBrowserWindow } from './openBrowserWindow';
 export { default as removeAccountByName } from './removeAccountByName';
-export { default as setActiveAccount } from './setActiveAccount';
+export { setActiveAccount } from './setActiveAccount';
 export { default as startTask } from './startTask';
 export { default as stopTask } from './stopTask';
 export { default as storeUserConfig } from './storeUserConfig';

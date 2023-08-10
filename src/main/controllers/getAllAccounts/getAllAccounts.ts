@@ -6,7 +6,7 @@ import { getAppDataPath } from 'main/node/helpers/getAppDataPath';
 import sdk from 'main/services/sdk';
 import { getAllAccountsResponse } from 'models/api';
 
-import { getCurrentActiveAccountName } from '../node/helpers';
+import { getCurrentActiveAccountName } from '../../node/helpers';
 
 export const getAllAccounts = async (): Promise<getAllAccountsResponse> => {
   if (!fs.existsSync(`${getAppDataPath()}/namespace`))

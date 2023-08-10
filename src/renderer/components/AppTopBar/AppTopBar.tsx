@@ -23,7 +23,7 @@ export function AppTopBar() {
   };
 
   return (
-    <div className="flex justify-between w-full mx-auto h-[80px] py-2">
+    <div className="flex justify-between w-full mx-auto h-[80px] py-2 z-10">
       {displayedNotificationEntry ? (
         <NotificationBanner
           id={displayedNotificationEntry.id}
