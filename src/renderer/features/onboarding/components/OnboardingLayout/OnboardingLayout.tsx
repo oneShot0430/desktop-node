@@ -47,7 +47,7 @@ function OnboardingLayout({ children }: PropsType) {
       navigate(AppRoute.MyNode, { state: { noBackButton: true } });
       addNotification(
         'referralProgramNotification',
-        AppNotification.ReferalProgramNotification,
+        AppNotification.ReferralProgramNotification,
         NotificationPlacement.TopBar
       );
     },

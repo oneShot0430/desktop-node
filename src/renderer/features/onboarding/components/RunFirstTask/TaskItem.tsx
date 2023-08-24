@@ -87,7 +87,9 @@ function TaskItem({
             <Tooltip
               theme={Theme.Light}
               placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
-              tooltipContent="Open task details"
+              tooltipContent={`${
+                accordionView ? 'Close task details' : 'Open task details'
+              }`}
             >
               <div className="flex flex-col h-full items-center justify-start">
                 <Button

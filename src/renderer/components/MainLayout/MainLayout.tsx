@@ -8,17 +8,17 @@ import {
   NotificationBanner,
   NotificationPlacement,
 } from 'renderer/features/notifications';
+import { Sidebar } from 'renderer/features/sidebar';
 import { saveUserConfig, switchUpdateChannel } from 'renderer/services';
 import { AppRoute } from 'renderer/types/routes';
 
 import Header from '../Header';
-import { Sidebar } from '../Sidebar';
 
 type MainLayoutProps = {
   children: React.ReactNode;
 };
 
-function MainLayout({ children }: MainLayoutProps): JSX.Element {
+export function MainLayout({ children }: MainLayoutProps): JSX.Element {
   const navigate = useNavigate();
 
   const { getNextNotification } = useNotificationsContext();
@@ -68,5 +68,3 @@ function MainLayout({ children }: MainLayoutProps): JSX.Element {
     </div>
   );
 }
-
-export default MainLayout;

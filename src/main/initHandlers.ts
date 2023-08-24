@@ -72,6 +72,11 @@ const endpointToControllerMap: Record<
   [Endpoints.DISABLE_STAY_AWAKE]: controllers.disableStayAwake,
   [Endpoints.GET_MAIN_LOGS]: controllers.getMainLogs,
   [Endpoints.GET_STARTED_TASKS_PUBKEYS]: controllers.getStartedTasksPubKeys,
+  [Endpoints.GET_RUNNING_TASKS_PUBKEYS]: controllers.getRunningTasksPubKeys,
+  [Endpoints.GET_TIME_TO_NEXT_REWARD]: controllers.getTimeToNextReward,
+  [Endpoints.CANCEL_TASK_RETRY]: controllers.cancelTaskRetry,
+  [Endpoints.GET_RETRY_DATA_BY_TASK_ID]: controllers.getRetryDataByTaskId,
+  [Endpoints.SWITCH_LAUNCH_ON_RESTART]: controllers.switchLaunchOnRestart,
 };
 
 const initHandlers = (): void => {

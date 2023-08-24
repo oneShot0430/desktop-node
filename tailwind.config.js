@@ -22,6 +22,9 @@ module.exports = {
         22.5: '5.6rem',
         125: '31.25rem',
       },
+      rotate: {
+        135: '135deg',
+      },
       animation: {
         'reverse-spin': 'reverse-spin 1s linear infinite',
         slideDownAndFade:
@@ -101,6 +104,7 @@ module.exports = {
           3: '#353570',
           4: '#4D3D8D',
           5: '#454580',
+          6: '#8989C733',
         },
       },
       backgroundImage: (theme) => ({

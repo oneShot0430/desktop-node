@@ -115,3 +115,10 @@ export interface TaskData {
   distributionsAuditTrigger: Record<string, Record<string, AuditTriggerState>>;
   submissionsAuditTrigger: Record<string, Record<string, AuditTriggerState>>;
 }
+
+export interface TaskRetryData {
+  count: number;
+  timestamp: number;
+  cancelled: boolean;
+  timerReference: number | null | undefined;
+}

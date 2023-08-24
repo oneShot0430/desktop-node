@@ -11,14 +11,20 @@ import {
   TaskData as TaskNodeTaskData,
   ITaskNodeBase,
 } from '@koii-network/task-node';
-import { DEFAULT_K2_NETWORK_URL, SERVER_PORT } from 'config/node';
+import {
+  DEFAULT_K2_NETWORK_URL,
+  SERVER_PORT,
+  TASK_STABILITY_THRESHOLD,
+} from 'config/node';
 // import cryptoRandomString from 'crypto-random-string';
+import { SystemDbKeys } from 'config/systemDbKeys';
 import { Express } from 'express';
+import { get } from 'lodash';
 import db from 'main/db';
 import { getK2NetworkUrl } from 'main/node/helpers/k2NetworkUrl';
-import { Namespace } from 'main/node/helpers/Namespace';
+import { Namespace, namespaceInstance } from 'main/node/helpers/Namespace';
 import koiiTasks from 'main/services/koiiTasks';
-import { ErrorType, RawTaskData } from 'models';
+import { ErrorType, RawTaskData, TaskRetryData } from 'models';
 import { TaskStartStopParam } from 'models/api';
 import { throwDetailedError } from 'utils';
 
@@ -93,6 +99,7 @@ const startTask = async (
     console.log('LOADING TASK:', taskAccountPubKey);
     await loadTask({ taskAuditProgram: taskInfo.task_audit_program });
 
+    await clearTaskRetryTimeout(taskAccountPubKey);
     const { namespace, child, expressAppPort, secret } = await executeTasks(
       { ...taskInfo, task_id: taskAccountPubKey },
       expressApp,
@@ -117,13 +124,39 @@ const startTask = async (
   }
 };
 
+export async function clearTaskRetryTimeout(taskPubkey: string) {
+  const allTaskRetryData: {
+    [key: string]: TaskRetryData;
+  } = (await namespaceInstance.storeGet(SystemDbKeys.TaskRetryData)) || {};
+
+  const taskRetryData = get(allTaskRetryData, taskPubkey, null);
+  if (taskRetryData?.timerReference) {
+    clearTimeout(taskRetryData?.timerReference); // clear ongoing retry timerReference
+  }
+
+  if (taskRetryData) {
+    taskRetryData.timerReference = null;
+  }
+
+  const payload: any = {
+    ...allTaskRetryData,
+    [taskPubkey]: taskRetryData,
+  };
+
+  namespaceInstance.storeSet(SystemDbKeys.TaskRetryData, payload);
+}
+
 /**
  * Load tasks and generate task executables
  * @param {any[]} selectedTasks Array of selected tasks
  * @param {any} expressApp
  * @returns {any[]} Array of executable tasks
  */
-async function loadTask({ taskAuditProgram }: { taskAuditProgram: string }) {
+export async function loadTask({
+  taskAuditProgram,
+}: {
+  taskAuditProgram: string;
+}) {
   const executablesDirectoryPath = `${getAppDataPath()}/executables`;
   const presumedSourceCodePath = `${executablesDirectoryPath}/${taskAuditProgram}.js`;
 
@@ -142,7 +175,7 @@ async function loadTask({ taskAuditProgram }: { taskAuditProgram: string }) {
  * @param {any[]} selectedTask Array of selected tasks
  * @param {any[]} executableTasks Array of executable tasks
  */
-async function executeTasks(
+export async function executeTasks(
   selectedTask: Required<TaskNodeTaskData> & {
     stake_list: Record<string, number>;
   },
@@ -243,9 +276,89 @@ async function executeTasks(
     )
     .pipe(logFile);
 
-  childTaskProcess.on('error', (err) => {
+  childTaskProcess.on('error', async (err) => {
     console.error('Error starting child process:', err);
     koiiTasks.stopTask(selectedTask.task_id, true);
+
+    const allTaskRetryData: {
+      [key: string]: TaskRetryData;
+    } = (await namespaceInstance.storeGet(SystemDbKeys.TaskRetryData)) || {};
+
+    let taskRetryData = get(allTaskRetryData, selectedTask.task_id, null);
+    if (!taskRetryData) {
+      taskRetryData = {
+        count: 0,
+        timestamp: Date.now(),
+        cancelled: false,
+        timerReference: null,
+      };
+    }
+
+    if (!taskRetryData.cancelled) {
+      console.log(
+        `WILL RETRY [${selectedTask.task_name}] IN ${
+          2 ** (Number(taskRetryData?.count) + 1)
+        } SECONDS`
+      );
+      const timerReference = setTimeout(async () => {
+        console.log(`RETRY TASK [${selectedTask.task_name}]`);
+        const allTaskRetryData =
+          (await namespaceInstance.storeGet(SystemDbKeys.TaskRetryData)) || {};
+
+        taskRetryData = get(allTaskRetryData, selectedTask.task_id, null);
+        if (taskRetryData) {
+          if (!taskRetryData?.cancelled) {
+            const { namespace, child, expressAppPort, secret } =
+              await executeTasks(
+                selectedTask,
+                expressApp,
+                OPERATION_MODE,
+                mainSystemAccount
+              );
+
+            await koiiTasks.startTask(
+              selectedTask.task_id,
+              namespace,
+              child,
+              expressAppPort,
+              secret
+            );
+
+            if (
+              Date.now() - taskRetryData.timestamp >=
+              TASK_STABILITY_THRESHOLD
+            ) {
+              taskRetryData.count = 0;
+            } else {
+              taskRetryData.count += 1;
+            }
+            taskRetryData.timestamp = Date.now();
+            taskRetryData.timerReference = null;
+
+            const payload: any = {
+              ...taskRetryData,
+              [selectedTask.task_id]: taskRetryData,
+            };
+
+            await namespaceInstance.storeSet(
+              SystemDbKeys.TaskRetryData,
+              payload
+            );
+          } else {
+            console.log('ABORT TASK RETRY');
+          }
+        }
+      }, 2 ** (taskRetryData.count + 1) * 1000);
+
+      // store timerReference
+      taskRetryData.timerReference = timerReference[Symbol.toPrimitive](); // get timeoutId in number
+      taskRetryData.timestamp = Date.now();
+      const payload: any = {
+        ...taskRetryData,
+        [selectedTask.task_id]: taskRetryData,
+      };
+      namespaceInstance.storeSet(SystemDbKeys.TaskRetryData, payload);
+    }
   });
 
   childTaskProcess.on('exit', (code, signal) => {

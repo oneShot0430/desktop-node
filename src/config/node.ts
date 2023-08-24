@@ -26,6 +26,8 @@ export const STAKING_DERIVATION_PATH = "m/44'/501'/99'/0'";
 // value in ROE
 const TASK_FEE = 50000000;
 
+export const TASK_STABILITY_THRESHOLD = 18000000; // five hours in ms
+
 export default {
   REDIS,
   BUNDLER_URL,
@@ -38,4 +40,5 @@ export default {
   MINIMUM_ACCEPTED_LENGTH_TASK_CONTRACT,
   TASK_FEE,
   STAKING_DERIVATION_PATH,
+  TASK_STABILITY_THRESHOLD,
 };

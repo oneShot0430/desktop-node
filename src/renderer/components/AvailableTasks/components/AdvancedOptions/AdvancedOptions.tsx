@@ -30,7 +30,7 @@ export function AdvancedOptions({ columnsLayout }: Props) {
         className={`transition-all duration-500 ease-in-out transform ${animationClasses}`}
       >
         {isAddPrivateTaskVisible && (
-          <div className="pb-[22px]">
+          <div>
             <AddPrivateTask
               columnsLayout={columnsLayout}
               onClose={handleAddPrivateTaskClose}
@@ -39,7 +39,7 @@ export function AdvancedOptions({ columnsLayout }: Props) {
         )}
       </div>
       {!isAddPrivateTaskVisible && (
-        <div className="pt-4 pb-6 pl-4">
+        <div className="pt-4 pl-4">
           <AdvancedButton onClick={handleAdvancedButtonClick} />
         </div>
       )}

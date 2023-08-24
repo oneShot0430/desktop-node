@@ -22,9 +22,21 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
     'plugin:prettier/recommended',
+    'plugin:@cspell/recommended',
   ],
   plugins: ['unused-imports'],
   rules: {
+    '@cspell/spellchecker': [
+      'error',
+      {
+        autoFix: false,
+        checkIdentifiers: false,
+        checkComments: false,
+        ignoreImports: true,
+        ignoreImportProperties: true,
+        customWordListFile: './spellcheckignore.txt',
+      },
+    ],
     semi: ['error', 'always'],
     quotes: ['error', 'single', { avoidEscape: true }],
     'jsx-quotes': ['error', 'prefer-double'],

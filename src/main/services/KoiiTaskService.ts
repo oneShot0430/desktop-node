@@ -7,8 +7,10 @@ import {
   IRunningTasks,
   ITaskNodeBase,
   runTimers,
+  updateRewardsQueue,
 } from '@koii-network/task-node';
 import { isString } from 'lodash';
+import { store } from 'main/node/helpers/k2NetworkUrl';
 import { ErrorType, RawTaskData } from 'models';
 import { throwDetailedError, getProgramAccountFilter } from 'utils';
 
@@ -25,10 +27,12 @@ export class KoiiTaskService {
 
   public allTaskPubkeys: string[] = [];
 
+  public timerForRewards = 0;
+
   private startedTasksData: Omit<RawTaskData, 'is_running'>[] = [];
 
   /**
-   * @dev: this functions is preparing the Koii Node to work in a few crucial steps:
+   * @dev: this functions is preparing the Desktop Node to work in a few crucial steps:
    * 1. Fetch all tasks from the Task program
    * 2. Get the state of the tasks from the database
    * 3. Watch for changes in the tasks
@@ -52,6 +56,7 @@ export class KoiiTaskService {
     runTimers({
       selectedTasks: startedTasks,
       runningTasks: this.RUNNING_TASKS,
+      setTimerForRewards: this.setTimerForRewards,
     });
   }
 
@@ -86,6 +91,14 @@ export class KoiiTaskService {
     await this.addRunningTaskPubKey(taskAccountPubKey);
     await this.fetchStartedTaskData();
     await this.runTimers();
+  }
+
+  async setTimerForRewards(value: number) {
+    store.set('timeToNextRewardAsSlots', value);
+  }
+
+  async updateRewardsQueue() {
+    await updateRewardsQueue(this.setTimerForRewards);
   }
 
   async stopTask(
@@ -125,7 +138,7 @@ export class KoiiTaskService {
     console.log(`Fetched ${this.allTaskPubkeys.length} Tasks Public Keys`);
   }
 
-  private async addRunningTaskPubKey(pubkey: string) {
+  public async addRunningTaskPubKey(pubkey: string) {
     const currentlyRunningTaskIds: Array<string> = Array.from(
       new Set([...(await this.getRunningTaskPubKeys()), pubkey])
     );

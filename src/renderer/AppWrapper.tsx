@@ -19,7 +19,7 @@ import {
 } from './services';
 import { getErrorToDisplay } from './utils';
 
-const NODE_INITALIZED = 'NODE_INITALIZED';
+const NODE_INITIALIZED = 'NODE_INITIALIZED';
 
 function AppWrapper(): JSX.Element {
   const { addNotification } = useNotificationsContext();
@@ -54,7 +54,7 @@ function AppWrapper(): JSX.Element {
     const initializeNode = async () => {
       try {
         // Indicate the initialization API call in sessionStorage
-        sessionStorage.setItem(NODE_INITALIZED, setValue);
+        sessionStorage.setItem(NODE_INITIALIZED, setValue);
         await initializeTasks();
       } catch (error: any) {
         console.error(error);
@@ -65,7 +65,7 @@ function AppWrapper(): JSX.Element {
     };
 
     // Check if the node was already initialized
-    const nodeInitialized = sessionStorage.getItem(NODE_INITALIZED);
+    const nodeInitialized = sessionStorage.getItem(NODE_INITIALIZED);
 
     if (nodeInitialized !== setValue) {
       initializeNode();

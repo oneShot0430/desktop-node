@@ -32,3 +32,5 @@ export * from './getAllTimeRewards';
 export * from './privateTasks';
 export * from './getIsTaskRunning';
 export * from './getMainLogs';
+export * from './cancelTaskRetry';
+export * from './getRetryDataByTaskId';

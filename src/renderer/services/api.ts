@@ -116,7 +116,7 @@ export const startTask = (taskAccountPubKey: string, isPrivate?: boolean) => {
 };
 
 export const stopTask = (taskAccountPubKey: string) => {
-  console.log('STOPING TASK', taskAccountPubKey);
+  console.log('STOPPING TASK', taskAccountPubKey);
   return window.main.stopTask({ taskAccountPubKey });
 };
 
@@ -410,4 +410,24 @@ export const disableStayAwake = async () => {
 
 export const getStartedTasksPubKeys = async () => {
   return window.main.getStartedTasksPubKeys();
+};
+
+export const getRunningTasksPubKeys = async () => {
+  return window.main.getRunningTasksPubKeys();
+};
+
+export const getTimeToNextReward = async () => {
+  return window.main.getTimeToNextReward();
+};
+
+export const cancelTaskRetry = async (taskPubKey: string) => {
+  return window.main.cancelTaskRetry({ taskPubKey });
+};
+
+export const getRetryDataByTaskId = async (taskPubKey: string) => {
+  return window.main.getRetryDataByTaskId({ taskPubKey });
+};
+
+export const switchLaunchOnRestart = async () => {
+  return window.main.switchLaunchOnRestart();
 };

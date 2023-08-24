@@ -1,6 +1,6 @@
 {
   "name": "desktop-node",
-  "version": "0.2.21",
+  "version": "0.2.22",
   "description": "Desktop GUI and runtime for earning Koii tokens by running Koii Tasks",
   "license": "MIT",
   "author": {
@@ -17,6 +17,6 @@
   "dependencies": {
     "@_koi/web3.js": "^0.0.6",
     "@_koii/sdk": "^2.4.18",
-    "@koii-network/task-node": "^1.7.10"
+    "@koii-network/task-node": "^1.8.0"
   }
 }

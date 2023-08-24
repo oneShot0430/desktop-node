@@ -70,7 +70,7 @@ function RunFirstTask() {
     handleSaveUserAppConfig({ settings: { onboardingCompleted: true } });
     addNotification(
       'referralProgramNotification',
-      AppNotification.ReferalProgramNotification,
+      AppNotification.ReferralProgramNotification,
       NotificationPlacement.TopBar
     );
     addNotification(

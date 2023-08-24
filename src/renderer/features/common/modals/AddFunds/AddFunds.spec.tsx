@@ -4,7 +4,7 @@ import { createServer, Server } from 'miragejs';
 import React from 'react';
 
 import config from 'config';
-import { Actions } from 'renderer/components/Sidebar/components/Actions';
+import { SidebarActions } from 'renderer/features/sidebar/components';
 import { openBrowserWindow } from 'renderer/services';
 import { render } from 'renderer/tests/utils';
 import { StatusResponse, ValidationStatus } from 'renderer/types';
@@ -59,9 +59,19 @@ afterEach(() => {
 
 const renderWithFaucetStateMock = (faucetState: StatusResponse) => {
   server.get(`/get-user-faucet-state/${publicKey}`, () => faucetState);
-  render(<Actions />);
+  render(
+    <SidebarActions
+      onPrimaryActionClick={() => {
+        return '';
+      }}
+      onSecondaryActionClick={() => {
+        return '';
+      }}
+    />
+  );
 };
 
+// eslint-disable-next-line jest/no-disabled-tests
 describe('AddFunds', () => {
   it('displays the right modal content if the user has completed at least 1 validation method from the faucet', async () => {
     const faucetState: StatusResponse = {
@@ -70,7 +80,7 @@ describe('AddFunds', () => {
     };
     renderWithFaucetStateMock(faucetState);
 
-    const addFundsButton = screen.getByText(/Add Funds/i);
+    const addFundsButton = screen.getByTestId('sidebar_tip_give_button');
     await userEvent.click(addFundsButton);
 
     const copyForOneMethodCompleted = await screen.findByText(
@@ -83,7 +93,7 @@ describe('AddFunds', () => {
   it('displays the right modal content if the user has not completed any validation method from the faucet', async () => {
     renderWithFaucetStateMock(baseFaucetState);
 
-    const addFundsButton = screen.getByText(/Add Funds/i);
+    const addFundsButton = screen.getByTestId('sidebar_tip_give_button');
     await userEvent.click(addFundsButton);
 
     const copyForNoMethodsCompleted = await screen.findByText(
@@ -103,7 +113,7 @@ describe('AddFunds', () => {
     };
     renderWithFaucetStateMock(faucetState);
 
-    const addFundsButton = screen.getByText(/Add Funds/i);
+    const addFundsButton = screen.getByTestId('sidebar_tip_give_button');
     await userEvent.click(addFundsButton);
 
     const copyForAllMethodsCompleted = await screen.findByText(
@@ -120,7 +130,7 @@ describe('AddFunds', () => {
     };
     renderWithFaucetStateMock(faucetState);
 
-    const addFundsButton = screen.getByText(/Add Funds/i);
+    const addFundsButton = screen.getByTestId('sidebar_tip_give_button');
     await userEvent.click(addFundsButton);
 
     const getMyFreeTokensButton = await screen.findByText(
@@ -140,7 +150,7 @@ describe('AddFunds', () => {
     };
     renderWithFaucetStateMock(faucetState);
 
-    const addFundsButton = screen.getByText(/Add Funds/i);
+    const addFundsButton = screen.getByTestId('sidebar_tip_give_button');
     await userEvent.click(addFundsButton);
 
     const copyButton = await screen.getByRole('button', {

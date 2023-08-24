@@ -1,3 +1,4 @@
+/* eslint-disable @cspell/spellchecker */
 export { default as addTask } from './addTask';
 export { default as checkWalletExists } from './checkWalletExists';
 export { default as claimReward } from './claimReward';
@@ -37,6 +38,8 @@ export { openLogfileFolder } from './openLogfileFolder';
 export { isValidWalletAddress } from './isValidWalletAddress';
 export { getMainLogs } from './getMainLogs';
 export { getStartedTasksPubKeys } from './getStartedTasksPubKeys';
+export { getRunningTasksPubKeys } from './getRunningTasksPubKeys';
+export { getTimeToNextReward } from './getTimeToNextReward';
 export * from './openNodeLogfileFolder';
 export * from './taskVariables';
 export * from './getVersion';
@@ -47,5 +50,7 @@ export * from './privateTasks';
 export * from './getIsTaskRunning';
 export * from './enableStayAwake';
 export * from './disableStayAwake';
-
+export { cancelTaskRetry } from './cancelTaskRetry';
+export { getRetryDataByTaskId } from './getRetryDataByTaskId';
+export { switchLaunchOnRestart } from './switchLaunchOnRestart';
 export * from './types';

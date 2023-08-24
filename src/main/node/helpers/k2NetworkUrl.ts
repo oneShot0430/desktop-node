@@ -2,7 +2,10 @@ import Store from 'electron-store';
 
 import { DEFAULT_K2_NETWORK_URL } from 'config/node';
 
-const store = new Store<{ k2URL: string }>();
+export const store = new Store<{
+  k2URL: string;
+  timeToNextRewardAsSlots: number;
+}>();
 
 const initializeStore = () => {
   const k2URL = store.get('k2URL');
