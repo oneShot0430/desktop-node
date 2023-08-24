@@ -4,7 +4,6 @@ import {
   Icon,
   CloseLine,
   InformationCircleLine,
-  ClickXlLine,
 } from '@_koii/koii-styleguide';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import React, {
@@ -18,6 +17,11 @@ import React, {
 import { toast } from 'react-hot-toast';
 import { useQuery, useQueryClient } from 'react-query';
 
+import CancelButton from 'assets/svgs/cancel-button.svg';
+import RetryAnim from 'assets/svgs/history-icon.svg';
+import DotsSvg from 'assets/svgs/options.svg';
+import { TASK_RETRY_DATA_REFETCH_INTERVAL } from 'config/refetchIntervals';
+import { get } from 'lodash';
 import { Address } from 'renderer/components/AvailableTasks/components/Address';
 import { TaskInfo } from 'renderer/components/AvailableTasks/components/TaskInfo';
 import { getTooltipContent } from 'renderer/components/AvailableTasks/utils';
@@ -52,11 +56,14 @@ import {
   getActiveAccountName,
   getAllTimeRewards,
   getIsTaskRunning,
+  cancelTaskRetry,
+  getRetryDataByTaskId,
 } from 'renderer/services';
 import { Task, TaskStatus } from 'renderer/types';
 import { getCreatedAtDate, getKoiiFromRoe } from 'utils';
 
 import { OptionsDropdown } from './OptionsDropdown';
+import useCountDown from './useCountDown';
 
 type PropsType = {
   task: Task;
@@ -75,6 +82,7 @@ export function TaskItem({
   totalItems,
   isPrivate,
 }: PropsType) {
+  const [isArchivingTask, setIsArchivingTask] = useState(false);
   const [shouldDisplayInfo, setShouldDisplayInfo] = useState(false);
   const [shouldDisplayActions, setShouldDisplayActions] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -93,6 +101,14 @@ export function TaskItem({
     () => getIsTaskRunning(publicKey),
     {
       enabled: !fetchMyTasksEnabled,
+    }
+  );
+
+  const { data: taskRetryData = null } = useQuery(
+    [QueryKeys.TaskRetryData, publicKey],
+    () => getRetryDataByTaskId(publicKey),
+    {
+      refetchInterval: TASK_RETRY_DATA_REFETCH_INTERVAL,
     }
   );
 
@@ -229,7 +245,13 @@ export function TaskItem({
   );
   useOnClickOutside(
     optionsDropdownRef as MutableRefObject<HTMLDivElement>,
-    closeOptionsDropdown,
+    () => {
+      /**
+       * @dev do not close the dropdown if the user is archiving the task, so we wont lose archiving state
+       */
+      if (isArchivingTask) return;
+      closeOptionsDropdown();
+    },
     DROPDOWN_MENU_ID
   );
 
@@ -275,12 +297,45 @@ export function TaskItem({
     setHideTooltip(false);
   };
 
+  const handleTaskArchive = async (isArchiving: boolean) => {
+    setIsArchivingTask(isArchiving);
+  };
+
   const propsManagingMainTooltipState = {
     onFocus: handleHideMainTooltip,
     onMouseOver: handleHideMainTooltip,
     onBlur: handleShowMainTooltip,
     onMouseLeave: handleShowMainTooltip,
   };
+
+  const hasOngoingRetry = useMemo(() => {
+    const timerReference = get(taskRetryData, 'timerReference');
+    const cancelled = get(taskRetryData, 'cancelled');
+    if (timerReference && !cancelled) return true;
+    return false;
+  }, [taskRetryData]);
+
+  const taskRetryRemainingTime = useMemo(() => {
+    const timestamp = get(taskRetryData, 'timestamp');
+    const count = get(taskRetryData, 'count');
+
+    if (timestamp && count) {
+      const timeHasPassed = Date.now() - timestamp;
+      const totalTime = 2 ** (count + 1) * 1000;
+      if (totalTime > timeHasPassed) return totalTime - timeHasPassed;
+    }
+
+    return 0;
+  }, [taskRetryData]);
+
+  const handleCancelTaskRetry = async () => {
+    await cancelTaskRetry(task.publicKey);
+    queryCache.invalidateQueries();
+  };
+
+  const { Counter, timeRemaining } = useCountDown({
+    durationInSeconds: Math.floor(taskRetryRemainingTime / 1000),
+  });
 
   return (
     <Tooltip
@@ -295,42 +350,72 @@ export function TaskItem({
         ref={infoRef}
       >
         <div {...propsManagingMainTooltipState}>
-          {loading ? (
+          {!hasOngoingRetry ? (
             <div>
-              <LoadingSpinner size={LoadingSpinnerSize.Large} />
+              {loading ? (
+                <div>
+                  <LoadingSpinner size={LoadingSpinnerSize.Large} />
+                </div>
+              ) : (
+                <Tooltip
+                  tooltipContent={tooltipContent}
+                  placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
+                >
+                  <Button
+                    onlyIcon
+                    icon={
+                      <Icon
+                        source={
+                          isRunning && myStakeInKoii > 0 ? PauseFill : PlayFill
+                        }
+                        size={18}
+                        className={`${
+                          isRunning && myStakeInKoii > 0
+                            ? 'text-finniePurple'
+                            : 'text-white'
+                        }
+                  ${isPlayPauseButtonDisabled && 'opacity-60'}`}
+                      />
+                    }
+                    onClick={handleToggleTask}
+                    className="w-8 h-8 rounded-full"
+                    disabled={isPlayPauseButtonDisabled}
+                  />
+                </Tooltip>
+              )}
             </div>
           ) : (
-            <Tooltip
-              tooltipContent={tooltipContent}
-              placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
-            >
-              <Button
-                onlyIcon
-                icon={
-                  <Icon
-                    source={
-                      isRunning && myStakeInKoii > 0 ? PauseFill : PlayFill
-                    }
-                    size={18}
-                    className={`${
-                      isRunning && myStakeInKoii > 0
-                        ? 'text-finniePurple'
-                        : 'text-white'
-                    }
-                  ${isPlayPauseButtonDisabled && 'opacity-60'}`}
-                  />
-                }
-                onClick={handleToggleTask}
-                className="w-8 h-8 rounded-full"
-                disabled={isPlayPauseButtonDisabled}
-              />
-            </Tooltip>
+            <div>
+              {loading ? (
+                <div>
+                  <LoadingSpinner size={LoadingSpinnerSize.Large} />
+                </div>
+              ) : (
+                <Tooltip
+                  tooltipContent="Click to retry now"
+                  placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
+                >
+                  <div
+                    className="flex flex-col items-center justify-center cursor-pointer"
+                    onClick={handleToggleTask}
+                  >
+                    <RetryAnim
+                      className={`w-[25px] h-[25px]
+                     ${timeRemaining <= 0 && 'animate-spin'}`}
+                    />
+                    {Counter}
+                  </div>
+                </Tooltip>
+              )}
+            </div>
           )}
         </div>
         <div className="flex gap-3 justify-self-start">
           <Tooltip
             placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
-            tooltipContent="Open task details"
+            tooltipContent={`${
+              shouldDisplayInfo ? 'Close task details' : 'Open task details'
+            }`}
           >
             <div
               {...propsManagingMainTooltipState}
@@ -381,12 +466,24 @@ export function TaskItem({
           />
         </div>
         <div {...propsManagingMainTooltipState}>
-          <Status
-            status={taskStatus}
-            isFirstRowInTable={isFirstRowInTable}
-            isLoading={isLoadingStatus}
-            isRunning={isRunning}
-          />
+          {!hasOngoingRetry ? (
+            <Status
+              status={taskStatus}
+              isFirstRowInTable={isFirstRowInTable}
+              isLoading={isLoadingStatus}
+              isRunning={isRunning}
+            />
+          ) : (
+            <Tooltip
+              placement={`${isFirstRowInTable ? 'bottom' : 'top'}-left`}
+              tooltipContent={`We'll keep retrying this task until it works.
+              If you want to stop, click the x at anytime.`}
+            >
+              <div onClick={handleCancelTaskRetry} className="cursor-pointer">
+                <CancelButton />
+              </div>
+            </Tooltip>
+          )}
         </div>
         <div
           ref={optionsDropdownRef}
@@ -399,9 +496,7 @@ export function TaskItem({
               )
             }
             onlyIcon
-            icon={
-              <Icon source={ClickXlLine} className="w-10 h-10 text-white" />
-            }
+            icon={<Icon source={DotsSvg} className="w-8 h-8 text-white" />}
             className={`py-0.75 !pr-[0.5px] rounded-full ${
               shouldDisplayActions ? 'bg-[#454580]' : 'bg-transparent'
             } h-12 w-12`}
@@ -414,6 +509,7 @@ export function TaskItem({
               runOrStopTask={handleToggleTask}
               task={task}
               isInverted={optionsDropdownIsInverted}
+              onTaskArchive={handleTaskArchive}
             />
           )}
         </div>

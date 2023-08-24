@@ -36,6 +36,7 @@ export function SelectedTasksSummary({
       <div className="my-4 min-h-[160px]">
         {listEmpty ? (
           <div className="flex flex-col items-center justify-center pt-[60px]">
+            {/* eslint-disable-next-line @cspell/spellchecker */}
             You didn&apos;t select any tasks to run.
           </div>
         ) : (

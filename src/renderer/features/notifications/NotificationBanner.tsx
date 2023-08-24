@@ -25,7 +25,7 @@ export function NotificationBanner({
     [AppNotification.RunExemptionFlow]: (
       <RentExemptionFlowBanner backButtonSlot={backButtonComponent} id={id} />
     ),
-    [AppNotification.ReferalProgramNotification]: (
+    [AppNotification.ReferralProgramNotification]: (
       <ReferalProgramNotification
         backButtonSlot={backButtonComponent}
         id={id}

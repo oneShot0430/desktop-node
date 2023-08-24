@@ -36,7 +36,7 @@ export function SettingsButton({
       !globalAndTaskVariables?.length
         ? "This Task doesn't use any Task settings"
         : isTaskToolsValid
-        ? 'Open Task settings'
+        ? 'Open task settings'
         : 'You need to set up the Task settings first in order to run this Task.',
     [globalAndTaskVariables, isTaskToolsValid]
   );

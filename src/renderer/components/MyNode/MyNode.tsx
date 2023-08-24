@@ -24,7 +24,7 @@ const tableHeaders = [
   { title: 'Rewards' },
   { title: 'Round' },
   { title: 'Status' },
-  { title: 'Options' },
+  { title: 'Menu' },
 ];
 
 const columnsLayout = 'grid-cols-my-node place-items-center';
@@ -86,6 +86,7 @@ export function MyNode() {
           <div className="flex flex-col items-center mx-auto text-sm text-white mt-14">
             <Lottie animationData={EmptyMyNode} className="w-66" />
             <p className="mb-4">
+              {/* eslint-disable-next-line @cspell/spellchecker */}
               You aren&apos;t running any tasks right now. Let&apos;s fix that!
             </p>
             <Button

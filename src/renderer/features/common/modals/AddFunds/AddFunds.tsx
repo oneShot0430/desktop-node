@@ -106,13 +106,13 @@ export const AddFunds = create(function AddFunds({
           {onGoBack && (
             <Icon
               source={ChevronArrowLine}
-              className="w-6 h-6 cursor-pointer -rotate-90 z-20 mr-auto"
+              className="z-20 w-6 h-6 mr-auto -rotate-90 cursor-pointer"
               onClick={closeAndGoBack}
             />
           )}
           <Icon
             source={CloseLine}
-            className="w-6 h-6 cursor-pointer z-20"
+            className="z-20 w-6 h-6 cursor-pointer"
             onClick={modal.remove}
           />
         </div>
@@ -133,7 +133,7 @@ export const AddFunds = create(function AddFunds({
                 icon={
                   <Icon
                     source={hasCopiedKey ? CheckSuccessLine : CopyLine}
-                    className="h-6 w-6"
+                    className="w-6 h-6"
                   />
                 }
               />
@@ -141,8 +141,8 @@ export const AddFunds = create(function AddFunds({
               <Button
                 onClick={openFinnieAndClose}
                 label="Get the Finnie Wallet"
-                className=" bg-transparent w-auto underline text-sm leading-4 py-1.5 text-sm mt-3 rounded"
-                icon={<Icon source={WalletLine} className="h-6 w-6" />}
+                className=" bg-transparent w-auto underline text-sm leading-4 py-1.5 mt-3 rounded"
+                icon={<Icon source={WalletLine} className="w-6 h-6" />}
               />
             </>
           ) : (
@@ -160,7 +160,7 @@ export const AddFunds = create(function AddFunds({
               </div>
               <Address
                 address={currentAccountPubKey}
-                className="mb-4 text-sm text-green-dark select-text"
+                className="mb-4 text-sm select-text text-green-dark"
               />
               <Button
                 onClick={copyToClipboardAndClose}

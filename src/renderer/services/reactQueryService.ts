@@ -30,4 +30,9 @@ export enum QueryKeys {
   AllTimeRewards = 'AllTimeRewards',
   IsRunning = 'IsRunning',
   StartedTasksPubKeys = 'StartedTasksPubKeys',
+  // eslint-disable-next-line @cspell/spellchecker
+  RunningTasksPubKeys = 'RUNNING_TASKS_PUBKEYS',
+  TimeToNextReward = 'TimeToNextReward',
+  OnboardingTaskIds = 'OnboardingTaskIds',
+  TaskRetryData = 'TaskRetryData',
 }

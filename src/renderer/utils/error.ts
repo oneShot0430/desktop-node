@@ -91,4 +91,5 @@ export const errorTypeToContent: Record<
   [ErrorType.TOO_MANY_REQUESTS]: 'Too many requests. Please try again later',
   [ErrorType.PARTIAL_CLAIM_FAILURE]:
     'Not all rewards were claimed successfully, please try again',
+  [ErrorType.FETCHING_NEXT_REWARD_FAILED]: 'Failed to fetch the next reward.',
 };

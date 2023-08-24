@@ -48,7 +48,7 @@ async function getCacheNodes() {
 async function getNodes(url: string): Promise<Array<INode>> {
   try {
     const res = await axios.get<INode[]>(url + BUNDLER_NODES);
-    console.log('RESPOSNE FROM GET NODES', res.data);
+    console.log('RESPONSE FROM GET NODES', res.data);
     return res.data;
   } catch (_e) {
     return [];

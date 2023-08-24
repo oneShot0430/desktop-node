@@ -1,3 +1,4 @@
+/* eslint-disable @cspell/spellchecker */
 export { useClipboard } from './useClipboard';
 export { useUserSettings } from './userSettings';
 export { useTaskStake } from './useTaskStake';

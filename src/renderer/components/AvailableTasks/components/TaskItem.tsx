@@ -336,7 +336,7 @@ function TaskItem({ task, index, columnsLayout }: Props) {
   const gearTooltipContent = !globalAndTaskVariables?.length
     ? "This Task doesn't use any Task settings"
     : isTaskToolsValid
-    ? 'Open Task settings'
+    ? 'Open task settings'
     : 'You need to set up the Task settings first in order to run this Task.';
   const runButtonTooltipContent =
     errorMessage || (isRunning ? 'Stop task' : 'Start task');
@@ -368,7 +368,11 @@ function TaskItem({ task, index, columnsLayout }: Props) {
         <div>
           <Tooltip
             placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
-            tooltipContent="Open task details"
+            tooltipContent={`${
+              accordionView === 'info'
+                ? 'Close task details'
+                : 'Open task details'
+            }`}
           >
             <div className="flex flex-col items-center justify-start w-10">
               <Button

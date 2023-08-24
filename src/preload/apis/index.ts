@@ -1,4 +1,5 @@
 import archiveTask from './archiveTask';
+import cancelTaskRetry from './cancelTaskRetry';
 import checkWalletExists from './checkWalletExists';
 import claimReward from './claimReward';
 import createNodeWallets from './createNodeWallets';
@@ -21,6 +22,8 @@ import getMainAccountPubKey from './getMainAccountPubKey';
 import getMainLogs from './getMainLogs';
 import getMyTasks from './getMyTasks';
 import getNetworkUrl from './getNetworkUrl';
+import getRetryDataByTaskId from './getRetryDataByTaskId';
+import getRunningTasksPubKeys from './getRunningTasksPubKeys';
 import getStakingAccountPubKey from './getStakingAccountPubKey';
 import getStartedTasksPubKeys from './getStartedTasksPubKeys';
 import getTaskInfo from './getTaskInfo';
@@ -30,6 +33,7 @@ import getTaskNodeInfo from './getTaskNodeInfo';
 import getTasksById from './getTasksById';
 import getTaskSource from './getTaskSource';
 import getTaskVariablesNames from './getTaskVariablesNames';
+import getTimeToNextReward from './getTimeToNextReward';
 import getUserConfig from './getUserConfig';
 import getVersion from './getVersion';
 import initializeTasks from './initializeTasks';
@@ -47,6 +51,7 @@ import startTask from './startTask';
 import stopTask from './stopTask';
 import storeAllTimeRewards from './storeAllTimeRewards';
 import storeUserConfig from './storeUserConfig';
+import switchLaunchOnRestart from './switchLaunchOnRestart';
 import switchNetwork from './switchNetwork';
 import {
   getStoredTaskVariables,
@@ -121,4 +126,9 @@ export default {
   getMainLogs,
   onAppDownloaded,
   getStartedTasksPubKeys,
+  getRunningTasksPubKeys,
+  getTimeToNextReward,
+  cancelTaskRetry,
+  getRetryDataByTaskId,
+  switchLaunchOnRestart,
 };

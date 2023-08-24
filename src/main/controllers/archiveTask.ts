@@ -16,5 +16,6 @@ export const archiveTask = async (_: Event, payload: ArchiveTaskParams) => {
   if (pendingRewards) {
     await claimReward({} as Event, { taskAccountPubKey: payload.taskPubKey });
   }
+
   koiiTasks.removeTaskFromStartedTasks(payload.taskPubKey);
 };

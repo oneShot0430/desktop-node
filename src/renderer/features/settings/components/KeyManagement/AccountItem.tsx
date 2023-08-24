@@ -10,7 +10,6 @@ import {
 } from '@_koii/koii-styleguide';
 import React, { memo, useState } from 'react';
 
-import DotsSvg from 'assets/svgs/dots.svg';
 import { Address } from 'renderer/components/AvailableTasks/components/Address';
 import { FundButton } from 'renderer/components/FundButton';
 import {
@@ -116,9 +115,7 @@ export const AccountItem = memo(
         {error && <ErrorMessage error={error} />}
 
         <TableRow columnsLayout={columnsLayout} className={rowClasses}>
-          <div className="flex flex-col items-center justify-center row-span-2 py-1">
-            <DotsSvg height={48} width={11} />
-          </div>
+          <div className="flex flex-col items-center justify-center row-span-2 py-1" />
           {setAccountActiveLoading ? (
             <LoadingSpinner />
           ) : (

@@ -32,6 +32,7 @@ type PropsType = {
   openLogs: () => void;
   task: Task;
   isInverted: boolean;
+  onTaskArchive: (isArchiving: boolean) => void;
 };
 
 export function OptionsDropdown({
@@ -41,6 +42,7 @@ export function OptionsDropdown({
   openLogs,
   task,
   isInverted,
+  onTaskArchive,
 }: PropsType) {
   const queryCache = useQueryClient();
 
@@ -51,28 +53,35 @@ export function OptionsDropdown({
     stakingAccountPublicKey
   );
 
-  const { mutate: archiveTask } = useMutation(
-    () => archiveTaskService(task.publicKey),
-    {
-      onSuccess: () => {
-        if (pendingRewards) {
-          toast.success(
-            'We sent the pending rewards from this task to your account.',
-            {
-              duration: 4500,
-              icon: <CheckSuccessLine className="h-5 w-5" />,
-              style: {
-                backgroundColor: '#BEF0ED',
-                paddingRight: 0,
-              },
-            }
-          );
-        }
-        queryCache.invalidateQueries([QueryKeys.taskList]);
-      },
-      retry: 10,
-    }
-  );
+  const {
+    mutate: archiveTask,
+    isLoading: isArchivingTask,
+    error: archiveTaskError,
+  } = useMutation(() => archiveTaskService(task.publicKey), {
+    onMutate: () => {
+      onTaskArchive(true);
+    },
+    onSettled: () => {
+      onTaskArchive(false);
+    },
+    onSuccess: () => {
+      if (pendingRewards) {
+        toast.success(
+          'We sent the pending rewards from this task to your account.',
+          {
+            duration: 4500,
+            icon: <CheckSuccessLine className="w-5 h-5" />,
+            style: {
+              backgroundColor: '#BEF0ED',
+              paddingRight: 0,
+            },
+          }
+        );
+      }
+      queryCache.invalidateQueries([QueryKeys.taskList]);
+    },
+    retry: 10,
+  });
 
   const { taskStake } = useTaskStake({ task });
 
@@ -84,7 +93,7 @@ export function OptionsDropdown({
   const isTaskDelisted = !task.isWhitelisted || !task.isActive;
   const isRunPauseButtonDisabled =
     !task.isRunning && (!taskStake || isTaskDelisted);
-  const isArchiveDisabled = task.isRunning || !!taskStake;
+  const isArchiveDisabled = task.isRunning || !!taskStake || isArchivingTask;
   const baseItemClasses = 'flex gap-2 text-white cursor-pointer';
   const containerClasses = `z-10 ${
     isInverted
@@ -160,7 +169,7 @@ export function OptionsDropdown({
         onClick={() => archiveTask()}
       >
         <Icon source={Archive} />
-        Archive
+        {isArchivingTask ? 'Archiving task...' : 'Archive'}
         {task.isRunning
           ? archiveWhenRunningMessage
           : taskStake

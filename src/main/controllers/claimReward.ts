@@ -42,6 +42,7 @@ const claimReward = async (
   } catch (err: any) {
     console.error(`Failed to claim the reward for Task: ${taskAccountPubKey}`);
     console.error(err);
+
     return throwDetailedError({
       detailed: err,
       type: ErrorType.GENERIC,
