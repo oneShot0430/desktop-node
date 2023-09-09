@@ -23,7 +23,10 @@ const getMyTasks = async (
       const taskLogPath = `${getAppDataPath()}/namespace/${
         rawTaskData.task_id
       }/task.log`;
-      const taskLogs = fsSync.readFileSync(taskLogPath, 'utf-8');
+
+      const taskLogs = fsSync.existsSync(taskLogPath)
+        ? fsSync.readFileSync(taskLogPath, 'utf-8')
+        : '';
       const hasError = checkErrorInLastLogTimestamp(taskLogs);
 
       return {
