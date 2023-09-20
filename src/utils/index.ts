@@ -5,6 +5,7 @@ import {
   getFullKoiiFromRoe,
 } from './currencyConversion';
 import { throwDetailedError } from './error';
+import { getBestTooltipPosition } from './getBestTooltipPosition';
 import { getCreatedAtDate } from './getCreatedAtDate';
 import getProgramAccountFilter from './getProgramAccountFilter';
 import mainErrorHandler from './mainErrorHandler';
@@ -21,4 +22,5 @@ export {
   isValidUrl,
   getProgramAccountFilter,
   checkErrorInLastLogTimestamp,
+  getBestTooltipPosition,
 };

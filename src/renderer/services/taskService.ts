@@ -21,11 +21,11 @@ export class TaskService {
   }
 
   static getTopStake(task: Task): number {
-    return max(Object.values(task.stakeList)) || 0;
+    return max(Object.values(task?.stakeList || {})) || 0;
   }
 
   static getNodesCount(task: Task): number {
-    return Object.values(task.stakeList).length;
+    return Object.values(task?.stakeList || {})?.length;
   }
 
   static getPendingRewardsByTask(

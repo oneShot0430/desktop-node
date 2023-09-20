@@ -92,4 +92,10 @@ export const errorTypeToContent: Record<
   [ErrorType.PARTIAL_CLAIM_FAILURE]:
     'Not all rewards were claimed successfully, please try again',
   [ErrorType.FETCHING_NEXT_REWARD_FAILED]: 'Failed to fetch the next reward.',
+  [ErrorType.INVALID_SCHEDULE_SESSION_TIME_RANGE]:
+    'Invalid time range. Start time must be before stop time.',
+  [ErrorType.SCHEDULE_SAME_START_STOP_TIMES]:
+    'Start time needs to be different from stop time.',
+  [ErrorType.SCHEDULE_OVERLAP]: 'This session overlaps an existing one.',
+  [ErrorType.SCHEDULE_NO_SELECTED_DAYS]: 'Please select session days.',
 };

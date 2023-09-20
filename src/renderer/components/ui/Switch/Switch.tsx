@@ -3,7 +3,7 @@ import React from 'react';
 interface Props {
   id: string;
   isChecked: boolean;
-  onSwitch: () => void;
+  onSwitch: (e?: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
   disabled?: boolean;
 }

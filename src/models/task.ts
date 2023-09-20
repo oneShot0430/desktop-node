@@ -62,7 +62,6 @@ export interface Task {
 }
 
 type ROE = number;
-type EndTimestamp = number;
 
 export interface TaskMetadata {
   author: string;
@@ -70,6 +69,7 @@ export interface TaskMetadata {
   repositoryUrl: string;
   createdAt: number;
   imageUrl: string;
+  migrationDescription: string;
   requirementsTags: RequirementTag[];
 }
 
@@ -114,6 +114,8 @@ export interface TaskData {
   >;
   distributionsAuditTrigger: Record<string, Record<string, AuditTriggerState>>;
   submissionsAuditTrigger: Record<string, Record<string, AuditTriggerState>>;
+  isMigrated: boolean;
+  migratedTo: string;
 }
 
 export interface TaskRetryData {

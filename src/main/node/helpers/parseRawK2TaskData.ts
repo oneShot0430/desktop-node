@@ -30,5 +30,7 @@ export function parseRawK2TaskData({
     submissions: rawTaskData.submissions,
     distributionsAuditTrigger: rawTaskData.distributions_audit_trigger,
     submissionsAuditTrigger: rawTaskData.submissions_audit_trigger,
+    isMigrated: rawTaskData.is_migrated,
+    migratedTo: rawTaskData.migrated_to,
   };
 }

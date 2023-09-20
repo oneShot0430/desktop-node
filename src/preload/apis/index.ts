@@ -47,12 +47,24 @@ import openNodeLogfileFolder from './openNodeLogfileFolder';
 import { getRunnedPrivateTasks, setRunnedPrivateTasks } from './privateTasks';
 import removeAccountByName from './removeAccountByName';
 import setActiveAccount from './setActiveAccount';
+import startAllTasks from './startAllTasks';
 import startTask from './startTask';
+import stopAllTasks from './stopAllTasks';
 import stopTask from './stopTask';
 import storeAllTimeRewards from './storeAllTimeRewards';
 import storeUserConfig from './storeUserConfig';
 import switchLaunchOnRestart from './switchLaunchOnRestart';
 import switchNetwork from './switchNetwork';
+import {
+  addSession,
+  removeSession,
+  updateSessionById,
+  getAllSessions,
+  getSessionById,
+  addTaskToScheduler,
+  getSchedulerTasks,
+  removeTaskFromScheduler,
+} from './tasksScheduler';
 import {
   getStoredTaskVariables,
   storeTaskVariable,
@@ -63,6 +75,7 @@ import {
   getTaskPairedVariablesNamesWithLabels,
   getTasksPairedWithVariable,
 } from './taskVariables';
+import upgradeTask from './upgradeTask';
 import withdrawStake from './withdrawStake';
 
 export default {
@@ -126,9 +139,20 @@ export default {
   getMainLogs,
   onAppDownloaded,
   getStartedTasksPubKeys,
+  upgradeTask,
   getRunningTasksPubKeys,
   getTimeToNextReward,
   cancelTaskRetry,
   getRetryDataByTaskId,
   switchLaunchOnRestart,
+  stopAllTasks,
+  startAllTasks,
+  addSession,
+  removeSession,
+  updateSessionById,
+  getAllSessions,
+  getSessionById,
+  addTaskToScheduler,
+  getSchedulerTasks,
+  removeTaskFromScheduler,
 };

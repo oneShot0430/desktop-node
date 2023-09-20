@@ -12,6 +12,7 @@ interface PropsType {
   isFetchingNextPage: boolean;
   headers: TableHeader[];
   columnsLayout: ColumnsLayout;
+  minHeight?: string;
   children: ReactNode[];
   update: () => void;
   hasMore: boolean;
@@ -25,6 +26,7 @@ export function InfiniteScrollTable({
   isFetchingNextPage,
   headers,
   columnsLayout,
+  minHeight,
   children,
   update,
   hasMore,
@@ -49,16 +51,16 @@ export function InfiniteScrollTable({
     showLoader ? '' : 'hidden'
   );
 
-  const innerWrapperClasses = twMerge('relative h-4 my-8');
+  const containerClasses = twMerge(
+    '!overflow-hidden flex flex-col',
+    minHeight || 'min-h-[440px]'
+  );
 
   return (
     <Table headers={headers} columnsLayout={columnsLayout} error={error}>
-      <div
-        ref={animationRef}
-        className="!overflow-hidden flex flex-col min-h-[440px]"
-      >
+      <div ref={animationRef} className={containerClasses}>
         <div>{children}</div>
-        <div ref={tableBottomRef} className={innerWrapperClasses}>
+        <div ref={tableBottomRef} className="relative h-4 my-8">
           <div className={loaderClasses}>
             <LoadingSpinner size={LoadingSpinnerSize.Large} />
           </div>

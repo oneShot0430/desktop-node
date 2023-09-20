@@ -1,16 +1,7 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 
-import { RequirementTag } from 'models';
+import { TaskMetadata } from 'models';
 import { getTaskMetadata, QueryKeys } from 'renderer/services';
-
-export interface TaskMetadata {
-  author: string;
-  description: string;
-  repositoryUrl: string;
-  createdAt: number;
-  imageUrl: string;
-  requirementsTags: RequirementTag[];
-}
 
 type CIDType = string | undefined | null;
 

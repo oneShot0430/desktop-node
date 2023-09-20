@@ -28,7 +28,7 @@ export function BackButton({ color }: PropsType) {
   };
 
   const labelClasses = twMerge(
-    'text-white self-center uppercase h-10 text-3xl align-middle pl-4 flex flex-col justify-center w-max',
+    'text-white self-center uppercase h-10 text-3xl pr-2 align-middle pl-4 flex flex-col justify-center w-max',
     color === 'blue' && 'text-blue-1'
   );
 

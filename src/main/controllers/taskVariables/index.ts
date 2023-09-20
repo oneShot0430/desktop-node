@@ -9,3 +9,4 @@ export * from './unpairTaskVariable';
 export * from './getTasksPairedWithVariable';
 export * from './getTaskPairedVariablesNamesWithValues';
 export * from './getTaskPairedVariablesNamesWithLabels';
+export * from './getPairedTaskVariableData';

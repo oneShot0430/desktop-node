@@ -28,6 +28,7 @@ type PropsType = {
   placement?: Placement;
   groupName?: GroupVariant;
   forceHide?: boolean;
+  customTooltipWrapperClass?: string;
 };
 
 export function Tooltip({
@@ -37,6 +38,7 @@ export function Tooltip({
   placement = 'top-right',
   groupName,
   forceHide,
+  customTooltipWrapperClass,
 }: PropsType) {
   const groupClasses =
     (groupName && groupVariant[groupName]) || groupVariant.defaultGroup;
@@ -63,7 +65,8 @@ export function Tooltip({
     'opacity-0 invisible',
     !forceHide && groupClasses.hover,
     arrowClasses,
-    classesByPlacement
+    classesByPlacement,
+    customTooltipWrapperClass
   );
 
   const tooltipClasses = twMerge(
@@ -73,10 +76,7 @@ export function Tooltip({
 
   return (
     <div
-      className={twMerge(
-        'relative inline-block',
-        !forceHide && groupClasses.group
-      )}
+      className={twMerge('relative inline', !forceHide && groupClasses.group)}
     >
       <div className={wrappingClasses}>
         <div className={tooltipClasses} role="tooltip">

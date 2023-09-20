@@ -9,7 +9,7 @@ import {
   NotificationPlacement,
 } from 'renderer/features/notifications';
 import { Sidebar } from 'renderer/features/sidebar';
-import { saveUserConfig, switchUpdateChannel } from 'renderer/services';
+import { saveUserConfig } from 'renderer/services';
 import { AppRoute } from 'renderer/types/routes';
 
 import Header from '../Header';
@@ -36,10 +36,6 @@ export function MainLayout({ children }: MainLayoutProps): JSX.Element {
           settings: { onboardingCompleted: false },
         });
         navigate(AppRoute.OnboardingCreatePin);
-      },
-
-      async switchToAlphaUpdates() {
-        await switchUpdateChannel('alpha');
       },
     });
   }, [navigate]);

@@ -5,4 +5,6 @@ export enum SystemDbKeys {
   UserConfig = 'USER_CONFIG',
   AllTimeRewards = 'ALL_TIME_REWARDS',
   TaskRetryData = 'TASK_RETRY_DATA',
+  Schedules = 'SCHEDULES',
+  SchedulerTasks = 'SCHEDULER_TASKS',
 }
