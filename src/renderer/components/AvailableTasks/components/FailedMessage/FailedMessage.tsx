@@ -1,26 +1,13 @@
-import { CloseLine } from '@_koii/koii-styleguide';
 import React from 'react';
-import toast from 'react-hot-toast';
 
 import CloseIcon from 'assets/svgs/close-icon.svg';
-import { getMainLogs } from 'renderer/services';
+import { openMainLogs } from 'renderer/utils';
 
-export function FailedMessage({ runTaskAgain }: any) {
-  const retrieveTheLogs = async () => {
-    try {
-      await getMainLogs();
-    } catch (err) {
-      toast.error('Failed to retrieve the logs', {
-        duration: 4500,
-        icon: <CloseLine className="h-5 w-5" />,
-        style: {
-          backgroundColor: '#FFA6A6',
-          paddingRight: 0,
-        },
-      });
-    }
-  };
+interface Props {
+  runTaskAgain: () => void;
+}
 
+export function FailedMessage({ runTaskAgain }: Props) {
   return (
     <div className="h-[67px] w-full flex justify-start items-center text-white border-b-2 border-white relative">
       <div className="h-[67px] w-full absolute bg-[#FFA6A6] opacity-30" />
@@ -29,7 +16,7 @@ export function FailedMessage({ runTaskAgain }: any) {
         <p>
           Oops, something&apos;s not quite right.{' '}
           <span
-            onClick={retrieveTheLogs}
+            onClick={openMainLogs}
             className="text-finnieTeal-100 underline cursor-pointer"
           >
             Retrieve the logs

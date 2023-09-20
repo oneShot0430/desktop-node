@@ -11,11 +11,7 @@ import {
   TaskData as TaskNodeTaskData,
   ITaskNodeBase,
 } from '@koii-network/task-node';
-import {
-  DEFAULT_K2_NETWORK_URL,
-  SERVER_PORT,
-  TASK_STABILITY_THRESHOLD,
-} from 'config/node';
+import { DEFAULT_K2_NETWORK_URL, SERVER_PORT } from 'config/node';
 // import cryptoRandomString from 'crypto-random-string';
 import { SystemDbKeys } from 'config/systemDbKeys';
 import { Express } from 'express';
@@ -37,6 +33,7 @@ import initExpressApp from '../node/initExpressApp';
 
 import getStakingAccountPublicKey from './getStakingAccountPubKey';
 import { getTaskSource } from './getTaskSource';
+import retryTask from './retryTask';
 import { getTaskPairedVariablesNamesWithValues } from './taskVariables';
 
 const OPERATION_MODE = 'service';
@@ -279,94 +276,21 @@ export async function executeTasks(
   childTaskProcess.on('error', async (err) => {
     console.error('Error starting child process:', err);
     koiiTasks.stopTask(selectedTask.task_id, true);
-
-    const allTaskRetryData: {
-      [key: string]: TaskRetryData;
-    } = (await namespaceInstance.storeGet(SystemDbKeys.TaskRetryData)) || {};
-
-    let taskRetryData = get(allTaskRetryData, selectedTask.task_id, null);
-    if (!taskRetryData) {
-      taskRetryData = {
-        count: 0,
-        timestamp: Date.now(),
-        cancelled: false,
-        timerReference: null,
-      };
-    }
-
-    if (!taskRetryData.cancelled) {
-      console.log(
-        `WILL RETRY [${selectedTask.task_name}] IN ${
-          2 ** (Number(taskRetryData?.count) + 1)
-        } SECONDS`
-      );
-      const timerReference = setTimeout(async () => {
-        console.log(`RETRY TASK [${selectedTask.task_name}]`);
-        const allTaskRetryData =
-          (await namespaceInstance.storeGet(SystemDbKeys.TaskRetryData)) || {};
-
-        taskRetryData = get(allTaskRetryData, selectedTask.task_id, null);
-        if (taskRetryData) {
-          if (!taskRetryData?.cancelled) {
-            const { namespace, child, expressAppPort, secret } =
-              await executeTasks(
-                selectedTask,
-                expressApp,
-                OPERATION_MODE,
-                mainSystemAccount
-              );
-
-            await koiiTasks.startTask(
-              selectedTask.task_id,
-              namespace,
-              child,
-              expressAppPort,
-              secret
-            );
-
-            if (
-              Date.now() - taskRetryData.timestamp >=
-              TASK_STABILITY_THRESHOLD
-            ) {
-              taskRetryData.count = 0;
-            } else {
-              taskRetryData.count += 1;
-            }
-            taskRetryData.timestamp = Date.now();
-            taskRetryData.timerReference = null;
-
-            const payload: any = {
-              ...taskRetryData,
-              [selectedTask.task_id]: taskRetryData,
-            };
-
-            await namespaceInstance.storeSet(
-              SystemDbKeys.TaskRetryData,
-              payload
-            );
-          } else {
-            console.log('ABORT TASK RETRY');
-          }
-        }
-      }, 2 ** (taskRetryData.count + 1) * 1000);
-
-      // store timerReference
-      taskRetryData.timerReference = timerReference[Symbol.toPrimitive](); // get timeoutId in number
-      taskRetryData.timestamp = Date.now();
-      const payload: any = {
-        ...taskRetryData,
-        [selectedTask.task_id]: taskRetryData,
-      };
-      namespaceInstance.storeSet(SystemDbKeys.TaskRetryData, payload);
-    }
   });
 
-  childTaskProcess.on('exit', (code, signal) => {
+  childTaskProcess.on('exit', async (code, signal) => {
     if (code !== 0) {
       console.error(
         `Child process exited with code ${code} and signal ${signal}`
       );
       // Handle the error here
+      retryTask(
+        selectedTask,
+        expressApp,
+        OPERATION_MODE,
+        mainSystemAccount,
+        executeTasks
+      );
     } else {
       console.log('Child process exited successfully');
     }

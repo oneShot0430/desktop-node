@@ -70,6 +70,7 @@ const endpointToControllerMap: Record<
   [Endpoints.GET_IS_TASK_RUNNING]: controllers.getIsTaskRunning,
   [Endpoints.ENABLE_STAY_AWAKE]: controllers.enableStayAwake,
   [Endpoints.DISABLE_STAY_AWAKE]: controllers.disableStayAwake,
+  [Endpoints.UPGRADE_TASK]: controllers.upgradeTask,
   [Endpoints.GET_MAIN_LOGS]: controllers.getMainLogs,
   [Endpoints.GET_STARTED_TASKS_PUBKEYS]: controllers.getStartedTasksPubKeys,
   [Endpoints.GET_RUNNING_TASKS_PUBKEYS]: controllers.getRunningTasksPubKeys,
@@ -77,6 +78,16 @@ const endpointToControllerMap: Record<
   [Endpoints.CANCEL_TASK_RETRY]: controllers.cancelTaskRetry,
   [Endpoints.GET_RETRY_DATA_BY_TASK_ID]: controllers.getRetryDataByTaskId,
   [Endpoints.SWITCH_LAUNCH_ON_RESTART]: controllers.switchLaunchOnRestart,
+  [Endpoints.STOP_ALL_TASKS]: controllers.stopAllTasks,
+  [Endpoints.START_ALL_TASKS]: controllers.startAllTasks,
+  [Endpoints.ADD_TASKS_SCHEDULE]: controllers.addSession,
+  [Endpoints.REMOVE_TASKS_SCHEDULE]: controllers.removeSession,
+  [Endpoints.UPDATE_TASKS_SCHEDULE_BY_ID]: controllers.updateSessionById,
+  [Endpoints.GET_TASKS_SCHEDULES]: controllers.getAllSessions,
+  [Endpoints.GET_TASKS_SCHEDULE_BY_ID]: controllers.getSessionById,
+  [Endpoints.ADD_TASK_TO_SCHEDULER]: controllers.addTaskToScheduler,
+  [Endpoints.GET_SCHEDULER_TASKS]: controllers.getSchedulerTasks,
+  [Endpoints.REMOVE_TASK_FROM_SCHEDULER]: controllers.removeTaskFromScheduler,
 };
 
 const initHandlers = (): void => {

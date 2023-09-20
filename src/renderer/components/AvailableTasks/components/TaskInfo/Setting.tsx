@@ -26,6 +26,7 @@ interface Props {
     dropdownRef: RefObject<HTMLButtonElement>,
     settingName: string
   ) => void;
+  isEditDisabled?: boolean;
 }
 
 export function Setting({
@@ -34,6 +35,7 @@ export function Setting({
   label,
   isRunning,
   onOpenAddTaskVariableModal,
+  isEditDisabled,
 }: Props) {
   const [isEditing, setIsEditing] = useState(false);
   const [newSettingId, setNewSettingId] = useState<DropdownItem['id']>('');
@@ -120,7 +122,13 @@ export function Setting({
         ...taskVariableItem,
       }));
 
-  const isButtonDisabled = (isEditing && !newSettingId) || isPairing;
+  const isRightButtonDisabled = (isEditing && !newSettingId) || isPairing;
+  const rightButtonClasses = `p-2 mr-2 text-sm rounded-md bg-finnieBlue-light-tertiary w-12 ${
+    isRightButtonDisabled && 'opacity-50'
+  }`;
+  const handleRightButtonClick = isEditing
+    ? () => pairTaskSetting()
+    : toggleEditMode;
 
   if (isLoading) return null;
 
@@ -161,15 +169,15 @@ export function Setting({
             {label}
           </div>
         )}
-        <button
-          onClick={isEditing ? () => pairTaskSetting() : toggleEditMode}
-          className={`p-2 mr-2 text-sm rounded-md bg-finnieBlue-light-tertiary w-12 ${
-            isButtonDisabled && 'opacity-50'
-          }`}
-          disabled={isButtonDisabled}
-        >
-          {isEditing ? 'Pair' : 'Edit'}
-        </button>
+        {!isEditDisabled && (
+          <button
+            onClick={handleRightButtonClick}
+            className={rightButtonClasses}
+            disabled={isRightButtonDisabled}
+          >
+            {isEditing ? 'Pair' : 'Edit'}
+          </button>
+        )}
       </div>
     </div>
   );

@@ -60,10 +60,30 @@ export class KoiiTaskService {
     });
   }
 
+  private async checkTaskSubmissions() {
+    this.startedTasksData.forEach(async (task) => {
+      const allSubmissions = Object.values(task.submissions);
+      const lastRoundWithSubmissions = Object.values(
+        allSubmissions?.slice(-1)?.flat()?.[0] || {}
+      )[0]?.round;
+
+      const currentSlot = await sdk.k2Connection.getSlot();
+      const currentRound = Math.floor(
+        (currentSlot - task.starting_slot) / task.round_time
+      );
+
+      if (currentRound - lastRoundWithSubmissions > 3) {
+        this.RUNNING_TASKS[task.task_id].child.emit('error');
+      }
+    });
+  }
+
   private watchTasks() {
     setInterval(() => {
       this.fetchAllTaskIds();
-      this.fetchStartedTaskData();
+      this.fetchStartedTaskData().then(() => {
+        this.checkTaskSubmissions();
+      });
     }, 15000);
   }
 
@@ -112,7 +132,7 @@ export class KoiiTaskService {
       });
     }
 
-    this.RUNNING_TASKS[taskAccountPubKey].child.kill();
+    this.RUNNING_TASKS[taskAccountPubKey].child.emit('exit', 0);
     delete this.RUNNING_TASKS[taskAccountPubKey];
 
     if (!skipRemoveFromRunningTasks) {
@@ -289,6 +309,14 @@ export class KoiiTaskService {
           const task = await this.fetchDataAndValidateIfTask(pubkey).catch(
             async (err) => {
               if (isString(err) && err.includes(ErrorType.TASK_NOT_FOUND)) {
+                // FIXME(Chris) Any Error during Account Infor fetch is treated as Task Not found
+                //  so if there was previously one and it's state was fetched we use it
+                const exisingState = this.startedTasksData.find(
+                  (task) => task.task_id === pubkey
+                );
+                if (exisingState) {
+                  return exisingState;
+                }
                 await this.removeRunningTaskPubKey(pubkey);
                 /**
                  * @todo: additionaly remove the task from filesystem
@@ -300,20 +328,6 @@ export class KoiiTaskService {
               return null;
             }
           );
-
-          // TODO(Chris) we need to refine this flow
-          // if (task && !task.is_active) {
-          //   console.log(
-          //     `DETECTED NOT ACTIVE TASK WITH ID ${pubkey} - DROPPING`
-          //   );
-          //   await this.removeRunningTaskPubKey(pubkey);
-          //   /**
-          //    * @todo: additionaly remove the task from filesystem
-          //    * removeTaskFromStartedTasks(pubkey);
-          //    * should be tested after task remove is implemented from ui
-          //    */
-          //   return null;
-          // }
 
           return task;
         })

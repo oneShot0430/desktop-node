@@ -1,7 +1,7 @@
 import { Icon } from '@_koii/koii-styleguide';
 import React, { useEffect, useState } from 'react';
 
-import HistoryIcon from 'assets/svgs/history-icon.svg';
+import HourGlassIcon from 'assets/svgs/hour-glass-icon.svg';
 import { Tooltip, Placement } from 'renderer/components/ui';
 import { getAverageSlotTime } from 'renderer/services';
 import {
@@ -38,7 +38,7 @@ export function RoundTime({ tooltipPlacement, roundTime }: PropsType) {
         placement={tooltipPlacement}
         tooltipContent={`Round Time is ${fullTime}`}
       >
-        <Icon source={HistoryIcon} />
+        <Icon source={HourGlassIcon} />
         <div>{`${Math.ceil(parsedRoundTime.value)} ${
           parsedRoundTime.unit
         }`}</div>

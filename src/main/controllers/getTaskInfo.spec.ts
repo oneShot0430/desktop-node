@@ -76,6 +76,8 @@ const expectedResult: TaskData = {
   taskManager: '7Ds4GdPPGb2DNEwT6is31i1KkR2WqusttB55T4QgGUvg',
   taskName: 'task',
   totalBountyAmount: 100,
+  isMigrated: false,
+  migratedTo: 'string',
 };
 
 describe('getTaskInfo', () => {

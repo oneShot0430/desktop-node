@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import { FAUCET_API_URL } from 'config/faucet';
+import { StartStopAllTasksParams } from 'main/controllers/types';
 import {
   Task as TaskRaw,
   GetAvailableTasksParam,
@@ -11,6 +12,8 @@ import {
   PairTaskVariableParamType,
   PaginatedResponse,
   RunningPrivateTasks,
+  ScheduleMetadata,
+  ScheduleMetadataUpdateType,
 } from 'models';
 import { Task } from 'renderer/types';
 import { getKoiiFromRoe } from 'utils';
@@ -36,6 +39,14 @@ export const fetchMyTasks = async (
     ...response,
     content: response.content.map(parseTask),
   };
+};
+
+export const stopAllTasks = async (payload?: StartStopAllTasksParams) => {
+  return window.main.stopAllTasks(payload);
+};
+
+export const startAllTasks = async (payload?: StartStopAllTasksParams) => {
+  return window.main.startAllTasks(payload);
 };
 
 export const fetchAvailableTasks = async (
@@ -164,10 +175,7 @@ export const createNodeWalletsFromJson = (
 };
 
 export const generateSeedPhrase = (): Promise<string> => {
-  return window.main.generateSeedPhrase().then((mnemonic) => {
-    console.log('GENERATING SEED PHRASE', mnemonic);
-    return mnemonic;
-  });
+  return window.main.generateSeedPhrase();
 };
 
 export const getAllAccounts = () => {
@@ -198,16 +206,6 @@ export const saveUserConfig = (config: StoreUserConfigParam) => {
     console.log('SAVING USER CONFIG', res);
     return res;
   });
-};
-
-export const switchUpdateChannel = (channel: string) => {
-  const alphaUpdatesEnabled: boolean = channel === 'alpha';
-  return window.main
-    .storeUserConfig({ settings: { alphaUpdatesEnabled } })
-    .then((res) => {
-      console.log('SAVING USER CONFIG', res);
-      return res;
-    });
 };
 
 export const removeAccount = (accountName: string) => {
@@ -430,4 +428,41 @@ export const getRetryDataByTaskId = async (taskPubKey: string) => {
 
 export const switchLaunchOnRestart = async () => {
   return window.main.switchLaunchOnRestart();
+};
+
+export const addTasksSchedulerSession = async (
+  schedule: Omit<ScheduleMetadata, 'id'>
+) => {
+  return window.main.addSession(schedule);
+};
+
+export const updateSessionById = async (
+  schedule: ScheduleMetadataUpdateType
+) => {
+  console.log('updating session', schedule);
+  return window.main.updateSessionById(schedule);
+};
+
+export const removeTasksSchedulerSession = async (scheduleId: string) => {
+  return window.main.removeSession({ id: scheduleId });
+};
+
+export const getTasksSchedulerSessions = async () => {
+  return window.main.getAllSessions();
+};
+
+export const getTasksSchedulerSessionById = async (sessionId: string) => {
+  return window.main.getSessionById({ id: sessionId });
+};
+
+export const getSchedulerTasks = async () => {
+  return window.main.getSchedulerTasks();
+};
+
+export const addTaskToScheduler = async (taskPublicKey: string) => {
+  return window.main.addTaskToScheduler({ taskPublicKey });
+};
+
+export const removeTaskFromScheduler = async (taskPublicKey: string) => {
+  return window.main.removeTaskFromScheduler({ taskPublicKey });
 };

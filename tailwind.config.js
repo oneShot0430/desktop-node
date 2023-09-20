@@ -55,6 +55,7 @@ module.exports = {
           'light-tertiary': '#4A4A73',
           'light-4': '#54547B',
           DEFAULT: '#171753',
+          'light-transparent': 'rgba(137, 137, 199, 0.25)',
         },
         blue: {
           1: '#0E0E44',
@@ -105,6 +106,7 @@ module.exports = {
           4: '#4D3D8D',
           5: '#454580',
           6: '#8989C733',
+          'light-transparent': 'rgba(137, 137, 199, 0.25)',
         },
       },
       backgroundImage: (theme) => ({

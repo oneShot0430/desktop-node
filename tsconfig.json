@@ -23,5 +23,5 @@
     "release/app/dist",
     ".erb/dll",
     ".erb/configs"
-  ],
+  ]
 }

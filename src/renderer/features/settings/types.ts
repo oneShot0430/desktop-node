@@ -10,4 +10,5 @@ export enum Tab {
   AccountsTable = 'AccountsTable',
   TaskSettings = 'TaskSettings',
   MainSettings = 'MainSettings',
+  TasksScheduler = 'TasksScheduler',
 }

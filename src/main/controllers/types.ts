@@ -3,3 +3,7 @@ export enum PersistentStoreKeys {
   TaskToVariablesPairs = 'TaskToVariablesPairs',
   RunnedPrivateTasks = 'RunnedPrivateTasks',
 }
+
+export type StartStopAllTasksParams = {
+  runOnlyScheduledTasks?: boolean;
+};

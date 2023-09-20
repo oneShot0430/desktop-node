@@ -35,4 +35,8 @@ export enum QueryKeys {
   TimeToNextReward = 'TimeToNextReward',
   OnboardingTaskIds = 'OnboardingTaskIds',
   TaskRetryData = 'TaskRetryData',
+  NewTaskVersion = 'NewTaskVersion',
+  SchedulerSessions = 'SchedulerSessions',
+  DefaultSchedulerSession = 'DefaultSchedulerSession',
+  SchedulerTasks = 'SchedulerTasks',
 }

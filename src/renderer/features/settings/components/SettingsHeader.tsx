@@ -15,6 +15,10 @@ const tabs = [
     value: Tab.TaskSettings,
     label: 'Task Settings',
   },
+  {
+    value: Tab.TasksScheduler,
+    label: 'Tasks Scheduler',
+  },
 ];
 
 type PropsType = {
@@ -30,7 +34,7 @@ export function SettingsHeader({ onTabChange, activeTab }: PropsType) {
   );
 
   return (
-    <div className="flex items-center h-13 mb-6 text-white bg-finnieTeal bg-opacity-30 gap-7 pl-10">
+    <div className="flex items-center pl-10 mb-6 text-white h-13 bg-finnieTeal bg-opacity-30 gap-7">
       <div className="flex items-center gap-4">
         {tabs.map(({ value: tabName, label }) => {
           const isActive = activeTab === tabName;

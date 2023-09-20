@@ -1,6 +1,6 @@
 import { Button, ButtonSize, ButtonVariant } from '@_koii/koii-styleguide';
 import Lottie from '@novemberfiveco/lottie-react-light';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
@@ -31,6 +31,8 @@ const columnsLayout = 'grid-cols-my-node place-items-center';
 const pageSize = 10;
 
 export function MyNode() {
+  const tableRef = useRef<HTMLDivElement>(null);
+
   const { data: mainAccountPubKey, isLoading: isLoadingMainAccount } = useQuery(
     QueryKeys.MainAccount,
     getMainAccountPublicKey
@@ -68,11 +70,12 @@ export function MyNode() {
   }, [queryClient]);
 
   return (
-    <div className="relative flex flex-col flex-grow w-full min-h-0 h-0">
+    <div ref={tableRef} className="relative flex flex-col flex-grow w-full h-0">
       <InfiniteScrollTable
         isFetchingNextPage={isFetchingNextTasks}
         columnsLayout={columnsLayout}
         headers={tableHeaders}
+        minHeight="min-h-[500px]"
         isLoading={isLoadingTasks || isLoadingMainAccount}
         error={tasksError as Error}
         hasMore={!!hasMoreTasks}
@@ -108,8 +111,8 @@ export function MyNode() {
               task={task}
               accountPublicKey={mainAccountPubKey as string}
               columnsLayout={columnsLayout}
-              totalItems={allRows.length}
               isPrivate={isPrivate}
+              tableRef={tableRef}
             />
           );
         })}

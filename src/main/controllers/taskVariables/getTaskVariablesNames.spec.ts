@@ -24,6 +24,7 @@ const tasksTestData: {
       repositoryUrl: 'test',
       createdAt: 123,
       imageUrl: 'test',
+      migrationDescription: 'test',
       requirementsTags: [],
     },
   },
@@ -36,6 +37,7 @@ const tasksTestData: {
       repositoryUrl: 'test',
       createdAt: 123,
       imageUrl: 'test',
+      migrationDescription: 'test',
       requirementsTags: [
         { type: RequirementType.TASK_VARIABLE, value: taskVariablesNames[0] },
         { type: RequirementType.GLOBAL_VARIABLE, value: taskVariablesNames[1] },
