@@ -279,10 +279,10 @@ export async function executeTasks(
   });
 
   childTaskProcess.on('exit', async (code, signal) => {
-    if (code !== 0) {
-      console.error(
-        `Child process exited with code ${code} and signal ${signal}`
-      );
+    console.error(
+      `Child process exited with code ${code} and signal ${signal}`
+    );
+    if (code !== 0 && signal !== 'SIGQUIT') {
       // Handle the error here
       retryTask(
         selectedTask,
@@ -291,15 +291,8 @@ export async function executeTasks(
         mainSystemAccount,
         executeTasks
       );
-    } else {
+    } else if (code === 0) {
       console.log('Child process exited successfully');
-    }
-    if (koiiTasks.RUNNING_TASKS[selectedTask.task_id]) {
-      /**
-       * The "on exit" event is triggered when the task is stopped,
-       * so we don't need to call the stopTask method again
-       */
-      koiiTasks.stopTask(selectedTask.task_id, true);
     }
   });
 
