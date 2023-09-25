@@ -132,7 +132,7 @@ export class KoiiTaskService {
       });
     }
 
-    this.RUNNING_TASKS[taskAccountPubKey].child.emit('exit', 0);
+    this.RUNNING_TASKS[taskAccountPubKey].child.kill('SIGQUIT');
     delete this.RUNNING_TASKS[taskAccountPubKey];
 
     if (!skipRemoveFromRunningTasks) {
