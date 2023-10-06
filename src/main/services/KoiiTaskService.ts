@@ -82,7 +82,8 @@ export class KoiiTaskService {
     setInterval(() => {
       this.fetchAllTaskIds();
       this.fetchStartedTaskData().then(() => {
-        this.checkTaskSubmissions();
+        // this.checkTaskSubmissions();
+        console.log('check task submissions');
       });
     }, 15000);
   }
@@ -132,7 +133,7 @@ export class KoiiTaskService {
       });
     }
 
-    this.RUNNING_TASKS[taskAccountPubKey].child.kill('SIGQUIT');
+    this.RUNNING_TASKS[taskAccountPubKey].child.kill('SIGTERM');
     delete this.RUNNING_TASKS[taskAccountPubKey];
 
     if (!skipRemoveFromRunningTasks) {

@@ -15,10 +15,11 @@ const tabs = [
     value: Tab.TaskSettings,
     label: 'Task Settings',
   },
-  {
-    value: Tab.TasksScheduler,
-    label: 'Tasks Scheduler',
-  },
+  // TODO: uncomment when feature is ready
+  // {
+  //   value: Tab.TasksScheduler,
+  //   label: 'Tasks Scheduler',
+  // },
 ];
 
 type PropsType = {

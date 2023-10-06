@@ -282,7 +282,7 @@ export async function executeTasks(
     console.error(
       `Child process exited with code ${code} and signal ${signal}`
     );
-    if (code !== 0 && signal !== 'SIGQUIT') {
+    if (code !== 0 && signal !== 'SIGTERM') {
       // Handle the error here
       retryTask(
         selectedTask,

@@ -1,7 +1,5 @@
 import React, { memo, useState } from 'react';
 
-import { TasksScheduler } from '../tasks-scheduler';
-
 import {
   AccountsTable,
   SettingsHeader,
@@ -17,7 +15,8 @@ function Settings() {
     [Tab.AccountsTable]: AccountsTable,
     [Tab.TaskSettings]: TaskSettings,
     [Tab.MainSettings]: MainSettings,
-    [Tab.TasksScheduler]: TasksScheduler,
+    // TODO: uncomment when feature is ready
+    // [Tab.TasksScheduler]: TasksScheduler,
   }[selectedTab];
 
   return (
