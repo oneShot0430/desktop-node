@@ -42,7 +42,7 @@ export const fetchMyTasks = async (
 };
 
 export const stopAllTasks = async (payload?: StartStopAllTasksParams) => {
-  return window.main.stopAllTasks(payload);
+  return window.main.stopAllTasks();
 };
 
 export const startAllTasks = async (payload?: StartStopAllTasksParams) => {

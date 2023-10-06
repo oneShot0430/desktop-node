@@ -11,7 +11,6 @@ import { getSchedulerTasks } from 'renderer/services';
 import { Address } from '../Address';
 
 import { Setting } from './Setting';
-import { TurnSchedulerOnOffOnTask } from './TurnSchedulerOnOffOnTask';
 
 type PropsType = {
   publicKey: string;
@@ -116,15 +115,17 @@ export function TaskInfo({
             </div>
           </div>
         </div>
-        <div>
-          {!isLoadingSchedulerTasks && (
-            <TurnSchedulerOnOffOnTask
-              taskPublicKey={publicKey}
-              defaultValue={isScheduledTask}
-            />
-          )}
-        </div>
       </div>
+
+      {/* TODO: (Eenable this when fix) */}
+      {/* <div className="flex justify-end">
+        {!isLoadingSchedulerTasks && (
+          <TurnSchedulerOnOffOnTask
+            taskPublicKey={publicKey}
+            defaultValue={isScheduledTask}
+          />
+        )}
+      </div> */}
 
       <div className="text-start">
         <div className="mb-2 text-base font-semibold text-finnieEmerald-light">
