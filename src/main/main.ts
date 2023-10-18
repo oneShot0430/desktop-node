@@ -2,10 +2,11 @@ import { app, BrowserWindow, dialog } from 'electron';
 import path from 'path';
 
 import { initializeAppUpdater } from './AppUpdater';
-import { getAllAccounts, setActiveAccount } from './controllers';
+import { getAllAccounts, setActiveAccount, getUserConfig } from './controllers';
 import initHandlers from './initHandlers';
 import { configureLogger } from './logger';
 import { getCurrentActiveAccountName } from './node/helpers';
+import { initializeStore } from './node/helpers/k2NetworkUrl';
 import { setUpPowerStateManagement } from './powerMonitor';
 import { resolveHtmlPath } from './util';
 
@@ -40,13 +41,17 @@ const installExtensions = async () => {
 };
 
 const main = async (): Promise<void> => {
+  const userConfig = await getUserConfig();
+  const shouldSetNetworkToDefault = !userConfig?.onboardingCompleted;
+  await initializeStore(shouldSetNetworkToDefault);
+
   initHandlers();
 
   await getCurrentActiveAccountName().catch(async () => {
     console.warn(
       'NO ACTIVE ACCOUNT IN DB - setting first available account as active'
     );
-    const allAccounts = await getAllAccounts();
+    const allAccounts = await getAllAccounts({} as Event);
 
     if (allAccounts[0]) {
       await setActiveAccount({} as Event, {
@@ -80,9 +85,9 @@ const createWindow = async () => {
   mainWindow = new BrowserWindow({
     show: false,
     height: 760,
-    width: 1152,
+    width: 1162,
     minHeight: 760,
-    minWidth: 1152,
+    minWidth: 1162,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: app.isPackaged

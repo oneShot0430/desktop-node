@@ -9,6 +9,9 @@ export interface UserAppConfig {
   // so we can differenciate unset from intentionally disabled and then enable it by default on app initialization.
   stayAwake?: number | false;
   launchOnRestart?: boolean;
+  tasksThatAlreadyNotifiedUpgradesAvailable?: string[];
+  hasStartedEmergencyMigration?: boolean;
+  hasFinishedEmergencyMigration?: boolean;
 }
 
 export interface StoreUserConfigParam {

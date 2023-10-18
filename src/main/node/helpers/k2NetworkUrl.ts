@@ -7,16 +7,16 @@ export const store = new Store<{
   timeToNextRewardAsSlots: number;
 }>();
 
-const initializeStore = () => {
+export const initializeStore = async (shouldSetNetworkToDefault: boolean) => {
   const k2URL = store.get('k2URL');
 
-  if (k2URL === undefined) {
+  if (k2URL === undefined || shouldSetNetworkToDefault) {
     store.set('k2URL', DEFAULT_K2_NETWORK_URL);
   }
 };
 
-initializeStore();
-
-export const getK2NetworkUrl = () => store.get('k2URL');
+export const getK2NetworkUrl = () => {
+  return store.get('k2URL');
+};
 
 export const setK2NetworkUrl = (url: string) => store.set('k2URL', url);

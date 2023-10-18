@@ -28,3 +28,4 @@ export { useInspectTaskVariable } from './useInspectTaskVariable';
 export { useConfirmNetworkSwitchModal } from './useConfirmNetworkSwitchModal';
 export { useDeleteAccountModal } from './useDeleteAccountModal';
 export { useRunExemptionFlowModal } from './useRunExemptionFlowModal';
+export { useEmergencyMigrationModal } from './useEmergencyMigrationModal';

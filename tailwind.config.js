@@ -109,10 +109,10 @@ module.exports = {
           'light-transparent': 'rgba(137, 137, 199, 0.25)',
         },
       },
-      backgroundImage: (theme) => ({
+      backgroundImage: {
         'gradient-dark':
           'linear-gradient(90deg, rgba(3, 3, 50, 0.9) 0%, rgba(23, 23, 83, 0.9) 100%)',
-      }),
+      },
       blur: {
         4.5: '4.5px',
       },

@@ -14,8 +14,9 @@ export const IPFS_GATEWAY_URL = 'https://ipfs.io/ipfs';
 
 export const TESTNET_RPC_URL = 'https://k2-testnet.koii.live';
 export const DEVNET_RPC_URL = 'https://k2-devnet.koii.live';
+export const EMERGENCY_TESTNET_RPC_URL = 'https://testnet.koii.live';
 
-export const DEFAULT_K2_NETWORK_URL = TESTNET_RPC_URL;
+export const DEFAULT_K2_NETWORK_URL = EMERGENCY_TESTNET_RPC_URL;
 
 export const TASK_CONTRACT_ID = 'Koiitask22222222222222222222222222222222222';
 
