@@ -7,7 +7,10 @@ import KoiiLogo from 'assets/svgs/koii-logo-white.svg';
 import WelcomeLinesDiagonal from 'assets/svgs/welcome-lines-diagonal.svg';
 import WelcomeWheelBackground from 'assets/svgs/welcome-wheel-background.svg';
 import { PinInput } from 'renderer/components/PinInput';
-import { useUserSettings } from 'renderer/features/common';
+import {
+  useEmergencyMigrationModal,
+  useUserSettings,
+} from 'renderer/features/common';
 import { AppRoute } from 'renderer/types/routes';
 
 export function Unlock(): JSX.Element {
@@ -15,7 +18,13 @@ export function Unlock(): JSX.Element {
 
   const { settings } = useUserSettings();
 
+  const migrationPhase = settings?.hasStartedEmergencyMigration ? 2 : 1;
+
   const navigate = useNavigate();
+
+  const { showModal: showEmergencyMigrationModal } = useEmergencyMigrationModal(
+    { migrationPhase }
+  );
 
   const handlePinChange = async (enteredPin: string) => {
     setHasPinError(false);
@@ -28,6 +37,10 @@ export function Unlock(): JSX.Element {
       );
 
       if (pinMatchesStoredHash) {
+        if (!settings?.hasFinishedEmergencyMigration) {
+          showEmergencyMigrationModal();
+        }
+
         navigate(AppRoute.MyNode, { state: { noBackButton: true } });
       } else {
         setHasPinError(true);

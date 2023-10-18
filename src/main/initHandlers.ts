@@ -88,6 +88,8 @@ const endpointToControllerMap: Record<
   [Endpoints.ADD_TASK_TO_SCHEDULER]: controllers.addTaskToScheduler,
   [Endpoints.GET_SCHEDULER_TASKS]: controllers.getSchedulerTasks,
   [Endpoints.REMOVE_TASK_FROM_SCHEDULER]: controllers.removeTaskFromScheduler,
+  [Endpoints.START_EMERGENCY_MIGRATION]: controllers.startEmergencyMigration,
+  [Endpoints.FINISH_EMERGENCY_MIGRATION]: controllers.finishEmergencyMigration,
 };
 
 const initHandlers = (): void => {

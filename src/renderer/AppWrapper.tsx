@@ -3,6 +3,7 @@ import { useQueryClient } from 'react-query';
 import { Outlet, useLocation } from 'react-router-dom';
 
 import { MainLayout, LoadingScreen } from './components';
+import { useUserSettings } from './features';
 import {
   AppNotification,
   useNotificationsContext,
@@ -23,6 +24,8 @@ const NODE_INITIALIZED = 'NODE_INITIALIZED';
 
 function AppWrapper(): JSX.Element {
   const { addNotification } = useNotificationsContext();
+
+  const { settings, loadingSettings } = useUserSettings();
 
   const queryClient = useQueryClient();
   const location = useLocation();
@@ -67,12 +70,17 @@ function AppWrapper(): JSX.Element {
     // Check if the node was already initialized
     const nodeInitialized = sessionStorage.getItem(NODE_INITIALIZED);
 
-    if (nodeInitialized !== setValue) {
+    const shouldInitializeNode =
+      nodeInitialized !== setValue &&
+      !loadingSettings &&
+      settings?.hasFinishedEmergencyMigration;
+
+    if (shouldInitializeNode) {
       initializeNode();
     } else {
       setInitializingNode(false);
     }
-  }, []);
+  }, [settings?.hasFinishedEmergencyMigration, loadingSettings]);
 
   // started prefetching required data while node is initialising
   useEffect(() => {

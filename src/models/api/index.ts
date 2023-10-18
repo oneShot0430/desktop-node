@@ -34,3 +34,4 @@ export * from './getIsTaskRunning';
 export * from './getMainLogs';
 export * from './cancelTaskRetry';
 export * from './getRetryDataByTaskId';
+export * from './taskToMigrate';

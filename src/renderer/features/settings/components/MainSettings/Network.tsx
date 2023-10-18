@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
-import { TESTNET_RPC_URL } from 'config/node';
+import { EMERGENCY_TESTNET_RPC_URL, TESTNET_RPC_URL } from 'config/node';
 import { useConfirmNetworkSwitchModal } from 'renderer/features/common/hooks';
 import { QueryKeys, getNetworkUrl, switchNetwork } from 'renderer/services';
 
@@ -27,15 +27,16 @@ export function Network() {
     queryClient.invalidateQueries(QueryKeys.GetNetworkUrl);
   };
 
+  const isTestnet =
+    networkUrl === TESTNET_RPC_URL || networkUrl === EMERGENCY_TESTNET_RPC_URL;
+
   const { showModal } = useConfirmNetworkSwitchModal({
     onConfirm: confirmSwitchNetwork,
     onCancel: () => setHasFlippedSwitch(false),
-    newNetwork: networkUrl === TESTNET_RPC_URL ? 'Devnet' : 'Testnet',
+    newNetwork: isTestnet ? 'Devnet' : 'Testnet',
   });
 
-  const isNetworkChecked = !hasFlippedSwitch
-    ? networkUrl !== TESTNET_RPC_URL
-    : networkUrl === TESTNET_RPC_URL;
+  const isNetworkChecked = !hasFlippedSwitch ? !isTestnet : isTestnet;
 
   return (
     <div className="flex flex-col gap-5">

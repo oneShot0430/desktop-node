@@ -54,6 +54,8 @@ export * from './enableStayAwake';
 export * from './disableStayAwake';
 export * from './upgradeTask';
 export * from './tasksScheduler';
+export * from './finishEmergencyMigration';
+export * from './startEmergencyMigration';
 export { cancelTaskRetry } from './cancelTaskRetry';
 export { getRetryDataByTaskId } from './getRetryDataByTaskId';
 export { switchLaunchOnRestart } from './switchLaunchOnRestart';

@@ -8,7 +8,10 @@ import { getAllAccountsResponse } from 'models/api';
 
 import { getCurrentActiveAccountName } from '../../node/helpers';
 
-export const getAllAccounts = async (): Promise<getAllAccountsResponse> => {
+export const getAllAccounts = async (
+  _: Event,
+  shouldFetchBalances?: boolean
+): Promise<getAllAccountsResponse> => {
   if (!fs.existsSync(`${getAppDataPath()}/namespace`))
     fs.mkdirSync(`${getAppDataPath()}/namespace`);
   if (!fs.existsSync(`${getAppDataPath()}/wallets`))
@@ -65,8 +68,15 @@ export const getAllAccounts = async (): Promise<getAllAccountsResponse> => {
       mainPublicKeyBalance: 0,
       stakingPublicKeyBalance: 0,
     });
-    promisesArr.push(sdk.k2Connection.getBalance(mainSystemWallet.publicKey));
-    promisesArr.push(sdk.k2Connection.getBalance(stakingWallet.publicKey));
+
+    // TODO: we want to add both or just one of the values
+    if (shouldFetchBalances) {
+      promisesArr.push(sdk.k2Connection.getBalance(mainSystemWallet.publicKey));
+      promisesArr.push(sdk.k2Connection.getBalance(stakingWallet.publicKey));
+    } else {
+      promisesArr.push(Promise.resolve(1000000000));
+      promisesArr.push(Promise.resolve(500000000));
+    }
   });
   const resolvedPromises = await Promise.allSettled(promisesArr);
   const mappedRes = resolvedPromises.map((e) => {

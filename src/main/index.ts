@@ -1,7 +1,9 @@
-import initHandlers from './initHandlers';
+import { getUserConfig } from './controllers';
 import { loadAndExecuteTasks } from './node';
 
 export default async (): Promise<void> => {
-  initHandlers();
-  await loadAndExecuteTasks();
+  const userConfig = await getUserConfig();
+  if (userConfig?.hasFinishedEmergencyMigration) {
+    await loadAndExecuteTasks();
+  }
 };

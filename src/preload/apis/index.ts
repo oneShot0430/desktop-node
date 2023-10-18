@@ -8,6 +8,7 @@ import delegateStake from './delegateStake';
 import disableStayAwake from './disableStayAwake';
 import downloadAppUpdate from './downloadAppUpdate';
 import enableStayAwake from './enableStayAwake';
+import finishEmergencyMigration from './finishEmergencyMigration';
 import generateSeedPhrase from './generateSeedPhrase';
 import getAccountBalance from './getAccountBalance';
 import getActiveAccountName from './getActiveAccountName';
@@ -48,6 +49,7 @@ import { getRunnedPrivateTasks, setRunnedPrivateTasks } from './privateTasks';
 import removeAccountByName from './removeAccountByName';
 import setActiveAccount from './setActiveAccount';
 import startAllTasks from './startAllTasks';
+import startEmergencyMigration from './startEmergencyMigration';
 import startTask from './startTask';
 import stopAllTasks from './stopAllTasks';
 import stopTask from './stopTask';
@@ -155,4 +157,6 @@ export default {
   addTaskToScheduler,
   getSchedulerTasks,
   removeTaskFromScheduler,
+  startEmergencyMigration,
+  finishEmergencyMigration,
 };

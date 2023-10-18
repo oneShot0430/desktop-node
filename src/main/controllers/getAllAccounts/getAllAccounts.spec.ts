@@ -48,7 +48,7 @@ describe('getAllAccounts', () => {
   });
 
   it('should work correctly', async () => {
-    const result = await getAllAccounts();
+    const result = await getAllAccounts({} as Event, true);
 
     // Assert
     expect(result).toEqual([

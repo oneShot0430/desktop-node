@@ -10,7 +10,8 @@ import {
   updateRewardsQueue,
 } from '@koii-network/task-node';
 import { isString } from 'lodash';
-import { store } from 'main/node/helpers/k2NetworkUrl';
+import { getNetworkUrl } from 'main/controllers/getNetworkUrl';
+import { store, getK2NetworkUrl } from 'main/node/helpers/k2NetworkUrl';
 import { ErrorType, RawTaskData } from 'models';
 import { throwDetailedError, getProgramAccountFilter } from 'utils';
 
@@ -57,6 +58,7 @@ export class KoiiTaskService {
       selectedTasks: startedTasks,
       runningTasks: this.RUNNING_TASKS,
       setTimerForRewards: this.setTimerForRewards,
+      networkURL: getNetworkUrl(),
     });
   }
 
@@ -119,7 +121,7 @@ export class KoiiTaskService {
   }
 
   async updateRewardsQueue() {
-    await updateRewardsQueue(this.setTimerForRewards);
+    await updateRewardsQueue(this.setTimerForRewards, getK2NetworkUrl());
   }
 
   async stopTask(

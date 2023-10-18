@@ -7,4 +7,5 @@ export enum SystemDbKeys {
   TaskRetryData = 'TASK_RETRY_DATA',
   Schedules = 'SCHEDULES',
   SchedulerTasks = 'SCHEDULER_TASKS',
+  EmergencyTasksToMigrate = 'EMERGENCY_TASKS_TO_MIGRATE',
 }
