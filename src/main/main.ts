@@ -2,11 +2,10 @@ import { app, BrowserWindow, dialog } from 'electron';
 import path from 'path';
 
 import { initializeAppUpdater } from './AppUpdater';
-import { getAllAccounts, setActiveAccount, getUserConfig } from './controllers';
+import { getAllAccounts, setActiveAccount } from './controllers';
 import initHandlers from './initHandlers';
 import { configureLogger } from './logger';
 import { getCurrentActiveAccountName } from './node/helpers';
-import { initializeStore } from './node/helpers/k2NetworkUrl';
 import { setUpPowerStateManagement } from './powerMonitor';
 import { resolveHtmlPath } from './util';
 
@@ -41,10 +40,8 @@ const installExtensions = async () => {
 };
 
 const main = async (): Promise<void> => {
-  const userConfig = await getUserConfig();
-  const shouldSetNetworkToDefault = !userConfig?.onboardingCompleted;
-  await initializeStore(shouldSetNetworkToDefault);
-
+  // const userConfig = await getUserConfig();
+  // const shouldSetNetworkToDefault = !userConfig?.onboardingCompleted;
   initHandlers();
 
   await getCurrentActiveAccountName().catch(async () => {
