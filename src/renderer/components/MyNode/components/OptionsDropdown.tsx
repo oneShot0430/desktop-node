@@ -1,5 +1,4 @@
 import {
-  CheckSuccessLine,
   Icon,
   RemoveLine,
   TooltipChatQuestionLeftLine,
@@ -67,15 +66,7 @@ export function OptionsDropdown({
     onSuccess: () => {
       if (pendingRewards) {
         toast.success(
-          'We sent the pending rewards from this task to your account.',
-          {
-            duration: 4500,
-            icon: <CheckSuccessLine className="w-5 h-5" />,
-            style: {
-              backgroundColor: '#BEF0ED',
-              paddingRight: 0,
-            },
-          }
+          'We sent the pending rewards from this task to your account.'
         );
       }
       queryCache.invalidateQueries([QueryKeys.taskList]);

@@ -21,7 +21,7 @@ describe('getCronTime function', () => {
     const startTime = '25:00:00'; // Invalid hours
     const days = [1, 2, 3];
     expect(() => getCronTime(startTime as TimeFormat, days)).toThrow(
-      'Invalid startTime format. Expected HH:MM:SS.'
+      'Invalid time format. Expected HH:MM:SS.'
     );
   });
 });

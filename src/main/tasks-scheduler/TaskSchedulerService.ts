@@ -2,7 +2,13 @@
 import { randomUUID } from 'crypto';
 
 import { CronJob } from 'cron';
-import { parse, isBefore, Interval, areIntervalsOverlapping } from 'date-fns';
+import {
+  parse,
+  isBefore,
+  addDays,
+  areIntervalsOverlapping,
+  format,
+} from 'date-fns';
 
 import { SystemDbKeys } from 'config/systemDbKeys';
 import { clone, isNil, isNumber } from 'lodash';
@@ -80,7 +86,6 @@ export class TaskSchedulerService {
 
   async getSchedule(id: string) {
     const schedules = await this.getSchedulesFromDb();
-    console.log('###LOOKS FOR SCHEDULE: ', id, schedules);
     return schedules.find((schedule) => schedule.id === id);
   }
 
@@ -147,7 +152,7 @@ export class TaskSchedulerService {
     await this.saveSchedulesToDb();
   }
 
-  private checkIsScheduleInConflict(
+  checkIsScheduleInConflict(
     checkedScheduleId: string,
     checkedStartTime: Date,
     checkedStopTime: Date | null,
@@ -157,9 +162,19 @@ export class TaskSchedulerService {
       return false;
     }
 
-    const checkedInterval: Interval = {
-      start: checkedStartTime,
-      end: checkedStopTime,
+    const comparisonDate = new Date(2023, 0, 1);
+
+    const checkedInterval = {
+      start: parse(
+        format(checkedStartTime, 'HH:mm:ss'),
+        'HH:mm:ss',
+        comparisonDate
+      ),
+      end: parse(
+        format(checkedStopTime, 'HH:mm:ss'),
+        'HH:mm:ss',
+        comparisonDate
+      ),
     };
 
     return Array.from(this.schedules.values()).some((schedule) => {
@@ -167,19 +182,30 @@ export class TaskSchedulerService {
         return false;
       }
 
-      const startParsed = parse(schedule.startTime, 'HH:mm:ss', new Date());
-      const stopParsed = schedule.stopTime
-        ? parse(schedule.stopTime, 'HH:mm:ss', new Date())
+      const startParsed = parse(schedule.startTime, 'HH:mm:ss', comparisonDate);
+      let stopParsed = schedule.stopTime
+        ? parse(schedule.stopTime, 'HH:mm:ss', comparisonDate)
         : null;
 
       if (!stopParsed) {
         return false;
       }
 
-      const iteratedInterval: Interval = {
+      // If stopParsed is before startParsed, add 1 day to stopParsed
+      if (isBefore(stopParsed, startParsed)) {
+        stopParsed = addDays(stopParsed, 1);
+      }
+
+      const iteratedInterval = {
         start: startParsed,
         end: stopParsed,
       };
+
+      // Ensure that the checked interval end time is also adjusted if it is before the start time
+      if (isBefore(checkedInterval.end, checkedInterval.start)) {
+        checkedInterval.end = addDays(checkedInterval.end, 1);
+      }
+
       if (areIntervalsOverlapping(checkedInterval, iteratedInterval)) {
         return checkedDays.some((day) => schedule.days.includes(day));
       }
@@ -206,37 +232,59 @@ export class TaskSchedulerService {
         'HH:mm:ss',
         new Date()
       );
-      const stopParsed = newStopTime
+
+      let stopParsed = newStopTime
         ? parse(newStopTime, 'HH:mm:ss', new Date())
         : null;
 
-      if (!startParsed || (stopParsed && isBefore(stopParsed, startParsed))) {
-        return throwDetailedError({
-          detailed: `Invalid time range. Start time ${startParsed}, Stop time ${stopParsed}`,
-          type: ErrorType.INVALID_SCHEDULE_SESSION_TIME_RANGE,
-        });
-      }
+      if (newStartTime || newStopTime) {
+        // If only startTime is provided, no need to compare with stopTime
+        if (newStartTime && !newStopTime) {
+          // Nothing to do here
+        }
+        // If both startTime and stopTime are provided
+        else if (startParsed && stopParsed) {
+          // If stopTime is earlier than startTime, assume it's for the next day
+          if (isBefore(stopParsed, startParsed)) {
+            // Adjust stopParsed to the next day
+            stopParsed = addDays(stopParsed, 1);
+          }
+        }
+        // If only stopTime is provided
+        else if (stopParsed) {
+          // Compare stopParsed with existing startTime
+          if (isBefore(stopParsed, startParsed)) {
+            // Adjust stopParsed to the next day
+            stopParsed = addDays(stopParsed, 1);
+          }
+        } else {
+          return throwDetailedError({
+            detailed: `Invalid time range. Start time ${startParsed}, Stop time ${stopParsed}`,
+            type: ErrorType.INVALID_SCHEDULE_SESSION_TIME_RANGE,
+          });
+        }
 
-      if (newStartTime === newStopTime) {
-        return throwDetailedError({
-          detailed: `Invalid time range. Start time ${startParsed}, Stop time ${stopParsed}`,
-          type: ErrorType.SCHEDULE_SAME_START_STOP_TIMES,
-        });
+        if (newStartTime === newStopTime) {
+          return throwDetailedError({
+            detailed: `Invalid time range. Start time ${startParsed}, Stop time ${stopParsed}`,
+            type: ErrorType.SCHEDULE_SAME_START_STOP_TIMES,
+          });
+        }
       }
 
       if (newDays && newDays !== schedule.days) {
         schedule.days = newDays;
       }
 
+      const hasConflictithOtherSchedules = this.checkIsScheduleInConflict(
+        schedule.id,
+        startParsed,
+        stopParsed,
+        schedule.days
+      );
+
       // check for overlap / conflicts
-      if (
-        this.checkIsScheduleInConflict(
-          schedule.id,
-          startParsed,
-          stopParsed,
-          schedule.days
-        )
-      ) {
+      if (hasConflictithOtherSchedules) {
         return throwDetailedError({
           detailed: `Conflict. ID ${schedule.id}`,
           type: ErrorType.SCHEDULE_OVERLAP,
@@ -286,6 +334,8 @@ export class TaskSchedulerService {
       }
 
       if (!isNil(newIsEnabled) && schedule.isEnabled !== newIsEnabled) {
+        schedule.isEnabled = newIsEnabled;
+
         if (newIsEnabled && isStayAwake) {
           if (!schedule.startJob.running) schedule.startJob.start();
           if (!schedule.stopJob?.running) schedule.stopJob?.start();

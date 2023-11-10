@@ -42,7 +42,7 @@ export const fetchMyTasks = async (
 };
 
 export const stopAllTasks = async (payload?: StartStopAllTasksParams) => {
-  return window.main.stopAllTasks();
+  return window.main.stopAllTasks(payload);
 };
 
 export const startAllTasks = async (payload?: StartStopAllTasksParams) => {
@@ -465,4 +465,14 @@ export const addTaskToScheduler = async (taskPublicKey: string) => {
 
 export const removeTaskFromScheduler = async (taskPublicKey: string) => {
   return window.main.removeTaskFromScheduler({ taskPublicKey });
+};
+
+export const validateSchedulerSession = (
+  payload: ScheduleMetadata
+): Promise<boolean> => {
+  return window.main.validateSchedulerSession(payload);
+};
+
+export const fundStakingWalletFromMainWallet = async (amountInRoe: number) => {
+  return window.main.creditStakingWalletFromMainWallet({ amountInRoe });
 };

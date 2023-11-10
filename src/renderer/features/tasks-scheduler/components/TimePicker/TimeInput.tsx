@@ -23,7 +23,7 @@ export function TimeInput({
   ...props
 }: TimeSelectProps) {
   const inputClasses = twMerge(
-    'text-sm leading-4 bg-purple-light-transparent w-[52px] h-9 py-2 text-center rounded-md border-2 border-transparent',
+    'text-sm leading-4 bg-purple-light-transparent w-[48px] h-9 py-2 text-center rounded-md border-2 border-transparent',
     hasError && 'border-finnieRed focus:border-finnieRed'
   );
 
@@ -54,6 +54,7 @@ export function TimeInput({
       min={min}
       max={max}
       pattern={validationPattern}
+      {...props}
     />
   );
 }

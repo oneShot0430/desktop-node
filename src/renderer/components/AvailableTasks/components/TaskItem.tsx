@@ -292,8 +292,10 @@ function TaskItem({ task, index, columnsLayout }: Props) {
       return (
         <TaskInfo
           publicKey={task.publicKey}
+          metadataCID={task.metadataCID}
           metadata={metadata ?? undefined}
           details={details}
+          creator={task.taskManager}
         />
       );
     }

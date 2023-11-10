@@ -19,24 +19,34 @@ export function getTimeUntilScheduleStarts(
         milliseconds: 0,
       });
 
-      if (i === 0 && isPast(eventDate)) {
+      // If the eventDate is in the past, skip to the next possible day
+      if (isPast(eventDate) && i === 0) {
         // eslint-disable-next-line no-continue
         continue;
       }
 
       const diffInMilliseconds = eventDate.getTime() - now.getTime();
       const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
-      const diffInHours = Math.floor(
-        (diffInMilliseconds / (1000 * 60 * 60)) % 24
-      );
-      const diffInMinutes = Math.floor((diffInMilliseconds / (1000 * 60)) % 60);
+      const remainderHours = diffInMilliseconds % (1000 * 60 * 60 * 24);
+      const diffInHours = Math.floor(remainderHours / (1000 * 60 * 60));
+      const remainderMinutes = remainderHours % (1000 * 60 * 60);
+      const diffInMinutes = Math.floor(remainderMinutes / (1000 * 60));
+      const remainderSeconds = remainderMinutes % (1000 * 60);
+      const diffInSeconds = Math.floor(remainderSeconds / 1000);
 
       let timeUntilStart = '';
-      if (diffInDays > 0) timeUntilStart += `${diffInDays} days `;
+      if (diffInDays > 0) timeUntilStart += `${diffInDays}d `;
       if (diffInHours > 0 || diffInDays > 0)
-        timeUntilStart += `${diffInHours} hours `;
+        timeUntilStart += `${diffInHours}h `;
       if (diffInMinutes > 0 || diffInHours > 0 || diffInDays > 0)
-        timeUntilStart += `${diffInMinutes} minutes`;
+        timeUntilStart += `${diffInMinutes}m `;
+      if (
+        diffInSeconds > 0 ||
+        diffInMinutes > 0 ||
+        diffInHours > 0 ||
+        diffInDays > 0
+      )
+        timeUntilStart += `${diffInSeconds}s`;
 
       return timeUntilStart.trim();
     }

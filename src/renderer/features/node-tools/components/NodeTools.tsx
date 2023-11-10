@@ -3,7 +3,6 @@ import {
   ButtonSize,
   ButtonVariant,
   CheckSuccessLine,
-  CloseLine,
   Icon,
 } from '@_koii/koii-styleguide';
 import React, {
@@ -115,25 +114,11 @@ export function NodeTools({
     onToolsValidation?.(areAllVariablesPaired);
     queryCache.invalidateQueries([QueryKeys.StoredTaskVariables]);
 
-    toast.success('Task settings successfully paired', {
-      duration: 4500,
-      icon: <CheckSuccessLine className="w-5 h-5" />,
-      style: {
-        backgroundColor: '#BEF0ED',
-        paddingRight: 0,
-      },
-    });
+    toast.success('Task settings successfully paired');
   };
 
   const onError = () => {
-    toast.error('Task settings pairing failed. Try Again', {
-      duration: 4500,
-      icon: <CloseLine className="w-5 h-5" />,
-      style: {
-        backgroundColor: '#FFA6A6',
-        paddingRight: 0,
-      },
-    });
+    toast.error('Task settings pairing failed. Try Again');
   };
 
   const { mutate: pairTaskVariables, isLoading: isPairingTasksVariables } =

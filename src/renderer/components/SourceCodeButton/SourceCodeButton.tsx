@@ -1,7 +1,7 @@
 import { Icon } from '@_koii/koii-styleguide';
 import React from 'react';
 
-import SourceCode from 'assets/svgs/source-code.svg';
+import CodeIcon from 'assets/svgs/embed-icon.svg';
 import { Tooltip } from 'renderer/components/ui';
 import { openBrowserWindow } from 'renderer/services';
 import { formatUrl, isValidUrl } from 'utils';
@@ -13,12 +13,11 @@ type PropsType = {
 export function SourceCodeButton({ repositoryUrl }: PropsType) {
   const fullUrl = formatUrl(repositoryUrl);
   const isValidRepositoryUrl = isValidUrl(fullUrl);
-  const buttonClasses = `w-[54px] flex flex-col items-center ${
-    repositoryUrl ? 'cursor-pointer' : 'cursor-not-allowed'
+  const buttonClasses = `flex flex-col items-center ${
+    isValidRepositoryUrl
+      ? 'cursor-pointer hover:underline text-finnieEmerald-light'
+      : 'cursor-not-allowed text-finnieGray-secondary'
   }`;
-  const tooltipContent = isValidRepositoryUrl
-    ? 'Source Code'
-    : 'Repository URL is missing or invalid';
 
   const showSourceCodeInRepository = () => {
     openBrowserWindow(fullUrl);
@@ -30,8 +29,15 @@ export function SourceCodeButton({ repositoryUrl }: PropsType) {
       onClick={showSourceCodeInRepository}
       disabled={!isValidRepositoryUrl}
     >
-      <Tooltip tooltipContent={tooltipContent} placement="top-left">
-        <Icon source={SourceCode} size={30} className="stroke-[1.3px]" />
+      <Tooltip
+        tooltipContent="Repository URL is missing or invalid"
+        forceHide={isValidRepositoryUrl}
+        placement="bottom-left"
+      >
+        <div className="flex gap-2">
+          <Icon source={CodeIcon} className="h-6 w-6" />
+          <p>Inspect code</p>
+        </div>
       </Tooltip>
     </button>
   );

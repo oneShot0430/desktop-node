@@ -3,7 +3,10 @@ import { useQueryClient } from 'react-query';
 import { Outlet, useLocation } from 'react-router-dom';
 
 import { MainLayout, LoadingScreen } from './components';
-import { useUserSettings } from './features';
+import {
+  useLowStakingAccountBalanceWarnings,
+  useUserSettings,
+} from './features';
 import {
   AppNotification,
   useNotificationsContext,
@@ -26,7 +29,7 @@ function AppWrapper(): JSX.Element {
   const { addNotification } = useNotificationsContext();
 
   const { settings, loadingSettings } = useUserSettings();
-
+  useLowStakingAccountBalanceWarnings();
   const queryClient = useQueryClient();
   const location = useLocation();
   const [initializingNode, setInitializingNode] = useState(true);

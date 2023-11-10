@@ -1,10 +1,10 @@
 import { useQuery } from 'react-query';
 
-import { QueryKeys, getTasksById } from 'renderer/services';
-
-const tasksAllowedOnOnboarding = [
-  'DSc7PmaDG1ubwEm1CaQVGVo6jRBVtMZKgyBa89R5k1k9',
-];
+import {
+  QueryKeys,
+  getTasksById,
+  getOnboardingTaskIds,
+} from 'renderer/services';
 
 export const useDefaultTasks = () => {
   const {
@@ -12,13 +12,14 @@ export const useDefaultTasks = () => {
     error,
     data: verifiedTasks = [],
   } = useQuery(
-    [
-      QueryKeys.taskList,
-      {
-        tasksIds: tasksAllowedOnOnboarding,
-      },
-    ],
-    () => getTasksById(tasksAllowedOnOnboarding)
+    [QueryKeys.taskList],
+    () =>
+      getOnboardingTaskIds().then((tasksAllowedOnOnboarding) =>
+        getTasksById(tasksAllowedOnOnboarding)
+      ),
+    {
+      refetchInterval: Infinity,
+    }
   );
 
   return {

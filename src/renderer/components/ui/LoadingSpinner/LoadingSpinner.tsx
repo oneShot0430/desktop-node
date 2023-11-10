@@ -7,6 +7,7 @@ export enum LoadingSpinnerSize {
   Small = 'Small',
   Medium = 'Medium',
   Large = 'Large',
+  XLarge = 'XLarge',
 }
 
 type PropsType = {
@@ -19,6 +20,7 @@ const getSizeClasses = (size: LoadingSpinnerSize) => {
     [LoadingSpinnerSize.Small]: 'w-4 h-4',
     [LoadingSpinnerSize.Medium]: 'w-6 h-6',
     [LoadingSpinnerSize.Large]: 'w-8 h-8',
+    [LoadingSpinnerSize.XLarge]: 'w-20 h-20',
   }[size];
   return sizes;
 };

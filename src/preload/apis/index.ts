@@ -4,6 +4,7 @@ import checkWalletExists from './checkWalletExists';
 import claimReward from './claimReward';
 import createNodeWallets from './createNodeWallets';
 import createNodeWalletsFromJson from './createNodeWalletsFromJson';
+import creditStakingWalletFromMainWallet from './creditStakingWalletFromMainWallet';
 import delegateStake from './delegateStake';
 import disableStayAwake from './disableStayAwake';
 import downloadAppUpdate from './downloadAppUpdate';
@@ -66,6 +67,7 @@ import {
   addTaskToScheduler,
   getSchedulerTasks,
   removeTaskFromScheduler,
+  validateSchedulerSession,
 } from './tasksScheduler';
 import {
   getStoredTaskVariables,
@@ -157,6 +159,8 @@ export default {
   addTaskToScheduler,
   getSchedulerTasks,
   removeTaskFromScheduler,
+  validateSchedulerSession,
   startEmergencyMigration,
   finishEmergencyMigration,
+  creditStakingWalletFromMainWallet,
 };

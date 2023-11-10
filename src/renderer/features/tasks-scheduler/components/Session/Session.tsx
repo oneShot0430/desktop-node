@@ -1,19 +1,19 @@
-import { CheckSuccessLine, CloseLine } from '@_koii/koii-styleguide';
+import { CloseLine } from '@_koii/koii-styleguide';
 import React, { useCallback, useState } from 'react';
-import { toast } from 'react-hot-toast';
 import { twMerge } from 'tailwind-merge';
 
+import { debounce } from 'lodash';
 import {
   ScheduleMetadata,
   ScheduleMetadataUpdateType,
   TimeFormat,
 } from 'models';
 import { Button, Tooltip } from 'renderer/components/ui';
-import { updateSessionById } from 'renderer/services';
 
-import { getErrorToDisplay } from '../../../../utils';
 import { defaultSessionId } from '../../constants';
-import { getTimeUntilScheduleStarts } from '../../utils';
+import { type ScheduleRefetchFuncType, useUpdateSession } from '../../hooks';
+import { addTime, renderTimeToStartSessionToast } from '../../utils';
+import { renderErrorToast } from '../../utils/toasts';
 import { TimePicker } from '../TimePicker';
 import { ToggleScheduleSwitch } from '../ToggleScheduleSwitch';
 import { WeekDaySelect } from '../WeekDaysSelect';
@@ -22,20 +22,25 @@ type PropsType = {
   scheduleMetadata: ScheduleMetadata;
   disabled: boolean;
   onRemoveSessionClick: (sessionId: string) => void;
+  refetchSchedules: ScheduleRefetchFuncType;
 };
+
+const DEFAULT_STOP_TIME_DIFFERENCE = '06:00:00';
+const DEFAULT_TIME = '00:00:00';
 
 export function Session({
   scheduleMetadata,
   disabled,
   onRemoveSessionClick,
+  refetchSchedules,
 }: PropsType) {
   const [showStopTimer, setShowStopTimer] = useState<boolean>(
     !!scheduleMetadata.stopTime
   );
   const [schedule, setSchedule] = useState<ScheduleMetadataUpdateType>(
     scheduleMetadata || {
-      startTime: '00:00:00',
-      stopTime: '00:00:00',
+      startTime: DEFAULT_TIME,
+      stopTime: DEFAULT_TIME,
       days: [],
       isEnabled: false,
     }
@@ -43,106 +48,94 @@ export function Session({
 
   const [hasError, setHasError] = useState(false);
 
-  const updateSession = useCallback(
-    (scheduleData: ScheduleMetadataUpdateType) => {
-      setHasError(false);
-      updateSessionById(scheduleData)
-        .then(() => {
-          const timeTillNextStart = getTimeUntilScheduleStarts(
-            scheduleData.startTime as TimeFormat,
-            scheduleData.days || []
-          );
-
-          toast.success(
-            scheduleData.isEnabled
-              ? `This session will begin in ${timeTillNextStart}.`
-              : 'Session updated.',
-            {
-              duration: 4500,
-              icon: <CheckSuccessLine className="w-5 h-5" />,
-              style: {
-                backgroundColor: '#BEF0ED',
-                paddingRight: 0,
-                maxWidth: '100%',
-              },
-            }
-          );
-        })
-        .catch((error: any) => {
-          console.error(error);
-          const errorMessage = getErrorToDisplay(error);
-          if (errorMessage) {
-            setHasError(true);
-            toast.error(errorMessage, {
-              duration: 4500,
-              icon: <CloseLine className="w-5 h-5" />,
-              style: {
-                backgroundColor: '#FFA6A6',
-                paddingRight: 0,
-                maxWidth: '100%',
-              },
-            });
-          }
-        });
+  const updateSessionMutation = useUpdateSession({
+    onSessionUpdateError(message) {
+      setHasError(true);
+      renderErrorToast(message);
     },
-    [setHasError]
+    onSessionUpdateSuccess(data) {
+      setHasError(false);
+      if (data.variables.startTime) {
+        renderTimeToStartSessionToast(
+          data.variables.startTime as TimeFormat,
+          data.variables.days || []
+        );
+      }
+    },
+  });
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedUpdateSession = useCallback(
+    debounce(async (newSchedule: ScheduleMetadataUpdateType) => {
+      try {
+        await updateSessionMutation.mutateAsync(newSchedule);
+      } catch {
+        console.log('Failed to update session');
+      }
+    }, 1500),
+    []
   );
 
   const handleStartTimeChange = useCallback(
     (value: TimeFormat) => {
-      const changedSchedule = {
-        ...schedule,
-        startTime: value,
-      };
-      setSchedule(changedSchedule);
+      setSchedule((oldSchedule) => {
+        const changedSchedule = {
+          ...oldSchedule,
+          startTime: value,
+        };
 
-      updateSession(changedSchedule);
+        debouncedUpdateSession(changedSchedule);
+        return changedSchedule;
+      });
     },
-    [schedule, updateSession]
+    [debouncedUpdateSession]
   );
 
   const handleStopTimeChange = useCallback(
-    (value: TimeFormat) => {
-      const changedSchedule = {
-        ...schedule,
-        stopTime: value,
-      };
-      setSchedule(changedSchedule);
+    async (value: TimeFormat) => {
+      try {
+        setSchedule((oldSchedule) => {
+          const changedSchedule = {
+            ...oldSchedule,
+            stopTime: value,
+          };
+          return changedSchedule;
+        });
 
-      updateSession(changedSchedule);
+        const newSchedule = {
+          stopTime: value,
+          id: scheduleMetadata.id,
+        };
+
+        await debouncedUpdateSession(newSchedule);
+        await refetchSchedules();
+      } catch (error) {
+        console.log(error);
+      }
     },
-    [schedule, updateSession]
+    [debouncedUpdateSession, refetchSchedules, scheduleMetadata.id]
   );
 
   const handleSelectedDaysChange = useCallback(
     (value: number[]) => {
-      const changedSchedule = {
-        ...schedule,
-        days: value,
-      };
+      setSchedule((oldSchedule) => {
+        const changedSchedule = {
+          ...oldSchedule,
+          days: value,
+        };
 
-      setSchedule(changedSchedule);
-
-      updateSession(changedSchedule);
+        debouncedUpdateSession(changedSchedule);
+        return changedSchedule;
+      });
     },
-    [schedule, updateSession]
+    [debouncedUpdateSession]
   );
 
-  const handleRemoveSchedule = () => {
+  const handleRemoveSchedule = useCallback(() => {
     if (scheduleMetadata.id) {
       onRemoveSessionClick(scheduleMetadata.id);
     }
-  };
-
-  const handleScheduleToggle = (value: boolean) => {
-    const changedSchedule = {
-      ...schedule,
-      isEnabled: value,
-    };
-    setSchedule(changedSchedule);
-
-    updateSession(changedSchedule);
-  };
+  }, [onRemoveSessionClick, scheduleMetadata.id]);
 
   const handleHideStopTimer = () => {
     setShowStopTimer(false);
@@ -153,10 +146,17 @@ export function Session({
     };
     setSchedule(changedSchedule);
 
-    updateSession(changedSchedule);
+    debouncedUpdateSession(changedSchedule);
   };
 
-  const handleAddStopTimer = () => {
+  const handleAddStopTimer = async () => {
+    const stopTime = addTime(
+      scheduleMetadata.startTime,
+      DEFAULT_STOP_TIME_DIFFERENCE
+    );
+
+    await handleStopTimeChange(stopTime as TimeFormat);
+
     setShowStopTimer(true);
   };
 
@@ -178,10 +178,10 @@ export function Session({
       tooltipContent='Set your node to "Stay Awake" to use this feature'
       customTooltipWrapperClass="right-10 -top-[15px]"
     >
-      <div className="flex items-center w-">
+      <div className="flex items-center">
         <div className={wrapperClasses}>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-4">
+          <div className="flex items-center gap-7">
+            <div className="flex items-center gap-6">
               <TimePicker
                 label="Start"
                 onTimeChange={handleStartTimeChange}
@@ -191,8 +191,9 @@ export function Session({
                 <TimePicker
                   label="Stop"
                   onTimeChange={handleStopTimeChange}
-                  defaultValue={scheduleMetadata.stopTime || '00:00:00'}
+                  defaultValue={scheduleMetadata.stopTime || DEFAULT_TIME}
                   onHide={handleHideStopTimer}
+                  autofocus
                 />
               ) : (
                 <div className="pb-2 mt-7">
@@ -214,8 +215,7 @@ export function Session({
           <div className="pr-6">
             <ToggleScheduleSwitch
               sessionId={scheduleMetadata.id}
-              onToggle={handleScheduleToggle}
-              defaultValue={scheduleMetadata.isEnabled}
+              value={scheduleMetadata.isEnabled}
               disabled={hasError}
             />
           </div>

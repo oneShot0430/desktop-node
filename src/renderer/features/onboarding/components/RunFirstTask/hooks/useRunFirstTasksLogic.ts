@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import { useDefaultTasks } from 'renderer/features/onboarding/hooks';
 
@@ -25,14 +25,19 @@ export const useRunFirstTasksLogic = () => {
     setFilteredTasksByKey([]);
   };
 
+  useEffect(() => {
+    const pubKeyToStakeMap: Record<string, number> = {};
+    selectedTasks.forEach((task) => {
+      pubKeyToStakeMap[task.publicKey] = task.minimumStakeAmount;
+    });
+    setStakePerTask(pubKeyToStakeMap);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedTasks]);
+
   const selectedTasksWithStake = useMemo(
     () =>
       selectedTasks.map((task) => {
         const minStake = task.minimumStakeAmount;
-        setStakePerTask({
-          ...stakePerTask,
-          [task.publicKey]: minStake,
-        });
 
         return {
           ...task,

@@ -7,3 +7,4 @@ export * from './Dropdown';
 export * from './EditStakeInput';
 export * from './Switch';
 export * from './DotsLoader';
+export * from './CopyButton';

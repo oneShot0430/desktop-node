@@ -1,5 +1,4 @@
-import { CheckSuccessLine, CloseLine } from '@_koii/koii-styleguide';
-import React, { useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -127,29 +126,12 @@ export const useSidebraLogic = () => {
   };
 
   const handleFailure = () => {
-    toast.error('Something went wrong. Please try again.', {
-      duration: 4500,
-      icon: <CloseLine className="w-5 h-5" />,
-      style: {
-        backgroundColor: '#FFA6A6',
-        paddingRight: 0,
-      },
-    });
+    toast.error('Something went wrong. Please try again.');
   };
 
   const handlePartialFailure = () => {
     enableRefecthingSidebarAndMyNode();
-    toast.error(
-      'Not all rewards were claimed successfully, please try again.',
-      {
-        duration: 4500,
-        icon: <CloseLine className="w-5 h-5" />,
-        style: {
-          backgroundColor: '#FFA6A6',
-          paddingRight: 0,
-        },
-      }
-    );
+    toast.error('Not all rewards were claimed successfully, please try again.');
   };
 
   const handleSuccess = () => {
@@ -161,14 +143,7 @@ export const useSidebraLogic = () => {
       pendingRewards: 0,
     }));
     enableRefecthingSidebarAndMyNode();
-    toast.success('Congrats! Your totals will be updated shortly.', {
-      duration: 4500,
-      icon: <CheckSuccessLine className="w-5 h-5" />,
-      style: {
-        backgroundColor: '#BEF0ED',
-        paddingRight: 0,
-      },
-    });
+    toast.success('Congrats! Your totals will be updated shortly.');
   };
 
   const { mutate: claimPendingRewards, isLoading: isClaimingRewards } =

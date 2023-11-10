@@ -59,4 +59,5 @@ export * from './startEmergencyMigration';
 export { cancelTaskRetry } from './cancelTaskRetry';
 export { getRetryDataByTaskId } from './getRetryDataByTaskId';
 export { switchLaunchOnRestart } from './switchLaunchOnRestart';
+export { creditStakingWalletFromMainWallet } from './creditStakingWalletFromMainWallet';
 export * from './types';

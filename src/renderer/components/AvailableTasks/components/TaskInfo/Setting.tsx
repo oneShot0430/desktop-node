@@ -1,9 +1,4 @@
-import {
-  AddLine,
-  CheckSuccessLine,
-  CloseLine,
-  Icon,
-} from '@_koii/koii-styleguide';
+import { AddLine, Icon } from '@_koii/koii-styleguide';
 import React, { RefObject, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useMutation, useQueryClient } from 'react-query';
@@ -70,14 +65,7 @@ export function Setting({
           QueryKeys.StoredTaskPairedTaskVariables,
           publicKey,
         ]);
-        toast.success('Task setting successfully paired.', {
-          duration: 4500,
-          icon: <CheckSuccessLine className="h-5 w-5" />,
-          style: {
-            backgroundColor: '#BEF0ED',
-            paddingRight: 0,
-          },
-        });
+        toast.success('Task setting successfully paired.');
         handleClickCancel();
         if (isRunning) {
           try {
@@ -89,12 +77,6 @@ export function Setting({
               'Restarting the task failed after pairing. Try stopping and running it manually to use the new setting.',
               {
                 duration: 10000,
-                icon: <CloseLine className="h-5 w-5" />,
-                style: {
-                  backgroundColor: '#FFA6A6',
-                  maxWidth: '100%',
-                  paddingRight: 0,
-                },
               }
             );
           } finally {
@@ -103,14 +85,7 @@ export function Setting({
         }
       },
       onError: () => {
-        toast.error('Task setting pairing failed. Try Again.', {
-          duration: 4500,
-          icon: <CloseLine className="h-5 w-5" />,
-          style: {
-            backgroundColor: '#FFA6A6',
-            paddingRight: 0,
-          },
-        });
+        toast.error('Task setting pairing failed. Try Again.');
       },
     }
   );

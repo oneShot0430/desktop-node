@@ -34,6 +34,7 @@ export function AppTopBar() {
           id={displayedNotificationEntry.id}
           variant={displayedNotificationEntry.notification}
           backButtonComponent={<BackButton color="blue" />}
+          payload={displayedNotificationEntry?.payload}
         />
       ) : (
         <div className="flex items-center justify-between w-full gap-4 px-4 mx-auto">

@@ -4,6 +4,9 @@ export enum AppNotification {
   ReferralProgramNotification = 'ReferralProgramNotification',
   UpdateAvailable = 'UpdateAvailable',
   FirstTaskRunningNotification = 'FirstTaskRunningNotification',
+  TaskUpgradeNotification = 'TaskUpgradeNotification',
+  LowStakingAccountBalance = 'LowStakingAccountBalance',
+  LowStakingAccountBalanceSevere = 'LowMainAccountBalanceSevere',
 }
 
 export enum NotificationPlacement {

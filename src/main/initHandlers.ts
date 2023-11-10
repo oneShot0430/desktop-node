@@ -88,8 +88,11 @@ const endpointToControllerMap: Record<
   [Endpoints.ADD_TASK_TO_SCHEDULER]: controllers.addTaskToScheduler,
   [Endpoints.GET_SCHEDULER_TASKS]: controllers.getSchedulerTasks,
   [Endpoints.REMOVE_TASK_FROM_SCHEDULER]: controllers.removeTaskFromScheduler,
+  [Endpoints.VALIDATE_SCHEDULER_SESSION]: controllers.validateSchedulerSession,
   [Endpoints.START_EMERGENCY_MIGRATION]: controllers.startEmergencyMigration,
   [Endpoints.FINISH_EMERGENCY_MIGRATION]: controllers.finishEmergencyMigration,
+  [Endpoints.CREDIT_STAKING_WALLET_FROM_MAIN_WALLET]:
+    controllers.creditStakingWalletFromMainWallet,
 };
 
 const initHandlers = (): void => {
