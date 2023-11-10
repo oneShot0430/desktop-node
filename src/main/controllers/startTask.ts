@@ -33,7 +33,7 @@ import initExpressApp from '../node/initExpressApp';
 
 import getStakingAccountPublicKey from './getStakingAccountPubKey';
 import { getTaskSource } from './getTaskSource';
-import retryTask from './retryTask';
+// import retryTask from './retryTask';
 import { getTaskPairedVariablesNamesWithValues } from './taskVariables';
 
 const OPERATION_MODE = 'service';
@@ -284,13 +284,13 @@ export async function executeTasks(
     );
     if (code !== 0 && signal !== 'SIGTERM') {
       // Handle the error here
-      retryTask(
-        selectedTask,
-        expressApp,
-        OPERATION_MODE,
-        mainSystemAccount,
-        executeTasks
-      );
+      // retryTask(
+      //   selectedTask,
+      //   expressApp,
+      //   OPERATION_MODE,
+      //   mainSystemAccount,
+      //   executeTasks
+      // );
     } else if (code === 0) {
       console.log('Child process exited successfully');
     }
