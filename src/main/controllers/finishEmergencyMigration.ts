@@ -1,7 +1,7 @@
 import { Event } from 'electron';
 import https from 'https';
 
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 import { Keypair, LAMPORTS_PER_SOL } from '@_koi/web3.js';
 import bs58 from 'bs58';
@@ -43,8 +43,18 @@ export const finishEmergencyMigration = async () => {
   );
 
   for (const taskToMigrate of Object.values(oldTasksToMigrate)) {
-    await migrateTask(taskToMigrate);
-    await delay(SAFE_TIMEOUT);
+    try {
+      await migrateTask(taskToMigrate);
+      await delay(SAFE_TIMEOUT);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const originalTaskIsOldAndInactive = error.response?.status === 422;
+        if (!originalTaskIsOldAndInactive) {
+          throw error;
+        }
+      }
+      console.log(error);
+    }
   }
 
   await setEmergencyMigrationAsFinished();

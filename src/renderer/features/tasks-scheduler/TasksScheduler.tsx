@@ -23,7 +23,7 @@ export function TasksScheduler() {
   useDefaultSchedulerSession();
 
   const { userConfig } = useUserAppConfig({});
-  const { schedulerSessions } = useTaskSchedulers();
+  const { schedulerSessions, refetchSchedules } = useTaskSchedulers();
 
   const handleAddSessionClick = useCallback(async () => {
     const defaultTimeString: TimeFormat = '00:00:00';
@@ -101,6 +101,7 @@ export function TasksScheduler() {
               key={session.id}
               disabled={!isStayAwakeEnabled}
               onRemoveSessionClick={handleRemoveSessionClick}
+              refetchSchedules={refetchSchedules}
             />
           ))}
         </div>

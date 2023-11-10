@@ -1,5 +1,5 @@
 import { Icon } from '@_koii/koii-styleguide';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import HourGlassIcon from 'assets/svgs/hour-glass-icon.svg';
 import { Tooltip, Placement } from 'renderer/components/ui';
@@ -21,14 +21,19 @@ export function RoundTime({ tooltipPlacement, roundTime }: PropsType) {
     unit: 's',
   });
 
-  useEffect(() => {
-    const getParsedRoundTime = async () => {
+  const getParsedRoundTime = useCallback(async () => {
+    try {
       const averageSlotTime = await getAverageSlotTime();
       const parsedRoundTime = parseRoundTime(roundTime * averageSlotTime);
       setParsedRoundTime(parsedRoundTime);
-    };
-    getParsedRoundTime();
+    } catch (err) {
+      console.log(err);
+    }
   }, [roundTime]);
+
+  useEffect(() => {
+    getParsedRoundTime();
+  }, [getParsedRoundTime]);
 
   const fullTime = formatRoundTimeWithFullUnit(parsedRoundTime);
 

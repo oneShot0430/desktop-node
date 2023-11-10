@@ -1,9 +1,19 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { RequirementType } from 'models';
-import { useMetadata, useTaskStake } from 'renderer/features';
+import {
+  useAllStoredPairedTaskVariables,
+  useMetadata,
+  useTaskStake,
+  useUserAppConfig,
+} from 'renderer/features';
+import {
+  AppNotification,
+  NotificationPlacement,
+  useNotificationsContext,
+} from 'renderer/features/notifications';
 import {
   QueryKeys,
   TaskService,
@@ -14,7 +24,10 @@ import { getKoiiFromRoe } from 'utils';
 
 export enum UpgradeStatus {
   UP_TO_DATE = 'UP_TO_DATE',
-  AVAILABLE = 'AVAILABLE',
+  UPGRADE_AVAILABLE = 'UPGRADE_AVAILABLE',
+  PRIVATE_UPGRADE_AVAILABLE = 'PRIVATE_UPGRADE_AVAILABLE',
+  PRIVATE_UPGRADE_WARNING = 'PRIVATE_UPGRADE_WARNING',
+  NEW_VERSION_BEING_AUDITED = 'NEW_VERSION_BEING_AUDITED',
   ACKNOWLEDGED = 'ACKNOWLEDGED',
   IS_CONFIRMING_UPGRADE = 'IS_CONFIRMING_UPGRADE',
   IN_PROGRESS = 'IN_PROGRESS',
@@ -22,9 +35,19 @@ export enum UpgradeStatus {
   SUCCESS = 'SUCCESS',
 }
 
-export const useUpgradeTask = (task: Task) => {
+interface Params {
+  task: Task;
+  oldTaskIsPrivate: boolean;
+  oldTaskIsCoolingDown: boolean;
+}
+
+export const useUpgradeTask = ({
+  task,
+  oldTaskIsPrivate,
+  oldTaskIsCoolingDown,
+}: Params) => {
   const initialStatus = task.isMigrated
-    ? UpgradeStatus.AVAILABLE
+    ? UpgradeStatus.UPGRADE_AVAILABLE
     : UpgradeStatus.UP_TO_DATE;
   const [upgradeStatus, setUpgradeStatus] =
     useState<UpgradeStatus>(initialStatus);
@@ -48,11 +71,8 @@ export const useUpgradeTask = (task: Task) => {
       const newerTaskState = await getLatestActiveVersionOfTask(
         newTaskState.migratedTo
       );
-      const newerTask = {
-        ...newerTaskState,
-        publicKey: newTaskState.migratedTo,
-      };
-      return newerTask;
+
+      return newerTaskState;
     } else {
       console.log(
         `UPGRADE TASK: the latest version of the task ${taskPublicKey} is not active`
@@ -70,11 +90,26 @@ export const useUpgradeTask = (task: Task) => {
   );
 
   const {
-    data: newTaskVersionPairedVariables,
-    isLoading: isLoadingNewTaskVersionPairedVariables,
+    storedPairedTaskVariablesQuery: {
+      data: allPairedVariables = {},
+      isLoading: isLoadingNewTaskVersionPairedVariables,
+    },
+  } = useAllStoredPairedTaskVariables();
+
+  const newTaskVersionPairedVariables = Object.entries(
+    Object.entries(allPairedVariables).filter(
+      ([taskId]) => taskId === newTaskVersion?.publicKey
+    )[0]?.[1] || {}
+  ).map(([key, value]) => ({ [key]: value }));
+
+  const {
+    data: newTaskVersionPairedVariablesWithLabel = [],
+    // isLoading: isLoadingNewTaskVersionPairedVariables,
   } = useQuery(
-    [QueryKeys.StoredTaskPairedTaskVariables, newTaskVersion?.publicKey || ''],
-    () => getTaskPairedVariablesNamesWithLabels(newTaskVersion?.publicKey || '')
+    [QueryKeys.StoredTaskPairedTaskVariables, newTaskVersion?.publicKey],
+    () =>
+      getTaskPairedVariablesNamesWithLabels(newTaskVersion?.publicKey || ''),
+    { enabled: !!newTaskVersion?.publicKey }
   );
 
   const {
@@ -82,6 +117,7 @@ export const useUpgradeTask = (task: Task) => {
     isLoadingMetadata: isLoadingNewTaskVersionMetadata,
   } = useMetadata({
     metadataCID: newTaskVersion?.metadataCID,
+    queryOptions: { enabled: !!newTaskVersion },
   });
 
   const newTaskVersionVariables = (
@@ -90,7 +126,12 @@ export const useUpgradeTask = (task: Task) => {
         type
       )
     ) || []
-  ).map(({ value }) => ({ name: value || '', label: 'ㅤ' }));
+  ).map(({ value, type }) => ({
+    name: value || '',
+    value: value || '',
+    type: type || '',
+    label: 'ㅤ',
+  }));
 
   const { taskStake: newTaskVersionStake } = useTaskStake({
     task: newTaskVersion,
@@ -117,15 +158,92 @@ export const useUpgradeTask = (task: Task) => {
     bounty: newTaskVersionTotalBountyInKoii,
   };
 
+  const { addNotification } = useNotificationsContext();
+
+  const { handleSaveUserAppConfig, userConfig } = useUserAppConfig({});
+
+  const handleNotifyUpgradeAvailable = useCallback(() => {
+    const taskIsReadyToUpgrade =
+      !oldTaskIsCoolingDown &&
+      newTaskVersion &&
+      [
+        UpgradeStatus.UPGRADE_AVAILABLE,
+        UpgradeStatus.PRIVATE_UPGRADE_AVAILABLE,
+      ].includes(upgradeStatus);
+
+    if (!taskIsReadyToUpgrade) return;
+
+    const tasksThatAlreadyNotifiedUpgradesAvailable =
+      userConfig?.tasksThatAlreadyNotifiedUpgradesAvailable || [];
+    const hasNotified = tasksThatAlreadyNotifiedUpgradesAvailable.includes(
+      newTaskVersion?.publicKey || ''
+    );
+    const shoulNotNotify = hasNotified || !userConfig;
+
+    if (shoulNotNotify) return;
+
+    const registerTaskUpgradeAsNotified = () =>
+      handleSaveUserAppConfig({
+        settings: {
+          tasksThatAlreadyNotifiedUpgradesAvailable: [
+            ...tasksThatAlreadyNotifiedUpgradesAvailable,
+            newTaskVersion.publicKey,
+          ],
+        },
+      });
+
+    const onClickBannerCTA = () => {
+      const newUpgradeStatus = newTaskVersion.isWhitelisted
+        ? UpgradeStatus.IS_CONFIRMING_UPGRADE
+        : UpgradeStatus.PRIVATE_UPGRADE_WARNING;
+      setUpgradeStatus(newUpgradeStatus);
+      registerTaskUpgradeAsNotified();
+    };
+
+    addNotification(
+      `taskUpgradeNotification ${task.publicKey}}`,
+      AppNotification.TaskUpgradeNotification,
+      NotificationPlacement.TopBar,
+      {
+        taskName: task.taskName,
+        ctaButtonAction: onClickBannerCTA,
+        closeButtonAction: registerTaskUpgradeAsNotified,
+      }
+    );
+  }, [
+    oldTaskIsCoolingDown,
+    upgradeStatus,
+    handleSaveUserAppConfig,
+    userConfig,
+    newTaskVersion,
+    addNotification,
+    task.publicKey,
+    task.taskName,
+  ]);
+
+  useEffect(() => {
+    handleNotifyUpgradeAvailable();
+  }, [handleNotifyUpgradeAvailable]);
+
   useEffect(() => {
     if (
       task.isMigrated &&
       newTaskVersion &&
       upgradeStatus === UpgradeStatus.UP_TO_DATE
     ) {
-      setUpgradeStatus(UpgradeStatus.AVAILABLE);
+      setUpgradeStatus(UpgradeStatus.UPGRADE_AVAILABLE);
     }
   }, [task.isMigrated, newTaskVersion, upgradeStatus]);
+
+  useEffect(() => {
+    const newTaskVersionIsPrivate = newTaskVersion?.isWhitelisted === false;
+    if (newTaskVersionIsPrivate) {
+      const newUpgradeStatus = oldTaskIsPrivate
+        ? UpgradeStatus.PRIVATE_UPGRADE_AVAILABLE
+        : UpgradeStatus.NEW_VERSION_BEING_AUDITED;
+      setUpgradeStatus(newUpgradeStatus);
+    }
+  }, [newTaskVersion?.isWhitelisted, oldTaskIsPrivate]);
 
   const { mutate: upgradeTask } = useMutation(
     (newStake: number) => {
@@ -157,7 +275,7 @@ export const useUpgradeTask = (task: Task) => {
   );
 
   return {
-    upgradeStatus,
+    upgradeStatus: newTaskVersion ? upgradeStatus : UpgradeStatus.UP_TO_DATE,
     setUpgradeStatus,
     upgradeTask,
     newTaskVersion,
@@ -166,6 +284,7 @@ export const useUpgradeTask = (task: Task) => {
     isLoadingNewTaskVersionMetadata,
     newTaskVersionVariables,
     newTaskVersionPairedVariables,
+    newTaskVersionPairedVariablesWithLabel,
     isLoadingNewTaskVersionPairedVariables,
     newTaskVersionDetails,
     newTaskVersionStake,

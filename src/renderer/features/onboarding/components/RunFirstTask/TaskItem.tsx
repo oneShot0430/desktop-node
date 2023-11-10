@@ -1,7 +1,6 @@
 import {
   Icon,
   InformationCircleLine,
-  CheckSuccessLine,
   EditPencilLine,
 } from '@_koii/koii-styleguide';
 import React, { useState, useMemo } from 'react';
@@ -70,14 +69,7 @@ function TaskItem({
   };
   const handleCopyCreatorAddress = () => {
     copyToClipboard(task.taskManager);
-    toast.success('Creators address copied!', {
-      duration: 4500,
-      icon: <CheckSuccessLine className="h-5 w-5" />,
-      style: {
-        backgroundColor: '#BEF0ED',
-        paddingRight: 0,
-      },
-    });
+    toast.success('Creators address copied!');
   };
   return (
     <div className="w-full relative max-w-[1100px]">
@@ -176,6 +168,8 @@ function TaskItem({
           <div className="h-[200px] overflow-y-auto">
             <TaskInfo
               publicKey={task.publicKey}
+              creator={task.taskManager}
+              metadataCID={task.metadataCID}
               metadata={metadata ?? undefined}
               details={details}
               isOnboardingTask

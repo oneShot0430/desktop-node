@@ -10,6 +10,5 @@ export enum Tab {
   AccountsTable = 'AccountsTable',
   TaskSettings = 'TaskSettings',
   MainSettings = 'MainSettings',
-  // TODO: uncomment when feature is ready
-  // TasksScheduler = 'TasksScheduler',
+  TasksScheduler = 'TasksScheduler',
 }

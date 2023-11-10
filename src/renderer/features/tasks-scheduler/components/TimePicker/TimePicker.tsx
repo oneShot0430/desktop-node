@@ -12,6 +12,7 @@ interface TimePickerProps {
   onTimeChange: (value: TimeFormat) => void;
   defaultValue?: TimeFormat;
   onHide?: () => void;
+  autofocus?: boolean;
 }
 
 const formatHour = (hour: number): string => {
@@ -25,6 +26,7 @@ export function TimePicker({
   onTimeChange,
   defaultValue,
   onHide,
+  autofocus,
 }: TimePickerProps) {
   const defaultHour = defaultValue ? defaultValue.split(':')[0] : '00';
   const defaultMinute = defaultValue ? defaultValue.split(':')[1] : '00';
@@ -57,8 +59,10 @@ export function TimePicker({
       const formattedTime = format(parsedDate, 'HH:mm:ss') as TimeFormat;
       const prevTime = prevTimeRef.current;
 
-      if (!prevTime || (prevTime && prevTime !== formattedTime)) {
+      if (prevTime && prevTime !== formattedTime) {
         // Call onTimeChange only if the time values are different
+        console.log('### prevTime', prevTime);
+
         onTimeChange(formattedTime);
       }
 
@@ -91,6 +95,7 @@ export function TimePicker({
               name="hour"
               onChange={setHour}
               defaultValue={hour}
+              onFocus={(e) => e.target.select()}
               min={0}
               max={12}
               hasError={hasError && isDirty}
@@ -102,11 +107,13 @@ export function TimePicker({
               name="minute"
               onChange={setMinute}
               defaultValue={defaultMinute}
+              onFocus={(e) => e.target.select()}
               min={0}
               max={59}
               hasError={hasError && isDirty}
               // allow values between 00 and 59
               validationPattern="^([0-5]?[0-9])$"
+              autoFocus={autofocus}
             />
           </div>
           <SelectAmPm

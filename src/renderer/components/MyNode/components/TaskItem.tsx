@@ -2,7 +2,6 @@ import {
   PauseFill,
   PlayFill,
   Icon,
-  CloseLine,
   InformationCircleLine,
 } from '@_koii/koii-styleguide';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
@@ -26,8 +25,10 @@ import UpdateIcon from 'assets/svgs/update-icon.svg';
 import UploadLine from 'assets/svgs/upload-line.svg';
 import { TASK_RETRY_DATA_REFETCH_INTERVAL } from 'config/refetchIntervals';
 import { get, noop, uniqBy } from 'lodash';
+import { RequirementType } from 'models';
 import { Address } from 'renderer/components/AvailableTasks/components/Address';
 import { TaskInfo } from 'renderer/components/AvailableTasks/components/TaskInfo';
+import { TaskSettings } from 'renderer/components/AvailableTasks/components/TaskSettings';
 import { getTooltipContent } from 'renderer/components/AvailableTasks/utils';
 import { RoundTime } from 'renderer/components/RoundTime';
 import {
@@ -75,6 +76,8 @@ import {
   UpgradeFailedContent,
   UpgradeAvailableContent,
   ConfirmUpgradeContent,
+  NewVersionInAudit,
+  PrivateUpgradeWarning,
 } from './taskUpgrade';
 import useCountDown from './useCountDown';
 import { UpgradeStatus, useUpgradeTask } from './useUpgradeTask';
@@ -98,7 +101,7 @@ export function TaskItem({
 }: PropsType) {
   const [isArchivingTask, setIsArchivingTask] = useState(false);
   const [accordionView, setAccordionView] = useState<
-    'info' | 'upgrade-info' | null
+    'info' | 'upgrade-info' | 'upgrade-settings' | null
   >(null);
   const [shouldDisplayActions, setShouldDisplayActions] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -107,25 +110,11 @@ export function TaskItem({
   const [claimedRewards, setClaimedRewards] = useState(0);
   const [isAddTaskSettingModalOpen, setIsAddTaskSettingModalOpen] =
     useState(false);
+  const [isTaskSettingsValid, setIsTaskSettingsValid] = useState(false);
 
   const { fetchMyTasksEnabled } = useMyNodeContext();
 
   const { taskName, isRunning: originalIsRunning, publicKey, roundTime } = task;
-
-  const {
-    upgradeStatus,
-    upgradeTask,
-    setUpgradeStatus,
-    newTaskVersion,
-    isLoadingNewTaskVersion,
-    newTaskVersionVariables,
-    newTaskVersionPairedVariables,
-    isLoadingNewTaskVersionPairedVariables,
-    newTaskVersionMetadata,
-    isLoadingNewTaskVersionMetadata,
-    newTaskVersionDetails,
-    newTaskVersionStake,
-  } = useUpgradeTask(task);
 
   const { data: alternativeIsRunning = false } = useQuery(
     [QueryKeys.IsRunning, publicKey],
@@ -179,6 +168,38 @@ export function TaskItem({
     stakingAccountPublicKey,
   });
 
+  const { canUnstake } = useUnstakingAvailability({
+    task,
+    stakingAccountPublicKey,
+  });
+
+  const myStakeInKoii = getKoiiFromRoe(taskStake);
+
+  const isCoolingDown = useMemo(
+    () => !canUnstake && !!myStakeInKoii,
+    [canUnstake, myStakeInKoii]
+  );
+
+  const {
+    upgradeStatus,
+    upgradeTask,
+    setUpgradeStatus,
+    newTaskVersion,
+    isLoadingNewTaskVersion,
+    newTaskVersionVariables,
+    newTaskVersionPairedVariables,
+    isLoadingNewTaskVersionPairedVariables,
+    newTaskVersionPairedVariablesWithLabel,
+    newTaskVersionMetadata,
+    isLoadingNewTaskVersionMetadata,
+    newTaskVersionDetails,
+    newTaskVersionStake,
+  } = useUpgradeTask({
+    task,
+    oldTaskIsPrivate: isPrivate,
+    oldTaskIsCoolingDown: isCoolingDown,
+  });
+
   const stopTaskIfDelisted = useCallback(async () => {
     if (isRunning && !task.isActive) {
       try {
@@ -202,16 +223,6 @@ export function TaskItem({
     setPendingRewards(pendingRewards);
   }, [task, stakingAccountPublicKey]);
 
-  const allTimeRewards = claimedRewards + pendingRewards;
-  const allTimeRewardsInKoii = getKoiiFromRoe(allTimeRewards);
-  const pendingRewardsInKoii = getKoiiFromRoe(pendingRewards);
-  const myStakeInKoii = getKoiiFromRoe(taskStake);
-  const totalBountyInKoii = getKoiiFromRoe(task.totalBountyAmount);
-  const isFirstRowInTable = index === 0;
-
-  const nodes = useMemo(() => TaskService.getNodesCount(task), [task]);
-  const topStake = useMemo(() => TaskService.getTopStake(task), [task]);
-
   const { metadata, isLoadingMetadata } = useMetadata({
     metadataCID: task.metadataCID,
   });
@@ -220,7 +231,52 @@ export function TaskItem({
       ? isLoadingNewTaskVersionMetadata
       : isLoadingMetadata;
 
-  const { data: pairedVariables, isLoading: isLoadingPairedVariables } =
+  const oldTaskVersionVariables = metadata?.requirementsTags.filter(
+    ({ type }) =>
+      [RequirementType.TASK_VARIABLE, RequirementType.GLOBAL_VARIABLE].includes(
+        type
+      )
+  );
+
+  const newTaskVariableSet = new Set(
+    newTaskVersionVariables?.map((v) => v.name)
+  );
+  const oldTaskVariableSet = new Set(
+    oldTaskVersionVariables?.map((v) => v.value)
+  );
+
+  const upgradeUsesDifferentVariables = !!(
+    newTaskVersionVariables?.some((v) => !oldTaskVariableSet.has(v.name)) ||
+    oldTaskVersionVariables?.some(
+      (v) => !newTaskVariableSet.has(v?.value || '')
+    )
+  );
+
+  useEffect(() => {
+    const validateAllVariablesWerePaired = () => {
+      const numberOfPairedVariables = Object.keys(
+        newTaskVersionPairedVariables || {}
+      ).length;
+
+      const allVariablesWerePaired =
+        (newTaskVersionVariables?.length || 0) === numberOfPairedVariables;
+
+      setIsTaskSettingsValid(allVariablesWerePaired);
+    };
+
+    validateAllVariablesWerePaired();
+  }, [newTaskVersionPairedVariables, newTaskVersionVariables, taskName]);
+
+  const allTimeRewards = claimedRewards + pendingRewards;
+  const allTimeRewardsInKoii = getKoiiFromRoe(allTimeRewards);
+  const pendingRewardsInKoii = getKoiiFromRoe(pendingRewards);
+  const totalBountyInKoii = getKoiiFromRoe(task.totalBountyAmount);
+  const isFirstRowInTable = index === 0;
+
+  const nodes = useMemo(() => TaskService.getNodesCount(task), [task]);
+  const topStake = useMemo(() => TaskService.getTopStake(task), [task]);
+
+  const { data: pairedVariables = [], isLoading: isLoadingPairedVariables } =
     useQuery([QueryKeys.StoredTaskPairedTaskVariables, task.publicKey], () =>
       getTaskPairedVariablesNamesWithLabels(task.publicKey)
     );
@@ -260,6 +316,10 @@ export function TaskItem({
     }
   };
 
+  const handleTaskToolsValidationCheck = (isValid: boolean) => {
+    setIsTaskSettingsValid(isValid);
+  };
+
   const [parent] = useAutoAnimate();
 
   const infoRef = useRef<HTMLDivElement>(null);
@@ -269,19 +329,21 @@ export function TaskItem({
     getBestTooltipPosition(optionsDropdownRef.current, tableRef.current) ===
     'top';
 
-  const closeAccordionView = () =>
-    !isAddTaskSettingModalOpen && setAccordionView(null);
+  const closeAccordionView = () => {
+    queryCache.invalidateQueries([QueryKeys.StoredPairedTaskVariables]);
+    queryCache.invalidateQueries([
+      QueryKeys.StoredTaskPairedTaskVariables,
+      newTaskVersion?.publicKey,
+    ]);
+    if (!isAddTaskSettingModalOpen) {
+      setAccordionView(null);
+    }
+  };
   const closeOptionsDropdown = () => setShouldDisplayActions(false);
   const openTaskLogs = async () => {
     const openedTheLogs: boolean = await openLogfileFolder(task.publicKey);
     if (!openedTheLogs) {
-      toast.error('Unable to open the logs folder. Try Again', {
-        icon: <CloseLine className="w-5 h-5" />,
-        style: {
-          backgroundColor: '#FFA6A6',
-          paddingRight: 0,
-        },
-      });
+      toast.error('Unable to open the logs folder. Try Again');
     }
   };
 
@@ -326,6 +388,8 @@ export function TaskItem({
         isLoadingNewTaskVersion ||
         isLoadingPairedVariables ||
         isLoadingNewTaskVersionPairedVariables,
+      'upgrade-settings':
+        isLoadingNewTaskVersion || isLoadingNewTaskVersionPairedVariables,
     }[accordionView];
 
   const mainTooltipContent =
@@ -352,7 +416,8 @@ ${isPlayPauseButtonDisabled && 'opacity-60'}`;
 
   const containerClasses = `py-2.5 gap-y-0 min-h-[69px] w-full ${
     [
-      UpgradeStatus.AVAILABLE,
+      UpgradeStatus.UPGRADE_AVAILABLE,
+      UpgradeStatus.PRIVATE_UPGRADE_AVAILABLE,
       UpgradeStatus.IS_CONFIRMING_UPGRADE,
       UpgradeStatus.IN_PROGRESS,
     ].includes(upgradeStatus)
@@ -373,13 +438,19 @@ ${isPlayPauseButtonDisabled && 'opacity-60'}`;
       : ''
   }`;
   const updateIconClasses = `stroke-[1.4px] ${
-    upgradeStatus === UpgradeStatus.ACKNOWLEDGED
+    [
+      UpgradeStatus.ACKNOWLEDGED,
+      UpgradeStatus.NEW_VERSION_BEING_AUDITED,
+      UpgradeStatus.PRIVATE_UPGRADE_AVAILABLE,
+    ].includes(upgradeStatus)
       ? 'text-finnieOrange'
       : 'text-finnieTeal'
   } ${
-    [UpgradeStatus.AVAILABLE, UpgradeStatus.ACKNOWLEDGED].includes(
-      upgradeStatus
-    ) && 'cursor-pointer'
+    [
+      UpgradeStatus.UPGRADE_AVAILABLE,
+      UpgradeStatus.ACKNOWLEDGED,
+      UpgradeStatus.PRIVATE_UPGRADE_AVAILABLE,
+    ].includes(upgradeStatus) && 'cursor-pointer'
   }`;
   const optionsButtonClasses = `py-0.75 !pr-[0.5px] rounded-full ${
     shouldDisplayActions ? 'bg-purple-5' : 'bg-transparent'
@@ -410,6 +481,11 @@ ${isPlayPauseButtonDisabled && 'opacity-60'}`;
       currentAccordionView === 'info' ? null : 'info'
     );
   };
+  const handleToggleSettingsAccordion = () => {
+    setAccordionView((currentAccordionView) =>
+      currentAccordionView === 'upgrade-settings' ? null : 'upgrade-settings'
+    );
+  };
 
   const handleToggleUpgradeInfoAccordion = () => {
     setAccordionView((currentAccordionView) =>
@@ -425,19 +501,37 @@ ${isPlayPauseButtonDisabled && 'opacity-60'}`;
     setUpgradeStatus(UpgradeStatus.IS_CONFIRMING_UPGRADE);
   };
 
-  const handleDisplayAvailableUpgrade = () => {
-    setUpgradeStatus(UpgradeStatus.AVAILABLE);
+  const handleMoveToPrivateUpgradeWarning = () => {
+    setUpgradeStatus(UpgradeStatus.PRIVATE_UPGRADE_WARNING);
+  };
+
+  const handleDisplayPrivateUpgradeAvailable = () => {
+    setUpgradeStatus(UpgradeStatus.PRIVATE_UPGRADE_AVAILABLE);
+  };
+
+  const handleDisplayUpgradeAvailable = () => {
+    setUpgradeStatus(UpgradeStatus.UPGRADE_AVAILABLE);
   };
 
   const handleToggleOptionsDropdown = () => {
     setShouldDisplayActions((shouldDisplayActions) => !shouldDisplayActions);
   };
 
+  const handleClickArrow =
+    upgradeStatus === UpgradeStatus.IS_CONFIRMING_UPGRADE &&
+    newTaskVersion?.isWhitelisted
+      ? handleDisplayUpgradeAvailable
+      : handleDisplayPrivateUpgradeAvailable;
+
   const handleClickOnUpdateIcon =
     UpgradeStatus.ACKNOWLEDGED === upgradeStatus
-      ? handleDisplayAvailableUpgrade
-      : UpgradeStatus.AVAILABLE === upgradeStatus
+      ? newTaskVersion?.isWhitelisted
+        ? handleDisplayUpgradeAvailable
+        : handleDisplayPrivateUpgradeAvailable
+      : UpgradeStatus.UPGRADE_AVAILABLE === upgradeStatus
       ? handleMoveToConfirmUpgrade
+      : UpgradeStatus.PRIVATE_UPGRADE_AVAILABLE === upgradeStatus
+      ? handleMoveToPrivateUpgradeWarning
       : noop;
 
   const hasOngoingRetry = useMemo(() => {
@@ -469,15 +563,10 @@ ${isPlayPauseButtonDisabled && 'opacity-60'}`;
     durationInSeconds: Math.floor(taskRetryRemainingTime / 1000),
   });
 
-  const { canUnstake } = useUnstakingAvailability({
-    task,
-    stakingAccountPublicKey,
-  });
-
   const pairedAndUnpairedNewTaskVersionVariables = uniqBy(
     [
-      ...(newTaskVersionPairedVariables || []),
-      ...(pairedVariables || []),
+      ...newTaskVersionPairedVariablesWithLabel,
+      ...(upgradeUsesDifferentVariables ? [] : pairedVariables),
       ...newTaskVersionVariables,
     ],
     'name'
@@ -494,10 +583,16 @@ ${isPlayPauseButtonDisabled && 'opacity-60'}`;
       accordionView === 'upgrade-info'
         ? newTaskVersion?.publicKey || ''
         : task.publicKey,
+    creator: task.taskManager,
     variables:
       accordionView === 'upgrade-info'
         ? pairedAndUnpairedNewTaskVersionVariables
         : pairedVariables,
+
+    metadataCID:
+      accordionView === 'upgrade-info'
+        ? newTaskVersion?.metadataCID || ''
+        : task.metadataCID,
     metadata:
       accordionView === 'upgrade-info'
         ? newTaskVersionMetadata || undefined
@@ -507,11 +602,10 @@ ${isPlayPauseButtonDisabled && 'opacity-60'}`;
     isUpgradeInfo: accordionView === 'upgrade-info',
     onOpenAddTaskVariableModal: handleOpenAddTaskVariableModal,
     shouldDisplayToolsInUse: true,
+    pendingRewards: accordionView === 'info' ? pendingRewards : undefined,
+    shouldDisplayArchiveButton:
+      accordionView === 'info' && !isRunning && !myStakeInKoii,
   };
-  const isCoolingDown = useMemo(
-    () => !canUnstake && !!myStakeInKoii,
-    [canUnstake, myStakeInKoii]
-  );
   const retryAnimationClasses = `w-[25px] h-[25px]
     ${timeRemaining <= 0 && 'animate-spin'}`;
   const tooltipLeftPlacement: Placement = `${
@@ -520,6 +614,31 @@ ${isPlayPauseButtonDisabled && 'opacity-60'}`;
   const tooltipRightPlacement: Placement = `${
     isFirstRowInTable ? 'bottom' : 'top'
   }-right`;
+
+  const optionsDropdown = (
+    <div
+      ref={optionsDropdownRef}
+      className="relative flex flex-row items-center gap-4"
+    >
+      <Button
+        onClick={handleToggleOptionsDropdown}
+        onlyIcon
+        icon={<Icon source={DotsSvg} className="text-white h-8 w-8" />}
+        className={optionsButtonClasses}
+      />
+      {shouldDisplayActions && (
+        <OptionsDropdown
+          addStake={showAddStakeModal}
+          unstake={showUnstakeModal}
+          openLogs={openTaskLogs}
+          runOrStopTask={handleToggleTask}
+          task={task}
+          isInverted={optionsDropdownIsInverted}
+          onTaskArchive={handleTaskArchive}
+        />
+      )}
+    </div>
+  );
 
   if (upgradeStatus === UpgradeStatus.IN_PROGRESS)
     return (
@@ -578,15 +697,21 @@ ${isPlayPauseButtonDisabled && 'opacity-60'}`;
               <LoadingSpinner size={LoadingSpinnerSize.Large} />
             </div>
           ) : [
-              UpgradeStatus.AVAILABLE,
+              UpgradeStatus.UPGRADE_AVAILABLE,
               UpgradeStatus.ACKNOWLEDGED,
               UpgradeStatus.IN_PROGRESS,
+              UpgradeStatus.NEW_VERSION_BEING_AUDITED,
+              UpgradeStatus.PRIVATE_UPGRADE_AVAILABLE,
             ].includes(upgradeStatus) ? (
             <Tooltip
               placement={tooltipRightPlacement}
               tooltipContent={
                 [UpgradeStatus.IN_PROGRESS].includes(upgradeStatus)
                   ? 'Upgrade in progress'
+                  : [UpgradeStatus.PRIVATE_UPGRADE_AVAILABLE].includes(
+                      upgradeStatus
+                    )
+                  ? 'Running tasks that are not vetted by our team could be risky.'
                   : 'Upgrade available'
               }
             >
@@ -595,12 +720,15 @@ ${isPlayPauseButtonDisabled && 'opacity-60'}`;
                 onClick={handleClickOnUpdateIcon}
               />
             </Tooltip>
-          ) : upgradeStatus === UpgradeStatus.IS_CONFIRMING_UPGRADE ? (
+          ) : [
+              UpgradeStatus.IS_CONFIRMING_UPGRADE,
+              UpgradeStatus.PRIVATE_UPGRADE_WARNING,
+            ].includes(upgradeStatus) ? (
             <button
-              onClick={handleDisplayAvailableUpgrade}
+              onClick={handleClickArrow}
               className="cursor-pointer h-12 w-12 flex justify-center items-center"
             >
-              <ArrowIcon />
+              <ArrowIcon className="cursor-pointer" />
             </button>
           ) : hasOngoingRetry ? (
             <Tooltip
@@ -638,128 +766,138 @@ ${isPlayPauseButtonDisabled && 'opacity-60'}`;
             </Tooltip>
           )}
         </div>
-
-        <div className="flex gap-3 justify-self-start">
-          <Tooltip
-            placement={tooltipRightPlacement}
-            tooltipContent={infoButtonTooltipContent}
-          >
-            <div
-              {...propsManagingMainTooltipState}
-              className="flex flex-col items-center justify-start w-10"
-            >
-              <Button
-                onClick={handleToggleInfoAccordion}
-                icon={
-                  <Icon
-                    source={InformationCircleLine}
-                    size={36}
-                    className={infoIconClasses}
-                  />
-                }
-                onlyIcon
-              />
-            </div>
-          </Tooltip>
-          <div className="flex flex-col gap-1 text-xs justify-self-start max-w-[12vw]">
-            <div>{taskName}</div>
-            <div className="text-finnieTeal truncate">
-              <span>ID:</span> <Address address={task.publicKey} />
-            </div>
-          </div>
-        </div>
-
-        {upgradeStatus === UpgradeStatus.AVAILABLE ? (
-          <UpgradeAvailableContent
+        {upgradeStatus === UpgradeStatus.PRIVATE_UPGRADE_WARNING ? (
+          <PrivateUpgradeWarning
             onReview={handleToggleUpgradeInfoAccordion}
             onAcknowledge={handleAcknowledgeUpgrade}
             onUpgrade={handleMoveToConfirmUpgrade}
             isFirstRowInTable={isFirstRowInTable}
             isCoolingDown={isCoolingDown}
           />
-        ) : upgradeStatus === UpgradeStatus.IS_CONFIRMING_UPGRADE ? (
-          <ConfirmUpgradeContent
-            onUpgrade={upgradeTask}
-            originalStake={taskStake}
-            newStake={newTaskVersionStake}
-            minStake={newTaskVersion?.minimumStakeAmount || 0}
-            isLoadingNewVersion={isLoadingNewTaskVersion}
-          />
         ) : (
           <>
-            <div className="flex flex-col gap-2 text-xs min-w-[130px] w-full justify-self-start">
-              <div className="truncate">
-                Creator: <Address address={task.taskManager} />
-              </div>
-              <div className="truncate">{`Account: ${accountName}`}</div>
-            </div>
-            <div className="flex flex-col gap-2 text-xs min-w-[50px] w-fit text-left mr-auto ml-[20%] xl:ml-[40%] 2xl:ml-[50%]">
-              <div className="truncate">{`Staked: ${myStakeInKoii}`}</div>
-              <div className="truncate">{`Bounty: ${totalBountyInKoii}`}</div>
-            </div>
-            <div className="flex flex-col gap-2 text-xs w-fit">
-              <div className="mx-auto truncate">{`All time: ${allTimeRewardsInKoii}`}</div>
-              <div className="mx-auto truncate">{`To claim: ${pendingRewardsInKoii}`}</div>
-            </div>
-            <div {...propsManagingMainTooltipState}>
-              <RoundTime
-                tooltipPlacement={tooltipLeftPlacement}
-                roundTime={roundTime}
-              />
-            </div>
-            <div {...propsManagingMainTooltipState}>
-              {upgradeStatus === UpgradeStatus.ACKNOWLEDGED ? (
-                <Button
-                  onClick={handleDisplayAvailableUpgrade}
-                  icon={<UploadLine />}
-                  onlyIcon
-                  className="text-finnieBlue h-9 w-14 rounded bg-white flex justify-center items-center -mr-1 xl:mr-0"
-                />
-              ) : !hasOngoingRetry ? (
-                <Status
-                  status={taskStatus}
-                  isFirstRowInTable={isFirstRowInTable}
-                  isLoading={isLoadingStatus}
-                  isRunning={isRunning}
-                />
-              ) : (
-                <Tooltip
-                  placement={tooltipLeftPlacement}
-                  tooltipContent="We'll keep retrying this task until it works.
-                  If you want to stop, click the x at anytime."
+            <div className="flex gap-3 justify-self-start">
+              <Tooltip
+                placement={tooltipRightPlacement}
+                tooltipContent={infoButtonTooltipContent}
+              >
+                <div
+                  {...propsManagingMainTooltipState}
+                  className="flex flex-col items-center justify-start w-10"
                 >
-                  <button
-                    onClick={handleCancelTaskRetry}
-                    className="cursor-pointer"
-                  >
-                    <CancelButton />
-                  </button>
-                </Tooltip>
-              )}
+                  <Button
+                    onClick={handleToggleInfoAccordion}
+                    icon={
+                      <Icon
+                        source={InformationCircleLine}
+                        size={36}
+                        className={infoIconClasses}
+                      />
+                    }
+                    onlyIcon
+                  />
+                </div>
+              </Tooltip>
+              <div className="flex flex-col gap-1 text-xs justify-self-start max-w-[12vw]">
+                <div>{taskName}</div>
+                <div className="text-finnieTeal truncate">
+                  <span>ID:</span> <Address address={task.publicKey} />
+                </div>
+              </div>
             </div>
-
-            <div
-              ref={optionsDropdownRef}
-              className="relative flex flex-row items-center gap-4"
-            >
-              <Button
-                onClick={handleToggleOptionsDropdown}
-                onlyIcon
-                icon={<Icon source={DotsSvg} className="text-white h-8 w-8" />}
-                className={optionsButtonClasses}
+            {upgradeStatus === UpgradeStatus.NEW_VERSION_BEING_AUDITED ? (
+              <>
+                <NewVersionInAudit />
+                {optionsDropdown}
+              </>
+            ) : upgradeStatus === UpgradeStatus.UPGRADE_AVAILABLE ||
+              upgradeStatus === UpgradeStatus.PRIVATE_UPGRADE_AVAILABLE ? (
+              <UpgradeAvailableContent
+                onReview={handleToggleUpgradeInfoAccordion}
+                onAcknowledge={handleAcknowledgeUpgrade}
+                onUpgrade={
+                  upgradeStatus === UpgradeStatus.PRIVATE_UPGRADE_AVAILABLE
+                    ? handleMoveToPrivateUpgradeWarning
+                    : handleMoveToConfirmUpgrade
+                }
+                isFirstRowInTable={isFirstRowInTable}
+                isCoolingDown={isCoolingDown}
+                isPrivateUpgrade={
+                  upgradeStatus === UpgradeStatus.PRIVATE_UPGRADE_AVAILABLE
+                }
               />
-              {shouldDisplayActions && (
-                <OptionsDropdown
-                  addStake={showAddStakeModal}
-                  unstake={showUnstakeModal}
-                  openLogs={openTaskLogs}
-                  runOrStopTask={handleToggleTask}
-                  task={task}
-                  isInverted={optionsDropdownIsInverted}
-                  onTaskArchive={handleTaskArchive}
-                />
-              )}
-            </div>
+            ) : upgradeStatus === UpgradeStatus.IS_CONFIRMING_UPGRADE ? (
+              <ConfirmUpgradeContent
+                hasVariablesToUpgrade={upgradeUsesDifferentVariables}
+                taskVariables={newTaskVersionVariables}
+                openSettings={handleToggleSettingsAccordion}
+                onUpgrade={upgradeTask}
+                originalStake={taskStake}
+                newStake={newTaskVersionStake}
+                minStake={newTaskVersion?.minimumStakeAmount || 0}
+                isLoadingNewVersion={isLoadingNewTaskVersion}
+                isTaskSettingsValid={isTaskSettingsValid}
+                isFirstRowInTable={isFirstRowInTable}
+              />
+            ) : (
+              <>
+                <div className="flex flex-col gap-2 text-xs min-w-[130px] w-full justify-self-start">
+                  <div className="truncate">
+                    Creator: <Address address={task.taskManager} />
+                  </div>
+                  <div className="truncate">{`Account: ${accountName}`}</div>
+                </div>
+                <div className="flex flex-col gap-2 text-xs min-w-[50px] w-fit text-left mr-auto ml-[20%] xl:ml-[40%] 2xl:ml-[50%]">
+                  <div className="truncate">{`Staked: ${myStakeInKoii}`}</div>
+                  <div className="truncate">{`Bounty: ${totalBountyInKoii}`}</div>
+                </div>
+                <div className="flex flex-col gap-2 text-xs w-fit">
+                  <div className="mx-auto truncate">{`All time: ${allTimeRewardsInKoii}`}</div>
+                  <div className="mx-auto truncate">{`To claim: ${pendingRewardsInKoii}`}</div>
+                </div>
+                <div {...propsManagingMainTooltipState}>
+                  <RoundTime
+                    tooltipPlacement={tooltipLeftPlacement}
+                    roundTime={roundTime}
+                  />
+                </div>
+                <div {...propsManagingMainTooltipState}>
+                  {upgradeStatus === UpgradeStatus.ACKNOWLEDGED ? (
+                    <Button
+                      onClick={
+                        newTaskVersion?.isWhitelisted
+                          ? handleDisplayUpgradeAvailable
+                          : handleDisplayPrivateUpgradeAvailable
+                      }
+                      icon={<UploadLine />}
+                      onlyIcon
+                      className="text-finnieBlue h-9 w-14 rounded bg-white flex justify-center items-center -mr-1 xl:mr-0"
+                    />
+                  ) : !hasOngoingRetry ? (
+                    <Status
+                      status={taskStatus}
+                      isFirstRowInTable={isFirstRowInTable}
+                      isLoading={isLoadingStatus}
+                      isRunning={isRunning}
+                    />
+                  ) : (
+                    <Tooltip
+                      placement={tooltipLeftPlacement}
+                      tooltipContent="We'll keep retrying this task until it works.
+                  If you want to stop, click the x at anytime."
+                    >
+                      <button
+                        onClick={handleCancelTaskRetry}
+                        className="cursor-pointer"
+                      >
+                        <CancelButton />
+                      </button>
+                    </Tooltip>
+                  )}
+                </div>
+                {optionsDropdown}
+              </>
+            )}
           </>
         )}
 
@@ -770,6 +908,15 @@ ${isPlayPauseButtonDisabled && 'opacity-60'}`;
                 <div className="m-auto">
                   <LoadingSpinner />
                 </div>
+              ) : accordionView === 'upgrade-settings' ? (
+                <TaskSettings
+                  taskPubKey={newTaskVersion?.publicKey || ''}
+                  onToolsValidation={handleTaskToolsValidationCheck}
+                  taskVariables={newTaskVersionVariables}
+                  onPairingSuccess={closeAccordionView}
+                  onOpenAddTaskVariableModal={handleOpenAddTaskVariableModal}
+                  moveToTaskInfo={() => setAccordionView('upgrade-info')}
+                />
               ) : (
                 <TaskInfo {...taskInfoProps} />
               ))}

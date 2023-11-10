@@ -5,3 +5,4 @@ export { useMainAccountBalance } from './useMainAccountBalance';
 export { useUserAppConfig } from './useUserAppConfig';
 export { useMainAccount } from './useMainAccount';
 export { useStakingAccount } from './useStakingAccount';
+export { useLowStakingAccountBalanceWarnings } from './useLowStakingAccountBalanceWarnings';

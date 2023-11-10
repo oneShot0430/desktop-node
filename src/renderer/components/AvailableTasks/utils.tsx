@@ -1,4 +1,3 @@
-import { CloseLine } from '@_koii/koii-styleguide';
 import React from 'react';
 import toast from 'react-hot-toast';
 
@@ -44,14 +43,7 @@ export const getErrorMessage = ({
 
 export const showTaskRunErrorToast = (taskName: string | undefined) => {
   if (taskName === '') return;
-  toast.error(`Task ${taskName} running failed. Please try again!`, {
-    duration: 3500,
-    icon: <CloseLine className="w-5 h-5" />,
-    style: {
-      backgroundColor: '#FFA6A6',
-      paddingRight: 0,
-    },
-  });
+  toast.error(`Task ${taskName} running failed. Please try again!`);
 };
 
 type GetTooltipContentParamsType = {

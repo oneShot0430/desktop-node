@@ -1,9 +1,7 @@
 import {
   FavoriteStarFill,
   FavoriteStarLine,
-  CopyLine,
   DeleteTrashXlLine,
-  CheckSuccessLine,
   KeyUnlockLine,
   Icon,
   LockLine,
@@ -20,6 +18,7 @@ import {
   Tooltip,
   TableRow,
   ColumnsLayout,
+  CopyButton,
 } from 'renderer/components/ui';
 import { useClipboard, useDeleteAccountModal } from 'renderer/features/common';
 import { useExportSecretPhrase } from 'renderer/features/common/hooks/useExportSecretPhrase';
@@ -79,6 +78,8 @@ export const AccountItem = memo(
       publicKey: mainPublicKey,
     });
 
+    const stakingAccountBalanceInKoii = getKoiiFromRoe(stakingAccountBalance);
+
     const handleExportSecretPhrase = async () => {
       showExportSecretPhraseModal();
     };
@@ -105,10 +106,9 @@ export const AccountItem = memo(
     } bg-opacity-5 grid grid-cols-accounts gap-y-6 !py-4 border-none`;
     const StarIcon = isDefault ? FavoriteStarFill : FavoriteStarLine;
     const accountBalanceInKoii = getKoiiFromRoe(accountBalance);
-    const stakingAccountBalanceInKoii = getKoiiFromRoe(stakingAccountBalance);
 
     return (
-      <div className="w-full mb-4 pr-2 text-white">
+      <div className="w-full pr-2 mb-4 text-white">
         <div className="pb-2 pl-[5.5%] text-xl font-semibold">
           {accountName}
         </div>
@@ -125,7 +125,7 @@ export const AccountItem = memo(
                 icon={
                   <Icon
                     source={StarIcon}
-                    className="text-finnieTeal-100 h-5 w-5"
+                    className="w-5 h-5 text-finnieTeal-100"
                   />
                 }
                 className="w-6 h-6 bg-transparent rounded-full"
@@ -142,21 +142,14 @@ export const AccountItem = memo(
             className="pr-2 overflow-hidden text-ellipsis"
           />
           <div className="flex justify-center gap-4">
-            <Tooltip tooltipContent={copiedMainKey ? 'Copied' : 'Copy'}>
-              <Button
-                onClick={handleCopyMainPublicKey}
-                icon={
-                  <Icon
-                    source={copiedMainKey ? CheckSuccessLine : CopyLine}
-                    className="h-4 w-4 text-white"
-                  />
-                }
-                className="rounded-full w-6.5 h-6.5 bg-transparent outline-none"
-              />
-            </Tooltip>
+            <CopyButton
+              onCopy={handleCopyMainPublicKey}
+              isCopied={copiedMainKey}
+              className="w-6.5 h-6.5"
+            />
             <Button
               icon={<KeyUnlockLine className="w-3.5 h-3.5 text-white" />}
-              className=" w-6 h-6 rounded-full bg-transparent"
+              className="w-6 h-6 bg-transparent rounded-full "
               onClick={handleExportSecretPhrase}
             />
           </div>
@@ -175,7 +168,7 @@ export const AccountItem = memo(
 
           <span />
 
-          <div className="mr-4 ml-auto">
+          <div className="ml-auto mr-4">
             {!isDefault &&
               (isDeleting ? (
                 <LoadingSpinner size={LoadingSpinnerSize.Medium} />
@@ -207,19 +200,11 @@ export const AccountItem = memo(
             className="pr-2 overflow-hidden text-ellipsis"
           />
           <div className="flex justify-center gap-4">
-            <Tooltip tooltipContent={copiedStakingKey ? 'Copied' : 'Copy'}>
-              <Button
-                onClick={handleCopyStakingPublicKey}
-                icon={
-                  <Icon
-                    source={copiedStakingKey ? CheckSuccessLine : CopyLine}
-                    className="text-black h-4 w-4 text-white"
-                  />
-                }
-                className="rounded-full w-6.5 h-6.5 bg-transparent outline-none"
-              />
-            </Tooltip>
-
+            <CopyButton
+              onCopy={handleCopyStakingPublicKey}
+              isCopied={copiedStakingKey}
+              className="w-6.5 h-6.5"
+            />
             <div className="w-6" />
           </div>
 
@@ -241,7 +226,7 @@ export const AccountItem = memo(
                 </p>
               }
             >
-              <Icon source={LockLine} className="h-4 w-4 text-white mb-1" />
+              <Icon source={LockLine} className="w-4 h-4 mb-1 text-white" />
             </Tooltip>
           </span>
         </TableRow>

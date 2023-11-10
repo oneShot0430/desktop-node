@@ -12,3 +12,4 @@ export * from './SourceCodeButton';
 export * from './RoundTime';
 export * from './LoadingScreen';
 export * from './FundButton';
+export * from './KoiiInput';

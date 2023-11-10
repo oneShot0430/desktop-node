@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useCallback, useContext, useState } from 'react';
 
 import { AppNotification, NotificationPlacement } from '../types';
 
@@ -6,14 +6,18 @@ type PendingNotification = {
   notification: AppNotification;
   type: NotificationPlacement;
   id: string;
+  payload?: any;
 };
 
+type AddNotification = (
+  id: string,
+  notification: AppNotification,
+  type: NotificationPlacement,
+  payload?: any
+) => void;
+
 export interface NotificationsContextType {
-  addNotification: (
-    id: string,
-    notification: AppNotification,
-    type: NotificationPlacement
-  ) => void;
+  addNotification: AddNotification;
   getNextNotification: (
     type: NotificationPlacement
   ) => PendingNotification | undefined;
@@ -44,15 +48,22 @@ export function NotificationsProvider({ children }: NotificationsPropsType) {
     PendingNotification[]
   >([]);
 
-  const addNotification = (
-    id: string,
-    notification: AppNotification,
-    type: NotificationPlacement
-  ) => {
-    setPendingNotifications((prev) => [...prev, { id, notification, type }]);
-  };
+  const addNotification: AddNotification = useCallback(
+    (id, notification, type, payload) => {
+      setPendingNotifications((prev) => [
+        ...prev,
+        { id, notification, type, payload },
+      ]);
+    },
+    []
+  );
 
-  const removeNotificationById = (id: string) => {
+  const removeNotificationById = (id?: string) => {
+    // if there is not notification with this id, do nothing
+    if (!pendingNotifications.find((notification) => notification.id === id)) {
+      return;
+    }
+
     const updatedNotification = pendingNotifications.filter(
       (notification) => notification.id !== id
     );

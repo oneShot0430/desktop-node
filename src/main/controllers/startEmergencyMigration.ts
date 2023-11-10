@@ -1,6 +1,6 @@
 import { Event } from 'electron';
 
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 import { EMERGENCY_TESTNET_RPC_URL } from 'config/node';
 import koiiTasks from 'main/services/koiiTasks';
@@ -58,35 +58,48 @@ const recordTasksAndStakesForAccount = async (
     })
   );
 };
+
+const getTaskState = async (taskPublicKey: string) => {
+  const response = await axios.get<TaskData>(
+    `https://faucet-api.koii.network/api/get-task-state/${taskPublicKey}`
+  );
+
+  return response.data;
+};
+
 const recordTaskAndStake = async (
   taskPublicKey: string,
   account: OwnerAccount
 ) => {
-  const getTaskState = async (taskPublicKey: string) => {
-    const response = await axios.get<TaskData>(
-      `https://faucet-api.koii.network/api/get-task-state/${taskPublicKey}`
-    );
+  try {
+    const taskState: TaskData = await getTaskState(taskPublicKey);
+    const stakeOnTask = taskState?.stakeList?.[account.stakingPublicKey] || 0;
+    const hasStakeOnTask = stakeOnTask > 0;
+    const taskCanBeMigrated = hasStakeOnTask && taskState.isActive;
 
-    return response.data;
-  };
-
-  const taskState: TaskData = await getTaskState(taskPublicKey);
-  const stakeOnTask = taskState?.stakeList?.[account.stakingPublicKey] || 0;
-  const hasStakeOnTask = stakeOnTask > 0;
-
-  if (hasStakeOnTask && taskState.isActive) {
-    const taskToMigrateRecord = {
-      publicKey: taskPublicKey,
-      stake: stakeOnTask,
-      ...account,
-    };
-    console.log(
-      `MIGRATE NETWORK: recording task ${taskPublicKey} with stake ${stakeOnTask} ROE, from account ${account.accountName}`
-    );
-    await storeTaskToMigrate(taskToMigrateRecord);
-    console.log(
-      `MIGRATE NETWORK: recorded task ${taskPublicKey} with stake ${stakeOnTask} ROE, from account ${account.accountName}`
-    );
+    if (taskCanBeMigrated) {
+      const taskToMigrateRecord = {
+        publicKey: taskPublicKey,
+        stake: stakeOnTask,
+        ...account,
+      };
+      console.log(
+        `MIGRATE NETWORK: recording task ${taskPublicKey} with stake ${stakeOnTask} ROE, from account ${account.accountName}`
+      );
+      await storeTaskToMigrate(taskToMigrateRecord);
+      console.log(
+        `MIGRATE NETWORK: recorded task ${taskPublicKey} with stake ${stakeOnTask} ROE, from account ${account.accountName}`
+      );
+    }
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      const taskIsOldAndInactive =
+        error.response?.data.message.includes('not a valid taskID');
+      if (!taskIsOldAndInactive) {
+        throw error;
+      }
+    }
+    console.log(error);
   }
 };
 

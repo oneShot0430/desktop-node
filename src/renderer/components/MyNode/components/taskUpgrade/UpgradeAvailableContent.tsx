@@ -11,6 +11,7 @@ interface UpgradeAvailableContentProps {
   onAcknowledge: () => void;
   isFirstRowInTable: boolean;
   isCoolingDown: boolean;
+  isPrivateUpgrade: boolean;
 }
 
 export function UpgradeAvailableContent({
@@ -19,19 +20,26 @@ export function UpgradeAvailableContent({
   onAcknowledge,
   isFirstRowInTable,
   isCoolingDown,
+  isPrivateUpgrade,
 }: UpgradeAvailableContentProps) {
+  const upgradeNowClasses = `text-finnieBlue h-9 w-[162px] bg-white ${
+    isPrivateUpgrade ? 'bg-finnieOrange' : ''
+  }`;
   const upgradeNowButton = (
     <Button
       onClick={onUpgrade}
       icon={<UpdateIcon className="h-6 w-6 stroke-2" />}
       label="Upgrade Now"
       disabled={isCoolingDown}
-      className="text-finnieBlue h-9 w-[162px] bg-white"
+      className={upgradeNowClasses}
     />
   );
   const coolingDownTooltipPlacement: Placement = `${
     isFirstRowInTable ? 'bottom' : 'top'
   }-left`;
+  const tooltipContent = isCoolingDown
+    ? 'The upgrade will be available after 3 rounds.'
+    : 'Running tasks that are not vetted by our team could be risky.';
 
   return (
     <>
@@ -43,13 +51,13 @@ export function UpgradeAvailableContent({
           onClick={onReview}
           icon={<SearchIcon />}
           label="Review"
-          className="border-2 border-white text-white h-9 w-[115px] bg-transparent"
+          className="border-2 border-white text-white h-9 w-[115px] bg-transparent rounded-md"
         />
       </div>
       <div className="col-span-3 ml-10">
-        {isCoolingDown ? (
+        {isCoolingDown || isPrivateUpgrade ? (
           <Tooltip
-            tooltipContent="The upgrade will be available after 3 rounds."
+            tooltipContent={tooltipContent}
             placement={coolingDownTooltipPlacement}
           >
             {upgradeNowButton}

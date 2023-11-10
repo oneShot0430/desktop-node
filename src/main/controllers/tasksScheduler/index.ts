@@ -3,7 +3,7 @@ export * from './removeSession';
 export * from './updateSessionById';
 export * from './getAllSessions';
 export * from './getSessionById';
-
+export * from './validateSchedulerSession';
 export * from './addTaskToScheduler';
 export * from './getSchedulerTasks';
 export * from './removeTaskFromScheduler';
