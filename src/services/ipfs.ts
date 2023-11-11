@@ -1,7 +1,7 @@
 import config from 'config';
 import { getStoredTaskVariables } from 'main/controllers/taskVariables/getStoredTaskVariables';
+import { fetchWithTimeout } from 'main/node/helpers';
 import { ErrorType } from 'models';
-import fetch from 'node-fetch';
 import { throwDetailedError } from 'utils';
 import { Web3Storage } from 'web3.storage';
 
@@ -18,18 +18,18 @@ export async function retrieveFromIPFS(
     ({ label }) => label === 'WEB3_STORAGE_KEY'
   )?.value;
 
-  if (userWeb3StorageKey) {
-    try {
+  try {
+    if (userWeb3StorageKey) {
       const client = makeStorageClient(userWeb3StorageKey);
       return retrieveThroughClient(client, cid);
-    } catch (error: any) {
-      return throwDetailedError({
-        detailed: error,
-        type: ErrorType.GENERIC,
-      });
+    } else {
+      return retrieveThroughHttpGateway(cid, fileName);
     }
-  } else {
-    return retrieveThroughHttpGateway(cid, fileName);
+  } catch (error: any) {
+    return throwDetailedError({
+      detailed: error,
+      type: ErrorType.GENERIC,
+    });
   }
 }
 
@@ -55,8 +55,30 @@ async function retrieveThroughHttpGateway(
   fileName = ''
 ): Promise<string> {
   console.log('use IPFS HTTP gateway');
-  const fileContent = await fetch(
-    `${config.node.IPFS_GATEWAY_URL}/${cid}/${fileName}`
-  ).then((res) => res.text());
-  return fileContent;
+
+  const listOfIpfsGatewaysUrls = [
+    `${config.node.IPFS_GATEWAY_URL}/${cid}/${fileName}`,
+    `https://${cid}.ipfs.w3s.link/${fileName}`,
+    `https://gateway.ipfs.io/ipfs/${cid}/${fileName}`,
+    `https://ipfs.eth.aragon.network/ipfs/${cid}/${fileName}`,
+  ];
+
+  for (const url of listOfIpfsGatewaysUrls) {
+    try {
+      const response = await fetchWithTimeout(url);
+      const fileContent = await response.text();
+      const couldNotFetchActualFileContent =
+        fileContent.startsWith('<!DOCTYPE html>');
+
+      if (!couldNotFetchActualFileContent) {
+        return fileContent;
+      }
+
+      console.log(`Gateway failed at ${url}, trying next if available.`);
+    } catch (error) {
+      console.error(`Error fetching from ${url}:`, error);
+    }
+  }
+
+  throw Error(`Failed to get ${cid} from IPFS`);
 }

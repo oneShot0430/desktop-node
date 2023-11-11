@@ -156,12 +156,18 @@ export async function loadTask({
 }) {
   const executablesDirectoryPath = `${getAppDataPath()}/executables`;
   const presumedSourceCodePath = `${executablesDirectoryPath}/${taskAuditProgram}.js`;
+  let shouldDownloadExecutable = !fsSync.existsSync(presumedSourceCodePath);
 
-  if (!fsSync.existsSync(presumedSourceCodePath)) {
+  if (!shouldDownloadExecutable) {
+    const fileContent = fsSync.readFileSync(presumedSourceCodePath, 'utf8');
+    console.log({ fileContent });
+    shouldDownloadExecutable = fileContent.startsWith('<!DOCTYPE html>');
+  }
+
+  if (shouldDownloadExecutable) {
     const sourceCode: string = await getTaskSource({} as Event, {
       taskAuditProgram,
     });
-
     fsSync.mkdirSync(executablesDirectoryPath, { recursive: true });
     fsSync.writeFileSync(presumedSourceCodePath, sourceCode);
   }

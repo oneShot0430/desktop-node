@@ -5,6 +5,7 @@ import { Namespace } from './Namespace';
 import regNodes from './regNodes';
 
 export * from './wallets';
+export * from './fetchWithTimeout';
 
 export default {
   getNodes: errorHandler(getNodes, 'Get nodes error'),
