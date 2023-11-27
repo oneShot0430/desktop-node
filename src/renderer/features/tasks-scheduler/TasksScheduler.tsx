@@ -5,14 +5,14 @@ import { useQueryClient } from 'react-query';
 
 import { isNumber } from 'lodash';
 import { TimeFormat } from 'models';
-import { useUserAppConfig } from 'renderer/features/settings/hooks';
+import { useUserAppConfig } from 'renderer/features/settings/hooks/useUserAppConfig';
 import {
   QueryKeys,
   addTasksSchedulerSession,
   removeTasksSchedulerSession,
 } from 'renderer/services';
 
-import { StayAwake } from '../settings/components/MainSettings/StayAwake';
+import { StayAwake } from '../settings/components/GeneralSettings/StayAwake';
 
 import { AddSessionButton } from './components/AddSessionButton';
 import { Session } from './components/Session/Session';
@@ -74,20 +74,25 @@ export function TasksScheduler() {
 
   return (
     <div>
-      <div className="flex justify-between mb-4">
-        <div className="mb-4 text-xl font-semibold text-white">
-          Schedule your Node’s work
+      <div className="flex justify-between">
+        <div>
+          <div className="flex justify-between mb-4">
+            <div className="text-xl font-semibold text-white ">
+              Schedule your node’s work time
+            </div>
+          </div>
+
+          <div className="mb-5 text-sm leading-6 text-white w-[460px] xl:w-full">
+            Set it and forget it to earn tokens while you sleep!
+            <br /> Schedule your node to run while you’re away from your
+            computer. That way if you forget to turn it on, you won’t miss out.
+          </div>
         </div>
-        <div className="flex items-center justify-center gap-2 px-4 py-2 text-white rounded-md bg-purple-light-transparent mr-9">
+
+        <div className="flex items-center justify-center gap-2 px-4 py-2 text-white rounded-md h-fit w-fit bg-purple-light-transparent mr-9">
           <span>Stay Awake</span>
           <StayAwake />
         </div>
-      </div>
-
-      <div className="mb-5 text-sm leading-6 text-white">
-        Set it and forget it to earn tokens while you sleep!
-        <br /> Schedule your node to run while you’re away from your computer.
-        That way if you forget to turn it on, you won’t miss out.
       </div>
 
       <div className="mb-2">

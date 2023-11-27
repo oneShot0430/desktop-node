@@ -46,6 +46,7 @@ export const useUserAppConfig = ({ onConfigSaveSuccess }: ParamsType) => {
 
   const {
     mutate,
+    mutateAsync,
     isLoading: isSavingUserConfig,
     error: saveUserConfigError,
   } = userConfigMutation;
@@ -55,6 +56,13 @@ export const useUserAppConfig = ({ onConfigSaveSuccess }: ParamsType) => {
       mutate(config);
     },
     [mutate]
+  );
+
+  const handleSaveUserAppConfigAsync = useCallback(
+    async (config: Partial<StoreUserConfigParam>) => {
+      return mutateAsync(config);
+    },
+    [mutateAsync]
   );
 
   return {
@@ -67,5 +75,6 @@ export const useUserAppConfig = ({ onConfigSaveSuccess }: ParamsType) => {
     saveUserConfigError,
     refetchUserConfig,
     userConfigMutation,
+    handleSaveUserAppConfigAsync,
   };
 };

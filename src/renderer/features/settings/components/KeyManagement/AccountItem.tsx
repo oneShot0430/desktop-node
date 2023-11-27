@@ -8,7 +8,6 @@ import {
 } from '@_koii/koii-styleguide';
 import React, { memo, useState } from 'react';
 
-import { Address } from 'renderer/components/AvailableTasks/components/Address';
 import { FundButton } from 'renderer/components/FundButton';
 import {
   LoadingSpinner,
@@ -22,6 +21,7 @@ import {
 } from 'renderer/components/ui';
 import { useClipboard, useDeleteAccountModal } from 'renderer/features/common';
 import { useExportSecretPhrase } from 'renderer/features/common/hooks/useExportSecretPhrase';
+import { Address } from 'renderer/features/tasks/components/AvailableTaskRow/components/Address';
 import { Theme } from 'renderer/types/common';
 import { getKoiiFromRoe } from 'utils';
 
@@ -109,7 +109,7 @@ export const AccountItem = memo(
 
     return (
       <div className="w-full pr-2 mb-4 text-white">
-        <div className="pb-2 pl-[5.5%] text-xl font-semibold">
+        <div className="pb-2 pl-[5.5%] text-md font-semibold">
           {accountName}
         </div>
         {error && <ErrorMessage error={error} />}

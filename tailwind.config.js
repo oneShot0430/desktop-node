@@ -174,8 +174,11 @@ module.exports = {
       },
       gridTemplateColumns: {
         'first-task': '3.4rem repeat(16, minmax(0, 1fr)) 3rem',
-        'my-node': '2.3fr minmax(255px, 5fr) 4fr 4fr 3fr 1.8fr 1.5fr 2.6fr',
-        'available-tasks': '2fr minmax(180px, 3fr) 4fr 2.5fr 1.5fr 3fr 2fr 2fr',
+        'my-node':
+          'minmax(52px, 1fr) minmax(200px, 2fr) minmax(68px, 1.5fr) minmax(68px, 1.5fr) minmax(68px, 1fr) minmax(68px, 1fr) minmax(68px, 1.5fr) minmax(182px, 4fr) minmax(68px, 1fr) minmax(68px, 1fr)',
+        'available-tasks':
+          'minmax(52px, 1fr) minmax(200px, 2fr) minmax(68px, 1.5fr) minmax(68px, 1.5fr) minmax(100px, 1fr) minmax(68px, 1fr) minmax(120px, 2fr) minmax(68px, 1.5fr) minmax(68px, 1fr)',
+
         'add-private-task': '14fr 3fr 2fr 2fr',
         'accounts-headers': '1fr 4fr 7fr 6fr',
         accounts: '1fr 1fr 3fr 5fr 2fr 3fr 2fr 1fr',

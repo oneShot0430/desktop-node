@@ -51,7 +51,8 @@ export const useTaskVariable = ({ onSuccess, taskVariable }: Params = {}) => {
       onSuccess: handleSuccess,
     });
 
-  const handleAddTaskVariable = () => storeTaskVariable({ label, value });
+  const handleAddTaskVariable = (overrideValue?: string) =>
+    storeTaskVariable({ label, value: overrideValue || value });
 
   const handleEditTaskVariable = () =>
     editTaskVariable({ id: taskVariable?.id || '', label, value });

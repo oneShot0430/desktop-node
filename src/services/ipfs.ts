@@ -58,6 +58,7 @@ async function retrieveThroughHttpGateway(
 
   const listOfIpfsGatewaysUrls = [
     `${config.node.IPFS_GATEWAY_URL}/${cid}/${fileName}`,
+    `https://${cid}.ipfs.sphn.link/${fileName}`,
     `https://${cid}.ipfs.w3s.link/${fileName}`,
     `https://gateway.ipfs.io/ipfs/${cid}/${fileName}`,
     `https://ipfs.eth.aragon.network/ipfs/${cid}/${fileName}`,

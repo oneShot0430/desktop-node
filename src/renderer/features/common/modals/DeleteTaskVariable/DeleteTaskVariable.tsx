@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from 'react-query';
 
 import { TaskVariableDataWithId } from 'models/api';
 import { Button } from 'renderer/components/ui';
+import { useCloseWithEsc } from 'renderer/features/common/hooks/useCloseWithEsc';
 import { Modal, ModalContent } from 'renderer/features/modals';
 import {
   deleteTaskVariable as deleteTaskVariableService,
@@ -24,9 +25,13 @@ export const DeleteTaskVariable = create<Params>(function DeleteTaskVariable({
   const { mutate: deleteTaskVariable } = useMutation(
     deleteTaskVariableService,
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries([QueryKeys.TaskVariables]);
-        queryClient.invalidateQueries([
+      onSuccess: async () => {
+        await queryClient.invalidateQueries([QueryKeys.StoredTaskVariables]);
+        await queryClient.invalidateQueries([QueryKeys.TaskVariables]);
+        await queryClient.invalidateQueries([
+          QueryKeys.StoredPairedTaskVariables,
+        ]);
+        await queryClient.invalidateQueries([
           QueryKeys.StoredTaskPairedTaskVariables,
         ]);
       },
@@ -44,6 +49,8 @@ export const DeleteTaskVariable = create<Params>(function DeleteTaskVariable({
     deleteTaskVariable(id);
     handleClose();
   };
+
+  useCloseWithEsc({ closeModal: handleClose });
 
   return (
     <Modal>

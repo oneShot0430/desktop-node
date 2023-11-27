@@ -62,6 +62,7 @@ const endpointToControllerMap: Record<
   [Endpoints.GET_VERSION]: controllers.getVersion,
   [Endpoints.ARCHIVE_TASK]: controllers.archiveTask,
   [Endpoints.DOWNLOAD_APP_UPDATE]: controllers.downloadAppUpdate,
+  [Endpoints.CHECK_APP_UPDATE]: controllers.checkAppUpdate,
   [Endpoints.STORE_ALL_TIME_REWARDS]: controllers.storeAllTimeRewards,
   [Endpoints.GET_ALL_TIME_REWARDS_BY_TASK]: controllers.getAllTimeRewardsByTask,
   [Endpoints.VALIDATE_PUBLIC_KEY]: controllers.isValidWalletAddress,
@@ -93,6 +94,12 @@ const endpointToControllerMap: Record<
   [Endpoints.FINISH_EMERGENCY_MIGRATION]: controllers.finishEmergencyMigration,
   [Endpoints.CREDIT_STAKING_WALLET_FROM_MAIN_WALLET]:
     controllers.creditStakingWalletFromMainWallet,
+  [Endpoints.LIMIT_LOGS_SIZE]: controllers.limitLogsSize,
+  [Endpoints.GET_TASK_LAST_SUBMISSION_TIME]: controllers.getLastSubmissionTime,
+  [Endpoints.GET_LATEST_AVERAGE_TASK_REWARD]:
+    controllers.getLatestAverageTaskReward,
+  [Endpoints.REDEEM_TOKENS_IN_NEW_NETWORK]:
+    controllers.redeemTokensInNewNetwork,
 };
 
 const initHandlers = (): void => {

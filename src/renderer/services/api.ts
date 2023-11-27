@@ -1,3 +1,4 @@
+/* eslint-disable @cspell/spellchecker */
 import axios from 'axios';
 
 import { FAUCET_API_URL } from 'config/faucet';
@@ -14,6 +15,7 @@ import {
   RunningPrivateTasks,
   ScheduleMetadata,
   ScheduleMetadataUpdateType,
+  TaskData,
 } from 'models';
 import { Task } from 'renderer/types';
 import { getKoiiFromRoe } from 'utils';
@@ -381,6 +383,10 @@ export const downloadAppUpdate = async () => {
   return window.main.downloadAppUpdate();
 };
 
+export const checkAppUpdate = async () => {
+  return window.main.checkAppUpdate();
+};
+
 export const getAllTimeRewards = async (taskPubKey: string) => {
   return window.main.getAllTimeRewardsByTask({ taskId: taskPubKey });
 };
@@ -475,4 +481,26 @@ export const validateSchedulerSession = (
 
 export const fundStakingWalletFromMainWallet = async (amountInRoe: number) => {
   return window.main.creditStakingWalletFromMainWallet({ amountInRoe });
+};
+
+export const limitLogsSize = async () => {
+  console.log('@@@@LIMIT LOGS');
+  return window.main.limitLogsSize();
+};
+
+export const getLastSubmissionTime = async (
+  task: TaskData,
+  stakingPublicKey: string
+): Promise<number> => {
+  return window.main.getLastSubmissionTime({ task, stakingPublicKey });
+};
+
+export const getLatestAverageTaskReward = async (
+  task: TaskData
+): Promise<number> => {
+  return window.main.getLatestAverageTaskReward({ task });
+};
+
+export const redeemTokensInNewNetwork = (): Promise<number> => {
+  return window.main.redeemTokensInNewNetwork();
 };

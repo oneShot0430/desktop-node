@@ -4,12 +4,7 @@ import axios, { AxiosError } from 'axios';
 
 import { EMERGENCY_TESTNET_RPC_URL } from 'config/node';
 import koiiTasks from 'main/services/koiiTasks';
-import {
-  Account,
-  OwnerAccount,
-  TaskData,
-  getAllAccountsResponse,
-} from 'models';
+import { OwnerAccount, TaskData, getAllAccountsResponse } from 'models';
 
 import { getAllAccounts } from './getAllAccounts';
 import getUserConfig from './getUserConfig';
@@ -31,9 +26,7 @@ export const startEmergencyMigration = async () => {
 const recordAllTasksAndStakes = async () => {
   const allAccounts = await getAllAccounts({} as Event, false);
 
-  const setAccountAsActiveAndRecordItsTasksStakes = async (
-    account: Account
-  ) => {
+  for (const account of allAccounts) {
     console.log(
       `MIGRATE NETWORK: setting account ${account.accountName} as active account`
     );
@@ -42,9 +35,7 @@ const recordAllTasksAndStakes = async () => {
       `MIGRATE NETWORK: set account ${account.accountName} as active account`
     );
     await recordTasksAndStakesForAccount(account);
-  };
-
-  await Promise.all(allAccounts.map(setAccountAsActiveAndRecordItsTasksStakes));
+  }
 };
 const recordTasksAndStakesForAccount = async (
   account: getAllAccountsResponse[0]

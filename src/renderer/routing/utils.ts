@@ -1,6 +1,10 @@
 import { AppRoute } from 'renderer/types/routes';
 
 export const getRouteViewLabel = (route: AppRoute) => {
+  if (route.includes('settings')) {
+    return 'Settings';
+  }
+
   switch (route) {
     case AppRoute.MyNode:
       return 'My Node';
@@ -12,8 +16,6 @@ export const getRouteViewLabel = (route: AppRoute) => {
       return 'Notifications';
     case AppRoute.Rewards:
       return 'Rewards';
-    case AppRoute.Settings:
-      return 'Settings';
     case AppRoute.History:
       return 'History';
     default:

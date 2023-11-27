@@ -12,22 +12,21 @@ type PropsType = {
 
 export function AvailableBalanceInfoBox({ availableBalance = 0 }: PropsType) {
   return (
-    <InfoBox className="h-[60px] p-1 pr-2">
+    <InfoBox className="justify-center h-20 p-2 pr-2 xl:p-4">
       <div className="flex items-center justify-between w-full">
-        {/* TODO: replace with icon from styleguide, when available */}
-        <Icon
-          source={KoiiBrandIconCircled}
-          size={48}
-          aria-label="rewards icon"
-          data-testid="koii-brand-icon"
-        />
-
-        <div className="flex flex-col items-end">
+        <div className="flex flex-col items-start">
+          <span className="text-sm text-green-2">Available Balance</span>
           <span className="text-lg">
             <CountKoii value={availableBalance} />
           </span>
-          <span className="text-sm text-green-2">Available Balance</span>
         </div>
+        {/* TODO: replace with icon from styleguide, when available */}
+        <Icon
+          source={KoiiBrandIconCircled}
+          size={56}
+          aria-label="rewards icon"
+          data-testid="koii-brand-icon"
+        />
       </div>
     </InfoBox>
   );

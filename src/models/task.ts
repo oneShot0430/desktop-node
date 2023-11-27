@@ -77,6 +77,7 @@ export interface RequirementTag {
   type: RequirementType;
   value?: string;
   description?: string;
+  retrievalInfo?: string;
 }
 
 export enum RequirementType {
@@ -116,6 +117,7 @@ export interface TaskData {
   submissionsAuditTrigger: Record<string, Record<string, AuditTriggerState>>;
   isMigrated: boolean;
   migratedTo: string;
+  distributionRewardsSubmission: any;
 }
 
 export interface TaskRetryData {
@@ -124,3 +126,15 @@ export interface TaskRetryData {
   cancelled: boolean;
   timerReference: number | null | undefined;
 }
+
+export enum RetrievalInfoActionType {
+  GET = 'GET',
+  POST = 'POST',
+  BROWSER = 'BROWSER',
+}
+
+export type RetrievalInfo = {
+  url: string;
+  actionType: RetrievalInfoActionType;
+  params: string[];
+};

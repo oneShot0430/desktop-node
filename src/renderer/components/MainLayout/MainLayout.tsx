@@ -1,14 +1,17 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useMemo } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import Background from 'assets/svgs/background.svg';
 import { AppTopBar } from 'renderer/components/AppTopBar';
+import { SettingsSidebar } from 'renderer/features';
+import { useWindowSize } from 'renderer/features/common/hooks/useWindowSize';
 import {
   useNotificationsContext,
   NotificationBanner,
   NotificationPlacement,
 } from 'renderer/features/notifications';
 import { Sidebar } from 'renderer/features/sidebar';
+import { VersionDisplay } from 'renderer/features/sidebar/components';
 import { saveUserConfig } from 'renderer/services';
 import { AppRoute } from 'renderer/types/routes';
 
@@ -20,6 +23,7 @@ type MainLayoutProps = {
 
 export function MainLayout({ children }: MainLayoutProps): JSX.Element {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { getNextNotification } = useNotificationsContext();
 
@@ -40,6 +44,13 @@ export function MainLayout({ children }: MainLayoutProps): JSX.Element {
     });
   }, [navigate]);
 
+  const isSettingsView = useMemo(
+    () => location.pathname.includes(AppRoute.Settings),
+    [location]
+  );
+
+  const { height } = useWindowSize();
+
   return (
     <div className="relative flex flex-col flex-grow min-h-screen overflow-x-hidden overflow-y-hidden bg-gradient-to-b from-finnieBlue-dark-secondary to-finnieBlue min-w-fit">
       <Background
@@ -50,7 +61,7 @@ export function MainLayout({ children }: MainLayoutProps): JSX.Element {
       <Header />
       <AppTopBar />
       <div className="relative flex flex-grow min-h-0 px-4 pt-3 mt-1 bg-gradient-dark bg-opacity-10">
-        <Sidebar />
+        {isSettingsView ? <SettingsSidebar /> : <Sidebar />}
         <div className="flex flex-col flex-grow min-h-0 h-[calc(100vh-172px)] pb-4 z-10">
           {children}
         </div>
@@ -61,6 +72,12 @@ export function MainLayout({ children }: MainLayoutProps): JSX.Element {
           />
         )}
       </div>
+
+      {Number(height) >= 756 && (
+        <div className="absolute bottom-0 left-2">
+          <VersionDisplay />
+        </div>
+      )}
     </div>
   );
 }

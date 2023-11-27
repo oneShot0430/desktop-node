@@ -1,12 +1,14 @@
 import { Icon, CloseLine, SettingsLine } from '@_koii/koii-styleguide';
 import { create, useModal } from '@ebay/nice-modal-react';
-import React, { useCallback } from 'react';
+import React from 'react';
+import { useQueryClient } from 'react-query';
 
 import { TaskVariableDataWithId } from 'models';
 import { Button, ErrorMessage } from 'renderer/components/ui';
+import { useCloseWithEsc } from 'renderer/features/common/hooks/useCloseWithEsc';
 import { useTaskVariable } from 'renderer/features/common/hooks/useTaskVariable';
 import { Modal, ModalContent } from 'renderer/features/modals';
-import { useStoredTaskVariables } from 'renderer/features/node-tools';
+import { QueryKeys } from 'renderer/services';
 import { Theme } from 'renderer/types/common';
 
 const baseInputClassName =
@@ -19,13 +21,12 @@ interface Props {
 export const AddTaskVariable = create(function AddTaskVariable({
   presetLabel,
 }: Props) {
-  const {
-    storedTaskVariablesQuery: { refetch },
-  } = useStoredTaskVariables();
   const modal = useModal();
 
+  const queryClient = useQueryClient();
+
   const onAddTaskVariableSucces = async () => {
-    await refetch();
+    await queryClient.invalidateQueries([QueryKeys.StoredTaskVariables]);
     modal.resolve(true);
     modal.remove();
   };
@@ -44,10 +45,12 @@ export const AddTaskVariable = create(function AddTaskVariable({
     taskVariable: { label: presetLabel } as TaskVariableDataWithId,
   });
 
-  const closeModal = useCallback(() => {
+  const closeModal = () => {
     modal.resolve(false);
     modal.remove();
-  }, [modal]);
+  };
+
+  useCloseWithEsc({ closeModal });
 
   return (
     <Modal>
@@ -55,12 +58,12 @@ export const AddTaskVariable = create(function AddTaskVariable({
         theme={Theme.Dark}
         className="text-left p-5 pl-10 w-max h-fit rounded text-white flex flex-col gap-4 min-w-[740px]"
       >
-        <div className="w-full flex justify-center items-center gap-4 text-2xl font-semibold pt-2">
-          <Icon source={SettingsLine} className="h-8 w-8" />
+        <div className="flex items-center justify-center w-full gap-4 pt-2 text-2xl font-semibold">
+          <Icon source={SettingsLine} className="w-8 h-8" />
           <span>Add a Task Setting</span>
           <Icon
             source={CloseLine}
-            className="h-8 w-8 ml-auto cursor-pointer"
+            className="w-8 h-8 ml-auto cursor-pointer"
             onClick={closeModal}
           />
         </div>
@@ -78,7 +81,7 @@ export const AddTaskVariable = create(function AddTaskVariable({
             onChange={handleLabelChange}
             placeholder="Add Label"
           />
-          <div className="h-12 -mb-10 -mt-2">
+          <div className="h-12 -mt-2 -mb-10">
             {labelError && (
               <ErrorMessage error={labelError} className="text-xs" />
             )}
@@ -110,9 +113,9 @@ export const AddTaskVariable = create(function AddTaskVariable({
 
         <Button
           label="Save Settings"
-          onClick={handleAddTaskVariable}
+          onClick={() => handleAddTaskVariable()}
           disabled={!!labelError || !label || !value}
-          className="m-auto font-semibold bg-finnieGray-tertiary text-finnieBlue-light w-56 h-12"
+          className="w-56 h-12 m-auto font-semibold bg-finnieGray-tertiary text-finnieBlue-light"
           loading={storingTaskVariable}
         />
       </ModalContent>

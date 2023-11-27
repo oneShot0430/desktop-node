@@ -25,7 +25,7 @@ export function SidebarActions({
   const { showModal: showFundModal } = useFundNewAccountModal();
 
   const actionBaselasses =
-    'flex items-center rounded-md justify-center w-[85px] cursor-pointer';
+    'flex items-center rounded-md justify-center w-full cursor-pointer';
   const primaryActionClasses = twMerge(
     actionBaselasses,
     'text-white',
@@ -49,7 +49,7 @@ export function SidebarActions({
   };
 
   return (
-    <div className="h-[60px] flex gap-2 justify-between">
+    <div className="flex justify-between h-20 gap-4">
       <div
         className={primaryActionClasses}
         onKeyDown={handleKeyDown(handleAddFundsClick)}

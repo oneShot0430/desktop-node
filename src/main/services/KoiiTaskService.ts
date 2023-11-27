@@ -311,7 +311,13 @@ export class KoiiTaskService {
         startedTasksPubKeys.map(async (pubkey) => {
           const task = await this.fetchDataAndValidateIfTask(pubkey).catch(
             async (err) => {
-              if (isString(err) && err.includes(ErrorType.TASK_NOT_FOUND)) {
+              const isConnectionErrorFromK2 =
+                config.node.K2_CONNECTION_ERROR_MESSAGES.some(
+                  (errorMessage) =>
+                    (isString(err) && err.includes(errorMessage)) ||
+                    err?.message?.includes?.(errorMessage)
+                );
+              if (isConnectionErrorFromK2) {
                 // FIXME(Chris) Any Error during Account Infor fetch is treated as Task Not found
                 //  so if there was previously one and it's state was fetched we use it
                 const exisingState = this.startedTasksData.find(

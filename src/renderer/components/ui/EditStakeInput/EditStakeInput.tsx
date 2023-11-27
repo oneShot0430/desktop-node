@@ -24,7 +24,7 @@ export function EditStakeInput({
 
   const hasError = !meetsMinimumStake && !isPristine;
   const inputClasses = twMerge(
-    'w-[92px] rounded-sm text-right text-finnieBlue-dark p-[3px] border-2 border-transparent focus:border-finnieEmerald focus:outline-none',
+    'w-[92px] bg-purple-5 text-white rounded-sm text-right p-[3px] border-2 border-transparent focus:border-finnieEmerald focus:outline-none',
     hasError && 'border-finnieRed focus:border-finnieRed'
   );
   const labelClasses = twMerge(

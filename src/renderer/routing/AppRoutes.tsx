@@ -3,7 +3,6 @@ import { useRoutes } from 'react-router-dom';
 
 import AppLoader from 'renderer/AppLoader';
 import AppBoot from 'renderer/AppWrapper';
-import { Settings } from 'renderer/features';
 import {
   CreatePin,
   CreateOrImportAccountWrapper,
@@ -19,9 +18,12 @@ import {
   ImportKey,
   ImportKeySuccess,
 } from 'renderer/features/onboarding';
+import { SETTINGS_SECTIONS } from 'renderer/features/settings/settingsRoutesConfig';
+import { AvailableTasksTable } from 'renderer/features/tasks/components/AvailableTasksTable';
+import { MyNodeTable } from 'renderer/features/tasks/components/MyNodeTable';
 import { AppRoute } from 'renderer/types/routes';
 
-import { History, AvailableTasks, MyNode, Unlock } from '../components';
+import { History, Unlock } from '../components';
 
 const routes = [
   { path: AppRoute.Unlock, element: <Unlock /> },
@@ -30,10 +32,10 @@ const routes = [
     element: <AppBoot />,
     children: [
       { path: AppRoute.Root, element: <AppLoader /> },
-      { path: AppRoute.MyNode, element: <MyNode /> },
+      { path: AppRoute.MyNode, element: <MyNodeTable /> },
       {
         path: AppRoute.AddTask,
-        element: <AvailableTasks />,
+        element: <AvailableTasksTable />,
       },
       {
         path: AppRoute.Rewards,
@@ -57,7 +59,11 @@ const routes = [
       },
       {
         path: AppRoute.Settings,
-        element: <Settings />,
+        // element: <Settings />,
+        children: SETTINGS_SECTIONS.map(({ path, component: Component }) => ({
+          path,
+          element: <Component />, // Replace with the actual component you want to render for this route
+        })),
       },
 
       {

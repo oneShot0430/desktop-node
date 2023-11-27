@@ -5,7 +5,6 @@ import {
   StakeInfoBox,
   AvailableBalanceInfoBox,
   SidebarActions,
-  VersionDisplay,
   RewardsInfoBox,
 } from './components';
 import { useSidebraLogic } from './hooks';
@@ -38,9 +37,9 @@ export function Sidebar() {
         onPrimaryActionClick={handleAddFundsClick}
         onSecondaryActionClick={handleSecondaryActionClick}
       />
-      <div className="pb-5 mt-auto">
+      {/* <div className="pb-5 mt-auto">
         <VersionDisplay />
-      </div>
+      </div> */}
     </div>
   );
 }

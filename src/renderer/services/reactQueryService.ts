@@ -39,4 +39,9 @@ export enum QueryKeys {
   SchedulerSessions = 'SchedulerSessions',
   DefaultSchedulerSession = 'DefaultSchedulerSession',
   SchedulerTasks = 'SchedulerTasks',
+  LastSubRoundPerTask = 'LastSubRoundPerTask',
+  RoundTime = 'RoundTime',
+  TaskAverageReward = 'TaskAverageReward',
+  TaskRoundTime = 'TaskRoundTime',
+  AverageSlotTime = 'AverageSlotTime',
 }

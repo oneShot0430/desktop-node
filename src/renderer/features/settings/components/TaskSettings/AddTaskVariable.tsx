@@ -5,7 +5,7 @@ import { Button, ErrorMessage } from 'renderer/components/ui';
 import { useTaskVariable } from 'renderer/features/common/hooks/useTaskVariable';
 
 const baseInputClassName =
-  'px-6 py-2 text-sm rounded-md bg-finnieBlue-light-tertiary focus:ring-2 focus:ring-finnieTeal focus:outline-none focus:bg-finnieBlue-light-secondary';
+  'px-6 py-2 w-[320px] text-sm rounded-md bg-finnieBlue-light-tertiary focus:ring-2 focus:ring-finnieTeal focus:outline-none focus:bg-finnieBlue-light-secondary';
 
 export function AddTaskVariable() {
   const {
@@ -19,38 +19,44 @@ export function AddTaskVariable() {
   } = useTaskVariable();
 
   return (
-    <div className="flex flex-col gap-4 text-sm">
+    <div className="flex flex-col gap-4 text-sm w-fit">
       <span className="text-2xl font-semibold text-left">
         Add a Task Setting
       </span>
 
-      <div className="flex gap-5 items-end">
-        <div className="flex flex-col mr-4">
-          <label className="mb-1 text-left">LABEL</label>
+      <div className="flex flex-wrap items-stretch gap-4">
+        <div className="flex flex-col w-full md:w-auto">
+          <label htmlFor="toolLabel" className="mb-1 text-left">
+            LABEL
+          </label>
           <input
-            className={`${baseInputClassName} w-56`}
+            className={`${baseInputClassName}`}
             type="text"
             value={label}
             onChange={handleLabelChange}
             placeholder="Add Label"
+            id="toolLabel"
           />
-          <div className="h-12 -mb-10 -mt-2">
+          <div className="h-12 -mt-2 -mb-10">
             {labelError && (
               <ErrorMessage className="text-xs" error={labelError} />
             )}
           </div>
         </div>
 
-        <div className="flex flex-col w-full">
-          <label className="mb-1 text-left">KEY INPUT</label>
+        <div className="flex flex-col w-full md:flex-grow md:w-auto">
+          <label htmlFor="toolKey" className="mb-1 text-left">
+            KEY INPUT
+          </label>
           <input
-            className={`${baseInputClassName} w-full`}
+            id="toolKey"
+            className={`${baseInputClassName}`}
             type="text"
             value={value}
             onChange={handleToolKeyChange}
             placeholder="Type key here"
           />
-          <div className="h-12 -mb-10 -mt-2">
+          <div className="h-12 -mt-2 -mb-10">
             {errorStoringTaskVariable && (
               <ErrorMessage
                 error={errorStoringTaskVariable}
@@ -60,13 +66,15 @@ export function AddTaskVariable() {
           </div>
         </div>
 
-        <Button
-          label="Add"
-          icon={<Icon source={SettingsLine} className="w-5" />}
-          onClick={handleAddTaskVariable}
-          disabled={!!labelError || !label || !value}
-          className="font-semibold bg-white text-finnieBlue-light text-[14px] leading-[14px] min-w-[200px] h-9 self-end"
-        />
+        <div className="flex flex-col justify-end">
+          <Button
+            label="Add"
+            icon={<Icon source={SettingsLine} className="w-5" />}
+            onClick={() => handleAddTaskVariable()}
+            disabled={!!labelError || !label || !value}
+            className="font-semibold bg-white text-finnieBlue-light text-[14px] leading-[14px] min-w-[200px] h-9 self-end"
+          />
+        </div>
       </div>
     </div>
   );

@@ -37,6 +37,7 @@ module.exports = {
         customWordListFile: './spellcheckignore.txt',
       },
     ],
+
     semi: ['error', 'always'],
     quotes: ['error', 'single', { avoidEscape: true }],
     'jsx-quotes': ['error', 'prefer-double'],
@@ -75,7 +76,14 @@ module.exports = {
     'no-shadow': 'off',
     'jsx-a11y/click-events-have-key-events': 'warn',
     'prefer-template': 'warn',
-    'jsx-a11y/label-has-associated-control': 'warn',
+    'jsx-a11y/label-has-associated-control': [
+      'error',
+      {
+        required: {
+          some: ['nesting', 'id'],
+        },
+      },
+    ],
     'no-nested-ternary': 'off',
     'react/no-array-index-key': 'off',
     'jsx-a11y/tabindex-no-positive': 'warn',

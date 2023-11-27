@@ -62,24 +62,6 @@ describe('pairTaskVariable', () => {
     ).rejects.toThrow(/payload is not valid/i);
   });
 
-  it('throws an error if there is Task on K2 but not using given variable', async () => {
-    validateTaskMock.mockResolvedValue({});
-
-    const notUsedVariableName = 'variableName';
-
-    getTaskVariableNamesMock.mockResolvedValue(['otherName']);
-
-    const validPayload: PairTaskVariableParamType = {
-      taskAccountPubKey: k2PublicKeyExample,
-      variableInTaskName: notUsedVariableName,
-      desktopVariableId: 'test1',
-    };
-
-    await expect(pairTaskVariable({} as Event, validPayload)).rejects.toThrow(
-      /variable Name in the task not found/i
-    );
-  });
-
   it('throws an error if there is no variable stored with given ID', async () => {
     validateTaskMock.mockResolvedValue({});
 

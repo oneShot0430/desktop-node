@@ -78,6 +78,7 @@ const expectedResult: TaskData = {
   totalBountyAmount: 100,
   isMigrated: false,
   migratedTo: 'string',
+  distributionRewardsSubmission: {},
 };
 
 describe('getTaskInfo', () => {

@@ -32,5 +32,13 @@ export function formatRoundTimeWithFullUnit({
     m: 'minute',
     s: 'second',
   };
-  return `${value} ${shortToExt[unit] ?? unit}${value === 1 ? '' : 's'}`;
+  let formattedValue = `${Math.floor(value)} ${shortToExt[unit]}${
+    Math.floor(value) === 1 ? '' : 's'
+  }`;
+  if (unit === 'm' && !Number.isInteger(value)) {
+    const seconds = Math.round((value - Math.floor(value)) * 60);
+    formattedValue += ` ${seconds} second${seconds === 1 ? '' : 's'}`;
+  }
+
+  return formattedValue;
 }

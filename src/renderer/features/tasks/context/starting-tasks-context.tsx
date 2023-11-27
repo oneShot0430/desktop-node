@@ -1,6 +1,12 @@
 import React, { createContext, useCallback, useMemo, useState } from 'react';
+import { useQueryClient } from 'react-query';
 
-import { stakeOnTask, startTask } from 'renderer/services';
+import {
+  addTaskToScheduler,
+  QueryKeys,
+  stakeOnTask,
+  startTask,
+} from 'renderer/services';
 
 type StartTaskArgs = {
   publicKey: string;
@@ -40,22 +46,32 @@ export function StartingTasksProvider({ children }: PropsType) {
     Record<string, TaskStartingPromise>
   >({});
 
+  const queryClient = useQueryClient();
+
   const executeTask = useCallback(
     async (args: StartTaskArgs) => {
       const { publicKey } = args;
-      const taskPromise = runTask(args).finally(() => {
-        // delete promise when it's done
-        const { [publicKey]: removedKey, ...remainingPromises } =
-          startTaskPromises;
-        setStartTaskPromises(remainingPromises);
-      });
+      const taskPromise = runTask(args)
+        .then(async () => {
+          // enable scheduler by default
+          await addTaskToScheduler(publicKey);
+        })
+        .finally(() => {
+          // cleanup
+          // delete promise when it's done
+          const { [publicKey]: removedKey, ...remainingPromises } =
+            startTaskPromises;
+          setStartTaskPromises(remainingPromises);
+          // revalidate scheduler tasks cache
+          queryClient.invalidateQueries([QueryKeys.SchedulerTasks, publicKey]);
+        });
 
       setStartTaskPromises({
         ...startTaskPromises,
         [publicKey]: taskPromise,
       });
     },
-    [startTaskPromises]
+    [queryClient, startTaskPromises]
   );
 
   const getTaskStartPromise = useCallback(

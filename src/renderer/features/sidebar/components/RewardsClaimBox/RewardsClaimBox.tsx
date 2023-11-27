@@ -22,16 +22,16 @@ export function RewardsClaimBox({
   isClaimingRewards,
 }: PropsType) {
   return (
-    <InfoBox className="flex flex-col items-center p-2 h-28">
+    <InfoBox className="flex flex-col items-center h-32 p-2 xl:p-4">
       <div className="flex items-center justify-between w-full">
-        {/* TODO: replace with icon from styleguide, when available */}
-        <Icon source={RewardIcon} size={36} aria-label="rewards icon" />
-        <div className="flex flex-col items-end">
+        <div className="flex flex-col items-start">
+          <span className="text-sm text-green-2">Rewards</span>
           <span className="text-lg">
             <CountKoii value={rewardsAmount} />
           </span>
-          <span className="text-sm text-green-2">Rewards</span>
         </div>
+        {/* TODO: replace with icon from styleguide, when available */}
+        <Icon source={RewardIcon} size={48} aria-label="rewards icon" />
       </div>
 
       {rewardClaimable ? (

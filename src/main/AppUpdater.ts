@@ -21,6 +21,10 @@ export async function initializeAppUpdater(
   setListeners(mainWindow);
 }
 
+export function checkForUpdates() {
+  return autoUpdater.checkForUpdatesAndNotify();
+}
+
 async function configureUpdater() {
   autoUpdater.logger = log;
   autoUpdater.autoDownload = false;
@@ -53,7 +57,7 @@ function setListeners(mainWindow: BrowserWindow | undefined) {
           autoUpdater.downloadUpdate();
         } else if (mainWindow) {
           // if auto updates are disabled, inform the user about the update
-          mainWindow.webContents.send(RendererEndpoints.UPDATE_AVAILABLE);
+          mainWindow.webContents.send(RendererEndpoints.UPDATE_AVAILABLE, info);
         }
       })
       .catch((error) => {

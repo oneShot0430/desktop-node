@@ -6,7 +6,6 @@ import {
 } from '@_koii/koii-styleguide';
 import React from 'react';
 
-import DotsSvg from 'assets/svgs/dots.svg';
 import { TaskVariableDataWithId } from 'models/api';
 import {
   useDeleteTaskVariable,
@@ -26,7 +25,6 @@ export function TaskVariableItem({ taskVariable }: Props) {
 
   return (
     <div className="flex items-center">
-      <Icon source={DotsSvg} className="h-5" />
       <div className="px-6 py-2 mr-6 text-sm rounded-md bg-finnieBlue-light-tertiary w-80">
         {label}
       </div>
@@ -45,7 +43,7 @@ export function TaskVariableItem({ taskVariable }: Props) {
       />
       <Icon
         source={DeleteTrashXlLine}
-        className="h-5 mx-2 text-finnieRed cursor-pointer"
+        className="h-5 mx-2 cursor-pointer text-finnieRed"
         onClick={showDeleteModal}
         data-testid="delete-task-variable"
       />

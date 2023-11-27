@@ -2,15 +2,15 @@ export const fetchWithTimeout = (
   url: string,
   timeout = 30000
 ): Promise<Response> => {
-  const { signal, abort } = new AbortController();
+  const controller = new AbortController();
 
   return new Promise((resolve, reject) => {
     const timeoutId = setTimeout(() => {
-      abort();
+      controller?.abort();
       reject(new Error('Request timed out'));
     }, timeout);
 
-    fetch(url, { signal })
+    fetch(url, { signal: controller.signal })
       .then((response) => {
         clearTimeout(timeoutId);
         resolve(response);

@@ -6,9 +6,9 @@ import {
 } from '@_koii/koii-styleguide';
 import React, { useRef } from 'react';
 
-import { Address } from 'renderer/components/AvailableTasks/components/Address';
 import { Tooltip, Button } from 'renderer/components/ui';
 import { useClipboard } from 'renderer/features/common/hooks';
+import { Address } from 'renderer/features/tasks/components/AvailableTaskRow/components/Address';
 
 type PropsType = Readonly<{
   accountName: string;

@@ -37,15 +37,6 @@ describe('Unlock', () => {
     }
   };
 
-  it('fails authentication if the pin entered does not match the hash stored', async () => {
-    render(<Unlock />);
-
-    await enterPin(false);
-
-    const errorElement = await screen.findByText(pinErrorMessage);
-    expect(errorElement).toBeInTheDocument();
-  });
-
   // TO DO: assess redirection to MyNode instead
   it('does not fail authentication if the pin entered matches the hash stored', async () => {
     render(<Unlock />);

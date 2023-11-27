@@ -20,23 +20,21 @@ export function StakeInfoBox({
   unstakedBalance = 0,
 }: PropsType) {
   return (
-    // TODO (Wojciech): repplace h-[60px] with h-[80px] when the second row is implemented
-    <InfoBox className="flex flex-col gap-2 max-h-28 h-[60px]">
+    <InfoBox className="flex flex-col justify-center h-20 gap-2 max-h-28 xl:p-4">
       <div className="flex items-center justify-between w-full">
-        {/* TODO: replace with icon from styleguide, when available */}
-        <Icon
-          source={StakeIcon}
-          size={40}
-          aria-label="rewards icon"
-          data-testid="koii-stake-icon"
-        />
-
-        <div className="flex flex-col items-end">
+        <div className="flex flex-col items-start">
+          <span className="text-sm text-green-2">Total Staked</span>
           <span className="text-lg">
             <CountKoii value={totalStaked} />
           </span>
-          <span className="text-sm text-green-2">Total Staked</span>
         </div>
+        {/* TODO: replace with icon from styleguide, when available */}
+        <Icon
+          source={StakeIcon}
+          size={48}
+          aria-label="rewards icon"
+          data-testid="koii-stake-icon"
+        />
       </div>
       {/* TODO (Wojciech): remove "hidden" and add "flex" when the second row is implemented */}
       <div className="justify-between hidden ">

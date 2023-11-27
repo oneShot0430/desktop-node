@@ -22,14 +22,27 @@ export const getStoredPairedTaskVariables =
 
       const activeStoredTaskVariables = await getStoredTaskVariables();
       const activePairingIds = Object.keys(activeStoredTaskVariables || {});
-      const arrayOfPairingsWithActiveIds = Object.entries(
+      const pairingsWithActiveIds = Object.entries(
         pairedTaskVariables
-      ).filter(([, pairing]) => {
-        const desktopVariableId = Object.values(pairing)[0];
-        return activePairingIds.includes(desktopVariableId);
-      });
-      const pairingsWithActiveIds = Object.fromEntries(
-        arrayOfPairingsWithActiveIds
+      ).reduce<GetStoredPairedTaskVariablesReturnType>(
+        (acc, [taskId, recordOfPairings]) => {
+          const validPairingsForTask = Object.entries(recordOfPairings)
+            .filter(([_, variableId]) => activePairingIds.includes(variableId))
+            .reduce<GetStoredPairedTaskVariablesReturnType[string]>(
+              (innerAcc, [innerKey, innerValue]) => {
+                innerAcc[innerKey] = innerValue;
+                return innerAcc;
+              },
+              {}
+            );
+
+          if (Object.keys(validPairingsForTask).length > 0) {
+            acc[taskId] = validPairingsForTask;
+          }
+
+          return acc;
+        },
+        {}
       );
 
       return pairingsWithActiveIds;

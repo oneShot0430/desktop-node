@@ -13,6 +13,7 @@ export { useStartedTasks } from './useStartedTasks';
 export { useAvailableTasks } from './useAvailableTasks';
 export { useTaskStatus } from './useTaskStatus';
 export { useUnstakingAvailability } from './useUnstakingAvailability';
+export { useCloseWithEsc } from './useCloseWithEsc';
 
 // modals
 export { useCreateTaskModal } from './useCreateTaskModal';
@@ -28,4 +29,6 @@ export { useInspectTaskVariable } from './useInspectTaskVariable';
 export { useConfirmNetworkSwitchModal } from './useConfirmNetworkSwitchModal';
 export { useDeleteAccountModal } from './useDeleteAccountModal';
 export { useRunExemptionFlowModal } from './useRunExemptionFlowModal';
+export { useUpdatePinModal } from './useUpdatePinModal';
 export { useEmergencyMigrationModal } from './useEmergencyMigrationModal';
+export { useAverageSlotTime } from './useAverageSlotTime';

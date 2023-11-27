@@ -39,27 +39,30 @@ export const EditTaskVariable = create<Params>(function EditTaskVariable({
         theme={Theme.Dark}
         className="text-left p-5 pl-10 w-max h-fit rounded text-white flex flex-col gap-4 min-w-[740px]"
       >
-        <div className="w-full flex justify-center items-center gap-4 text-2xl font-semibold pt-2">
-          <Icon source={SettingsLine} className="h-8 w-8" />
+        <div className="flex items-center justify-center w-full gap-4 pt-2 text-2xl font-semibold">
+          <Icon source={SettingsLine} className="w-8 h-8" />
           <span>Edit a Task Setting</span>
           <Icon
             source={CloseLine}
-            className="h-8 w-8 ml-auto cursor-pointer"
+            className="w-8 h-8 ml-auto cursor-pointer"
             onClick={modal.remove}
           />
         </div>
 
         <p className="mr-12">Edit information about your Task Setting</p>
         <div className="flex flex-col mb-2">
-          <label className="mb-0.5 text-left">LABEL</label>
+          <label className="mb-0.5 text-left" htmlFor="label-input">
+            LABEL
+          </label>
           <input
             className={`${baseInputClassName} w-56`}
             type="text"
             value={label}
+            id="label-input"
             onChange={handleLabelChange}
             placeholder="Add Label"
           />
-          <div className="h-12 -mb-10 -mt-2">
+          <div className="h-12 -mt-2 -mb-10">
             {labelError && (
               <ErrorMessage error={labelError} className="text-xs" />
             )}
@@ -67,8 +70,11 @@ export const EditTaskVariable = create<Params>(function EditTaskVariable({
         </div>
 
         <div className="flex flex-col mb-2">
-          <label className="mb-0.5 text-left">KEY INPUT</label>
+          <label htmlFor="key-input" className="mb-0.5 text-left">
+            KEY INPUT
+          </label>
           <input
+            id="key-input"
             className={`${baseInputClassName} w-full`}
             type="text"
             value={value}
@@ -90,7 +96,7 @@ export const EditTaskVariable = create<Params>(function EditTaskVariable({
           label="Save Settings"
           onClick={handleEditTaskVariable}
           disabled={!!labelError || !label || !value}
-          className="m-auto font-semibold bg-finnieGray-tertiary text-finnieBlue-light w-56 h-12"
+          className="w-56 h-12 m-auto font-semibold bg-finnieGray-tertiary text-finnieBlue-light"
         />
       </ModalContent>
     </Modal>
