@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 
 import { Button, ErrorMessage, LoadingSpinner } from 'renderer/components/ui';
+import { useCloseWithEsc } from 'renderer/features/common/hooks/useCloseWithEsc';
 import { Modal, ModalContent, ModalTopBar } from 'renderer/features/modals';
 import { useStakingAccount } from 'renderer/features/settings/hooks';
 import { getAverageSlotTime, stopTask, withdrawStake } from 'renderer/services';
@@ -35,6 +36,8 @@ export const Unstake = create<PropsType>(function AddStake({ task }) {
     modal.resolve(true);
     modal.remove();
   };
+
+  useCloseWithEsc({ closeModal: handleClose });
 
   const stopTaskAndUnstake = async () => {
     if (isRunning) {
@@ -69,12 +72,16 @@ export const Unstake = create<PropsType>(function AddStake({ task }) {
 
   useEffect(() => {
     const getParsedRoundTime = async () => {
-      const averageSlotTime = await getAverageSlotTime();
-      const parsedRoundTime = parseRoundTime(
-        task.roundTime * averageSlotTime * 3
-      );
-      setTotalRoundTime(task.roundTime * averageSlotTime);
-      setParsedRoundTime(parsedRoundTime);
+      try {
+        const averageSlotTime = await getAverageSlotTime();
+        const parsedRoundTime = parseRoundTime(
+          task.roundTime * averageSlotTime * 3
+        );
+        setTotalRoundTime(task.roundTime * averageSlotTime);
+        setParsedRoundTime(parsedRoundTime);
+      } catch (error) {
+        console.log(error);
+      }
     };
 
     getParsedRoundTime();

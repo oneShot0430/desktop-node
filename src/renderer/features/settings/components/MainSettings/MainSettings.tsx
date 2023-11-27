@@ -3,13 +3,14 @@ import React from 'react';
 import { Tooltip } from 'renderer/components/ui';
 import { Theme } from 'renderer/types/common';
 
-import { AutoUpdates } from './AutoUpdates';
-import { LaunchOnRestart } from './LaunchOnRestart';
-import { Network } from './Network';
-import { NodeLogs } from './NodeLogs';
-import { Referral } from './Referral';
+import { AutoUpdates } from '../GeneralSettings/AutoUpdates';
+import { LaunchOnRestart } from '../GeneralSettings/LaunchOnRestart';
+import { Network } from '../GeneralSettings/Network';
+import { NodeLogsButton } from '../GeneralSettings/NodeLogs';
+import { Referral } from '../GeneralSettings/Referral/Referral';
+import { StayAwake } from '../GeneralSettings/StayAwake';
+
 import { ReportBug } from './ReportBug';
-import { StayAwake } from './StayAwake';
 import { SwitchWrapper } from './SwitchWrapper';
 
 export function MainSettings() {
@@ -57,7 +58,7 @@ export function MainSettings() {
 
       <div className="w-full h-px bg-white" />
 
-      <NodeLogs />
+      <NodeLogsButton />
 
       <div className="flex justify-end w-full mt-2">
         <ReportBug />

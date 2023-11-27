@@ -5,16 +5,11 @@ import {
   CheckSuccessLine,
   Icon,
 } from '@_koii/koii-styleguide';
-import React, {
-  useState,
-  useEffect,
-  useMemo,
-  RefObject,
-  useCallback,
-} from 'react';
+import React, { useState, useMemo, RefObject } from 'react';
 import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from 'react-query';
 
+import { isEqual } from 'lodash';
 import { RequirementTag } from 'models/task';
 import {
   ErrorMessage,
@@ -56,35 +51,28 @@ export function NodeTools({
   } = useAllStoredPairedTaskVariables({
     enabled: !!taskPubKey,
   });
-  const [areAllVariablesSelected, setAreAllVariablesSelected] = useState(false);
+
   const [selectedTools, setSelectedTools] = useState<Record<string, string>>(
     {}
   );
 
-  const checkifAllVariablesSelected = useCallback(
+  const pairedVariablesForTask = useMemo(
+    () => getPairedTaskVariablesForTask(taskPubKey, pairedVariables),
+    [pairedVariables, taskPubKey]
+  );
+
+  const areAllVariablesSelected = useMemo(
     () => !!tools?.every(({ value }) => !!selectedTools[value as string]),
     [tools, selectedTools]
   );
 
-  useEffect(() => {
-    const areAllVariablesSelected = checkifAllVariablesSelected();
-    setAreAllVariablesSelected(areAllVariablesSelected);
-  }, [setAreAllVariablesSelected, checkifAllVariablesSelected]);
+  const selectedVariablesAreSameAsCurrentlyPaired = isEqual(
+    pairedVariablesForTask,
+    selectedTools
+  );
 
   const handleToolPick = (tool: string, desktopVariableId: string) => {
     setSelectedTools({ ...selectedTools, [tool]: desktopVariableId });
-  };
-
-  const handleInit = (tool: string, desktopVariableId: string) => {
-    /**
-     * @dev
-     * We need to set the default value for the tool which are not yet selected,
-     * so we can validate the form and show the "Confirm" button
-     */
-    setSelectedTools((selected) => ({
-      ...selected,
-      [tool]: desktopVariableId,
-    }));
   };
 
   const confirmTaskVariables = async () => {
@@ -110,9 +98,9 @@ export function NodeTools({
     onPairingSuccess();
 
     // As at this specific stage we have just successfully paired, if all variables are selected means they are paired too
-    const areAllVariablesPaired = checkifAllVariablesSelected();
-    onToolsValidation?.(areAllVariablesPaired);
+    onToolsValidation?.(areAllVariablesSelected);
     queryCache.invalidateQueries([QueryKeys.StoredTaskVariables]);
+    queryCache.invalidateQueries([QueryKeys.StoredPairedTaskVariables]);
 
     toast.success('Task settings successfully paired');
   };
@@ -127,19 +115,38 @@ export function NodeTools({
       onError,
     });
 
-  const pairedVariablesForTask = useMemo(
-    () => getPairedTaskVariablesForTask(taskPubKey, pairedVariables),
-    [pairedVariables, taskPubKey]
-  );
-
   const isLoading = isLoadingPairedVariables;
+
+  const handleInit = (tool: string, desktopVariableId: string) => {
+    /**
+     * @dev
+     * We need to set the default value for the tool which are not yet selected,
+     * so we can validate the form and show the "Confirm" button
+     */
+    setSelectedTools((selected) => ({
+      ...selected,
+      [tool]: desktopVariableId,
+    }));
+  };
+
+  const canPairVariables = useMemo(
+    () =>
+      areAllVariablesSelected &&
+      !selectedVariablesAreSameAsCurrentlyPaired &&
+      !isPairingTasksVariables,
+    [
+      areAllVariablesSelected,
+      selectedVariablesAreSameAsCurrentlyPaired,
+      isPairingTasksVariables,
+    ]
+  );
 
   if (pairedVariablesError) {
     return <ErrorMessage error={pairedVariablesError as string} />;
   }
 
   return (
-    <div className="w-full pb-4 pr-4">
+    <div className="w-full pb-4 pr-4 2xl:pr-[12%]">
       {isLoading && (
         <div className="flex flex-col items-center justify-center h-40 gap-4">
           <LoadingSpinner size={LoadingSpinnerSize.Large} />
@@ -148,11 +155,13 @@ export function NodeTools({
       )}
       {!isLoading && (
         <>
-          {tools?.map(({ value, description }, index) => (
+          {tools?.map(({ value, description, retrievalInfo }, index) => (
             <NodeTool
               onSecretSelected={handleToolPick}
+              selectedSecrets={selectedTools}
               onInit={handleInit}
               tool={value as string}
+              retrievalInfo={retrievalInfo}
               key={index}
               defaultVariableId={pairedVariablesForTask[value as string]}
               description={description}
@@ -172,7 +181,7 @@ export function NodeTools({
                 )
               }
               onClick={() => pairTaskVariables()}
-              disabled={!areAllVariablesSelected || isPairingTasksVariables}
+              disabled={!canPairVariables}
               /**
                * @todo implement loading state for style guide Button
                */

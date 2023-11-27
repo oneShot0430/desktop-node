@@ -59,6 +59,7 @@ export function RewardsInfoBox({
         <Tooltip
           tooltipContent="The timing of your next reward is approximate."
           theme={Theme.Light}
+          placement="top-right"
         >
           <div className="flex flex-col items-center">
             <Icon
@@ -99,10 +100,10 @@ export function RewardsInfoBox({
           <Icon
             source={RewardsEarnLine}
             data-testid="pending-rewards-icon"
-            className="mb-[4px]"
-            size={40}
+            className="mb-[4px] h-10 w-10 xl:h-12 xl:w-12"
+            size={48}
           />
-          <span className="text-lg text-green-2">Run a task</span>
+          <span className="text-lg xl:text-2xl text-green-2">Run a task</span>
           <span className="text-sm">to earn rewards</span>
         </>
       ),
@@ -111,7 +112,7 @@ export function RewardsInfoBox({
   );
 
   return (
-    <InfoBox className="flex flex-col items-center pt-4 h-28">
+    <InfoBox className="flex flex-col items-center pt-4 h-32 w-[186px] xl:w-[230px]">
       {viewByState[rewardState]}
     </InfoBox>
   );

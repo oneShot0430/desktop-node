@@ -13,7 +13,6 @@ import { PersistentStoreKeys } from '../types';
 
 import { getStoredPairedTaskVariables } from './getStoredPairedTaskVariables';
 import { getStoredTaskVariables } from './getStoredTaskVariables';
-import { getTaskVariablesNames } from './getTaskVariablesNames';
 
 export const pairTaskVariable = async (
   _: Event,
@@ -35,23 +34,6 @@ export const pairTaskVariable = async (
   // task validation
 
   await validateTask({} as Event, payload, 'pairTaskVariable');
-
-  // variableInTaskName validation
-
-  const taskVariablesNames = await getTaskVariablesNames({} as Event, {
-    taskPublicKey: payload.taskAccountPubKey,
-  });
-
-  const doesTaskUseProvidedVariableName = taskVariablesNames.includes(
-    payload.variableInTaskName
-  );
-
-  if (!doesTaskUseProvidedVariableName) {
-    return throwDetailedError({
-      detailed: 'Variable Pairing error: Variable Name in the Task not found',
-      type: ErrorType.GENERIC,
-    });
-  }
 
   // desktopVariableId validation
 

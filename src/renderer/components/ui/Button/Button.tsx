@@ -56,11 +56,13 @@ function Button({
         } flex items-center justify-center`}
         {...rest}
       >
-        <span className={icon && label ? 'pr-2' : ''}>{icon}</span>
         {loading ? (
           <LoadingSpinner />
         ) : (
-          <span className="self-center">{label}</span>
+          <>
+            <span className={icon && label ? 'pr-2' : ''}>{icon}</span>
+            <span className="self-center">{label}</span>
+          </>
         )}
       </button>
     </div>

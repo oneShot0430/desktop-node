@@ -3,6 +3,7 @@ import { create, useModal } from '@ebay/nice-modal-react';
 import React from 'react';
 
 import { Button } from 'renderer/components/ui';
+import { useCloseWithEsc } from 'renderer/features/common/hooks/useCloseWithEsc';
 import { Modal, ModalContent } from 'renderer/features/modals';
 
 export interface Props {
@@ -26,6 +27,8 @@ export const ConfirmNetworkSwitch = create<Props>(
       modal.resolve(true);
       modal.remove();
     };
+
+    useCloseWithEsc({ closeModal: handleClose });
 
     return (
       <Modal>

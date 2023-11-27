@@ -1,7 +1,6 @@
 import { AddLine, Icon } from '@_koii/koii-styleguide';
 import React, { memo, useMemo } from 'react';
 
-import { Button, Table } from 'renderer/components/ui';
 import { useAddNewAccountModal } from 'renderer/features/common/hooks/useAddNewAccountModal';
 
 import { useAccounts } from '../../hooks';
@@ -25,46 +24,28 @@ export const AccountsTable = memo(() => {
     [accounts]
   );
 
-  const headers = [
-    { title: '' },
-    { title: 'Account' },
-    { title: 'Address' },
-    { title: 'KOII balance' },
-  ];
-
   return (
     <>
-      <Table
-        headers={headers}
-        columnsLayout="grid-cols-accounts-headers mb-4"
-        isLoading={loadingAccounts}
-        error={accountsError}
+      {accountsSorted?.map(
+        ({ accountName, mainPublicKey, stakingPublicKey, isDefault }) => (
+          <AccountItem
+            key={accountName}
+            mainPublicKey={mainPublicKey}
+            accountName={accountName}
+            stakingPublicKey={stakingPublicKey}
+            isDefault={isDefault}
+            columnsLayout="grid-cols-accounts"
+          />
+        )
+      )}
+
+      <button
+        onClick={showModal}
+        className="flex items-center mt-8 text-sm text-finnieTeal-100 underline-offset-2"
       >
-        {accountsSorted?.map(
-          ({ accountName, mainPublicKey, stakingPublicKey, isDefault }) => (
-            <AccountItem
-              key={accountName}
-              mainPublicKey={mainPublicKey}
-              accountName={accountName}
-              stakingPublicKey={stakingPublicKey}
-              isDefault={isDefault}
-              columnsLayout="grid-cols-accounts"
-            />
-          )
-        )}
-
-        <Button
-          label="New"
-          className="w-auto p-2 mr-auto my-6 bg-transparent h-[60px] text-white"
-          icon={<Icon source={AddLine} className="h-[34px] w-[34px] mr-2" />}
-          onClick={showModal}
-        />
-      </Table>
-
-      <div className="pt-3 mt-auto text-xs text-finnieOrange">
-        Controlling access to your keys is critical to protecting your assets
-        stored on the Blockchain.
-      </div>
+        <Icon source={AddLine} className="h-[18px] w-[18px] mr-2" />
+        Get New Key
+      </button>
     </>
   );
 });

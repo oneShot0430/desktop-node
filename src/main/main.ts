@@ -1,8 +1,10 @@
 import { app, BrowserWindow, dialog } from 'electron';
 import path from 'path';
 
+import { get } from 'lodash';
+
 import { initializeAppUpdater } from './AppUpdater';
-import { getAllAccounts, setActiveAccount } from './controllers';
+import { getAllAccounts, setActiveAccount, getUserConfig } from './controllers';
 import initHandlers from './initHandlers';
 import { configureLogger } from './logger';
 import { getCurrentActiveAccountName } from './node/helpers';
@@ -83,7 +85,7 @@ const createWindow = async () => {
     show: false,
     width: 1920,
     height: 1080,
-    minWidth: 1162,
+    minWidth: 1152,
     minHeight: 760,
     icon: getAssetPath('icon.png'),
     webPreferences: {
@@ -100,8 +102,10 @@ const createWindow = async () => {
   //   new BrowserWindow().webContents
   // );
   // mainWindow.webContents.openDevTools({ mode: 'detach' });
+  const userConfig = await getUserConfig();
+  const limitLogsSize = get(userConfig, 'limitLogsSize', false);
 
-  configureLogger();
+  configureLogger(limitLogsSize);
   await initializeAppUpdater(mainWindow);
 
   await setUpPowerStateManagement();

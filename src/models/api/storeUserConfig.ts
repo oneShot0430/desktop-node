@@ -10,6 +10,7 @@ export interface UserAppConfig {
   stayAwake?: number | false;
   launchOnRestart?: boolean;
   tasksThatAlreadyNotifiedUpgradesAvailable?: string[];
+  limitLogsSize?: boolean;
   hasStartedEmergencyMigration?: boolean;
   hasFinishedEmergencyMigration?: boolean;
 }

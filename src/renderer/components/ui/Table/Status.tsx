@@ -12,9 +12,10 @@ import React from 'react';
 import CoolDown from 'assets/svgs/cooldown-line.svg';
 import WarmUp from 'assets/svgs/warmup-line.svg';
 import { TaskStatus } from 'renderer/types';
+import { Theme } from 'renderer/types/common';
 
 import { LoadingSpinner } from '../LoadingSpinner';
-import { Tooltip, Placement } from '../Tooltip';
+import { Popover } from '../Popover/Popover';
 
 const statuses = {
   [TaskStatus.PRE_SUBMISSION]: {
@@ -67,7 +68,6 @@ const statuses = {
 
 type PropsType = {
   status: TaskStatus;
-  isFirstRowInTable?: boolean;
   isLoading?: boolean;
   isRunning?: boolean;
   isPrivate?: boolean;
@@ -75,15 +75,13 @@ type PropsType = {
 
 export function Status({
   status,
-  isFirstRowInTable,
+
   isLoading,
   isRunning,
   isPrivate,
 }: PropsType) {
   const { icon: StatusIcon, tooltip, iconColor } = statuses[status];
-  const tooltipPlacement: Placement = `${
-    isFirstRowInTable ? 'bottom' : 'top'
-  }-left`;
+
   const tooltipMessage =
     status === TaskStatus.BLACKLISTED && isRunning && !isPrivate
       ? "This task has been delisted, but don't worry! Your tokens are safe. Pause the task and the tokens will be ready to unstake after 3 rounds."
@@ -92,8 +90,8 @@ export function Status({
   return isLoading ? (
     <LoadingSpinner />
   ) : (
-    <Tooltip tooltipContent={tooltipMessage} placement={tooltipPlacement}>
+    <Popover tooltipContent={tooltipMessage} theme={Theme.Dark}>
       <Icon source={StatusIcon} className={`h-8 w-8 ${iconColor}`} />
-    </Tooltip>
+    </Popover>
   );
 }

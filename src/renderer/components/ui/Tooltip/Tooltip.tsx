@@ -21,7 +21,7 @@ type HorizontalPlacement = 'left' | 'right';
 type CombinedPlacement = `${VerticalPlacement}-${HorizontalPlacement}`;
 export type Placement = HorizontalPlacement | CombinedPlacement;
 
-type PropsType = {
+export type PropsType = {
   children: React.ReactNode;
   tooltipContent: React.ReactNode;
   theme?: Theme;
@@ -84,7 +84,7 @@ export function Tooltip({
         </div>
         {/* {manualClose && (
           <span onClick={handleClose}>
-            <Icon source={CloseFill} className="z-50 h-8 w-8 text-finnieTeal" />
+            <Icon source={CloseFill} className="z-50 w-8 h-8 text-finnieTeal" />
           </span>
         )} */}
       </div>

@@ -32,6 +32,7 @@ describe('TaskService.getStatus', () => {
     submissionsAuditTrigger: {},
     isMigrated: false,
     migratedTo: 'string',
+    distributionRewardsSubmission: {},
   };
 
   it('should return TaskStatus.ERROR if task hasError is true', async () => {

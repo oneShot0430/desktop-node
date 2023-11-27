@@ -13,7 +13,7 @@ describe('CountKoii', () => {
   });
 
   test('renders CountUp for non-small amounts', () => {
-    render(<CountKoii value={1000000} />);
+    render(<CountKoii value={1000000000} />);
 
     const countUp = screen.getByText(/1.00/);
     expect(countUp).toBeInTheDocument();

@@ -1,3 +1,4 @@
+import { onAppDownloaded, checkAppUpdate, onAppUpdate } from './appUpdates';
 import archiveTask from './archiveTask';
 import cancelTaskRetry from './cancelTaskRetry';
 import checkWalletExists from './checkWalletExists';
@@ -20,6 +21,7 @@ import getAverageSlotTime from './getAverageSlotTime';
 import getCurrentSlot from './getCurrentSlot';
 import getEncryptedSecretPhrase from './getEncryptedSecretPhrase';
 import getIsTaskRunning from './getIsTaskRunning';
+import getLastSubmissionTime from './getLastSubmissionTime';
 import getMainAccountPubKey from './getMainAccountPubKey';
 import getMainLogs from './getMainLogs';
 import getMyTasks from './getMyTasks';
@@ -40,13 +42,13 @@ import getUserConfig from './getUserConfig';
 import getVersion from './getVersion';
 import initializeTasks from './initializeTasks';
 import isValidWalletAddress from './isValidWalletAddress';
-import onAppDownloaded from './onAppDownloaded';
-import onAppUpdate from './onAppUpdate';
+import { limitLogsSize } from './logger';
 import onSystemWakeUp from './onSystemWakeUp';
 import openBrowserWindow from './openBrowserWindow';
 import openLogfileFolder from './openLogfileFolder';
 import openNodeLogfileFolder from './openNodeLogfileFolder';
 import { getRunnedPrivateTasks, setRunnedPrivateTasks } from './privateTasks';
+import redeemTokensInNewNetwork from './redeemTokensInNewNetwork';
 import removeAccountByName from './removeAccountByName';
 import setActiveAccount from './setActiveAccount';
 import startAllTasks from './startAllTasks';
@@ -58,6 +60,7 @@ import storeAllTimeRewards from './storeAllTimeRewards';
 import storeUserConfig from './storeUserConfig';
 import switchLaunchOnRestart from './switchLaunchOnRestart';
 import switchNetwork from './switchNetwork';
+import { getLatestAverageTaskReward } from './tasks';
 import {
   addSession,
   removeSession,
@@ -142,6 +145,7 @@ export default {
   onSystemWakeUp,
   getMainLogs,
   onAppDownloaded,
+  checkAppUpdate,
   getStartedTasksPubKeys,
   upgradeTask,
   getRunningTasksPubKeys,
@@ -160,7 +164,11 @@ export default {
   getSchedulerTasks,
   removeTaskFromScheduler,
   validateSchedulerSession,
+  creditStakingWalletFromMainWallet,
+  limitLogsSize,
   startEmergencyMigration,
   finishEmergencyMigration,
-  creditStakingWalletFromMainWallet,
+  getLastSubmissionTime,
+  getLatestAverageTaskReward,
+  redeemTokensInNewNetwork,
 };

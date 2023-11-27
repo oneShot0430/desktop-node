@@ -12,10 +12,11 @@ import React from 'react';
 import { useQuery } from 'react-query';
 
 import config from 'config';
-import { Address } from 'renderer/components/AvailableTasks/components/Address';
 import { Button } from 'renderer/components/ui';
 import { useClipboard } from 'renderer/features/common/hooks/useClipboard';
+import { useCloseWithEsc } from 'renderer/features/common/hooks/useCloseWithEsc';
 import { Modal, ModalContent } from 'renderer/features/modals';
+import { Address } from 'renderer/features/tasks/components/AvailableTaskRow/components/Address';
 import {
   getMainAccountPublicKey,
   getFaucetStatus,
@@ -74,6 +75,8 @@ export const AddFunds = create(function AddFunds({
     modal.resolve();
     modal.remove();
   };
+
+  useCloseWithEsc({ closeModal });
 
   const openFaucetAndClose = () => {
     const urlToFaucet = `${config.faucet.FAUCET_URL}?key=${currentAccountPubKey}`;

@@ -8,7 +8,7 @@ type PropsType = {
 
 export function InfoBox({ children, className }: PropsType) {
   const classNames = twMerge(
-    'flex flex-col text-white w-[186px] rounded bg-finnieBlue-light-secondary p-2',
+    'flex flex-col text-white w-[186px] xl:w-[230px] rounded bg-finnieBlue-light-secondary p-2',
     className || ''
   );
 

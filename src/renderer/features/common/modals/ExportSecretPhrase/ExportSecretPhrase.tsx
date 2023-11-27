@@ -2,6 +2,7 @@ import { Icon, KeyUnlockLine, CloseLine } from '@_koii/koii-styleguide';
 import { create, useModal } from '@ebay/nice-modal-react';
 import React, { useState } from 'react';
 
+import { useCloseWithEsc } from 'renderer/features/common/hooks/useCloseWithEsc';
 import { Modal, ModalContent } from 'renderer/features/modals';
 import { Theme } from 'renderer/types/common';
 
@@ -23,6 +24,8 @@ export const ExportSecretPhrase = create<PropsType>(
     const handleClose = () => {
       modal.remove();
     };
+
+    useCloseWithEsc({ closeModal: handleClose });
 
     const getCurrentView = (step: Steps) => {
       const views = {

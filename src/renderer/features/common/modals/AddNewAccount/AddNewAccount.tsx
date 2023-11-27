@@ -1,6 +1,7 @@
 import { create, useModal } from '@ebay/nice-modal-react';
 import React, { useState } from 'react';
 
+import { useCloseWithEsc } from 'renderer/features/common/hooks/useCloseWithEsc';
 import { Modal } from 'renderer/features/modals';
 
 import { AccountCreatedOrImported } from './components/AccountCreatedOrImported';
@@ -28,6 +29,8 @@ export const AddNewAccount = create(function AddNewAccount() {
   const handleClose = () => {
     modal.remove();
   };
+
+  useCloseWithEsc({ closeModal: handleClose });
 
   const getCurrentView = (step: Steps) => {
     const views = {

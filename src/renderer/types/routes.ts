@@ -6,6 +6,13 @@ export enum AppRoute {
   AddTask = '/add-tasks',
   Notifications = '/notifications',
   Settings = '/settings',
+  SettingsGeneral = '/settings/general',
+  SettingsSecurity = '/settings/security',
+  SettingsExtensions = '/settings/extensions',
+  SettingsAutomateNode = '/settings/automate-node',
+  SettingsNotifications = '/settings/notifications',
+  SettingsHelp = '/settings/help',
+  SettingsPrivacy = '/settings/privacy',
   History = '/history',
   Onboarding = '/onboarding',
   // onboarding routes

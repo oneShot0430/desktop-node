@@ -1,6 +1,7 @@
 import { create, useModal } from '@ebay/nice-modal-react';
 import React from 'react';
 
+import { useCloseWithEsc } from 'renderer/features/common/hooks/useCloseWithEsc';
 import { Modal, ModalContent, ModalTopBar } from 'renderer/features/modals';
 import { openBrowserWindow } from 'renderer/services';
 
@@ -10,6 +11,8 @@ export const CreateTaskModal = create(function CreateTaskModal() {
   const handleClose = () => {
     modal.remove();
   };
+
+  useCloseWithEsc({ closeModal: handleClose });
 
   const linkClassNames =
     'text-finnieTeal-700 font-semibold underline inline-block cursor-pointer';

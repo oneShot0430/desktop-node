@@ -10,7 +10,7 @@ const navItems = [
   // { name: 'Rewards', to: '/rewards' },
   // { name: 'History', to: '/history' },
   // { name: 'Notifications', to: '/notifications' },
-  { name: 'Settings', to: AppRoute.Settings },
+  { name: 'Settings', to: AppRoute.SettingsGeneral },
 ];
 
 function Navbar(): JSX.Element {

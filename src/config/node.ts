@@ -1,3 +1,5 @@
+import { ErrorType } from 'models';
+
 export const REDIS = {
   IP: 'localhost',
   PORT: 6379,
@@ -29,6 +31,14 @@ const TASK_FEE = 50000000;
 
 export const TASK_STABILITY_THRESHOLD = 18000000; // five hours in ms
 
+const K2_CONNECTION_ERROR_MESSAGES = [
+  ErrorType.TASK_NOT_FOUND,
+  '503 Service Temporarily Unavailable',
+  'ENOTFOUND',
+  'EADDRNOTAVAIL',
+  'ETIMEDOUT',
+];
+
 export default {
   REDIS,
   BUNDLER_URL,
@@ -42,4 +52,5 @@ export default {
   TASK_FEE,
   STAKING_DERIVATION_PATH,
   TASK_STABILITY_THRESHOLD,
+  K2_CONNECTION_ERROR_MESSAGES,
 };

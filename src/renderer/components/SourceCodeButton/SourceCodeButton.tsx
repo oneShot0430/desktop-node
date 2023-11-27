@@ -13,7 +13,7 @@ type PropsType = {
 export function SourceCodeButton({ repositoryUrl }: PropsType) {
   const fullUrl = formatUrl(repositoryUrl);
   const isValidRepositoryUrl = isValidUrl(fullUrl);
-  const buttonClasses = `flex flex-col items-center ${
+  const buttonClasses = `flex flex-col items-center w-fit ${
     isValidRepositoryUrl
       ? 'cursor-pointer hover:underline text-finnieEmerald-light'
       : 'cursor-not-allowed text-finnieGray-secondary'
@@ -35,7 +35,7 @@ export function SourceCodeButton({ repositoryUrl }: PropsType) {
         placement="bottom-left"
       >
         <div className="flex gap-2">
-          <Icon source={CodeIcon} className="h-6 w-6" />
+          <Icon source={CodeIcon} className="w-6 h-6" />
           <p>Inspect code</p>
         </div>
       </Tooltip>

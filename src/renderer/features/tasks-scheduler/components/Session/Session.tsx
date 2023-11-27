@@ -180,8 +180,8 @@ export function Session({
     >
       <div className="flex items-center">
         <div className={wrapperClasses}>
-          <div className="flex items-center gap-7">
-            <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center gap-4 xl:gap-8">
+            <div className="flex items-center gap-8">
               <TimePicker
                 label="Start"
                 onTimeChange={handleStartTimeChange}
@@ -205,6 +205,7 @@ export function Session({
                 </div>
               )}
             </div>
+
             <WeekDaySelect
               sessionId={scheduleMetadata.id}
               onSelectedDaysChange={handleSelectedDaysChange}

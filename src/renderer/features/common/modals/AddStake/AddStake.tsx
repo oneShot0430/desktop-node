@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 
 import { Button, ErrorMessage } from 'renderer/components/ui';
+import { useCloseWithEsc } from 'renderer/features/common/hooks/useCloseWithEsc';
 import { Modal, ModalContent, ModalTopBar } from 'renderer/features/modals';
 import {
   QueryKeys,
@@ -60,6 +61,8 @@ export const AddStake = create<PropsType>(function AddStake({ task }) {
     modal.resolve(true);
     modal.remove();
   };
+
+  useCloseWithEsc({ closeModal: handleClose });
 
   const showBackButton = step === Step.Confirm;
 

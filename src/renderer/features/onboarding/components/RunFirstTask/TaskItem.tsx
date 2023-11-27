@@ -6,9 +6,10 @@ import {
 import React, { useState, useMemo } from 'react';
 import toast from 'react-hot-toast';
 
-import { TaskInfo } from 'renderer/components/AvailableTasks/components/TaskInfo';
 import { Tooltip, Button } from 'renderer/components/ui';
 import { useMetadata, useClipboard } from 'renderer/features/common';
+import { TaskInfo } from 'renderer/features/tasks/components/TaskInfo';
+import { getTaskTotalStake } from 'renderer/features/tasks/utils';
 import { TaskService } from 'renderer/services';
 import { Task } from 'renderer/types';
 import { Theme } from 'renderer/types/common';
@@ -28,7 +29,6 @@ type PropsType = {
 function TaskItem({
   stakeValue,
   onStakeInputChange,
-  onRemove,
   index,
   task,
   setShowMinimumStakeError,
@@ -54,7 +54,7 @@ function TaskItem({
   const handleChangeStakeView = () => {
     setEditStakeView(!editStakeView);
   };
-  const nodes = useMemo(() => TaskService.getNodesCount(task), [task]);
+  const nodesNumber = useMemo(() => TaskService.getNodesCount(task), [task]);
   const topStake = useMemo(() => TaskService.getTopStake(task), [task]);
   const totalBountyInKoii = useMemo(
     () => getKoiiFromRoe(task.totalBountyAmount),
@@ -62,7 +62,7 @@ function TaskItem({
   );
 
   const details = {
-    nodes,
+    nodesNumber,
     minStake: getKoiiFromRoe(task.minimumStakeAmount),
     topStake: getKoiiFromRoe(topStake),
     bounty: totalBountyInKoii,
@@ -71,10 +71,13 @@ function TaskItem({
     copyToClipboard(task.taskManager);
     toast.success('Creators address copied!');
   };
+
+  const taskTotalStake = useMemo(() => getTaskTotalStake(task), [task]);
+
   return (
     <div className="w-full relative max-w-[1100px]">
       <div className="sticky top-0 z-[100] mb-1 bg-finnieBlue-dark-secondary">
-        <div className="grid w-full text-sm text-left rounded-md bg-finnieBlue-light-secondary h-13 grid-cols-first-task grid-cols-first-task place-content-center">
+        <div className="grid w-full text-sm text-left rounded-md bg-finnieBlue-light-secondary h-13 grid-cols-first-task place-content-center">
           <div className="col-span-2 m-auto">
             <Tooltip
               theme={Theme.Light}
@@ -83,7 +86,7 @@ function TaskItem({
                 accordionView ? 'Close task details' : 'Open task details'
               }`}
             >
-              <div className="flex flex-col h-full items-center justify-start">
+              <div className="flex flex-col items-center justify-start h-full">
                 <Button
                   onClick={() => setAccordionView(!accordionView)}
                   icon={
@@ -117,7 +120,7 @@ function TaskItem({
               {task.taskName}
             </Tooltip>
           </div>
-          <div className="col-span-6 flex items-center">
+          <div className="flex items-center col-span-6">
             <Tooltip
               theme={Theme.Light}
               placement={`${isFirstRowInTable ? 'bottom' : 'top'}-right`}
@@ -139,7 +142,7 @@ function TaskItem({
               <div className="flex gap-1">
                 <p>{stakeValueInKoii} KOII</p>
                 <button
-                  className=" cursor-pointer text-white"
+                  className="text-white cursor-pointer "
                   onClick={handleChangeStakeView}
                 >
                   <div className="w-7">
@@ -158,13 +161,13 @@ function TaskItem({
           </div>
         </div>
         <div className="grid grid-cols-first-task w-full mb-1.5">
-          <div className="text-xs leading-4 col-span-4 col-start-15 text-finnieEmerald-light">
+          <div className="col-span-4 text-xs leading-4 col-start-15 text-finnieEmerald-light">
             minimum: {minStakeInKoii}
           </div>
         </div>
       </div>
       {accordionView && (
-        <div className="bg-finnieBlue-light-secondary p-6 rounded-lg">
+        <div className="p-6 rounded-lg bg-finnieBlue-light-secondary">
           <div className="h-[200px] overflow-y-auto">
             <TaskInfo
               publicKey={task.publicKey}
@@ -173,6 +176,7 @@ function TaskItem({
               metadata={metadata ?? undefined}
               details={details}
               isOnboardingTask
+              totalStake={taskTotalStake}
             />
           </div>
         </div>
