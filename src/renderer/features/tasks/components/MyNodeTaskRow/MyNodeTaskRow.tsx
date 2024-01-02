@@ -574,10 +574,22 @@ ${isPlayPauseButtonDisabled && 'opacity-60'}`;
     durationInSeconds: Math.floor(taskRetryRemainingTime / 1000),
   });
 
+  const pairedVariablesIncludedInMetadata = useMemo(
+    () =>
+      pairedVariables.filter((pairedVariable) =>
+        metadata?.requirementsTags.find(
+          (requiredVariable) => requiredVariable.value === pairedVariable.name
+        )
+      ),
+    [pairedVariables, metadata?.requirementsTags]
+  );
+
   const pairedAndUnpairedNewTaskVersionVariables = uniqBy(
     [
       ...newTaskVersionPairedVariablesWithLabel,
-      ...(upgradeUsesDifferentVariables ? [] : pairedVariables),
+      ...(upgradeUsesDifferentVariables
+        ? []
+        : pairedVariablesIncludedInMetadata),
       ...newTaskVersionVariables,
     ],
     'name'
@@ -598,7 +610,7 @@ ${isPlayPauseButtonDisabled && 'opacity-60'}`;
     variables:
       accordionView === 'upgrade-info'
         ? pairedAndUnpairedNewTaskVersionVariables
-        : pairedVariables,
+        : pairedVariablesIncludedInMetadata,
 
     metadataCID:
       accordionView === 'upgrade-info'

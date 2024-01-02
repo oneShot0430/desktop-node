@@ -161,7 +161,7 @@ export async function loadTask({
   if (!shouldDownloadExecutable) {
     const fileContent = fsSync.readFileSync(presumedSourceCodePath, 'utf8');
     console.log({ fileContent });
-    shouldDownloadExecutable = fileContent.startsWith('<!DOCTYPE html>');
+    shouldDownloadExecutable = fileContent.startsWith('<');
   }
 
   if (shouldDownloadExecutable) {

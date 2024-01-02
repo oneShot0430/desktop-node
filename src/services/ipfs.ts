@@ -57,10 +57,11 @@ async function retrieveThroughHttpGateway(
   console.log('use IPFS HTTP gateway');
 
   const listOfIpfsGatewaysUrls = [
-    `${config.node.IPFS_GATEWAY_URL}/${cid}/${fileName}`,
-    `https://${cid}.ipfs.sphn.link/${fileName}`,
     `https://${cid}.ipfs.w3s.link/${fileName}`,
+    `https://${cid}.ipfs.sphn.link/${fileName}`,
+    `https://${cid}.ipfs.dweb.link/${fileName}`,
     `https://gateway.ipfs.io/ipfs/${cid}/${fileName}`,
+    `${config.node.IPFS_GATEWAY_URL}/${cid}/${fileName}`,
     `https://ipfs.eth.aragon.network/ipfs/${cid}/${fileName}`,
   ];
 
@@ -68,8 +69,7 @@ async function retrieveThroughHttpGateway(
     try {
       const response = await fetchWithTimeout(url);
       const fileContent = await response.text();
-      const couldNotFetchActualFileContent =
-        fileContent.startsWith('<!DOCTYPE html>');
+      const couldNotFetchActualFileContent = fileContent.startsWith('<');
 
       if (!couldNotFetchActualFileContent) {
         return fileContent;
