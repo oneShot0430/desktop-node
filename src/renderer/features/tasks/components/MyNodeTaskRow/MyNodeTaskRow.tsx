@@ -378,7 +378,7 @@ export function MyNodeTaskRow({
     nodesNumber,
     minStake,
     topStake: getKoiiFromRoe(topStake),
-    bounty: getKoiiFromRoe(totalBountyInKoii),
+    bounty: totalBountyInKoii,
   };
   const isBountyEmpty = task.totalBountyAmount < task.bountyAmountPerRound;
   const isTaskDelisted = !task.isWhitelisted || !task.isActive;
