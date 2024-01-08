@@ -100,6 +100,10 @@ const endpointToControllerMap: Record<
     controllers.getLatestAverageTaskReward,
   [Endpoints.REDEEM_TOKENS_IN_NEW_NETWORK]:
     controllers.redeemTokensInNewNetwork,
+  [Endpoints.TRANSFER_KOII_FROM_MAIN_WALLET]:
+    controllers.transferKoiiFromMainWallet,
+  [Endpoints.TRANSFER_KOII_FROM_STAKING_WALLET]:
+    controllers.transferKoiiFromStakingWallet,
 };
 
 const initHandlers = (): void => {

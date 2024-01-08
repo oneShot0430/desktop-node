@@ -848,7 +848,11 @@ ${isPlayPauseButtonDisabled && 'opacity-60'}`;
                   tooltipPlacement={tooltipLeftPlacement}
                   label="Staked"
                   value={
-                    <CurrencyDisplay currency="KOII" amount={myStakeInKoii} />
+                    <CurrencyDisplay
+                      currency="KOII"
+                      amount={myStakeInKoii}
+                      precision={myStakeInKoii > 10 ? 0 : 2}
+                    />
                   }
                 />
 
@@ -879,6 +883,7 @@ ${isPlayPauseButtonDisabled && 'opacity-60'}`;
                     <CurrencyDisplay
                       currency="KOII"
                       amount={pendingRewardsInKoii}
+                      precision={pendingRewardsInKoii > 10 ? 0 : 2}
                       tooltipContent="Rewards pending to be claimed."
                     />
                   }
@@ -886,6 +891,7 @@ ${isPlayPauseButtonDisabled && 'opacity-60'}`;
                     <CurrencyDisplay
                       currency="KOII"
                       amount={allTimeRewardsInKoii}
+                      precision={allTimeRewardsInKoii > 10 ? 0 : 2}
                       tooltipContent={
                         <>
                           Total of rewards earned from

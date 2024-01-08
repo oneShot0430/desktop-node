@@ -32,3 +32,4 @@ export { useRunExemptionFlowModal } from './useRunExemptionFlowModal';
 export { useUpdatePinModal } from './useUpdatePinModal';
 export { useEmergencyMigrationModal } from './useEmergencyMigrationModal';
 export { useAverageSlotTime } from './useAverageSlotTime';
+export { useTransferFundsModal } from './useTransferFundsModal';

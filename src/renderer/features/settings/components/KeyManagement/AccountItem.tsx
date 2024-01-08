@@ -9,6 +9,7 @@ import {
 import React, { memo, useState } from 'react';
 
 import { FundButton } from 'renderer/components/FundButton';
+import { TransferButton } from 'renderer/components/TransferButton';
 import {
   LoadingSpinner,
   LoadingSpinnerSize,
@@ -147,22 +148,30 @@ export const AccountItem = memo(
               isCopied={copiedMainKey}
               className="w-6.5 h-6.5"
             />
-            <Button
-              icon={<KeyUnlockLine className="w-3.5 h-3.5 text-white" />}
-              className="w-6 h-6 bg-transparent rounded-full "
-              onClick={handleExportSecretPhrase}
-            />
+            <Tooltip placement="top-left" tooltipContent="Export Secret Phrase">
+              <Button
+                icon={<KeyUnlockLine className="w-3.5 h-3.5 text-white" />}
+                className="w-6 h-6 bg-transparent rounded-full "
+                onClick={handleExportSecretPhrase}
+              />
+            </Tooltip>
           </div>
 
           <span className="flex gap-2.5 items-center ml-3">
             <span>
               {accountBalanceLoadingError ? '-' : accountBalanceInKoii} KOII
             </span>
-
-            <span>
-              {accountBalanceInKoii < 1 && (
+            {accountBalanceInKoii < 1 && (
+              <span>
                 <FundButton accountPublicKey={mainPublicKey} />
-              )}
+              </span>
+            )}
+            <span>
+              <TransferButton
+                accountPublicKey={mainPublicKey}
+                accountName={accountName}
+                accountType="SYSTEM"
+              />
             </span>
           </span>
 
@@ -228,6 +237,13 @@ export const AccountItem = memo(
             >
               <Icon source={LockLine} className="w-4 h-4 mb-1 text-white" />
             </Tooltip>
+            <span>
+              <TransferButton
+                accountPublicKey={stakingPublicKey}
+                accountName={accountName}
+                accountType="STAKING"
+              />
+            </span>
           </span>
         </TableRow>
       </div>

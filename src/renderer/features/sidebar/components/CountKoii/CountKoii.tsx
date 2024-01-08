@@ -20,7 +20,7 @@ export function CountKoii({ value }: PropsType) {
   const previousValue = usePrevious(roundedValue);
   const decimalsAmount = countDecimals(fullValue);
   const isVerySmallKoiiAmount = fullValue < 0.001 && fullValue > 0;
-
+  const decimals = roundedValue < 100 ? 2 : 0;
   return (
     <Tooltip
       placement="top-right"
@@ -34,7 +34,7 @@ export function CountKoii({ value }: PropsType) {
       ) : (
         <span>
           <CountUp
-            decimals={0}
+            decimals={decimals}
             start={previousValue}
             end={roundedValue}
             duration={0.5}

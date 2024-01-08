@@ -31,6 +31,9 @@ const TASK_FEE = 50000000;
 
 export const TASK_STABILITY_THRESHOLD = 18000000; // five hours in ms
 
+export const DUMMY_ACTIVE_TASK_FOR_STAKING_KEY_WITHDRAWAL =
+  '6CqK37vzpsSSvrtocCTsFnrnAi9NCyARqFDrVpd2CG8Y';
+
 const K2_CONNECTION_ERROR_MESSAGES = [
   ErrorType.TASK_NOT_FOUND,
   '503 Service Temporarily Unavailable',

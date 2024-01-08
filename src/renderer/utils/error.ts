@@ -98,4 +98,5 @@ export const errorTypeToContent: Record<
     'Start time needs to be different from stop time.',
   [ErrorType.SCHEDULE_OVERLAP]: 'This session overlaps an existing one.',
   [ErrorType.SCHEDULE_NO_SELECTED_DAYS]: 'Please select session days.',
+  [ErrorType.INVALID_WALLET_ADDRESS]: 'Please use a valid wallet address',
 };

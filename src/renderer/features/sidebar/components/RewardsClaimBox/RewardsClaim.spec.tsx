@@ -17,7 +17,7 @@ describe('RewardsClaimBox', () => {
         onRewardClaimClick={jest.fn()}
       />
     );
-    expect(screen.getByText('10')).toBeInTheDocument();
+    expect(screen.getAllByText('10.00')[0]).toBeInTheDocument();
   });
 
   it('should display the claim rewards button when reward is claimable', () => {

@@ -6,3 +6,4 @@ export * from './SidebarActions';
 export * from './StakeInfoBox';
 export * from './VersionDisplay';
 export * from './RewardsInfoBox';
+export * from './MainWalletView';
