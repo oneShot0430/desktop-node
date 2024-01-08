@@ -122,6 +122,28 @@ export const stakeOnTask = (taskAccountPubKey: string, stakeAmount: number) => {
     stakeAmount: stakeAmountInKoii,
   });
 };
+export const transferKoiiFromMainWallet = (
+  accountName: string,
+  amount: number,
+  toWalletAddress: string
+) => {
+  return window.main.transferKoiiFromMainWallet({
+    accountName,
+    amount,
+    toWalletAddress,
+  });
+};
+export const transferKoiiFromStakingWallet = (
+  accountName: string,
+  amount: number,
+  toWalletAddress: string
+) => {
+  return window.main.transferKoiiFromStakingWallet({
+    accountName,
+    amount,
+    toWalletAddress,
+  });
+};
 
 export const startTask = (taskAccountPubKey: string, isPrivate?: boolean) => {
   console.log(`${isPrivate ? 'FORCE' : ''} STARTING TASK`, taskAccountPubKey);

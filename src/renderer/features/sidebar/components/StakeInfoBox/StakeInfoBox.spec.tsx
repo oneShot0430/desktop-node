@@ -13,19 +13,19 @@ describe('<StakeInfoBox />', () => {
 
   it('displays the pending rewards correctly', () => {
     render(<StakeInfoBox pendingStake={50000000000} />);
-    expect(screen.getByText('50')).toBeInTheDocument();
+    expect(screen.getAllByText('50.00')[0]).toBeInTheDocument();
     expect(screen.getByText('Pending')).toBeInTheDocument();
   });
 
   it('displays the unstaked balance correctly', () => {
     render(<StakeInfoBox unstakedBalance={25000000000} />);
-    expect(screen.getByText('25')).toBeInTheDocument();
+    expect(screen.getAllByText('25.00')[0]).toBeInTheDocument();
     expect(screen.getByText('Unstaked')).toBeInTheDocument();
   });
 
   it('renders with default props', () => {
     render(<StakeInfoBox />);
-    expect(screen.getAllByText('0')).toHaveLength(3);
+    expect(screen.getAllByText('0.00')).toHaveLength(3);
     expect(screen.getByText('Total Staked')).toBeInTheDocument();
     expect(screen.getByText('Pending')).toBeInTheDocument();
     expect(screen.getByText('Unstaked')).toBeInTheDocument();

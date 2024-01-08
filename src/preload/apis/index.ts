@@ -82,6 +82,10 @@ import {
   getTaskPairedVariablesNamesWithLabels,
   getTasksPairedWithVariable,
 } from './taskVariables';
+import {
+  transferKoiiFromMainWallet,
+  transferKoiiFromStakingWallet,
+} from './transferKOII';
 import upgradeTask from './upgradeTask';
 import withdrawStake from './withdrawStake';
 
@@ -171,4 +175,6 @@ export default {
   getLastSubmissionTime,
   getLatestAverageTaskReward,
   redeemTokensInNewNetwork,
+  transferKoiiFromMainWallet,
+  transferKoiiFromStakingWallet,
 };

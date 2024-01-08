@@ -10,3 +10,4 @@ export * from './SourceCodeButton';
 export * from './LoadingScreen';
 export * from './FundButton';
 export * from './KoiiInput';
+export * from './TransferButton';

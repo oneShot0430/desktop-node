@@ -26,7 +26,7 @@ const getTaskNodeInfo = async (_: Event): Promise<GetTaskNodeInfoResponse> => {
       pendingRewards: pendingRewards || 0,
     };
   } catch (e: any) {
-    console.error(e);
+    if (e?.message !== 'Tasks not fetched yet') console.error(e);
     return throwDetailedError({
       detailed: e,
       type: ErrorType.GENERIC,

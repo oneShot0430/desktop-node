@@ -32,6 +32,8 @@ import koiiTasks from '../services/koiiTasks';
 
 import { getTaskInfo } from './getTaskInfo';
 
+const TRANSACTION_FINALITY_WAIT = 5000; // 5sec
+
 const delegateStake = async (
   event: Event,
   payload: DelegateStakeParam
@@ -75,6 +77,7 @@ const delegateStake = async (
         type: errorType,
       });
     }
+    sleep(TRANSACTION_FINALITY_WAIT);
 
     const data = encodeData(TASK_INSTRUCTION_LAYOUTS.Stake, {
       stakeAmount: stakeAmount * LAMPORTS_PER_SOL,
@@ -211,6 +214,14 @@ const delegateStake = async (
       });
     }
   }
+};
+
+const sleep = (timeout: number): Promise<void> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, timeout);
+  });
 };
 
 export default delegateStake;

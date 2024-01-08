@@ -14,13 +14,13 @@ describe('AvailableBalanceInfoBox component', () => {
   it('renders the available balance', () => {
     const VALUE_IN_ROE = 10000000000;
     render(<AvailableBalanceInfoBox availableBalance={VALUE_IN_ROE} />);
-    const balanceElement = screen.getByText('10');
-    expect(balanceElement).toBeInTheDocument();
+    const balanceElement = screen.getAllByText('10.00');
+    expect(balanceElement[0]).toBeInTheDocument();
   });
 
   it('defaults to 0 when no available balance is provided', () => {
     render(<AvailableBalanceInfoBox />);
-    const balanceElement = screen.getByText('0');
+    const balanceElement = screen.getByText('0.00');
     expect(balanceElement).toBeInTheDocument();
   });
 });
