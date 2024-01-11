@@ -1,6 +1,6 @@
 import React from 'react';
 
-import ChainDeskLogo from 'assets/svgs/ChainDeskLogo.svg';
+import OrcaLogo from 'assets/svgs/Orca-Logo.png';
 
 import { AddonItem } from './AddonItem';
 
@@ -10,13 +10,14 @@ const ADDONS = [
     description: `Use ORCA to earn more rewards with more complex tasks right from your computer. ORCA (Operational Resource distributed Consensus Automation) is a tool that allows task creators to containerize their app, making development easier and more consistent. Learn more here.
 
     Koii has vetted this Add-On and worked with the Chained team to develop this tool.`,
-    logo: ChainDeskLogo,
+    logo: OrcaLogo,
+    url: 'https://docs.chaindeck.io/orcaNode',
   },
 ];
 
 export function AddOnsList() {
   return (
-    <div className="hidden">
+    <div className="m-4">
       <div className="mb-4 text-2xl font-semibold text-left">Add-ons</div>
       <div className="mb-4">
         Add-ons are programs from our partners that you can download to make
@@ -31,6 +32,7 @@ export function AddOnsList() {
               name={addon.name}
               description={addon.description}
               logo={addon.logo}
+              url={addon.url}
             />
           );
         })}

@@ -54,9 +54,7 @@ export const startAllTasks = async (payload?: StartStopAllTasksParams) => {
 export const fetchAvailableTasks = async (
   params: GetAvailableTasksParam
 ): Promise<PaginatedResponse<Task>> => {
-  console.log('FETCHING AVAILABLE TASKS', params);
   const response = await window.main.getAvailableTasks(params);
-  console.log('FETCHED AVAILABLE TASKS', params, response);
   return {
     ...response,
     content: response.content.map(parseTask),
@@ -525,4 +523,8 @@ export const getLatestAverageTaskReward = async (
 
 export const redeemTokensInNewNetwork = (): Promise<number> => {
   return window.main.redeemTokensInNewNetwork();
+};
+
+export const checkOrcaPodmanExistsAndRunning = async () => {
+  return window.main.checkOrcaPodmanExistsAndRunning();
 };

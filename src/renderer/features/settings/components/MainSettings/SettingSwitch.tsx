@@ -8,6 +8,7 @@ interface Props {
   isChecked: boolean;
   onSwitch: () => void;
   labels: [string, string];
+  isDisabled?: boolean;
 }
 
 export function SettingSwitch({
@@ -16,6 +17,7 @@ export function SettingSwitch({
   isChecked,
   onSwitch,
   labels,
+  isDisabled = false,
 }: Props) {
   const [leftLabel, rightLabel] = labels;
 
@@ -25,7 +27,12 @@ export function SettingSwitch({
       {isLoading ? (
         <LoadingSpinner className="mx-2.5" />
       ) : (
-        <Switch id={id} isChecked={isChecked} onSwitch={onSwitch} />
+        <Switch
+          id={id}
+          isChecked={isChecked}
+          onSwitch={onSwitch}
+          disabled={isDisabled}
+        />
       )}
       <span>{rightLabel}</span>
     </div>

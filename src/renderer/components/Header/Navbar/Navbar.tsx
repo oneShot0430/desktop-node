@@ -1,7 +1,8 @@
-import clsx from 'clsx';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { twMerge } from 'tailwind-merge';
 
+import { OrcaActionsDropdown } from 'renderer/features/orca/OrcaActionsDropdown';
 import { AppRoute } from 'renderer/types/routes';
 
 const navItems = [
@@ -15,11 +16,11 @@ const navItems = [
 
 function Navbar(): JSX.Element {
   return (
-    <nav className="flex justify-between">
+    <nav className="flex items-center justify-between">
       {navItems.map((item) => (
         <NavLink
           className={({ isActive }) =>
-            clsx(
+            twMerge(
               'tracking-finnieSpacing ml-7 text-right',
               isActive && 'text-finnieTeal font-semibold underline'
             )
@@ -30,6 +31,9 @@ function Navbar(): JSX.Element {
           {item.name}
         </NavLink>
       ))}
+      <div className="ml-6">
+        <OrcaActionsDropdown />
+      </div>
     </nav>
   );
 }

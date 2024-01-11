@@ -35,5 +35,6 @@ export * from './getMainLogs';
 export * from './cancelTaskRetry';
 export * from './getRetryDataByTaskId';
 export * from './creditStakingWalletFromMainWallet';
+export * from './checkOrcaPodmanExistsAndRunning';
 export * from './taskToMigrate';
 export * from './transferKoii';

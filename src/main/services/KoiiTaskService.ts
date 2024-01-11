@@ -11,8 +11,10 @@ import {
 } from '@koii-network/task-node';
 import { isString } from 'lodash';
 import { getNetworkUrl } from 'main/controllers/getNetworkUrl';
+import { getTaskMetadata } from 'main/controllers/getTaskMetadata';
+import { stopOrcaVM } from 'main/controllers/orca/stopOrcaVm';
 import { store, getK2NetworkUrl } from 'main/node/helpers/k2NetworkUrl';
-import { ErrorType, RawTaskData } from 'models';
+import { ErrorType, RawTaskData, TaskMetadata } from 'models';
 import { throwDetailedError, getProgramAccountFilter } from 'utils';
 
 import config from '../../config';
@@ -31,6 +33,8 @@ export class KoiiTaskService {
   public timerForRewards = 0;
 
   private startedTasksData: Omit<RawTaskData, 'is_running'>[] = [];
+
+  private taskMetadata: any = {};
 
   /**
    * @dev: this functions is preparing the Desktop Node to work in a few crucial steps:
@@ -146,6 +150,32 @@ export class KoiiTaskService {
     }
 
     await this.runTimers();
+
+    const startedTasks = this.startedTasksData.filter((task) => {
+      return !!this.RUNNING_TASKS[task.task_id];
+    });
+    const promiseArr = startedTasks.map(async (e) => {
+      return {
+        ...e,
+        fetchedMetadata: await this.getTaskMetadataUtil(e.task_metadata),
+      };
+    });
+    const tasksArrWithMetadata = await Promise.allSettled(promiseArr);
+    const isOrcaTasksRunning =
+      tasksArrWithMetadata.filter(
+        (e) =>
+          e.status === 'fulfilled' &&
+          e.value.fetchedMetadata.requirementsTags.find(
+            (e) => e.type === 'ADDON' && e.value === 'ORCA_TASK'
+          )
+      ).length > 0;
+    if (!isOrcaTasksRunning) {
+      try {
+        await stopOrcaVM();
+      } catch (e) {
+        console.error(e);
+      }
+    }
   }
 
   async fetchAllTaskIds() {
@@ -345,5 +375,16 @@ export class KoiiTaskService {
         })
       )
     ).filter((e): e is RawTaskData => Boolean(e));
+  }
+
+  async getTaskMetadataUtil(metadataCID: string): Promise<TaskMetadata> {
+    if (this.taskMetadata[metadataCID]) {
+      return this.taskMetadata[metadataCID];
+    }
+    const taskMetadata = await getTaskMetadata({} as Event, {
+      metadataCID,
+    });
+    this.taskMetadata[metadataCID] = taskMetadata;
+    return taskMetadata;
   }
 }

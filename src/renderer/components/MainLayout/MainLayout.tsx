@@ -74,7 +74,7 @@ export function MainLayout({ children }: MainLayoutProps): JSX.Element {
       </div>
 
       {Number(height) >= 820 && (
-        <div className="absolute bottom-0 left-2">
+        <div className="absolute bottom-0 right-0">
           <VersionDisplay />
         </div>
       )}

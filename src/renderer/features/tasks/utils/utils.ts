@@ -1,5 +1,7 @@
 import { intervalToDuration } from 'date-fns';
+import { InfiniteData } from 'react-query';
 
+import { PaginatedResponse } from 'models';
 import { Task } from 'renderer/types';
 
 type GetTaskMessageParams = {
@@ -82,4 +84,10 @@ export function formatMilliseconds(milliseconds: number): string {
   formattedString += `${minutes} min`;
 
   return formattedString.trim();
+}
+
+export function joinPaginatedResponseContent(
+  data: InfiniteData<PaginatedResponse<Task>>
+) {
+  return data.pages.map(({ content }) => content).flat();
 }

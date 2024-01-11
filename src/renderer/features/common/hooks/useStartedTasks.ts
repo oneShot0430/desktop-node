@@ -1,6 +1,6 @@
 import { QueryKeys, fetchMyTasks } from 'renderer/services';
 
-import { useTasksInfiniteScroll } from './useTaskInfinitieScroll';
+import { useTasksInfiniteScroll } from './useTaskInfiniteScroll';
 
 type UseTasksInfiniteScrollParams = {
   pageSize: number;

@@ -28,12 +28,14 @@ export function ForceRedeemMigrationTokens() {
       {isLoading ? (
         <LoadingSpinner className="h-8 w-8 -mt-2" />
       ) : (
-        <button
-          onClick={handleForceRedeem}
-          className="underline text-finnieEmerald-light underline-offset-2 font-semibold"
-        >
-          Check Now
-        </button>
+        <span>
+          <button
+            onClick={handleForceRedeem}
+            className="underline text-finnieEmerald-light underline-offset-2 font-semibold"
+          >
+            Check Now
+          </button>
+        </span>
       )}
     </div>
   );

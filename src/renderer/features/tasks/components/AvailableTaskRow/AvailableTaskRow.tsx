@@ -18,6 +18,7 @@ import React, {
   MutableRefObject,
 } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
+import { twMerge } from 'tailwind-merge';
 
 import GearFill from 'assets/svgs/gear-fill.svg';
 import GearLine from 'assets/svgs/gear-line.svg';
@@ -42,6 +43,7 @@ import {
   useStartingTasksContext,
   useOnClickOutside,
   useStakingAccount,
+  useOrcaPodman,
 } from 'renderer/features';
 import { useAutoPairVariables } from 'renderer/features/common/hooks/useAutoPairVariables';
 import {
@@ -54,7 +56,7 @@ import { Task } from 'renderer/types';
 import { Theme } from 'renderer/types/common';
 import { getKoiiFromRoe } from 'utils';
 
-import { formatNumber, getTaskTotalStake } from '../../utils';
+import { formatNumber, getTaskTotalStake, isOrcaTask } from '../../utils';
 import { SuccessMessage } from '../AvailableTasksTable/components/SuccessMessage';
 import { TaskName } from '../common';
 import { RoundTime } from '../common/RoundTime';
@@ -93,7 +95,7 @@ function AvailableTaskRow({ task, index, columnsLayout }: Props) {
 
   const { data: mainAccountPubKey = '' } = useMainAccount();
   const { data: stakingKeyPubKey = '' } = useStakingAccount();
-
+  const { data: orcaStatus } = useOrcaPodman();
   const { accountBalance = 0 } = useAccountBalance(mainAccountPubKey);
 
   const {
@@ -296,6 +298,8 @@ function AvailableTaskRow({ task, index, columnsLayout }: Props) {
     }
   };
 
+  const isUsingOrca = useMemo(() => isOrcaTask(metadata), [metadata]);
+
   const handleStakeValueChange = (value: number) => {
     setValueToStake(value);
     setMeetsMinimumStake(value >= minStake);
@@ -400,11 +404,20 @@ function AvailableTaskRow({ task, index, columnsLayout }: Props) {
     ? getKoiiFromRoe(averageTaskReward)
     : null;
 
+  const hideIfOrcaNotInstalled = useMemo(() => {
+    return isUsingOrca && !orcaStatus?.isPodmanExists;
+  }, [isUsingOrca, orcaStatus?.isPodmanExists]);
+
+  const tableRowClasses = twMerge(
+    'py-2 gap-y-0',
+    hideIfOrcaNotInstalled && 'hidden'
+  );
+
   return (
     taskStartCompleted || (
       <TableRow
         columnsLayout={columnsLayout}
-        className="py-2 gap-y-0"
+        className={tableRowClasses}
         ref={ref}
       >
         <div>
@@ -436,7 +449,7 @@ function AvailableTaskRow({ task, index, columnsLayout }: Props) {
         </div>
 
         <Popover tooltipContent={taskName} theme={Theme.Dark}>
-          <TaskName taskName={taskName} />
+          <TaskName taskName={taskName} isUsingOrca={!!isUsingOrca} />
         </Popover>
 
         <TaskItemStatCell

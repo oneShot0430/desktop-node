@@ -6,6 +6,7 @@ import { Popover } from 'renderer/components/ui/Popover/Popover';
 import { Theme } from 'renderer/types/common';
 
 import { TaskName } from '../../../common';
+import { OrcaTag } from '../../../OrcaTag';
 
 type PropsType = {
   publicKey: string;
@@ -15,6 +16,7 @@ type PropsType = {
   propsManagingMainTooltipState: any;
   tooltipRightPlacement?: Placement;
   infoButtonTooltipContent: string;
+  isUsingOrca?: boolean;
 };
 
 export function TaskInfoCell({
@@ -23,6 +25,7 @@ export function TaskInfoCell({
   handleToggleInfoAccordion,
   propsManagingMainTooltipState,
   infoButtonTooltipContent,
+  isUsingOrca = true,
 }: PropsType) {
   return (
     <div className="flex items-center gap-2 justify-self-start">
@@ -47,6 +50,7 @@ export function TaskInfoCell({
 
       <Popover theme={Theme.Dark} tooltipContent={taskName}>
         <TaskName taskName={taskName} />
+        {isUsingOrca && <OrcaTag />}
       </Popover>
     </div>
   );

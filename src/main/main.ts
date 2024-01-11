@@ -4,7 +4,12 @@ import path from 'path';
 import { get } from 'lodash';
 
 import { initializeAppUpdater } from './AppUpdater';
-import { getAllAccounts, setActiveAccount, getUserConfig } from './controllers';
+import {
+  getAllAccounts,
+  setActiveAccount,
+  getUserConfig,
+  stopOrcaVM,
+} from './controllers';
 import initHandlers from './initHandlers';
 import { configureLogger } from './logger';
 import { getCurrentActiveAccountName } from './node/helpers';
@@ -97,6 +102,15 @@ const createWindow = async () => {
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
+  app.on('before-quit', () => {
+    // Run your tasks or code here before quitting
+    console.log('Running tasks before quitting');
+    try {
+      stopOrcaVM().then(console.log);
+    } catch (error) {
+      console.error(error);
+    }
+  });
   // Open the DevTools.
   // mainWindow.webContents.setDevToolsWebContents(
   //   new BrowserWindow().webContents

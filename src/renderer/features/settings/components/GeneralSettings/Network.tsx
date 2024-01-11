@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
 import { EMERGENCY_TESTNET_RPC_URL, TESTNET_RPC_URL } from 'config/node';
+import { Tooltip } from 'renderer/components/ui/Tooltip';
 import { useConfirmNetworkSwitchModal } from 'renderer/features/common/hooks';
 import { QueryKeys, getNetworkUrl, switchNetwork } from 'renderer/services';
 
@@ -37,16 +38,19 @@ export function Network() {
   });
 
   const isNetworkChecked = !hasFlippedSwitch ? !isTestnet : isTestnet;
-
+  const tooltipContent = 'MAINNET is coming in Q2 2023';
   return (
-    <div className="flex flex-col gap-5">
-      <SettingSwitch
-        id="network"
-        isLoading={isLoadingNetworkUrl}
-        isChecked={isNetworkChecked}
-        onSwitch={toggleNetwork}
-        labels={['TESTNET', 'DEVNET']}
-      />
-    </div>
+    <Tooltip tooltipContent={tooltipContent} placement="bottom-left">
+      <div className="flex flex-col gap-5">
+        <SettingSwitch
+          id="network"
+          isLoading={isLoadingNetworkUrl}
+          isChecked={isNetworkChecked}
+          onSwitch={toggleNetwork}
+          labels={['TESTNET', 'MAINNET']}
+          isDisabled
+        />
+      </div>
+    </Tooltip>
   );
 }
