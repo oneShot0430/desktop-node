@@ -44,4 +44,5 @@ export enum QueryKeys {
   TaskAverageReward = 'TaskAverageReward',
   TaskRoundTime = 'TaskRoundTime',
   AverageSlotTime = 'AverageSlotTime',
+  OrcaPodman = 'OrcaPodman',
 }

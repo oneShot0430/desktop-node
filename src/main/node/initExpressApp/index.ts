@@ -30,7 +30,6 @@ const initExpressApp = async (): Promise<Express | undefined> => {
   expressApp.listen(port, () => {
     console.log(`Express server started @ http://localhost:${port}`);
   });
-
   // eslint-disable-next-line consistent-return
   return expressApp;
 };

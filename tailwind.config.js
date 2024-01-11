@@ -93,6 +93,7 @@ module.exports = {
           light: '#F5F5F5',
           secondary: '#9B9BB2',
           tertiary: '#D6D6D6',
+          100: '#D5D8DC',
         },
         neutral: { ...colors.neutral, 200: '#EAEAEA' },
         finnieRed: {

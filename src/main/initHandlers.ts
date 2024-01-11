@@ -94,6 +94,9 @@ const endpointToControllerMap: Record<
   [Endpoints.FINISH_EMERGENCY_MIGRATION]: controllers.finishEmergencyMigration,
   [Endpoints.CREDIT_STAKING_WALLET_FROM_MAIN_WALLET]:
     controllers.creditStakingWalletFromMainWallet,
+  [Endpoints.CHECK_ORCA_PODMAN_EXISTS_AND_RUNNING]:
+    controllers.checkOrcaPodmanExistsAndRunning,
+  [Endpoints.START_ORCA_VM]: controllers.startOrcaVM,
   [Endpoints.LIMIT_LOGS_SIZE]: controllers.limitLogsSize,
   [Endpoints.GET_TASK_LAST_SUBMISSION_TIME]: controllers.getLastSubmissionTime,
   [Endpoints.GET_LATEST_AVERAGE_TASK_REWARD]:

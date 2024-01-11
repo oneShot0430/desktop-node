@@ -7,7 +7,8 @@ import React, { useState, useMemo } from 'react';
 import toast from 'react-hot-toast';
 
 import { Tooltip, Button } from 'renderer/components/ui';
-import { useMetadata, useClipboard } from 'renderer/features/common';
+import { useClipboard } from 'renderer/features/common';
+import { useMetadata } from 'renderer/features/tasks';
 import { TaskInfo } from 'renderer/features/tasks/components/TaskInfo';
 import { getTaskTotalStake } from 'renderer/features/tasks/utils';
 import { TaskService } from 'renderer/services';

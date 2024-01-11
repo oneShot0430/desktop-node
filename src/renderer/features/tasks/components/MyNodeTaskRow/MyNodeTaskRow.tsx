@@ -32,12 +32,15 @@ import {
 } from 'renderer/components/ui';
 import { DROPDOWN_MENU_ID } from 'renderer/components/ui/Dropdown/Dropdown';
 import { Popover } from 'renderer/components/ui/Popover/Popover';
-import { useMyNodeContext, useStakingAccount } from 'renderer/features';
+import {
+  useMyNodeContext,
+  useStakingAccount,
+  useMetadata,
+} from 'renderer/features';
 import {
   useAddStakeModal,
   useUnstakeModal,
   useTaskStake,
-  useMetadata,
   useOnClickOutside,
   useTaskStatus,
   useAddTaskVariableModal,
@@ -66,7 +69,7 @@ import useCountDown from '../../hooks/useCountDown';
 import { useTaskLastSubmission } from '../../hooks/useTaskLastSubmission';
 import { useTaskRoundNumber } from '../../hooks/useTaskRoundNumber';
 import { UpgradeStatus, useUpgradeTask } from '../../hooks/useUpgradeTask';
-import { getTaskTotalStake } from '../../utils';
+import { getTaskTotalStake, isOrcaTask } from '../../utils';
 import { getTooltipContent } from '../../utils/utils';
 import { RoundTime } from '../common/RoundTime';
 import { TaskItemStatCell } from '../common/TaskItemStatCell';
@@ -236,6 +239,7 @@ export function MyNodeTaskRow({
   const { metadata, isLoadingMetadata } = useMetadata({
     metadataCID: task.metadataCID,
   });
+
   const isLoadingMetadataFlag =
     accordionView === 'upgrade-info'
       ? isLoadingNewTaskVersionMetadata
@@ -653,6 +657,8 @@ ${isPlayPauseButtonDisabled && 'opacity-60'}`;
 
   const taskTotalStake = useMemo(() => getTaskTotalStake(task), [task]);
 
+  const isUsingOrca = useMemo(() => isOrcaTask(metadata), [metadata]);
+
   if (upgradeStatus === UpgradeStatus.IN_PROGRESS)
     return (
       <TableRow
@@ -792,6 +798,7 @@ ${isPlayPauseButtonDisabled && 'opacity-60'}`;
               infoIconClasses={infoIconClasses}
               infoButtonTooltipContent={infoButtonTooltipContent}
               tooltipRightPlacement={tooltipRightPlacement}
+              isUsingOrca={!!isUsingOrca}
             />
 
             {upgradeStatus === UpgradeStatus.NEW_VERSION_BEING_AUDITED ? (

@@ -32,13 +32,16 @@ export function Sidebar() {
         isClaimingRewards={isClaimingRewards}
       />
       <StakeInfoBox totalStaked={nodeInfoData?.totalStaked ?? 0} />
+
       <AvailableBalanceInfoBox availableBalance={nodeInfoData?.totalKOII} />
       <SidebarActions
         showMyNodeAction={isAddTaskView}
         onPrimaryActionClick={handleAddFundsClick}
         onSecondaryActionClick={handleSecondaryActionClick}
       />
+
       <MainWalletView />
+
       {/* <div className="pb-5 mt-auto">
         <VersionDisplay />
       </div> */}

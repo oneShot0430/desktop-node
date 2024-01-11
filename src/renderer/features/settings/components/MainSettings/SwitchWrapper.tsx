@@ -1,5 +1,5 @@
-import clsx from 'clsx';
 import React, { FunctionComponent } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 type PropsType = {
   title: string;
@@ -14,7 +14,7 @@ export function SwitchWrapper({
 }: PropsType) {
   return (
     <div
-      className={clsx(
+      className={twMerge(
         'flex flex-col items-center rounded-[4px] bg-finnieTeal-100 bg-opacity-20 gap-2 p-4 px-10',
         className,
         'w-293px h-[91px]'

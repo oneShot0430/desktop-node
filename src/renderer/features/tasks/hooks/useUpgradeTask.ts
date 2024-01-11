@@ -5,7 +5,6 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { RequirementType } from 'models';
 import {
   useAllStoredPairedTaskVariables,
-  useMetadata,
   useTaskStake,
   useUserAppConfig,
 } from 'renderer/features';
@@ -14,6 +13,7 @@ import {
   NotificationPlacement,
   useNotificationsContext,
 } from 'renderer/features/notifications';
+import { useMetadata } from 'renderer/features/tasks';
 import {
   QueryKeys,
   TaskService,

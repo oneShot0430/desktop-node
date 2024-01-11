@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from 'react-query';
+import { InfiniteData, useInfiniteQuery } from 'react-query';
 
 import { GetMyTasksParam, PaginatedResponse } from 'models';
 import { QueryKeys } from 'renderer/services';
@@ -10,6 +10,7 @@ type UseTasksInfiniteScrollParams = {
   refetchInterval?: number;
   fetchFunction: (params: GetMyTasksParam) => Promise<PaginatedResponse<Task>>;
   enabled?: boolean;
+  onSuccess?: (data: InfiniteData<PaginatedResponse<Task>>) => void;
 };
 
 export const useTasksInfiniteScroll = ({
@@ -18,6 +19,7 @@ export const useTasksInfiniteScroll = ({
   refetchInterval,
   fetchFunction,
   enabled = true,
+  onSuccess,
 }: UseTasksInfiniteScrollParams) => {
   const {
     isLoading: isLoadingTasks,
@@ -40,6 +42,9 @@ export const useTasksInfiniteScroll = ({
         return hasMore ? nextPage : undefined;
       },
       enabled,
+      onSuccess(data) {
+        onSuccess?.(data);
+      },
     }
   );
 

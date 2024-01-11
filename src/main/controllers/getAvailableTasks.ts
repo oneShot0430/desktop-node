@@ -13,7 +13,6 @@ const getAvailableTasks = async (
 ): Promise<PaginatedResponse<Task>> => {
   try {
     const { offset, limit } = payload;
-    console.log('FETCHING AVAILABLE TASKS', payload);
 
     const idsSlice = koiiTasks.allTaskPubkeys.slice(offset, offset + limit);
     const runningIds = koiiTasks
@@ -41,8 +40,6 @@ const getAvailableTasks = async (
         (task): task is Task =>
           task !== null && task.data.isWhitelisted && task.data.isActive
       );
-
-    console.log('FETCHED CHUNK OF AVAILABLE TASKS', tasks);
 
     const response: PaginatedResponse<Task> = {
       content: tasks,

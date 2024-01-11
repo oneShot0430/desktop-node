@@ -17,6 +17,7 @@ import { SystemDbKeys } from 'config/systemDbKeys';
 import { Express } from 'express';
 import { get } from 'lodash';
 import db from 'main/db';
+import initOrca from 'main/node/helpers/initOrca';
 import { getK2NetworkUrl } from 'main/node/helpers/k2NetworkUrl';
 import { Namespace, namespaceInstance } from 'main/node/helpers/Namespace';
 import koiiTasks from 'main/services/koiiTasks';
@@ -32,6 +33,7 @@ import { getAppDataPath } from '../node/helpers/getAppDataPath';
 import initExpressApp from '../node/initExpressApp';
 
 import getStakingAccountPublicKey from './getStakingAccountPubKey';
+import { getTaskMetadata } from './getTaskMetadata';
 import { getTaskSource } from './getTaskSource';
 // import retryTask from './retryTask';
 import { getTaskPairedVariablesNamesWithValues } from './taskVariables';
@@ -66,6 +68,23 @@ const startTask = async (
     });
   }
 
+  const taskMetadata = await getTaskMetadata({} as Event, {
+    metadataCID: taskInfo.task_metadata,
+  });
+  for (const tag of taskMetadata?.requirementsTags || []) {
+    if (tag.type === 'ADDON' && tag.value === 'ORCA_TASK') {
+      try {
+        await initOrca();
+      } catch (err: any) {
+        console.error('ERROR STARTING TASK', err);
+        return throwDetailedError({
+          detailed: err,
+          type: ErrorType.TASK_START,
+        });
+      }
+      console.log('ORCA TASK ');
+    }
+  }
   const stakingAccKeypair = await getStakingAccountKeypair();
   const stakingPubkey = stakingAccKeypair.publicKey.toBase58();
 

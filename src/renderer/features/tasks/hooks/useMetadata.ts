@@ -1,7 +1,10 @@
+import { useAtom } from 'jotai';
 import { useQuery, UseQueryOptions } from 'react-query';
 
 import { TaskMetadata } from 'models';
 import { getTaskMetadata, QueryKeys } from 'renderer/services';
+
+import { tasksMetadataByIdAtom } from '../state';
 
 type CIDType = string | undefined | null;
 
@@ -30,6 +33,8 @@ export const useMetadata = ({
     'queryKey' | 'queryFn'
   >;
 }) => {
+  const [, setData] = useAtom(tasksMetadataByIdAtom);
+
   const {
     data: metadata,
     isLoading: isLoadingMetadata,
@@ -41,7 +46,13 @@ export const useMetadata = ({
       staleTime: Infinity,
       retry: 10,
       ...queryOptions,
+      onSuccess(data) {
+        if (data) {
+          setData((prev) => ({ ...prev, [metadataCID || '']: data }));
+        }
+      },
     }
   );
+
   return { metadata, isLoadingMetadata, metadataError };
 };

@@ -1,6 +1,6 @@
 import { QueryKeys, fetchAvailableTasks } from 'renderer/services';
 
-import { useTasksInfiniteScroll } from './useTaskInfinitieScroll';
+import { useTasksInfiniteScroll } from './useTaskInfiniteScroll';
 
 type UseAvailableTasksParams = {
   pageSize: number;

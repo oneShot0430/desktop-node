@@ -1,6 +1,7 @@
 import { onAppDownloaded, checkAppUpdate, onAppUpdate } from './appUpdates';
 import archiveTask from './archiveTask';
 import cancelTaskRetry from './cancelTaskRetry';
+import checkOrcaPodmanExistsAndRunning from './checkOrcaPodmanExistsAndRunning';
 import checkWalletExists from './checkWalletExists';
 import claimReward from './claimReward';
 import createNodeWallets from './createNodeWallets';
@@ -53,6 +54,7 @@ import removeAccountByName from './removeAccountByName';
 import setActiveAccount from './setActiveAccount';
 import startAllTasks from './startAllTasks';
 import startEmergencyMigration from './startEmergencyMigration';
+import startOrcaVm from './startOrcaVm';
 import startTask from './startTask';
 import stopAllTasks from './stopAllTasks';
 import stopTask from './stopTask';
@@ -169,6 +171,7 @@ export default {
   removeTaskFromScheduler,
   validateSchedulerSession,
   creditStakingWalletFromMainWallet,
+  checkOrcaPodmanExistsAndRunning,
   limitLogsSize,
   startEmergencyMigration,
   finishEmergencyMigration,
@@ -177,4 +180,5 @@ export default {
   redeemTokensInNewNetwork,
   transferKoiiFromMainWallet,
   transferKoiiFromStakingWallet,
+  startOrcaVm,
 };

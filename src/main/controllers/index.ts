@@ -62,6 +62,7 @@ export { cancelTaskRetry } from './cancelTaskRetry';
 export { getRetryDataByTaskId } from './getRetryDataByTaskId';
 export { switchLaunchOnRestart } from './switchLaunchOnRestart';
 export { creditStakingWalletFromMainWallet } from './creditStakingWalletFromMainWallet';
+export * from './orca';
 export * from './types';
 export { getLastSubmissionTime } from './getLastSubmissionTime';
 export * from './tasks';

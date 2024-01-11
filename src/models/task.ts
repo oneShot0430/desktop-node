@@ -89,6 +89,7 @@ export enum RequirementType {
   NETWORK = 'NETWORK',
   ARCHITECTURE = 'ARCHITECTURE',
   OS = 'OS',
+  ADDON = 'ADDON',
 }
 
 export interface TaskData {
