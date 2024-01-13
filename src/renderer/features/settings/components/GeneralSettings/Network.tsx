@@ -38,7 +38,7 @@ export function Network() {
   });
 
   const isNetworkChecked = !hasFlippedSwitch ? !isTestnet : isTestnet;
-  const tooltipContent = 'MAINNET is coming in Q2 2023';
+  const tooltipContent = 'MAINNET is coming in Q2 2024';
   return (
     <Tooltip tooltipContent={tooltipContent} placement="bottom-left">
       <div className="flex flex-col gap-5">

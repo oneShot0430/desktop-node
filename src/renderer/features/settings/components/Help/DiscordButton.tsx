@@ -5,7 +5,7 @@ import { openBrowserWindow } from 'renderer/services';
 
 export function DiscrodButton() {
   const handleOpenDiscordServerWindow = () =>
-    openBrowserWindow('https://discord.com/invite/koii');
+    openBrowserWindow('https://discord.gg/koiin');
 
   return (
     <Button

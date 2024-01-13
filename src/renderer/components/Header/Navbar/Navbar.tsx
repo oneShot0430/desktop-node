@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 
-import { OrcaActionsDropdown } from 'renderer/features/orca/OrcaActionsDropdown';
+// import { OrcaActionsDropdown } from 'renderer/features/orca/OrcaActionsDropdown';
 import { AppRoute } from 'renderer/types/routes';
 
 const navItems = [
@@ -31,9 +31,11 @@ function Navbar(): JSX.Element {
           {item.name}
         </NavLink>
       ))}
+      {/* 
+      TODO: ReEnable in RELEASE_0.3.7
       <div className="ml-6">
         <OrcaActionsDropdown />
-      </div>
+      </div> */}
     </nav>
   );
 }
