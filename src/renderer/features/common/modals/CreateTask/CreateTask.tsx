@@ -23,7 +23,7 @@ export const CreateTaskModal = create(function CreateTaskModal() {
     );
 
   const handleOpenDiscordServerWindow = () =>
-    openBrowserWindow('https://discord.com/invite/koii');
+    openBrowserWindow('https://discord.gg/koiin');
 
   return (
     <Modal>
