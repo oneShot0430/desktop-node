@@ -1,12 +1,14 @@
-import * as Orca from '@chaindeck/orca';
+// import * as Orca from '@chaindeck/orca';
 
-import { checkOrcaPodmanExistsAndRunning } from '../../controllers/orca/checkOrcaPodmanExistsAndRunning';
-import { startOrcaVM } from '../../controllers/orca/startOrcaVm';
+// import { checkOrcaPodmanExistsAndRunning } from '../../controllers/orca/checkOrcaPodmanExistsAndRunning';
+// import { startOrcaVM } from '../../controllers/orca/startOrcaVm';
 import errorHandler from '../../errorHandler';
 
-let isOrcaInitialized = false;
+// let isOrcaInitialized = false;
 
 const initOrca = async (): Promise<void> => {
+  /*
+  TODO: ENABLE IN RELEASE_0.3.8
   const { isPodmanExists, isOrcaVMRunning } =
     await checkOrcaPodmanExistsAndRunning();
   if (!isPodmanExists) {
@@ -35,8 +37,11 @@ const initOrca = async (): Promise<void> => {
     // orcaInstance.close()
     isOrcaInitialized = true;
   }
+  */
 };
+/*
 const waitUntilOrcaIsRunning = async () => {
+  TODO: ENABLE IN RELEASE_0.3.8
   let isOrcaRunning = false;
   let retry = 0;
   while (!isOrcaRunning) {
@@ -47,10 +52,11 @@ const waitUntilOrcaIsRunning = async () => {
     isOrcaRunning = isOrcaVMRunning;
     retry += 1;
   }
+
 };
 const sleep = (ms: number) =>
   new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
-
+  */
 export default errorHandler(initOrca, 'Init Orca app error');

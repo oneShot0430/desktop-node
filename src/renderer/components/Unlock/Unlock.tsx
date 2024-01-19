@@ -1,22 +1,36 @@
 import { Icon } from '@_koii/koii-styleguide';
 import { compare } from 'bcryptjs';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
 import KoiiLogo from 'assets/svgs/koii-logo-white.svg';
 import WelcomeLinesDiagonal from 'assets/svgs/welcome-lines-diagonal.svg';
 import WelcomeWheelBackground from 'assets/svgs/welcome-wheel-background.svg';
+import { LoadingScreen } from 'renderer/components/LoadingScreen';
 import { PinInput } from 'renderer/components/PinInput';
 import {
   useEmergencyMigrationModal,
   useUserSettings,
 } from 'renderer/features/common';
+import {
+  QueryKeys,
+  getAllAccounts,
+  getUserConfig,
+  initializeTasks,
+} from 'renderer/services';
 import { AppRoute } from 'renderer/types/routes';
+
+const NODE_INITIALIZED = 'NODE_INITIALIZED';
 
 export function Unlock(): JSX.Element {
   const [hasPinError, setHasPinError] = useState<boolean>(false);
 
-  const { settings } = useUserSettings();
+  const [initializingNode, setInitializingNode] = useState(true);
+
+  const queryClient = useQueryClient();
+
+  const { settings, loadingSettings } = useUserSettings();
 
   const migrationPhase = settings?.hasStartedEmergencyMigration ? 2 : 1;
 
@@ -47,6 +61,53 @@ export function Unlock(): JSX.Element {
       }
     }
   };
+
+  useEffect(() => {
+    const initializeNode = async () => {
+      try {
+        // Indicate the initialization API call in sessionStorage
+        await initializeTasks();
+        setInitializingNode(false);
+      } catch (error: any) {
+        console.error(error);
+      }
+    };
+
+    const shouldInitializeNode =
+      !loadingSettings && settings?.hasFinishedEmergencyMigration;
+
+    if (shouldInitializeNode) {
+      initializeNode();
+    } else {
+      setInitializingNode(false);
+    }
+  }, [settings?.hasFinishedEmergencyMigration, loadingSettings]);
+
+  // started prefetching required data while node is initializing
+  useEffect(() => {
+    const prefetchQueries = async () => {
+      try {
+        await Promise.all([
+          queryClient.prefetchQuery({
+            queryKey: [QueryKeys.UserSettings],
+            queryFn: getUserConfig,
+          }),
+          queryClient.prefetchQuery({
+            queryKey: [QueryKeys.Accounts],
+            queryFn: getAllAccounts,
+          }),
+        ]);
+      } catch (error: any) {
+        console.error(error);
+      }
+    };
+
+    prefetchQueries();
+  }, [queryClient]);
+
+  if (initializingNode) {
+    return <LoadingScreen />;
+  }
 
   return (
     <div className="relative overflow-y-auto flex flex-col justify-center items-center gap-5 h-full bg-gradient-to-b from-finnieBlue-dark-secondary to-finnieBlue text-white overflow-hidden">

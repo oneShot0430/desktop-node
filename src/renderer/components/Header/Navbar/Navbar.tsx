@@ -31,11 +31,11 @@ function Navbar(): JSX.Element {
           {item.name}
         </NavLink>
       ))}
-      {/* 
-      TODO: ReEnable in RELEASE_0.3.7
+      {/* TODO: ReEnable in RELEASE_0.3.8
       <div className="ml-6">
         <OrcaActionsDropdown />
-      </div> */}
+      </div>
+      */}
     </nav>
   );
 }
