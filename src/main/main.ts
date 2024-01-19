@@ -1,4 +1,12 @@
-import { app, BrowserWindow, dialog } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  dialog,
+  globalShortcut,
+  Menu,
+  shell,
+  Tray,
+} from 'electron';
 import path from 'path';
 
 import { get } from 'lodash';
@@ -15,6 +23,12 @@ import { configureLogger } from './logger';
 import { getCurrentActiveAccountName } from './node/helpers';
 import { setUpPowerStateManagement } from './powerMonitor';
 import { resolveHtmlPath } from './util';
+
+const isMac = process.platform === 'darwin';
+let tray: Tray | null = null;
+
+// Define the flag
+let isQuitting = false;
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -147,7 +161,152 @@ const createWindow = async () => {
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
+
+  const ret = globalShortcut.register('CommandOrControl+Q', () => {
+    isQuitting = true;
+    app.quit();
+  });
+
+  if (!ret) {
+    console.log('Registration failed');
+  }
+
+  // Check whether a shortcut is registered.
+  console.log(globalShortcut.isRegistered('CommandOrControl+Q'));
+
+  // Add event listener for 'close' event
+  mainWindow.on('close', (event) => {
+    if (!isDebug && !isQuitting) {
+      event.preventDefault(); // Prevent the default close operation
+      if (mainWindow) {
+        if (isMac) {
+          mainWindow.minimize();
+        } else {
+          mainWindow.hide();
+        }
+      }
+      // Minimize the window instead of closing
+    }
+  });
 };
+
+const createMenu = () => {
+  const template = [
+    ...(process.platform === 'darwin'
+      ? [
+          {
+            label: app.getName(),
+            submenu: [
+              {
+                label: 'FAQ',
+                click: () => {
+                  shell.openExternal('https://docs.koii.network/koii/faq');
+                },
+              },
+              {
+                label: 'Report an issue',
+                click: () => {
+                  shell.openExternal('https://discord.gg/koiin');
+                },
+              },
+              {
+                label: 'Hide',
+                accelerator: 'CmdOrCtrl+H',
+                click: () => {
+                  app.quit();
+                },
+              },
+              {
+                label: 'Quit',
+                accelerator: 'CmdOrCtrl+Q',
+                click: () => {
+                  isQuitting = true;
+                  app.quit();
+                },
+              },
+            ],
+          },
+        ]
+      : []),
+    {
+      label: 'Window',
+      submenu: [
+        {
+          label: 'Hide',
+          accelerator: 'CmdOrCtrl+H',
+          click: () => {
+            app.quit();
+          },
+        },
+        {
+          label: 'Exit',
+          accelerator: 'CmdOrCtrl+Q',
+          click: () => {
+            isQuitting = true;
+            app.quit();
+          },
+        },
+      ],
+    },
+    {
+      label: 'Help',
+      submenu: [
+        {
+          label: 'FAQ',
+          click: () => {
+            shell.openExternal('https://docs.koii.network/koii/faq');
+          },
+        },
+        {
+          label: 'Report an issue',
+          click: () => {
+            shell.openExternal('https://discord.gg/koiin');
+          },
+        },
+      ],
+    },
+  ];
+
+  const menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
+};
+
+function createTray() {
+  const RESOURCES_PATH = app.isPackaged
+    ? path.join(process.resourcesPath, 'assets')
+    : path.join(__dirname, '../../assets');
+
+  const getAssetPath = (...paths: string[]): string => {
+    return path.join(RESOURCES_PATH, ...paths);
+  };
+  const iconPath = getAssetPath('icons/trayIcon.png');
+  tray = new Tray(iconPath);
+
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'Open',
+      click: () => {
+        if (mainWindow) mainWindow.show();
+      },
+    },
+    {
+      label: 'Quit',
+      click: () => {
+        isQuitting = true;
+        app.quit();
+      },
+    },
+  ]);
+
+  tray.setToolTip('Koii Node');
+  tray.setContextMenu(contextMenu);
+  tray.on('click', () => {
+    if (tray) tray.popUpContextMenu();
+  });
+  tray.on('double-click', () => {
+    if (mainWindow) mainWindow.show();
+  });
+}
 
 // Check for a single instance
 const isSingleInstance = app.requestSingleInstanceLock();
@@ -167,7 +326,11 @@ if (!isSingleInstance) {
   // This method will be called when Electron has finished
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
-  app.on('ready', createWindow);
+  app.on('ready', () => {
+    createWindow();
+    createMenu();
+    createTray();
+  });
 
   // Quit when all windows are closed, except on macOS. There, it's common
   // for applications and their menu bar to stay active until the user quits
@@ -183,7 +346,17 @@ if (!isSingleInstance) {
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
+      createMenu();
+      createTray();
     }
+  });
+
+  app.on('will-quit', () => {
+    // Unregister the shortcut.
+    globalShortcut.unregister('CommandOrControl+Q');
+
+    // Unregister all shortcuts if you have more.
+    globalShortcut.unregisterAll();
   });
 
   // In this file you can include the rest of your app's specific main process

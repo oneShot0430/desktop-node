@@ -3,16 +3,14 @@ import React from 'react';
 import { Button } from 'renderer/components/ui';
 import { openBrowserWindow } from 'renderer/services';
 
-export function BugReport() {
-  const redirectToReportForm = () =>
-    openBrowserWindow(
-      'https://docs.google.com/forms/d/e/1FAIpQLSe5_gRJ4hHOvIF_AHHK1TqFz2J3DzqWhkcm7AyAicPkQyTrrA/viewform'
-    );
+export function FAQButton() {
+  const handleOpenFAQWindow = () =>
+    openBrowserWindow('https://docs.koii.network/koii/faq');
 
   return (
     <Button
-      label="Submit the Bug Form"
-      onClick={redirectToReportForm}
+      label="Go to FAQ"
+      onClick={handleOpenFAQWindow}
       className="font-semibold bg-white text-finnieBlue-light text-[14px] leading-[14px] min-w-[200px] h-9 self-end mt-2"
     />
   );

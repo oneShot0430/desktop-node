@@ -227,7 +227,8 @@ function AvailableTaskRow({ task, index, columnsLayout }: Props) {
 
   const validateTask = useCallback(() => {
     const hasEnoughKoii =
-      accountBalance > minStake && accountBalance > valueToStake;
+      taskTotalStake > minStake ||
+      (accountBalance > minStake && accountBalance > valueToStake);
     const hasMinimumStake =
       (alreadyStakedTokensAmount || valueToStake) >= minStake;
     const isTaskValid = hasMinimumStake && isTaskToolsValid && hasEnoughKoii;

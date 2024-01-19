@@ -191,7 +191,7 @@ export class KoiiTaskService {
         }
       )
     ).map(({ pubkey }) => pubkey.toBase58());
-    console.log(`Fetched ${this.allTaskPubkeys.length} Tasks Public Keys`);
+    // console.log(`Fetched ${this.allTaskPubkeys.length} Tasks Public Keys`);
   }
 
   public async addRunningTaskPubKey(pubkey: string) {

@@ -6,6 +6,8 @@ export const checkOrcaPodmanExistsAndRunning =
   async (): Promise<checkOrcaPodmanExistsAndRunningResponse> => {
     let isPodmanExists = false;
     let isOrcaVMRunning = false;
+    return { isPodmanExists, isOrcaVMRunning };
+    // TODO: ReEnable in RELEASE_0.3.8
     try {
       isPodmanExists = await checkIsPodmanExists();
       if (isPodmanExists) {

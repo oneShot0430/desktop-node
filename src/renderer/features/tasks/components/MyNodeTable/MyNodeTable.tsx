@@ -60,6 +60,7 @@ export function MyNodeTable() {
   const navigate = useNavigate();
 
   const goToAvailableTasks = () => navigate(AppRoute.AddTask);
+  const goToSettings = () => navigate(AppRoute.SettingsHelp);
   const thereAreNoTasks = !isLoadingTasks && !allRows.length;
 
   const queryClient = useQueryClient();
@@ -93,30 +94,49 @@ export function MyNodeTable() {
               {/* eslint-disable-next-line @cspell/spellchecker */}
               You aren&apos;t running any tasks right now. Let&apos;s fix that!
             </p>
-            <Button
-              onClick={goToAvailableTasks}
-              variant={ButtonVariant.Secondary}
-              size={ButtonSize.SM}
-              label="Available Tasks"
-              buttonClassesOverrides="!border-white !text-white"
-            />
+            <div className="flex flex-row">
+              <Button
+                onClick={goToAvailableTasks}
+                variant={ButtonVariant.Secondary}
+                size={ButtonSize.SM}
+                label="Available Tasks"
+                buttonClassesOverrides="!border-white !text-white mr-4"
+              />
+              <Button
+                onClick={goToSettings}
+                variant={ButtonVariant.Secondary}
+                size={ButtonSize.SM}
+                label="Need Help?"
+                buttonClassesOverrides="!border-white !text-white ml-4"
+              />
+            </div>
           </div>
         )}
 
         {allRows.map((task, index) => {
           const isPrivate = privateTasksList.includes(task.publicKey);
           return (
-            <MyNodeTaskRow
-              key={task.publicKey}
-              index={index}
-              task={task}
-              accountPublicKey={mainAccountPubKey as string}
-              columnsLayout={columnsLayout}
-              isPrivate={isPrivate}
-              tableRef={tableRef}
-            />
+            <div key={task.publicKey}>
+              <MyNodeTaskRow
+                key={task.publicKey}
+                index={index}
+                task={task}
+                accountPublicKey={mainAccountPubKey as string}
+                columnsLayout={columnsLayout}
+                isPrivate={isPrivate}
+                tableRef={tableRef}
+              />
+            </div>
           );
         })}
+        <div className="text-right pt-2">
+          <a
+            className="underline text-sm text-green-2 cursor-pointer"
+            onClick={goToSettings}
+          >
+            Need Help?
+          </a>
+        </div>
       </InfiniteScrollTable>
     </div>
   );
