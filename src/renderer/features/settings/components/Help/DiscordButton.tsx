@@ -5,7 +5,7 @@ import { openBrowserWindow } from 'renderer/services';
 
 export function DiscordButton({ onClick }: { onClick?: () => void }) {
   const handleOpenDiscordServerWindow = () => {
-    openBrowserWindow('https://discord.gg/koiin');
+    openBrowserWindow('https://discord.gg/koii-network');
     if (onClick) {
       onClick(); // Call the passed onClick function
     }
