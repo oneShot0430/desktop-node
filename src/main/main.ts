@@ -206,7 +206,7 @@ const createMenu = () => {
               {
                 label: 'Report an issue',
                 click: () => {
-                  shell.openExternal('https://discord.gg/koiin');
+                  shell.openExternal('https://discord.gg/koii-network');
                 },
               },
               {
@@ -260,7 +260,7 @@ const createMenu = () => {
         {
           label: 'Report an issue',
           click: () => {
-            shell.openExternal('https://discord.gg/koiin');
+            shell.openExternal('https://discord.gg/koii-network');
           },
         },
       ],
