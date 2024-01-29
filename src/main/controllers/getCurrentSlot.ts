@@ -1,5 +1,7 @@
+import { getCurrentSlot as getCurrentSlotTaskNode } from '@koii-network/task-node';
 import sdk from 'main/services/sdk';
 
-const getCurrentSlot = async (): Promise<number> => sdk.k2Connection.getSlot();
+const getCurrentSlot = async (): Promise<number> =>
+  getCurrentSlotTaskNode(sdk.k2Connection);
 
 export default getCurrentSlot;

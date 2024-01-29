@@ -13,7 +13,7 @@ import { isString } from 'lodash';
 import { getNetworkUrl } from 'main/controllers/getNetworkUrl';
 import { getTaskMetadata } from 'main/controllers/getTaskMetadata';
 import { stopOrcaVM } from 'main/controllers/orca/stopOrcaVm';
-import { store, getK2NetworkUrl } from 'main/node/helpers/k2NetworkUrl';
+import { store } from 'main/node/helpers/k2NetworkUrl';
 import { ErrorType, RawTaskData, TaskMetadata } from 'models';
 import { throwDetailedError, getProgramAccountFilter } from 'utils';
 
@@ -36,12 +36,14 @@ export class KoiiTaskService {
 
   private taskMetadata: any = {};
 
+  private isInitialized = false;
   /**
    * @dev: this functions is preparing the Desktop Node to work in a few crucial steps:
    * 1. Fetch all tasks from the Task program
    * 2. Get the state of the tasks from the database
    * 3. Watch for changes in the tasks
    */
+
   async initializeTasks() {
     await this.fetchAllTaskIds();
     // await this.synchroniseFileSystemTasksWithDB();
@@ -73,6 +75,7 @@ export class KoiiTaskService {
         allSubmissions?.slice(-1)?.flat()?.[0] || {}
       )[0]?.round;
 
+      // TODO: Replace with getCurrentSlot
       const currentSlot = await sdk.k2Connection.getSlot();
       const currentRound = Math.floor(
         (currentSlot - task.starting_slot) / task.round_time
@@ -85,13 +88,19 @@ export class KoiiTaskService {
   }
 
   private watchTasks() {
+    if (this.isInitialized) return;
+    this.isInitialized = true;
     setInterval(() => {
-      this.fetchAllTaskIds();
-      this.fetchStartedTaskData().then(() => {
-        // this.checkTaskSubmissions();
-        console.log('check task submissions');
-      });
-    }, 15000);
+      try {
+        this.fetchAllTaskIds();
+        this.fetchStartedTaskData().then(() => {
+          // this.checkTaskSubmissions();
+          console.log('check task submissions');
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    }, 60000);
   }
 
   getStartedTasks(): RawTaskData[] {
@@ -128,7 +137,7 @@ export class KoiiTaskService {
   }
 
   async updateRewardsQueue() {
-    await updateRewardsQueue(this.setTimerForRewards, getK2NetworkUrl());
+    await updateRewardsQueue(this.setTimerForRewards, sdk.k2Connection);
   }
 
   async stopTask(
