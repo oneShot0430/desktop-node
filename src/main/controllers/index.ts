@@ -67,3 +67,4 @@ export * from './types';
 export { getLastSubmissionTime } from './getLastSubmissionTime';
 export * from './tasks';
 export * from './transferKOII';
+export * from './notifications';

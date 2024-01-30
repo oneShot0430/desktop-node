@@ -10,11 +10,7 @@ import {
   useMyNodeContext,
   useUserAppConfig,
 } from 'renderer/features';
-import {
-  AppNotification,
-  NotificationPlacement,
-  useNotificationsContext,
-} from 'renderer/features/notifications';
+import { useAppNotifications } from 'renderer/features/notifications/hooks';
 import {
   QueryKeys,
   getTaskNodeInfo,
@@ -36,7 +32,6 @@ const CLAIM_REWARDS_RETRY_VALUE = 10;
 export const useSidebraLogic = () => {
   const queryClient = useQueryClient();
   const { setFetchMyTasksEnabled } = useMyNodeContext();
-  const { addNotification } = useNotificationsContext();
   const { handleSaveUserAppConfig, refetchUserConfig } = useUserAppConfig({});
   const tasksWithClaimableRewardsRef = useRef<number>(0);
 
@@ -45,18 +40,15 @@ export const useSidebraLogic = () => {
   const { showModal: showFundModal } = useFundNewAccountModal();
   const navigate = useNavigate();
   const location = useLocation();
-
+  const { addAppNotification: showFirstNodeRewardBanner } =
+    useAppNotifications('FIRST_NODE_REWARD');
   const showFirstNodeRewardNotification = async () => {
     const { data } = await refetchUserConfig();
 
     if (data) {
       const { firstRewardNotificationDisplayed } = data;
       if (!firstRewardNotificationDisplayed) {
-        addNotification(
-          'firstNodeReward',
-          AppNotification.FirstNodeReward,
-          NotificationPlacement.TopBar
-        );
+        showFirstNodeRewardBanner();
         handleSaveUserAppConfig({
           settings: {
             firstRewardNotificationDisplayed: true,

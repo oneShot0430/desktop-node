@@ -48,7 +48,7 @@ const retryTask = async (
       taskRetryData = get(allTaskRetryData, selectedTask.task_id, null);
       if (taskRetryData) {
         if (!taskRetryData?.cancelled) {
-          // resursive method call
+          // recursive method call
           const { namespace, child, expressAppPort, secret } =
             await executeTasks(
               selectedTask,

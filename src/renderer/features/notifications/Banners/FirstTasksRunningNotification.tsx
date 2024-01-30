@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import React, { MutableRefObject, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,13 +7,24 @@ import DesktopSvg from 'assets/svgs/destop.svg';
 import { useOnClickOutside } from 'renderer/features/common/hooks';
 import { AppRoute } from 'renderer/types/routes';
 
-import { useNotificationsContext } from '../context';
+import { NotificationType } from '../types';
+import { useNotificationActions } from '../useNotificationStore';
 
-export function FirstTaskRunningNotification({ id }: { id: string }) {
-  const { removeNotificationById } = useNotificationsContext();
+const variants = {
+  initial: { scale: 0.6, opacity: 0 },
+  animate: { scale: 1, opacity: 1, transition: { duration: 0.2 } },
+  exit: { scale: 0.6, opacity: 0, transition: { duration: 0.2 } },
+};
+
+export function FirstTaskRunningNotification({
+  notification,
+}: {
+  notification: NotificationType;
+}) {
   const navigate = useNavigate();
+  const { markAsRead } = useNotificationActions();
 
-  const close = () => removeNotificationById(id);
+  const close = () => markAsRead(notification.id);
   const onCTAClick = () => {
     navigate(AppRoute.AddTask);
     close();
@@ -22,9 +34,13 @@ export function FirstTaskRunningNotification({ id }: { id: string }) {
   useOnClickOutside(ref as MutableRefObject<HTMLDivElement>, close);
 
   return (
-    <div
+    <motion.div
       className="absolute right-[53px] bottom-[43px] text-white z-[100] bg-blue-1 p-3 rounded-lg"
       ref={ref}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      variants={variants}
     >
       <div className="flex">
         <DesktopSvg />
@@ -35,7 +51,7 @@ export function FirstTaskRunningNotification({ id }: { id: string }) {
           <p className="mt-1 text-base leading-8">
             Head over to{' '}
             <button
-              className="text-finnieEmerald-light underline cursor-pointer"
+              className="underline cursor-pointer text-finnieEmerald-light"
               onClick={onCTAClick}
             >
               Add Tasks
@@ -49,6 +65,6 @@ export function FirstTaskRunningNotification({ id }: { id: string }) {
           </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

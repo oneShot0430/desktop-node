@@ -3,19 +3,20 @@ import { Outlet, useLocation } from 'react-router-dom';
 
 import { MainLayout } from './components';
 import { useLowStakingAccountBalanceWarnings } from './features';
-import {
-  AppNotification,
-  useNotificationsContext,
-  NotificationPlacement,
-} from './features/notifications';
+import { useAppNotifications } from './features/notifications/hooks/useAppNotifications';
 import { OnboardingLayout } from './features/onboarding/components/OnboardingLayout';
 import { OnboardingProvider } from './features/onboarding/context/onboarding-context';
 import { StartingTasksProvider, MyNodeProvider } from './features/tasks';
 
 function AppWrapper(): JSX.Element {
-  const { addNotification } = useNotificationsContext();
+  const { addAppNotification: showCriticalStakingKeyBalanceNotification } =
+    useAppNotifications('TOP_UP_STAKING_KEY_CRITICAL');
+  const { addAppNotification: addUpdateAvailableNotification } =
+    useAppNotifications('UPDATE_AVAILABLE');
 
-  useLowStakingAccountBalanceWarnings();
+  useLowStakingAccountBalanceWarnings({
+    showCriticalBalanceNotification: showCriticalStakingKeyBalanceNotification,
+  });
   const location = useLocation();
 
   const isOnboarding = useMemo(
@@ -25,17 +26,13 @@ function AppWrapper(): JSX.Element {
 
   useEffect(() => {
     const destroy = window.main.onAppUpdate(() => {
-      addNotification(
-        'updateAvailable',
-        AppNotification.UpdateAvailable,
-        NotificationPlacement.TopBar
-      );
+      addUpdateAvailableNotification();
     });
 
     return () => {
       destroy();
     };
-  }, [addNotification]);
+  }, [addUpdateAvailableNotification]);
 
   if (!isOnboarding) {
     return (

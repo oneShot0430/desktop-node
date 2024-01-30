@@ -8,4 +8,5 @@ export enum SystemDbKeys {
   Schedules = 'SCHEDULES',
   SchedulerTasks = 'SCHEDULER_TASKS',
   EmergencyTasksToMigrate = 'EMERGENCY_TASKS_TO_MIGRATE',
+  Notifications = 'NOTIFICATIONS',
 }

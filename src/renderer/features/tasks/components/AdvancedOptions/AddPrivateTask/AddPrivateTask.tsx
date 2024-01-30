@@ -164,7 +164,7 @@ export function AddPrivateTask({ columnsLayout, onClose }: Props) {
 
   const minStake = task?.minimumStakeAmount;
 
-  const { metadata } = useMetadata({
+  const { metadata, isLoadingMetadata } = useMetadata({
     metadataCID: task?.metadataCID ?? null,
     queryOptions: {
       enabled: !!task?.metadataCID,
@@ -302,12 +302,15 @@ export function AddPrivateTask({ columnsLayout, onClose }: Props) {
 
   const myStakeInKoii = getKoiiFromRoe(alreadyStakedTokensAmount);
   const isActive = task?.isActive;
-  const startPauseDisabled = !isActive || !isTaskValidToRun || taskAlreadyAdded;
+  const startPauseDisabled =
+    !isActive || !isTaskValidToRun || taskAlreadyAdded || isLoadingMetadata;
 
   const runButtonTooltipContent = useMemo(
     () =>
       errorMessage.length > 0 ? (
         <ErrorList errors={errorMessage} />
+      ) : isLoadingMetadata ? (
+        'Loading task metadata'
       ) : (
         'Start task'
       ),

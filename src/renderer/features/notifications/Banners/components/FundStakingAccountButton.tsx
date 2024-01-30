@@ -3,16 +3,20 @@ import React from 'react';
 
 import { useFundStakingAccountModal } from 'renderer/features/common/hooks/useFundStakingAccountModal';
 
-import { useNotificationsContext } from '../../context';
-import { AppNotification } from '../../types';
+import { useNotificationActions } from '../../useNotificationStore';
 
-export function FundStakingAccountButton() {
-  const { removeNotificationById } = useNotificationsContext();
+export function FundStakingAccountButton({
+  notificationId,
+}: {
+  notificationId: string;
+}) {
+  const { markAsRead } = useNotificationActions();
+
   const { showModal: showFundStakingAccountModal } = useFundStakingAccountModal(
     {
       onWalletFundSuccess: () => {
-        removeNotificationById(AppNotification.LowStakingAccountBalanceSevere);
-        removeNotificationById(AppNotification.LowStakingAccountBalance);
+        markAsRead(notificationId);
+        markAsRead(notificationId);
       },
     }
   );

@@ -107,6 +107,11 @@ const endpointToControllerMap: Record<
     controllers.transferKoiiFromMainWallet,
   [Endpoints.TRANSFER_KOII_FROM_STAKING_WALLET]:
     controllers.transferKoiiFromStakingWallet,
+  [Endpoints.GET_NOTIFICATIONS]: controllers.getNotificationsFromStore,
+  [Endpoints.STORE_NOTIFICATION]: controllers.storeNotification,
+  [Endpoints.PURGE_NOTIFICATIONS]: controllers.purgeNotifications,
+  [Endpoints.REMOVE_NOTIFICATION]: controllers.removeNotification,
+  [Endpoints.UPDATE_NOTIFICATION]: controllers.updateNotification,
 };
 
 const initHandlers = (): void => {

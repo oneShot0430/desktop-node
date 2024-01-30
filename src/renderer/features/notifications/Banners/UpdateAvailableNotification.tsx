@@ -1,27 +1,24 @@
 // UpdateAvailableNotification
 
-import {
-  Icon,
-  CloseLine,
-  Button,
-  ButtonVariant,
-  ButtonSize,
-} from '@_koii/koii-styleguide';
+import { Button, ButtonVariant, ButtonSize } from '@_koii/koii-styleguide';
 import React, { useEffect } from 'react';
-import { twMerge } from 'tailwind-merge';
 
 import { downloadAppUpdate } from 'renderer/services';
 
-import { useNotificationsContext } from '../context';
+import { NotificationType } from '../types';
+import { useNotificationActions } from '../useNotificationStore';
+
+import { NotificationDisplayBanner } from './components/NotificationDisplayBanner';
 
 export function UpdateAvailableNotification({
-  id,
+  notification,
   backButtonSlot,
 }: {
-  id: string;
-  backButtonSlot?: React.ReactNode;
+  notification: NotificationType;
+  backButtonSlot: React.ReactNode;
 }) {
-  const { removeNotificationById } = useNotificationsContext();
+  const { markAsRead } = useNotificationActions();
+
   const [isDownloading, setIsDownloading] = React.useState(false);
   const [isDownloaded, setIsDownloaded] = React.useState(false);
 
@@ -31,19 +28,14 @@ export function UpdateAvailableNotification({
       setIsDownloaded(() => true);
 
       setTimeout(() => {
-        removeNotificationById(id);
+        markAsRead(notification.id);
       }, 5000);
     });
 
     return () => {
       destroy();
     };
-  }, [id, isDownloaded, removeNotificationById]);
-
-  const classNames = twMerge(
-    'flex justify-between w-full px-4 mx-auto px-4 items-center gap-4',
-    'bg-finnieTeal-100 text-finnieBlue'
-  );
+  }, [isDownloaded, markAsRead, notification.id]);
 
   const handleUpdateDownload = () => {
     setIsDownloading(true);
@@ -72,24 +64,19 @@ export function UpdateAvailableNotification({
     );
   };
 
-  const showBannerMianContent = !isDownloading && !isDownloaded;
+  const showBannerMainContent = !isDownloading && !isDownloaded;
 
   return (
-    <div className={classNames}>
-      {backButtonSlot}
-      <div className="max-w-[65%]">
-        {showBannerMianContent && 'A new version of the node is ready for you!'}
-      </div>
-      <div className="flex items-center gap-6 w-max">
-        {getContent()}
-        <button
-          className="cursor-pointer"
-          title="close"
-          onClick={() => removeNotificationById(id)}
-        >
-          <Icon source={CloseLine} className="h-9 w-9" />
-        </button>
-      </div>
-    </div>
+    <NotificationDisplayBanner
+      notification={notification}
+      messageSlot={
+        <div className="max-w-[65%]">
+          {showBannerMainContent &&
+            'A new version of the node is ready for you!'}
+        </div>
+      }
+      actionButtonSlot={getContent()}
+      backButtonSlot={backButtonSlot}
+    />
   );
 }

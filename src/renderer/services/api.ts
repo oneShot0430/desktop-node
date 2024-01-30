@@ -17,6 +17,7 @@ import {
   ScheduleMetadataUpdateType,
   TaskData,
 } from 'models';
+import { NotificationType } from 'renderer/features/notifications/types';
 import { Task } from 'renderer/types';
 import { getKoiiFromRoe } from 'utils';
 
@@ -527,4 +528,30 @@ export const redeemTokensInNewNetwork = (): Promise<number> => {
 
 export const checkOrcaPodmanExistsAndRunning = async () => {
   return window.main.checkOrcaPodmanExistsAndRunning();
+};
+
+export const saveNotificationToDb = async (
+  notificationData: NotificationType
+) => {
+  window.main.storeNotification({ notificationData });
+};
+export const removeNotificationFromDb = async (id: string) => {
+  return window.main.removeNotification({ notificationId: id });
+};
+export const updateNotificationInDb = async (
+  id: string,
+  updateData: Partial<Omit<NotificationType, 'id'>>
+) => {
+  return window.main.updateNotification({
+    notificationId: id,
+    notificationData: updateData,
+  });
+};
+
+export const getNotificationsFromDb = async (): Promise<NotificationType[]> => {
+  return window.main.getNotificationsFromStore();
+};
+
+export const purgeNotificationsFromDb = async () => {
+  return window.main.purgeNotifications();
 };

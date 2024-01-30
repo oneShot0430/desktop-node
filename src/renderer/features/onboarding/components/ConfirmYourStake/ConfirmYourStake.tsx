@@ -13,11 +13,7 @@ import {
   useNotEnoughFunds,
   useRunMultipleTasks,
 } from 'renderer/features/common';
-import {
-  AppNotification,
-  useNotificationsContext,
-  NotificationPlacement,
-} from 'renderer/features/notifications';
+import { useAppNotifications } from 'renderer/features/notifications/hooks';
 import {
   useMainAccountBalance,
   useUserAppConfig,
@@ -39,22 +35,16 @@ function ConfirmYourStake() {
     selectedTasks as TaskWithStake[]
   );
   const [isRunButtonDisabled, setIsRunButtonDisabled] = useState<boolean>();
-
-  const { addNotification } = useNotificationsContext();
+  const { addAppNotification: showFirstTaskRunningNotification } =
+    useAppNotifications('FIRST_TASK_RUNNING');
+  const { addAppNotification: showReferralProgramNotification } =
+    useAppNotifications('REFERRAL_PROGRAM');
 
   const { data: balance = 0, isLoading } = useMainAccountBalance();
   const handleRunTasksSuccess = () => {
     handleSaveUserAppConfig({ settings: { onboardingCompleted: true } });
-    addNotification(
-      'referralProgramNotification',
-      AppNotification.ReferralProgramNotification,
-      NotificationPlacement.TopBar
-    );
-    addNotification(
-      'firstTaskRunningNotification',
-      AppNotification.FirstTaskRunningNotification,
-      NotificationPlacement.Bottom
-    );
+    showReferralProgramNotification();
+    showFirstTaskRunningNotification();
   };
   const balanceInKoii = getKoiiFromRoe(balance);
 
@@ -115,9 +105,9 @@ function ConfirmYourStake() {
           setIsRunButtonDisabled={setIsRunButtonDisabled}
         />
 
-        <div className="flex justify-center items-center gap-4 mt-2 px-3">
+        <div className="flex items-center justify-center gap-4 px-3 mt-2">
           <Icon source={WarningTriangleLine} size={32} color="#FFC78F" />
-          <div className="text-xs text-finnieOrange leading-5">
+          <div className="text-xs leading-5 text-finnieOrange">
             After your node makes its first submission, stake cannot be
             withdrawn until three rounds after the task is paused.
           </div>
@@ -126,7 +116,7 @@ function ConfirmYourStake() {
         <div className="flex justify-center mt-[40px]">
           <div className="flex flex-col items-center justify-center">
             <div className="flex flex-row items-center gap-2 mb-2 text-sm text-finnieEmerald-light">
-              <Icon source={CurrencyMoneyLine} className="h-6 w-6" />
+              <Icon source={CurrencyMoneyLine} className="w-6 h-6" />
               {`Total balance: ${
                 isLoading ? 'Loading balance...' : balanceInKoii
               } KOII`}

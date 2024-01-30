@@ -8,11 +8,7 @@ import {
   useTaskStake,
   useUserAppConfig,
 } from 'renderer/features';
-import {
-  AppNotification,
-  NotificationPlacement,
-  useNotificationsContext,
-} from 'renderer/features/notifications';
+import { useAppNotifications } from 'renderer/features/notifications/hooks';
 import { useMetadata } from 'renderer/features/tasks';
 import {
   QueryKeys,
@@ -46,6 +42,8 @@ export const useUpgradeTask = ({
   oldTaskIsPrivate,
   oldTaskIsCoolingDown,
 }: Params) => {
+  const { addAppNotification: showUpgradeTaskNotification } =
+    useAppNotifications('TASK_UPGRADE');
   const initialStatus = task.isMigrated
     ? UpgradeStatus.UPGRADE_AVAILABLE
     : UpgradeStatus.UP_TO_DATE;
@@ -139,10 +137,12 @@ export const useUpgradeTask = ({
     publicKey: newTaskVersion?.publicKey,
   });
   const newTaskVersionNodes = useMemo(
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     () => TaskService.getNodesCount(newTaskVersion!),
     [newTaskVersion]
   );
   const newTaskVersionTopStake = useMemo(
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     () => TaskService.getTopStake(newTaskVersion!),
     [newTaskVersion]
   );
@@ -158,8 +158,6 @@ export const useUpgradeTask = ({
     topStake: getKoiiFromRoe(newTaskVersionTopStake),
     bounty: newTaskVersionTotalBountyInKoii,
   };
-
-  const { addNotification } = useNotificationsContext();
 
   const { handleSaveUserAppConfig, userConfig } = useUserAppConfig({});
 
@@ -179,9 +177,9 @@ export const useUpgradeTask = ({
     const hasNotified = tasksThatAlreadyNotifiedUpgradesAvailable.includes(
       newTaskVersion?.publicKey || ''
     );
-    const shoulNotNotify = hasNotified || !userConfig;
+    const shouldNotNotify = hasNotified || !userConfig;
 
-    if (shoulNotNotify) return;
+    if (shouldNotNotify) return;
 
     const registerTaskUpgradeAsNotified = () =>
       handleSaveUserAppConfig({
@@ -201,25 +199,15 @@ export const useUpgradeTask = ({
       registerTaskUpgradeAsNotified();
     };
 
-    addNotification(
-      `taskUpgradeNotification ${task.publicKey}}`,
-      AppNotification.TaskUpgradeNotification,
-      NotificationPlacement.TopBar,
-      {
-        taskName: task.taskName,
-        ctaButtonAction: onClickBannerCTA,
-        closeButtonAction: registerTaskUpgradeAsNotified,
-      }
-    );
+    showUpgradeTaskNotification({ task });
   }, [
     oldTaskIsCoolingDown,
-    upgradeStatus,
-    handleSaveUserAppConfig,
-    userConfig,
     newTaskVersion,
-    addNotification,
-    task.publicKey,
-    task.taskName,
+    upgradeStatus,
+    userConfig,
+    showUpgradeTaskNotification,
+    task,
+    handleSaveUserAppConfig,
   ]);
 
   useEffect(() => {

@@ -133,7 +133,7 @@ export const AccountItem = memo(
               />
             </Tooltip>
           )}
-          <span className="text-finnieTeal">System Key</span>
+          <span className="text-finnieTeal">System Public Key</span>
           {/* <Button
           icon={<EditIconSvg />}
           className="invisible w-6 h-6 rounded-full bg-finnieTeal-100"
@@ -198,7 +198,7 @@ export const AccountItem = memo(
               ))}
           </div>
           <div />
-          <div className="text-finnieOrange">Staking Key</div>
+          <div className="text-finnieOrange">Staking Public Key</div>
 
           {/* <Button
           icon={<EditIconSvg />}

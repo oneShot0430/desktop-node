@@ -35,7 +35,7 @@ import initExpressApp from '../node/initExpressApp';
 import getStakingAccountPublicKey from './getStakingAccountPubKey';
 import { getTaskMetadata } from './getTaskMetadata';
 import { getTaskSource } from './getTaskSource';
-// import retryTask from './retryTask';
+import retryTask from './retryTask';
 import { getTaskPairedVariablesNamesWithValues } from './taskVariables';
 
 const OPERATION_MODE = 'service';
@@ -212,7 +212,8 @@ export async function executeTasks(
   const availablePort = await detectPort();
 
   // TODO: [Ghazanfer] Figure out why every IPC call is being made twice and update below code accordingly
-  const secret = 'secret';
+  // eslint-disable-next-line @cspell/spellchecker
+  const secret = 'Jt9Dwaz@kh*9efFBv51';
   const options: ForkOptions = {
     env: await getTaskPairedVariablesNamesWithValues({} as Event, {
       taskAccountPubKey: selectedTask.task_id,
@@ -306,16 +307,17 @@ export async function executeTasks(
     console.error(
       `Child process exited with code ${code} and signal ${signal}`
     );
-    if (code !== 0 && signal !== 'SIGTERM') {
+    if (code === 0) {
+      console.log('#### RETRYING TASK ####');
       // Handle the error here
-      // retryTask(
-      //   selectedTask,
-      //   expressApp,
-      //   OPERATION_MODE,
-      //   mainSystemAccount,
-      //   executeTasks
-      // );
-    } else if (code === 0) {
+      retryTask(
+        selectedTask,
+        expressApp,
+        OPERATION_MODE,
+        mainSystemAccount,
+        executeTasks
+      );
+    } else if (code === null) {
       console.log('Child process exited successfully');
     }
   });

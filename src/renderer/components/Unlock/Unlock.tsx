@@ -1,6 +1,6 @@
 import { Icon } from '@_koii/koii-styleguide';
 import { compare } from 'bcryptjs';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
@@ -62,8 +62,15 @@ export function Unlock(): JSX.Element {
     }
   };
 
+  const initializeNodeCalled = useRef(false);
+
   useEffect(() => {
     const initializeNode = async () => {
+      if (initializeNodeCalled.current) {
+        return; // If already called, skip the initialization
+      }
+      initializeNodeCalled.current = true;
+      console.log('Initializing node...');
       try {
         // Indicate the initialization API call in sessionStorage
         await initializeTasks();
@@ -110,7 +117,7 @@ export function Unlock(): JSX.Element {
   }
 
   return (
-    <div className="relative overflow-y-auto flex flex-col justify-center items-center gap-5 h-full bg-gradient-to-b from-finnieBlue-dark-secondary to-finnieBlue text-white overflow-hidden">
+    <div className="relative flex flex-col items-center justify-center h-full gap-5 overflow-hidden overflow-y-auto text-white bg-gradient-to-b from-finnieBlue-dark-secondary to-finnieBlue">
       <WelcomeWheelBackground className="absolute top-0 -left-[40%] h-[40%] scale-110" />
 
       <Icon source={KoiiLogo} className="h-[156px] w-[156px]" />
@@ -127,7 +134,7 @@ export function Unlock(): JSX.Element {
         showHideButton
         showHideIconSize={28}
       />
-      <div className="text-xs text-finnieOrange h-4">
+      <div className="h-4 text-xs text-finnieOrange">
         {hasPinError && (
           <span>
             Oops! That PIN isn’t quite right. Double check it and try again.

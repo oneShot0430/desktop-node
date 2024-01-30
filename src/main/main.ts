@@ -4,6 +4,7 @@ import {
   dialog,
   globalShortcut,
   Menu,
+  MenuItemConstructorOptions,
   shell,
   Tray,
 } from 'electron';
@@ -28,7 +29,7 @@ const isMac = process.platform === 'darwin';
 let tray: Tray | null = null;
 
 // Define the flag
-let isQuitting = false;
+// let (app as any).isQuitting = false;
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -105,7 +106,8 @@ const createWindow = async () => {
     width: 1920,
     height: 1080,
     minWidth: 1152,
-    minHeight: 760,
+    minHeight: 870,
+
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: app.isPackaged
@@ -163,7 +165,7 @@ const createWindow = async () => {
   });
 
   const ret = globalShortcut.register('CommandOrControl+Q', () => {
-    isQuitting = true;
+    (app as any).isQuitting = true;
     app.quit();
   });
 
@@ -176,7 +178,8 @@ const createWindow = async () => {
 
   // Add event listener for 'close' event
   mainWindow.on('close', (event) => {
-    if (!isDebug && !isQuitting) {
+    console.log('#### is Quitting', (app as any).isQuitting);
+    if (!isDebug && !(app as any).isQuitting) {
       event.preventDefault(); // Prevent the default close operation
       if (mainWindow) {
         if (isMac) {
@@ -193,7 +196,7 @@ const createWindow = async () => {
 const createMenu = () => {
   const template = [
     ...(process.platform === 'darwin'
-      ? [
+      ? ([
           {
             label: app.getName(),
             submenu: [
@@ -220,13 +223,27 @@ const createMenu = () => {
                 label: 'Quit',
                 accelerator: 'CmdOrCtrl+Q',
                 click: () => {
-                  isQuitting = true;
+                  (app as any).isQuitting = true;
                   app.quit();
                 },
               },
             ],
           },
-        ]
+          {
+            label: 'Edit',
+            submenu: [
+              { label: 'Undo', role: 'undo' },
+              { label: 'Redo', role: 'redo' },
+              { type: 'separator' },
+              { label: 'Cut', role: 'cut' },
+              { label: 'Copy', role: 'copy' },
+              { label: 'Paste', role: 'paste' },
+              { type: 'separator' },
+              // eslint-disable-next-line @cspell/spellchecker
+              { label: 'Select All', role: 'selectall' },
+            ],
+          },
+        ] as MenuItemConstructorOptions[])
       : []),
     {
       label: 'Window',
@@ -242,7 +259,7 @@ const createMenu = () => {
           label: 'Exit',
           accelerator: 'CmdOrCtrl+Q',
           click: () => {
-            isQuitting = true;
+            (app as any).isQuitting = true;
             app.quit();
           },
         },
@@ -292,7 +309,7 @@ function createTray() {
     {
       label: 'Quit',
       click: () => {
-        isQuitting = true;
+        (app as any).isQuitting = true;
         app.quit();
       },
     },

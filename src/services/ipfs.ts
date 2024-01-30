@@ -57,6 +57,7 @@ async function retrieveThroughHttpGateway(
   console.log('use IPFS HTTP gateway');
 
   const listOfIpfsGatewaysUrls = [
+    `https://koii-k2-task-metadata.s3.us-east-2.amazonaws.com/${cid}/${fileName}`,
     `https://${cid}.ipfs.w3s.link/${fileName}`,
     `https://${cid}.ipfs.sphn.link/${fileName}`,
     `https://${cid}.ipfs.dweb.link/${fileName}`,
