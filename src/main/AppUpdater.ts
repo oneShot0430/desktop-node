@@ -1,4 +1,4 @@
-import { BrowserWindow, dialog } from 'electron';
+import { app, BrowserWindow, dialog } from 'electron';
 import path from 'path';
 
 import log from 'electron-log';
@@ -91,6 +91,7 @@ function setListeners(mainWindow: BrowserWindow | undefined) {
         })
         .then((selection) => {
           if (selection.response === 0) {
+            (app as any).isQuitting = true;
             // User clicked 'Restart & Update'
             autoUpdater.quitAndInstall();
           }

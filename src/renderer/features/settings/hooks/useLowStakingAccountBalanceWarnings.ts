@@ -1,11 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useQuery } from 'react-query';
 
-import { useNotificationsContext } from 'renderer/features/notifications/context/notifications-context';
-import {
-  AppNotification,
-  NotificationPlacement,
-} from 'renderer/features/notifications/types';
 import {
   getStakingAccountPublicKey,
   getMainAccountPublicKey,
@@ -19,9 +14,11 @@ const CRITICAL_STAKING_ACCOUNT_BALANCE = 0.99;
 const MINIMUM_PUBLIC_BALANCE_TO_TRIGGER = 2.1;
 // const LOW_STAKING_ACCOUNT_BALANCE = 5;
 
-export const useLowStakingAccountBalanceWarnings = () => {
-  const { addNotification } = useNotificationsContext();
-
+export const useLowStakingAccountBalanceWarnings = ({
+  showCriticalBalanceNotification,
+}: {
+  showCriticalBalanceNotification: () => void;
+}) => {
   const { data: stakingPublicKey } = useQuery(
     [QueryKeys.StakingAccount],
     getStakingAccountPublicKey
@@ -56,11 +53,7 @@ export const useLowStakingAccountBalanceWarnings = () => {
     if (!stakingAccountBalanceInKoii || !displayStakingAlerts) return;
 
     if (stakingAccountBalanceInKoii < CRITICAL_STAKING_ACCOUNT_BALANCE) {
-      addNotification(
-        AppNotification.LowStakingAccountBalanceSevere,
-        AppNotification.LowStakingAccountBalanceSevere,
-        NotificationPlacement.TopBar
-      );
+      showCriticalBalanceNotification();
     }
 
     /*     else if (
@@ -77,8 +70,8 @@ export const useLowStakingAccountBalanceWarnings = () => {
     } */
   }, [
     stakingAccountBalanceInKoii,
-    addNotification,
     previousBalance,
     displayStakingAlerts,
+    showCriticalBalanceNotification,
   ]);
 };

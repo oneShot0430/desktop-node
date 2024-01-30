@@ -6,9 +6,8 @@ import { AppTopBar } from 'renderer/components/AppTopBar';
 import { SettingsSidebar } from 'renderer/features';
 import { useWindowSize } from 'renderer/features/common/hooks/useWindowSize';
 import {
-  useNotificationsContext,
-  NotificationBanner,
-  NotificationPlacement,
+  DisplayBottomNotifications,
+  useNotificationBanner,
 } from 'renderer/features/notifications';
 import { Sidebar } from 'renderer/features/sidebar';
 import { VersionDisplay } from 'renderer/features/sidebar/components';
@@ -22,15 +21,9 @@ type MainLayoutProps = {
 };
 
 export function MainLayout({ children }: MainLayoutProps): JSX.Element {
+  const { unreadNotificationsWithBannerBottom } = useNotificationBanner();
   const navigate = useNavigate();
   const location = useLocation();
-
-  const { getNextNotification } = useNotificationsContext();
-
-  // Get the first entry
-  const displayedNotificationEntry = getNextNotification(
-    NotificationPlacement.Bottom
-  );
 
   // TODO: Remove after release
   useEffect(() => {
@@ -65,12 +58,9 @@ export function MainLayout({ children }: MainLayoutProps): JSX.Element {
         <div className="flex flex-col flex-grow min-h-0 h-[calc(100vh-172px)] pb-4 z-10">
           {children}
         </div>
-        {displayedNotificationEntry && (
-          <NotificationBanner
-            id={displayedNotificationEntry.id}
-            variant={displayedNotificationEntry.notification}
-          />
-        )}
+        <DisplayBottomNotifications
+          bottomNotifications={unreadNotificationsWithBannerBottom}
+        />
       </div>
 
       {Number(height) >= 820 && (

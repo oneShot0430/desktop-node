@@ -1,89 +1,79 @@
 /* eslint-disable react/no-unescaped-entities */
-import {
-  Icon,
-  CloseLine,
-  Button,
-  ButtonVariant,
-  ButtonSize,
-} from '@_koii/koii-styleguide';
+import { Button, ButtonSize, ButtonVariant } from '@_koii/koii-styleguide';
 import React, { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { twMerge } from 'tailwind-merge';
 
 import { useRentExemptionFlow } from 'renderer/features/common/hooks/useRentExemptionFlow';
 import { AppRoute } from 'renderer/types/routes';
 
-import { useNotificationsContext } from '../context';
-import { AppNotification, NotificationPlacement } from '../types';
+import { useAppNotifications } from '../hooks';
+import { NotificationType } from '../types';
+// import { useNotificationActions } from '../useNotificationStore';
+
+import { NotificationDisplayBanner } from './components/NotificationDisplayBanner';
 
 export function FirstNodeReward({
+  notification,
   backButtonSlot,
-  id,
 }: {
-  backButtonSlot?: React.ReactNode;
-  id: string;
+  notification: NotificationType;
+  backButtonSlot: React.ReactNode;
 }) {
   const navigate = useNavigate();
-  const { removeNotificationById, addNotification } = useNotificationsContext();
   const { getStakingWalletAirdrop } = useRentExemptionFlow();
+
+  const { addAppNotification: runExemptionFlowNotification, markAsRead } =
+    useAppNotifications('RUN_EXEMPTION_FLOW');
 
   const handleShowRentExemptionFlowNotification = useCallback(async () => {
     await getStakingWalletAirdrop()
       .then((res) => {
         console.log(res.message);
-        addNotification(
-          'runExemptionFlow',
-          AppNotification.RunExemptionFlow,
-          NotificationPlacement.TopBar
-        );
+        runExemptionFlowNotification();
       })
       .catch((err) => {
         console.log(err.message);
       });
-  }, [addNotification, getStakingWalletAirdrop]);
+  }, [getStakingWalletAirdrop, runExemptionFlowNotification]);
 
   const handleSeeTasksAction = useCallback(() => {
-    removeNotificationById(id);
+    markAsRead(notification.id);
     navigate(AppRoute.AddTask);
     handleShowRentExemptionFlowNotification();
   }, [
     handleShowRentExemptionFlowNotification,
-    id,
     navigate,
-    removeNotificationById,
+    notification.id,
+    markAsRead,
   ]);
 
   const handleClose = useCallback(() => {
     handleShowRentExemptionFlowNotification();
-    removeNotificationById(id);
-  }, [handleShowRentExemptionFlowNotification, id, removeNotificationById]);
-
-  const classNames = twMerge(
-    'flex justify-between w-full px-4 mx-auto px-4 items-center gap-4',
-    'bg-green-2 text-finnieBlue'
-  );
+  }, [handleShowRentExemptionFlowNotification]);
 
   return (
-    <div className={classNames}>
-      {backButtonSlot}
-      <div className="max-w-[65%]">
-        You've earned your first node reward! Run more tasks to easily increase
-        your rewards.
-      </div>
-      <div className="flex items-center gap-6 w-max">
-        <Button
-          label="See tasks"
-          onClick={handleSeeTasksAction}
-          variant={ButtonVariant.PrimaryDark}
-          size={ButtonSize.MD}
-          labelClassesOverrides="font-semibold w-max"
-          buttonClassesOverrides="bg-finnieBlue"
-        />
-
-        <button className="cursor-pointer" title="close" onClick={handleClose}>
-          <Icon source={CloseLine} className="h-5.5 w-5.5" />
-        </button>
-      </div>
-    </div>
+    <NotificationDisplayBanner
+      onClose={handleClose}
+      notification={notification}
+      messageSlot={
+        <div className="max-w-[65%]">
+          You've earned your first node reward! Run more tasks to easily
+          increase your rewards.
+        </div>
+      }
+      actionButtonSlot={
+        <div className="flex items-center gap-6 w-max">
+          <Button
+            label="See tasks"
+            onClick={handleSeeTasksAction}
+            variant={ButtonVariant.PrimaryDark}
+            size={ButtonSize.MD}
+            labelClassesOverrides="font-semibold w-max"
+            buttonClassesOverrides="bg-finnieBlue"
+          />
+        </div>
+      }
+      backButtonSlot={backButtonSlot}
+    />
   );
 }

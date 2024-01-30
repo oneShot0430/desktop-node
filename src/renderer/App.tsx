@@ -13,7 +13,6 @@ import 'tailwindcss/tailwind.css';
 import ExclamationMarkIcon from 'assets/svgs/exclamation-mark-icon.svg';
 import AppProvider from 'renderer/Providers/AppProvider';
 
-import { NotificationsProvider } from './features/notifications';
 import AppRoutes from './routing/AppRoutes';
 
 const queryClient = new QueryClient();
@@ -25,30 +24,28 @@ function App(): JSX.Element {
     <QueryClientProvider client={queryClient}>
       <AppProvider>
         <NiceModal.Provider>
-          <NotificationsProvider>
-            <AppRoutes />
-            <Toaster
-              toastOptions={{
+          <AppRoutes />
+          <Toaster
+            toastOptions={{
+              style: {
+                maxWidth: '100%',
+              },
+              className: 'px-4 text-sm text-[#171753]',
+              duration: 4500,
+              error: {
+                icon: <ExclamationMarkIcon className="w-6 h-6" />,
                 style: {
-                  maxWidth: '100%',
+                  backgroundColor: '#FFA6A6',
                 },
-                className: 'px-4 text-sm text-[#171753]',
-                duration: 4500,
-                error: {
-                  icon: <ExclamationMarkIcon className="w-6 h-6" />,
-                  style: {
-                    backgroundColor: '#FFA6A6',
-                  },
+              },
+              success: {
+                icon: <CheckSuccessLine className="w-5 h-5" />,
+                style: {
+                  backgroundColor: '#BEF0ED',
                 },
-                success: {
-                  icon: <CheckSuccessLine className="h-5 w-5" />,
-                  style: {
-                    backgroundColor: '#BEF0ED',
-                  },
-                },
-              }}
-            />
-          </NotificationsProvider>
+              },
+            }}
+          />
         </NiceModal.Provider>
       </AppProvider>
     </QueryClientProvider>

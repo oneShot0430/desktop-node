@@ -44,6 +44,13 @@ import getVersion from './getVersion';
 import initializeTasks from './initializeTasks';
 import isValidWalletAddress from './isValidWalletAddress';
 import { limitLogsSize } from './logger';
+import {
+  storeNotification,
+  getNotificationsFromStore,
+  purgeNotifications,
+  removeNotification,
+  updateNotification,
+} from './notifications';
 import onSystemWakeUp from './onSystemWakeUp';
 import openBrowserWindow from './openBrowserWindow';
 import openLogfileFolder from './openLogfileFolder';
@@ -181,4 +188,9 @@ export default {
   transferKoiiFromMainWallet,
   transferKoiiFromStakingWallet,
   startOrcaVm,
+  storeNotification,
+  getNotificationsFromStore,
+  purgeNotifications,
+  removeNotification,
+  updateNotification,
 };

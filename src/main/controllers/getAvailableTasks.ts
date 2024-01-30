@@ -1,5 +1,8 @@
 import { Event } from 'electron';
 
+import axios from 'axios';
+
+import { FAUCET_API_URL } from 'config/faucet';
 import koiiTasks from 'main/services/koiiTasks';
 import { ErrorType, PaginatedResponse, Task } from 'models';
 import { GetAvailableTasksParam } from 'models/api';
@@ -14,13 +17,23 @@ const getAvailableTasks = async (
   try {
     const { offset, limit } = payload;
 
-    const idsSlice = koiiTasks.allTaskPubkeys.slice(offset, offset + limit);
+    let whitelistedTasks: string[] = [];
+    try {
+      whitelistedTasks = (
+        await axios.get(`${FAUCET_API_URL}/get-whitelisted-task-ids`)
+      ).data.whitelistedTaskIds;
+      console.log({ whitelistedTasks });
+    } catch (error) {
+      console.error(error);
+    }
+    const idsSlice = whitelistedTasks.slice(offset, offset + limit);
     const runningIds = koiiTasks
       .getStartedTasks()
       .map(({ task_id }) => task_id);
 
     const filteredIdsSlice = idsSlice.filter(
-      (pubKey) => !runningIds.includes(pubKey)
+      (pubKey) =>
+        !runningIds.includes(pubKey) && whitelistedTasks.includes(pubKey)
     );
 
     const tasks: Task[] = (

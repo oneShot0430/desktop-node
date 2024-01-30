@@ -3,6 +3,7 @@ import { useRoutes } from 'react-router-dom';
 
 import AppLoader from 'renderer/AppLoader';
 import AppBoot from 'renderer/AppWrapper';
+import { NotificationsCenter } from 'renderer/features/notifications/NotificationsCenter/NotificationsCenter';
 import {
   CreatePin,
   CreateOrImportAccountWrapper,
@@ -47,11 +48,7 @@ const routes = [
       },
       {
         path: AppRoute.Notifications,
-        element: (
-          <div className="w-1/2 mx-auto mt-56 text-3xl text-center">
-            Notifications
-          </div>
-        ),
+        element: <NotificationsCenter />,
       },
       {
         path: AppRoute.History,

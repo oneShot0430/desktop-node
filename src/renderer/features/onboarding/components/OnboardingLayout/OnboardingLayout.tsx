@@ -9,11 +9,7 @@ import React, { useMemo } from 'react';
 
 import KoiiLogo from 'assets/svgs/koii-logo-white.svg';
 import { Button } from 'renderer/components/ui/Button';
-import {
-  AppNotification,
-  useNotificationsContext,
-  NotificationPlacement,
-} from 'renderer/features/notifications';
+import { useAppNotifications } from 'renderer/features/notifications/hooks';
 import { useMainAccount, useUserAppConfig } from 'renderer/features/settings';
 import { AppRoute } from 'renderer/types/routes';
 
@@ -32,10 +28,9 @@ function OnboardingLayout({ children }: PropsType) {
     currentPath,
     navigate,
   } = useBackButtonHandler();
-
+  const { addAppNotification: showReferralProgramNotification } =
+    useAppNotifications('REFERRAL_PROGRAM');
   const { data: mainAccountPubKey } = useMainAccount();
-
-  const { addNotification } = useNotificationsContext();
 
   const displaySkipButton = useMemo(
     () => currentPath !== AppRoute.OnboardingCreatePin && mainAccountPubKey,
@@ -45,11 +40,7 @@ function OnboardingLayout({ children }: PropsType) {
   const { handleSaveUserAppConfig } = useUserAppConfig({
     onConfigSaveSuccess: () => {
       navigate(AppRoute.MyNode, { state: { noBackButton: true } });
-      addNotification(
-        'referralProgramNotification',
-        AppNotification.ReferralProgramNotification,
-        NotificationPlacement.TopBar
-      );
+      showReferralProgramNotification();
     },
   });
 

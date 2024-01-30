@@ -3,10 +3,9 @@ import { useLocation } from 'react-router-dom';
 
 import RefreshIcon from 'assets/svgs/refresh-icon.svg';
 import {
-  NotificationBanner,
-  NotificationPlacement,
+  DisplayTopBarNotifications,
+  useNotificationBanner,
 } from 'renderer/features/notifications';
-import { useNotificationsContext } from 'renderer/features/notifications/context';
 import { AppRoute } from 'renderer/types/routes';
 
 import { BackButton } from '../BackButton';
@@ -15,26 +14,18 @@ import { Button, Tooltip } from '../ui';
 
 export function AppTopBar() {
   const location = useLocation();
-
-  const { getNextNotification } = useNotificationsContext();
-
-  // Get the first entry (a [key, value] tuple) from the Map
-  const displayedNotificationEntry = getNextNotification(
-    NotificationPlacement.TopBar
-  );
+  const { unreadNotificationsWithBannerTopBar } = useNotificationBanner();
 
   const handleNodeRefresh = () => {
     window.location.reload();
   };
 
   return (
-    <div className="flex justify-between w-full mx-auto h-[80px] py-2 z-10">
-      {displayedNotificationEntry ? (
-        <NotificationBanner
-          id={displayedNotificationEntry.id}
-          variant={displayedNotificationEntry.notification}
-          backButtonComponent={<BackButton color="blue" />}
-          payload={displayedNotificationEntry?.payload}
+    <div className="flex justify-between w-full mx-auto h-[80px] relative z-10">
+      {unreadNotificationsWithBannerTopBar.length > 0 ? (
+        <DisplayTopBarNotifications
+          topBarNotifications={unreadNotificationsWithBannerTopBar}
+          backButtonSlot={<BackButton />}
         />
       ) : (
         <div className="flex items-center justify-between w-full gap-4 px-4 mx-auto">

@@ -9,11 +9,7 @@ import {
   useRunMultipleTasks,
   useNotEnoughFunds,
 } from 'renderer/features/common';
-import {
-  useNotificationsContext,
-  AppNotification,
-  NotificationPlacement,
-} from 'renderer/features/notifications';
+import { useAppNotifications } from 'renderer/features/notifications/hooks';
 import {
   useMainAccountBalance,
   useUserAppConfig,
@@ -59,25 +55,20 @@ function RunFirstTask() {
     [totalStaked]
   );
 
-  const { addNotification } = useNotificationsContext();
   const { handleSaveUserAppConfig } = useUserAppConfig({
     onConfigSaveSuccess: () =>
       navigate(AppRoute.MyNode, {
         state: { noBackButton: true },
       }),
   });
+  const { addAppNotification: showFirstTaskRunningNotification } =
+    useAppNotifications('FIRST_TASK_RUNNING');
+  const { addAppNotification: showReferralProgramNotification } =
+    useAppNotifications('REFERRAL_PROGRAM');
   const handleRunTasksSuccess = () => {
     handleSaveUserAppConfig({ settings: { onboardingCompleted: true } });
-    addNotification(
-      'referralProgramNotification',
-      AppNotification.ReferralProgramNotification,
-      NotificationPlacement.TopBar
-    );
-    addNotification(
-      'firstTaskRunningNotification',
-      AppNotification.FirstTaskRunningNotification,
-      NotificationPlacement.Bottom
-    );
+    showReferralProgramNotification();
+    showFirstTaskRunningNotification();
   };
 
   const { runAllTasks, runTasksLoading, runTasksError } = useRunMultipleTasks({
@@ -125,7 +116,7 @@ function RunFirstTask() {
               <div className="col-span-2 mx-auto ">Info</div>
               <div className="col-span-6 ">Task</div>
               <div className="col-span-6">Creator</div>
-              <div className="col-span-4  2xl:col-start-15 2xl:col-span-4">
+              <div className="col-span-4 2xl:col-start-15 2xl:col-span-4">
                 Stake
               </div>
             </div>

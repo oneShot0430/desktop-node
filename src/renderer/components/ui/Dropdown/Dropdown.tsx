@@ -22,6 +22,7 @@ export type DropdownProps = {
   emptyListItemSlot?: React.ReactNode;
   customItem?: React.ReactNode;
   className?: string;
+  containerClassOverrides?: string;
 };
 
 export const Dropdown = forwardRef<HTMLButtonElement, DropdownProps>(
@@ -34,6 +35,7 @@ export const Dropdown = forwardRef<HTMLButtonElement, DropdownProps>(
       emptyListItemSlot,
       className,
       onSelect,
+      containerClassOverrides = '',
     },
     ref
   ) => {
@@ -60,7 +62,11 @@ export const Dropdown = forwardRef<HTMLButtonElement, DropdownProps>(
       </div>
     );
 
-    const containerClasses = twMerge(className, 'h-full w-72');
+    const containerClasses = twMerge(
+      className,
+      'h-full w-72',
+      containerClassOverrides
+    );
 
     return (
       <div className={containerClasses} data-testid="koii_dropdown_test_id">

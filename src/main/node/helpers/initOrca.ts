@@ -23,15 +23,15 @@ const initOrca = async (): Promise<void> => {
     console.log('Calling Orca bootstrap');
 
     // Create an instance of ORCA
-    const orcaInstance = await Orca.bootstrap();
+    // const orcaInstance = await Orca.bootstrap();
 
     // Call the initialize function to start the ORCA
     // Install prerequisite
     // orcaInstance.installPrerequisites();
 
-    orcaInstance.setErrorHandler((msg: string) => console.error('ORCA: ', msg));
-    orcaInstance.setWarnHandler((msg: string) => console.warn('ORCA: ', msg));
-    orcaInstance.setLogHandler((msg: string) => console.log('ORCA: ', msg));
+    // orcaInstance.setErrorHandler((msg: string) => console.error('ORCA: ', msg));
+    // orcaInstance.setWarnHandler((msg: string) => console.warn('ORCA: ', msg));
+    // orcaInstance.setLogHandler((msg: string) => console.log('ORCA: ', msg));
 
     // Close the Orca
     // orcaInstance.close()

@@ -10,7 +10,10 @@ import {
   updateRewardsQueue,
 } from '@koii-network/task-node';
 import { isString } from 'lodash';
+import getAverageSlotTime from 'main/controllers/getAverageSlotTime';
+import getCurrentSlot from 'main/controllers/getCurrentSlot';
 import { getNetworkUrl } from 'main/controllers/getNetworkUrl';
+import getStakingAccountPubKey from 'main/controllers/getStakingAccountPubKey';
 import { getTaskMetadata } from 'main/controllers/getTaskMetadata';
 import { stopOrcaVM } from 'main/controllers/orca/stopOrcaVm';
 import { store } from 'main/node/helpers/k2NetworkUrl';
@@ -25,6 +28,32 @@ import { namespaceInstance } from '../node/helpers/Namespace';
 
 import sdk from './sdk';
 
+interface Submission {
+  submission_value: string;
+  slot: number;
+  round: number;
+}
+
+type SubmissionsRecord = Record<string, Record<string, Submission>>;
+
+function getLatestSubmission(
+  publicKey: string,
+  submissions: SubmissionsRecord
+): Submission | undefined {
+  let latestSubmission: Submission | undefined;
+  // eslint-disable-next-line guard-for-in
+  for (const round in submissions) {
+    const submission = submissions[round][publicKey];
+    if (
+      submission &&
+      (!latestSubmission || submission.round > latestSubmission.round)
+    ) {
+      latestSubmission = submission;
+    }
+  }
+  return latestSubmission;
+}
+
 export class KoiiTaskService {
   public RUNNING_TASKS: IRunningTasks<ITaskNodeBase> = {};
 
@@ -35,6 +64,8 @@ export class KoiiTaskService {
   private startedTasksData: Omit<RawTaskData, 'is_running'>[] = [];
 
   private taskMetadata: any = {};
+
+  private submissionCheckIntervals: Record<string, NodeJS.Timeout> = {};
 
   private isInitialized = false;
   /**
@@ -68,23 +99,40 @@ export class KoiiTaskService {
     });
   }
 
-  private async checkTaskSubmissions() {
-    this.startedTasksData.forEach(async (task) => {
-      const allSubmissions = Object.values(task.submissions);
-      const lastRoundWithSubmissions = Object.values(
-        allSubmissions?.slice(-1)?.flat()?.[0] || {}
-      )[0]?.round;
+  public stopSubmissionCheck(taskAccountPubKey: string): void {
+    if (this.submissionCheckIntervals[taskAccountPubKey]) {
+      clearInterval(this.submissionCheckIntervals[taskAccountPubKey]);
+      delete this.submissionCheckIntervals[taskAccountPubKey]; // Remove the interval ID from the tracking object
+    }
+  }
 
-      // TODO: Replace with getCurrentSlot
-      const currentSlot = await sdk.k2Connection.getSlot();
-      const currentRound = Math.floor(
-        (currentSlot - task.starting_slot) / task.round_time
-      );
+  private async checkTaskSubmission(task: RawTaskData) {
+    const pubKey = await getStakingAccountPubKey();
+    const lastSubmission = getLatestSubmission(pubKey, task.submissions);
 
-      if (currentRound - lastRoundWithSubmissions > 3) {
-        this.RUNNING_TASKS[task.task_id].child.emit('error');
+    // TODO: Replace with getCurrentSlot
+    const currentSlot = await getCurrentSlot();
+    const currentRound = Math.floor(
+      (currentSlot - task.starting_slot) / task.round_time
+    );
+
+    const runningTask = this.RUNNING_TASKS[task.task_id];
+
+    if (!lastSubmission?.round) {
+      if (runningTask) {
+        this.stopSubmissionCheck(task.task_id);
+        console.log('#### NO SUBMISSIONS, STOPPING TASK', task.task_id);
+        runningTask.child.emit('exit', 0, null);
       }
-    });
+      return;
+    }
+
+    if (currentRound - lastSubmission.round > 3) {
+      if (runningTask) {
+        this.stopSubmissionCheck(task.task_id);
+        runningTask.child.emit('exit', 0, null);
+      }
+    }
   }
 
   private watchTasks() {
@@ -130,6 +178,19 @@ export class KoiiTaskService {
     await this.addRunningTaskPubKey(taskAccountPubKey);
     await this.fetchStartedTaskData();
     await this.runTimers();
+    const taskRawData = this.startedTasksData.find(
+      (task) => task.task_id === taskAccountPubKey
+    );
+
+    if (!taskRawData) {
+      return;
+    }
+    const averageSlotTime = await getAverageSlotTime();
+    const roundTime = taskRawData.round_time * averageSlotTime;
+
+    this.submissionCheckIntervals[taskAccountPubKey] = setInterval(() => {
+      this.checkTaskSubmission(taskRawData);
+    }, 3.5 * roundTime);
   }
 
   async setTimerForRewards(value: number) {
