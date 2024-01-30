@@ -8,8 +8,7 @@ export const getNotificationsFromStore =
   async (): Promise<GetNotificationsResponse> => {
     try {
       const userConfigStringified: string =
-        (await namespaceInstance.storeGet(SystemDbKeys.Notifications)) ?? [];
-
+        (await namespaceInstance.storeGet(SystemDbKeys.Notifications)) ?? '[]';
       const userConfig = JSON.parse(
         userConfigStringified
       ) as GetNotificationsResponse;

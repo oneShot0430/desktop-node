@@ -43,7 +43,6 @@ const getMyTasks = async (
     };
     return response;
   } catch (e: any) {
-    if (e?.message !== 'Tasks not fetched yet') console.error(e);
     return throwDetailedError({
       detailed: e,
       type: ErrorType.GENERIC,

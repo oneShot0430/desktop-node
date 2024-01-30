@@ -11,6 +11,7 @@ type UseTasksInfiniteScrollParams = {
   fetchFunction: (params: GetMyTasksParam) => Promise<PaginatedResponse<Task>>;
   enabled?: boolean;
   onSuccess?: (data: InfiniteData<PaginatedResponse<Task>>) => void;
+  staleTime?: number;
 };
 
 export const useTasksInfiniteScroll = ({
@@ -20,6 +21,7 @@ export const useTasksInfiniteScroll = ({
   fetchFunction,
   enabled = true,
   onSuccess,
+  staleTime = 0,
 }: UseTasksInfiniteScrollParams) => {
   const {
     isLoading: isLoadingTasks,
@@ -45,7 +47,7 @@ export const useTasksInfiniteScroll = ({
       onSuccess(data) {
         onSuccess?.(data);
       },
-      staleTime: 1000 * 60 * 5,
+      staleTime,
     }
   );
 
