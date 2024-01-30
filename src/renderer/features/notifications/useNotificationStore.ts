@@ -56,8 +56,12 @@ export const useNotificationStore = create<NotificationState>((set) => ({
       await purgeNotificationsFromDb();
     },
     fetchNotifications: async () => {
-      const notifications = await getNotificationsFromDb();
-      set({ notifications });
+      try {
+        const notifications = await getNotificationsFromDb();
+        set({ notifications });
+      } catch (error) {
+        console.error(error);
+      }
     },
   },
 }));

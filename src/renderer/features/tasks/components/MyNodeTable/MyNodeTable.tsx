@@ -5,7 +5,7 @@ import { useQuery, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
 import EmptyMyNode from 'assets/animations/empty-my-node.json';
-import { TASK_REFETCH_INTERVAL } from 'config/refetchIntervals';
+import { MY_NODE_TASK_REFETCH_INTERVAL } from 'config/refetchIntervals';
 import { InfiniteScrollTable, LoadingSpinner } from 'renderer/components/ui';
 import { useMyNodeContext, usePrivateTasks } from 'renderer/features';
 import { useStartedTasks } from 'renderer/features/common/hooks/useStartedTasks';
@@ -53,7 +53,7 @@ export function MyNodeTable() {
     allRows,
   } = useStartedTasks({
     pageSize,
-    refetchInterval: TASK_REFETCH_INTERVAL,
+    refetchInterval: MY_NODE_TASK_REFETCH_INTERVAL,
     enabled: fetchMyTasksEnabled && privateTasksLoaded,
   });
 

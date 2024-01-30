@@ -152,9 +152,6 @@ export class KoiiTaskService {
   }
 
   getStartedTasks(): RawTaskData[] {
-    if (this.allTaskPubkeys.length === 0)
-      throw new Error('Tasks not fetched yet');
-
     return this.startedTasksData.map((task) => ({
       ...task,
       is_running: Boolean(this.RUNNING_TASKS[task.task_id]),
