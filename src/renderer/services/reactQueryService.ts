@@ -45,4 +45,6 @@ export enum QueryKeys {
   TaskRoundTime = 'TaskRoundTime',
   AverageSlotTime = 'AverageSlotTime',
   OrcaPodman = 'OrcaPodman',
+  MainAccountBalance = 'MainAccountBalance',
+  AccountBalance = 'AccountBalance',
 }

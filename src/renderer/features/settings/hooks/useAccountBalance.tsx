@@ -1,5 +1,7 @@
 import { useQuery } from 'react-query';
 
+import { QueryKeys } from 'renderer/services';
+
 import { fetchAccountBalance } from './common';
 
 export const useAccountBalance = (accountPublicKey?: string) => {
@@ -8,7 +10,7 @@ export const useAccountBalance = (accountPublicKey?: string) => {
     isLoading: loadingAccountBalance,
     error: accountBalanceLoadingError,
   } = useQuery(
-    accountPublicKey ? ['account-balance', accountPublicKey] : [],
+    accountPublicKey ? [QueryKeys.AccountBalance, accountPublicKey] : [],
     fetchAccountBalance,
     {
       enabled: !!accountPublicKey,

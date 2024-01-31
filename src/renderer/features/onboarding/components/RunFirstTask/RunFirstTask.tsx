@@ -48,7 +48,8 @@ function RunFirstTask() {
     setTasksToRun(selectedTasks);
   }, [selectedTasks]);
 
-  const { data: mainAccountBalance = 0, isLoading } = useMainAccountBalance();
+  const { accountBalance: mainAccountBalance = 0, loadingAccountBalance } =
+    useMainAccountBalance();
   const balanceInKoii = getKoiiFromRoe(mainAccountBalance);
   const totalStakeInKoii = useMemo(
     () => getKoiiFromRoe(totalStaked),
@@ -157,7 +158,7 @@ function RunFirstTask() {
         <div className="flex flex-col items-center h-[10%] mt-auto">
           <div className="flex flex-row items-center gap-2 mb-1.5 text-sm text-finnieEmerald-light">
             {`Total balance: ${
-              isLoading ? 'Loading balance...' : balanceInKoii
+              loadingAccountBalance ? 'Loading balance...' : balanceInKoii
             } KOII`}
             <FundButton />
           </div>

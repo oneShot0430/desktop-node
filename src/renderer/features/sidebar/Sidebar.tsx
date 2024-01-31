@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { useMainAccountBalance } from '../settings';
+
 import {
   RewardsClaimBox,
   StakeInfoBox,
@@ -22,6 +24,8 @@ export function Sidebar() {
     handleSecondaryActionClick,
   } = useSidebraLogic();
 
+  const { accountBalance: mainAccountBalance } = useMainAccountBalance();
+
   return (
     <div className="flex flex-col pr-[22px] gap-4">
       <RewardsInfoBox rewardState={rewardsInfoBoxState} />
@@ -33,7 +37,7 @@ export function Sidebar() {
       />
       <StakeInfoBox totalStaked={nodeInfoData?.totalStaked ?? 0} />
 
-      <AvailableBalanceInfoBox availableBalance={nodeInfoData?.totalKOII} />
+      <AvailableBalanceInfoBox availableBalance={mainAccountBalance} />
       <SidebarActions
         showMyNodeAction={isAddTaskView}
         onPrimaryActionClick={handleAddFundsClick}

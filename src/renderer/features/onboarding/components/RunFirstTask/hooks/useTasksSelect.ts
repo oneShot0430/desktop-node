@@ -16,7 +16,7 @@ export const useTasksSelect = ({ verifiedTasks = [] }: ParamsType) => {
 
   const selectedTasks = useMemo(
     () =>
-      verifiedTasks.filter((task) => {
+      verifiedTasks?.filter((task) => {
         return !filteredTasksByKey.includes(task.publicKey);
       }),
     [filteredTasksByKey, verifiedTasks]

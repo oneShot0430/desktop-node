@@ -5,6 +5,7 @@ import { useMutation, useQuery } from 'react-query';
 import { Button, ErrorMessage } from 'renderer/components/ui';
 import { useCloseWithEsc } from 'renderer/features/common/hooks/useCloseWithEsc';
 import { Modal, ModalContent, ModalTopBar } from 'renderer/features/modals';
+import { useMainAccount } from 'renderer/features/settings/hooks/useMainAccount';
 import {
   QueryKeys,
   getMainAccountBalance,
@@ -52,9 +53,11 @@ export const AddStake = create<PropsType>(function AddStake({ task }) {
   });
 
   const handleClickAddStake = () => setStep(Step.Confirm);
+  const { data: mainAccountPublicKey } = useMainAccount();
 
-  const { data: balance = 0 } = useQuery([QueryKeys.mainAccountBalance], () =>
-    getMainAccountBalance()
+  const { data: balance = 0 } = useQuery(
+    [QueryKeys.AccountBalance, mainAccountPublicKey],
+    () => getMainAccountBalance()
   );
 
   const handleClose = () => {
@@ -104,7 +107,7 @@ export const AddStake = create<PropsType>(function AddStake({ task }) {
           showBackButton={showBackButton}
         />
 
-        <div className="flex flex-col items-center justify-center py-8 text-finnieBlue-dark gap-5 h-64">
+        <div className="flex flex-col items-center justify-center h-64 gap-5 py-8 text-finnieBlue-dark">
           <div>{title}</div>
           <div>
             {step === Step.Add ? (
@@ -112,7 +115,7 @@ export const AddStake = create<PropsType>(function AddStake({ task }) {
             ) : (
               <p className="text-4xl mt-1.5 text-center">{stakeAmount} KOII</p>
             )}
-            <div className="h-12 -mb-10 -mt-2">
+            <div className="h-12 -mt-2 -mb-10">
               {error && (
                 <ErrorMessage error={error || (errorStaking as Error)} />
               )}
@@ -122,7 +125,7 @@ export const AddStake = create<PropsType>(function AddStake({ task }) {
           <Button
             label={buttonLabel}
             onClick={buttonAction}
-            className="text-white py-4"
+            className="py-4 text-white"
             loading={isStaking}
             disabled={!!error || !stakeAmount}
           />

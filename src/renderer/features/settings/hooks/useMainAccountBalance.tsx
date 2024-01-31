@@ -1,22 +1,29 @@
 import { useQuery } from 'react-query';
 
-import { getMainAccountPublicKey } from 'renderer/services';
+import { QueryKeys } from 'renderer/services';
 
 import { fetchAccountBalance } from './common';
+import { useMainAccount } from './useMainAccount';
 
 export const useMainAccountBalance = () => {
-  const { data: mainAccountPubKey } = useQuery(
-    ['main-account'],
-    getMainAccountPublicKey
-  );
+  const { data: mainAccountPublicKey } = useMainAccount();
+  const {
+    data: accountBalance,
+    isLoading: loadingAccountBalance,
+    error: accountBalanceLoadingError,
+  } = useQuery(
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    [QueryKeys.AccountBalance, mainAccountPublicKey!],
 
-  const mainAccountBalanceQuery = useQuery(
-    ['account-balance', mainAccountPubKey as string],
     fetchAccountBalance,
     {
-      enabled: !!mainAccountPubKey,
+      enabled: !!mainAccountPublicKey,
     }
   );
 
-  return mainAccountBalanceQuery;
+  return {
+    accountBalance,
+    loadingAccountBalance,
+    accountBalanceLoadingError,
+  };
 };

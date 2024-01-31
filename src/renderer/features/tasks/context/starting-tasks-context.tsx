@@ -1,6 +1,7 @@
 import React, { createContext, useCallback, useMemo, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
+import { useMainAccount } from 'renderer/features/settings/hooks/useMainAccount';
 import {
   addTaskToScheduler,
   QueryKeys,
@@ -45,6 +46,7 @@ export function StartingTasksProvider({ children }: PropsType) {
   const [startTaskPromises, setStartTaskPromises] = useState<
     Record<string, TaskStartingPromise>
   >({});
+  const { data: mainAccountPublicKey } = useMainAccount();
 
   const queryClient = useQueryClient();
 
@@ -64,6 +66,10 @@ export function StartingTasksProvider({ children }: PropsType) {
           setStartTaskPromises(remainingPromises);
           // revalidate scheduler tasks cache
           queryClient.invalidateQueries([QueryKeys.SchedulerTasks, publicKey]);
+          queryClient.invalidateQueries([
+            QueryKeys.AccountBalance,
+            mainAccountPublicKey,
+          ]);
         });
 
       setStartTaskPromises({
@@ -71,7 +77,7 @@ export function StartingTasksProvider({ children }: PropsType) {
         [publicKey]: taskPromise,
       });
     },
-    [queryClient, startTaskPromises]
+    [mainAccountPublicKey, queryClient, startTaskPromises]
   );
 
   const getTaskStartPromise = useCallback(
