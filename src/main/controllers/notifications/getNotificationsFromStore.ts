@@ -9,6 +9,7 @@ export const getNotificationsFromStore =
     try {
       const userConfigStringified: string =
         (await namespaceInstance.storeGet(SystemDbKeys.Notifications)) ?? '[]';
+
       const userConfig = JSON.parse(
         userConfigStringified
       ) as GetNotificationsResponse;

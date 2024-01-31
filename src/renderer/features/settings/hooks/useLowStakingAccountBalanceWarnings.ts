@@ -1,14 +1,10 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useQuery } from 'react-query';
 
-import {
-  getStakingAccountPublicKey,
-  getMainAccountPublicKey,
-  QueryKeys,
-} from 'renderer/services';
 import { getKoiiFromRoe } from 'utils';
 
 import { useAccountBalance } from './useAccountBalance';
+import { useMainAccount } from './useMainAccount';
+import { useStakingAccount } from './useStakingAccount';
 
 const CRITICAL_STAKING_ACCOUNT_BALANCE = 0.99;
 const MINIMUM_PUBLIC_BALANCE_TO_TRIGGER = 2.1;
@@ -19,15 +15,8 @@ export const useLowStakingAccountBalanceWarnings = ({
 }: {
   showCriticalBalanceNotification: () => void;
 }) => {
-  const { data: stakingPublicKey } = useQuery(
-    [QueryKeys.StakingAccount],
-    getStakingAccountPublicKey
-  );
-
-  const { data: mainAccount } = useQuery(
-    [QueryKeys.MainAccount],
-    getMainAccountPublicKey
-  );
+  const { data: stakingPublicKey } = useStakingAccount();
+  const { data: mainAccount } = useMainAccount();
 
   const { accountBalance: stakingAccountBalance } =
     useAccountBalance(stakingPublicKey);
@@ -53,7 +42,16 @@ export const useLowStakingAccountBalanceWarnings = ({
     if (!stakingAccountBalanceInKoii || !displayStakingAlerts) return;
 
     if (stakingAccountBalanceInKoii < CRITICAL_STAKING_ACCOUNT_BALANCE) {
-      showCriticalBalanceNotification();
+      // show critical balance notification only once for the session
+      const criticalBalanceNotificationShown = sessionStorage.getItem(
+        'criticalBalanceNotificationShown'
+      );
+
+      if (criticalBalanceNotificationShown !== 'true') {
+        showCriticalBalanceNotification();
+      }
+
+      sessionStorage.setItem('criticalBalanceNotificationShown', 'true');
     }
 
     /*     else if (

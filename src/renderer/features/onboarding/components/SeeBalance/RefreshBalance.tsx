@@ -5,26 +5,34 @@ import { useQuery } from 'react-query';
 import ReloadSvg from 'assets/svgs/reload-icon-big.svg';
 import { ErrorMessage } from 'renderer/components/ui';
 import { useFundNewAccountModal } from 'renderer/features/common';
-import { getMainAccountBalance } from 'renderer/services';
+import { useMainAccount } from 'renderer/features/settings';
+import { getMainAccountBalance, QueryKeys } from 'renderer/services';
 
 type PropsType = {
   onBalanceRefresh?: (balance: string | number) => void;
 };
 
 export function RefreshBalance({ onBalanceRefresh }: PropsType) {
+  const { data: mainAccountPubKey } = useMainAccount();
   const {
     data: balance,
     isLoading,
     isRefetching,
     refetch,
     error,
-  } = useQuery<number, Error>(['main-account-balance'], getMainAccountBalance, {
-    onSuccess: (data) => {
-      if (onBalanceRefresh) {
-        onBalanceRefresh(data);
-      }
-    },
-  });
+  } = useQuery<number, Error>(
+    [QueryKeys.AccountBalance, mainAccountPubKey],
+    getMainAccountBalance,
+    {
+      onSuccess: (data) => {
+        if (onBalanceRefresh) {
+          onBalanceRefresh(data);
+        }
+      },
+      refetchInterval: 3000,
+      enabled: !!mainAccountPubKey,
+    }
+  );
 
   const { showModal: showFundAccountModal } = useFundNewAccountModal();
 
@@ -48,7 +56,7 @@ export function RefreshBalance({ onBalanceRefresh }: PropsType) {
         onClick={handleRefetch}
       >
         <div className="flex flex-col items-center justify-center w-full h-full rounded-full bg-finnieBlue-light-secondary">
-          <Icon source={ReloadSvg} className="h-24 w-24" />
+          <Icon source={ReloadSvg} className="w-24 h-24" />
         </div>
       </div>
       <div className="mb-2">Refresh Balance</div>
@@ -59,7 +67,7 @@ export function RefreshBalance({ onBalanceRefresh }: PropsType) {
       </div>
       {error && <ErrorMessage error="Cant't fetch balance, try again" />}
       <div
-        className="mt-2 text-finnieTeal underline inline-block cursor-pointer"
+        className="inline-block mt-2 underline cursor-pointer text-finnieTeal"
         onClick={showFundAccountModal}
       >
         Fund another way

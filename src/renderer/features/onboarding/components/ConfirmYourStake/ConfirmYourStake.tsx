@@ -40,7 +40,8 @@ function ConfirmYourStake() {
   const { addAppNotification: showReferralProgramNotification } =
     useAppNotifications('REFERRAL_PROGRAM');
 
-  const { data: balance = 0, isLoading } = useMainAccountBalance();
+  const { accountBalance: balance = 0, loadingAccountBalance } =
+    useMainAccountBalance();
   const handleRunTasksSuccess = () => {
     handleSaveUserAppConfig({ settings: { onboardingCompleted: true } });
     showReferralProgramNotification();
@@ -118,7 +119,7 @@ function ConfirmYourStake() {
             <div className="flex flex-row items-center gap-2 mb-2 text-sm text-finnieEmerald-light">
               <Icon source={CurrencyMoneyLine} className="w-6 h-6" />
               {`Total balance: ${
-                isLoading ? 'Loading balance...' : balanceInKoii
+                loadingAccountBalance ? 'Loading balance...' : balanceInKoii
               } KOII`}
             </div>
             <Button
