@@ -112,6 +112,7 @@ const endpointToControllerMap: Record<
   [Endpoints.PURGE_NOTIFICATIONS]: controllers.purgeNotifications,
   [Endpoints.REMOVE_NOTIFICATION]: controllers.removeNotification,
   [Endpoints.UPDATE_NOTIFICATION]: controllers.updateNotification,
+  [Endpoints.FETCH_S3_FOLDER_CONTENTS]: controllers.fetchS3FolderContents,
 };
 
 const initHandlers = (): void => {

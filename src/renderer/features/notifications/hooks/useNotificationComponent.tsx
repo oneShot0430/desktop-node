@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Task } from 'renderer/types';
 
+import { ExternalNotificationBanner } from '../Banners/ExternalNotificationBanner';
 import { FirstNodeReward } from '../Banners/FirstNodeRewardBanner';
 import { FirstTaskRunningNotification } from '../Banners/FirstTasksRunningNotification';
 import { LowStakingAccountBalanceNotification } from '../Banners/LowStakingAccountBalanceNotification';
@@ -69,6 +70,18 @@ export const useNotificationComponent = ({
         backButtonSlot={backButtonSlot}
       />
     ),
+    EXTERNAL_INFO: (
+      <ExternalNotificationBanner
+        notification={notification}
+        backButtonSlot={backButtonSlot}
+      />
+    ),
+    EXTERNAL_OFFER: (
+      <ExternalNotificationBanner
+        notification={notification}
+        backButtonSlot={backButtonSlot}
+      />
+    ),
     NEW_TASK_AVAILABLE: null,
     TASK_BLACKLISTED_OR_REMOVED: null,
     TASK_OUT_OF_BOUNTY: null,
@@ -81,5 +94,8 @@ export const useNotificationComponent = ({
     SESSION_STARTED_FROM_SCHEDULER: null,
   };
 
-  return componentsMap[notification.appNotificationDataKey];
+  return (
+    notification.appNotificationDataKey &&
+    componentsMap[notification.appNotificationDataKey]
+  );
 };

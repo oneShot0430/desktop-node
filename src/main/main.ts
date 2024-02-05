@@ -10,6 +10,8 @@ import {
 } from 'electron';
 import path from 'path';
 
+import { initialize, trackEvent } from '@aptabase/electron/main';
+
 import { get } from 'lodash';
 
 import { initializeAppUpdater } from './AppUpdater';
@@ -24,6 +26,8 @@ import { configureLogger } from './logger';
 import { getCurrentActiveAccountName } from './node/helpers';
 import { setUpPowerStateManagement } from './powerMonitor';
 import { resolveHtmlPath } from './util';
+
+if (process.env.APTABASE_INT) initialize(process.env.APTABASE_INT);
 
 const isMac = process.platform === 'darwin';
 let tray: Tray | null = null;
@@ -118,13 +122,13 @@ const createWindow = async () => {
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
-  app.on('before-quit', () => {
+  app.on('before-quit', async () => {
     // Run your tasks or code here before quitting
     console.log('Running tasks before quitting');
     try {
-      stopOrcaVM().then(console.log);
+      await stopOrcaVM();
     } catch (error) {
-      console.error(error);
+      console.error('Stopping Orca Error');
     }
   });
   // Open the DevTools.
@@ -156,7 +160,7 @@ const createWindow = async () => {
     })
     .catch((err): void => {
       dialog.showErrorBox('Something went wrong!', err.message);
-
+      trackEvent('app_error', { error: err.message });
       app.quit();
     });
 
@@ -166,6 +170,7 @@ const createWindow = async () => {
 
   const ret = globalShortcut.register('CommandOrControl+Q', () => {
     (app as any).isQuitting = true;
+    trackEvent('app_closed');
     app.quit();
   });
 
@@ -216,7 +221,7 @@ const createMenu = () => {
                 label: 'Hide',
                 accelerator: 'CmdOrCtrl+H',
                 click: () => {
-                  app.quit();
+                  mainWindow?.hide();
                 },
               },
               {
@@ -224,6 +229,7 @@ const createMenu = () => {
                 accelerator: 'CmdOrCtrl+Q',
                 click: () => {
                   (app as any).isQuitting = true;
+                  trackEvent('app_closed');
                   app.quit();
                 },
               },
@@ -252,7 +258,7 @@ const createMenu = () => {
           label: 'Hide',
           accelerator: 'CmdOrCtrl+H',
           click: () => {
-            app.quit();
+            mainWindow?.hide();
           },
         },
         {
@@ -260,6 +266,7 @@ const createMenu = () => {
           accelerator: 'CmdOrCtrl+Q',
           click: () => {
             (app as any).isQuitting = true;
+            trackEvent('app_closed');
             app.quit();
           },
         },
@@ -310,6 +317,7 @@ function createTray() {
       label: 'Quit',
       click: () => {
         (app as any).isQuitting = true;
+        trackEvent('app_closed');
         app.quit();
       },
     },
@@ -347,6 +355,7 @@ if (!isSingleInstance) {
     createWindow();
     createMenu();
     createTray();
+    trackEvent('app_started');
   });
 
   // Quit when all windows are closed, except on macOS. There, it's common

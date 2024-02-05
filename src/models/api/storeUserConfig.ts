@@ -13,6 +13,7 @@ export interface UserAppConfig {
   limitLogsSize?: boolean;
   hasStartedEmergencyMigration?: boolean;
   hasFinishedEmergencyMigration?: boolean;
+  shownNotifications?: string[];
 }
 
 export interface StoreUserConfigParam {

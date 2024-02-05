@@ -13,6 +13,8 @@ export { useAvailableTasks } from './useAvailableTasks';
 export { useTaskStatus } from './useTaskStatus';
 export { useUnstakingAvailability } from './useUnstakingAvailability';
 export { useCloseWithEsc } from './useCloseWithEsc';
+export { useNodeInitialization } from './useNodeInitialization';
+export { useExternalNotifications } from './useExternalNotifications';
 
 // modals
 export { useCreateTaskModal } from './useCreateTaskModal';

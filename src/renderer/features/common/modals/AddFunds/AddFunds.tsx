@@ -7,6 +7,7 @@ import {
   CurrencyMoneyLine,
   WalletLine,
 } from '@_koii/koii-styleguide';
+import { trackEvent } from '@aptabase/electron/renderer';
 import { create, useModal } from '@ebay/nice-modal-react';
 import React from 'react';
 import { useQuery } from 'react-query';
@@ -81,11 +82,19 @@ export const AddFunds = create(function AddFunds({
   const openFaucetAndClose = () => {
     const urlToFaucet = `${config.faucet.FAUCET_URL}?key=${currentAccountPubKey}`;
     openBrowserWindow(urlToFaucet);
+    trackEvent('open_faucet', {
+      walletAddress: currentAccountPubKey,
+      behavior: 'open_faucet_page',
+    });
     closeModal();
   };
 
   const copyToClipboardAndClose = () => {
     copyToClipboard(currentAccountPubKey);
+    trackEvent('open_faucet', {
+      walletAddress: currentAccountPubKey,
+      behavior: 'copy_wallet_address',
+    });
     closeModal();
   };
 
@@ -93,6 +102,10 @@ export const AddFunds = create(function AddFunds({
     const urlToFinnie =
       'https://chrome.google.com/webstore/detail/finnie/cjmkndjhnagcfbpiemnkdpomccnjblmj';
     openBrowserWindow(urlToFinnie);
+    trackEvent('open_faucet', {
+      walletAddress: currentAccountPubKey,
+      behavior: 'open_finnie_page',
+    });
     closeModal();
   };
 

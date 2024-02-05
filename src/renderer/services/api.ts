@@ -1,4 +1,5 @@
 /* eslint-disable @cspell/spellchecker */
+import { trackEvent } from '@aptabase/electron/renderer';
 import axios from 'axios';
 
 import { FAUCET_API_URL } from 'config/faucet';
@@ -45,10 +46,12 @@ export const fetchMyTasks = async (
 };
 
 export const stopAllTasks = async (payload?: StartStopAllTasksParams) => {
+  trackEvent('task_stop_all');
   return window.main.stopAllTasks(payload);
 };
 
 export const startAllTasks = async (payload?: StartStopAllTasksParams) => {
+  trackEvent('task_start_all');
   return window.main.startAllTasks(payload);
 };
 
@@ -151,6 +154,7 @@ export const startTask = (taskAccountPubKey: string, isPrivate?: boolean) => {
 
 export const stopTask = (taskAccountPubKey: string) => {
   console.log('STOPPING TASK', taskAccountPubKey);
+  trackEvent('task_stop', { taskPublicKey: taskAccountPubKey });
   return window.main.stopTask({ taskAccountPubKey });
 };
 
@@ -320,6 +324,7 @@ export const getTaskMetadata = async (metadataCID: string) => {
 };
 
 export const claimTaskReward = async (taskAccountPubKey: string) => {
+  trackEvent('task_claim_reward', { taskPublicKey: taskAccountPubKey });
   return window.main.claimReward({ taskAccountPubKey });
 };
 
@@ -397,6 +402,7 @@ export const getVersion = async () => {
 };
 
 export const archiveTask = async (taskPubKey: string) => {
+  trackEvent('task_archive', { taskPublicKey: taskPubKey });
   return window.main.archiveTask({ taskPubKey });
 };
 
@@ -554,4 +560,11 @@ export const getNotificationsFromDb = async (): Promise<NotificationType[]> => {
 
 export const purgeNotificationsFromDb = async () => {
   return window.main.purgeNotifications();
+};
+
+export const fetchExternalNotificationsFromAws = async () => {
+  return window.main.fetchS3FolderContents({
+    prefix: 'alerts',
+    bucket: 'koii-notifications',
+  });
 };

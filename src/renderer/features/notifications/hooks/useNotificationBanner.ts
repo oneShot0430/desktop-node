@@ -11,7 +11,8 @@ export const useNotificationBanner = () => {
     () =>
       notifications.filter((notification) => {
         const { appNotificationDataKey } = notification;
-        return !!AppNotificationsMap[appNotificationDataKey].notificationBanner;
+        return !!AppNotificationsMap[appNotificationDataKey]
+          ?.notificationBanner;
       }),
     [notifications]
   ).sort((a, b) => {
@@ -19,13 +20,18 @@ export const useNotificationBanner = () => {
   });
 
   const unreadNotificationsWithBanner = useMemo(
-    () => notificationsWithBanner.filter((notification) => !notification.read),
+    () =>
+      notificationsWithBanner.filter(
+        (notification) => !notification.read // || notification.persist
+      ),
     [notificationsWithBanner]
   );
+
   const unreadNotificationsWithBannerTopBar = useMemo(
     () =>
       unreadNotificationsWithBanner.filter(
         (notification) =>
+          notification.appNotificationDataKey &&
           AppNotificationsMap[notification.appNotificationDataKey]
             ?.notificationBanner?.placement === BannerPlacement.TopBar
       ),
@@ -36,6 +42,7 @@ export const useNotificationBanner = () => {
     () =>
       unreadNotificationsWithBanner.filter(
         (notification) =>
+          notification.appNotificationDataKey &&
           AppNotificationsMap[notification.appNotificationDataKey]
             ?.notificationBanner?.placement === BannerPlacement.Bottom
       ),

@@ -7,7 +7,6 @@ export const stopOrcaVM = async (): Promise<void> => {
     try {
       exec(stopCommand, (error: Error) => {
         if (error) {
-          console.error(error);
           reject(error);
         } else {
           resolve();

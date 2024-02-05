@@ -24,9 +24,10 @@ export function RefreshBalance({ onBalanceRefresh }: PropsType) {
     [QueryKeys.AccountBalance, mainAccountPubKey],
     getMainAccountBalance,
     {
-      onSuccess: (data) => {
+      onSuccess: (balance) => {
         if (onBalanceRefresh) {
-          onBalanceRefresh(data);
+          console.log('###### balance', balance);
+          onBalanceRefresh(balance);
         }
       },
       refetchInterval: 3000,
@@ -54,6 +55,13 @@ export function RefreshBalance({ onBalanceRefresh }: PropsType) {
       <div
         className="w-[180px] h-[180px] p-2 border-dashed border-finnieOrange rounded-full border-2 mb-4 cursor-pointer"
         onClick={handleRefetch}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            handleRefetch();
+          }
+        }}
       >
         <div className="flex flex-col items-center justify-center w-full h-full rounded-full bg-finnieBlue-light-secondary">
           <Icon source={ReloadSvg} className="w-24 h-24" />
@@ -68,7 +76,14 @@ export function RefreshBalance({ onBalanceRefresh }: PropsType) {
       {error && <ErrorMessage error="Cant't fetch balance, try again" />}
       <div
         className="inline-block mt-2 underline cursor-pointer text-finnieTeal"
+        role="button"
+        tabIndex={0}
         onClick={showFundAccountModal}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            showFundAccountModal();
+          }
+        }}
       >
         Fund another way
       </div>

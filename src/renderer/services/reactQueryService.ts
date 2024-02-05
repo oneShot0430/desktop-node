@@ -47,4 +47,6 @@ export enum QueryKeys {
   OrcaPodman = 'OrcaPodman',
   MainAccountBalance = 'MainAccountBalance',
   AccountBalance = 'AccountBalance',
+  InitializingNode = 'InitializingNode',
+  ExternalNotifications = 'ExternalNotifications',
 }

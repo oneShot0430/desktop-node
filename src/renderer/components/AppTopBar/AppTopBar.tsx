@@ -2,6 +2,7 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 
 import RefreshIcon from 'assets/svgs/refresh-icon.svg';
+import { useExternalNotifications } from 'renderer/features';
 import {
   DisplayTopBarNotifications,
   useNotificationBanner,
@@ -14,6 +15,7 @@ import { Button, Tooltip } from '../ui';
 
 export function AppTopBar() {
   const location = useLocation();
+  useExternalNotifications();
   const { unreadNotificationsWithBannerTopBar } = useNotificationBanner();
 
   const handleNodeRefresh = () => {
