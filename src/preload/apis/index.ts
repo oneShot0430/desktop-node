@@ -1,5 +1,6 @@
 import { onAppDownloaded, checkAppUpdate, onAppUpdate } from './appUpdates';
 import archiveTask from './archiveTask';
+import { fetchS3FolderContents } from './aws';
 import cancelTaskRetry from './cancelTaskRetry';
 import checkOrcaPodmanExistsAndRunning from './checkOrcaPodmanExistsAndRunning';
 import checkWalletExists from './checkWalletExists';
@@ -193,4 +194,5 @@ export default {
   purgeNotifications,
   removeNotification,
   updateNotification,
+  fetchS3FolderContents,
 };

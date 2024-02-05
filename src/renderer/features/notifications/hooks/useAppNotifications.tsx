@@ -179,9 +179,33 @@ export const useAppNotifications = (
           }}
         />
       ),
+      EXTERNAL_INFO: (
+        <CTAButton
+          label={notification.ctaText ?? 'Learn more'}
+          onClick={() => {
+            if (notification.ctaLink) {
+              window.open(notification.ctaLink, '_blank');
+              markAsRead(notification.id);
+            }
+          }}
+        />
+      ),
+      EXTERNAL_OFFER: (
+        <CTAButton
+          label={notification.ctaText ?? 'Learn more'}
+          onClick={() => {
+            if (notification.ctaLink) {
+              window.open(notification.ctaLink, '_blank');
+              markAsRead(notification.id);
+            }
+          }}
+        />
+      ),
     };
 
-    return componentsMap[notification.appNotificationDataKey];
+    return notification.appNotificationDataKey
+      ? componentsMap[notification.appNotificationDataKey]
+      : null;
   };
 
   const notificationData = useMemo(
@@ -190,7 +214,10 @@ export const useAppNotifications = (
   );
 
   if (!notificationData) {
-    throw new Error(
+    // throw new Error(
+    //   `No notification data found for notification type ${notificationTypeName}`
+    // );
+    console.error(
       `No notification data found for notification type ${notificationTypeName}`
     );
   }

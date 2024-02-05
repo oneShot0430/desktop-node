@@ -20,6 +20,7 @@ const queryClient = new QueryClient();
 function App(): JSX.Element {
   // TODO(Chris): check properly if ok to remove it
   window.Buffer = Buffer;
+
   return (
     <QueryClientProvider client={queryClient}>
       <AppProvider>

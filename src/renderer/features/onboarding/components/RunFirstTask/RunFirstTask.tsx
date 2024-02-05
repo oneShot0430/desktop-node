@@ -104,7 +104,7 @@ function RunFirstTask() {
     <div className="relative flex-col items-center justify-center h-full bg-finnieBlue-dark-secondary">
       <div className="flex flex-col items-center justify-center h-full px-8 py-6">
         <div className="max-h-[90%] flex flex-col h-full w-full items-center justify-center">
-          <div className="flex flex-col items-center justify-center w-full max-h-full text-center">
+          <div className="flex flex-col items-center justify-center w-full max-h-full text-center max-w-[960px]">
             <p className="mb-2 text-2xl leading-8 text-finnieEmerald-light">
               Get Started
             </p>

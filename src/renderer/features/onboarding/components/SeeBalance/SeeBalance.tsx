@@ -9,13 +9,16 @@ export function SeeBalance() {
   return (
     <div className="w-full h-full">
       <div className="flex flex-col items-center justify-center h-full">
-        {balance ? (
-          <ShowBalance balance={balance} />
-        ) : (
-          <RefreshBalance
-            onBalanceRefresh={(balance) => setBalance(balance as number)}
-          />
-        )}
+        {
+          // eslint-disable-next-line eqeqeq
+          balance && balance != 0 ? (
+            <ShowBalance balance={balance} />
+          ) : (
+            <RefreshBalance
+              onBalanceRefresh={(balance) => setBalance(balance as number)}
+            />
+          )
+        }
       </div>
     </div>
   );

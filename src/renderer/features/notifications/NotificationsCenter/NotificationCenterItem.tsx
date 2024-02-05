@@ -27,6 +27,51 @@ export function NotificationCenterItem({
 
   const actionComponent = getNotificationActionComponent(notification);
 
+  const renderTitle = () => {
+    if (notification.title) {
+      return <div className="text-sm font-semibold">{notification.title}</div>;
+    }
+
+    if (notificationDetails?.title) {
+      return (
+        <div className="text-sm font-semibold">
+          {typeof notificationDetails?.title === 'string' &&
+            notificationDetails?.title}
+        </div>
+      );
+    }
+
+    return (
+      <div className="text-sm font-semibold">Notification Title Missing</div>
+    );
+  };
+
+  const renderMessage = () => {
+    if (notification.customMessage) {
+      return (
+        <div className="flex flex-col items-center mt-4 text-sm">
+          {notification.customMessage}
+        </div>
+      );
+    }
+
+    if (notificationDetails?.message) {
+      return (
+        <div className="flex flex-col items-center mt-4 text-sm">
+          {typeof notificationDetails?.message === 'string'
+            ? notificationDetails?.message
+            : notificationDetails?.message(notification.metadata)}
+        </div>
+      );
+    }
+
+    return (
+      <div className="flex flex-col items-center mt-4 text-sm">
+        Notification Message Missing
+      </div>
+    );
+  };
+
   return (
     <div className="border-b border-[#F5F5F5]">
       <div className="h-[64px] flex items-center justify-between">
@@ -45,14 +90,11 @@ export function NotificationCenterItem({
             <div className="mt-[3px]">
               <NotificationStatusIndicator
                 isRead={notification.read}
-                notificationType={notificationDetails.variant ?? 'INFO'}
+                notificationType={notificationDetails?.variant ?? 'INFO'}
               />
             </div>
             <div className="flex flex-col gap-2">
-              <div className="text-sm font-semibold">
-                {typeof notificationDetails.title === 'string' &&
-                  notificationDetails.title}
-              </div>
+              {renderTitle()}
               <DisplayDate dateInMs={notification.date} />
             </div>
           </div>
@@ -70,11 +112,7 @@ export function NotificationCenterItem({
       <div
         className={`overflow-hidden transition-all ${isOpen ? 'h-20' : 'h-0'}`}
       >
-        <div className="flex flex-col items-center mt-4 text-sm">
-          {typeof notificationDetails.message === 'string'
-            ? notificationDetails.message
-            : notificationDetails.message(notification.metadata)}
-        </div>
+        {renderMessage()}
       </div>
     </div>
   );

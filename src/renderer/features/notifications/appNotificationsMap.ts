@@ -166,4 +166,23 @@ export const AppNotificationsMap: Record<
     variant: 'SUCCESS',
     notificationBanner: null,
   },
+  // External Notifications
+  EXTERNAL_INFO: {
+    title: '',
+    message: '',
+    variant: 'INFO',
+    notificationBanner: {
+      componentKey: 'EXTERNAL_INFO',
+      placement: BannerPlacement.TopBar,
+    },
+  },
+  EXTERNAL_OFFER: {
+    title: '',
+    message: '',
+    variant: 'OFFER',
+    notificationBanner: {
+      componentKey: 'EXTERNAL_INFO',
+      placement: BannerPlacement.TopBar,
+    },
+  },
 };

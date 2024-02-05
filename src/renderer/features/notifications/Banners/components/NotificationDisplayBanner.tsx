@@ -31,6 +31,7 @@ export function NotificationDisplayBanner({
   const { markAsRead } = useNotificationActions();
   const handleClose = () => {
     onClose?.();
+    console.log('####notification.id', notification.id);
     markAsRead(notification.id);
   };
 
@@ -40,7 +41,8 @@ export function NotificationDisplayBanner({
     notification.variant === 'ERROR' && 'bg-finnieRed',
     notification.variant === 'WARNING' && 'bg-finnieOrange',
     notification.variant === 'SUCCESS' && 'bg-finnieEmerald-light',
-    notification.variant === 'INFO' && 'bg-finnieTeal'
+    notification.variant === 'INFO' && 'bg-finnieTeal',
+    notification.variant === 'OFFER' && 'bg-finnieTeal'
   );
 
   return (

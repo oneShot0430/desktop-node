@@ -5,6 +5,7 @@ import {
   InformationCircleLine,
   PauseFill,
 } from '@_koii/koii-styleguide';
+import { trackEvent } from '@aptabase/electron/renderer';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import React, {
   memo,
@@ -301,7 +302,16 @@ function AvailableTaskRow({ task, index, columnsLayout }: Props) {
 
   const isUsingOrca = useMemo(() => isOrcaTask(metadata), [metadata]);
 
+  const settingsViewIsOpen = accordionView === 'settings';
+  const shouldNotShowSettingsView = !globalAndTaskVariables?.length;
+
   const handleStakeValueChange = (value: number) => {
+    if (value) {
+      // open task details if user is trying to stake if not open
+      if (!settingsViewIsOpen && !shouldNotShowSettingsView) {
+        handleToggleView('settings');
+      }
+    }
     setValueToStake(value);
     setMeetsMinimumStake(value >= minStake);
   };
@@ -498,7 +508,7 @@ function AvailableTaskRow({ task, index, columnsLayout }: Props) {
           <div className="flex flex-col items-center justify-start w-10">
             <Button
               onMouseDown={() => handleToggleView('settings')}
-              disabled={!globalAndTaskVariables?.length}
+              disabled={shouldNotShowSettingsView}
               icon={
                 <Icon source={GearIcon} size={36} className={gearIconColor} />
               }
@@ -529,12 +539,18 @@ function AvailableTaskRow({ task, index, columnsLayout }: Props) {
               onClick={
                 isRunning
                   ? handleStopTask
-                  : () =>
+                  : () => {
                       executeTask({
                         publicKey,
                         valueToStake,
                         alreadyStakedTokensAmount,
-                      })
+                      });
+                      trackEvent('task_start', {
+                        taskName,
+                        taskPublicKey: publicKey,
+                        valueToStake,
+                      });
+                    }
               }
               disabled={!isRunning && !isTaskValidToRun}
             />

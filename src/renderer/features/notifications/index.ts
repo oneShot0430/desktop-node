@@ -1,4 +1,4 @@
-export { AppNotification, NotificationPlacement } from './types';
+export { NotificationPlacement } from './types';
 export { NotificationDisplayBanner } from './Banners/components/NotificationDisplayBanner';
 export { useNotificationBanner } from './hooks/useNotificationBanner';
 export { DisplayTopBarNotifications } from './DisplayTopBarNotifications';

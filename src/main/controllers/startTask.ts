@@ -226,26 +226,33 @@ export async function executeTasks(
   fsSync.mkdirSync(`${getAppDataPath()}/namespace/${selectedTask.task_id}`, {
     recursive: true,
   });
+  let logFile;
+  try {
+    logFile = rfs.createStream('task.log', {
+      size: '5M', // Maximum file size
+      compress: 'gzip', // Compress rotated files using gzip
+      path: `${getAppDataPath()}/namespace/${selectedTask.task_id}`, // Directory path for log files
+    });
 
-  const logFile = rfs.createStream('task.log', {
-    size: '3M', // Maximum file size
-    compress: 'gzip', // Compress rotated files using gzip
-    path: `${getAppDataPath()}/namespace/${selectedTask.task_id}`, // Directory path for log files
-  });
-
-  // Event listener for the rotation event
-  logFile.on('rotated', (filename) => {
-    // Delete the previous log file when rotation occurs
-    if (filename.includes('log.gz')) {
-      fsSync.unlink(filename, (err) => {
-        if (err) {
-          console.error(`Error deleting log file ${filename}:`, err);
-        } else {
-          console.log(`Deleted log file ${filename}`);
-        }
-      });
-    }
-  });
+    // Event listener for the rotation event
+    logFile.on('rotated', (filename) => {
+      // Delete the previous log file when rotation occurs
+      if (filename.includes('log.gz')) {
+        fsSync.unlink(filename, (err) => {
+          if (err) {
+            console.error(`Error deleting log file ${filename}:`, err);
+          } else {
+            console.log(`Deleted log file ${filename}`);
+          }
+        });
+      }
+    });
+    logFile.on('error', (error) => {
+      console.error('ERROR IN TASK LOG listener', error);
+    });
+  } catch (error) {
+    console.error('ERROR IN TASK LOG', error);
+  }
   const childTaskProcess = fork(
     `${getAppDataPath()}/executables/${selectedTask.task_audit_program}.js`,
     [
@@ -272,31 +279,62 @@ export async function executeTasks(
   ): Transform =>
     new Transform({
       transform(data, encoding, callback) {
-        const timestamp = new Date().toLocaleString(
-          'en-US',
-          logTimestampFormat
-        );
-        const isErrorMessage = data.toString().toLowerCase().includes('error');
-        const message = formatter(timestamp, data.toString(), isErrorMessage);
-        this.push(message);
-        callback();
+        try {
+          const timestamp = new Date().toLocaleString(
+            'en-US',
+            logTimestampFormat
+          );
+          const isErrorMessage = data
+            .toString()
+            .toLowerCase()
+            .includes('error');
+          const message = formatter(timestamp, data.toString(), isErrorMessage);
+          // Check if the stream is still writable before pushing data
+          if (!this.writableEnded) {
+            this.push(message);
+            callback();
+          } else {
+            // Handle the situation when the stream is no longer writable
+            const error = new Error(
+              'Attempted to write after stream has ended'
+            );
+            console.error(error);
+            callback(error);
+          }
+        } catch (error: any) {
+          // Handle other unexpected errors
+          console.error('Error in transform stream:', error);
+          callback(error);
+        }
       },
     });
 
-  childTaskProcess.stdout
-    ?.pipe(
-      messageTransform((timestamp, message) => `[${timestamp}] ${message}`)
-    )
-    .pipe(logFile);
+  if (logFile) {
+    childTaskProcess.stdout
+      ?.pipe(
+        messageTransform((timestamp, message) => `[${timestamp}] ${message}`)
+      )
+      .pipe(logFile)
+      .on('error', (err) => {
+        // Handle the error here
+        console.error('Error in stream pipeline:', err);
+        // Depending on your application, you might want to clean up resources or shut down the process
+      });
 
-  childTaskProcess.stderr
-    ?.pipe(
-      messageTransform((timestamp, message, isError) => {
-        const label = isError ? 'ERROR' : 'WARNING';
-        return `[${timestamp}] ${label}: ${message}`;
-      })
-    )
-    .pipe(logFile);
+    childTaskProcess.stderr
+      ?.pipe(
+        messageTransform((timestamp, message, isError) => {
+          const label = isError ? 'ERROR' : 'WARNING';
+          return `[${timestamp}] ${label}: ${message}`;
+        })
+      )
+      .pipe(logFile)
+      .on('error', (err) => {
+        // Handle the error here
+        console.error('Error in stream pipeline:', err);
+        // Depending on your application, you might want to clean up resources or shut down the process
+      });
+  }
 
   childTaskProcess.on('error', async (err) => {
     console.error('Error starting child process:', err);

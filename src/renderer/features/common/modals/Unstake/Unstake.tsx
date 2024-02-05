@@ -1,3 +1,4 @@
+import { trackEvent } from '@aptabase/electron/renderer';
 import { create, useModal } from '@ebay/nice-modal-react';
 import React, { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
@@ -52,6 +53,7 @@ export const Unstake = create<PropsType>(function AddStake({ task }) {
     error: errorUnstaking,
   } = useMutation<any, Error>(stopTaskAndUnstake, {
     onSuccess: () => {
+      trackEvent('task_unstake', { taskPublicKey: publicKey });
       refetchTaskStake();
       handleClose();
     },

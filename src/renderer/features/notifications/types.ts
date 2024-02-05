@@ -1,14 +1,3 @@
-export enum AppNotification {
-  FirstNodeReward = 'FirstNodeReward',
-  RunExemptionFlow = 'RunExemptionFlow',
-  ReferralProgramNotification = 'ReferralProgramNotification',
-  UpdateAvailable = 'UpdateAvailable',
-  FirstTaskRunningNotification = 'FirstTaskRunningNotification',
-  TaskUpgradeNotification = 'TaskUpgradeNotification',
-  LowStakingAccountBalance = 'LowStakingAccountBalance',
-  LowStakingAccountBalanceSevere = 'LowMainAccountBalanceSevere',
-}
-
 export enum NotificationPlacement {
   TopBar = 'TopBar',
   Bottom = 'Bottom',
@@ -24,6 +13,7 @@ export const NotificationVariants = {
   WARNING: 'Warning',
   ERROR: 'Error',
   INFO: 'Info',
+  OFFER: 'Offer',
 } as const;
 
 export type NotificationVariantType = keyof typeof NotificationVariants;
@@ -35,6 +25,11 @@ export interface NotificationType {
   accountPubKey: string;
   variant: NotificationVariantType;
   appNotificationDataKey: AppNotificationType;
+  title?: string;
+  customMessage?: string;
+  ctaLink?: string;
+  ctaText?: string;
+  persist?: boolean;
   metadata?: Record<string, unknown>;
 }
 
@@ -56,7 +51,9 @@ export type AppNotificationType =
   | 'UPDATE_AVAILABLE'
   | 'ARCHIVING_SUCCESSFUL'
   | 'SESSION_STARTED_FROM_SCHEDULER'
-  | 'TASK_STARTED';
+  | 'TASK_STARTED'
+  | 'EXTERNAL_INFO'
+  | 'EXTERNAL_OFFER';
 
 export type AppNotificationDataType = {
   message: string | ((...args: any[]) => string);
