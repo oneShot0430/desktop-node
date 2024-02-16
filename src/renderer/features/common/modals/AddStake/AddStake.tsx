@@ -1,17 +1,12 @@
 import { create, useModal } from '@ebay/nice-modal-react';
 import React, { useState } from 'react';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation } from 'react-query';
 
 import { Button, ErrorMessage } from 'renderer/components/ui';
 import { useCloseWithEsc } from 'renderer/features/common/hooks/useCloseWithEsc';
 import { Modal, ModalContent, ModalTopBar } from 'renderer/features/modals';
-import { useMainAccount } from 'renderer/features/settings/hooks/useMainAccount';
-import {
-  QueryKeys,
-  getMainAccountBalance,
-  stakeOnTask,
-  startTask,
-} from 'renderer/services';
+import { useMainAccountBalance } from 'renderer/features/settings/hooks/useMainAccountBalance';
+import { stakeOnTask, startTask } from 'renderer/services';
 import { Task } from 'renderer/types';
 import { getKoiiFromRoe, getRoeFromKoii } from 'utils';
 
@@ -53,12 +48,8 @@ export const AddStake = create<PropsType>(function AddStake({ task }) {
   });
 
   const handleClickAddStake = () => setStep(Step.Confirm);
-  const { data: mainAccountPublicKey } = useMainAccount();
 
-  const { data: balance = 0 } = useQuery(
-    [QueryKeys.AccountBalance, mainAccountPublicKey],
-    () => getMainAccountBalance()
-  );
+  const { accountBalance: mainAccountBalance = 0 } = useMainAccountBalance();
 
   const handleClose = () => {
     modal.resolve(true);
@@ -68,7 +59,7 @@ export const AddStake = create<PropsType>(function AddStake({ task }) {
   useCloseWithEsc({ closeModal: handleClose });
 
   const showBackButton = step === Step.Confirm;
-
+  const mainAccountBalanceInKoii = getKoiiFromRoe(mainAccountBalance);
   const minStakeInKoii = getKoiiFromRoe(minStake);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,7 +69,7 @@ export const AddStake = create<PropsType>(function AddStake({ task }) {
     const meetsMinStake = stakeToAddInRoe >= minStake;
     if (!meetsMinStake) {
       setError(`Min stake: ${minStakeInKoii} KOII`);
-    } else if (stakeToAdd > balance) {
+    } else if (stakeToAdd > mainAccountBalanceInKoii) {
       setError('Not enough balance');
     }
     setStakeAmount(stakeToAdd);
@@ -121,7 +112,7 @@ export const AddStake = create<PropsType>(function AddStake({ task }) {
               )}
             </div>
           </div>
-          <div className="py-2 text-xs text-finnieTeal-700">{`${balance} KOII available in your balance`}</div>
+          <div className="py-2 text-xs text-finnieTeal-700">{`${mainAccountBalanceInKoii} KOII available in your balance`}</div>
           <Button
             label={buttonLabel}
             onClick={buttonAction}

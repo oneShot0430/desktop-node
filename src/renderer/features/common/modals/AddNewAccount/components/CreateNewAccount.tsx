@@ -6,8 +6,8 @@ import { useQueryClient } from 'react-query';
 import { PinInput } from 'renderer/components/PinInput';
 import { ErrorMessage, Button } from 'renderer/components/ui';
 import { useKeyInput } from 'renderer/features/common/hooks';
-import { useUserSettings } from 'renderer/features/common/hooks/userSettings';
 import { ModalContent } from 'renderer/features/modals';
+import { useUserAppConfig } from 'renderer/features/settings/hooks';
 import {
   createNodeWallets,
   generateSeedPhrase,
@@ -25,19 +25,20 @@ type PropsType = Readonly<{
 
 export function CreateNewAccount({ onClose, setNextStep }: PropsType) {
   const [pin, setPin] = useState('');
+  const { userConfig } = useUserAppConfig();
   const [error, setError] = useState<Error | string>('');
   const [accountName, setAccountName] = useState('');
   const queryCache = useQueryClient();
-  const { settings } = useUserSettings();
+  const { userConfig: settings } = useUserAppConfig();
 
   const handleCreateNewKey = async () => {
     const isPinValid = await validatePin(pin, settings?.pin);
 
     try {
-      if (isPinValid) {
+      if (isPinValid && userConfig?.pin) {
         const seedPhrase = await generateSeedPhrase();
         const encryptedSecretPhrase: string = await encryptor.encrypt(
-          pin,
+          userConfig?.pin,
           seedPhrase
         );
 
@@ -86,7 +87,7 @@ export function CreateNewAccount({ onClose, setNextStep }: PropsType) {
     <ModalContent theme={Theme.Dark} className="w-[800px] h-[520px] text-white">
       <div className="flex justify-between p-3">
         <div className="flex items-center justify-between pl-6">
-          <Icon source={KeyUnlockLine} className="h-8 w-6 mx-5" />
+          <Icon source={KeyUnlockLine} className="w-6 h-8 mx-5" />
           <span className="text-[24px]">Create a New Account</span>
         </div>
         <Icon

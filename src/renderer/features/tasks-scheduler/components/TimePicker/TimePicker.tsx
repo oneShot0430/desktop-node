@@ -61,7 +61,6 @@ export function TimePicker({
 
       if (prevTime && prevTime !== formattedTime) {
         // Call onTimeChange only if the time values are different
-        console.log('### prevTime', prevTime);
 
         onTimeChange(formattedTime);
       }

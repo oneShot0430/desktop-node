@@ -10,6 +10,7 @@ import React, {
 } from 'react';
 import { useQueryClient } from 'react-query';
 
+import { MIN_BALANCE_TO_CORRECTLY_RUN_A_TASK } from 'config/node';
 import { RequirementTag, RequirementType } from 'models';
 import {
   LoadingSpinner,
@@ -166,6 +167,7 @@ export function AddPrivateTask({ columnsLayout, onClose }: Props) {
 
   const { metadata, isLoadingMetadata } = useMetadata({
     metadataCID: task?.metadataCID ?? null,
+    taskPublicKey: taskPubkey,
     queryOptions: {
       enabled: !!task?.metadataCID,
     },
@@ -214,7 +216,9 @@ export function AddPrivateTask({ columnsLayout, onClose }: Props) {
 
   const validateTask = useCallback(() => {
     const hasEnoughKoii =
-      accountBalance > Number(minStake) && accountBalance > valueToStake;
+      (accountBalance >= MIN_BALANCE_TO_CORRECTLY_RUN_A_TASK &&
+        alreadyStakedTokensAmount >= Number(minStake)) ||
+      accountBalance >= valueToStake + MIN_BALANCE_TO_CORRECTLY_RUN_A_TASK;
     const hasMinimumStake =
       (alreadyStakedTokensAmount || valueToStake) >= Number(minStake);
     const isTaskValid = hasMinimumStake && isTaskToolsValid && hasEnoughKoii;

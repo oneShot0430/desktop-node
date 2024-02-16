@@ -19,6 +19,7 @@ import { AppRoute } from 'renderer/types/routes';
 import { ErrorContext } from 'renderer/utils';
 import { getKoiiFromRoe } from 'utils';
 
+import { BalanceHelp } from './BalanceHelp';
 import { useRunFirstTasksLogic } from './hooks';
 import TaskItem from './TaskItem';
 
@@ -162,12 +163,14 @@ function RunFirstTask() {
             } KOII`}
             <FundButton />
           </div>
+
           <Button
             className="font-semibold bg-finnieGray-light text-finnieBlue-light w-56 h-[38px]"
             label={runTasksLoading ? 'Running tasks...' : 'Confirm'}
             disabled={runTasksLoading || isRunButtonDisabled}
             onClick={handleConfirm}
           />
+          <BalanceHelp />
           {runTasksError?.map((error, index) => (
             <ErrorMessage
               key={index}

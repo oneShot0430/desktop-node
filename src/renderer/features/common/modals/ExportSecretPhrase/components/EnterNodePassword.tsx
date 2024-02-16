@@ -5,7 +5,7 @@ import { useQueryClient } from 'react-query';
 import { PinInput } from 'renderer/components/PinInput';
 import { ErrorMessage, Button } from 'renderer/components/ui';
 import { useKeyInput } from 'renderer/features/common/hooks';
-import { useUserSettings } from 'renderer/features/common/hooks/userSettings';
+import { useUserAppConfig } from 'renderer/features/settings/hooks';
 import { QueryKeys, getEncryptedSecretPhrase } from 'renderer/services';
 import { validatePin } from 'renderer/utils';
 
@@ -27,13 +27,13 @@ export function EnterNodePassword({
   const [pin, setPin] = useState('');
   const [error, setError] = useState<Error | string>('');
   const queryCache = useQueryClient();
-  const { settings } = useUserSettings();
+  const { userConfig: settings } = useUserAppConfig({});
 
   const handleCreateNewKey = async () => {
     const isPinValid = await validatePin(pin, settings?.pin);
 
     try {
-      if (isPinValid) {
+      if (isPinValid && settings?.pin) {
         const encryptedSecretPhrase = await getEncryptedSecretPhrase(publicKey);
         if (!encryptedSecretPhrase) {
           return setError(
@@ -41,7 +41,7 @@ export function EnterNodePassword({
           );
         }
         const seedPhrase: string = (await decrypt(
-          pin,
+          settings?.pin,
           encryptedSecretPhrase
         )) as string;
         setSeedPhrase(seedPhrase);
@@ -70,9 +70,9 @@ export function EnterNodePassword({
 
   return (
     <div className="text-white">
-      <div className="flex text-lg px-12 leading-6 font-semibold pt-6 text-white">
+      <div className="flex px-12 pt-6 text-lg font-semibold leading-6 text-white">
         Account Name:{' '}
-        <span className="ml-1 tracking-tight font-normal">{accountName}</span>
+        <span className="ml-1 font-normal tracking-tight">{accountName}</span>
       </div>
 
       <p className="px-12 mt-1.5 tracking-tight w-full items-start text-start leading-[32px] text-base">

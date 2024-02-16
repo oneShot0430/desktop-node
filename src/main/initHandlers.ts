@@ -51,6 +51,8 @@ const endpointToControllerMap: Record<
   [Endpoints.GET_ACCOUNT_BALANCE]: controllers.getAccountBalance,
   [Endpoints.GET_AVERAGE_SLOT_TIME]: controllers.getAverageSlotTime,
   [Endpoints.GET_ENCRYPTED_SECRET_PHRASE]: controllers.getEncryptedSecretPhrase,
+  [Endpoints.GET_ENCRYPTED_SECRET_PHRASE_MAP]:
+    controllers.getEncryptedSecretPhraseMap,
   [Endpoints.SWITCH_NETWORK]: controllers.switchNetwork,
   [Endpoints.GET_NETWORK_URL]: controllers.getNetworkUrl,
   [Endpoints.GET_CURRENT_SLOT]: controllers.getCurrentSlot,
@@ -113,6 +115,8 @@ const endpointToControllerMap: Record<
   [Endpoints.REMOVE_NOTIFICATION]: controllers.removeNotification,
   [Endpoints.UPDATE_NOTIFICATION]: controllers.updateNotification,
   [Endpoints.FETCH_S3_FOLDER_CONTENTS]: controllers.fetchS3FolderContents,
+  [Endpoints.SAVE_ENCRYPTED_SECRET_PHRASE_MAP]:
+    controllers.saveEncryptedSecretPhraseMap,
 };
 
 const initHandlers = (): void => {

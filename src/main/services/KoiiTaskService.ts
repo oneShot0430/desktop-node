@@ -110,7 +110,6 @@ export class KoiiTaskService {
     const pubKey = await getStakingAccountPubKey();
     const lastSubmission = getLatestSubmission(pubKey, task.submissions);
 
-    // TODO: Replace with getCurrentSlot
     const currentSlot = await getCurrentSlot();
     const currentRound = Math.floor(
       (currentSlot - task.starting_slot) / task.round_time
@@ -121,7 +120,6 @@ export class KoiiTaskService {
     if (!lastSubmission?.round) {
       if (runningTask) {
         this.stopSubmissionCheck(task.task_id);
-        console.log('#### NO SUBMISSIONS, STOPPING TASK', task.task_id);
         runningTask.child.emit('exit', 0, null);
       }
       return;
@@ -186,7 +184,10 @@ export class KoiiTaskService {
     const roundTime = taskRawData.round_time * averageSlotTime;
 
     this.submissionCheckIntervals[taskAccountPubKey] = setInterval(() => {
-      this.checkTaskSubmission(taskRawData);
+      const taskRawData = this.startedTasksData.find(
+        (task) => task.task_id === taskAccountPubKey
+      );
+      if (taskRawData) this.checkTaskSubmission(taskRawData);
     }, 3.5 * roundTime);
   }
 
@@ -196,6 +197,13 @@ export class KoiiTaskService {
 
   async updateRewardsQueue() {
     await updateRewardsQueue(this.setTimerForRewards, sdk.k2Connection);
+  }
+
+  async stopTaskOnAppQuit() {
+    Object.keys(this.RUNNING_TASKS).forEach((taskPubKey) => {
+      this.RUNNING_TASKS[taskPubKey].child.kill('SIGTERM');
+      delete this.RUNNING_TASKS[taskPubKey];
+    });
   }
 
   async stopTask(

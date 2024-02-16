@@ -1,7 +1,7 @@
 import { namespaceInstance } from 'main/node/helpers/Namespace';
 import { throwDetailedError } from 'utils';
 
-import getEncryptedSecretPhrase from './getEncryptedSecretPhrase';
+import { getEncryptedSecretPhrase } from './getEncryptedSecretPhrase';
 
 jest.mock('main/node/helpers/Namespace', () => ({
   namespaceInstance: {

@@ -346,7 +346,6 @@ export async function executeTasks(
       `Child process exited with code ${code} and signal ${signal}`
     );
     if (code === 0) {
-      console.log('#### RETRYING TASK ####');
       // Handle the error here
       retryTask(
         selectedTask,

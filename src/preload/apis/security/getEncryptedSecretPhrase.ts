@@ -4,9 +4,9 @@ import {
   GetEncryptedSecretPhraseResponse,
 } from 'models';
 
-import sendMessage from '../sendMessage';
+import sendMessage from '../../sendMessage';
 
-export default (
+export const getEncryptedSecretPhrase = (
   payload: GetEncryptedSecretPhraseParam
 ): Promise<GetEncryptedSecretPhraseResponse> =>
   sendMessage(config.endpoints.GET_ENCRYPTED_SECRET_PHRASE, payload);

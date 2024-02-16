@@ -127,7 +127,7 @@ const createNodeWallets = async (
 
     // add seed phrase to db
     const allEncryptedSecretPhraseString: string | undefined =
-      await namespaceInstance.storeGet(SystemDbKeys.EncyptedSecretPhraseMap);
+      await namespaceInstance.storeGet(SystemDbKeys.EncryptedSecretPhraseMap);
 
     try {
       const allEncryptedSecretPhrase: Record<string, string> =
@@ -146,7 +146,7 @@ const createNodeWallets = async (
         allEncryptedSecretPhrase
       );
       await namespaceInstance.storeSet(
-        SystemDbKeys.EncyptedSecretPhraseMap,
+        SystemDbKeys.EncryptedSecretPhraseMap,
         stringifiedAllEncryptedSecretPhrase
       );
     } catch (error: any) {

@@ -26,14 +26,15 @@ function KeyCreationMethodPick() {
   const [accountName, setAccountName] = useState<string>('');
   const [error, setError] = useState<Error | string>('');
   const navigate = useNavigate();
-  const { setNewSeedPhrase, setSystemKey, newAccountPin } =
+  const { setNewSeedPhrase, setSystemKey, newEncryptedAccountPin } =
     useOnboardingContext();
   const { accounts } = useAccounts();
 
   const createNewKey = async (accountName: string) => {
     const seedPhrase = await generateSeedPhrase();
+
     const encryptedSecretPhrase: string = await encrypt(
-      newAccountPin,
+      newEncryptedAccountPin,
       seedPhrase
     );
 
@@ -157,7 +158,7 @@ function KeyCreationMethodPick() {
               disabled={!!error}
             >
               <div className="flex flex-col items-center justify-center w-full h-full rounded-full bg-finnieBlue-light-secondary">
-                <Icon source={SeedSecretPhraseXlLine} className="h-20 w-20" />
+                <Icon source={SeedSecretPhraseXlLine} className="w-20 h-20" />
               </div>
             </button>
             Import Account

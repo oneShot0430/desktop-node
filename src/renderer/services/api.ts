@@ -65,15 +65,17 @@ export const fetchAvailableTasks = async (
   };
 };
 
-export const getMainAccountBalance = (): Promise<number> => {
-  return window.main
-    .getMainAccountPubKey()
-    .then((pubKey) => getAccountBalance(pubKey))
-    .then(getKoiiFromRoe)
-    .then((balance) => {
-      console.log('GETTING MAIN ACCOUNT BALANCE', balance);
-      return balance;
-    });
+export const getMainAccountBalance = async (): Promise<number> => {
+  try {
+    const pubKey = await window.main.getMainAccountPubKey();
+    const accountBalance = await getAccountBalance(pubKey);
+    // const balance = getKoiiFromRoe(accountBalance);
+    console.log('GETTING MAIN ACCOUNT BALANCE', accountBalance);
+    return accountBalance;
+  } catch (error) {
+    console.error('Error getting main account balance:', error);
+    throw error; // Rethrow the error if you want to handle it further up the call stack
+  }
 };
 
 export const getAccountBalance = (pubKey: string) => {
@@ -102,6 +104,15 @@ export const getEncryptedSecretPhrase = (pubKey: string) => {
     .then((encryptedSecretPhrase) => {
       return encryptedSecretPhrase;
     });
+};
+
+export const saveEncryptedSecretPhrase = (payload: Record<string, string>) => {
+  return window.main.saveEncryptedSecretPhraseMap(payload);
+};
+
+export const getEncryptedSecretPhraseMap = async () => {
+  const encryptedSecretPhrase = await window.main.getEncryptedSecretPhraseMap();
+  return encryptedSecretPhrase;
 };
 
 export const getStakingAccountPublicKey = (): Promise<string> => {
@@ -565,6 +576,6 @@ export const purgeNotificationsFromDb = async () => {
 export const fetchExternalNotificationsFromAws = async () => {
   return window.main.fetchS3FolderContents({
     prefix: 'alerts',
-    bucket: 'koii-notifications',
+    bucket: 'koii-node-notification',
   });
 };

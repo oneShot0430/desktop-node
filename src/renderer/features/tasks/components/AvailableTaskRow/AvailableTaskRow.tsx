@@ -23,6 +23,7 @@ import { twMerge } from 'tailwind-merge';
 
 import GearFill from 'assets/svgs/gear-fill.svg';
 import GearLine from 'assets/svgs/gear-line.svg';
+import { MIN_BALANCE_TO_CORRECTLY_RUN_A_TASK } from 'config/node';
 import { RequirementTag, RequirementType } from 'models';
 import {
   Button,
@@ -45,6 +46,7 @@ import {
   useOnClickOutside,
   useStakingAccount,
   useOrcaPodman,
+  useConfirmRunTask,
 } from 'renderer/features';
 import { useAutoPairVariables } from 'renderer/features/common/hooks/useAutoPairVariables';
 import {
@@ -88,7 +90,9 @@ function AvailableTaskRow({ task, index, columnsLayout }: Props) {
   const [isTaskValidToRun, setIsTaskValidToRun] = useState(false);
   const [taskStartSucceeded, setTaskStartSucceeded] = useState(false);
   const [taskStartFailed, setTaskStartFailed] = useState(false);
-  const [valueToStake, setValueToStake] = useState<number>(0);
+  const [valueToStake, setValueToStake] = useState<number>(
+    task.minimumStakeAmount || 0
+  );
   const [meetsMinimumStake, setMeetsMinimumStake] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | ReactNode>('');
   const { executeTask, getTaskStartPromise, getIsTaskLoading } =
@@ -172,6 +176,7 @@ function AvailableTaskRow({ task, index, columnsLayout }: Props) {
 
   const { metadata, isLoadingMetadata } = useMetadata({
     metadataCID: task.metadataCID,
+    taskPublicKey: publicKey,
   });
 
   const globalAndTaskVariables: RequirementTag[] = useMemo(
@@ -228,8 +233,9 @@ function AvailableTaskRow({ task, index, columnsLayout }: Props) {
 
   const validateTask = useCallback(() => {
     const hasEnoughKoii =
-      taskTotalStake > minStake ||
-      (accountBalance > minStake && accountBalance > valueToStake);
+      (accountBalance >= MIN_BALANCE_TO_CORRECTLY_RUN_A_TASK &&
+        alreadyStakedTokensAmount >= minStake) ||
+      accountBalance >= valueToStake + MIN_BALANCE_TO_CORRECTLY_RUN_A_TASK;
     const hasMinimumStake =
       (alreadyStakedTokensAmount || valueToStake) >= minStake;
     const isTaskValid = hasMinimumStake && isTaskToolsValid && hasEnoughKoii;
@@ -424,6 +430,25 @@ function AvailableTaskRow({ task, index, columnsLayout }: Props) {
     hideIfOrcaNotInstalled && 'hidden'
   );
 
+  const runTask = () => {
+    executeTask({
+      publicKey,
+      valueToStake,
+      alreadyStakedTokensAmount,
+    });
+    trackEvent('task_start', {
+      taskName,
+      taskPublicKey: publicKey,
+      valueToStake,
+    });
+  };
+
+  const { showModal: showConfirmRunTaskModal } = useConfirmRunTask({
+    taskName: task.taskName,
+    stake: alreadyStakedTokensAmount || valueToStake,
+    onConfirm: runTask,
+  });
+
   return (
     taskStartCompleted || (
       <TableRow
@@ -536,22 +561,7 @@ function AvailableTaskRow({ task, index, columnsLayout }: Props) {
                   }`}
                 />
               }
-              onClick={
-                isRunning
-                  ? handleStopTask
-                  : () => {
-                      executeTask({
-                        publicKey,
-                        valueToStake,
-                        alreadyStakedTokensAmount,
-                      });
-                      trackEvent('task_start', {
-                        taskName,
-                        taskPublicKey: publicKey,
-                        valueToStake,
-                      });
-                    }
-              }
+              onClick={isRunning ? handleStopTask : showConfirmRunTaskModal}
               disabled={!isRunning && !isTaskValidToRun}
             />
           </Popover>

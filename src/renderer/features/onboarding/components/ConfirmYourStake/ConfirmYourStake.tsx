@@ -40,14 +40,14 @@ function ConfirmYourStake() {
   const { addAppNotification: showReferralProgramNotification } =
     useAppNotifications('REFERRAL_PROGRAM');
 
-  const { accountBalance: balance = 0, loadingAccountBalance } =
+  const { accountBalance: mainAccountBalance = 0, loadingAccountBalance } =
     useMainAccountBalance();
   const handleRunTasksSuccess = () => {
     handleSaveUserAppConfig({ settings: { onboardingCompleted: true } });
     showReferralProgramNotification();
     showFirstTaskRunningNotification();
   };
-  const balanceInKoii = getKoiiFromRoe(balance);
+  const balanceInKoii = getKoiiFromRoe(mainAccountBalance);
 
   const { runAllTasks, runTasksLoading, runTasksError } = useRunMultipleTasks({
     tasksToRun,
@@ -76,8 +76,6 @@ function ConfirmYourStake() {
       runAllTasks();
     }
   };
-
-  const handleSelectMoreTasks = () => navigate(AppRoute.AddTask);
 
   const updateStake = (publicKey: string, newStake: number) => {
     const updatedTasks = tasksToRun.map((task) => {
@@ -118,8 +116,10 @@ function ConfirmYourStake() {
           <div className="flex flex-col items-center justify-center">
             <div className="flex flex-row items-center gap-2 mb-2 text-sm text-finnieEmerald-light">
               <Icon source={CurrencyMoneyLine} className="w-6 h-6" />
-              {`Total balance: ${
-                loadingAccountBalance ? 'Loading balance...' : balanceInKoii
+              {`Total mainAccountBalance: ${
+                loadingAccountBalance
+                  ? 'Loading mainAccountBalance...'
+                  : balanceInKoii
               } KOII`}
             </div>
             <Button

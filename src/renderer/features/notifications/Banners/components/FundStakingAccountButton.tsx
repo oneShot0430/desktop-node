@@ -20,7 +20,7 @@ export function FundStakingAccountButton({
   const invalidateQueries = () => {
     queryCache.invalidateQueries([QueryKeys.AccountBalance, stakingPublicKey]);
     queryCache.invalidateQueries([
-      QueryKeys.AccountBalance,
+      QueryKeys.MainAccountBalance,
       mainAccountPublicKey,
     ]);
   };
@@ -32,7 +32,6 @@ export function FundStakingAccountButton({
         setTimeout(() => {
           invalidateQueries();
           // await 15sec until balances are updated on chain
-          console.log('### queries invalidated');
         }, 1000 * 15);
 
         markAsRead(notificationId);

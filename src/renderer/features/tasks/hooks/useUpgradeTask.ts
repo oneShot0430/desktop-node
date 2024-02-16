@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
@@ -42,6 +42,8 @@ export const useUpgradeTask = ({
   oldTaskIsPrivate,
   oldTaskIsCoolingDown,
 }: Params) => {
+  const hasNotifiedUpgrade = useRef(false);
+
   const { addAppNotification: showUpgradeTaskNotification } =
     useAppNotifications('TASK_UPGRADE');
   const initialStatus = task.isMigrated
@@ -115,6 +117,7 @@ export const useUpgradeTask = ({
     isLoadingMetadata: isLoadingNewTaskVersionMetadata,
   } = useMetadata({
     metadataCID: newTaskVersion?.metadataCID,
+    taskPublicKey: newTaskVersion?.publicKey || 'newTaskVersionPubKeyMissing',
     queryOptions: { enabled: !!newTaskVersion },
   });
 
@@ -162,51 +165,41 @@ export const useUpgradeTask = ({
   const { handleSaveUserAppConfig, userConfig } = useUserAppConfig({});
 
   const handleNotifyUpgradeAvailable = useCallback(() => {
+    if (hasNotifiedUpgrade.current) return;
+
     const taskIsReadyToUpgrade =
       !oldTaskIsCoolingDown &&
       newTaskVersion &&
+      userConfig &&
       [
         UpgradeStatus.UPGRADE_AVAILABLE,
         UpgradeStatus.PRIVATE_UPGRADE_AVAILABLE,
       ].includes(upgradeStatus);
-
-    if (!taskIsReadyToUpgrade) return;
-
-    const tasksThatAlreadyNotifiedUpgradesAvailable =
-      userConfig?.tasksThatAlreadyNotifiedUpgradesAvailable || [];
-    const hasNotified = tasksThatAlreadyNotifiedUpgradesAvailable.includes(
-      newTaskVersion?.publicKey || ''
-    );
-    const shouldNotNotify = hasNotified || !userConfig;
-
-    if (shouldNotNotify) return;
-
-    const registerTaskUpgradeAsNotified = () =>
-      handleSaveUserAppConfig({
-        settings: {
-          tasksThatAlreadyNotifiedUpgradesAvailable: [
-            ...tasksThatAlreadyNotifiedUpgradesAvailable,
-            newTaskVersion.publicKey,
-          ],
-        },
-      });
-
-    const onClickBannerCTA = () => {
-      const newUpgradeStatus = newTaskVersion.isWhitelisted
-        ? UpgradeStatus.IS_CONFIRMING_UPGRADE
-        : UpgradeStatus.PRIVATE_UPGRADE_WARNING;
-      setUpgradeStatus(newUpgradeStatus);
-      registerTaskUpgradeAsNotified();
-    };
-
-    showUpgradeTaskNotification({ task });
+    if (taskIsReadyToUpgrade) {
+      const tasksThatAlreadyNotifiedUpgradesAvailable =
+        userConfig?.tasksThatAlreadyNotifiedUpgradesAvailable || [];
+      const hasNotified = tasksThatAlreadyNotifiedUpgradesAvailable.includes(
+        newTaskVersion?.publicKey || ''
+      );
+      if (!hasNotified) {
+        showUpgradeTaskNotification({ taskName: task.taskName });
+        handleSaveUserAppConfig({
+          settings: {
+            tasksThatAlreadyNotifiedUpgradesAvailable: [
+              ...tasksThatAlreadyNotifiedUpgradesAvailable,
+              newTaskVersion.publicKey,
+            ],
+          },
+        });
+        hasNotifiedUpgrade.current = true;
+      }
+    }
   }, [
     oldTaskIsCoolingDown,
     newTaskVersion,
-    upgradeStatus,
     userConfig,
-    showUpgradeTaskNotification,
-    task,
+    upgradeStatus,
+    task.taskName,
     handleSaveUserAppConfig,
   ]);
 

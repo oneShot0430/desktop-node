@@ -67,7 +67,7 @@ export function StartingTasksProvider({ children }: PropsType) {
           // revalidate scheduler tasks cache
           queryClient.invalidateQueries([QueryKeys.SchedulerTasks, publicKey]);
           queryClient.invalidateQueries([
-            QueryKeys.AccountBalance,
+            QueryKeys.MainAccountBalance,
             mainAccountPublicKey,
           ]);
         });

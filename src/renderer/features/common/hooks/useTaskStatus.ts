@@ -18,7 +18,7 @@ export const useTaskStatus = ({ task, stakingAccountPublicKey }: Params) => {
     isLoading: isLoadingStatus,
     error,
   } = useQuery(
-    [QueryKeys.TaskStatus, task],
+    [QueryKeys.TaskStatus, task.publicKey],
     () =>
       TaskService.getStatus(
         task,

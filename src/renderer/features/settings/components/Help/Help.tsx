@@ -1,5 +1,6 @@
 import { Icon, CheckSuccessLine, CopyLine } from '@_koii/koii-styleguide';
 import React, { useState, useEffect } from 'react';
+import { useQuery } from 'react-query';
 
 import FolderIcon from 'assets/svgs/folder-icon.svg';
 import { Button } from 'renderer/components/ui';
@@ -9,6 +10,7 @@ import {
   useMainAccount,
   useStakingAccount,
 } from 'renderer/features/settings/hooks';
+import { QueryKeys, getVersion } from 'renderer/services';
 
 import { SectionHeader } from '../SectionHeader';
 import { Spacer } from '../Spacer';
@@ -25,15 +27,20 @@ export function Help() {
     window.main.openNodeLogfileFolder();
   };
 
-  const { copyToClipboard, copied: hasCopiedKey } = useClipboard();
+  const { copyToClipboard: copyKeyPair, copied: hasCopiedKeyPair } =
+    useClipboard();
+  const { copyToClipboard: copyNodeVersion, copied: hasCopiedNodeVersion } =
+    useClipboard();
 
   const { data: mainAccountPublicKey } = useMainAccount();
   const { data: stakingAccountPublicKey } = useStakingAccount();
+  const { data: appVersion = '' } = useQuery(QueryKeys.AppVersion, getVersion, {
+    refetchInterval: Infinity,
+  });
 
-  const contentToCopy = `System Key: ${mainAccountPublicKey}, Staking Key: ${stakingAccountPublicKey}`;
-  const copyToClipboardAndClose = () => {
-    copyToClipboard(contentToCopy || '');
-  };
+  const keyPair = `System Key: ${mainAccountPublicKey}, Staking Key: ${stakingAccountPublicKey}`;
+  const copyKeyPairToClipboard = () => copyKeyPair(keyPair);
+  const copyNodeVersionToClipboard = () => copyNodeVersion(appVersion);
 
   const [discordButtonClickCount, setDiscordButtonClickCount] = useState(0);
   const [showSection, setShowSection] = useState(false);
@@ -50,6 +57,7 @@ export function Help() {
   const handleDiscordButtonClick = () => {
     setDiscordButtonClickCount((prevCount) => prevCount + 1);
   };
+
   return (
     <div className="overflow-y-auto text-white">
       <SectionHeader title="Need Help?" />
@@ -109,12 +117,26 @@ export function Help() {
           </p>
 
           <Button
-            onClick={copyToClipboardAndClose}
-            label={hasCopiedKey ? 'Copied' : 'Copy'}
+            onClick={copyKeyPairToClipboard}
+            label={hasCopiedKeyPair ? 'Copied' : 'Copy'}
             className="text-white bg-purple-4 w-[110px] py-1.5 text-sm my-1 rounded"
             icon={
               <Icon
-                source={hasCopiedKey ? CheckSuccessLine : CopyLine}
+                source={hasCopiedKeyPair ? CheckSuccessLine : CopyLine}
+                className="w-4 h-4"
+              />
+            }
+          />
+
+          <p>Node version: {appVersion}</p>
+
+          <Button
+            onClick={copyNodeVersionToClipboard}
+            label={hasCopiedNodeVersion ? 'Copied' : 'Copy'}
+            className="text-white bg-purple-4 w-[110px] py-1.5 text-sm my-1 rounded"
+            icon={
+              <Icon
+                source={hasCopiedNodeVersion ? CheckSuccessLine : CopyLine}
                 className="w-4 h-4"
               />
             }
@@ -126,7 +148,7 @@ export function Help() {
               placement="right"
               tooltipContent="You can find your task.log file by clicking the menu icon to the right of your tasks."
             >
-              <span className="cursor-help">Task log file(?)</span>
+              <span className="cursor-help">Task log file (?)</span>
             </Tooltip>
           </p>
           <Button
@@ -141,18 +163,9 @@ export function Help() {
               placement="right"
               tooltipContent="Open the task info and check 'Task ID'."
             >
-              <span className="cursor-help">Task IDs(?)</span>
+              <span className="cursor-help">Task IDs (?) </span>
             </Tooltip>
-            ,{' '}
-            <Tooltip
-              placement="right"
-              tooltipContent="Version is at bottom right."
-            >
-              <span className="cursor-help">
-                the version of the Koii Node(?)
-              </span>
-            </Tooltip>
-            , and the time the node has been running are also helpful!
+            and the time the node has been running are also helpful!
           </p>
         </div>
       </div>

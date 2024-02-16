@@ -39,6 +39,7 @@ function TaskItem({
   const [editStakeView, setEditStakeView] = useState<boolean>(false);
   const { metadata } = useMetadata({
     metadataCID: task.metadataCID,
+    taskPublicKey: task.publicKey,
   });
   const { copyToClipboard } = useClipboard();
 

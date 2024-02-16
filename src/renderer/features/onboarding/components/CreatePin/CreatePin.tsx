@@ -1,19 +1,20 @@
-import { hash } from 'bcryptjs';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import LinesVerticalTeal from 'assets/svgs/onboarding/lines-vertical-teal.svg';
 import { PinInput } from 'renderer/components/PinInput';
 import { Button, Tooltip } from 'renderer/components/ui';
+import { usePinUtils } from 'renderer/features/security';
+import { useUserAppConfig } from 'renderer/features/settings/hooks';
 import { openBrowserWindow } from 'renderer/services';
 import { Theme } from 'renderer/types/common';
 import { AppRoute } from 'renderer/types/routes';
 
-import { useUserAppConfig } from '../../../common/hooks/useUserAppConfig';
 import { useOnboardingContext } from '../../context/onboarding-context';
 import { ContentRightWrapper } from '../ContentRightWrapper';
 
 function CreatePin() {
+  const { encryptPin } = usePinUtils();
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [pin, setPin] = useState('');
   const [pinConfirm, setPinConfirm] = useState('');
@@ -24,12 +25,11 @@ function CreatePin() {
       navigate(AppRoute.OnboardingPickKeyCreationMethod),
   });
 
-  const { setNewAccountPin } = useOnboardingContext();
+  const { setNewEncryptedAccountPin } = useOnboardingContext();
 
   const handlePinCreate = async () => {
-    const saltRounds = 10;
-    const hashedPin = await hash(pin, saltRounds);
-    setNewAccountPin(pin);
+    const hashedPin = await encryptPin(pin);
+    setNewEncryptedAccountPin(hashedPin);
     handleSaveUserAppConfig({
       settings: {
         pin: hashedPin,
@@ -41,7 +41,7 @@ function CreatePin() {
   };
 
   const pinIsMatching = useMemo(() => pin === pinConfirm, [pin, pinConfirm]);
-  const pinsLengtIsMatching = useMemo(
+  const pinsLengthIsMatching = useMemo(
     () => pin.length === 6 && pinConfirm.length === 6,
     [pin, pinConfirm]
   );
@@ -53,7 +53,7 @@ function CreatePin() {
     return false;
   }, [pin, pinIsMatching, termsAccepted]);
 
-  const diableLogin = !canLogIn();
+  const disableLogin = !canLogIn();
 
   const openTermsWindow = () => {
     openBrowserWindow('https://www.koii.network/TOU_June_22_2021.pdf');
@@ -99,7 +99,7 @@ function CreatePin() {
               key={pin}
             />
             <div className="pt-4 text-xs text-finnieOrange">
-              {!pinIsMatching && pinsLengtIsMatching ? (
+              {!pinIsMatching && pinsLengthIsMatching ? (
                 <span>
                   Oops! These PINs don’t match. Double check it and try again.
                 </span>
@@ -113,7 +113,7 @@ function CreatePin() {
         </div>
 
         <div className="flex flex-col items-start pt-14">
-          <div className="items-center relative inline-block">
+          <div className="relative items-center inline-block">
             <input
               id="link-checkbox"
               type="checkbox"
@@ -122,7 +122,7 @@ function CreatePin() {
                 e.key === 'Enter' && setTermsAccepted(!termsAccepted)
               }
               checked={termsAccepted}
-              onChange={(e) => setTermsAccepted(!termsAccepted)}
+              onChange={() => setTermsAccepted(!termsAccepted)}
             />
             <label
               htmlFor="link-checkbox"
@@ -139,10 +139,10 @@ function CreatePin() {
             </label>
           </div>
           <Button
-            disabled={diableLogin}
+            disabled={disableLogin}
             label="Log in"
             onClick={handlePinCreate}
-            className="bg-finnieGray-light text-finnieBlue w-60 mt-6 mr-3"
+            className="mt-6 mr-3 bg-finnieGray-light text-finnieBlue w-60"
           />
         </div>
       </ContentRightWrapper>

@@ -10,6 +10,7 @@ type UseStoredPairedTaskVariablesParams = {
 export const useAllStoredPairedTaskVariables = (
   options?: UseStoredPairedTaskVariablesParams
 ) => {
+  // TODO rename to AllStoredPairedTaskVariables, check occurrences of StoredTaskPairedTaskVariables and cleanup
   const storedPairedTaskVariablesQuery = useQuery<PairedTaskVariables>(
     [QueryKeys.StoredPairedTaskVariables],
     getStoredPairedTaskVariables,

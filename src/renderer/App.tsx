@@ -34,7 +34,9 @@ function App(): JSX.Element {
               className: 'px-4 text-sm text-[#171753]',
               duration: 4500,
               error: {
-                icon: <ExclamationMarkIcon className="w-6 h-6" />,
+                icon: (
+                  <ExclamationMarkIcon className="w-6 h-6 text-finnieBlue" />
+                ),
                 style: {
                   backgroundColor: '#FFA6A6',
                 },

@@ -1,6 +1,6 @@
 import { Keypair } from '@_koi/web3.js';
 import { TaskData as TaskNodeTaskData } from '@koii-network/task-node';
-import { TASK_STABILITY_THRESHOLD } from 'config/node';
+import { TASK_STABILITY_THRESHOLD, MAX_TASK_RETRY_TIME } from 'config/node';
 import { SystemDbKeys } from 'config/systemDbKeys';
 import { Express } from 'express';
 import { get } from 'lodash';
@@ -34,6 +34,9 @@ const retryTask = async (
   }
 
   if (!taskRetryData.cancelled) {
+    const retryInterval = 2 ** (taskRetryData.count + 1) * 1000;
+    const retryTime = Math.min(retryInterval, MAX_TASK_RETRY_TIME);
+
     console.log(
       `WILL RETRY [${selectedTask.task_name}] IN ${
         2 ** (Number(taskRetryData?.count) + 1)
@@ -78,7 +81,7 @@ const retryTask = async (
           taskRetryData.timerReference = null;
 
           const payload: any = {
-            ...taskRetryData,
+            ...allTaskRetryData,
             [selectedTask.task_id]: taskRetryData,
           };
 
@@ -87,7 +90,7 @@ const retryTask = async (
           console.log('ABORT TASK RETRY');
         }
       }
-    }, 2 ** (taskRetryData.count + 1) * 1000);
+    }, retryTime);
 
     // store timerReference
     taskRetryData.timerReference = timerReference[Symbol.toPrimitive](); // get timeoutId in number
