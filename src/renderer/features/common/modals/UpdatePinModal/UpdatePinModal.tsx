@@ -1,32 +1,127 @@
 import { Icon, KeyUnlockLine, CloseLine } from '@_koii/koii-styleguide';
 import { create, useModal } from '@ebay/nice-modal-react';
-import { hash } from 'bcryptjs';
+import { decrypt, encrypt } from '@metamask/browser-passworder';
+import { compare } from 'bcryptjs';
 import React, { useMemo, useState } from 'react';
+import { useQuery } from 'react-query';
 
+import { mapValues } from 'lodash';
 import { PinInput } from 'renderer/components/PinInput';
 import { Button } from 'renderer/components/ui';
 import { useCloseWithEsc } from 'renderer/features/common/hooks/useCloseWithEsc';
 import { Modal, ModalContent } from 'renderer/features/modals';
+import { usePinUtils } from 'renderer/features/security';
 import { useUserAppConfig } from 'renderer/features/settings/hooks/useUserAppConfig';
+import {
+  getEncryptedSecretPhraseMap,
+  QueryKeys,
+  saveEncryptedSecretPhrase,
+} from 'renderer/services';
 import { Theme } from 'renderer/types/common';
 
 export const UpdatePinModal = create(function UpdatePinModal() {
-  const { handleSaveUserAppConfig, isMutating } = useUserAppConfig({
-    onConfigSaveSuccess: () => {
-      modal.remove();
-    },
-  });
+  const [oldPinError, setOldPinError] = useState<string>();
+  const [oldPinValue, setOldPinValue] = useState('');
+  const { encryptPin } = usePinUtils();
+  const { handleSaveUserAppConfigAsync, isMutating, userConfig } =
+    useUserAppConfig({
+      onConfigSaveSuccess: () => {
+        modal.remove();
+      },
+    });
+  const { data: encryptedSecretPhraseMap, isLoading } = useQuery(
+    [QueryKeys.EncryptedSecretPhraseMap],
+    getEncryptedSecretPhraseMap
+  );
+
   const [focus, setFocus] = useState(true);
   const [pin, setPin] = useState('');
   const [pinConfirm, setPinConfirm] = useState('');
   const modal = useModal();
+  const encryptedOldPin = userConfig?.pin;
+  const pinIsMatching = useMemo(() => pin === pinConfirm, [pin, pinConfirm]);
+  const pinsLengthIsMatching = useMemo(
+    () => pin.length === 6 && pinConfirm.length === 6,
+    [pin, pinConfirm]
+  );
 
   const handlePinCreate = async () => {
-    const saltRounds = 10;
-    const hashedPin = await hash(pin, saltRounds);
-    handleSaveUserAppConfig({
-      settings: { pin: hashedPin, hasCopiedReferralCode: false },
-    });
+    try {
+      if (
+        pinIsMatching &&
+        pinsLengthIsMatching &&
+        encryptedOldPin &&
+        encryptedSecretPhraseMap
+      ) {
+        const pinMatchesStoredHash = await compare(
+          oldPinValue,
+          userConfig?.pin || ''
+        );
+
+        if (!pinMatchesStoredHash) {
+          setOldPinError('Old PIN is incorrect');
+          return;
+        }
+
+        const hashedPin = await encryptPin(pinConfirm);
+
+        /**
+         * Since users with the previous version of the app might have their secret phrases encrypted with the old pin,
+         * we need to attempt to decrypt the secret phrases with the decrypted old as well.
+         */
+        const encryptionTasks = mapValues(
+          encryptedSecretPhraseMap,
+          async (encryptedSecretPhrase) => {
+            try {
+              // First attempt with encryptedOldPin
+              const decryptedSecretPhrase = await decrypt(
+                encryptedOldPin,
+                encryptedSecretPhrase
+              );
+              return encrypt(hashedPin, decryptedSecretPhrase);
+            } catch (error) {
+              console.log(
+                'Decryption with encryptedOldPin failed, trying with oldPinValue'
+              );
+              // If the first attempt fails, try with oldPinValue
+              try {
+                const decryptedSecretPhrase = await decrypt(
+                  oldPinValue, // Use oldPinValue for the second attempt
+                  encryptedSecretPhrase
+                );
+                return encrypt(hashedPin, decryptedSecretPhrase);
+              } catch (secondError) {
+                console.error('Both decryption attempts failed');
+                throw secondError; // Rethrow or handle as needed
+              }
+            }
+          }
+        );
+
+        // Await all encryption tasks to complete
+        const newSecretPhraseEncryptions = await Promise.all(
+          Object.values(encryptionTasks)
+        );
+
+        // Transform the array back to the object with the same keys
+        const newEncryptedSecretPhraseMap = Object.keys(
+          encryptedSecretPhraseMap
+        ).reduce<Record<string, string>>((acc, publicKey, index) => {
+          acc[publicKey] = newSecretPhraseEncryptions[index];
+          return acc;
+        }, {});
+
+        // Save new pin and encrypted secret phrases
+        await handleSaveUserAppConfigAsync({
+          settings: { pin: hashedPin, hasCopiedReferralCode: false },
+        });
+
+        await saveEncryptedSecretPhrase(newEncryptedSecretPhraseMap);
+        console.log('Encryptions updated successfully');
+      }
+    } catch (error) {
+      console.error('Operation failed, no changes were applied:', error);
+    }
   };
 
   const handlePinSubmit = (pin: string) => {
@@ -34,19 +129,15 @@ export const UpdatePinModal = create(function UpdatePinModal() {
     setPin(pin);
   };
 
-  const pinIsMatching = useMemo(() => pin === pinConfirm, [pin, pinConfirm]);
-  const pinsLengtIsMatching = useMemo(
-    () => pin.length === 6 && pinConfirm.length === 6,
-    [pin, pinConfirm]
-  );
-
   const handleClose = () => {
     modal.remove();
   };
 
   useCloseWithEsc({ closeModal: handleClose });
 
-  console.log('@@@@isUserConfigLoading', isMutating);
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <Modal>
@@ -67,22 +158,39 @@ export const UpdatePinModal = create(function UpdatePinModal() {
         </div>
 
         <div className="flex flex-col items-center justify-center mt-4">
-          <div className="z-50 flex flex-col">
-            <div className="mb-5 text-lg w-fit">Update your Access PIN.</div>
-            <PinInput focus onComplete={handlePinSubmit} />
+          <div className="flex flex-col gap-6">
+            <div className="">
+              <div className="mb-2 text-md w-fit">Old PIN.</div>
+              <PinInput
+                focus
+                onComplete={(value) => {
+                  setOldPinValue(value);
+                }}
+              />
+            </div>
+
+            <div className="flex flex-col gap-4">
+              <div className="">
+                <div className="mb-2 text-md w-fit">New PIN</div>
+                <PinInput onComplete={handlePinSubmit} />
+              </div>
+
+              <div>
+                <div className="mb-2 text-md w-fit">Confirm New PIN.</div>
+                <PinInput
+                  focus={!pinConfirm && !focus}
+                  onChange={(pin) => setPinConfirm(pin)}
+                  key={pin}
+                />
+              </div>
+            </div>
           </div>
 
-          <div className="flex flex-col">
-            <div className="mt-8 mb-5 text-lg w-fit">
-              Confirm your Access PIN.
-            </div>
-            <PinInput
-              focus={!pinConfirm && !focus}
-              onChange={(pin) => setPinConfirm(pin)}
-              key={pin}
-            />
+          {oldPinError ? (
+            <div className="pt-4 text-xs text-finnieRed">{oldPinError}</div>
+          ) : (
             <div className="pt-4 text-xs text-finnieOrange">
-              {!pinIsMatching && pinsLengtIsMatching ? (
+              {!pinIsMatching && pinsLengthIsMatching ? (
                 <span>
                   Oops! These PINs don’t match. Double check it and try again.
                 </span>
@@ -92,10 +200,10 @@ export const UpdatePinModal = create(function UpdatePinModal() {
                 </span>
               )}
             </div>
-          </div>
+          )}
 
           <Button
-            disabled={!pinIsMatching || !pinsLengtIsMatching || isMutating}
+            disabled={!pinIsMatching || !pinsLengthIsMatching || isMutating}
             label="Confirm PIN"
             onClick={handlePinCreate}
             className="py-2 mt-6 mr-3 bg-finnieGray-light text-finnieBlue w-60"

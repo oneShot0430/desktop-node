@@ -27,7 +27,6 @@ export const useStartedTasks = ({
     enabled,
     onSuccess(data) {
       const flattenData = joinPaginatedResponseContent(data);
-      console.log('#### FLATTEN TASK DATA', flattenData);
       setData(flattenData);
     },
   });

@@ -8,12 +8,11 @@ import {
   useNotificationActions,
   useNotificationStore,
 } from 'renderer/features/notifications/useNotificationStore';
+import { useUserAppConfig } from 'renderer/features/settings/hooks';
 import { useMainAccount } from 'renderer/features/settings/hooks/useMainAccount';
 import {
   fetchExternalNotificationsFromAws,
   QueryKeys,
-  saveUserConfig,
-  getUserConfig,
 } from 'renderer/services';
 // eslint-disable-next-line @cspell/spellchecker
 import { v4 as uuidv4 } from 'uuid';
@@ -29,6 +28,8 @@ type ExternalNotification = {
 };
 
 export const useExternalNotifications = () => {
+  const { handleSaveUserAppConfigAsync, refetchUserConfig } =
+    useUserAppConfig();
   const { data: mainAccount } = useMainAccount();
   const { addNotification } = useNotificationActions();
   const localNotifications = useNotificationStore(
@@ -36,7 +37,7 @@ export const useExternalNotifications = () => {
   );
 
   const markAsShown = (id: string) => {
-    saveUserConfig({
+    handleSaveUserAppConfigAsync({
       settings: {
         shownNotifications: [...localNotifications.map((n) => n.id), id],
       },
@@ -44,8 +45,8 @@ export const useExternalNotifications = () => {
   };
 
   const isNotificationShown = async (id: string) => {
-    const shownNotifications = await getUserConfig();
-    return shownNotifications?.shownNotifications?.includes(id);
+    const { data: userConfig } = await refetchUserConfig();
+    return userConfig?.shownNotifications?.includes(id);
   };
 
   useQuery(

@@ -14,7 +14,7 @@ export const useUnstakingAvailability = ({
 }: Params) => {
   const { data: canUnstake, isLoading: isLoadingUnstakingAvailability } =
     useQuery(
-      [QueryKeys.UnstakingAvailability, task],
+      [QueryKeys.UnstakingAvailability, task.publicKey],
       () => TaskService.getUnstakingAvailability(task, stakingAccountPublicKey),
       {
         enabled: !!stakingAccountPublicKey,

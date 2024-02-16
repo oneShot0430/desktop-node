@@ -1,7 +1,7 @@
 import { useCallback, useRef } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
-import { useUserSettings } from 'renderer/features/common/hooks/userSettings';
+import { useUserAppConfig } from 'renderer/features/settings/hooks';
 import {
   initializeTasks,
   QueryKeys,
@@ -11,7 +11,8 @@ import {
 
 export function useNodeInitialization() {
   const queryClient = useQueryClient();
-  const { settings, loadingSettings } = useUserSettings();
+  const { userConfig: settings, isUserConfigLoading: loadingSettings } =
+    useUserAppConfig();
   const initializeNodeCalled = useRef(false);
 
   const prefetchQueries = useCallback(async () => {

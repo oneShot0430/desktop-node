@@ -1,50 +1,53 @@
 import { Icon } from '@_koii/koii-styleguide';
-import React, { useCallback, useMemo } from 'react';
-import { useQuery } from 'react-query';
+import React, { useCallback, useState } from 'react';
 
 import ReloadSvg from 'assets/svgs/reload-icon-big.svg';
-import { ErrorMessage } from 'renderer/components/ui';
+import { ErrorMessage } from 'renderer/components/ui/ErrorMessage';
 import { useFundNewAccountModal } from 'renderer/features/common';
-import { useMainAccount } from 'renderer/features/settings';
-import { getMainAccountBalance, QueryKeys } from 'renderer/services';
+import {
+  useMainAccountBalance,
+  useRefreshMainAccountBalanceAction,
+} from 'renderer/features/settings';
 
 type PropsType = {
   onBalanceRefresh?: (balance: string | number) => void;
 };
 
 export function RefreshBalance({ onBalanceRefresh }: PropsType) {
-  const { data: mainAccountPubKey } = useMainAccount();
   const {
-    data: balance,
-    isLoading,
-    isRefetching,
-    refetch,
-    error,
-  } = useQuery<number, Error>(
-    [QueryKeys.AccountBalance, mainAccountPubKey],
-    getMainAccountBalance,
-    {
-      onSuccess: (balance) => {
-        if (onBalanceRefresh) {
-          console.log('###### balance', balance);
-          onBalanceRefresh(balance);
-        }
-      },
-      refetchInterval: 3000,
-      enabled: !!mainAccountPubKey,
-    }
-  );
-
-  const { showModal: showFundAccountModal } = useFundNewAccountModal();
-
-  const checkingBalance = useMemo(
-    () => isRefetching || isLoading,
-    [isLoading, isRefetching]
-  );
+    accountBalance: mainAccountBalance,
+    loadingAccountBalance,
+    accountBalanceLoadingError,
+    isRefetchingAccountBalance,
+  } = useMainAccountBalance({ onSuccess: onBalanceRefresh });
+  const { refreshMainAccountBalance } = useRefreshMainAccountBalanceAction();
+  const [isAnimating, setIsAnimating] = useState(false);
 
   const handleRefetch = useCallback(() => {
-    refetch();
-  }, [refetch]);
+    setIsAnimating(true);
+    setTimeout(() => {
+      setIsAnimating(false);
+    }, 800);
+    /**
+     * Invalidate the cache to force a refetch
+     */
+    refreshMainAccountBalance();
+    setTimeout(() => {
+      /**
+       * Invalidate the cache again after 5 seconds to ensure the balance is updated
+       */
+      refreshMainAccountBalance();
+    }, 5000);
+  }, [refreshMainAccountBalance]);
+
+  const renderError = () => {
+    if (accountBalanceLoadingError) {
+      return <ErrorMessage error="Cant't fetch balance, try again" />;
+    }
+    return null;
+  };
+
+  const { showModal: showFundAccountModal } = useFundNewAccountModal();
 
   return (
     <div className="flex flex-col items-center h-full pt-44">
@@ -53,7 +56,9 @@ export function RefreshBalance({ onBalanceRefresh }: PropsType) {
         <br /> to your new account.
       </div>
       <div
-        className="w-[180px] h-[180px] p-2 border-dashed border-finnieOrange rounded-full border-2 mb-4 cursor-pointer"
+        className={`w-[180px] h-[180px] p-2 border-dashed border-finnieOrange rounded-full border-2 mb-4 cursor-pointer flex items-center justify-center ${
+          isAnimating ? 'animate-rotate-once' : ''
+        }`}
         onClick={handleRefetch}
         role="button"
         tabIndex={0}
@@ -69,11 +74,11 @@ export function RefreshBalance({ onBalanceRefresh }: PropsType) {
       </div>
       <div className="mb-2">Refresh Balance</div>
       <div className="mb-2">
-        {checkingBalance
+        {loadingAccountBalance || isRefetchingAccountBalance
           ? 'Checking balance...'
-          : balance === 0 && 'Your balance is 0, try again'}
+          : mainAccountBalance === 0 && 'Your balance is 0, try again'}
       </div>
-      {error && <ErrorMessage error="Cant't fetch balance, try again" />}
+      {renderError()}
       <div
         className="inline-block mt-2 underline cursor-pointer text-finnieTeal"
         role="button"

@@ -1,29 +1,39 @@
 import { useQuery } from 'react-query';
 
-import { QueryKeys } from 'renderer/services';
+import { getMainAccountBalance, QueryKeys } from 'renderer/services';
 
-import { fetchAccountBalance } from './common';
 import { useMainAccount } from './useMainAccount';
 
-export const useMainAccountBalance = () => {
+type OptionsType = {
+  onSuccess?: (balance: number) => void;
+};
+
+export const useMainAccountBalance = (options?: OptionsType) => {
+  const { onSuccess } = options || {};
   const { data: mainAccountPublicKey } = useMainAccount();
+  const mainAccountBalanceCacheKey = [
+    QueryKeys.MainAccountBalance,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    mainAccountPublicKey!,
+  ];
+
   const {
     data: accountBalance,
     isLoading: loadingAccountBalance,
     error: accountBalanceLoadingError,
-  } = useQuery(
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    [QueryKeys.AccountBalance, mainAccountPublicKey!],
-
-    fetchAccountBalance,
-    {
-      enabled: !!mainAccountPublicKey,
-    }
-  );
+    refetch: refetchAccountBalance,
+    isRefetching: isRefetchingAccountBalance,
+  } = useQuery(mainAccountBalanceCacheKey, getMainAccountBalance, {
+    enabled: !!mainAccountPublicKey,
+    onSuccess,
+  });
 
   return {
     accountBalance,
     loadingAccountBalance,
     accountBalanceLoadingError,
+    mainAccountBalanceCacheKey,
+    refetchAccountBalance,
+    isRefetchingAccountBalance,
   };
 };

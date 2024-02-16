@@ -1,6 +1,5 @@
 /* eslint-disable @cspell/spellchecker */
 export { useClipboard } from './useClipboard';
-export { useUserSettings } from './userSettings';
 export { useTaskStake } from './useTaskStake';
 export { useRunMultipleTasks } from './useRunMultipleTasks';
 export { usePrevious } from './usePrevious';
@@ -34,3 +33,4 @@ export { useUpdatePinModal } from './useUpdatePinModal';
 export { useEmergencyMigrationModal } from './useEmergencyMigrationModal';
 export { useAverageSlotTime } from './useAverageSlotTime';
 export { useTransferFundsModal } from './useTransferFundsModal';
+export { useConfirmRunTask } from './useConfirmRunTask';

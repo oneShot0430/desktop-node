@@ -49,4 +49,5 @@ export enum QueryKeys {
   AccountBalance = 'AccountBalance',
   InitializingNode = 'InitializingNode',
   ExternalNotifications = 'ExternalNotifications',
+  EncryptedSecretPhraseMap = 'EncryptedSecretPhraseMap',
 }

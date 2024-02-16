@@ -9,10 +9,8 @@ import WelcomeLinesDiagonal from 'assets/svgs/welcome-lines-diagonal.svg';
 import WelcomeWheelBackground from 'assets/svgs/welcome-wheel-background.svg';
 import { LoadingScreen } from 'renderer/components/LoadingScreen';
 import { PinInput } from 'renderer/components/PinInput';
-import {
-  useEmergencyMigrationModal,
-  useUserSettings,
-} from 'renderer/features/common';
+import { useEmergencyMigrationModal } from 'renderer/features/common';
+import { useUserAppConfig } from 'renderer/features/settings/hooks';
 import {
   QueryKeys,
   getAllAccounts,
@@ -21,8 +19,6 @@ import {
 } from 'renderer/services';
 import { AppRoute } from 'renderer/types/routes';
 
-const NODE_INITIALIZED = 'NODE_INITIALIZED';
-
 export function Unlock(): JSX.Element {
   const [hasPinError, setHasPinError] = useState<boolean>(false);
 
@@ -30,7 +26,8 @@ export function Unlock(): JSX.Element {
 
   const queryClient = useQueryClient();
 
-  const { settings, loadingSettings } = useUserSettings();
+  const { userConfig: settings, isUserConfigLoading: loadingSettings } =
+    useUserAppConfig();
 
   const migrationPhase = settings?.hasStartedEmergencyMigration ? 2 : 1;
 

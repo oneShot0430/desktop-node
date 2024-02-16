@@ -3,8 +3,8 @@ import React, { useCallback, useState } from 'react';
 
 import { PinInput } from 'renderer/components/PinInput';
 import { ErrorMessage, Button } from 'renderer/components/ui';
-import { useUserSettings } from 'renderer/features/common/hooks/userSettings';
 import { ModalContent } from 'renderer/features/modals';
+import { useUserAppConfig } from 'renderer/features/settings/hooks';
 import { Theme } from 'renderer/types/common';
 import { validatePin } from 'renderer/utils';
 
@@ -24,7 +24,7 @@ export function ImportNewAccount({
   accountPin,
 }: PropsType) {
   const [error, setError] = useState<Error | string>('');
-  const { settings } = useUserSettings();
+  const { userConfig: settings } = useUserAppConfig();
 
   const handleValidateUser = async () => {
     const isPinValid = await validatePin(accountPin, settings?.pin);

@@ -24,7 +24,7 @@ export * from './getTaskVariablesNames';
 export * from './getTaskSource';
 export * from './getTaskMetadata';
 export * from './openLogfileFolder';
-export * from './getEncryptedSecretPhrase';
+export * from './security';
 export * from './archiveTask';
 export * from './createNodeWalletsFromJson';
 export * from './storeAllTimeRewards';

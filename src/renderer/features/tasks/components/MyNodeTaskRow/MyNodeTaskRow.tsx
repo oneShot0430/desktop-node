@@ -17,6 +17,7 @@ import ArrowIcon from 'assets/svgs/chevron-no-circle.svg';
 import RetryAnim from 'assets/svgs/history-icon.svg';
 import UpdateIcon from 'assets/svgs/update-icon.svg';
 import UploadLine from 'assets/svgs/upload-line.svg';
+import { MAX_TASK_RETRY_TIME } from 'config/node';
 import { TASK_RETRY_DATA_REFETCH_INTERVAL } from 'config/refetchIntervals';
 import { get, noop, uniqBy } from 'lodash';
 import { RequirementType } from 'models';
@@ -238,6 +239,7 @@ export function MyNodeTaskRow({
 
   const { metadata, isLoadingMetadata } = useMetadata({
     metadataCID: task.metadataCID,
+    taskPublicKey: task.publicKey,
   });
 
   const isLoadingMetadataFlag =
@@ -562,7 +564,8 @@ ${isPlayPauseButtonDisabled && 'opacity-60'}`;
 
     if (timestamp && count) {
       const timeHasPassed = Date.now() - timestamp;
-      const totalTime = 2 ** (count + 1) * 1000;
+      const retryInterval = 2 ** (count + 1) * 1000;
+      const totalTime = Math.min(retryInterval, MAX_TASK_RETRY_TIME);
       if (totalTime > timeHasPassed) return totalTime - timeHasPassed;
     }
 

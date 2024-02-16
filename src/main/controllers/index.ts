@@ -20,7 +20,7 @@ export { getTaskSource } from './getTaskSource';
 export { getTaskMetadata } from './getTaskMetadata';
 export { default as getUserConfig } from './getUserConfig';
 export { default as getAverageSlotTime } from './getAverageSlotTime';
-export { default as getEncryptedSecretPhrase } from './getEncryptedSecretPhrase';
+export * from './security';
 export { default as openBrowserWindow } from './openBrowserWindow';
 export { default as removeAccountByName } from './removeAccountByName';
 export { setActiveAccount } from './setActiveAccount';

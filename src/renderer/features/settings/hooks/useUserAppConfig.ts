@@ -8,7 +8,8 @@ type ParamsType = {
   onConfigSaveSuccess?: () => void;
 };
 
-export const useUserAppConfig = ({ onConfigSaveSuccess }: ParamsType) => {
+export const useUserAppConfig = (options?: ParamsType) => {
+  const { onConfigSaveSuccess } = options || {};
   const [isMutating, setIsMutating] = useState(false);
   const queryClient = useQueryClient();
 

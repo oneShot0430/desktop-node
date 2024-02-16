@@ -1,8 +1,6 @@
 import {
-  app,
   BrowserWindow,
   dialog,
-  globalShortcut,
   Menu,
   MenuItemConstructorOptions,
   shell,
@@ -14,6 +12,7 @@ import { initialize, trackEvent } from '@aptabase/electron/main';
 
 import { get } from 'lodash';
 
+import { app } from './app';
 import { initializeAppUpdater } from './AppUpdater';
 import {
   getAllAccounts,
@@ -25,15 +24,13 @@ import initHandlers from './initHandlers';
 import { configureLogger } from './logger';
 import { getCurrentActiveAccountName } from './node/helpers';
 import { setUpPowerStateManagement } from './powerMonitor';
+import koiiTasks from './services/koiiTasks';
 import { resolveHtmlPath } from './util';
 
 if (process.env.APTABASE_INT) initialize(process.env.APTABASE_INT);
 
 const isMac = process.platform === 'darwin';
 let tray: Tray | null = null;
-
-// Define the flag
-// let (app as any).isQuitting = false;
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -123,9 +120,14 @@ const createWindow = async () => {
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
   app.on('before-quit', async () => {
+    app.isQuitting = true;
     // Run your tasks or code here before quitting
     console.log('Running tasks before quitting');
     try {
+      /**
+       * processes cleanup
+       */
+      koiiTasks.stopTaskOnAppQuit();
       await stopOrcaVM();
     } catch (error) {
       console.error('Stopping Orca Error');
@@ -168,23 +170,9 @@ const createWindow = async () => {
     mainWindow = null;
   });
 
-  const ret = globalShortcut.register('CommandOrControl+Q', () => {
-    (app as any).isQuitting = true;
-    trackEvent('app_closed');
-    app.quit();
-  });
-
-  if (!ret) {
-    console.log('Registration failed');
-  }
-
-  // Check whether a shortcut is registered.
-  console.log(globalShortcut.isRegistered('CommandOrControl+Q'));
-
   // Add event listener for 'close' event
   mainWindow.on('close', (event) => {
-    console.log('#### is Quitting', (app as any).isQuitting);
-    if (!isDebug && !(app as any).isQuitting) {
+    if (!app.isQuitting) {
       event.preventDefault(); // Prevent the default close operation
       if (mainWindow) {
         if (isMac) {
@@ -228,7 +216,7 @@ const createMenu = () => {
                 label: 'Quit',
                 accelerator: 'CmdOrCtrl+Q',
                 click: () => {
-                  (app as any).isQuitting = true;
+                  app.isQuitting = true;
                   trackEvent('app_closed');
                   app.quit();
                 },
@@ -265,7 +253,7 @@ const createMenu = () => {
           label: 'Exit',
           accelerator: 'CmdOrCtrl+Q',
           click: () => {
-            (app as any).isQuitting = true;
+            app.isQuitting = true;
             trackEvent('app_closed');
             app.quit();
           },
@@ -316,7 +304,7 @@ function createTray() {
     {
       label: 'Quit',
       click: () => {
-        (app as any).isQuitting = true;
+        app.isQuitting = true;
         trackEvent('app_closed');
         app.quit();
       },
@@ -378,11 +366,7 @@ if (!isSingleInstance) {
   });
 
   app.on('will-quit', () => {
-    // Unregister the shortcut.
-    globalShortcut.unregister('CommandOrControl+Q');
-
-    // Unregister all shortcuts if you have more.
-    globalShortcut.unregisterAll();
+    app.isQuitting = true;
   });
 
   // In this file you can include the rest of your app's specific main process

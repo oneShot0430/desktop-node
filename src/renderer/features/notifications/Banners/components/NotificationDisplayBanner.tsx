@@ -31,7 +31,6 @@ export function NotificationDisplayBanner({
   const { markAsRead } = useNotificationActions();
   const handleClose = () => {
     onClose?.();
-    console.log('####notification.id', notification.id);
     markAsRead(notification.id);
   };
 

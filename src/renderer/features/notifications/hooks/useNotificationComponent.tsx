@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { Task } from 'renderer/types';
-
 import { ExternalNotificationBanner } from '../Banners/ExternalNotificationBanner';
 import { FirstNodeReward } from '../Banners/FirstNodeRewardBanner';
 import { FirstTaskRunningNotification } from '../Banners/FirstTasksRunningNotification';
@@ -59,8 +57,7 @@ export const useNotificationComponent = ({
         backButtonSlot={backButtonSlot}
         notification={notification}
         taskName={
-          (notification?.metadata as { task: Partial<Task> })?.task?.taskName ??
-          ''
+          (notification?.metadata as { taskName: string })?.taskName ?? ''
         }
       />
     ),

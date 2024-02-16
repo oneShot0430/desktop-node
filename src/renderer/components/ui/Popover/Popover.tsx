@@ -23,7 +23,8 @@ export function Popover({
     'p-2',
     'leading-5',
     'text-xs',
-    'z-50'
+    'z-50',
+    'shadow-md'
   );
 
   return (

@@ -4,10 +4,11 @@ import { Navigate } from 'react-router-dom';
 import { LoadingSpinner } from 'renderer/components';
 import { AppRoute } from 'renderer/types/routes';
 
-import { useUserSettings } from './features/common';
+import { useUserAppConfig } from './features/settings/hooks';
 
 function AppLoader(): JSX.Element {
-  const { settings, loadingSettings } = useUserSettings();
+  const { userConfig: settings, isUserConfigLoading: loadingSettings } =
+    useUserAppConfig();
 
   const routeToNavigate = settings?.onboardingCompleted
     ? AppRoute.Unlock

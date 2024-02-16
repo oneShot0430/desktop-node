@@ -30,8 +30,13 @@ module.exports = {
         slideDownAndFade:
           'slideDownAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
         slideUpAndFade: 'slideUpAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
+        'rotate-once': 'rotate360 1s ease-in-out forwards',
       },
       keyframes: {
+        rotate360: {
+          from: { transform: 'rotate(360deg)' },
+          to: { transform: 'rotate(0deg)' },
+        },
         'reverse-spin': {
           from: {
             transform: 'rotate(360deg)',

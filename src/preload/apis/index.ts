@@ -21,7 +21,6 @@ import getAllTimeRewardsByTask from './getAllTimeRewardsByTask';
 import getAvailableTasks from './getAvailableTasks';
 import getAverageSlotTime from './getAverageSlotTime';
 import getCurrentSlot from './getCurrentSlot';
-import getEncryptedSecretPhrase from './getEncryptedSecretPhrase';
 import getIsTaskRunning from './getIsTaskRunning';
 import getLastSubmissionTime from './getLastSubmissionTime';
 import getMainAccountPubKey from './getMainAccountPubKey';
@@ -59,6 +58,11 @@ import openNodeLogfileFolder from './openNodeLogfileFolder';
 import { getRunnedPrivateTasks, setRunnedPrivateTasks } from './privateTasks';
 import redeemTokensInNewNetwork from './redeemTokensInNewNetwork';
 import removeAccountByName from './removeAccountByName';
+import {
+  getEncryptedSecretPhrase,
+  getEncryptedSecretPhraseMap,
+  saveEncryptedSecretPhraseMap,
+} from './security';
 import setActiveAccount from './setActiveAccount';
 import startAllTasks from './startAllTasks';
 import startEmergencyMigration from './startEmergencyMigration';
@@ -145,6 +149,7 @@ export default {
   openNodeLogfileFolder,
   getVersion,
   getEncryptedSecretPhrase,
+  getEncryptedSecretPhraseMap,
   archiveTask,
   downloadAppUpdate,
   onAppUpdate,
@@ -195,4 +200,5 @@ export default {
   removeNotification,
   updateNotification,
   fetchS3FolderContents,
+  saveEncryptedSecretPhraseMap,
 };

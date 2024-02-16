@@ -42,6 +42,10 @@ const K2_CONNECTION_ERROR_MESSAGES = [
   'ETIMEDOUT',
 ];
 
+export const MAX_TASK_RETRY_TIME = 5 * 60 * 1000;
+
+export const MIN_BALANCE_TO_CORRECTLY_RUN_A_TASK = 90000000;
+
 export default {
   REDIS,
   BUNDLER_URL,

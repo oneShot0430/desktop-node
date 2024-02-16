@@ -21,14 +21,16 @@ const fetchMetadata = async (metadataCID: CIDType) => {
 export const useMetadata = ({
   metadataCID,
   queryOptions,
+  taskPublicKey,
 }: {
   metadataCID: CIDType;
+  taskPublicKey: string;
   queryOptions?: Omit<
     UseQueryOptions<
       TaskMetadata | null,
       unknown,
       TaskMetadata | null,
-      (string | null | undefined)[]
+      string[]
     >,
     'queryKey' | 'queryFn'
   >;
@@ -40,7 +42,7 @@ export const useMetadata = ({
     isLoading: isLoadingMetadata,
     error: metadataError,
   } = useQuery(
-    [QueryKeys.TaskMetadata, metadataCID],
+    [QueryKeys.TaskMetadata, taskPublicKey],
     () => fetchMetadata(metadataCID),
     {
       staleTime: Infinity,

@@ -1,5 +1,3 @@
-import { Task } from 'renderer/types';
-
 import {
   AppNotificationType,
   BannerPlacement,
@@ -79,7 +77,7 @@ export const AppNotificationsMap: Record<
   TASK_UPGRADE: {
     title: 'Task Upgrade Available',
     message: (metadata: Record<string, unknown>) =>
-      `Upgrade ${(metadata.task as Task).taskName} now to keep earning!`,
+      `Upgrade ${metadata.taskName as string} now to keep earning!`,
     variant: 'WARNING',
     notificationBanner: {
       componentKey: 'TASK_UPGRADE',

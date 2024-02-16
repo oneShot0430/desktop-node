@@ -7,3 +7,4 @@ export { useMainAccount } from './useMainAccount';
 export { useStakingAccount } from './useStakingAccount';
 export { useLowStakingAccountBalanceWarnings } from './useLowStakingAccountBalanceWarnings';
 export { useUpdateCheck } from './useUpdateCheck';
+export { useRefreshMainAccountBalanceAction } from './useRefreshMainAccountBalanceAction';
