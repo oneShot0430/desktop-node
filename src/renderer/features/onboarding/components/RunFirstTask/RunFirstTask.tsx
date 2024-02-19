@@ -109,20 +109,20 @@ function RunFirstTask() {
             <p className="mb-2 text-2xl leading-8 text-finnieEmerald-light">
               Get Started
             </p>
-            <div className="text-base mb-5 text-center max-w-[587px]">
-              After your node makes a submission, the stake is locked until
-              three rounds after the task is paused. This task has a round time
-              of about 10 minutes.
+            <div className="text-base mb-5 text-center max-w-[680px]">
+              Your earned KOII will pay for gas fees. You can also review task
+              details. Just click &apos;Confirm&apos; to start running. The more
+              you run, the more you earn.
             </div>
             <div className="grid w-full mb-1 text-xs text-left grid-cols-first-task text-finnieEmerald-light">
-              <div className="col-span-2 mx-auto ">Info</div>
-              <div className="col-span-6 ">Task</div>
-              <div className="col-span-6">Creator</div>
-              <div className="col-span-4 2xl:col-start-15 2xl:col-span-4">
+              <div className="col-span-2 mx-auto">Info</div>
+              <div className="col-span-6 -ml-[2px]">Task</div>
+              <div className="col-span-6 -ml-[2px]">Creator</div>
+              <div className="col-span-4 2xl:col-start-15 2xl:col-span-4 -ml-[2px]">
                 Stake
               </div>
             </div>
-            <div className="max-h-[80%] min-h-[40%] w-full h-full overflow-x-hidden overflow-y-auto z-0">
+            <div className="max-h-[80%] min-h-[40%] w-full h-full overflow-x-hidden overflow-hidden z-0">
               {loadingVerifiedTasks ? (
                 <div>Loading...</div>
               ) : (

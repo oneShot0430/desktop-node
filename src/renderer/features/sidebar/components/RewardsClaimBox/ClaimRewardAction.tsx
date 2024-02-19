@@ -28,6 +28,7 @@ export function ClaimRewardAction({
         buttonClassesOverrides="mt-3"
         label="Claim Rewards"
         data-testid="claim-rewards-button"
+        id="claim-rewards-button"
         onClick={onRewardClaimClick}
       />
     </Tooltip>

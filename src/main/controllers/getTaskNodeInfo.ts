@@ -4,14 +4,10 @@ import { throwDetailedError } from 'utils';
 
 import KoiiTasks from '../services/koiiTasks';
 
-import getAccountBalance from './getAccountBalance';
-import getMainAccountPubKey from './getMainAccountPubKey';
 import getStakingAccountPubKey from './getStakingAccountPubKey';
 
 const getTaskNodeInfo = async (_: Event): Promise<GetTaskNodeInfoResponse> => {
   try {
-    const totalKOII = await getAccountBalance(_, await getMainAccountPubKey());
-
     const stakingPubKey = await getStakingAccountPubKey();
     let totalStaked = 0;
     let pendingRewards = 0;
@@ -21,7 +17,6 @@ const getTaskNodeInfo = async (_: Event): Promise<GetTaskNodeInfoResponse> => {
     });
 
     return {
-      totalKOII,
       totalStaked: totalStaked || 0,
       pendingRewards: pendingRewards || 0,
     };

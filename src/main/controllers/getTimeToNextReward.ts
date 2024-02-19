@@ -6,14 +6,13 @@ import koiiTasks from 'main/services/koiiTasks';
 import { ErrorType } from 'models';
 import { throwDetailedError } from 'utils';
 
-import getAverageSlotTime from './getAverageSlotTime';
-
-export const getTimeToNextReward = async (_: Event): Promise<number> => {
+export const getTimeToNextReward = async (
+  _: Event,
+  payload: { averageSlotTime: number }
+): Promise<number> => {
   try {
-    const averageSlotTime = await getAverageSlotTime();
-
     const timeToNextReward = await calculateTimeToNextRewardConsideringUpdates(
-      averageSlotTime
+      payload.averageSlotTime
     );
 
     return timeToNextReward;

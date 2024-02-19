@@ -15,7 +15,14 @@ import AppProvider from 'renderer/Providers/AppProvider';
 
 import AppRoutes from './routing/AppRoutes';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 2000,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 function App(): JSX.Element {
   // TODO(Chris): check properly if ok to remove it

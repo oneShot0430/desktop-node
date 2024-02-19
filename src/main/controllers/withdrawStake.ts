@@ -13,9 +13,8 @@ import {
   TASK_CONTRACT_ID,
 } from '@koii-network/task-node';
 import sdk from 'main/services/sdk';
-import { ErrorType, NetworkErrors } from 'models';
 import { WithdrawStakeParam } from 'models/api';
-import { throwDetailedError } from 'utils';
+import { throwTransactionError } from 'utils/error';
 
 import {
   getMainSystemAccountKeypair,
@@ -59,15 +58,7 @@ const withdrawStake = async (
     return res;
   } catch (e: any) {
     console.error(e);
-    const errorType = e.message
-      .toLowerCase()
-      .includes(NetworkErrors.TRANSACTION_TIMEOUT)
-      ? ErrorType.TRANSACTION_TIMEOUT
-      : ErrorType.GENERIC;
-    return throwDetailedError({
-      detailed: e,
-      type: errorType,
-    });
+    return throwTransactionError(e);
   }
 };
 

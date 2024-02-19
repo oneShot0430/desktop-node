@@ -7,11 +7,12 @@ import { Button, ErrorMessage, LoadingSpinner } from 'renderer/components/ui';
 import { useCloseWithEsc } from 'renderer/features/common/hooks/useCloseWithEsc';
 import { Modal, ModalContent, ModalTopBar } from 'renderer/features/modals';
 import { useStakingAccount } from 'renderer/features/settings/hooks';
-import { getAverageSlotTime, stopTask, withdrawStake } from 'renderer/services';
+import { stopTask, withdrawStake } from 'renderer/services';
 import { Task } from 'renderer/types';
 import { parseRoundTime, ParsedRoundTime } from 'renderer/utils';
 import { getKoiiFromRoe } from 'utils';
 
+import { useAverageSlotTime } from '../../hooks/useAverageSlotTime';
 import { useTaskStake } from '../../hooks/useTaskStake';
 import { useTaskStatus } from '../../hooks/useTaskStatus';
 import { useUnstakingAvailability } from '../../hooks/useUnstakingAvailability';
@@ -58,6 +59,7 @@ export const Unstake = create<PropsType>(function AddStake({ task }) {
       handleClose();
     },
   });
+  const { data: averageSlotTime } = useAverageSlotTime();
 
   const { data: stakingAccountPublicKey = '' } = useStakingAccount();
 
@@ -73,9 +75,12 @@ export const Unstake = create<PropsType>(function AddStake({ task }) {
     });
 
   useEffect(() => {
+    if (!averageSlotTime) {
+      return;
+    }
+
     const getParsedRoundTime = async () => {
       try {
-        const averageSlotTime = await getAverageSlotTime();
         const parsedRoundTime = parseRoundTime(
           task.roundTime * averageSlotTime * 3
         );
@@ -87,7 +92,7 @@ export const Unstake = create<PropsType>(function AddStake({ task }) {
     };
 
     getParsedRoundTime();
-  }, [task, totalRoundTime, taskStatus, stakingAccountPublicKey, isRunning]);
+  }, [task, totalRoundTime, taskStatus, stakingAccountPublicKey, isRunning, averageSlotTime]);
 
   const title = canUnstake ? 'Unstake' : 'Finish the Round';
   const buttonAction = canUnstake ? () => unstake() : handleClose;
@@ -99,7 +104,7 @@ export const Unstake = create<PropsType>(function AddStake({ task }) {
     parsedRoundTime.unit
   }`;
   const unavailableText = (
-    <div className="px-28 text-lg">
+    <div className="text-lg px-28">
       <p className="mb-3">
         In order to make sure everyone plays fairly, each node must wait 3
         rounds after the last submission to unstake.
@@ -113,10 +118,10 @@ export const Unstake = create<PropsType>(function AddStake({ task }) {
       <ModalContent className="w-[600px]">
         <ModalTopBar title={title} onClose={handleClose} />
 
-        <div className="flex flex-col items-center justify-center py-8 text-finnieBlue-dark gap-5 h-64">
+        <div className="flex flex-col items-center justify-center h-64 gap-5 py-8 text-finnieBlue-dark">
           {isLoadingUnstakingAvailability ? (
-            <div className="h-full flex items-center">
-              <LoadingSpinner className="h-24 w-24" />
+            <div className="flex items-center h-full">
+              <LoadingSpinner className="w-24 h-24" />
             </div>
           ) : (
             <>
@@ -135,7 +140,7 @@ export const Unstake = create<PropsType>(function AddStake({ task }) {
                     <div className="pb-2 text-xs text-finnieTeal-700">
                       Current KOII staked.
                     </div>
-                    <div className="h-12 -mb-8 -mt-4">
+                    <div className="h-12 -mt-4 -mb-8">
                       {errorUnstaking && (
                         <ErrorMessage error={errorUnstaking as Error} />
                       )}

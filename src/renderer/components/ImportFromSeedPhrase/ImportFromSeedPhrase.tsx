@@ -17,7 +17,7 @@ type PropsType = {
   onImportFail?: (error: string) => void;
   setImportedWalletAsDefault?: boolean;
   className?: string;
-  accountEncryptedPin: string;
+  appPin: string;
 };
 
 function ImportFromSeedPhrase({
@@ -27,7 +27,7 @@ function ImportFromSeedPhrase({
   confirmActionLabel,
   setImportedWalletAsDefault = false,
   className,
-  accountEncryptedPin,
+  appPin,
 }: PropsType) {
   const [phrases, setPhrases] = useState(new Array(12).fill(''));
   const [error, setError] = useState<Error | string>('');
@@ -61,7 +61,7 @@ function ImportFromSeedPhrase({
         setLoading(true);
 
         const encryptedSecretPhrase: string = await encrypt(
-          accountEncryptedPin,
+          appPin,
           keyPhraseString
         );
         const accounts = await createNodeWallets(

@@ -25,13 +25,23 @@ function CreatePin() {
       navigate(AppRoute.OnboardingPickKeyCreationMethod),
   });
 
-  const { setNewEncryptedAccountPin } = useOnboardingContext();
+  const { setAppPin } = useOnboardingContext();
 
   const handlePinCreate = async () => {
     const hashedPin = await encryptPin(pin);
-    setNewEncryptedAccountPin(hashedPin);
+
+    /**
+     * sets raw pin value to context
+     */
+    console.log('@@@ sets new pin', pin);
+    setAppPin(pin);
+
+    console.log('@@@ sets new pin in settings', hashedPin);
     handleSaveUserAppConfig({
       settings: {
+        /**
+         * Saves **hashed** pin value to user config
+         */
         pin: hashedPin,
         hasCopiedReferralCode: false,
         hasStartedEmergencyMigration: true,

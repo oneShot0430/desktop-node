@@ -29,11 +29,16 @@ describe('getAppDataPath', () => {
   });
 
   it('should return "./appdata" for development environment', () => {
+    const mockPath = '/mock/appData/path';
+    (app.getPath as jest.Mock).mockReturnValue(mockPath);
+    (path.join as jest.Mock).mockReturnValue(mockPath);
     Object.defineProperty(process, 'env', {
       value: { DB_MODE: 'development', NODE_ENV: 'development' },
     });
-    const result = getAppDataPath();
-    expect(result).toBe('./appdata');
+    const result = getAppDataPath(true);
+    expect(result).toBe(mockPath);
+    expect(app.getPath).toHaveBeenCalledWith('appData');
+    expect(path.join).toHaveBeenCalledWith(mockPath, 'KOII-Desktop-Node-dev');
   });
 
   it('should return correct app data path for supported platforms', () => {

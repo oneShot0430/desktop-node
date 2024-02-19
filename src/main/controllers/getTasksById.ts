@@ -16,7 +16,7 @@ export const getTasksById = async (
   )
     .map((rawTaskData) => {
       if (!rawTaskData) {
-        return null;
+        throw new Error('Task data not found.');
       }
 
       return {

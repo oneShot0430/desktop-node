@@ -18,15 +18,19 @@ interface FetchS3FolderContentsPayload {
   prefix: string;
 }
 
+const isDev = process.env.NODE_ENV === 'development';
+
 export const fetchS3FolderContents = async (
   event: Event,
   payload: FetchS3FolderContentsPayload
 ): Promise<any[]> => {
   const { bucket, prefix } = payload;
 
+  const bucketName = isDev ? `${bucket}-dev` : bucket;
+
   const listedObjects = await s3Client.send(
     new ListObjectsV2Command({
-      Bucket: bucket,
+      Bucket: bucketName,
       Prefix: prefix,
     })
   );
@@ -39,7 +43,8 @@ export const fetchS3FolderContents = async (
   const filesContentsPromises = fileKeys.map(async (key) => {
     if (!key) return null; // Safeguard for TypeScript
 
-    const getObjectParams = { Bucket: bucket, Key: key };
+    const getObjectParams = { Bucket: bucketName, Key: key };
+
     const command = new GetObjectCommand(getObjectParams);
     const response: GetObjectCommandOutput = await s3Client.send(command);
 

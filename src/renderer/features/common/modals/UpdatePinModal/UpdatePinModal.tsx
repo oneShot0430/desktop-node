@@ -1,11 +1,10 @@
 import { Icon, KeyUnlockLine, CloseLine } from '@_koii/koii-styleguide';
 import { create, useModal } from '@ebay/nice-modal-react';
-import { decrypt, encrypt } from '@metamask/browser-passworder';
 import { compare } from 'bcryptjs';
 import React, { useMemo, useState } from 'react';
 import { useQuery } from 'react-query';
 
-import { mapValues } from 'lodash';
+import { map } from 'lodash';
 import { PinInput } from 'renderer/components/PinInput';
 import { Button } from 'renderer/components/ui';
 import { useCloseWithEsc } from 'renderer/features/common/hooks/useCloseWithEsc';
@@ -19,9 +18,11 @@ import {
 } from 'renderer/services';
 import { Theme } from 'renderer/types/common';
 
+import { encryptSeedPhraseWithNewPin } from './utils';
+
 export const UpdatePinModal = create(function UpdatePinModal() {
   const [oldPinError, setOldPinError] = useState<string>();
-  const [oldPinValue, setOldPinValue] = useState('');
+  const [oldPinRawValue, setOldPinValue] = useState('');
   const { encryptPin } = usePinUtils();
   const { handleSaveUserAppConfigAsync, isMutating, userConfig } =
     useUserAppConfig({
@@ -54,7 +55,7 @@ export const UpdatePinModal = create(function UpdatePinModal() {
         encryptedSecretPhraseMap
       ) {
         const pinMatchesStoredHash = await compare(
-          oldPinValue,
+          oldPinRawValue,
           userConfig?.pin || ''
         );
 
@@ -69,58 +70,69 @@ export const UpdatePinModal = create(function UpdatePinModal() {
          * Since users with the previous version of the app might have their secret phrases encrypted with the old pin,
          * we need to attempt to decrypt the secret phrases with the decrypted old as well.
          */
-        const encryptionTasks = mapValues(
+        const encryptionTasks = map(
           encryptedSecretPhraseMap,
-          async (encryptedSecretPhrase) => {
+          async (encryptedSecretPhrase, key) => {
             try {
-              // First attempt with encryptedOldPin
-              const decryptedSecretPhrase = await decrypt(
-                encryptedOldPin,
-                encryptedSecretPhrase
+              const newEncryptedValue = await encryptSeedPhraseWithNewPin(
+                oldPinRawValue,
+                pinConfirm,
+                encryptedSecretPhrase,
+                key
               );
-              return encrypt(hashedPin, decryptedSecretPhrase);
+              return newEncryptedValue;
             } catch (error) {
-              console.log(
-                'Decryption with encryptedOldPin failed, trying with oldPinValue'
-              );
-              // If the first attempt fails, try with oldPinValue
               try {
-                const decryptedSecretPhrase = await decrypt(
-                  oldPinValue, // Use oldPinValue for the second attempt
-                  encryptedSecretPhrase
+                if (!userConfig?.pin) {
+                  console.log('No old pin found in userConfig');
+                  throw new Error('No old pin found in userConfig');
+                }
+                /**
+                 * Attempt to decode the secret phrase with the old pin (hashed) from user settings
+                 */
+                const newEncryptedValue = await encryptSeedPhraseWithNewPin(
+                  userConfig?.pin,
+                  pinConfirm,
+                  encryptedSecretPhrase,
+                  key
                 );
-                return encrypt(hashedPin, decryptedSecretPhrase);
+                return newEncryptedValue;
               } catch (secondError) {
-                console.error('Both decryption attempts failed');
-                throw secondError; // Rethrow or handle as needed
+                console.error('Both decryption attempts failed', key);
+                throw secondError;
               }
             }
           }
         );
 
-        // Await all encryption tasks to complete
-        const newSecretPhraseEncryptions = await Promise.all(
-          Object.values(encryptionTasks)
-        );
+        try {
+          // Await all encryption tasks to complete
+          const newSecretPhraseEncryptions = await Promise.all(
+            Object.values(encryptionTasks)
+          );
 
-        // Transform the array back to the object with the same keys
-        const newEncryptedSecretPhraseMap = Object.keys(
-          encryptedSecretPhraseMap
-        ).reduce<Record<string, string>>((acc, publicKey, index) => {
-          acc[publicKey] = newSecretPhraseEncryptions[index];
-          return acc;
-        }, {});
+          // Transform the array back to the object with the same keys
+          const newEncryptedSecretPhraseMap = Object.keys(
+            encryptedSecretPhraseMap
+          ).reduce<Record<string, string>>((acc, publicKey, index) => {
+            acc[publicKey] = newSecretPhraseEncryptions[index];
+            return acc;
+          }, {});
 
-        // Save new pin and encrypted secret phrases
-        await handleSaveUserAppConfigAsync({
-          settings: { pin: hashedPin, hasCopiedReferralCode: false },
-        });
+          // Save new pin and encrypted secret phrases
+          await handleSaveUserAppConfigAsync({
+            settings: { pin: hashedPin, hasCopiedReferralCode: false },
+          });
 
-        await saveEncryptedSecretPhrase(newEncryptedSecretPhraseMap);
-        console.log('Encryptions updated successfully');
+          await saveEncryptedSecretPhrase(newEncryptedSecretPhraseMap);
+          console.log('Encryptions updated successfully');
+        } catch (error) {
+          throw new Error(error as string);
+        }
       }
     } catch (error) {
       console.error('Operation failed, no changes were applied:', error);
+      setOldPinError((error as any).message);
     }
   };
 

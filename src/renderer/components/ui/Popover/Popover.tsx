@@ -29,7 +29,7 @@ export function Popover({
 
   return (
     <Tooltip.Provider>
-      <Tooltip.Root>
+      <Tooltip.Root delayDuration={0}>
         <Tooltip.Trigger>{children}</Tooltip.Trigger>
         <Tooltip.Content
           side="top"

@@ -20,7 +20,7 @@ export const useStartedTasks = ({
   const [, setData] = useAtom(selectedTasksAtom);
 
   return useTasksInfiniteScroll({
-    queryKey: QueryKeys.taskList,
+    queryKey: QueryKeys.TaskList,
     pageSize,
     refetchInterval,
     fetchFunction: fetchMyTasks,

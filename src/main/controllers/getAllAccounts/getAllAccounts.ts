@@ -71,9 +71,11 @@ export const getAllAccounts = async (
 
     // TODO: we want to add both or just one of the values
     if (shouldFetchBalances) {
+      // FIXME: k2 call
       promisesArr.push(sdk.k2Connection.getBalance(mainSystemWallet.publicKey));
       promisesArr.push(sdk.k2Connection.getBalance(stakingWallet.publicKey));
     } else {
+      // TODO: ask Syed why we need this
       promisesArr.push(Promise.resolve(1000000000));
       promisesArr.push(Promise.resolve(500000000));
     }

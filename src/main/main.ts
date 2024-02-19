@@ -1,3 +1,4 @@
+/* eslint-disable @cspell/spellchecker */
 import {
   BrowserWindow,
   dialog,
@@ -27,6 +28,9 @@ import { setUpPowerStateManagement } from './powerMonitor';
 import koiiTasks from './services/koiiTasks';
 import { resolveHtmlPath } from './util';
 
+const isDev = process.env.NODE_ENV === 'development';
+const isDebug = isDev || process.env.DEBUG_PROD === 'true';
+
 if (process.env.APTABASE_INT) initialize(process.env.APTABASE_INT);
 
 const isMac = process.platform === 'darwin';
@@ -39,9 +43,6 @@ if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
   sourceMapSupport.install();
 }
-
-const isDebug =
-  process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
 
 if (isDebug) {
   // eslint-disable-next-line global-require
@@ -243,6 +244,18 @@ const createMenu = () => {
       label: 'Window',
       submenu: [
         {
+          label: 'Zoom In',
+          // eslint-disable-next-line @cspell/spellchecker
+          role: 'zoomin',
+          accelerator: 'CommandOrControl+=',
+        },
+        {
+          label: 'Zoom Out',
+          // eslint-disable-next-line @cspell/spellchecker
+          role: 'zoomout',
+          accelerator: 'CommandOrControl+-',
+        },
+        {
           label: 'Hide',
           accelerator: 'CmdOrCtrl+H',
           click: () => {
@@ -259,7 +272,7 @@ const createMenu = () => {
           },
         },
       ],
-    },
+    } as MenuItemConstructorOptions,
     {
       label: 'Help',
       submenu: [

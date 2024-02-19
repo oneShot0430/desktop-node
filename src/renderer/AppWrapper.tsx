@@ -6,6 +6,7 @@ import { useLowStakingAccountBalanceWarnings } from './features';
 import { useAppNotifications } from './features/notifications/hooks/useAppNotifications';
 import { OnboardingLayout } from './features/onboarding/components/OnboardingLayout';
 import { OnboardingProvider } from './features/onboarding/context/onboarding-context';
+import { useLowMainAccountBalanceWarnings } from './features/settings/hooks/useLowMainAccountBalanceWarnings';
 import { StartingTasksProvider, MyNodeProvider } from './features/tasks';
 
 function AppWrapper(): JSX.Element {
@@ -13,7 +14,7 @@ function AppWrapper(): JSX.Element {
     useAppNotifications('TOP_UP_STAKING_KEY_CRITICAL');
   const { addAppNotification: addUpdateAvailableNotification } =
     useAppNotifications('UPDATE_AVAILABLE');
-
+  useLowMainAccountBalanceWarnings();
   useLowStakingAccountBalanceWarnings({
     showCriticalBalanceNotification: showCriticalStakingKeyBalanceNotification,
   });

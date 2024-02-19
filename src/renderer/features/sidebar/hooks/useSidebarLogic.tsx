@@ -3,7 +3,10 @@ import toast from 'react-hot-toast';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { NODE_INFO_REFETCH_INTERVAL } from 'config/refetchIntervals';
+import {
+  NODE_INFO_REFETCH_INTERVAL,
+  NODE_INFO_STALE_TIME,
+} from 'config/refetchIntervals';
 import { GetTaskNodeInfoResponse } from 'models';
 import {
   useFundNewAccountModal,
@@ -69,6 +72,7 @@ export const useSidebraLogic = () => {
     {
       enabled: enableNodeInfoRefetch,
       refetchInterval: NODE_INFO_REFETCH_INTERVAL,
+      staleTime: NODE_INFO_STALE_TIME,
       onSettled: (nodeInfo) => {
         if ((nodeInfo?.pendingRewards as number) > 0) {
           showFirstNodeRewardNotification();
@@ -117,8 +121,8 @@ export const useSidebraLogic = () => {
     }, SIDEBAR_AND_MY_NODE_REFETCH_ENABLE_TIMEOUT);
   };
 
-  const handleFailure = () => {
-    toast.error('Something went wrong. Please try again.');
+  const handleFailure = (errorMessage: string) => {
+    toast.error(errorMessage);
   };
 
   const handlePartialFailure = () => {
@@ -144,15 +148,15 @@ export const useSidebraLogic = () => {
         setFetchMyTasksEnabled(false);
       },
       onSuccess: handleSuccess,
-      onError: (error: Error) => {
-        const tasksWithUnclaimedRewards = Number(error.message);
+      onError: (error: any) => {
+        const tasksWithUnclaimedRewards = Number(error.numberOfFailedClaims);
         const notAllRewardsWereClaimed =
           tasksWithUnclaimedRewards < tasksWithClaimableRewardsRef.current;
 
         if (notAllRewardsWereClaimed) {
           handlePartialFailure();
         } else {
-          handleFailure();
+          handleFailure(error.errorMessage);
         }
       },
       retry: CLAIM_REWARDS_RETRY_VALUE,

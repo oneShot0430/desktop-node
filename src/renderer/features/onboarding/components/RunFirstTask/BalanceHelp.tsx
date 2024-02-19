@@ -52,8 +52,8 @@ export function BalanceHelp() {
     </div>
   );
   return (
-    <div className="flex items-center gap-[2px] mt-3 text-xs text-finnieGray">
-      Can&apos;t see yours balance updated?
+    <div className="flex items-center gap-2 mt-3 text-xs text-finnieGray">
+      Can&apos;t see your balance updated?
       <Popover tooltipContent={tooltipContent}>
         <Icon
           size={18}

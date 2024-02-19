@@ -1,9 +1,9 @@
 import { Event } from 'electron';
 
 import { PublicKey } from '@_koi/web3.js';
-import { ClaimRewardParam, ClaimRewardResponse, ErrorType } from 'models';
+import { ClaimRewardParam, ClaimRewardResponse } from 'models';
+import { throwTransactionError } from 'utils/error';
 
-import { throwDetailedError } from '../../utils';
 import {
   getMainSystemAccountKeypair,
   getStakingAccountKeypair,
@@ -42,11 +42,7 @@ const claimReward = async (
   } catch (err: any) {
     console.error(`Failed to claim the reward for Task: ${taskAccountPubKey}`);
     console.error(err);
-
-    return throwDetailedError({
-      detailed: err,
-      type: ErrorType.GENERIC,
-    });
+    return throwTransactionError(err);
   }
 };
 

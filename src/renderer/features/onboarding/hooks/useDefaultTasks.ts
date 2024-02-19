@@ -12,12 +12,15 @@ export const useDefaultTasks = () => {
     error,
     data: verifiedTasks = [],
   } = useQuery(
-    [QueryKeys.taskList],
+    [QueryKeys.OnboardingTasks],
     () =>
       getOnboardingTaskIds().then((tasksAllowedOnOnboarding) =>
         getTasksById(tasksAllowedOnOnboarding)
       ),
     {
+      onError(error) {
+        console.error(error);
+      },
       refetchInterval: Infinity,
     }
   );

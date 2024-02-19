@@ -5,17 +5,19 @@ import { useTasksInfiniteScroll } from './useTaskInfiniteScroll';
 type UseAvailableTasksParams = {
   pageSize: number;
   refetchInterval?: number;
+  staleTime?: number;
 };
 
 export const useAvailableTasks = ({
   pageSize,
   refetchInterval,
+  staleTime,
 }: UseAvailableTasksParams) => {
   return useTasksInfiniteScroll({
     queryKey: QueryKeys.availableTaskList,
     pageSize,
     refetchInterval,
     fetchFunction: fetchAvailableTasks,
-    staleTime: 1000 * 60 * 5,
+    staleTime,
   });
 };
