@@ -53,7 +53,11 @@ export type AppNotificationType =
   | 'SESSION_STARTED_FROM_SCHEDULER'
   | 'TASK_STARTED'
   | 'EXTERNAL_INFO'
-  | 'EXTERNAL_OFFER';
+  | 'EXTERNAL_OFFER'
+  | 'TOP_UP_MAIN_KEY'
+  | 'TOP_UP_MAIN_KEY_CRITICAL'
+  | 'TOP_UP_MAIN_KEY_WITH_REWARDS'
+  | 'TOP_UP_MAIN_KEY_CRITICAL_WITH_REWARDS';
 
 export type AppNotificationDataType = {
   message: string | ((...args: any[]) => string);

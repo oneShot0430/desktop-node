@@ -5,6 +5,7 @@ import sendMessage from 'preload/sendMessage';
 type GetTaskLastSubmissionTimeParams = {
   task: TaskData;
   stakingPublicKey: string;
+  averageSlotTime: number;
 };
 
 export default (payload: GetTaskLastSubmissionTimeParams): Promise<number> =>

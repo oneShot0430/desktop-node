@@ -4,11 +4,11 @@ interface Context {
   systemKey: string | undefined;
   newSeedPhrase: string | undefined;
   accountName: string | undefined;
-  newEncryptedAccountPin: string;
+  appPin: string;
   setAccountName: React.Dispatch<React.SetStateAction<string | undefined>>;
   setNewSeedPhrase: React.Dispatch<React.SetStateAction<string | undefined>>;
   setSystemKey: React.Dispatch<React.SetStateAction<string | undefined>>;
-  setNewEncryptedAccountPin: React.Dispatch<React.SetStateAction<string>>;
+  setAppPin: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const Ctx = createContext<Context | undefined>(undefined);
@@ -21,8 +21,7 @@ export function OnboardingProvider({ children }: PropsType) {
   const [systemKey, setSystemKey] = useState<string>();
   const [accountName, setAccountName] = useState<string>();
   const [newSeedPhrase, setNewSeedPhrase] = useState<string>();
-  const [newEncryptedAccountPin, setNewEncryptedAccountPin] =
-    useState<string>('');
+  const [appPin, setAppPin] = useState<string>('');
 
   // eslint-disable-next-line react/jsx-no-constructed-context-values
   const value = {
@@ -32,8 +31,8 @@ export function OnboardingProvider({ children }: PropsType) {
     setNewSeedPhrase,
     accountName,
     setAccountName,
-    newEncryptedAccountPin,
-    setNewEncryptedAccountPin,
+    appPin,
+    setAppPin,
   };
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

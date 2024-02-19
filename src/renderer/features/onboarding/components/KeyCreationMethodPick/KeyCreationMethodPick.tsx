@@ -1,15 +1,10 @@
-import {
-  SeedSecretPhraseXlLine,
-  Icon,
-  TooltipChatQuestionLeftLine,
-} from '@_koii/koii-styleguide';
+import { SeedSecretPhraseXlLine, Icon } from '@_koii/koii-styleguide';
 import { encrypt } from '@metamask/browser-passworder';
 import React, { memo, useState, ChangeEventHandler } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
 import CreateAccountSvg from 'assets/svgs/onboarding/create-new-account-icon.svg';
-import { Tooltip } from 'renderer/components/ui';
 import { ErrorMessage } from 'renderer/components/ui/ErrorMessage';
 import { useAccounts } from 'renderer/features/settings';
 import {
@@ -26,17 +21,14 @@ function KeyCreationMethodPick() {
   const [accountName, setAccountName] = useState<string>('');
   const [error, setError] = useState<Error | string>('');
   const navigate = useNavigate();
-  const { setNewSeedPhrase, setSystemKey, newEncryptedAccountPin } =
-    useOnboardingContext();
+  const { setNewSeedPhrase, setSystemKey, appPin } = useOnboardingContext();
   const { accounts } = useAccounts();
 
   const createNewKey = async (accountName: string) => {
     const seedPhrase = await generateSeedPhrase();
 
-    const encryptedSecretPhrase: string = await encrypt(
-      newEncryptedAccountPin,
-      seedPhrase
-    );
+    console.log('@@@ encrypts seed phrase with pin:', appPin);
+    const encryptedSecretPhrase: string = await encrypt(appPin, seedPhrase);
 
     const resp = await createNodeWallets(
       seedPhrase,
@@ -95,25 +87,8 @@ function KeyCreationMethodPick() {
   return (
     <div className="max-w-lg xl:max-w-2xl m-auto pt-[100px]">
       <div className="flex flex-col pl-1 text-lg">
-        <p className="mb-4">
-          To ensure a fair playing field, every node is required to stake tokens
-          as collateral.{' '}
-          <Tooltip
-            tooltipContent={
-              <div className="max-w-[250px] w-full text-xs leading-4">
-                By &ldquo; staking &rdquo; tokens, you are promising to
-                participate honestly in the network. Many Web3 projects use
-                staking as a way to ensure the security of their networks.
-              </div>
-            }
-          >
-            <Icon
-              source={TooltipChatQuestionLeftLine}
-              className="h-4 w-4 text-finnieEmerald-light ml-0.5 -mt-1 cursor-pointer"
-            />
-          </Tooltip>
-        </p>
-        <p>Create a new account or import an existing one.</p>
+        <p className="mb-4">Create a new account or import an existing one.</p>
+        <p>Choose a nice name to label your account.</p>
       </div>
 
       <div className="my-6">

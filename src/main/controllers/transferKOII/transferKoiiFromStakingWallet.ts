@@ -18,8 +18,8 @@ import {
 } from '@koii-network/task-node';
 import { DUMMY_ACTIVE_TASK_FOR_STAKING_KEY_WITHDRAWAL } from 'config/node';
 import sdk from 'main/services/sdk';
-import { ErrorType, NetworkErrors, TransferKoiiParam } from 'models';
-import { throwDetailedError } from 'utils';
+import { ErrorType, TransferKoiiParam } from 'models';
+import { throwDetailedError, throwTransactionError } from 'utils/error';
 
 import {
   getStakingWalletPath,
@@ -31,6 +31,7 @@ import { getTaskInfo } from '../getTaskInfo';
 import { transferKoiiFromMainWallet } from './transferKoiiFromMainWallet';
 
 const TRANSACTION_FINALITY_WAIT = 5000; // 5sec
+const MAX_RETRY_COUNT = 3; // Maximum number of retries for each function
 
 export const transferKoiiFromStakingWallet = async (
   event: Event,
@@ -74,47 +75,57 @@ export const transferKoiiFromStakingWallet = async (
     );
     if (accountInfo?.owner?.toBase58() === TASK_CONTRACT_ID.toBase58()) {
       console.log('Transfer KOII from staking account: staking Tokens');
-      await stakeTokens(
+      await retryWithMaxCount(stakeTokens, [
         mainSystemAccount,
         stakingAccount,
         amount,
-        DUMMY_ACTIVE_TASK_FOR_STAKING_KEY_WITHDRAWAL
-      );
+        DUMMY_ACTIVE_TASK_FOR_STAKING_KEY_WITHDRAWAL,
+      ]);
       sleep(TRANSACTION_FINALITY_WAIT);
       console.log('Transfer KOII from staking account: withdrawing stake');
-      await withdrawStake(
+      await retryWithMaxCount(withdrawStake, [
         mainSystemAccount,
         stakingAccount,
-        DUMMY_ACTIVE_TASK_FOR_STAKING_KEY_WITHDRAWAL
-      );
+        DUMMY_ACTIVE_TASK_FOR_STAKING_KEY_WITHDRAWAL,
+      ]);
       sleep(TRANSACTION_FINALITY_WAIT);
       console.log('Transfer KOII from staking account: claiming tokens');
-      await claimTokens(
+      await retryWithMaxCount(claimTokens, [
         stakingAccount,
         DUMMY_ACTIVE_TASK_FOR_STAKING_KEY_WITHDRAWAL,
-        toWalletAddress
-      );
+        toWalletAddress,
+      ]);
       console.log('Transfer KOII from staking account: completed');
     } else {
-      transferKoiiFromMainWallet({} as Event, {
-        accountName,
-        amount,
-        toWalletAddress,
-      });
+      await retryWithMaxCount(transferKoiiFromMainWallet, [
+        {} as Event,
+        { accountName, amount, toWalletAddress },
+      ]);
     }
   } catch (e: any) {
     console.error(e);
-    const errorType = e.message
-      .toLowerCase()
-      .includes(NetworkErrors.TRANSACTION_TIMEOUT)
-      ? ErrorType.TRANSACTION_TIMEOUT
-      : ErrorType.GENERIC;
-    return throwDetailedError({
-      detailed: e,
-      type: errorType,
-    });
+    throwTransactionError(e);
   }
 };
+
+async function retryWithMaxCount(func: any, args: any) {
+  let retryCount = 0;
+  while (retryCount < MAX_RETRY_COUNT) {
+    try {
+      await func(...args);
+      return; // Exit the loop if function call succeeds
+    } catch (error) {
+      console.error(`Function call failed: ${error}`);
+      retryCount += 1;
+      if (retryCount === MAX_RETRY_COUNT) {
+        throw error;
+      }
+    }
+  }
+  console.error(
+    `Reached maximum retry count (${MAX_RETRY_COUNT}) for function call`
+  );
+}
 
 const stakeTokens = async (
   mainSystemAccount: Keypair,
@@ -160,15 +171,7 @@ const stakeTokens = async (
     return response;
   } catch (e: any) {
     console.error(e);
-    const errorType = e.message
-      .toLowerCase()
-      .includes(NetworkErrors.TRANSACTION_TIMEOUT)
-      ? ErrorType.TRANSACTION_TIMEOUT
-      : ErrorType.GENERIC;
-    return throwDetailedError({
-      detailed: e,
-      type: errorType,
-    });
+    throwTransactionError(e);
   }
 };
 
@@ -207,15 +210,7 @@ const withdrawStake = async (
     return res;
   } catch (e: any) {
     console.error(e);
-    const errorType = e.message
-      .toLowerCase()
-      .includes(NetworkErrors.TRANSACTION_TIMEOUT)
-      ? ErrorType.TRANSACTION_TIMEOUT
-      : ErrorType.GENERIC;
-    return throwDetailedError({
-      detailed: e,
-      type: errorType,
-    });
+    throwTransactionError(e);
   }
 };
 
@@ -243,11 +238,7 @@ const claimTokens = async (
   } catch (err: any) {
     console.error(`Failed to claim the reward for Task: ${taskAccountPubKey}`);
     console.error(err);
-
-    return throwDetailedError({
-      detailed: err,
-      type: ErrorType.GENERIC,
-    });
+    throwTransactionError(err);
   }
 };
 

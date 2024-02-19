@@ -54,11 +54,12 @@ export function MainWalletView() {
               size={ICON_SIZE}
               data-testid="key-unlock-icon"
               aria-label="key-unlock icon"
-            />{' '}
+            />
           </div>
-          <div className="items-center justify-center m-auto">
-            <p className="text-sm px-1">{shortenMainAccountPubKey}</p>
-            {/* CfDcT8F...H623hG5yPA */}
+          <div className="flex items-center justify-center m-auto">
+            <p className="px-1 overflow-hidden text-xs xl:text-sm w-fit whitespace-nowrap text-ellipsis">
+              {shortenMainAccountPubKey}
+            </p>
           </div>
         </div>
       </div>

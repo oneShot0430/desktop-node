@@ -16,13 +16,8 @@ import {
   padStringWithSpaces,
 } from '@koii-network/task-node';
 import sdk from 'main/services/sdk';
-import {
-  ErrorType,
-  NetworkErrors,
-  DelegateStakeParam,
-  DelegateStakeResponse,
-} from 'models';
-import { throwDetailedError } from 'utils';
+import { DelegateStakeParam, DelegateStakeResponse } from 'models';
+import { throwTransactionError } from 'utils/error';
 
 import {
   getMainSystemAccountKeypair,
@@ -33,6 +28,7 @@ import koiiTasks from '../services/koiiTasks';
 import { getTaskInfo } from './getTaskInfo';
 
 const TRANSACTION_FINALITY_WAIT = 5000; // 5sec
+const MAX_RETRY_COUNT = 3; // Maximum number of retries for each function
 
 const delegateStake = async (
   event: Event,
@@ -60,22 +56,13 @@ const delegateStake = async (
       })
     );
     try {
-      await sendAndConfirmTransaction(
+      await retryWithMaxCount(sendAndConfirmTransaction, [
         sdk.k2Connection,
         createSubmitterAccTransaction,
-        [mainSystemAccount]
-      );
+        [mainSystemAccount],
+      ]);
     } catch (e: any) {
       console.error(e);
-      const errorType = e.message
-        .toLowerCase()
-        .includes(NetworkErrors.TRANSACTION_TIMEOUT)
-        ? ErrorType.TRANSACTION_TIMEOUT
-        : ErrorType.GENERIC;
-      return throwDetailedError({
-        detailed: e,
-        type: errorType,
-      });
     }
     sleep(TRANSACTION_FINALITY_WAIT);
 
@@ -107,26 +94,18 @@ const delegateStake = async (
       data,
     });
     try {
-      const response = await sendAndConfirmTransaction(
+      const response = await retryWithMaxCount(sendAndConfirmTransaction, [
         sdk.k2Connection,
         new Transaction().add(instruction),
-        [mainSystemAccount, stakingAccKeypair]
-      );
+        [mainSystemAccount, stakingAccKeypair],
+      ]);
 
       await koiiTasks.fetchStartedTaskData();
 
       return response;
     } catch (e: any) {
       console.error(e);
-      const errorType = e.message
-        .toLowerCase()
-        .includes(NetworkErrors.TRANSACTION_TIMEOUT)
-        ? ErrorType.TRANSACTION_TIMEOUT
-        : ErrorType.GENERIC;
-      return throwDetailedError({
-        detailed: e,
-        type: errorType,
-      });
+      return throwTransactionError(e);
     }
   } else {
     const createSubmitterAccTransaction = new Transaction().add(
@@ -142,23 +121,15 @@ const delegateStake = async (
       })
     );
     try {
-      await sendAndConfirmTransaction(
+      await retryWithMaxCount(sendAndConfirmTransaction, [
         sdk.k2Connection,
         createSubmitterAccTransaction,
-        [mainSystemAccount, stakingAccKeypair]
-      );
+        [mainSystemAccount, stakingAccKeypair],
+      ]);
       console.log('Stake account created');
     } catch (e: any) {
       console.error(e);
-      const errorType = e.message
-        .toLowerCase()
-        .includes(NetworkErrors.TRANSACTION_TIMEOUT)
-        ? ErrorType.TRANSACTION_TIMEOUT
-        : ErrorType.GENERIC;
-      return throwDetailedError({
-        detailed: e,
-        type: errorType,
-      });
+      return throwTransactionError(e);
     }
 
     const data = encodeData(TASK_INSTRUCTION_LAYOUTS.Stake, {
@@ -190,11 +161,11 @@ const delegateStake = async (
     });
 
     try {
-      const response = await sendAndConfirmTransaction(
+      const response = await retryWithMaxCount(sendAndConfirmTransaction, [
         sdk.k2Connection,
         new Transaction().add(instruction),
-        [mainSystemAccount, stakingAccKeypair]
-      );
+        [mainSystemAccount, stakingAccKeypair],
+      ]);
 
       await koiiTasks.fetchStartedTaskData();
 
@@ -203,18 +174,29 @@ const delegateStake = async (
       return response;
     } catch (e: any) {
       console.error(e);
-      const errorType = e.message
-        .toLowerCase()
-        .includes(NetworkErrors.TRANSACTION_TIMEOUT)
-        ? ErrorType.TRANSACTION_TIMEOUT
-        : ErrorType.GENERIC;
-      return throwDetailedError({
-        detailed: e,
-        type: errorType,
-      });
+      return throwTransactionError(e);
     }
   }
 };
+
+async function retryWithMaxCount(func: any, args: any) {
+  let retryCount = 0;
+  while (retryCount < MAX_RETRY_COUNT) {
+    try {
+      const response = await func(...args);
+      return response;
+    } catch (error) {
+      console.error(`Function call failed: ${error}`);
+      retryCount += 1;
+      if (retryCount === MAX_RETRY_COUNT) {
+        throw error;
+      }
+    }
+  }
+  console.error(
+    `Reached maximum retry count (${MAX_RETRY_COUNT}) for function call`
+  );
+}
 
 const sleep = (timeout: number): Promise<void> => {
   return new Promise((resolve) => {

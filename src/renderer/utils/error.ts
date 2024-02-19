@@ -49,19 +49,29 @@ export const getErrorToDisplay = (
 export const errorTypeToContent: Record<
   ErrorType,
   | string
-  | { mainMessage: string; contextToSuffix: Record<ErrorContext, string> }
+  | {
+      mainMessage: string;
+      contextToSuffix: Partial<Record<ErrorContext, string>>;
+    }
 > = {
   [ErrorType.CONTRACT_ID_NOT_FOUND]: 'Something went wrong. Please try again',
   [ErrorType.NO_ACTIVE_ACCOUNT]: {
     mainMessage: 'Select an account',
     contextToSuffix: {
-      [ErrorContext.CLAIM_REWARD]: ' to claim a reward on this Task',
+      [ErrorContext.CLAIM_REWARD]: ' to claim rewards',
       [ErrorContext.DELEGATE_STAKE]: ' to delegate stake on this Task',
       [ErrorContext.GET_EARNED_REWARDS]: ' to get the earned rewards',
       [ErrorContext.GET_PUBLIC_KEY]: ' to get its public key',
       [ErrorContext.GET_STAKING_PUBLIC_KEY]: ' to get its staking public key',
       [ErrorContext.START_TASK]: ' to start this Task',
       [ErrorContext.WITHDRAW_STAKE]: ' to withdraw from this Task',
+    },
+  },
+  [ErrorType.INSUFFICIENT_FUNDS_FOR_FEES]: {
+    mainMessage:
+      'Insufficient balance on your main key to cover transaction fees',
+    contextToSuffix: {
+      [ErrorContext.CLAIM_REWARD]: ' for claiming.',
     },
   },
   [ErrorType.NO_ACCOUNT_KEY]:
@@ -99,4 +109,5 @@ export const errorTypeToContent: Record<
   [ErrorType.SCHEDULE_OVERLAP]: 'This session overlaps an existing one.',
   [ErrorType.SCHEDULE_NO_SELECTED_DAYS]: 'Please select session days.',
   [ErrorType.INVALID_WALLET_ADDRESS]: 'Please use a valid wallet address',
+  [ErrorType.FETCH_ACCOUNT_BALANCE]: 'Could not fetch the account balance',
 };

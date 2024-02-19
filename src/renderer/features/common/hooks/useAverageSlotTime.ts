@@ -1,10 +1,11 @@
 import { useQuery } from 'react-query';
 
+import { AVERAGE_SLOT_TIME_DEFAULT_STALE_TIME } from 'config/refetchIntervals';
 import { getAverageSlotTime, QueryKeys } from 'renderer/services';
 
 export const useAverageSlotTime = () => {
   return useQuery([QueryKeys.AverageSlotTime], getAverageSlotTime, {
-    // 30min retry
-    retry: 30 * 60 * 1000,
+    staleTime: AVERAGE_SLOT_TIME_DEFAULT_STALE_TIME,
+    refetchInterval: AVERAGE_SLOT_TIME_DEFAULT_STALE_TIME,
   });
 };

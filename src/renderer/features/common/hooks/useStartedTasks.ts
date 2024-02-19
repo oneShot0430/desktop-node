@@ -6,18 +6,21 @@ type UseTasksInfiniteScrollParams = {
   pageSize: number;
   refetchInterval?: number;
   enabled?: boolean;
+  staleTime?: number;
 };
 
 export const useStartedTasks = ({
   pageSize,
   refetchInterval,
   enabled,
+  staleTime,
 }: UseTasksInfiniteScrollParams) => {
   return useTasksInfiniteScroll({
-    queryKey: QueryKeys.taskList,
+    queryKey: QueryKeys.TaskList,
     pageSize,
     refetchInterval,
     fetchFunction: fetchMyTasks,
     enabled,
+    staleTime,
   });
 };

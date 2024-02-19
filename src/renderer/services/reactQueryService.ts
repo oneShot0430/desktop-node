@@ -1,5 +1,5 @@
 export enum QueryKeys {
-  taskList = 'taskList',
+  TaskList = 'TaskList',
   availableTaskList = 'availableTaskList',
   myTaskList = 'myTaskList',
   taskReward = 'taskReward',
@@ -11,6 +11,7 @@ export enum QueryKeys {
   MainAccountName = 'MainAccountName',
   StakingAccount = 'StakingAccount',
   Accounts = 'Accounts',
+  TaskInfo = 'TaskInfo',
   TaskStake = 'TaskStake',
   TaskVariables = 'TaskVariables',
   TaskVariablesNames = 'TaskVariablesNames',
@@ -50,4 +51,5 @@ export enum QueryKeys {
   InitializingNode = 'InitializingNode',
   ExternalNotifications = 'ExternalNotifications',
   EncryptedSecretPhraseMap = 'EncryptedSecretPhraseMap',
+  OnboardingTasks = 'OnboardingTasks',
 }

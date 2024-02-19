@@ -29,9 +29,12 @@ export enum ErrorType {
   SCHEDULE_NO_SELECTED_DAYS = 'SCHEDULE_NO_SELECTED_DAYS',
   SCHEDULE_OVERLAP = 'SCHEDULE_OVERLAP',
   INVALID_WALLET_ADDRESS = 'INVALID_WALLET_ADDRESS',
+  INSUFFICIENT_FUNDS_FOR_FEES = 'INSUFFICIENT_FUNDS_FOR_FEES',
+  FETCH_ACCOUNT_BALANCE = 'FETCH_ACCOUNT_BALANCE',
 }
 
 export enum NetworkErrors {
   TRANSACTION_TIMEOUT = 'transaction was not confirmed',
   NO_REWARD_PENDING_ON_TASK = "The provided claimer account doesn't have any balance on task state",
+  INSUFFICIENT_FUNDS_FOR_FEES = 'Attempt to debit an account but found no record of a prior credit',
 }

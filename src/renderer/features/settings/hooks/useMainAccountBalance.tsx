@@ -1,6 +1,10 @@
 import { useQuery } from 'react-query';
 
-import { getMainAccountBalance, QueryKeys } from 'renderer/services';
+import {
+  ACCOUNT_BALANCE_DATA_DEFAULT_STALE_TIME,
+  ACCOUNT_BALANCE_DATA_REFETCH_INTERVAL,
+} from 'config/refetchIntervals';
+import { getAccountBalance, QueryKeys } from 'renderer/services';
 
 import { useMainAccount } from './useMainAccount';
 
@@ -23,10 +27,22 @@ export const useMainAccountBalance = (options?: OptionsType) => {
     error: accountBalanceLoadingError,
     refetch: refetchAccountBalance,
     isRefetching: isRefetchingAccountBalance,
-  } = useQuery(mainAccountBalanceCacheKey, getMainAccountBalance, {
-    enabled: !!mainAccountPublicKey,
-    onSuccess,
-  });
+  } = useQuery(
+    mainAccountBalanceCacheKey,
+    () => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      return getAccountBalance(mainAccountPublicKey!);
+    },
+    {
+      enabled: !!mainAccountPublicKey,
+      onSuccess,
+      refetchInterval: ACCOUNT_BALANCE_DATA_REFETCH_INTERVAL,
+      staleTime: ACCOUNT_BALANCE_DATA_DEFAULT_STALE_TIME,
+      onError() {
+        console.error(`Error fetching balance for ${mainAccountPublicKey}`);
+      },
+    }
+  );
 
   return {
     accountBalance,

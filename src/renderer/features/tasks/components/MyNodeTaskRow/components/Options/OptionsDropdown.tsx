@@ -67,7 +67,7 @@ export function OptionsDropdown({
           'We sent the pending rewards from this task to your account.'
         );
       }
-      queryCache.invalidateQueries([QueryKeys.taskList]);
+      queryCache.invalidateQueries([QueryKeys.TaskList]);
     },
     retry: 10,
   });

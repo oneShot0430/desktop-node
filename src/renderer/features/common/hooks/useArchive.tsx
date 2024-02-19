@@ -35,7 +35,7 @@ function useArchive({ taskPublicKey, pendingRewards }: Params) {
           }
         );
       }
-      queryClient.invalidateQueries([QueryKeys.taskList]);
+      queryClient.invalidateQueries([QueryKeys.TaskList]);
     },
     retry: 10,
   });

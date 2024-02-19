@@ -3,6 +3,10 @@ import React from 'react';
 import { ExternalNotificationBanner } from '../Banners/ExternalNotificationBanner';
 import { FirstNodeReward } from '../Banners/FirstNodeRewardBanner';
 import { FirstTaskRunningNotification } from '../Banners/FirstTasksRunningNotification';
+import { LowMainAccountBalanceNotification } from '../Banners/LowMainAccountBalanceNotification';
+import { LowMainAccountBalanceSevereNotification } from '../Banners/LowMainAccountBalanceSevereNotification';
+import { LowMainAccountBalanceSevereWithRewardsNotification } from '../Banners/LowMainAccountBalanceSevereWithRewardsNotification';
+import { LowMainAccountBalanceWithRewardsNotification } from '../Banners/LowMainAccountBalanceWithRewardsNotification';
 import { LowStakingAccountBalanceNotification } from '../Banners/LowStakingAccountBalanceNotification';
 import { LowStakingAccountBalanceSevereNotification } from '../Banners/LowStakingAccountBalanceSevereNotification';
 import { ReferralProgramNotification } from '../Banners/ReferralProgramNotification';
@@ -30,6 +34,30 @@ export const useNotificationComponent = ({
     ),
     REFERRAL_PROGRAM: (
       <ReferralProgramNotification
+        notification={notification}
+        backButtonSlot={backButtonSlot}
+      />
+    ),
+    TOP_UP_MAIN_KEY: (
+      <LowMainAccountBalanceNotification
+        notification={notification}
+        backButtonSlot={backButtonSlot}
+      />
+    ),
+    TOP_UP_MAIN_KEY_CRITICAL: (
+      <LowMainAccountBalanceSevereNotification
+        notification={notification}
+        backButtonSlot={backButtonSlot}
+      />
+    ),
+    TOP_UP_MAIN_KEY_WITH_REWARDS: (
+      <LowMainAccountBalanceWithRewardsNotification
+        notification={notification}
+        backButtonSlot={backButtonSlot}
+      />
+    ),
+    TOP_UP_MAIN_KEY_CRITICAL_WITH_REWARDS: (
+      <LowMainAccountBalanceSevereWithRewardsNotification
         notification={notification}
         backButtonSlot={backButtonSlot}
       />

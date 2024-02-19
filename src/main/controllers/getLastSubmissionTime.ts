@@ -4,8 +4,6 @@ import { Event } from 'electron';
 import { namespaceInstance } from 'main/node/helpers/Namespace';
 import { TaskData } from 'models';
 
-import getAvgSlotTime from './getAverageSlotTime';
-
 const findEntryByPublicKey = (data: TaskData, publicKey: string) => {
   const keys = Object.keys(data.submissions).sort(
     (a: string, b: string) => Number(b) - Number(a)
@@ -19,22 +17,23 @@ const findEntryByPublicKey = (data: TaskData, publicKey: string) => {
   return null;
 };
 
-type GetTaskLastSubmissionTimeParams = {
+export type GetTaskLastSubmissionTimeParams = {
   task: TaskData;
   stakingPublicKey: string;
+  averageSlotTime: number;
 };
 
 export const getLastSubmissionTime = async (
   _: Event,
-  { task, stakingPublicKey }: GetTaskLastSubmissionTimeParams
+  { task, stakingPublicKey, averageSlotTime }: GetTaskLastSubmissionTimeParams
 ) => {
+  // FIXME: K2 call, should take it as a param and get it it from cache
   const currentSlot = await namespaceInstance.getCurrentSlot();
   const lastSubmission = findEntryByPublicKey(task, stakingPublicKey);
-  const averageSlot = await getAvgSlotTime();
 
   if (lastSubmission) {
     const lastSubmissionSlot = lastSubmission.slot;
-    const timeInMs = (currentSlot - lastSubmissionSlot) * averageSlot;
+    const timeInMs = (currentSlot - lastSubmissionSlot) * averageSlotTime;
     return timeInMs;
   }
 

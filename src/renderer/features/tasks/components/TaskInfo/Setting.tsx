@@ -80,7 +80,7 @@ export function Setting({
               }
             );
           } finally {
-            queryClient.invalidateQueries([QueryKeys.taskList]);
+            queryClient.invalidateQueries([QueryKeys.TaskList]);
           }
         }
       },

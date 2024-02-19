@@ -23,7 +23,7 @@ import { twMerge } from 'tailwind-merge';
 
 import GearFill from 'assets/svgs/gear-fill.svg';
 import GearLine from 'assets/svgs/gear-line.svg';
-import { MIN_BALANCE_TO_CORRECTLY_RUN_A_TASK } from 'config/node';
+import { CRITICAL_MAIN_ACCOUNT_BALANCE } from 'config/node';
 import { RequirementTag, RequirementType } from 'models';
 import {
   Button,
@@ -93,7 +93,6 @@ function AvailableTaskRow({ task, index, columnsLayout }: Props) {
   const [valueToStake, setValueToStake] = useState<number>(
     task.minimumStakeAmount || 0
   );
-  const [meetsMinimumStake, setMeetsMinimumStake] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | ReactNode>('');
   const { executeTask, getTaskStartPromise, getIsTaskLoading } =
     useStartingTasksContext();
@@ -130,10 +129,12 @@ function AvailableTaskRow({ task, index, columnsLayout }: Props) {
     DROPDOWN_MENU_ID
   );
 
-  const { data: averageTaskReward } = useQuery(
-    [QueryKeys.TaskAverageReward, task.publicKey],
-    () => getLatestAverageTaskReward(task)
-  );
+  const { data: averageTaskReward } = useQuery({
+    queryKey: [QueryKeys.TaskAverageReward, task.publicKey],
+    queryFn: () => getLatestAverageTaskReward(task),
+    // average task reward is not critical data, so we can use staleTime
+    staleTime: 60 * 60 * 1000,
+  });
 
   const { taskStake: alreadyStakedTokensAmount, loadingTaskStake } =
     useTaskStake({
@@ -155,7 +156,6 @@ function AvailableTaskRow({ task, index, columnsLayout }: Props) {
   };
 
   const minStake = task.minimumStakeAmount;
-  const isFirstRowInTable = index === 0;
   const nodesNumber = useMemo(() => TaskService.getNodesCount(task), [task]);
   const topStake = useMemo(() => TaskService.getTopStake(task), [task]);
   const totalBountyInKoii = useMemo(
@@ -233,9 +233,9 @@ function AvailableTaskRow({ task, index, columnsLayout }: Props) {
 
   const validateTask = useCallback(() => {
     const hasEnoughKoii =
-      (accountBalance >= MIN_BALANCE_TO_CORRECTLY_RUN_A_TASK &&
+      (accountBalance >= CRITICAL_MAIN_ACCOUNT_BALANCE &&
         alreadyStakedTokensAmount >= minStake) ||
-      accountBalance >= valueToStake + MIN_BALANCE_TO_CORRECTLY_RUN_A_TASK;
+      accountBalance >= valueToStake + CRITICAL_MAIN_ACCOUNT_BALANCE;
     const hasMinimumStake =
       (alreadyStakedTokensAmount || valueToStake) >= minStake;
     const isTaskValid = hasMinimumStake && isTaskToolsValid && hasEnoughKoii;
@@ -319,8 +319,14 @@ function AvailableTaskRow({ task, index, columnsLayout }: Props) {
       }
     }
     setValueToStake(value);
-    setMeetsMinimumStake(value >= minStake);
   };
+
+  const meetsMinimumStake = useMemo(
+    () =>
+      alreadyStakedTokensAmount >= getKoiiFromRoe(minStake) ||
+      valueToStake >= getKoiiFromRoe(minStake),
+    [alreadyStakedTokensAmount, valueToStake, minStake]
+  );
 
   const handleOpenAddTaskVariableModal = useCallback(
     (dropdownRef: RefObject<HTMLButtonElement>, tool: string) => {

@@ -18,7 +18,7 @@ export const AddNewAccount = create(function AddNewAccount() {
   const [currentStep, setCurrentStep] = useState(Steps.ImportKey);
   const [newKey, setNewKey] = useState<KeyType>();
   const [seedPhrase, setSeedPhrase] = useState('');
-  const [accountEncryptedPin, setAccountEncryptedPin] = useState('');
+  const [appPin, setAppPin] = useState<string>('');
 
   const handleCreatedNewKeyStep = (step: Steps, payload: CreateKeyPayload) => {
     setNewKey(payload.keys);
@@ -40,7 +40,7 @@ export const AddNewAccount = create(function AddNewAccount() {
       [Steps.ImportWithKeyPhrase]: (
         <ImportWithKeyPhrase
           onClose={handleClose}
-          accountEncryptedPin={accountEncryptedPin}
+          appPin={appPin}
           setNextStep={setCurrentStep}
           onImportSuccess={({ accountName, mainAccountPubKey }) => {
             setNewKey({
@@ -82,8 +82,8 @@ export const AddNewAccount = create(function AddNewAccount() {
         <ImportNewAccount
           onClose={handleClose}
           setNextStep={setCurrentStep}
-          accountPin={accountEncryptedPin}
-          setAccountPin={setAccountEncryptedPin}
+          accountPin={appPin}
+          setAccountPin={setAppPin}
         />
       ),
       [Steps.ImportWithKeyFile]: (

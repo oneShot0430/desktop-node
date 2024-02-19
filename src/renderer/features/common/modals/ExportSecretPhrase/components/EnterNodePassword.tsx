@@ -6,7 +6,7 @@ import { PinInput } from 'renderer/components/PinInput';
 import { ErrorMessage, Button } from 'renderer/components/ui';
 import { useKeyInput } from 'renderer/features/common/hooks';
 import { useUserAppConfig } from 'renderer/features/settings/hooks';
-import { QueryKeys, getEncryptedSecretPhrase } from 'renderer/services';
+import { getEncryptedSecretPhrase, QueryKeys } from 'renderer/services';
 import { validatePin } from 'renderer/utils';
 
 import { Steps } from '../types';
@@ -29,32 +29,44 @@ export function EnterNodePassword({
   const queryCache = useQueryClient();
   const { userConfig: settings } = useUserAppConfig({});
 
-  const handleCreateNewKey = async () => {
+  const handleShowPhrase = async () => {
     const isPinValid = await validatePin(pin, settings?.pin);
 
-    try {
-      if (isPinValid && settings?.pin) {
-        const encryptedSecretPhrase = await getEncryptedSecretPhrase(publicKey);
-        if (!encryptedSecretPhrase) {
-          return setError(
-            "It looks like this key wasn't generated with a secret phrase"
-          );
-        }
+    if (isPinValid && settings?.pin) {
+      const encryptedSecretPhrase = await getEncryptedSecretPhrase(publicKey);
+      if (!encryptedSecretPhrase) {
+        return setError(
+          "It looks like this key wasn't generated with a secret phrase"
+        );
+      }
+
+      try {
         const seedPhrase: string = (await decrypt(
           settings?.pin,
           encryptedSecretPhrase
         )) as string;
         setSeedPhrase(seedPhrase);
         setNextStep(Steps.ShowSecretPhase);
-      } else {
-        setError(
-          "Whoops. That PIN isn't right. Double check it and try again."
+      } catch (error) {
+        console.log(
+          'First attempt of decrypting the seed phrase failed, trying to use the old pin from DB...'
         );
+        try {
+          const seedPhrase: string = (await decrypt(
+            settings?.pin as string,
+            encryptedSecretPhrase
+          )) as string;
+          setSeedPhrase(seedPhrase);
+          setNextStep(Steps.ShowSecretPhase);
+        } catch (error) {
+          console.log('Second attempt of decrypting the seed phrase failed');
+          setError('Failed to decrypt the seed phrase');
+        }
+      } finally {
+        queryCache.invalidateQueries(QueryKeys.Accounts);
       }
-    } catch (error: any) {
-      setError(error);
-    } finally {
-      queryCache.invalidateQueries(QueryKeys.Accounts);
+    } else {
+      setError("Whoops. That PIN isn't right. Double check it and try again.");
     }
   };
 
@@ -64,7 +76,7 @@ export function EnterNodePassword({
 
   useKeyInput(
     'Enter',
-    handleCreateNewKey,
+    handleShowPhrase,
     accountName.length === 0 || pin.length !== 6
   );
 
@@ -101,7 +113,7 @@ export function EnterNodePassword({
       <div className="flex justify-center pt-2">
         <Button
           disabled={accountName.length === 0 || pin.length !== 6}
-          onClick={handleCreateNewKey}
+          onClick={handleShowPhrase}
           label="Reveal Secret Phrase"
           className="font-semibold bg-white text-finnieBlue-light w-[220px] h-[48px]"
         />

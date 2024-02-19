@@ -8,12 +8,8 @@ import {
   getStakingAccountKeypair,
 } from 'main/node/helpers';
 import sdk from 'main/services/sdk';
-import {
-  CreditStakingWalletFromMainWalletPayloadType,
-  ErrorType,
-  NetworkErrors,
-} from 'models';
-import { throwDetailedError } from 'utils/error';
+import { CreditStakingWalletFromMainWalletPayloadType } from 'models';
+import { throwTransactionError } from 'utils/error';
 
 export const creditStakingWalletFromMainWallet = async (
   _: Event,
@@ -47,14 +43,6 @@ export const creditStakingWalletFromMainWallet = async (
     return transactionResponse;
   } catch (e: unknown) {
     console.error(e);
-    const errorType = (e as { message: string }).message
-      .toLowerCase()
-      .includes(NetworkErrors.TRANSACTION_TIMEOUT)
-      ? ErrorType.TRANSACTION_TIMEOUT
-      : ErrorType.GENERIC;
-    return throwDetailedError({
-      detailed: (e as { message: string }).message,
-      type: errorType,
-    });
+    throwTransactionError(e);
   }
 };

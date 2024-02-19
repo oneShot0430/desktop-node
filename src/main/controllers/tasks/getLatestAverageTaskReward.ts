@@ -10,6 +10,7 @@ async function getDistributionList(
 ): Promise<string | null> {
   let accountInfo: AccountInfo<Buffer> | null = null;
   try {
+    // FIXME: calls K2
     accountInfo = await sdk.k2Connection.getAccountInfo(
       new PublicKey(publicKey)
     );

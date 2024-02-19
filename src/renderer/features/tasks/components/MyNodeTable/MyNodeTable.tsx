@@ -5,7 +5,10 @@ import { useQuery, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
 import EmptyMyNode from 'assets/animations/empty-my-node.json';
-import { MY_NODE_TASK_REFETCH_INTERVAL } from 'config/refetchIntervals';
+import {
+  MY_NODE_TASK_REFETCH_INTERVAL,
+  MY_NODE_TASK_STALE_TIME,
+} from 'config/refetchIntervals';
 import { InfiniteScrollTable, LoadingSpinner } from 'renderer/components/ui';
 import { useMyNodeContext, usePrivateTasks } from 'renderer/features';
 import { useStartedTasks } from 'renderer/features/common/hooks/useStartedTasks';
@@ -54,6 +57,7 @@ export function MyNodeTable() {
   } = useStartedTasks({
     pageSize,
     refetchInterval: MY_NODE_TASK_REFETCH_INTERVAL,
+    staleTime: MY_NODE_TASK_STALE_TIME,
     enabled: fetchMyTasksEnabled && privateTasksLoaded,
   });
 
@@ -67,7 +71,7 @@ export function MyNodeTable() {
 
   useEffect(() => {
     window.main.onSystemWakeUp(() => {
-      queryClient.invalidateQueries([QueryKeys.taskList]);
+      queryClient.invalidateQueries([QueryKeys.TaskList]);
     });
   }, [queryClient]);
 
@@ -129,9 +133,9 @@ export function MyNodeTable() {
             </div>
           );
         })}
-        <div className="text-right pt-2">
+        <div className="pt-2 text-right">
           <a
-            className="underline text-sm text-green-2 cursor-pointer"
+            className="text-sm underline cursor-pointer text-green-2"
             onClick={goToSettings}
           >
             Need Help?

@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useQuery } from 'react-query';
 
 import { TaskData } from 'models';
+import { useAverageSlotTime } from 'renderer/features/common';
 import { getLastSubmissionTime, QueryKeys } from 'renderer/services';
 
 import { formatMilliseconds } from '../utils/utils';
@@ -11,11 +12,14 @@ export const useTaskLastSubmission = (
   stakingAccountPublicKey: string,
   taskPublicKey: string
 ) => {
+  const { data: averageSlotTime } = useAverageSlotTime();
   const { data: lastSubInMilliseconds } = useQuery(
     [QueryKeys.LastSubRoundPerTask, stakingAccountPublicKey, taskPublicKey],
-    () => getLastSubmissionTime(task, stakingAccountPublicKey),
+    () =>
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      getLastSubmissionTime(task, stakingAccountPublicKey, averageSlotTime!),
     {
-      enabled: !!stakingAccountPublicKey,
+      enabled: !!stakingAccountPublicKey && !!averageSlotTime,
       refetchInterval: 60 * 1000,
     }
   );

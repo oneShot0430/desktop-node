@@ -10,7 +10,7 @@ import React, {
 } from 'react';
 import { useQueryClient } from 'react-query';
 
-import { MIN_BALANCE_TO_CORRECTLY_RUN_A_TASK } from 'config/node';
+import { CRITICAL_MAIN_ACCOUNT_BALANCE } from 'config/node';
 import { RequirementTag, RequirementType } from 'models';
 import {
   LoadingSpinner,
@@ -99,7 +99,6 @@ export function AddPrivateTask({ columnsLayout, onClose }: Props) {
         isValidPublicKey &&
         !loadingStartedTasks,
       // never cache this query because we want to always get the latest task data
-      cacheTime: 0,
       onSettled: (data) => {
         if (!data) {
           setTaskWarning(TASK_ID_DOES_NOT_MATCH_WARNING);
@@ -196,7 +195,7 @@ export function AddPrivateTask({ columnsLayout, onClose }: Props) {
       ?.then(() => {
         setTaskStartSucceeded(true);
       })
-      .catch((error) => {
+      .catch(() => {
         setTaskStartSucceeded(false);
         showTaskRunErrorToast(task?.taskName);
       });
@@ -216,9 +215,9 @@ export function AddPrivateTask({ columnsLayout, onClose }: Props) {
 
   const validateTask = useCallback(() => {
     const hasEnoughKoii =
-      (accountBalance >= MIN_BALANCE_TO_CORRECTLY_RUN_A_TASK &&
+      (accountBalance >= CRITICAL_MAIN_ACCOUNT_BALANCE &&
         alreadyStakedTokensAmount >= Number(minStake)) ||
-      accountBalance >= valueToStake + MIN_BALANCE_TO_CORRECTLY_RUN_A_TASK;
+      accountBalance >= valueToStake + CRITICAL_MAIN_ACCOUNT_BALANCE;
     const hasMinimumStake =
       (alreadyStakedTokensAmount || valueToStake) >= Number(minStake);
     const isTaskValid = hasMinimumStake && isTaskToolsValid && hasEnoughKoii;
@@ -231,6 +230,7 @@ export function AddPrivateTask({ columnsLayout, onClose }: Props) {
       isTaskRunning: !!task?.isRunning,
       hasMinimumStake,
       isTaskToolsValid,
+      isActive: !!task?.isActive,
     });
 
     setErrorMessage(errorMessage);
@@ -241,6 +241,7 @@ export function AddPrivateTask({ columnsLayout, onClose }: Props) {
     alreadyStakedTokensAmount,
     isTaskToolsValid,
     task?.isRunning,
+    task?.isActive,
   ]);
 
   useEffect(() => {
@@ -318,7 +319,7 @@ export function AddPrivateTask({ columnsLayout, onClose }: Props) {
       ) : (
         'Start task'
       ),
-    [errorMessage]
+    [errorMessage, isLoadingMetadata]
   );
 
   useAutoPairVariables({

@@ -417,6 +417,7 @@ export class KoiiTaskService {
     this.startedTasksData = (
       await Promise.all(
         startedTasksPubKeys.map(async (pubkey) => {
+          // FIXME: K2 call
           const task = await this.fetchDataAndValidateIfTask(pubkey).catch(
             async (err) => {
               const isConnectionErrorFromK2 =

@@ -26,7 +26,10 @@ export const useTaskById = ({ taskPubkey, options }: TaskByIdParams) => {
     [QueryKeys.PrivateTask, taskPubkey],
     () => getTaskById(taskPubkey),
     {
-      ...(options ?? {}),
+      onError(error) {
+        console.error(error);
+      },
+      ...options,
     }
   );
 

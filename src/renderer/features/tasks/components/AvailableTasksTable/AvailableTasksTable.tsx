@@ -3,7 +3,10 @@ import React from 'react';
 
 import EmptyAvailableTasks from 'assets/animations/empty-available-tasks.gif';
 import LoadingAvailableTasks from 'assets/animations/loading-available-tasks.gif';
-import { TASK_REFETCH_INTERVAL } from 'config/refetchIntervals';
+import {
+  AVAILABLE_TASKS_REFETCH_INTERVAL,
+  AVAILABLE_TASKS_STALE_TIME,
+} from 'config/refetchIntervals';
 import { InfiniteScrollTable } from 'renderer/components/ui';
 import { useAvailableTasks } from 'renderer/features';
 
@@ -35,7 +38,11 @@ export function AvailableTasksTable() {
     tasksError,
     hasMoreTasks,
     fetchNextTasks,
-  } = useAvailableTasks({ pageSize, refetchInterval: TASK_REFETCH_INTERVAL });
+  } = useAvailableTasks({
+    pageSize,
+    refetchInterval: AVAILABLE_TASKS_REFETCH_INTERVAL,
+    staleTime: AVAILABLE_TASKS_STALE_TIME,
+  });
 
   const [animationRef] = useAutoAnimate();
 

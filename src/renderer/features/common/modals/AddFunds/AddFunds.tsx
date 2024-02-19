@@ -117,7 +117,7 @@ export const AddFunds = create(function AddFunds({
 
   return (
     <Modal>
-      <ModalContent className="w-[432px] h-auto text-finnieBlue rounded-3xl py-2 pb-8">
+      <ModalContent className="w-[500px] h-auto text-finnieBlue rounded-3xl p-6 pt-4">
         <div className={headerClasses}>
           {onGoBack && (
             <Icon

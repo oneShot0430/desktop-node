@@ -30,10 +30,9 @@ export function ExternalNotificationBanner({
               window.open(notification.ctaLink, '_blank');
               markAsRead(notification.id);
             }}
-            variant={ButtonVariant.PrimaryDark}
-            size={ButtonSize.MD}
+            variant={ButtonVariant.SecondaryDark}
+            size={ButtonSize.SM}
             labelClassesOverrides="font-semibold w-max"
-            buttonClassesOverrides="bg-finnieBlue"
           />
         </div>
       }

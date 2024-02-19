@@ -15,14 +15,14 @@ import { Steps } from '../types';
 type PropsType = Readonly<{
   onClose: () => void;
   onImportSuccess: (keys: AccountsType) => void;
-  accountEncryptedPin: string;
+  appPin: string;
   setNextStep: (step: Steps) => void;
 }>;
 
 function ImportWithKeyPhrase({
   onClose,
   onImportSuccess,
-  accountEncryptedPin,
+  appPin,
   setNextStep,
 }: PropsType) {
   const queryCache = useQueryClient();
@@ -71,7 +71,7 @@ function ImportWithKeyPhrase({
             onImportSuccess({ accountName, mainAccountPubKey });
           }}
           confirmActionLabel="Import Account"
-          accountEncryptedPin={accountEncryptedPin}
+          appPin={appPin}
           className="px-8 bg-finnieBlue-light-4"
         />
         <div className="flex items-center justify-center w-full px-4 pt-3">

@@ -27,7 +27,7 @@ export function AppTopBar() {
       {unreadNotificationsWithBannerTopBar.length > 0 ? (
         <DisplayTopBarNotifications
           topBarNotifications={unreadNotificationsWithBannerTopBar}
-          backButtonSlot={<BackButton />}
+          backButtonSlot={<BackButton color="blue" />}
         />
       ) : (
         <div className="flex items-center justify-between w-full gap-4 px-4 mx-auto">

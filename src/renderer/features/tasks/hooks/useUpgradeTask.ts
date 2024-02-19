@@ -83,7 +83,9 @@ export const useUpgradeTask = ({
 
   const { data: newTaskVersion, isLoading: isLoadingNewTaskVersion } = useQuery(
     [QueryKeys.NewTaskVersion, task.publicKey],
-    () => getLatestActiveVersionOfTask(task.migratedTo),
+    () => {
+      return getLatestActiveVersionOfTask(task.migratedTo);
+    },
     {
       enabled: task.isMigrated,
     }
@@ -199,6 +201,7 @@ export const useUpgradeTask = ({
     newTaskVersion,
     userConfig,
     upgradeStatus,
+    showUpgradeTaskNotification,
     task.taskName,
     handleSaveUserAppConfig,
   ]);
@@ -245,7 +248,7 @@ export const useUpgradeTask = ({
         setUpgradeStatus(UpgradeStatus.SUCCESS);
 
         setTimeout(() => {
-          queryClient.invalidateQueries([QueryKeys.taskList]);
+          queryClient.invalidateQueries([QueryKeys.TaskList]);
         }, 5000);
       },
       onError: () => {

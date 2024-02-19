@@ -18,7 +18,10 @@ import RetryAnim from 'assets/svgs/history-icon.svg';
 import UpdateIcon from 'assets/svgs/update-icon.svg';
 import UploadLine from 'assets/svgs/upload-line.svg';
 import { MAX_TASK_RETRY_TIME } from 'config/node';
-import { TASK_RETRY_DATA_REFETCH_INTERVAL } from 'config/refetchIntervals';
+import {
+  TASK_RETRY_DATA_REFETCH_INTERVAL,
+  TASK_RETRY_DATA_STALE_TIME,
+} from 'config/refetchIntervals';
 import { get, noop, uniqBy } from 'lodash';
 import { RequirementType } from 'models';
 import {
@@ -138,6 +141,7 @@ export function MyNodeTaskRow({
     () => getRetryDataByTaskId(publicKey),
     {
       refetchInterval: TASK_RETRY_DATA_REFETCH_INTERVAL,
+      staleTime: TASK_RETRY_DATA_STALE_TIME,
     }
   );
 

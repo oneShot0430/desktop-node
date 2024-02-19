@@ -8,8 +8,8 @@ export const usePinUtils = () => {
   };
 
   const validatePin = async (pin: string, pinSha: string | undefined) => {
-    if (pin.length === 6) {
-      const pinMatchesStoredHash = await compare(pin, pinSha || '');
+    if (pin.length === 6 && pinSha) {
+      const pinMatchesStoredHash = await compare(pin, pinSha);
       return pinMatchesStoredHash;
     }
     return false;

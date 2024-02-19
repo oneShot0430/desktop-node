@@ -9,6 +9,7 @@ type GetErrorMessageParams = {
   isTaskRunning: boolean;
   hasMinimumStake: boolean;
   isTaskToolsValid: boolean;
+  isActive?: boolean;
 };
 
 export const getErrorMessage = ({
@@ -17,8 +18,10 @@ export const getErrorMessage = ({
   isTaskRunning,
   hasMinimumStake,
   isTaskToolsValid,
+  isActive,
 }: GetErrorMessageParams) => {
   if (isTaskRunning) return [];
+  console.log({ isActive });
 
   const conditions = [
     { condition: hasEnoughKoii, errorMessage: 'have enough KOII to stake' },
@@ -31,6 +34,10 @@ export const getErrorMessage = ({
     {
       condition: isTaskToolsValid,
       errorMessage: 'configure the Task settings',
+    },
+    {
+      condition: isActive,
+      errorMessage: 'the task is active',
     },
   ];
 

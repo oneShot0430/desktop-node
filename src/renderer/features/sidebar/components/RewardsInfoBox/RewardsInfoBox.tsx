@@ -10,7 +10,9 @@ import { useQuery } from 'react-query';
 
 import SparksAnimation from 'assets/animations/sparks.json';
 import tokenAnimation from 'assets/animations/token-animation.gif';
+import { SAFE_AVERAGE_SLOT_TIME } from 'config/refetchIntervals';
 import { Tooltip } from 'renderer/components/ui';
+import { useAverageSlotTime } from 'renderer/features/common';
 import { QueryKeys } from 'renderer/services';
 import { getTimeToNextReward } from 'renderer/services/api';
 import { Theme } from 'renderer/types/common';
@@ -28,11 +30,14 @@ type PropsType = {
 export function RewardsInfoBox({
   rewardState = RewardsState.NoRunningTasks,
 }: PropsType) {
+  const { data: averageSlotTime } = useAverageSlotTime();
   const { data: timeToNextReward, error: timeToNextRewardError } = useQuery(
     QueryKeys.TimeToNextReward,
-    getTimeToNextReward,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    () => getTimeToNextReward(averageSlotTime ?? SAFE_AVERAGE_SLOT_TIME),
     {
       refetchInterval: NEXT_REWARD_REFETCH_INTERVAL,
+      enabled: !!averageSlotTime,
     }
   );
 

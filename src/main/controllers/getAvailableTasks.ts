@@ -29,6 +29,7 @@ const getAvailableTasks = async (
     const idsSlice = whitelistedTasks.slice(offset, offset + limit);
     const runningIds = koiiTasks
       .getStartedTasks()
+      // eslint-disable-next-line camelcase
       .map(({ task_id }) => task_id);
 
     const filteredIdsSlice = idsSlice.filter(
@@ -36,23 +37,22 @@ const getAvailableTasks = async (
         !runningIds.includes(pubKey) && whitelistedTasks.includes(pubKey)
     );
 
-    const tasks: Task[] = (
-      await koiiTasks.fetchDataBundleAndValidateIfTasks(filteredIdsSlice)
-    )
-      .map((rawTaskData) => {
-        if (!rawTaskData) {
-          return null;
-        }
+    const tasks: Task[] = // FIXME: K2 calls
+      (await koiiTasks.fetchDataBundleAndValidateIfTasks(filteredIdsSlice))
+        .map((rawTaskData) => {
+          if (!rawTaskData) {
+            return null;
+          }
 
-        return {
-          publicKey: rawTaskData.task_id,
-          data: parseRawK2TaskData({ rawTaskData }),
-        };
-      })
-      .filter(
-        (task): task is Task =>
-          task !== null && task.data.isWhitelisted && task.data.isActive
-      );
+          return {
+            publicKey: rawTaskData.task_id,
+            data: parseRawK2TaskData({ rawTaskData }),
+          };
+        })
+        .filter(
+          (task): task is Task =>
+            task !== null && task.data.isWhitelisted && task.data.isActive
+        );
 
     const response: PaginatedResponse<Task> = {
       content: tasks,

@@ -1,3 +1,6 @@
+import { CRITICAL_MAIN_ACCOUNT_BALANCE } from 'config/node';
+import { getKoiiFromRoe } from 'utils';
+
 import {
   AppNotificationType,
   BannerPlacement,
@@ -42,6 +45,48 @@ export const AppNotificationsMap: Record<
     variant: 'INFO',
     notificationBanner: {
       componentKey: 'REFERRAL_PROGRAM',
+      placement: BannerPlacement.TopBar,
+    },
+  },
+  TOP_UP_MAIN_KEY: {
+    title: 'Low Main Key Balance',
+    message:
+      "Your main key's funds are getting low. Top up now to make sure your node keeps running tasks and making submissions.",
+    variant: 'WARNING',
+    notificationBanner: {
+      componentKey: 'TOP_UP_MAIN_KEY',
+      placement: BannerPlacement.TopBar,
+    },
+  },
+  TOP_UP_MAIN_KEY_CRITICAL: {
+    title: 'Low Main Key Balance',
+    message: `Your main key is below ${getKoiiFromRoe(
+      CRITICAL_MAIN_ACCOUNT_BALANCE
+    )} KOII. Fund now to keep your node working correctly.`,
+    variant: 'ERROR',
+    notificationBanner: {
+      componentKey: 'TOP_UP_MAIN_KEY_CRITICAL',
+      placement: BannerPlacement.TopBar,
+    },
+  },
+  TOP_UP_MAIN_KEY_WITH_REWARDS: {
+    title: 'Low Main Key Balance',
+    message:
+      "Your main key's funds are getting low. Claim some rewards to make sure your node keeps running tasks and making submissions.",
+    variant: 'WARNING',
+    notificationBanner: {
+      componentKey: 'TOP_UP_MAIN_KEY_WITH_REWARDS',
+      placement: BannerPlacement.TopBar,
+    },
+  },
+  TOP_UP_MAIN_KEY_CRITICAL_WITH_REWARDS: {
+    title: 'Low Main Key Balance',
+    message: `Your main key is below ${getKoiiFromRoe(
+      CRITICAL_MAIN_ACCOUNT_BALANCE
+    )} KOII. Claim some rewards to keep your node working correctly.`,
+    variant: 'ERROR',
+    notificationBanner: {
+      componentKey: 'TOP_UP_MAIN_KEY_CRITICAL_WITH_REWARDS',
       placement: BannerPlacement.TopBar,
     },
   },

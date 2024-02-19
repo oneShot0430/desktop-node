@@ -5,7 +5,7 @@ import { AppRoute } from 'renderer/types/routes';
 // eslint-disable-next-line @cspell/spellchecker
 import { v4 as uuidv4 } from 'uuid';
 
-import { useRunExemptionFlowModal } from '../../common';
+import { useFundNewAccountModal, useRunExemptionFlowModal } from '../../common';
 import { useFundStakingAccountModal } from '../../common/hooks/useFundStakingAccountModal';
 import { useMainAccount } from '../../settings';
 import { AppNotificationsMap } from '../appNotificationsMap';
@@ -23,6 +23,7 @@ export const useAppNotifications = (
   const { addNotification, removeNotification, markAsRead } =
     useNotificationActions();
   const { data: mainAccount } = useMainAccount();
+  const { showModal: showFundMainAccountModal } = useFundNewAccountModal();
   const { showModal: showFundStakingAccountModal } = useFundStakingAccountModal(
     {
       onWalletFundSuccess: () => {
@@ -50,6 +51,48 @@ export const useAppNotifications = (
           label="Learn more"
           onClick={() => {
             navigate(AppRoute.SettingsGeneral);
+            markAsRead(notification.id);
+          }}
+        />
+      ),
+      TOP_UP_MAIN_KEY: (
+        <CTAButton
+          label="Top Up Main Key"
+          onClick={() => {
+            showFundMainAccountModal();
+            markAsRead(notification.id);
+          }}
+        />
+      ),
+      TOP_UP_MAIN_KEY_CRITICAL: (
+        <CTAButton
+          label="Top Up Main Key"
+          onClick={() => {
+            showFundMainAccountModal();
+            markAsRead(notification.id);
+          }}
+        />
+      ),
+      TOP_UP_MAIN_KEY_WITH_REWARDS: (
+        <CTAButton
+          label="Claim some Rewards"
+          onClick={() => {
+            const claimRewardsButton = document.getElementById(
+              'claim-rewards-button'
+            );
+            claimRewardsButton?.click();
+            markAsRead(notification.id);
+          }}
+        />
+      ),
+      TOP_UP_MAIN_KEY_CRITICAL_WITH_REWARDS: (
+        <CTAButton
+          label="Claim some Rewards"
+          onClick={() => {
+            const claimRewardsButton = document.getElementById(
+              'claim-rewards-button'
+            );
+            claimRewardsButton?.click();
             markAsRead(notification.id);
           }}
         />
