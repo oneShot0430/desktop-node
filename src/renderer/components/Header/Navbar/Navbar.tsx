@@ -6,7 +6,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
-import { useQueryClient } from 'react-query';
 import { NavLink } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 
@@ -45,20 +44,6 @@ const navItems = [
 ];
 
 function Navbar(): JSX.Element {
-  const queryClient = useQueryClient();
-  const allQueriesData = queryClient
-    .getQueryCache()
-    .findAll()
-    .map((query) => {
-      return {
-        key: Array.isArray(query.queryKey)
-          ? query.queryKey.join()
-          : query.queryKey,
-        state: query.state.data,
-      };
-    });
-  console.log('####  QUERY CACHE ####', allQueriesData);
-
   return (
     <nav className="flex items-center justify-between">
       {navItems.map((item) => (

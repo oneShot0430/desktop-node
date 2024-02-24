@@ -27,7 +27,6 @@ function KeyCreationMethodPick() {
   const createNewKey = async (accountName: string) => {
     const seedPhrase = await generateSeedPhrase();
 
-    console.log('@@@ encrypts seed phrase with pin:', appPin);
     const encryptedSecretPhrase: string = await encrypt(appPin, seedPhrase);
 
     const resp = await createNodeWallets(

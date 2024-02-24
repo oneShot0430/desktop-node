@@ -53,29 +53,39 @@ export class TaskSchedulerService {
     const userConfig = await getUserConfig();
 
     schedules.forEach((schedule) => {
+      console.log(
+        'Loading schedule',
+        schedule.id,
+        schedule.startTime,
+        schedule.days
+      );
       const fullSchedule = {
         ...schedule,
-        startJob: this.createCronJob(
-          this.scheduleStartAction,
-          schedule.startTime,
-          schedule.days,
-          schedule.id
-        ),
-        stopJob: schedule.stopTime
+        startJob: schedule.isEnabled
           ? this.createCronJob(
-              this.scheduleEndAction,
-              schedule.stopTime,
+              this.scheduleStartAction,
+              schedule.startTime,
               schedule.days,
               schedule.id
             )
           : null,
+        stopJob:
+          schedule.stopTime && schedule.isEnabled
+            ? this.createCronJob(
+                this.scheduleEndAction,
+                schedule.stopTime,
+                schedule.days,
+                schedule.id
+              )
+            : null,
       };
+
       this.schedules.set(schedule.id, fullSchedule);
 
-      if (isNumber(userConfig.stayAwake) && schedule.isEnabled) {
-        fullSchedule.startJob.stop();
-        fullSchedule.stopJob?.stop();
-      }
+      // if (isNumber(userConfig.stayAwake) && schedule.isEnabled) {
+      //   fullSchedule.startJob.stop();
+      //   fullSchedule.stopJob?.stop();
+      // }
     });
   }
 
@@ -276,7 +286,7 @@ export class TaskSchedulerService {
         schedule.days = newDays;
       }
 
-      const hasConflictithOtherSchedules = this.checkIsScheduleInConflict(
+      const hasConflictingOtherSchedules = this.checkIsScheduleInConflict(
         schedule.id,
         startParsed,
         stopParsed,
@@ -284,7 +294,7 @@ export class TaskSchedulerService {
       );
 
       // check for overlap / conflicts
-      if (hasConflictithOtherSchedules) {
+      if (hasConflictingOtherSchedules) {
         return throwDetailedError({
           detailed: `Conflict. ID ${schedule.id}`,
           type: ErrorType.SCHEDULE_OVERLAP,
@@ -301,7 +311,7 @@ export class TaskSchedulerService {
       const isStayAwake = isNumber((await getUserConfig()).stayAwake);
 
       if (newStartTime && newStartTime !== schedule.startTime) {
-        schedule.startJob.stop();
+        schedule.startJob?.stop();
         schedule.startTime = newStartTime;
         schedule.startJob = this.createCronJob(
           this.scheduleStartAction,
@@ -337,11 +347,19 @@ export class TaskSchedulerService {
         schedule.isEnabled = newIsEnabled;
 
         if (newIsEnabled && isStayAwake) {
-          if (!schedule.startJob.running) schedule.startJob.start();
-          if (!schedule.stopJob?.running) schedule.stopJob?.start();
+          if (!schedule?.startJob?.running) {
+            schedule?.startJob?.start();
+          }
+          if (!schedule.stopJob?.running) {
+            schedule.stopJob?.start();
+          }
         } else {
-          if (schedule.startJob.running) schedule.startJob.stop();
-          if (schedule.stopJob?.running) schedule.stopJob?.stop();
+          if (schedule?.startJob?.running) {
+            schedule.startJob.stop();
+          }
+          if (schedule.stopJob?.running) {
+            schedule.stopJob?.stop();
+          }
         }
       }
 
@@ -361,7 +379,7 @@ export class TaskSchedulerService {
   public async removeSchedule(id: string) {
     const schedule = this.schedules.get(id);
     if (schedule) {
-      schedule.startJob.stop();
+      schedule.startJob?.stop();
       this.schedules.delete(id);
       await this.saveSchedulesToDb();
     }

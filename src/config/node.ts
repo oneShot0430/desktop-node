@@ -47,6 +47,8 @@ export const MAX_TASK_RETRY_TIME = 5 * 60 * 1000;
 export const LOW_MAIN_ACCOUNT_BALANCE = 200000000;
 export const CRITICAL_MAIN_ACCOUNT_BALANCE = 100000000;
 
+export const STAY_AWAKE_POLICY = 'prevent-display-sleep';
+
 export default {
   REDIS,
   BUNDLER_URL,

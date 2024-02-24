@@ -34,13 +34,14 @@ export function Help() {
 
   const { data: mainAccountPublicKey } = useMainAccount();
   const { data: stakingAccountPublicKey } = useStakingAccount();
-  const { data: appVersion = '' } = useQuery(QueryKeys.AppVersion, getVersion, {
+  const { data: appVersion } = useQuery(QueryKeys.AppVersion, getVersion, {
     refetchInterval: Infinity,
   });
 
   const keyPair = `System Key: ${mainAccountPublicKey}, Staking Key: ${stakingAccountPublicKey}`;
   const copyKeyPairToClipboard = () => copyKeyPair(keyPair);
-  const copyNodeVersionToClipboard = () => copyNodeVersion(appVersion);
+  const copyNodeVersionToClipboard = () =>
+    appVersion && copyNodeVersion(appVersion?.appVersion);
 
   const [discordButtonClickCount, setDiscordButtonClickCount] = useState(0);
   const [showSection, setShowSection] = useState(false);
@@ -128,7 +129,7 @@ export function Help() {
             }
           />
 
-          <p>Node version: {appVersion}</p>
+          <p>Node version: {appVersion?.appVersion}</p>
 
           <Button
             onClick={copyNodeVersionToClipboard}

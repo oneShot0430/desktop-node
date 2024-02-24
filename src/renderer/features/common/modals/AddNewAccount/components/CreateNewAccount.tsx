@@ -38,7 +38,7 @@ export function CreateNewAccount({ onClose, setNextStep }: PropsType) {
       if (isPinValid && userConfig?.pin) {
         const seedPhrase = await generateSeedPhrase();
         const encryptedSecretPhrase: string = await encryptor.encrypt(
-          userConfig?.pin,
+          pin,
           seedPhrase
         );
 

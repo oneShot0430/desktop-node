@@ -13,7 +13,6 @@ export const stopOrcaVM = async (): Promise<void> => {
         }
       });
     } catch (error) {
-      console.error(error);
       reject(error);
     }
   });

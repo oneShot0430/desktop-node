@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { Event } from 'electron';
 
 import axios from 'axios';
@@ -27,10 +28,9 @@ const getAvailableTasks = async (
       console.error(error);
     }
     const idsSlice = whitelistedTasks.slice(offset, offset + limit);
-    const runningIds = koiiTasks
-      .getStartedTasks()
-      // eslint-disable-next-line camelcase
-      .map(({ task_id }) => task_id);
+    const runningIds = (await koiiTasks.getStartedTasks()).map(
+      ({ task_id }) => task_id
+    );
 
     const filteredIdsSlice = idsSlice.filter(
       (pubKey) =>

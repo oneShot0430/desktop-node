@@ -72,8 +72,13 @@ export function Unlock(): JSX.Element {
         // Indicate the initialization API call in sessionStorage
         await initializeTasks();
         setInitializingNode(false);
-      } catch (error: any) {
-        console.error(error);
+      } catch (error) {
+        console.error((error as { message: string }).message);
+        /**
+         * If the initialization fails, we should not keep the user stuck in the
+         * initialization screen. Instead, we should allow the user to enter the app.
+         */
+        setInitializingNode(false);
       }
     };
 

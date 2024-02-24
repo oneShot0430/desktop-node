@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { openBrowserWindow } from 'renderer/services';
 import { AppRoute } from 'renderer/types/routes';
 // eslint-disable-next-line @cspell/spellchecker
 import { v4 as uuidv4 } from 'uuid';
@@ -226,8 +227,8 @@ export const useAppNotifications = (
         <CTAButton
           label={notification.ctaText ?? 'Learn more'}
           onClick={() => {
-            if (notification.ctaLink) {
-              window.open(notification.ctaLink, '_blank');
+            if (notification?.ctaLink) {
+              openBrowserWindow(notification.ctaLink);
               markAsRead(notification.id);
             }
           }}
@@ -238,7 +239,7 @@ export const useAppNotifications = (
           label={notification.ctaText ?? 'Learn more'}
           onClick={() => {
             if (notification.ctaLink) {
-              window.open(notification.ctaLink, '_blank');
+              openBrowserWindow(notification.ctaLink);
               markAsRead(notification.id);
             }
           }}

@@ -17,6 +17,8 @@ export const encryptSeedPhraseWithNewPin = async (
      */
     return encrypt(newPin, decryptedSecretPhrase);
   } catch (error) {
-    throw new Error(`Decryption with old pin failed for account ${key} failed`);
+    throw new Error(
+      `Decryption of the seedphrase with old pin failed for account ${key} failed`
+    );
   }
 };

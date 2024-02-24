@@ -1,5 +1,7 @@
 import { powerSaveBlocker } from 'electron';
 
+import { STAY_AWAKE_POLICY } from 'config/node';
+
 import { enableStayAwake } from './enableStayAwake';
 import getUserConfig from './getUserConfig';
 import storeUserConfig from './storeUserConfig';
@@ -32,9 +34,7 @@ describe('enableStayAwake', () => {
 
     await enableStayAwake();
 
-    expect(powerSaveBlocker.start).toHaveBeenCalledWith(
-      'prevent-app-suspension'
-    );
+    expect(powerSaveBlocker.start).toHaveBeenCalledWith(STAY_AWAKE_POLICY);
     expect(storeUserConfig).toHaveBeenCalledWith(
       {},
       { settings: { ...mockUserConfig, stayAwake: 100 } }

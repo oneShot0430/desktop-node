@@ -26,6 +26,7 @@ const getAccountBalance = async (_: Event, pubkey: string): Promise<number> => {
       return balance;
     }
   } catch (error) {
+    console.error(error);
     return throwDetailedError({
       detailed: error as string,
       type: ErrorType.FETCH_ACCOUNT_BALANCE,

@@ -9,7 +9,7 @@ export interface ScheduleMetadata {
 }
 
 export interface Schedule extends ScheduleMetadata {
-  startJob: CronJob;
+  startJob: CronJob | null;
   stopJob: CronJob | null;
 }
 

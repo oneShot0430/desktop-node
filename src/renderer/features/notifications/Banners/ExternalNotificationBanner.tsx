@@ -2,6 +2,8 @@
 import { Button, ButtonSize, ButtonVariant } from '@_koii/koii-styleguide';
 import React from 'react';
 
+import { openBrowserWindow } from 'renderer/services';
+
 import { NotificationType } from '../types';
 import { useNotificationActions } from '../useNotificationStore';
 
@@ -27,8 +29,10 @@ export function ExternalNotificationBanner({
           <Button
             label={notification.ctaText}
             onClick={() => {
-              window.open(notification.ctaLink, '_blank');
-              markAsRead(notification.id);
+              if (notification?.ctaLink) {
+                openBrowserWindow(notification.ctaLink);
+                markAsRead(notification.id);
+              }
             }}
             variant={ButtonVariant.SecondaryDark}
             size={ButtonSize.SM}

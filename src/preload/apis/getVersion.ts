@@ -1,5 +1,7 @@
 import config from 'config';
 import sendMessage from 'preload/sendMessage';
 
-export default (): Promise<string> =>
-  sendMessage(config.endpoints.GET_VERSION, undefined);
+export default (): Promise<{
+  appVersion: string;
+  packageVersion: string;
+}> => sendMessage(config.endpoints.GET_VERSION, undefined);

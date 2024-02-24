@@ -5,6 +5,8 @@ import Background from 'assets/svgs/background.svg';
 import { AppTopBar } from 'renderer/components/AppTopBar';
 import { SettingsSidebar } from 'renderer/features';
 import { useWindowSize } from 'renderer/features/common/hooks/useWindowSize';
+import { K2StatusIndicator } from 'renderer/features/network';
+import { useNetworkStatusContext } from 'renderer/features/network/context/NetworkStatusContext';
 import {
   DisplayBottomNotifications,
   useNotificationBanner,
@@ -21,6 +23,7 @@ type MainLayoutProps = {
 };
 
 export function MainLayout({ children }: MainLayoutProps): JSX.Element {
+  const { k2RateLimitError, setK2RateLimitError } = useNetworkStatusContext();
   const { unreadNotificationsWithBannerBottom } = useNotificationBanner();
   const navigate = useNavigate();
   const location = useLocation();
@@ -63,9 +66,20 @@ export function MainLayout({ children }: MainLayoutProps): JSX.Element {
         />
       </div>
 
-      {Number(height) >= 820 && (
+      {Number(height) >= 820 && !k2RateLimitError && (
         <div className="absolute bottom-0 right-0">
           <VersionDisplay />
+        </div>
+      )}
+
+      {k2RateLimitError && (
+        <div className="absolute bottom-0 right-0 z-50">
+          <K2StatusIndicator
+            status="K2RateLimitExceeded"
+            onClose={() => {
+              setK2RateLimitError(false);
+            }}
+          />
         </div>
       )}
     </div>

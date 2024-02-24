@@ -12,8 +12,6 @@ import {
   removeTasksSchedulerSession,
 } from 'renderer/services';
 
-import { StayAwake } from '../settings/components/GeneralSettings/StayAwake';
-
 import { AddSessionButton } from './components/AddSessionButton';
 import { Session } from './components/Session/Session';
 import { useDefaultSchedulerSession, useTaskSchedulers } from './hooks';
@@ -87,11 +85,6 @@ export function TasksScheduler() {
             <br /> Schedule your node to run while you’re away from your
             computer. That way if you forget to turn it on, you won’t miss out.
           </div>
-        </div>
-
-        <div className="flex items-center justify-center gap-2 px-4 py-2 text-white rounded-md h-fit w-fit bg-purple-light-transparent mr-9">
-          <span>Stay Awake</span>
-          <StayAwake />
         </div>
       </div>
 

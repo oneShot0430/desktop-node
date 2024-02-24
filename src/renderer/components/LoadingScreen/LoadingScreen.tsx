@@ -6,14 +6,14 @@ import React from 'react';
 import KoiiLogo from 'assets/svgs/koii-logo-white.svg';
 import WelcomeLinesDiagonal from 'assets/svgs/welcome-lines-diagonal.svg';
 import WelcomeWheelBackground from 'assets/svgs/welcome-wheel-background.svg';
-import { useConnectionStatus } from 'renderer/features/settings/hooks/useConnectionStatus';
+import { useInternetConnectionStatus } from 'renderer/features/settings/hooks/useInternetConnectionStatus';
 
 type PropsType = {
   initError?: string;
 };
 
 export function LoadingScreen({ initError }: PropsType): JSX.Element {
-  const isOnline = useConnectionStatus();
+  const isOnline = useInternetConnectionStatus();
 
   const getContent = () => {
     if (initError) {

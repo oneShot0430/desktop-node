@@ -131,7 +131,7 @@ const createWindow = async () => {
       koiiTasks.stopTaskOnAppQuit();
       await stopOrcaVM();
     } catch (error) {
-      console.error('Stopping Orca Error');
+      // console.log(error)
     }
   });
   // Open the DevTools.
