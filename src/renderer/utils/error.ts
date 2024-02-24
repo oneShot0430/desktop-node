@@ -110,4 +110,25 @@ export const errorTypeToContent: Record<
   [ErrorType.SCHEDULE_NO_SELECTED_DAYS]: 'Please select session days.',
   [ErrorType.INVALID_WALLET_ADDRESS]: 'Please use a valid wallet address',
   [ErrorType.FETCH_ACCOUNT_BALANCE]: 'Could not fetch the account balance',
+  [ErrorType.ACCOUNT_NOT_FOUND]: 'Account not found',
 };
+
+export function parseErrorMessage(errorMessage: string): {
+  errorCode: string | null;
+  htmlContent: string | null;
+} {
+  // Regular expression to find the error code
+  const errorCodeRegex = /Error: (\d{3}) Too Many Requests/;
+  // Regular expression to find the HTML content
+  const htmlContentRegex = /(<!DOCTYPE html>[\s\S]*<\/html>)/;
+
+  // Extracting the error code
+  const errorCodeMatch = errorMessage.match(errorCodeRegex);
+  const errorCode = errorCodeMatch ? errorCodeMatch[1] : null;
+
+  // Extracting the HTML content
+  const htmlContentMatch = errorMessage.match(htmlContentRegex);
+  const htmlContent = htmlContentMatch ? htmlContentMatch[1] : null;
+
+  return { errorCode, htmlContent };
+}

@@ -16,7 +16,8 @@ const getMyTasks = async (
   try {
     console.log('GETTING MY TASKS');
     const { offset, limit } = payload;
-    const startedTasks = koiiTasks.getStartedTasks();
+    ///
+    const startedTasks = await koiiTasks.getStartedTasks();
 
     const slicedTasks = startedTasks
       .slice(offset, offset + limit)

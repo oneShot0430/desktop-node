@@ -55,6 +55,14 @@ const startTask = async (
   payload: TaskStartStopParam
 ): Promise<void> => {
   const { taskAccountPubKey, isPrivate } = payload;
+  const isTaskRunning = await koiiTasks.getIsTaskRunning(taskAccountPubKey);
+  console.log({ isTaskRunning });
+  if (isTaskRunning) {
+    return throwDetailedError({
+      detailed: 'Task is already running',
+      type: ErrorType.TASK_NOT_FOUND,
+    });
+  }
   const mainSystemAccount = await getMainSystemAccountKeypair();
 
   const taskInfo: RawTaskData | null =

@@ -13,7 +13,7 @@ export const stopAllTasks = async (
   { runOnlyScheduledTasks = false }: StopAllTasksParams = {}
 ) => {
   try {
-    const startedTasks = koiiTasks.getStartedTasks();
+    const startedTasks = await koiiTasks.getStartedTasks();
     const schedulerTasks = runOnlyScheduledTasks
       ? await getSchedulerTasks({} as Event)
       : [];

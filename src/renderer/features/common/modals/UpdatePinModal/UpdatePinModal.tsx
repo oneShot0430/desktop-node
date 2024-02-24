@@ -30,6 +30,7 @@ export const UpdatePinModal = create(function UpdatePinModal() {
         modal.remove();
       },
     });
+
   const { data: encryptedSecretPhraseMap, isLoading } = useQuery(
     [QueryKeys.EncryptedSecretPhraseMap],
     getEncryptedSecretPhraseMap
@@ -98,8 +99,12 @@ export const UpdatePinModal = create(function UpdatePinModal() {
                 );
                 return newEncryptedValue;
               } catch (secondError) {
-                console.error('Both decryption attempts failed', key);
-                throw secondError;
+                console.error(
+                  `Decryption of the seedphrase for the Public Key ${key} failed for both raw and hashed pins:`
+                );
+                throw new Error(
+                  `Decryption of the seedphrase for the Public Key ${key} failed`
+                );
               }
             }
           }

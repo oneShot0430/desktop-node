@@ -115,6 +115,7 @@ export function MyNodeTaskRow({
   const [accordionView, setAccordionView] = useState<
     'info' | 'upgrade-info' | 'upgrade-settings' | null
   >(null);
+  const queryClient = useQueryClient();
   const [shouldDisplayActions, setShouldDisplayActions] = useState(false);
   const [loading, setLoading] = useState(false);
   const [hideTooltip, setHideTooltip] = useState(false);
@@ -123,7 +124,7 @@ export function MyNodeTaskRow({
   const [isAddTaskSettingModalOpen, setIsAddTaskSettingModalOpen] =
     useState(false);
   const [isTaskSettingsValid, setIsTaskSettingsValid] = useState(false);
-
+  const queryCache = useQueryClient();
   const { fetchMyTasksEnabled } = useMyNodeContext();
 
   const { taskName, isRunning: originalIsRunning, publicKey, roundTime } = task;
@@ -153,10 +154,11 @@ export function MyNodeTaskRow({
 
   const { showModal: showAddTaskSettingModal } = useAddTaskVariableModal();
 
-  const { taskStake, refetchTaskStake } = useTaskStake({
+  const { taskStake } = useTaskStake({
     task,
     publicKey: accountPublicKey,
   });
+
   const { showModal: showAddStake } = useAddStakeModal({
     task,
   });
@@ -165,15 +167,14 @@ export function MyNodeTaskRow({
   });
   const showAddStakeModal = () => {
     showAddStake().then(() => {
-      refetchTaskStake();
+      // TODO: revalidate the task list
     });
   };
   const showUnstakeModal = () => {
     showUnstake().then(() => {
-      refetchTaskStake();
+      // TODO: revalidate the task list
     });
   };
-  const queryCache = useQueryClient();
 
   const { data: stakingAccountPublicKey = '' } = useStakingAccount();
   const { taskStatus, isLoadingStatus } = useTaskStatus({

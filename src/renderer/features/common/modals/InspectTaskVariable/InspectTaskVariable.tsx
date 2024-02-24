@@ -41,7 +41,7 @@ export function InspectTaskVariable({ onRemove, taskVariable }: PropsType) {
   );
 
   console.log(
-    '###tasksPairedWithVariableWhichStarted',
+    'tasksPairedWithVariableWhichStarted',
     tasksPairedWithVariableWhichStarted
   );
 

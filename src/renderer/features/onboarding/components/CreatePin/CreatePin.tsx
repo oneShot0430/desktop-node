@@ -33,10 +33,8 @@ function CreatePin() {
     /**
      * sets raw pin value to context
      */
-    console.log('@@@ sets new pin', pin);
     setAppPin(pin);
 
-    console.log('@@@ sets new pin in settings', hashedPin);
     handleSaveUserAppConfig({
       settings: {
         /**

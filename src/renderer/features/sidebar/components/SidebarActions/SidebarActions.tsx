@@ -24,15 +24,15 @@ export function SidebarActions({
 }: PropsType) {
   const { showModal: showFundModal } = useFundNewAccountModal();
 
-  const actionBaselasses =
+  const actionBaseClasses =
     'flex items-center rounded-md justify-center w-full cursor-pointer';
   const primaryActionClasses = twMerge(
-    actionBaselasses,
+    actionBaseClasses,
     'text-white',
     'bg-finnieBlue-light-secondary'
   );
   const secondaryActionClasses = twMerge(
-    actionBaselasses,
+    actionBaseClasses,
     showMyNodeAction ? 'bg-finnieTeal-100' : 'bg-finnieTeal'
   );
 
@@ -58,12 +58,15 @@ export function SidebarActions({
         role="button"
         data-testid="sidebar_tip_give_button"
       >
-        <Icon
-          source={TipGiveLine}
-          size={ICON_SIZE}
-          data-testid="tip-give-icon"
-          aria-label="TipGiveLine icon"
-        />
+        <div className="flex flex-col items-center gap-2">
+          <Icon
+            source={TipGiveLine}
+            size={ICON_SIZE}
+            data-testid="tip-give-icon"
+            aria-label="TipGiveLine icon"
+          />
+          <div className="text-xs font-semibold">Add Funds</div>
+        </div>
       </div>
       <div
         className={secondaryActionClasses}
@@ -73,12 +76,15 @@ export function SidebarActions({
         tabIndex={0}
         role="button"
       >
-        <Icon
-          source={showMyNodeAction ? WebCursorXlLine : AddLine}
-          size={ICON_SIZE}
-          data-testid="add-line-icon"
-          aria-label="AddLine icon"
-        />
+        <div className="flex flex-col items-center gap-1">
+          <Icon
+            source={showMyNodeAction ? WebCursorXlLine : AddLine}
+            size={ICON_SIZE}
+            data-testid="add-line-icon"
+            aria-label="AddLine icon"
+          />
+          <div className="text-xs font-semibold">Add Task</div>
+        </div>
       </div>
     </div>
   );

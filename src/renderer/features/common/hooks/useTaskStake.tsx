@@ -11,7 +11,7 @@ type UseMyStakeParamsType = {
 
 export const useTaskStake = ({ task, enabled }: UseMyStakeParamsType) => {
   const {
-    data: taskStake = 0,
+    data: taskStake,
     isLoading,
     error,
     refetch,
@@ -20,7 +20,7 @@ export const useTaskStake = ({ task, enabled }: UseMyStakeParamsType) => {
     task ? [QueryKeys.TaskStake, task.publicKey] : '',
     // only perform the query if task is defined
     () => (task ? TaskService.getMyStake(task) : Promise.resolve(null)),
-    { enabled, cacheTime: 0 }
+    { enabled }
   );
 
   return {

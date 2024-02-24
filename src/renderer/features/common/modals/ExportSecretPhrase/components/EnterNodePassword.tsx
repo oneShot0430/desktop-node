@@ -42,7 +42,7 @@ export function EnterNodePassword({
 
       try {
         const seedPhrase: string = (await decrypt(
-          settings?.pin,
+          pin,
           encryptedSecretPhrase
         )) as string;
         setSeedPhrase(seedPhrase);

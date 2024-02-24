@@ -2,6 +2,7 @@ import { useQuery } from 'react-query';
 
 import {
   AppNotificationType,
+  ExternalNotification,
   NotificationVariantType,
 } from 'renderer/features/notifications/types';
 import {
@@ -12,20 +13,13 @@ import { useUserAppConfig } from 'renderer/features/settings/hooks';
 import { useMainAccount } from 'renderer/features/settings/hooks/useMainAccount';
 import {
   fetchExternalNotificationsFromAws,
+  getVersion,
   QueryKeys,
 } from 'renderer/services';
 // eslint-disable-next-line @cspell/spellchecker
 import { v4 as uuidv4 } from 'uuid';
 
-type ExternalNotification = {
-  id: string;
-  text: string;
-  title: string;
-  type: NotificationVariantType;
-  ctaLink: string;
-  ctaText: string;
-  persist: boolean;
-};
+import { getShouldDisplayNotification } from '../helpers/getShouldDisplayNotification';
 
 export const useExternalNotifications = () => {
   const { handleSaveUserAppConfigAsync, refetchUserConfig } =
@@ -58,7 +52,8 @@ export const useExternalNotifications = () => {
       refetchIntervalInBackground: true,
       refetchOnWindowFocus: false,
       enabled: !!mainAccount,
-      onSuccess(data) {
+      async onSuccess(data) {
+        const appVersion = await getVersion();
         const externalNotifications = data as ExternalNotification[];
 
         externalNotifications.forEach(async (externalNotification) => {
@@ -68,12 +63,21 @@ export const useExternalNotifications = () => {
             return;
           }
 
+          const shouldDisplay = getShouldDisplayNotification(
+            externalNotification.conditions,
+            { appVersion: appVersion.packageVersion }
+          );
+
           const wasNotificationShown = await isNotificationShown(
             externalNotification.id
           );
 
           if (!externalNotification.persist && wasNotificationShown) {
             // if not persist and already shown, don't show it again
+            return;
+          }
+
+          if (!shouldDisplay) {
             return;
           }
 

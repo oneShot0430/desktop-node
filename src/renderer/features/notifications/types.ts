@@ -69,3 +69,18 @@ export type AppNotificationDataType = {
   };
   variant: NotificationVariantType;
 };
+
+export type ExternalNotificationDisplayConditionsType = {
+  version?: string;
+};
+
+export type ExternalNotification = {
+  id: string;
+  text: string;
+  title: string;
+  type: NotificationVariantType;
+  ctaLink: string;
+  ctaText: string;
+  persist: boolean;
+  conditions?: ExternalNotificationDisplayConditionsType;
+};

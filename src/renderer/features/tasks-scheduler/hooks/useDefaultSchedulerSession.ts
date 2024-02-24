@@ -14,7 +14,7 @@ const defaultSessionData: ScheduleMetadata = {
   startTime: '00:00:00',
   stopTime: null,
   days: [0, 1, 2, 3, 4, 5, 6],
-  isEnabled: true,
+  isEnabled: false,
   id: defaultSessionId,
 };
 

@@ -9,15 +9,13 @@ import {
   runTimers,
   updateRewardsQueue,
 } from '@koii-network/task-node';
-import { isString } from 'lodash';
 import getAverageSlotTime from 'main/controllers/getAverageSlotTime';
 import getCurrentSlot from 'main/controllers/getCurrentSlot';
 import { getNetworkUrl } from 'main/controllers/getNetworkUrl';
 import getStakingAccountPubKey from 'main/controllers/getStakingAccountPubKey';
 import { getTaskMetadata } from 'main/controllers/getTaskMetadata';
-import { stopOrcaVM } from 'main/controllers/orca/stopOrcaVm';
 import { store } from 'main/node/helpers/k2NetworkUrl';
-import { ErrorType, RawTaskData, TaskMetadata } from 'models';
+import { DetailedError, ErrorType, RawTaskData, TaskMetadata } from 'models';
 import { throwDetailedError, getProgramAccountFilter } from 'utils';
 
 import config from '../../config';
@@ -61,9 +59,14 @@ export class KoiiTaskService {
 
   public timerForRewards = 0;
 
-  private startedTasksData: Omit<RawTaskData, 'is_running'>[] = [];
+  private startedTasksData:
+    | Omit<RawTaskData, 'is_running'>[]
+    | null
+    | undefined = null;
 
   private taskMetadata: any = {};
+
+  private cacheKey = 'startedTasksCache';
 
   private submissionCheckIntervals: Record<string, NodeJS.Timeout> = {};
 
@@ -87,9 +90,13 @@ export class KoiiTaskService {
     /**
      * @todo: get it from the database
      */
-    const startedTasks = this.startedTasksData.filter((task) => {
+    const startedTasks = this.startedTasksData?.filter((task) => {
       return !!this.RUNNING_TASKS[task.task_id];
     });
+
+    if (!startedTasks) {
+      return;
+    }
 
     runTimers({
       selectedTasks: startedTasks,
@@ -149,7 +156,17 @@ export class KoiiTaskService {
     }, 60000);
   }
 
-  getStartedTasks(): RawTaskData[] {
+  async getStartedTasks(): Promise<RawTaskData[]> {
+    if (!this.startedTasksData) {
+      // Try to load from cache if the data has not been fetched
+      const cachedData = await this.loadCachedTaskData();
+      if (cachedData) {
+        this.startedTasksData = cachedData;
+      } else {
+        throw new Error('Tasks not fetched properly and no cache available');
+      }
+    }
+
     return this.startedTasksData.map((task) => ({
       ...task,
       is_running: Boolean(this.RUNNING_TASKS[task.task_id]),
@@ -173,7 +190,7 @@ export class KoiiTaskService {
     await this.addRunningTaskPubKey(taskAccountPubKey);
     await this.fetchStartedTaskData();
     await this.runTimers();
-    const taskRawData = this.startedTasksData.find(
+    const taskRawData = this.startedTasksData?.find(
       (task) => task.task_id === taskAccountPubKey
     );
 
@@ -184,7 +201,7 @@ export class KoiiTaskService {
     const roundTime = taskRawData.round_time * averageSlotTime;
 
     this.submissionCheckIntervals[taskAccountPubKey] = setInterval(() => {
-      const taskRawData = this.startedTasksData.find(
+      const taskRawData = this.startedTasksData?.find(
         (task) => task.task_id === taskAccountPubKey
       );
       if (taskRawData) this.checkTaskSubmission(taskRawData);
@@ -226,31 +243,31 @@ export class KoiiTaskService {
 
     await this.runTimers();
 
-    const startedTasks = this.startedTasksData.filter((task) => {
-      return !!this.RUNNING_TASKS[task.task_id];
-    });
-    const promiseArr = startedTasks.map(async (e) => {
-      return {
-        ...e,
-        fetchedMetadata: await this.getTaskMetadataUtil(e.task_metadata),
-      };
-    });
-    const tasksArrWithMetadata = await Promise.allSettled(promiseArr);
-    const isOrcaTasksRunning =
-      tasksArrWithMetadata.filter(
-        (e) =>
-          e.status === 'fulfilled' &&
-          e.value.fetchedMetadata.requirementsTags.find(
-            (e) => e.type === 'ADDON' && e.value === 'ORCA_TASK'
-          )
-      ).length > 0;
-    if (!isOrcaTasksRunning) {
-      try {
-        await stopOrcaVM();
-      } catch (e) {
-        console.error(e);
-      }
-    }
+    // const startedTasks = this.startedTasksData?.filter((task) => {
+    //   return !!this.RUNNING_TASKS[task.task_id];
+    // });
+    // const promiseArr = startedTasks?.map(async (e) => {
+    //   return {
+    //     ...e,
+    //     fetchedMetadata: await this.getTaskMetadataUtil(e.task_metadata),
+    //   };
+    // });
+    // const tasksArrWithMetadata = await Promise.allSettled(promiseArr);
+    // const isOrcaTasksRunning =
+    //   tasksArrWithMetadata.filter(
+    //     (e) =>
+    //       e.status === 'fulfilled' &&
+    //       e.value.fetchedMetadata.requirementsTags.find(
+    //         (e) => e.type === 'ADDON' && e.value === 'ORCA_TASK'
+    //       )
+    //   ).length > 0;
+    // if (!isOrcaTasksRunning) {
+    //   try {
+    //     await stopOrcaVM();
+    //   } catch (e) {
+    //     console.error(e);
+    //   }
+    // }
   }
 
   async fetchAllTaskIds() {
@@ -277,6 +294,11 @@ export class KoiiTaskService {
       SystemDbKeys.RunningTasks,
       JSON.stringify(currentlyRunningTaskIds)
     );
+  }
+
+  public async getIsTaskRunning(pubkey: string) {
+    const isTaskRunning = !!this.RUNNING_TASKS[pubkey];
+    return isTaskRunning;
   }
 
   /**
@@ -340,7 +362,7 @@ export class KoiiTaskService {
     }
 
     // remove from started tasks data
-    this.startedTasksData = this.startedTasksData.filter(
+    this.startedTasksData = this.startedTasksData?.filter(
       (task) => task.task_id !== taskPubKey
     );
 
@@ -359,12 +381,18 @@ export class KoiiTaskService {
 
     if (!accountInfo || !accountInfo.data)
       return throwDetailedError({
-        detailed: `Data with pubkey ${pubkey} not found`,
-        type: ErrorType.TASK_NOT_FOUND,
+        detailed: `Account data with pubkey ${pubkey} not found`,
+        type: ErrorType.ACCOUNT_NOT_FOUND,
       });
 
     const taskData = await this.parseIfTask(accountInfo.data);
-    if (!taskData) return null;
+
+    if (!taskData) {
+      return throwDetailedError({
+        detailed: `Data with pubkey ${pubkey} not found`,
+        type: ErrorType.TASK_NOT_FOUND,
+      });
+    }
 
     return { ...taskData, task_id: pubkey };
   }
@@ -414,43 +442,68 @@ export class KoiiTaskService {
     const startedTasksPubKeys: Array<string> =
       await this.getStartedTasksPubKeys();
 
-    this.startedTasksData = (
-      await Promise.all(
-        startedTasksPubKeys.map(async (pubkey) => {
-          // FIXME: K2 call
-          const task = await this.fetchDataAndValidateIfTask(pubkey).catch(
-            async (err) => {
-              const isConnectionErrorFromK2 =
-                config.node.K2_CONNECTION_ERROR_MESSAGES.some(
-                  (errorMessage) =>
-                    (isString(err) && err.includes(errorMessage)) ||
-                    err?.message?.includes?.(errorMessage)
-                );
-              if (isConnectionErrorFromK2) {
-                // FIXME(Chris) Any Error during Account Infor fetch is treated as Task Not found
-                //  so if there was previously one and it's state was fetched we use it
-                const exisingState = this.startedTasksData.find(
-                  (task) => task.task_id === pubkey
-                );
-                if (exisingState) {
-                  return exisingState;
-                }
-                await this.removeRunningTaskPubKey(pubkey);
-                /**
-                 * @todo: additionaly remove the task from filesystem
-                 * removeTaskFromStartedTasks(pubkey);
-                 * should be tested after task remove is implemented from ui
-                 */
-                return null;
-              }
-              return null;
-            }
-          );
+    if (startedTasksPubKeys.length === 0) {
+      this.startedTasksData = [];
+    }
 
-          return task;
-        })
-      )
-    ).filter((e): e is RawTaskData => Boolean(e));
+    const promises = startedTasksPubKeys.map(async (pubkey) => {
+      const existingState = this.startedTasksData?.find(
+        (task) => task.task_id === pubkey
+      );
+
+      try {
+        const taskData = await this.fetchDataAndValidateIfTask(pubkey);
+
+        if (!taskData && existingState) {
+          return existingState;
+        }
+
+        return taskData;
+      } catch (e) {
+        const errorMessage = (e as { message: string }).message;
+        console.error(errorMessage);
+        const detailedError = JSON.parse(errorMessage) as DetailedError;
+
+        if (detailedError.type === ErrorType.TASK_NOT_FOUND) {
+          await this.removeRunningTaskPubKey(pubkey);
+        }
+        if (existingState) {
+          return existingState;
+        }
+        throw e;
+      }
+    });
+
+    const results = await Promise.allSettled(promises);
+
+    const filteredResults = results.filter(
+      (result) => result.status === 'fulfilled'
+    ) as PromiseFulfilledResult<RawTaskData>[];
+
+    const promisesData = filteredResults.map((result) => {
+      return result.value;
+    });
+
+    if (promisesData.length === 0) {
+      this.startedTasksData = null;
+    } else {
+      this.startedTasksData = promisesData;
+
+      await namespaceInstance.storeSet(
+        this.cacheKey,
+        JSON.stringify(this.startedTasksData)
+      );
+    }
+  }
+
+  private async loadCachedTaskData(): Promise<RawTaskData[] | null> {
+    try {
+      const data = await namespaceInstance.storeGet(this.cacheKey);
+      return data ? (JSON.parse(data) as RawTaskData[]) : null;
+    } catch (error) {
+      console.error('Failed to load cached task data:', error);
+    }
+    return null;
   }
 
   async getTaskMetadataUtil(metadataCID: string): Promise<TaskMetadata> {
