@@ -62,7 +62,7 @@ export class KoiiTaskService {
   private startedTasksData:
     | Omit<RawTaskData, 'is_running'>[]
     | null
-    | undefined = null;
+    | undefined = [];
 
   private taskMetadata: any = {};
 
@@ -444,6 +444,7 @@ export class KoiiTaskService {
 
     if (startedTasksPubKeys.length === 0) {
       this.startedTasksData = [];
+      return;
     }
 
     const promises = startedTasksPubKeys.map(async (pubkey) => {
