@@ -12,6 +12,8 @@ import stopTask from './stopTask';
 import { pairTaskVariable, getPairedTaskVariableData } from './taskVariables';
 import withdrawStake from './withdrawStake';
 
+const K2_MAX_FINALITY_DELAY = 5000;
+
 interface UpgradeTaskParams {
   oldPublicKey: string;
   newPublicKey: string;
@@ -26,7 +28,11 @@ export const upgradeTask = async (
 
   await unstakeFromOldTask(oldPublicKey);
 
+  await ensureTransactionFinality();
+
   await claimRewardsFromOldTask(oldPublicKey);
+
+  await ensureTransactionFinality();
 
   await delegateStake({} as Event, {
     taskAccountPubKey: newPublicKey,
@@ -118,6 +124,7 @@ const claimRewardsFromOldTask = async (oldPublicKey: string) => {
       taskAccountPubKey: oldPublicKey,
     })
   )?.availableBalances;
+
   const userPendingRewards = oldTaskPendingRewards?.[stakingAccount];
 
   if (userPendingRewards) {
@@ -134,7 +141,6 @@ const startNewTask = async ({ oldPublicKey, newPublicKey }: PublicKeys) => {
 
   const privateTasks = await getRunnedPrivateTasks();
   const oldTaskIsPrivate = privateTasks?.includes(oldPublicKey);
-
   const newTaskIsPrivate = oldTaskIsPrivate && !newTaskInfo.isWhitelisted;
 
   if (newTaskIsPrivate) {
@@ -150,3 +156,12 @@ const startNewTask = async ({ oldPublicKey, newPublicKey }: PublicKeys) => {
   });
   console.log('UPGRADE TASK: started new task');
 };
+
+const ensureTransactionFinality = async () =>
+  new Promise((resolve) => {
+    if (process.env.NODE_ENV !== 'test') {
+      setTimeout(resolve, K2_MAX_FINALITY_DELAY);
+    } else {
+      resolve('Skipping delay in test environment');
+    }
+  });

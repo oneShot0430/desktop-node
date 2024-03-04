@@ -4,6 +4,7 @@ import fs from 'fs';
 
 import { PublicKey } from '@_koi/web3.js';
 import {
+  getTaskState,
   IRunningTasks,
   ITaskNodeBase,
   runTimers,
@@ -25,6 +26,7 @@ import { getAppDataPath } from '../node/helpers/getAppDataPath';
 import { namespaceInstance } from '../node/helpers/Namespace';
 
 import sdk from './sdk';
+import { getTasksFromCache, saveTasksToCache } from './tasks-cache-utils';
 
 interface Submission {
   submission_value: string;
@@ -66,18 +68,16 @@ export class KoiiTaskService {
 
   private taskMetadata: any = {};
 
-  private cacheKey = 'startedTasksCache';
-
   private submissionCheckIntervals: Record<string, NodeJS.Timeout> = {};
 
   private isInitialized = false;
+
   /**
    * @dev: this functions is preparing the Desktop Node to work in a few crucial steps:
    * 1. Fetch all tasks from the Task program
    * 2. Get the state of the tasks from the database
    * 3. Watch for changes in the tasks
    */
-
   async initializeTasks() {
     await this.fetchAllTaskIds();
     // await this.synchroniseFileSystemTasksWithDB();
@@ -113,6 +113,22 @@ export class KoiiTaskService {
     }
   }
 
+  public async getTaskState(taskAccountPubKey: string) {
+    const partialRawTaskData: Omit<RawTaskData, 'task_id'> = await getTaskState(
+      sdk.k2Connection,
+      new PublicKey(taskAccountPubKey)
+    );
+
+    if (!partialRawTaskData || !partialRawTaskData.task_name) {
+      throw new Error('Task data not found');
+    }
+
+    return {
+      ...partialRawTaskData,
+      task_id: taskAccountPubKey,
+    };
+  }
+
   private async checkTaskSubmission(task: RawTaskData) {
     const pubKey = await getStakingAccountPubKey();
     const lastSubmission = getLatestSubmission(pubKey, task.submissions);
@@ -124,18 +140,23 @@ export class KoiiTaskService {
 
     const runningTask = this.RUNNING_TASKS[task.task_id];
 
+    const stopSubmissionCheckAndRetry = () => {
+      this.stopSubmissionCheck(task.task_id);
+      runningTask.child.kill('SIGTERM');
+      // TO DO: find why sometimes kill() doesn't trigger the exit event and we have to emit it manually
+      runningTask.child.emit('exit', 0, null);
+    };
+
     if (!lastSubmission?.round) {
       if (runningTask) {
-        this.stopSubmissionCheck(task.task_id);
-        runningTask.child.emit('exit', 0, null);
+        stopSubmissionCheckAndRetry();
       }
       return;
     }
 
     if (currentRound - lastSubmission.round > 3) {
       if (runningTask) {
-        this.stopSubmissionCheck(task.task_id);
-        runningTask.child.emit('exit', 0, null);
+        stopSubmissionCheckAndRetry();
       }
     }
   }
@@ -159,7 +180,7 @@ export class KoiiTaskService {
   async getStartedTasks(): Promise<RawTaskData[]> {
     if (!this.startedTasksData) {
       // Try to load from cache if the data has not been fetched
-      const cachedData = await this.loadCachedTaskData();
+      const cachedData = await getTasksFromCache();
       if (cachedData) {
         this.startedTasksData = cachedData;
       } else {
@@ -217,9 +238,9 @@ export class KoiiTaskService {
   }
 
   async stopTaskOnAppQuit() {
-    Object.keys(this.RUNNING_TASKS).forEach((taskPubKey) => {
+    const runningTasks = Object.keys(this.RUNNING_TASKS) || [];
+    runningTasks.forEach((taskPubKey) => {
       this.RUNNING_TASKS[taskPubKey].child.kill('SIGTERM');
-      delete this.RUNNING_TASKS[taskPubKey];
     });
   }
 
@@ -235,6 +256,9 @@ export class KoiiTaskService {
     }
 
     this.RUNNING_TASKS[taskAccountPubKey].child.kill('SIGTERM');
+    // TO DO: find why sometimes kill() doesn't trigger the exit event and we have to emit it manually
+    this.RUNNING_TASKS[taskAccountPubKey].child.emit('exit', null, null);
+
     delete this.RUNNING_TASKS[taskAccountPubKey];
 
     if (!skipRemoveFromRunningTasks) {
@@ -372,31 +396,6 @@ export class KoiiTaskService {
     });
   }
 
-  async fetchDataAndValidateIfTask(
-    pubkey: string
-  ): Promise<RawTaskData | null> {
-    const accountInfo = await sdk.k2Connection.getAccountInfo(
-      new PublicKey(pubkey)
-    );
-
-    if (!accountInfo || !accountInfo.data)
-      return throwDetailedError({
-        detailed: `Account data with pubkey ${pubkey} not found`,
-        type: ErrorType.ACCOUNT_NOT_FOUND,
-      });
-
-    const taskData = await this.parseIfTask(accountInfo.data);
-
-    if (!taskData) {
-      return throwDetailedError({
-        detailed: `Data with pubkey ${pubkey} not found`,
-        type: ErrorType.TASK_NOT_FOUND,
-      });
-    }
-
-    return { ...taskData, task_id: pubkey };
-  }
-
   async fetchDataBundleAndValidateIfTasks(
     pubkeys: string[]
   ): Promise<(RawTaskData | null)[]> {
@@ -453,7 +452,7 @@ export class KoiiTaskService {
       );
 
       try {
-        const taskData = await this.fetchDataAndValidateIfTask(pubkey);
+        const taskData = await this.getTaskState(pubkey);
 
         if (!taskData && existingState) {
           return existingState;
@@ -489,22 +488,8 @@ export class KoiiTaskService {
       this.startedTasksData = null;
     } else {
       this.startedTasksData = promisesData;
-
-      await namespaceInstance.storeSet(
-        this.cacheKey,
-        JSON.stringify(this.startedTasksData)
-      );
+      await saveTasksToCache(promisesData);
     }
-  }
-
-  private async loadCachedTaskData(): Promise<RawTaskData[] | null> {
-    try {
-      const data = await namespaceInstance.storeGet(this.cacheKey);
-      return data ? (JSON.parse(data) as RawTaskData[]) : null;
-    } catch (error) {
-      console.error('Failed to load cached task data:', error);
-    }
-    return null;
   }
 
   async getTaskMetadataUtil(metadataCID: string): Promise<TaskMetadata> {

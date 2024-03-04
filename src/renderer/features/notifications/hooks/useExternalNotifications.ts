@@ -20,6 +20,7 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 
 import { getShouldDisplayNotification } from '../helpers/getShouldDisplayNotification';
+import { isExternalNotification } from '../helpers/isExternalNotification';
 
 export const useExternalNotifications = () => {
   const { handleSaveUserAppConfigAsync, refetchUserConfig } =
@@ -57,6 +58,12 @@ export const useExternalNotifications = () => {
         const externalNotifications = data as ExternalNotification[];
 
         externalNotifications.forEach(async (externalNotification) => {
+          const isValid = isExternalNotification(externalNotification);
+
+          if (!isValid) {
+            return;
+          }
+
           if (
             localNotifications.some((n) => n.id === externalNotification.id)
           ) {
@@ -72,7 +79,7 @@ export const useExternalNotifications = () => {
             externalNotification.id
           );
 
-          if (!externalNotification.persist && wasNotificationShown) {
+          if (!externalNotification?.persist && wasNotificationShown) {
             // if not persist and already shown, don't show it again
             return;
           }

@@ -18,6 +18,7 @@ import {
 } from '@koii-network/task-node';
 import { DUMMY_ACTIVE_TASK_FOR_STAKING_KEY_WITHDRAWAL } from 'config/node';
 import sdk from 'main/services/sdk';
+import { sleep } from 'main/util';
 import { ErrorType, TransferKoiiParam } from 'models';
 import { throwDetailedError, throwTransactionError } from 'utils/error';
 
@@ -240,12 +241,4 @@ const claimTokens = async (
     console.error(err);
     throwTransactionError(err);
   }
-};
-
-const sleep = (timeout: number): Promise<void> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, timeout);
-  });
 };

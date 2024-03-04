@@ -14,6 +14,15 @@ export const getShouldDisplayNotification = (
         return false;
       }
     }
+
+    if (conditions.excludeAppVersions) {
+      if (
+        requiredData?.appVersion &&
+        conditions.excludeAppVersions.includes(requiredData?.appVersion)
+      ) {
+        return false;
+      }
+    }
   }
 
   return true;
