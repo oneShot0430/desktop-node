@@ -6,6 +6,7 @@ import regNodes from './regNodes';
 
 export * from './wallets';
 export * from './fetchWithTimeout';
+export * from './forceKillChildProcess';
 
 export default {
   getNodes: errorHandler(getNodes, 'Get nodes error'),

@@ -15,3 +15,11 @@ export function resolveHtmlPath(htmlFileName: string) {
 export const isDevMode = () => {
   return process.env.NODE_ENV === 'development';
 };
+
+export const sleep = (timeout: number): Promise<void> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, timeout);
+  });
+};

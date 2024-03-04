@@ -21,11 +21,13 @@ import initOrca from 'main/node/helpers/initOrca';
 import { getK2NetworkUrl } from 'main/node/helpers/k2NetworkUrl';
 import { Namespace, namespaceInstance } from 'main/node/helpers/Namespace';
 import koiiTasks from 'main/services/koiiTasks';
-import { ErrorType, RawTaskData, TaskRetryData } from 'models';
+import { sleep } from 'main/util';
+import { ErrorType, TaskRetryData } from 'models';
 import { TaskStartStopParam } from 'models/api';
 import { throwDetailedError } from 'utils';
 
 import {
+  forceKillChildProcess,
   getMainSystemAccountKeypair,
   getStakingAccountKeypair,
 } from '../node/helpers';
@@ -65,8 +67,7 @@ const startTask = async (
   }
   const mainSystemAccount = await getMainSystemAccountKeypair();
 
-  const taskInfo: RawTaskData | null =
-    await koiiTasks.fetchDataAndValidateIfTask(taskAccountPubKey);
+  const taskInfo = await koiiTasks.getTaskState(taskAccountPubKey);
 
   if (!taskInfo) {
     console.error("Task doesn't exist");
@@ -351,10 +352,14 @@ export async function executeTasks(
 
   childTaskProcess.on('exit', async (code, signal) => {
     console.error(
-      `Child process exited with code ${code} and signal ${signal}`
+      `Child process ${childTaskProcess.pid} exited with code ${code} and signal ${signal}`
     );
-    if (code === 0) {
-      // Handle the error here
+    const shouldRetry = code === 0;
+
+    await sleep(2000);
+    forceKillChildProcess(childTaskProcess);
+
+    if (shouldRetry) {
       retryTask(
         selectedTask,
         expressApp,
@@ -362,8 +367,6 @@ export async function executeTasks(
         mainSystemAccount,
         executeTasks
       );
-    } else if (code === null) {
-      console.log('Child process exited successfully');
     }
   });
 

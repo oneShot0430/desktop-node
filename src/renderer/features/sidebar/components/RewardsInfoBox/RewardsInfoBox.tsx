@@ -11,7 +11,7 @@ import { useQuery } from 'react-query';
 import SparksAnimation from 'assets/animations/sparks.json';
 import tokenAnimation from 'assets/animations/token-animation.gif';
 import { SAFE_AVERAGE_SLOT_TIME } from 'config/refetchIntervals';
-import { Tooltip } from 'renderer/components/ui';
+import { LoadingSpinner, Tooltip } from 'renderer/components/ui';
 import { useAverageSlotTime } from 'renderer/features/common';
 import { QueryKeys } from 'renderer/services';
 import { getTimeToNextReward } from 'renderer/services/api';
@@ -31,13 +31,18 @@ export function RewardsInfoBox({
   rewardState = RewardsState.NoRunningTasks,
 }: PropsType) {
   const { data: averageSlotTime } = useAverageSlotTime();
-  const { data: timeToNextReward, error: timeToNextRewardError } = useQuery(
+  const {
+    data: timeToNextReward,
+    error: timeToNextRewardError,
+    isLoading: isLoadingTimeToNextReward,
+  } = useQuery(
     QueryKeys.TimeToNextReward,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     () => getTimeToNextReward(averageSlotTime ?? SAFE_AVERAGE_SLOT_TIME),
     {
       refetchInterval: NEXT_REWARD_REFETCH_INTERVAL,
       enabled: !!averageSlotTime,
+      retry: 3,
     }
   );
 
@@ -74,11 +79,17 @@ export function RewardsInfoBox({
               data-testid="rewards-icon"
             />
 
-            <span className="text-lg text-green-2">
-              {timeToNextRewardConverted} {format}
-            </span>
+            {isLoadingTimeToNextReward ? (
+              <LoadingSpinner className="w-10 h-10" />
+            ) : (
+              <>
+                <span className="text-lg text-green-2">
+                  {timeToNextRewardConverted} {format}
+                </span>
 
-            <span className="text-sm">until next reward</span>
+                <span className="text-sm">until next reward</span>
+              </>
+            )}
           </div>
         </Tooltip>
       ),

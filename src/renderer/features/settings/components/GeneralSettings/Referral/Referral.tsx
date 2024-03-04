@@ -69,7 +69,7 @@ export function Referral() {
                 className="font-semibold bg-white text-finnieBlue-light text-[14px] leading-[14px] min-w-[250px] h-9 self-end"
               />
             </Tooltip>
-            <Tooltip tooltipContent="This code is for the faucet. If your friend uses your link, this code will be added to the automatically.">
+            <Tooltip tooltipContent="This code is for the faucet. If your friend uses your link, this code will be added automatically.">
               <div className="px-6 py-2 text-sm rounded-md bg-finnieBlue-light-tertiary w-fit">
                 {referralCode}
               </div>

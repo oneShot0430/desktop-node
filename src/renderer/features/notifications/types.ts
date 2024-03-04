@@ -72,6 +72,7 @@ export type AppNotificationDataType = {
 
 export type ExternalNotificationDisplayConditionsType = {
   version?: string;
+  excludeAppVersions?: string[];
 };
 
 export type ExternalNotification = {
@@ -81,6 +82,6 @@ export type ExternalNotification = {
   type: NotificationVariantType;
   ctaLink: string;
   ctaText: string;
-  persist: boolean;
+  persist?: boolean;
   conditions?: ExternalNotificationDisplayConditionsType;
 };

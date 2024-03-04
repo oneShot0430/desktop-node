@@ -21,6 +21,7 @@ import {
   getUserConfig,
   stopOrcaVM,
 } from './controllers';
+import db from './db';
 import initHandlers from './initHandlers';
 import { configureLogger } from './logger';
 import { getCurrentActiveAccountName } from './node/helpers';
@@ -86,7 +87,7 @@ const main = async (): Promise<void> => {
 // eslint-disable-next-line global-require
 if (require('electron-squirrel-startup')) {
   // eslint-disable-line global-require
-  app.quit();
+  app.emit('before-quit');
 }
 
 const createWindow = async () => {
@@ -121,18 +122,21 @@ const createWindow = async () => {
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
   app.on('before-quit', async () => {
-    app.isQuitting = true;
-    // Run your tasks or code here before quitting
-    console.log('Running tasks before quitting');
+    if (app.isQuitting) return;
+
     try {
       /**
        * processes cleanup
        */
-      koiiTasks.stopTaskOnAppQuit();
+      await koiiTasks.stopTaskOnAppQuit();
       await stopOrcaVM();
     } catch (error) {
-      // console.log(error)
+      console.log(error);
     }
+
+    trackEvent('app_closed');
+    app.isQuitting = true;
+    app.quit();
   });
   // Open the DevTools.
   // mainWindow.webContents.setDevToolsWebContents(
@@ -164,7 +168,7 @@ const createWindow = async () => {
     .catch((err): void => {
       dialog.showErrorBox('Something went wrong!', err.message);
       trackEvent('app_error', { error: err.message });
-      app.quit();
+      app.emit('before-quit');
     });
 
   mainWindow.on('closed', () => {
@@ -217,9 +221,7 @@ const createMenu = () => {
                 label: 'Quit',
                 accelerator: 'CmdOrCtrl+Q',
                 click: () => {
-                  app.isQuitting = true;
-                  trackEvent('app_closed');
-                  app.quit();
+                  app.emit('before-quit');
                 },
               },
             ],
@@ -266,9 +268,7 @@ const createMenu = () => {
           label: 'Exit',
           accelerator: 'CmdOrCtrl+Q',
           click: () => {
-            app.isQuitting = true;
-            trackEvent('app_closed');
-            app.quit();
+            app.emit('before-quit');
           },
         },
       ],
@@ -317,9 +317,7 @@ function createTray() {
     {
       label: 'Quit',
       click: () => {
-        app.isQuitting = true;
-        trackEvent('app_closed');
-        app.quit();
+        app.emit('before-quit');
       },
     },
   ]);
@@ -352,7 +350,16 @@ if (!isSingleInstance) {
   // This method will be called when Electron has finished
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
-  app.on('ready', () => {
+  app.on('ready', async () => {
+    /**
+     * @dev remove selected tasks from the the DB cache
+     * Some users might still have cache reciods in the neDB, so we need to remove them
+     * The DB cache is not used anymore because of its performance issues
+     */
+    await db.put('startedTasksCache', '');
+    // We manually compact the datafile to avoid the file growing indefinitely until app restart,
+    // as caching task states handles big chunks of data.
+    db.compactDatafile();
     createWindow();
     createMenu();
     createTray();
@@ -364,7 +371,7 @@ if (!isSingleInstance) {
   // explicitly with Cmd + Q.
   app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
-      app.quit();
+      app.emit('before-quit');
     }
   });
 

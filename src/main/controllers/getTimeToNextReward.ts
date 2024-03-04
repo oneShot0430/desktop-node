@@ -40,8 +40,13 @@ async function calculateTimeToNextRewardConsideringUpdates(
 async function calculateRewardTime(averageSlotTime: number): Promise<number> {
   const tasks = store.get('timeToNextRewardAsSlots') ?? 0;
   const currentSlot = await namespaceInstance.getCurrentSlot();
+  const currentSlotComesWithDefaultValue = currentSlot === -1;
 
-  return calculateTimeToNextReward(averageSlotTime, tasks, currentSlot);
+  if (currentSlotComesWithDefaultValue) {
+    throw new Error('K2 returned an invalid current slot');
+  } else {
+    return calculateTimeToNextReward(averageSlotTime, tasks, currentSlot);
+  }
 }
 
 function calculateTimeToNextReward(

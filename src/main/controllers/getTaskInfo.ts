@@ -1,14 +1,8 @@
 import { Event } from 'electron';
 
-import { PublicKey } from '@_koi/web3.js';
-import sdk from 'main/services/sdk';
-import {
-  ErrorType,
-  GetTaskInfoParam,
-  GetTaskInfoResponse,
-  RawTaskData,
-} from 'models';
-import { throwDetailedError } from 'utils';
+import koiiTasks from 'main/services/koiiTasks';
+import { ErrorType, GetTaskInfoParam, GetTaskInfoResponse } from 'models';
+import { throwDetailedError } from 'utils/error';
 
 import { parseRawK2TaskData } from '../node/helpers/parseRawK2TaskData';
 
@@ -17,34 +11,18 @@ export const getTaskInfo = async (
   payload: GetTaskInfoParam,
   context?: string
 ): Promise<GetTaskInfoResponse> => {
-  // payload validation
-  if (!payload?.taskAccountPubKey) {
-    throw throwDetailedError({
-      detailed: 'Get Task Info error: payload is not valid',
-      type: ErrorType.GENERIC,
-    });
-  }
-
   const { taskAccountPubKey } = payload;
 
-  const accountInfo = await sdk.k2Connection.getAccountInfo(
-    new PublicKey(taskAccountPubKey)
-  );
-
-  if (!accountInfo || !accountInfo.data)
-    return throwDetailedError({
-      detailed: `Task not found${context ? ` in context of ${context}` : ''}`,
-      type: ErrorType.TASK_NOT_FOUND,
-    });
-
-  let partialRawTaskData;
-
   try {
-    partialRawTaskData = JSON.parse(accountInfo.data.toString()) as Omit<
-      RawTaskData,
-      'task_id'
-    >;
-  } catch (e: any) {
+    const partialRawTaskData = await koiiTasks.getTaskState(taskAccountPubKey);
+
+    return parseRawK2TaskData({
+      rawTaskData: {
+        ...partialRawTaskData,
+        task_id: taskAccountPubKey,
+      },
+    });
+  } catch (e) {
     return throwDetailedError({
       detailed: `Error during Task parsing${
         context ? ` in context of ${context}` : ''
@@ -52,21 +30,6 @@ export const getTaskInfo = async (
       type: ErrorType.TASK_NOT_FOUND,
     });
   }
-
-  if (!partialRawTaskData) {
-    return throwDetailedError({
-      detailed: `Task data not found${
-        context ? ` in context of ${context}` : ''
-      }`,
-      type: ErrorType.TASK_NOT_FOUND,
-    });
-  }
-  return parseRawK2TaskData({
-    rawTaskData: {
-      ...partialRawTaskData,
-      task_id: taskAccountPubKey,
-    },
-  });
 };
 
 export const validateTask = getTaskInfo;
