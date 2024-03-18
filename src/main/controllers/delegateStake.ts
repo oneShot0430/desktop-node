@@ -15,6 +15,7 @@ import {
   TASK_CONTRACT_ID,
   padStringWithSpaces,
 } from '@koii-network/task-node';
+import { namespaceInstance } from 'main/node/helpers/Namespace';
 import sdk from 'main/services/sdk';
 import { DelegateStakeParam, DelegateStakeResponse } from 'models';
 import { throwTransactionError } from 'utils/error';
@@ -34,7 +35,7 @@ const delegateStake = async (
   event: Event,
   payload: DelegateStakeParam
 ): Promise<DelegateStakeResponse> => {
-  const { taskAccountPubKey, stakeAmount } = payload;
+  const { taskAccountPubKey, stakeAmount, isNetworkingTask } = payload;
 
   const mainSystemAccount = await getMainSystemAccountKeypair();
   const stakingAccKeypair = await getStakingAccountKeypair();
@@ -66,9 +67,14 @@ const delegateStake = async (
     }
     sleep(TRANSACTION_FINALITY_WAIT);
 
+    const subdomain = await namespaceInstance.storeGet('subdomain');
+    const subdomainToEncode = isNetworkingTask && subdomain ? subdomain : '';
+
     const data = encodeData(TASK_INSTRUCTION_LAYOUTS.Stake, {
       stakeAmount: stakeAmount * LAMPORTS_PER_SOL,
-      ipAddress: new TextEncoder().encode(padStringWithSpaces('', 64)),
+      ipAddress: new TextEncoder().encode(
+        padStringWithSpaces(subdomainToEncode, 64)
+      ),
     });
 
     const instruction = new TransactionInstruction({

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 
 import UpdateIcon from 'assets/svgs/update-icon.svg';
+import { CRITICAL_MAIN_ACCOUNT_BALANCE } from 'config/node';
 import { ROE } from 'models';
 import { Button, EditStakeInput, LoadingSpinner } from 'renderer/components/ui';
+import { useMainAccountBalance } from 'renderer/features/settings';
 import { SettingsButton } from 'renderer/features/tasks/components/AdvancedOptions/AddPrivateTask/SettingsButton';
 
 interface ConfirmUpgradeContentProps {
@@ -31,10 +33,12 @@ export function ConfirmUpgradeContent({
   isFirstRowInTable,
 }: ConfirmUpgradeContentProps) {
   const [stake, setStake] = useState(originalStake);
+  const { accountBalance = 0 } = useMainAccountBalance();
+  const meetsMinimumStake =
+    stake >= minStake &&
+    accountBalance >= stake + CRITICAL_MAIN_ACCOUNT_BALANCE;
   const isUpgradeButtonDisabled =
-    (hasVariablesToUpgrade && !isTaskSettingsValid) || newStake !== 0
-      ? newStake < minStake
-      : stake < minStake;
+    (hasVariablesToUpgrade && !isTaskSettingsValid) || !meetsMinimumStake;
   const confirmUpgrade = () => onUpgrade(stake);
 
   return (
@@ -52,7 +56,7 @@ export function ConfirmUpgradeContent({
             }`}
           >
             <EditStakeInput
-              meetsMinimumStake={!isUpgradeButtonDisabled}
+              meetsMinimumStake={meetsMinimumStake}
               stake={newStake || stake}
               defaultValue={newStake || stake}
               minStake={minStake}

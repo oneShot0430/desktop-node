@@ -30,3 +30,4 @@ taskid
 Logfile
 koiinode
 aptabase
+Solana

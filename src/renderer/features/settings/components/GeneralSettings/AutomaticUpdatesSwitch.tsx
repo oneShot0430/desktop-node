@@ -11,7 +11,7 @@ interface Props {
   isLoading?: boolean;
 }
 
-export function AutomaticUpdatesSwitch({
+export function SwitchWithLoader({
   id,
   isLoading,
   isChecked,

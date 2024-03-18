@@ -8,6 +8,7 @@ import errorHandler from './errorHandler';
 
 const endpointToControllerMap: Record<
   Endpoints,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (event: Event, ...args: any[]) => unknown
 > = {
   [Endpoints.GET_MY_TASKS]: controllers.getMyTasks,
@@ -117,6 +118,9 @@ const endpointToControllerMap: Record<
   [Endpoints.FETCH_S3_FOLDER_CONTENTS]: controllers.fetchS3FolderContents,
   [Endpoints.SAVE_ENCRYPTED_SECRET_PHRASE_MAP]:
     controllers.saveEncryptedSecretPhraseMap,
+  [Endpoints.APP_RELAUNCH]: controllers.appRelaunch,
+  [Endpoints.FETCH_AND_SAVE_UPNP_BIN]: controllers.fetchAndSaveUPnPBinary,
+  [Endpoints.CHECK_UPNP_BINARY]: controllers.checkUPnPBinary,
 };
 
 const initHandlers = (): void => {

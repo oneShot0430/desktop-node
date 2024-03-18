@@ -19,6 +19,7 @@ import React, {
   MutableRefObject,
 } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
+import { useNavigate } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 
 import GearFill from 'assets/svgs/gear-fill.svg';
@@ -44,9 +45,9 @@ import {
   useAddTaskVariableModal,
   useStartingTasksContext,
   useOnClickOutside,
-  useStakingAccount,
   useOrcaPodman,
   useConfirmRunTask,
+  useUserAppConfig,
 } from 'renderer/features';
 import { useAutoPairVariables } from 'renderer/features/common/hooks/useAutoPairVariables';
 import {
@@ -57,9 +58,15 @@ import {
 } from 'renderer/services';
 import { Task } from 'renderer/types';
 import { Theme } from 'renderer/types/common';
+import { AppRoute } from 'renderer/types/routes';
 import { getKoiiFromRoe } from 'utils';
 
-import { formatNumber, getTaskTotalStake, isOrcaTask } from '../../utils';
+import {
+  formatNumber,
+  getTaskTotalStake,
+  isOrcaTask,
+  isNetworkingTask,
+} from '../../utils';
 import { SuccessMessage } from '../AvailableTasksTable/components/SuccessMessage';
 import { TaskName } from '../common';
 import { RoundTime } from '../common/RoundTime';
@@ -76,16 +83,15 @@ interface Props {
   columnsLayout: ColumnsLayout;
 }
 
-function AvailableTaskRow({ task, index, columnsLayout }: Props) {
+function AvailableTaskRow({ task, columnsLayout }: Props) {
   const [isAddTaskSettingModalOpen, setIsAddTaskSettingModalOpen] =
     useState<boolean>(false);
   const { showModal: showAddTaskVariableModal } = useAddTaskVariableModal();
-  const { taskName, publicKey, taskManager, isRunning, roundTime } = task;
+  const { taskName, publicKey, isRunning, roundTime } = task;
   const queryCache = useQueryClient();
   const [accordionView, setAccordionView] = useState<
     'info' | 'settings' | null
   >(null);
-  // const [isGlobalToolsValid, setIsGlobalToolsValid] = useState(false);
   const [isTaskToolsValid, setIsTaskToolsValid] = useState(false);
   const [isTaskValidToRun, setIsTaskValidToRun] = useState(false);
   const [taskStartSucceeded, setTaskStartSucceeded] = useState(false);
@@ -98,7 +104,6 @@ function AvailableTaskRow({ task, index, columnsLayout }: Props) {
     useStartingTasksContext();
 
   const { data: mainAccountPubKey = '' } = useMainAccount();
-  const { data: stakingKeyPubKey = '' } = useStakingAccount();
   const { data: orcaStatus } = useOrcaPodman();
   const { accountBalance = 0 } = useAccountBalance(mainAccountPubKey);
 
@@ -231,6 +236,25 @@ function AvailableTaskRow({ task, index, columnsLayout }: Props) {
 
   const taskTotalStake = useMemo(() => getTaskTotalStake(task), [task]);
 
+  const { userConfig: settings, isUserConfigLoading: loadingSettings } =
+    useUserAppConfig();
+
+  const isUsingOrca = useMemo(() => isOrcaTask(metadata), [metadata]);
+  const isUsingNetworking = useMemo(
+    () => isNetworkingTask(metadata),
+    [metadata]
+  );
+  const userHasNetworkingEnabled = useMemo(
+    () => settings?.networkingFeaturesEnabled,
+    [settings]
+  );
+  const playButtonIsDisabled =
+    (!isRunning && !isTaskValidToRun) ||
+    loadingSettings ||
+    (isUsingNetworking && !userHasNetworkingEnabled);
+
+  const navigate = useNavigate();
+
   const validateTask = useCallback(() => {
     const hasEnoughKoii =
       (accountBalance >= CRITICAL_MAIN_ACCOUNT_BALANCE &&
@@ -257,20 +281,56 @@ function AvailableTaskRow({ task, index, columnsLayout }: Props) {
         },
         {
           condition: isTaskToolsValid,
-          errorMessage: 'configure the Task settings',
+          errorMessage: 'configure the Task extensions',
+          action: () => handleToggleView('settings'),
+        },
+        {
+          condition:
+            !isUsingNetworking ||
+            (isUsingNetworking && userHasNetworkingEnabled),
+          errorMessage: "enable Networking in your node's settings",
+          action: () => navigate(AppRoute.SettingsNetworkAndUPNP),
         },
       ];
 
       const errors = conditions
         .filter(({ condition }) => !condition)
-        .map(({ errorMessage }) => errorMessage);
+        .map(({ errorMessage, action }) => ({ errorMessage, action }));
 
       if (errors.length === 0) {
         return '';
       } else if (errors.length === 1) {
-        return `Make sure you ${errors[0]}.`;
+        return (
+          <div>
+            Make sure you{' '}
+            {errors[0].action ? (
+              <button
+                onClick={errors[0].action}
+                className="font-semibold text-finnieTeal-100 hover:underline"
+              >
+                {errors[0].errorMessage}.
+              </button>
+            ) : (
+              <>{errors[0].errorMessage}.</>
+            )}
+          </div>
+        );
       } else {
-        const errorList = errors.map((error) => <li key={error}>• {error}</li>);
+        const errorList = errors.map(({ errorMessage, action }) => (
+          <li key={errorMessage}>
+            •{' '}
+            {action ? (
+              <button
+                onClick={action}
+                className="font-semibold text-finnieTeal-100 hover:underline"
+              >
+                {errorMessage}
+              </button>
+            ) : (
+              <>• {errorMessage}</>
+            )}
+          </li>
+        ));
         return (
           <div>
             Make sure you:
@@ -290,6 +350,9 @@ function AvailableTaskRow({ task, index, columnsLayout }: Props) {
     valueToStake,
     accountBalance,
     alreadyStakedTokensAmount,
+    isUsingNetworking,
+    userHasNetworkingEnabled,
+    navigate,
   ]);
 
   useEffect(() => {
@@ -305,8 +368,6 @@ function AvailableTaskRow({ task, index, columnsLayout }: Props) {
       queryCache.invalidateQueries();
     }
   };
-
-  const isUsingOrca = useMemo(() => isOrcaTask(metadata), [metadata]);
 
   const settingsViewIsOpen = accordionView === 'settings';
   const shouldNotShowSettingsView = !globalAndTaskVariables?.length;
@@ -399,10 +460,10 @@ function AvailableTaskRow({ task, index, columnsLayout }: Props) {
     ? 'text-finnieEmerald-light'
     : 'text-finnieOrange';
   const gearTooltipContent = !globalAndTaskVariables?.length
-    ? "This Task doesn't use any Task settings"
+    ? "This Task doesn't use any Task extensions"
     : isTaskToolsValid
-    ? 'Open task settings'
-    : 'You need to set up the Task settings first in order to run this Task.';
+    ? 'Open task extensions'
+    : 'You need to set up the Task extensions first in order to run this Task.';
   const runButtonTooltipContent =
     errorMessage || (isRunning ? 'Stop task' : 'Start task');
 
@@ -416,6 +477,7 @@ function AvailableTaskRow({ task, index, columnsLayout }: Props) {
             publicKey,
             valueToStake,
             alreadyStakedTokensAmount,
+            isUsingNetworking,
           });
           setTaskStartFailed(false);
         }}
@@ -441,6 +503,7 @@ function AvailableTaskRow({ task, index, columnsLayout }: Props) {
       publicKey,
       valueToStake,
       alreadyStakedTokensAmount,
+      isUsingNetworking,
     });
     trackEvent('task_start', {
       taskName,
@@ -568,7 +631,7 @@ function AvailableTaskRow({ task, index, columnsLayout }: Props) {
                 />
               }
               onClick={isRunning ? handleStopTask : showConfirmRunTaskModal}
-              disabled={!isRunning && !isTaskValidToRun}
+              disabled={playButtonIsDisabled}
             />
           </Popover>
         )}

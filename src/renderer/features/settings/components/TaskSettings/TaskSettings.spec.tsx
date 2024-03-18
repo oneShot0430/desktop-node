@@ -77,8 +77,8 @@ const getTasksPairedWithVariableMock = getTasksPairedWithVariable as jest.Mock;
 
 const inspectModalDescription =
   'This is placeholder for information about the tool, website, function, etc.';
-const editModalDescription = 'Edit information about your Task Setting';
-const deleteModalDescription = 'Are you sure you want to delete Task Setting';
+const editModalDescription = 'Edit information about your Task Extension';
+const deleteModalDescription = 'Are you sure you want to delete Task Extension';
 const duplicatedLabelErrorMessage =
   'You already have a tool registered with that label.';
 

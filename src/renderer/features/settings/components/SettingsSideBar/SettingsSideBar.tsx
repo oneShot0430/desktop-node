@@ -30,7 +30,7 @@ export function SettingsSidebar() {
         ({ label, icon, path, disabled, iconFocused }) => {
           const isActive = location.pathname.includes(path);
           const sidebarItemClasses = twMerge(
-            'flex items-center justify-start gap-3 py-4 pl-4 cursor-pointer hover:font-semibold',
+            'flex items-center justify-start gap-3 py-4 pl-4 cursor-pointer hover:font-bold',
             isActive && 'text-green-2 font-semibold'
           );
 
@@ -40,7 +40,7 @@ export function SettingsSidebar() {
           return (
             <InfoBox
               key={path}
-              className={`w-[186px] xl:w-[230px] py-4 xl:py-6 ${
+              className={`w-[186px] xl:w-[230px] py-4 xl:py-4 ${
                 disabled ? 'hidden' : ''
               }`}
             >
@@ -66,7 +66,7 @@ export function SettingsSidebar() {
       <div>
         <div className="flex justify-between gap-4 w-[186px] xl:w-[230px] ">
           {SETTINGS_SECTIONS.slice(-2).map(
-            ({ icon, iconFocused, path, disabled }) => {
+            ({ icon, iconFocused, path, disabled, label }) => {
               const isActive = location.pathname.includes(path);
               const sidebarItemClasses = twMerge(
                 'flex text-lg items-center justify-center p-4 cursor-pointer hover:font-semibold',
@@ -76,7 +76,7 @@ export function SettingsSidebar() {
               return (
                 <InfoBox
                   key={path}
-                  className={`w-[50%] py-2 xl:py-4 ${disabled ? 'hidden' : ''}`}
+                  className={`w-[84px] py-1 ${disabled ? 'hidden' : ''}`}
                 >
                   <div
                     key={path}
@@ -86,11 +86,14 @@ export function SettingsSidebar() {
                     tabIndex={0}
                     className={sidebarItemClasses}
                   >
-                    {isActive ? (
-                      <Icon source={iconFocused} size={ICON_SIZE} />
-                    ) : (
-                      <Icon source={icon} size={ICON_SIZE} />
-                    )}
+                    <div className="flex flex-col items-center gap-1">
+                      {isActive ? (
+                        <Icon source={iconFocused} size={ICON_SIZE} />
+                      ) : (
+                        <Icon source={icon} size={ICON_SIZE} />
+                      )}
+                      <span className="text-xs font-semibold">{label}</span>
+                    </div>
                   </div>
                 </InfoBox>
               );

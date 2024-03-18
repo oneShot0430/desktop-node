@@ -5,10 +5,10 @@ import { getCacheNodes } from './Namespace';
 // get returntype of getCacheNodes
 type GetCacheNodesReturnType = ReturnType<typeof getCacheNodes>;
 
-export default async (): Promise<any> => {
+export default async (taskIdParam: string): Promise<any> => {
   let nodes: Array<INode> = [];
   try {
-    nodes = await getCacheNodes();
+    nodes = await getCacheNodes(taskIdParam);
   } catch (err: any) {
     console.error('Get nodes error: ', err.message);
   }

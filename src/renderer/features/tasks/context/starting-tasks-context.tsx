@@ -14,6 +14,7 @@ type StartTaskArgs = {
   valueToStake: number;
   alreadyStakedTokensAmount: number | null;
   isPrivate?: boolean;
+  isUsingNetworking: boolean;
 };
 
 interface TasksContext {
@@ -33,9 +34,10 @@ const runTask = async ({
   alreadyStakedTokensAmount = 0,
   valueToStake,
   isPrivate = false,
+  isUsingNetworking,
 }: StartTaskArgs) => {
   if (alreadyStakedTokensAmount === 0) {
-    await stakeOnTask(publicKey, valueToStake);
+    await stakeOnTask(publicKey, valueToStake, isUsingNetworking);
   }
   await startTask(publicKey, isPrivate);
 };

@@ -21,7 +21,7 @@ const tableHeaders = [
   { title: '' },
   { title: '' },
   { title: 'Stake' },
-  { title: 'Settings' },
+  { title: 'Extensions' },
   { title: 'Run Task' },
 ];
 

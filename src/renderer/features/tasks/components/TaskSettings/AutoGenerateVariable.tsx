@@ -1,11 +1,11 @@
 /* eslint-disable react/destructuring-assignment */
-import axios from 'axios';
 import React, { useCallback, useMemo, useState } from 'react';
 import { Toast, toast } from 'react-hot-toast';
 import { useMutation, useQueryClient } from 'react-query';
 
 import EmailIcon from 'assets/svgs/email-icon.svg';
 import PuzzleIcon from 'assets/svgs/puzzle-icon.svg';
+import axios from 'axios';
 import config from 'config';
 import {
   RetrievalInfo,

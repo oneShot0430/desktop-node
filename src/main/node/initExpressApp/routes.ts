@@ -4,43 +4,40 @@ import koiiTasks from 'main/services/koiiTasks';
 import helpers from '../helpers';
 
 const heartbeat = (req: Request, res: Response): void => {
-  res
-    .status(200)
-    .send(
-      '<body style="background:black"><img src="https://media.giphy.com/media/OMD2Ca7SN87gQ/giphy.gif" style="width:100vw;height:auto"></img></body>'
-    );
+  res.json({ status: 'OK', message: 'Node is running' });
 };
 
-const nodes = async (req: Request, res: Response): Promise<any> => {
+async function nodes(req: Request, res: Response) {
   try {
-    const nodes = await helpers.getNodes();
+    const { taskId } = req.params;
+    if (!taskId) res.status(200).send({ message: 'No taskId was selected' });
+    const nodes = await helpers.getNodes(taskId);
     res.status(200).send(nodes);
-  } catch (err) {
-    console.error('Error during "nodes" request:', err);
-    res.status(500).send({ error: `ERROR: ${err}` });
+  } catch (e) {
+    console.error('Error during "nodes" request:', e);
+    res.status(500).send({ error: `ERROR: ${e}` });
   }
-};
+}
 
-const registerNodes = async (req: Request, res: Response): Promise<any> => {
+const registerNodes = async (req: Request, res: Response) => {
   try {
-    const regRes = await helpers.regNodes([req.body]);
-    if (regRes) {
-      res.status(200).end();
-    } else {
+    const { taskId } = req.params;
+    const regRes = await helpers.regNodes([req.body], taskId);
+    if (regRes) res.status(200).end();
+    else
       res.status(409).json({
         message: 'Registration is duplicate, outdated, or invalid',
       });
-    }
-  } catch (err) {
-    console.error('Error during "register-node" request:', err);
-    res.status(500).send({ error: `ERROR: ${err}` });
+  } catch (e) {
+    console.error('Error during "register-node" request:', e);
+    res.status(500).send({ error: `ERROR: ${e}` });
   }
 };
 
 export default (app: Express) => {
   app.get('/', heartbeat);
-  app.get('/nodes', nodes);
-  app.post('/register-node', registerNodes);
+  app.get('/nodes/:taskId', nodes);
+  app.post('/register-node/:taskId', registerNodes);
   app.post('/namespace-wrapper', async (req, res) => {
     if (!req.body.args)
       return res.status(422).send({ message: 'No args provided' });

@@ -16,6 +16,7 @@ import { DEFAULT_K2_NETWORK_URL, SERVER_PORT } from 'config/node';
 import { SystemDbKeys } from 'config/systemDbKeys';
 import { Express } from 'express';
 import { get } from 'lodash';
+import getUserConfig from 'main/controllers/getUserConfig';
 import db from 'main/db';
 import initOrca from 'main/node/helpers/initOrca';
 import { getK2NetworkUrl } from 'main/node/helpers/k2NetworkUrl';
@@ -51,6 +52,7 @@ const logTimestampFormat: Intl.DateTimeFormatOptions = {
   second: 'numeric',
   hour12: true,
 };
+const MAX_PORT_EXPOSURE_RETRIES = 3;
 
 const startTask = async (
   _: Event,
@@ -120,6 +122,24 @@ const startTask = async (
   console.log('STARTED TASK DATA', taskInfo?.task_name);
 
   const expressApp = await initExpressApp();
+  let portExposure = await namespaceInstance.storeGet('Port_Exposure');
+  console.log('port_exposure', portExposure);
+
+  const { networkingFeaturesEnabled } = await getUserConfig();
+
+  let numberOfPortExposureRetries = 0;
+
+  if (!networkingFeaturesEnabled) {
+    while (
+      portExposure === 'Pending' &&
+      numberOfPortExposureRetries < MAX_PORT_EXPOSURE_RETRIES
+    ) {
+      numberOfPortExposureRetries += 1;
+      await sleep(10000);
+      portExposure = await namespaceInstance.storeGet('Port_Exposure');
+    }
+  }
+
   try {
     console.log('LOADING TASK:', taskAccountPubKey);
     await loadTask({ taskAuditProgram: taskInfo.task_audit_program });

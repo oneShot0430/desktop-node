@@ -54,7 +54,7 @@ describe('InspectTaskVariable', () => {
       <InspectTaskVariable taskVariable={taskVariable} onRemove={jest.fn} />
     );
 
-    expect(screen.getByText('View Task Setting Info')).toBeInTheDocument();
+    expect(screen.getByText('View Task Extension Info')).toBeInTheDocument();
     expect(screen.getByText('TOOL LABEL')).toBeInTheDocument();
     expect(screen.getByText('TOOL KEY INPUT')).toBeInTheDocument();
   });

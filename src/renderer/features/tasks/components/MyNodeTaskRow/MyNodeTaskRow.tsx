@@ -158,24 +158,6 @@ export function MyNodeTaskRow({
     task,
     publicKey: accountPublicKey,
   });
-
-  const { showModal: showAddStake } = useAddStakeModal({
-    task,
-  });
-  const { showModal: showUnstake } = useUnstakeModal({
-    task,
-  });
-  const showAddStakeModal = () => {
-    showAddStake().then(() => {
-      // TODO: revalidate the task list
-    });
-  };
-  const showUnstakeModal = () => {
-    showUnstake().then(() => {
-      // TODO: revalidate the task list
-    });
-  };
-
   const { data: stakingAccountPublicKey = '' } = useStakingAccount();
   const { taskStatus, isLoadingStatus } = useTaskStatus({
     task: { ...task, isRunning },
@@ -258,6 +240,23 @@ export function MyNodeTaskRow({
         type
       )
   );
+
+  const { showModal: showAddStake } = useAddStakeModal({
+    task,
+    metadata,
+  });
+  const { showModal: showUnstake } = useUnstakeModal({
+    task,
+  });
+  const invalidateTaskList = () => {
+    queryCache.invalidateQueries([QueryKeys.TaskList]);
+  };
+  const showAddStakeModal = () => {
+    showAddStake().then(invalidateTaskList);
+  };
+  const showUnstakeModal = () => {
+    showUnstake().then(invalidateTaskList);
+  };
 
   const roundNumber = useTaskRoundNumber(task);
 

@@ -41,7 +41,7 @@ export const EditTaskVariable = create<Params>(function EditTaskVariable({
       >
         <div className="flex items-center justify-center w-full gap-4 pt-2 text-2xl font-semibold">
           <Icon source={SettingsLine} className="w-8 h-8" />
-          <span>Edit a Task Setting</span>
+          <span>Edit a Task Extension</span>
           <Icon
             source={CloseLine}
             className="w-8 h-8 ml-auto cursor-pointer"
@@ -49,7 +49,7 @@ export const EditTaskVariable = create<Params>(function EditTaskVariable({
           />
         </div>
 
-        <p className="mr-12">Edit information about your Task Setting</p>
+        <p className="mr-12">Edit information about your Task Extension</p>
         <div className="flex flex-col mb-2">
           <label className="mb-0.5 text-left" htmlFor="label-input">
             LABEL

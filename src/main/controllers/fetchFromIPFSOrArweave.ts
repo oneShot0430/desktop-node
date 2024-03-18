@@ -1,6 +1,6 @@
-import axios from 'axios';
 import * as isIPFS from 'is-ipfs';
 
+import axios from 'axios';
 import config from 'config';
 import { retrieveFromIPFS } from 'services/ipfs';
 

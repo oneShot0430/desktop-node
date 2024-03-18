@@ -60,7 +60,7 @@ export const AddTaskVariable = create(function AddTaskVariable({
       >
         <div className="flex items-center justify-center w-full gap-4 pt-2 text-2xl font-semibold">
           <Icon source={SettingsLine} className="w-8 h-8" />
-          <span>Add a Task Setting</span>
+          <span>Add a Task Extension</span>
           <Icon
             source={CloseLine}
             className="w-8 h-8 ml-auto cursor-pointer"
@@ -68,7 +68,7 @@ export const AddTaskVariable = create(function AddTaskVariable({
           />
         </div>
 
-        <p className="mr-12">Add information about your Task Setting</p>
+        <p className="mr-12">Add information about your Task Extension</p>
         <div className="flex flex-col mb-2">
           <label htmlFor="setting-label" className="mb-0.5 text-left">
             LABEL

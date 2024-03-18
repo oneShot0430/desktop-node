@@ -1,6 +1,5 @@
-import axios from 'axios';
-
 import { INode } from '@koii-network/task-node';
+import axios from 'axios';
 import { getK2NetworkUrl } from 'main/node/helpers/k2NetworkUrl';
 
 import db from '../../db';
@@ -25,21 +24,22 @@ const namespaceInstance = new NodeNamespace({
  * Gets the node registry from Redis cache
  * @returns {Array<BundlerPayload<data:RegistrationData>>}
  */
-async function getCacheNodes() {
+async function getCacheNodes(taskIdParam: string): Promise<INode[]> {
   // Get nodes from cache
+  let taskId = taskIdParam;
+  if (!taskId) taskId = '';
   let nodes;
   try {
     nodes = JSON.parse(
-      (await namespaceInstance.storeGet('nodeRegistry')) || '[]'
+      (await namespaceInstance.storeGet(`nodesRegistry-${taskId}`)) || '[]'
     );
     if (nodes === null) nodes = [];
-  } catch (e: any) {
+  } catch (e) {
     console.error(e);
     nodes = [];
   }
   return nodes as Array<INode>;
 }
-
 /**
  * Gets an array of service nodes
  * @param url URL of the service node to retrieve the array from a known service node
@@ -60,9 +60,9 @@ async function getNodes(url: string): Promise<Array<INode>> {
  * @param {Array<NodeRegistration>} newNodes
  * @returns {boolean} Wether some new nodes were added or not
  */
-async function registerNodes(newNodes: any) {
+async function registerNodes(newNodes: any, taskId: string) {
   // Filter stale nodes from registry
-  let nodes = await getCacheNodes();
+  let nodes = await getCacheNodes(taskId);
   console.log(
     `Registry contains ${nodes.length} nodes. Registering ${newNodes.length} more`
   );
@@ -118,7 +118,10 @@ async function registerNodes(newNodes: any) {
 
   // Update registry
   console.log(`Registry now contains ${nodes.length} nodes`);
-  await namespaceInstance.storeSet('nodeRegistry', JSON.stringify(nodes));
+  await namespaceInstance.storeSet(
+    `nodeRegistry-${taskId}`,
+    JSON.stringify(nodes)
+  );
 
   return newNodes.length > 0;
 }

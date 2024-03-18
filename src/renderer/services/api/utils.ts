@@ -1,5 +1,4 @@
 import axios from 'axios';
-
 import { FAUCET_API_URL } from 'config/faucet';
 import { Task as TaskRaw } from 'models';
 import { Task } from 'renderer/types';
@@ -92,4 +91,8 @@ export const getMainAccountPublicKey = async (): Promise<string> => {
 
 export const openBrowserWindow = async (URL: string) => {
   await window.main.openBrowserWindow({ URL });
+};
+
+export const appRelaunch = async () => {
+  await window.main.appRelaunch();
 };

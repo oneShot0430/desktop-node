@@ -60,7 +60,7 @@ export const DeleteTaskVariable = create<Params>(function DeleteTaskVariable({
       >
         <div className="flex items-center justify-center w-full gap-4 pt-2 text-2xl font-semibold">
           <Icon source={SettingsLine} className="w-8 h-8" />
-          <span>Delete Task Setting</span>
+          <span>Delete Task Extension</span>
           <Icon
             source={CloseLine}
             className="w-8 h-8 ml-auto cursor-pointer"
@@ -69,7 +69,7 @@ export const DeleteTaskVariable = create<Params>(function DeleteTaskVariable({
         </div>
 
         <div className="py-10 leading-8 text-left pr-14">
-          <span> Are you sure you want to delete Task Setting </span>
+          <span> Are you sure you want to delete Task Extension </span>
           <span className="font-black">{label}</span>? This procedure cannot be
           undone and it will cause the tasks that are running on this tool to
           stop.
