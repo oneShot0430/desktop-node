@@ -30,18 +30,34 @@ npm config set @koii-network:registry https://gitlab.com/api/v4/packages/npm/
 
 where `<GITLAB_ACCESS_TOKEN>` is a [personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html)
 
+# linux batch 
+- You may need to install these packages:
+```
+sudo apt-get update
+sudo apt-get install build-essential
+```
+
+# Open terminal outside VS code 
+- There is a dependency that requires sudo access of which vs code doesn't provide by default
 - Install dependencies / packages:
 
 ```
 npm install
 ```
 
+- Run command: This command works on Linux Mint 
+```
+echo fs.inotify.max_user_watches= 524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+```
+
+- Restart your computer to ensure there isn't a grandfathered in broken backend process
+
 ## Starting Development
 
 Start the app in the `dev` environment:
 
 ```bash
-npm start
+npm run dev
 ```
 
 ## Packaging for Production
