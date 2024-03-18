@@ -13,7 +13,7 @@ const tabs = [
   },
   {
     value: Tab.TaskSettings,
-    label: 'Task Settings',
+    label: 'Task Extensions',
   },
   {
     value: Tab.TasksScheduler,

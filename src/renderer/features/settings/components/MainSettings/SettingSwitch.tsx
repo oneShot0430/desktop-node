@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 
 import { LoadingSpinner, Switch } from 'renderer/components/ui';
 
@@ -6,7 +6,7 @@ interface Props {
   id: string;
   isLoading: boolean;
   isChecked: boolean;
-  onSwitch: () => void;
+  onSwitch: (e?: ChangeEvent<HTMLInputElement>) => void;
   labels: [string, string];
   isDisabled?: boolean;
 }

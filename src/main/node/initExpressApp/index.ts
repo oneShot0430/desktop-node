@@ -1,12 +1,34 @@
+/* eslint-disable camelcase */
+import * as fs from 'fs/promises';
+import { createServer } from 'https';
+import * as path from 'path';
+
+import axios from 'axios';
 import { Request, Response, Express } from 'express';
-import koiiState from 'main/services/koiiState';
+import getUserConfig from 'main/controllers/getUserConfig';
+import koiiTasks from 'main/services/koiiTasks';
 
 import config from '../../../config';
+import { DYNAMIC_DNS_URL } from '../../../config/node';
 import errorHandler from '../../errorHandler';
+import { getAppDataPath } from '../helpers/getAppDataPath';
+import { namespaceInstance } from '../helpers/Namespace';
+import execute from '../helpers/settleuPnP';
+import startLocalTunnel from '../helpers/setTunneling';
+import signPayload from '../helpers/signPayloadHelper';
+import getCert from '../helpers/sslDomainHelper';
 
 import app from './app';
 
+// Specify the log file path
+const logFilePath = path.join(getAppDataPath(), 'logs', 'uPnP.log');
+
+const PORT_80 = 80;
+const PORT_443 = 443;
+
 let isExpressListening = false;
+let subdomain_assigned: string;
+
 const initExpressApp = async (): Promise<Express | undefined> => {
   // skip stake for now
 
@@ -18,20 +40,195 @@ const initExpressApp = async (): Promise<Express | undefined> => {
     res.send(config.node.TASK_CONTRACT_ID);
   });
 
-  expressApp.get('/tasks', (req: Request, res: Response) => {
-    let tasks = koiiState.getTasks();
+  expressApp.get('/tasks', async (req: Request, res: Response) => {
+    const tasks = await koiiTasks.getStartedTasks();
+    const tasksData = tasks
+      .filter((e) => e.is_running) // FIXME: why filtering is_running for upnp pr?
+      .map((task) => ({
+        TaskName: task.task_name,
+        TaskID: task.task_id,
+      }));
 
-    tasks = tasks.map((task: any) => task.name);
-
-    res.status(200).send(tasks);
+    res.status(200).send(tasksData);
   });
 
   const port = config.node.SERVER_PORT;
-  expressApp.listen(port, () => {
-    console.log(`Express server started @ http://localhost:${port}`);
+  const server = expressApp.listen(port, () => {
+    log(`Express server started @ http://localhost:${port}`);
   });
+
+  const { networkingFeaturesEnabled } = await getUserConfig();
+
+  if (networkingFeaturesEnabled) {
+    await handleServerStart(server, expressApp);
+
+    expressApp.use((req, res, next) => {
+      if (!req.secure && !isLocalhost(req)) {
+        return res.redirect(`https://${req.headers.host}${req.url}`);
+      }
+      next();
+    });
+  }
+
   // eslint-disable-next-line consistent-return
   return expressApp;
 };
+
+async function handleServerStart(server: any, expressApp: any) {
+  try {
+    const { forceTunneling } = await getUserConfig();
+    console.log('@@@@@@forceTunneling', forceTunneling);
+
+    if (forceTunneling) {
+      log('Forcing tunneling');
+      throw new Error('Forcing tunneling');
+    }
+
+    if (forceTunneling) {
+      log('Forcing tunneling');
+      throw new Error('Forcing tunneling');
+    }
+
+    await namespaceInstance.storeSet('Port_Exposure', 'Pending');
+    await execute.openPortCommand(PORT_80);
+    log('Port successfully opened:', true);
+    await namespaceInstance.storeSet('curr_port', PORT_80.toString());
+
+    const payloadData = await signPayload();
+    const returnedDomainMessage = await getSubdomain(payloadData);
+    subdomain_assigned = returnedDomainMessage.data.domain;
+    log('waiting for DNS propagation...');
+    await execute.sleep(10000);
+
+    const existingCertParams = await checkForExistingCert();
+    const certParams =
+      existingCertParams || (await getCert(subdomain_assigned));
+    if (certParams.cert) {
+      await transitionToSecureServer(certParams, server, expressApp);
+      await namespaceInstance.storeSet('Port_Exposure', 'uPnP');
+      await namespaceInstance.storeSet('subdomain', subdomain_assigned);
+    } else {
+      log('Error getting certParams');
+      await handleError();
+    }
+  } catch (error: any) {
+    console.error('An error occurred while trying uPnP:', error.message);
+    log('Error occurred while trying uPnP:', error.message);
+    await handleError();
+  }
+}
+
+async function getSubdomain(payloadData: any): Promise<any> {
+  try {
+    log('Getting subdomain...');
+    log('payloadData pubKey', payloadData.pubKey);
+    log('payloadData signData', payloadData.signData);
+    const response = await axios.post(`${DYNAMIC_DNS_URL}/dns/get_subdomain`, {
+      signedData: payloadData.signData,
+      publicKey: payloadData.pubKey,
+    });
+    if (response.status !== 200) {
+      log('Error getting subdomain', response);
+      throw new Error('Error getting subdomain');
+    }
+    log('Success getting subdomain', response.data);
+    return response;
+  } catch (error: any) {
+    log('Error getting subdomain custom', { error });
+    console.log('123 Error getting subdomain custom', { error });
+    throw new Error(`Error getting subdomain: ${error.message}`);
+  }
+}
+
+async function transitionToSecureServer(
+  certParams: any,
+  server: any,
+  expressApp: any
+): Promise<void> {
+  try {
+    execute.closePortCommand(PORT_80);
+    execute.openPortCommand(PORT_443);
+    await namespaceInstance.storeSet('curr_port', PORT_443.toString());
+    await new Promise<void>((resolve) => {
+      // server.close(() => {
+      log('Express server is being restarted for a secure connection...');
+      const secure_server = createServer(certParams, expressApp);
+      secure_server.listen(30018, () => {
+        log(`Express server started @ https://${subdomain_assigned}:30018`);
+        log('Express server is now secured with https!');
+        resolve();
+      });
+      // });
+    });
+  } catch (error: any) {
+    throw new Error(`Error transitioning to secure server: ${error.message}`);
+  }
+}
+
+async function handleError(): Promise<void> {
+  try {
+    // close any opened port
+    const curr_port = await namespaceInstance.storeGet('curr_port');
+    if (curr_port && curr_port !== '0') {
+      execute.closePortCommand(curr_port);
+      await namespaceInstance.storeSet('curr_port', '0');
+    }
+    log('Falling back to proxy server...');
+    const result = await startLocalTunnel();
+    if (result.success) {
+      log('Local tunnel started successfully!');
+      log('Tunnel URL:', result.result);
+      await namespaceInstance.storeSet('Port_Exposure', 'localtunnel');
+      let subdomain = '';
+      if (result.result) {
+        const urlWithoutProtocol = result.result.replace(/^http?:\/\//, '');
+        // eslint-disable-next-line prefer-destructuring
+        subdomain = urlWithoutProtocol.split('/')[0];
+      }
+      await namespaceInstance.storeSet('subdomain', subdomain);
+    } else {
+      log('Error starting local tunnel:', result.error);
+    }
+  } catch (error: any) {
+    await namespaceInstance.storeSet('Port_Exposure', 'Failure');
+    log(`Error starting local tunnel: ${error.message}`);
+  }
+}
+
+async function checkForExistingCert(): Promise<{
+  csr: Buffer;
+  key: Buffer;
+  cert: string;
+} | null> {
+  const certsPath = path.join(getAppDataPath(), 'certs');
+  try {
+    const [cert, key, csr] = await Promise.all([
+      fs.readFile(path.join(certsPath, 'cert'), 'utf-8'),
+      fs.readFile(path.join(certsPath, 'key')),
+      fs.readFile(path.join(certsPath, 'csr')),
+    ]);
+    log('Certs already exist, skipping cert generation');
+    return { cert, key, csr };
+  } catch (error: any) {
+    console.warn('Could not read existing certs:', error.message);
+    return null;
+  }
+}
+
+// A helper function to determine if the request is from localhost
+function isLocalhost(req: any) {
+  const ip = req.connection.remoteAddress;
+  return ip === '127.0.0.1' || ip === '::1' || ip === '::ffff:127.0.0.1';
+}
+
+// Custom log function to write to the log file
+function log(...args: any[]) {
+  const message = args.join(' ');
+  fs.appendFile(logFilePath, `${message}\n`, (err: any) => {
+    if (err) {
+      console.error('Failed to write to log file:', err);
+    }
+  });
+}
 
 export default errorHandler(initExpressApp, 'Init Express app error');

@@ -10,6 +10,7 @@ import {
   LockFill,
   TooltipChatQuestionLeftFill,
   TooltipChatQuestionRightLine,
+  BrowseInternetLine,
 } from '@_koii/koii-styleguide';
 import React from 'react';
 
@@ -25,6 +26,7 @@ import {
   TaskExtensionsSettings,
   Privacy,
   Help,
+  NetworkAndUPNPSettings,
 } from './components';
 import { SettingsSection } from './types';
 
@@ -56,6 +58,13 @@ export const SETTINGS_SECTIONS: SettingsSection[] = [
     iconFocused: (props) => <TimeFill {...props} />,
     path: AppRoute.SettingsAutomateNode,
     component: AutomateSettings,
+  },
+  {
+    label: 'Network',
+    icon: BrowseInternetLine,
+    iconFocused: BrowseInternetLine,
+    path: AppRoute.SettingsNetworkAndUPNP,
+    component: NetworkAndUPNPSettings,
   },
   {
     label: 'Notifications',

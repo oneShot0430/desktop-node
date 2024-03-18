@@ -36,10 +36,10 @@ export function SettingsButton({
   const gearTooltipContent = useMemo(
     () =>
       !globalAndTaskVariables?.length
-        ? "This Task doesn't use any Task settings"
+        ? "This Task doesn't use any Task extensions"
         : isTaskToolsValid
-        ? 'Open task settings'
-        : 'You need to set up the Task settings first in order to run this Task.',
+        ? 'Open task extensions'
+        : 'You need to set up the Task extensions first in order to run this Task.',
     [globalAndTaskVariables, isTaskToolsValid]
   );
   const tooltipPlacement: Placement = `${

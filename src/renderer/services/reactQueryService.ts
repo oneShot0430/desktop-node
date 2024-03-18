@@ -1,3 +1,4 @@
+/* eslint-disable @cspell/spellchecker */
 export enum QueryKeys {
   TaskList = 'TaskList',
   availableTaskList = 'availableTaskList',
@@ -52,4 +53,5 @@ export enum QueryKeys {
   ExternalNotifications = 'ExternalNotifications',
   EncryptedSecretPhraseMap = 'EncryptedSecretPhraseMap',
   OnboardingTasks = 'OnboardingTasks',
+  UpnpBinaryExists = 'UpnpBinaryExists',
 }

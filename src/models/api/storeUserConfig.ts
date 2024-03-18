@@ -14,8 +14,14 @@ export interface UserAppConfig {
   hasStartedEmergencyMigration?: boolean;
   hasFinishedEmergencyMigration?: boolean;
   shownNotifications?: string[];
+  networkingFeaturesEnabled?: boolean;
+  forceTunneling?: boolean;
 }
 
 export interface StoreUserConfigParam {
   settings: UserAppConfig;
 }
+
+// eslint-disable-next-line @cspell/spellchecker
+export const networkingMethods = ['upnp', 'tunneling'] as const;
+export type NetworkingMethodsType = (typeof networkingMethods)[number];

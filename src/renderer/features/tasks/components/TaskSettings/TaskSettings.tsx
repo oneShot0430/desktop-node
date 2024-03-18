@@ -47,10 +47,10 @@ export function TaskSettings({
   return (
     <div className={outerClasses}>
       <div className="flex items-center gap-2 mb-1 text-xs font-bold">
-        TASK SETTING CONFIGURATION
+        TASK EXTENSION CONFIGURATION
         <Tooltip
           placement="right"
-          tooltipContent="Task settings are additional integrations from other tools necessary to run the task"
+          tooltipContent="Task extensions are additional integrations from other tools necessary to run the task"
         >
           <Icon size={20} source={TooltipChatQuestionLeftLine} />
         </Tooltip>

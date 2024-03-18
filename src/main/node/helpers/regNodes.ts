@@ -1,8 +1,8 @@
 import { getCacheNodes, namespaceInstance } from './Namespace';
 
-export default async (newNodes: any[]) => {
+export default async (newNodes: any[], taskId: string) => {
   // Filter stale nodes from registry
-  let nodes = await getCacheNodes();
+  let nodes = await getCacheNodes(taskId);
   console.log(
     `Registry contains ${nodes.length} nodes. Registering ${newNodes.length} more`
   );
@@ -17,8 +17,6 @@ export default async (newNodes: any[]) => {
       return false;
     }
 
-    // TODO: Filter addresses with an invalid signature
-    // return await tools.verifySignature(node);
     return true;
   });
 
@@ -48,7 +46,10 @@ export default async (newNodes: any[]) => {
 
   // Update registry
   console.log(`Registry now contains ${nodes.length} nodes`);
-  await namespaceInstance.storeSet('nodeRegistry', JSON.stringify(nodes));
+  await namespaceInstance.storeSet(
+    `nodeRegistry-${taskId}`,
+    JSON.stringify(nodes)
+  );
 
   return newNodes.length > 0;
 };

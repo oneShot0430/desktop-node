@@ -1,3 +1,4 @@
+/* eslint-disable @cspell/spellchecker */
 export * from './checkWalletExists';
 export * from './getTaskLogs';
 export * from './withdrawStake';
@@ -39,3 +40,4 @@ export * from './checkOrcaPodmanExistsAndRunning';
 export * from './taskToMigrate';
 export * from './transferKoii';
 export * from './notifications';
+export * from './upnp';

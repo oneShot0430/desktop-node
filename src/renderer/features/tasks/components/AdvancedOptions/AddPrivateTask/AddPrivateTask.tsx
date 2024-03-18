@@ -31,6 +31,7 @@ import {
   useStartingTasksContext,
   useStartedTasksPubKeys,
   useOnClickOutside,
+  useUserAppConfig,
 } from 'renderer/features';
 import { useAutoPairVariables } from 'renderer/features/common/hooks/useAutoPairVariables';
 import {
@@ -38,6 +39,7 @@ import {
   getErrorMessage,
   showTaskRunErrorToast,
 } from 'renderer/features/tasks/components/AvailableTasksTable/utils';
+import { isNetworkingTask } from 'renderer/features/tasks/utils';
 import { stopTask } from 'renderer/services';
 import { isValidWalletAddress } from 'renderer/utils';
 import { getKoiiFromRoe } from 'utils';
@@ -231,6 +233,8 @@ export function AddPrivateTask({ columnsLayout, onClose }: Props) {
       hasMinimumStake,
       isTaskToolsValid,
       isActive: !!task?.isActive,
+      isUsingNetworking,
+      userHasNetworkingEnabled,
     });
 
     setErrorMessage(errorMessage);
@@ -280,6 +284,18 @@ export function AddPrivateTask({ columnsLayout, onClose }: Props) {
     [showAddTaskVariableModal]
   );
 
+  const { userConfig: settings, isUserConfigLoading: loadingSettings } =
+    useUserAppConfig();
+
+  const isUsingNetworking = useMemo(
+    () => isNetworkingTask(metadata),
+    [metadata]
+  );
+  const userHasNetworkingEnabled = useMemo(
+    () => !!settings?.networkingFeaturesEnabled,
+    [settings]
+  );
+
   const handleStartTask = async () => {
     try {
       await executeTask({
@@ -287,6 +303,7 @@ export function AddPrivateTask({ columnsLayout, onClose }: Props) {
         valueToStake,
         isPrivate: true,
         alreadyStakedTokensAmount,
+        isUsingNetworking,
       });
 
       await addPrivateTask(taskPubkey);
@@ -308,7 +325,11 @@ export function AddPrivateTask({ columnsLayout, onClose }: Props) {
   const myStakeInKoii = getKoiiFromRoe(alreadyStakedTokensAmount);
   const isActive = task?.isActive;
   const startPauseDisabled =
-    !isActive || !isTaskValidToRun || taskAlreadyAdded || isLoadingMetadata;
+    !isActive ||
+    !isTaskValidToRun ||
+    taskAlreadyAdded ||
+    isLoadingMetadata ||
+    (isUsingNetworking && !userHasNetworkingEnabled);
 
   const runButtonTooltipContent = useMemo(
     () =>

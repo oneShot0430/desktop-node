@@ -21,7 +21,7 @@ export function AddTaskVariable() {
   return (
     <div className="flex flex-col gap-4 text-sm w-fit">
       <span className="text-2xl font-semibold text-left">
-        Add a Task Setting
+        Add a Task Extension
       </span>
 
       <div className="flex flex-wrap items-stretch gap-4">

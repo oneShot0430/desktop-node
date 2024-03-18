@@ -65,7 +65,7 @@ export function Setting({
           QueryKeys.StoredTaskPairedTaskVariables,
           publicKey,
         ]);
-        toast.success('Task setting successfully paired.');
+        toast.success('Task extension successfully paired.');
         handleClickCancel();
         if (isRunning) {
           try {
@@ -74,7 +74,7 @@ export function Setting({
           } catch (error) {
             console.warn(error);
             toast.error(
-              'Restarting the task failed after pairing. Try stopping and running it manually to use the new setting.',
+              'Restarting the task failed after pairing. Try stopping and running it manually to use the new extension.',
               {
                 duration: 10000,
               }
@@ -85,7 +85,7 @@ export function Setting({
         }
       },
       onError: () => {
-        toast.error('Task setting pairing failed. Try Again.');
+        toast.error('Task extension pairing failed. Try Again.');
       },
     }
   );

@@ -18,6 +18,12 @@ jest.spyOn(koiiWeb3, 'sendAndConfirmTransaction');
 jest.spyOn(koiiWeb3.SystemProgram, 'createAccount');
 jest.spyOn(koiiWeb3.SystemProgram, 'transfer');
 
+jest.mock('main/node/helpers/Namespace', () => ({
+  namespaceInstance: {
+    storeGet: jest.fn(),
+    storeSet: jest.fn(),
+  },
+}));
 jest.mock('../node/helpers', () => ({
   __esModule: true,
   getMainSystemAccountKeypair: jest.fn(),

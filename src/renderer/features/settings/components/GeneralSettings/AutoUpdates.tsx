@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useUserAppConfig } from '../../hooks';
 
-import { AutomaticUpdatesSwitch } from './AutomaticUpdatesSwitch';
+import { SwitchWithLoader } from './AutomaticUpdatesSwitch';
 
 export function AutoUpdates() {
   const { userConfig, userConfigMutation, isMutating } = useUserAppConfig({});
@@ -11,7 +11,7 @@ export function AutoUpdates() {
 
   return (
     <div className="flex flex-col gap-5">
-      <AutomaticUpdatesSwitch
+      <SwitchWithLoader
         id="autoUpdates"
         isChecked={!autoUpdatesDisabled} // If autoUpdatesDisabled is not set or is false, isChecked will be true (updates enabled)
         onSwitch={() => {

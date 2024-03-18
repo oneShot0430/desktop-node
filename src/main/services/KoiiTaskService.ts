@@ -9,18 +9,21 @@ import {
   ITaskNodeBase,
   runTimers,
   updateRewardsQueue,
+  initialPropagation,
+  runPeriodic,
 } from '@koii-network/task-node';
 import getAverageSlotTime from 'main/controllers/getAverageSlotTime';
 import getCurrentSlot from 'main/controllers/getCurrentSlot';
 import { getNetworkUrl } from 'main/controllers/getNetworkUrl';
 import getStakingAccountPubKey from 'main/controllers/getStakingAccountPubKey';
 import { getTaskMetadata } from 'main/controllers/getTaskMetadata';
+import { getMainSystemAccountKeypair } from 'main/node/helpers';
 import { store } from 'main/node/helpers/k2NetworkUrl';
 import { DetailedError, ErrorType, RawTaskData, TaskMetadata } from 'models';
 import { throwDetailedError, getProgramAccountFilter } from 'utils';
 
 import config from '../../config';
-import { TASK_CONTRACT_ID } from '../../config/node';
+import { TASK_CONTRACT_ID, ATTENTION_TASK_ID } from '../../config/node';
 import { SystemDbKeys } from '../../config/systemDbKeys';
 import { getAppDataPath } from '../node/helpers/getAppDataPath';
 import { namespaceInstance } from '../node/helpers/Namespace';
@@ -71,6 +74,8 @@ export class KoiiTaskService {
   private submissionCheckIntervals: Record<string, NodeJS.Timeout> = {};
 
   private isInitialized = false;
+
+  public nodePropagationInterval: NodeJS.Timeout | null = null;
 
   /**
    * @dev: this functions is preparing the Desktop Node to work in a few crucial steps:
@@ -211,6 +216,40 @@ export class KoiiTaskService {
     await this.addRunningTaskPubKey(taskAccountPubKey);
     await this.fetchStartedTaskData();
     await this.runTimers();
+
+    try {
+      if (this.nodePropagationInterval) {
+        clearInterval(this.nodePropagationInterval);
+      }
+      const runningTasks = (await this.getStartedTasks()).filter((task) => {
+        return !!this.RUNNING_TASKS[task.task_id];
+      });
+      const curr_subDomain = await namespaceInstance.storeGet('subdomain');
+      const mainSystemAccount = await getMainSystemAccountKeypair();
+      initialPropagation(
+        runningTasks,
+        ATTENTION_TASK_ID,
+        namespaceInstance,
+        mainSystemAccount,
+        `https://${curr_subDomain}`,
+        true
+      ).then(() => {
+        this.nodePropagationInterval = setInterval(
+          () =>
+            runPeriodic(
+              runningTasks,
+              namespaceInstance,
+              mainSystemAccount,
+              `https://${curr_subDomain}`,
+              true
+            ),
+          300000
+        );
+      });
+    } catch (error: any) {
+      console.error(error.message);
+    }
+
     const taskRawData = this.startedTasksData?.find(
       (task) => task.task_id === taskAccountPubKey
     );
@@ -292,22 +331,60 @@ export class KoiiTaskService {
     //     console.error(e);
     //   }
     // }
+    try {
+      if (this.nodePropagationInterval) {
+        clearInterval(this.nodePropagationInterval);
+      }
+      const runningTasks = (await this.getStartedTasks()).filter((task) => {
+        return !!this.RUNNING_TASKS[task.task_id];
+      });
+      const mainSystemAccount = await getMainSystemAccountKeypair();
+      const curr_subDomain = await namespaceInstance.storeGet('subdomain');
+      console.log('curr_subDomain', curr_subDomain);
+      initialPropagation(
+        runningTasks,
+        ATTENTION_TASK_ID,
+        namespaceInstance,
+        mainSystemAccount,
+        `https://${curr_subDomain}`,
+        true
+      ).then(() => {
+        this.nodePropagationInterval = setInterval(
+          () =>
+            runPeriodic(
+              runningTasks,
+              namespaceInstance,
+              mainSystemAccount,
+              `https://${curr_subDomain}`,
+              true
+            ),
+          300000
+        );
+      });
+    } catch (error: any) {
+      console.error(error.message);
+    }
   }
 
   async fetchAllTaskIds() {
-    this.allTaskPubkeys = (
-      await sdk.k2Connection.getProgramAccounts(
-        new PublicKey(process.env.TASK_CONTRACT_ID || TASK_CONTRACT_ID),
-        {
-          dataSlice: {
-            offset: 0,
-            length: 0,
-          },
-          filters: [getProgramAccountFilter],
-        }
-      )
-    ).map(({ pubkey }) => pubkey.toBase58());
-    // console.log(`Fetched ${this.allTaskPubkeys.length} Tasks Public Keys`);
+    try {
+      const availableTasksIds = (
+        await sdk.k2Connection.getProgramAccounts(
+          new PublicKey(process.env.TASK_CONTRACT_ID || TASK_CONTRACT_ID),
+          {
+            dataSlice: {
+              offset: 0,
+              length: 0,
+            },
+            filters: [getProgramAccountFilter],
+          }
+        )
+      ).map(({ pubkey }) => pubkey.toBase58());
+
+      this.allTaskPubkeys = availableTasksIds;
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   public async addRunningTaskPubKey(pubkey: string) {
@@ -356,10 +433,13 @@ export class KoiiTaskService {
     const runningTasksStr: string | undefined =
       await namespaceInstance.storeGet(SystemDbKeys.RunningTasks);
     try {
-      return runningTasksStr
-        ? (JSON.parse(runningTasksStr) as Array<string>)
-        : [];
-    } catch (e: any) {
+      const startedTasks = await this.getStartedTasksPubKeys();
+      const runningTasks = (
+        runningTasksStr ? (JSON.parse(runningTasksStr) as Array<string>) : []
+      ).filter((task) => startedTasks.includes(task));
+
+      return runningTasks;
+    } catch (e) {
       return [];
     }
   }

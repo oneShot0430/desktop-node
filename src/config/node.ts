@@ -1,5 +1,7 @@
 import { ErrorType } from 'models';
 
+// import { upnpPath } from './upnpPathResolver';
+
 export const REDIS = {
   IP: 'localhost',
   PORT: 6379,
@@ -22,10 +24,17 @@ export const DEFAULT_K2_NETWORK_URL = EMERGENCY_TESTNET_RPC_URL;
 
 export const TASK_CONTRACT_ID = 'Koiitask22222222222222222222222222222222222';
 
+export const ATTENTION_TASK_ID = 'Attention22222222222222222222222222222222222';
+
 const MINIMUM_ACCEPTED_LENGTH_TASK_CONTRACT = 500;
 
 export const STAKING_DERIVATION_PATH = "m/44'/501'/99'/0'";
 
+/** ******************************** uPnP and Dynamic DNS Stuff BEGIN ************************************* */
+
+export const DYNAMIC_DNS_URL = 'https://dynamic.koiidns.com';
+
+/** ******************************** uPnP and Dynamic DNS Stuff END ************************************* */
 // value in ROE
 const TASK_FEE = 50000000;
 
@@ -63,4 +72,7 @@ export default {
   STAKING_DERIVATION_PATH,
   TASK_STABILITY_THRESHOLD,
   K2_CONNECTION_ERROR_MESSAGES,
+  // UPNP_BINARY_PATH,
+  DYNAMIC_DNS_URL,
+  ATTENTION_TASK_ID,
 };

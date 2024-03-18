@@ -15,6 +15,55 @@ type PropsType = {
 export function LoadingScreen({ initError }: PropsType): JSX.Element {
   const isOnline = useInternetConnectionStatus();
 
+  const facts = [
+    {
+      bold: 'Koii nodes power better apps.',
+      normal:
+        ' Earn tokens by providing the resources you already have to your community.',
+    },
+    {
+      bold: 'KOII is a Layer 1 currency, like Ethereum and Solana.',
+      normal:
+        ' Explore the wide range of possibilities and Layer 2 tokens with our application.',
+    },
+    {
+      bold: 'Koii Network was founded in 2020,',
+      normal:
+        ' and it is the only live fork of Solana and one of the original projects in the Cryptocurrency space.',
+    },
+    {
+      bold: 'Thanks for joining our Testnet!',
+      normal:
+        ' All the tokens that you are acquiring will be converted to Mainnet tokens with 1:1 ratio.',
+    },
+    {
+      bold: 'Koii has more than 40 thousands users as of today,',
+      normal: ' thanks for being an early adaptor!',
+    },
+    {
+      bold: 'Did you know that KOII stands for Knowledgeable, Open and Infinite Internet?',
+      normal: '',
+    },
+    {
+      bold: 'We are planning to launch our mainnet within 2024.',
+      normal: ' Stay tuned!',
+    },
+    {
+      bold: 'Did you know that there are only 10 billion initial KOII tokens in existence?',
+      normal: ' Obtain yours today during our airdrop phase.',
+    },
+    {
+      bold: 'ROE, which means a "fish egg" is the smallest unit of KOII,',
+      normal: ' being equivalent to (1/1000000000) of a KOII.',
+    },
+    {
+      bold: 'You can apply for development grants on our website.',
+      normal: ' Help to build a more decentralized world!',
+    },
+  ];
+
+  const randomFact = facts[Math.floor(Math.random() * facts.length)];
+
   const getContent = () => {
     if (initError) {
       return (
@@ -56,10 +105,9 @@ export function LoadingScreen({ initError }: PropsType): JSX.Element {
       </h1>
       <p className="justify-center max-w-xl text-lg text-center">
         <span className="mr-1 text-finnieTeal">
-          Koii nodes power better apps.
+          <strong>{randomFact.bold}</strong>
+          {randomFact.normal}
         </span>
-        Earn tokens by providing the resources you already have to your
-        community.
       </p>
 
       <WelcomeLinesDiagonal className="absolute bottom-0 -right-[22.5%] h-full" />

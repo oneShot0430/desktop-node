@@ -13,12 +13,21 @@ interface Params {
 export const useTaskStatus = ({ task, stakingAccountPublicKey }: Params) => {
   const { privateTasksQuery } = usePrivateTasks();
 
+  const lastFewRounds = Object.keys(task.submissions);
+  const lastRound = lastFewRounds[lastFewRounds.length - 1];
+
   const {
     data: taskStatus = TaskStatus.PRE_SUBMISSION,
     isLoading: isLoadingStatus,
     error,
   } = useQuery(
-    [QueryKeys.TaskStatus, task.publicKey],
+    [
+      QueryKeys.TaskStatus,
+      task.publicKey,
+      lastRound,
+      task.hasError,
+      task.isRunning,
+    ],
     () =>
       TaskService.getStatus(
         task,

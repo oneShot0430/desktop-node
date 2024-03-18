@@ -27,11 +27,16 @@ export const withdrawStake = (taskAccountPubKey: string) => {
   return window.main.withdrawStake({ taskAccountPubKey });
 };
 
-export const stakeOnTask = (taskAccountPubKey: string, stakeAmount: number) => {
+export const stakeOnTask = (
+  taskAccountPubKey: string,
+  stakeAmount: number,
+  isNetworkingTask?: boolean
+) => {
   const stakeAmountInKoii = getKoiiFromRoe(stakeAmount);
   return window.main.delegateStake({
     taskAccountPubKey,
     stakeAmount: stakeAmountInKoii,
+    isNetworkingTask,
   });
 };
 export const transferKoiiFromMainWallet = (

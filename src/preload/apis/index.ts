@@ -1,3 +1,4 @@
+import appRelaunch from './appRelaunch';
 import { onAppDownloaded, checkAppUpdate, onAppUpdate } from './appUpdates';
 import archiveTask from './archiveTask';
 import { fetchS3FolderContents } from './aws';
@@ -101,6 +102,7 @@ import {
   transferKoiiFromStakingWallet,
 } from './transferKOII';
 import upgradeTask from './upgradeTask';
+import { fetchAndSaveUPnPBinary, checkUPnPBinary } from './upnp';
 import withdrawStake from './withdrawStake';
 
 export default {
@@ -201,4 +203,7 @@ export default {
   updateNotification,
   fetchS3FolderContents,
   saveEncryptedSecretPhraseMap,
+  appRelaunch,
+  fetchAndSaveUPnPBinary,
+  checkUPnPBinary,
 };

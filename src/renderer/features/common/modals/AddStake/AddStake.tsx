@@ -1,11 +1,13 @@
 import { create, useModal } from '@ebay/nice-modal-react';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useMutation } from 'react-query';
 
+import { TaskMetadata } from 'models';
 import { Button, ErrorMessage } from 'renderer/components/ui';
 import { useCloseWithEsc } from 'renderer/features/common/hooks/useCloseWithEsc';
 import { Modal, ModalContent, ModalTopBar } from 'renderer/features/modals';
 import { useMainAccountBalance } from 'renderer/features/settings/hooks/useMainAccountBalance';
+import { isNetworkingTask } from 'renderer/features/tasks/utils';
 import { stakeOnTask, startTask } from 'renderer/services';
 import { Task } from 'renderer/types';
 import { getKoiiFromRoe, getRoeFromKoii } from 'utils';
@@ -19,9 +21,13 @@ enum Step {
 
 type PropsType = {
   task: Task;
+  metadata?: TaskMetadata | null;
 };
 
-export const AddStake = create<PropsType>(function AddStake({ task }) {
+export const AddStake = create<PropsType>(function AddStake({
+  task,
+  metadata,
+}) {
   const { publicKey, minimumStakeAmount: minStake, isRunning } = task;
 
   const modal = useModal();
@@ -30,8 +36,17 @@ export const AddStake = create<PropsType>(function AddStake({ task }) {
   const [stakeAmount, setStakeAmount] = useState<number>(0);
   const [error, setError] = useState('');
 
+  const isUsingNetworking = useMemo(
+    () => isNetworkingTask(metadata),
+    [metadata]
+  );
+
   const stakeAndRun = async () => {
-    await stakeOnTask(publicKey, getRoeFromKoii(stakeAmount));
+    await stakeOnTask(
+      publicKey,
+      getRoeFromKoii(stakeAmount),
+      isUsingNetworking
+    );
     if (!isRunning) {
       await startTask(publicKey);
     }
@@ -87,6 +102,7 @@ export const AddStake = create<PropsType>(function AddStake({ task }) {
   const buttonLabel = step === Step.Add ? 'Add Stake' : 'Run Task';
   const buttonAction =
     step === Step.Add ? handleClickAddStake : confirmAddStake;
+  const isButtonDisabled = !!error || !stakeAmount || !metadata;
 
   return (
     <Modal>
@@ -118,7 +134,7 @@ export const AddStake = create<PropsType>(function AddStake({ task }) {
             onClick={buttonAction}
             className="py-4 text-white"
             loading={isStaking}
-            disabled={!!error || !stakeAmount}
+            disabled={isButtonDisabled}
           />
         </div>
       </ModalContent>

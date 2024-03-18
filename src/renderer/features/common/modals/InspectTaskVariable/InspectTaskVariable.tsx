@@ -53,7 +53,7 @@ export function InspectTaskVariable({ onRemove, taskVariable }: PropsType) {
     <>
       <div className="flex items-center justify-center w-full gap-4 pt-2 text-2xl font-semibold">
         <Icon source={BrowseInternetLine} className="w-8 h-8" />
-        <span>View Task Setting Info</span>
+        <span>View Task Extension Info</span>
         <Icon
           source={CloseLine}
           className="w-8 h-8 ml-auto cursor-pointer"

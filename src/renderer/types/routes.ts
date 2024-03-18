@@ -11,6 +11,7 @@ export enum AppRoute {
   SettingsExtensions = '/settings/extensions',
   SettingsAutomateNode = '/settings/automate-node',
   SettingsNotifications = '/settings/notifications',
+  SettingsNetworkAndUPNP = '/settings/network',
   SettingsHelp = '/settings/help',
   SettingsPrivacy = '/settings/privacy',
   History = '/history',

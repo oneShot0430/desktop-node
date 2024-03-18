@@ -1,7 +1,6 @@
 import { Event } from 'electron';
 
 import axios, { AxiosError } from 'axios';
-
 import { EMERGENCY_TESTNET_RPC_URL } from 'config/node';
 import koiiTasks from 'main/services/koiiTasks';
 import { OwnerAccount, TaskData, getAllAccountsResponse } from 'models';

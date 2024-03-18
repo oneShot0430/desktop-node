@@ -2,7 +2,6 @@
 import { Event } from 'electron';
 
 import axios from 'axios';
-
 import { FAUCET_API_URL } from 'config/faucet';
 import koiiTasks from 'main/services/koiiTasks';
 import { ErrorType, PaginatedResponse, Task } from 'models';

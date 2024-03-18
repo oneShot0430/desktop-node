@@ -102,11 +102,11 @@ export function NodeTools({
     queryCache.invalidateQueries([QueryKeys.StoredTaskVariables]);
     queryCache.invalidateQueries([QueryKeys.StoredPairedTaskVariables]);
 
-    toast.success('Task settings successfully paired');
+    toast.success('Task extensions successfully paired');
   };
 
   const onError = () => {
-    toast.error('Task settings pairing failed. Try Again');
+    toast.error('Task extensions pairing failed. Try Again');
   };
 
   const { mutate: pairTaskVariables, isLoading: isPairingTasksVariables } =

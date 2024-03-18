@@ -1,8 +1,9 @@
-import { CheckSuccessLine } from '@_koii/koii-styleguide';
+import { CheckSuccessLine, Icon } from '@_koii/koii-styleguide';
 import React, { useCallback } from 'react';
 import { toast } from 'react-hot-toast';
 import { useQueryClient } from 'react-query';
 
+import Clock from 'assets/svgs/clock.svg';
 import { isNumber } from 'lodash';
 import { TimeFormat } from 'models';
 import { useUserAppConfig } from 'renderer/features/settings/hooks/useUserAppConfig';
@@ -84,6 +85,15 @@ export function TasksScheduler() {
             Set it and forget it to earn tokens while you sleep!
             <br /> Schedule your node to run while you’re away from your
             computer. That way if you forget to turn it on, you won’t miss out.
+          </div>
+
+          <div className="mb-5 text-sm leading-6 text-white w-[460px] xl:w-full flex">
+            <span>Remember to turn ON the Automate toggle&nbsp;&nbsp;</span>
+            <Icon source={Clock} />
+            <span>
+              &nbsp;&nbsp;inside the task&apos;s info details that you want to
+              schedule.
+            </span>
           </div>
         </div>
       </div>

@@ -19,6 +19,8 @@ import {
 } from 'renderer/services';
 import { AppRoute } from 'renderer/types/routes';
 
+const LOADING_SCREEN_TIMEOUT = 8000;
+
 export function Unlock(): JSX.Element {
   const [hasPinError, setHasPinError] = useState<boolean>(false);
 
@@ -69,9 +71,12 @@ export function Unlock(): JSX.Element {
       initializeNodeCalled.current = true;
       console.log('Initializing node...');
       try {
-        // Indicate the initialization API call in sessionStorage
-        await initializeTasks();
-        setInitializingNode(false);
+        initializeTasks().then(() => {
+          queryClient.invalidateQueries([QueryKeys.TaskList]);
+        });
+        setTimeout(() => {
+          setInitializingNode(false);
+        }, LOADING_SCREEN_TIMEOUT);
       } catch (error) {
         console.error((error as { message: string }).message);
         /**

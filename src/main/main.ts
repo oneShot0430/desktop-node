@@ -25,6 +25,7 @@ import db from './db';
 import initHandlers from './initHandlers';
 import { configureLogger } from './logger';
 import { getCurrentActiveAccountName } from './node/helpers';
+import execute from './node/helpers/settleuPnP';
 import { setUpPowerStateManagement } from './powerMonitor';
 import koiiTasks from './services/koiiTasks';
 import { resolveHtmlPath } from './util';
@@ -121,6 +122,16 @@ const createWindow = async () => {
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
+  const closePortConnection = async () => {
+    await db.get('curr_port').then(async (port: any) => {
+      if (port !== '0') {
+        await execute.closePortCommand(port);
+        await db.put('curr_port', '0');
+      }
+    });
+    await db.put('Port_Exposure', 'Pending');
+  };
+
   app.on('before-quit', async () => {
     if (app.isQuitting) return;
 
@@ -129,7 +140,9 @@ const createWindow = async () => {
        * processes cleanup
        */
       await koiiTasks.stopTaskOnAppQuit();
-      await stopOrcaVM();
+      await closePortConnection();
+      // Suppressing the error from printing
+      await stopOrcaVM().catch((err) => err);
     } catch (error) {
       console.log(error);
     }
@@ -351,6 +364,7 @@ if (!isSingleInstance) {
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
   app.on('ready', async () => {
+    console.log('##### DATA', app.getPath('userData'));
     /**
      * @dev remove selected tasks from the the DB cache
      * Some users might still have cache reciods in the neDB, so we need to remove them

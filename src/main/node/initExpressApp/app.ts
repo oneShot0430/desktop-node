@@ -5,6 +5,8 @@ import proxy from 'express-http-proxy';
 import koiiState from 'main/services/koiiState';
 import koiiTasks from 'main/services/koiiTasks';
 
+import { getAppDataPath } from '../helpers/getAppDataPath/getAppDataPath';
+
 import routes from './routes';
 
 const ATTENTION_TASK_ID = 'Attention22222222222222222222222222222222222';
@@ -38,6 +40,11 @@ const verifyTaskEndpoints = (
 
 export default (): Express => {
   const app = express();
+  console.log(
+    'static file path given to server:',
+    `${getAppDataPath()}/PUBLIC_STATIC_IMMUTABLE`
+  );
+  app.use(express.static(`${getAppDataPath()}/PUBLIC_STATIC_IMMUTABLE`));
   // Create alias for first task with name "Attention_Game" to /attention
   const alias = '/attention';
   app.all(`${alias}*`, function (req, _res, next) {

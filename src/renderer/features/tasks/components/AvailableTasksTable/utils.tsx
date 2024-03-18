@@ -10,7 +10,11 @@ type GetErrorMessageParams = {
   hasMinimumStake: boolean;
   isTaskToolsValid: boolean;
   isActive?: boolean;
+  isUsingNetworking: boolean;
+  userHasNetworkingEnabled: boolean;
 };
+
+// TO DO: unify error messages logic on private and whitelisted tasks
 
 export const getErrorMessage = ({
   hasEnoughKoii,
@@ -19,6 +23,8 @@ export const getErrorMessage = ({
   hasMinimumStake,
   isTaskToolsValid,
   isActive,
+  isUsingNetworking,
+  userHasNetworkingEnabled,
 }: GetErrorMessageParams) => {
   if (isTaskRunning) return [];
   console.log({ isActive });
@@ -33,11 +39,16 @@ export const getErrorMessage = ({
     },
     {
       condition: isTaskToolsValid,
-      errorMessage: 'configure the Task settings',
+      errorMessage: 'configure the Task extensions',
     },
     {
       condition: isActive,
       errorMessage: 'the task is active',
+    },
+    {
+      condition:
+        !isUsingNetworking || (isUsingNetworking && userHasNetworkingEnabled),
+      errorMessage: "enable Networking in your node's settings",
     },
   ];
 

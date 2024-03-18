@@ -1,9 +1,8 @@
 import { Event } from 'electron';
 import https from 'https';
 
-import axios, { AxiosError } from 'axios';
-
 import { Keypair, LAMPORTS_PER_SOL } from '@_koi/web3.js';
+import axios, { AxiosError } from 'axios';
 import bs58 from 'bs58';
 import {
   getMainSystemAccountKeypair,
