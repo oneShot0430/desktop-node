@@ -8,12 +8,14 @@ interface TooltipComponentProps {
   tooltipContent: React.ReactNode;
   children: React.ReactNode;
   theme?: Theme;
+  isHidden?: boolean;
 }
 
 export function Popover({
   tooltipContent,
   children,
   theme,
+  isHidden,
 }: TooltipComponentProps) {
   const arrowFill = theme === Theme.Dark ? '#353570' : '#fff';
   const tooltipClasses = twMerge(
@@ -36,6 +38,7 @@ export function Popover({
           align="start"
           avoidCollisions
           className={tooltipClasses}
+          hidden={isHidden}
         >
           {tooltipContent}
           <Tooltip.Arrow style={{ fill: arrowFill }} />

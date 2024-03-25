@@ -3,6 +3,7 @@ import {
   faHome,
   faGear,
   faAdd,
+  faShare,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
@@ -27,6 +28,11 @@ const navItems = [
   // { icon: 'Rewards', to: '/rewards' },
   // { icon: 'History', to: '/history' },
   // { icon: 'Notifications', to: '/notifications' },
+  {
+    icon: <FontAwesomeIcon icon={faShare} size="lg" />,
+    to: AppRoute.Referral,
+    label: 'Referrals',
+  },
   {
     icon: <FontAwesomeIcon icon={faGear} size="lg" />,
     to: AppRoute.SettingsGeneral,

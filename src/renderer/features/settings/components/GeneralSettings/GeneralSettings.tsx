@@ -10,15 +10,12 @@ import { ForceRedeemMigrationTokens } from './ForceRedeemMigrationTokens';
 import { LaunchOnRestart } from './LaunchOnRestart';
 import { Network } from './Network';
 import { NodeLogsSettingsSection } from './NodeLogs';
-import { Referral } from './Referral/Referral';
 import { StayAwake } from './StayAwake';
 
 export function GeneralSettings() {
   return (
     <div className="overflow-y-auto text-white">
       <SectionHeader title="General Settings" />
-      <Referral />
-      <Spacer showSeparator />
       <div className="flex flex-wrap gap-4">
         <SwitchWrapper
           title="Choose Network"

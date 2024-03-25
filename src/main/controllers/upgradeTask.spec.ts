@@ -27,6 +27,12 @@ jest.mock('./startTask', () => ({
   __esModule: true,
   default: jest.fn(),
 }));
+jest.mock('./getAllTimeRewardsByTask', () => ({
+  getAllTimeRewardsByTask: jest.fn(),
+}));
+jest.mock('./storeAllTimeRewards', () => ({
+  storeAllTimeRewards: jest.fn(),
+}));
 jest.mock('./delegateStake', () => ({
   __esModule: true,
   default: jest.fn(),

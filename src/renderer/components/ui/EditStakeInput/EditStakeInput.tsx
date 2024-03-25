@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, useState } from 'react';
+import React, { ChangeEventHandler } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { getKoiiFromRoe, getRoeFromKoii } from 'utils';
@@ -20,9 +20,7 @@ export function EditStakeInput({
   disabled = false,
   defaultValue,
 }: PropsType) {
-  const [isPristine, setIsPristine] = useState<boolean>(true);
-
-  const hasError = !meetsMinimumStake && !isPristine;
+  const hasError = !meetsMinimumStake;
   const inputClasses = twMerge(
     'w-[92px] bg-purple-5 text-white rounded-sm text-right p-[3px] border-2 border-transparent focus:border-finnieEmerald focus:outline-none',
     hasError && 'border-finnieRed focus:border-finnieRed'
@@ -46,7 +44,6 @@ export function EditStakeInput({
   return (
     <div className="flex flex-col items-center w-fit">
       <input
-        onBlur={() => setIsPristine(false)}
         value={value}
         placeholder={placeholder}
         onChange={handleChange}

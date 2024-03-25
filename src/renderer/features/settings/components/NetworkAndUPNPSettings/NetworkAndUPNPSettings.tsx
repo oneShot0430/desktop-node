@@ -60,7 +60,7 @@ export function NetworkAndUPNPSettings() {
           Enforce Tunneling: Activating this option will ensure that your
           application exclusively utilizes tunneling for communication,
           prioritizing security over other methods. Please note that tunneling
-          may require additional computational resources..
+          may require additional computational resources.
         </div>
         <Spacer size="sm" />
         <SwitchWrapper

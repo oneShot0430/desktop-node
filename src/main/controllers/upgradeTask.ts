@@ -3,12 +3,14 @@ import { Event } from 'electron';
 import { archiveTask } from './archiveTask';
 import claimReward from './claimReward';
 import delegateStake from './delegateStake';
+import { getAllTimeRewardsByTask } from './getAllTimeRewardsByTask';
 import { getIsTaskRunning } from './getIsTaskRunning';
 import getStakingAccountPubKey from './getStakingAccountPubKey';
 import { getTaskInfo } from './getTaskInfo';
 import { getRunnedPrivateTasks, setRunnedPrivateTask } from './privateTasks';
 import startTask from './startTask';
 import stopTask from './stopTask';
+import { storeAllTimeRewards } from './storeAllTimeRewards';
 import { pairTaskVariable, getPairedTaskVariableData } from './taskVariables';
 import withdrawStake from './withdrawStake';
 
@@ -34,6 +36,8 @@ export const upgradeTask = async (
 
   await ensureTransactionFinality();
 
+  await addUpAllTimeRewards(oldPublicKey, newPublicKey);
+
   await delegateStake({} as Event, {
     taskAccountPubKey: newPublicKey,
     stakeAmount: newStake,
@@ -52,6 +56,20 @@ export const upgradeTask = async (
   setTimeout(() => {
     archiveTask({} as Event, { taskPubKey: oldPublicKey });
   }, 3500);
+};
+
+const addUpAllTimeRewards = async (
+  oldPublicKey: string,
+  newPublicKey: string
+) => {
+  const oldTaskAllTimeRewards = await getAllTimeRewardsByTask({} as Event, {
+    taskId: oldPublicKey,
+  });
+
+  await storeAllTimeRewards({} as Event, {
+    taskId: newPublicKey,
+    newReward: oldTaskAllTimeRewards,
+  });
 };
 
 const stopOldTask = async (taskPublicKey: string) => {

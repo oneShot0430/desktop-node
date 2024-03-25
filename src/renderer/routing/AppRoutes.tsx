@@ -19,6 +19,7 @@ import {
   ImportKey,
   ImportKeySuccess,
 } from 'renderer/features/onboarding';
+import { ReferralsView } from 'renderer/features/referrals/components/ReferralsView';
 import { SETTINGS_SECTIONS } from 'renderer/features/settings/settingsRoutesConfig';
 import { AvailableTasksTable } from 'renderer/features/tasks/components/AvailableTasksTable';
 import { MyNodeTable } from 'renderer/features/tasks/components/MyNodeTable';
@@ -53,6 +54,10 @@ const routes = [
       {
         path: AppRoute.History,
         element: <History />,
+      },
+      {
+        path: AppRoute.Referral,
+        element: <ReferralsView />,
       },
       {
         path: AppRoute.Settings,

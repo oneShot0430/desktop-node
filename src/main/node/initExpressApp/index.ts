@@ -5,6 +5,7 @@ import * as path from 'path';
 
 import axios from 'axios';
 import { Request, Response, Express } from 'express';
+import { debounce } from 'lodash';
 import getUserConfig from 'main/controllers/getUserConfig';
 import koiiTasks from 'main/services/koiiTasks';
 
@@ -25,7 +26,9 @@ const logFilePath = path.join(getAppDataPath(), 'logs', 'uPnP.log');
 
 const PORT_80 = 80;
 const PORT_443 = 443;
+const MAX_LOCAL_TUNNEL_RETRIES = 5;
 
+let localTunnelRetries = 0;
 let isExpressListening = false;
 let subdomain_assigned: string;
 
@@ -109,12 +112,14 @@ async function handleServerStart(server: any, expressApp: any) {
       await namespaceInstance.storeSet('subdomain', subdomain_assigned);
     } else {
       log('Error getting certParams');
-      await handleError();
+      await setUpLocalTunnel();
     }
   } catch (error: any) {
-    console.error('An error occurred while trying uPnP:', error.message);
-    log('Error occurred while trying uPnP:', error.message);
-    await handleError();
+    logToConsoleAndToLogFile(
+      `An error occurred while trying uPnP: ${error.message}`,
+      true
+    );
+    await setUpLocalTunnel();
   }
 }
 
@@ -134,8 +139,7 @@ async function getSubdomain(payloadData: any): Promise<any> {
     log('Success getting subdomain', response.data);
     return response;
   } catch (error: any) {
-    log('Error getting subdomain custom', { error });
-    console.log('123 Error getting subdomain custom', { error });
+    log(`Error getting subdomain custom: ${error}`);
     throw new Error(`Error getting subdomain: ${error.message}`);
   }
 }
@@ -165,7 +169,41 @@ async function transitionToSecureServer(
   }
 }
 
-async function handleError(): Promise<void> {
+function logToConsoleAndToLogFile(message: string, isError?: boolean) {
+  const consoleMethod = isError ? console.error : console.log;
+  consoleMethod(message);
+  log(message);
+}
+
+async function retryLocalTunnel() {
+  setTimeout(async () => {
+    logToConsoleAndToLogFile(
+      `Retrying local tunneling... ${localTunnelRetries}`
+    );
+    localTunnelRetries += 1;
+    await setUpLocalTunnel();
+  }, 5000);
+}
+
+async function handleLocalTunnelError(error: Error) {
+  await namespaceInstance.storeSet('Port_Exposure', 'Failure');
+  logToConsoleAndToLogFile(
+    `Error running local tunnel: ${error.message}`,
+    true
+  );
+  const shouldRetry = localTunnelRetries < MAX_LOCAL_TUNNEL_RETRIES;
+
+  if (!shouldRetry) {
+    logToConsoleAndToLogFile(
+      'Max retries reached, giving up on local tunneling',
+      true
+    );
+    return;
+  }
+  await retryLocalTunnel();
+}
+
+async function setUpLocalTunnel(): Promise<void> {
   try {
     // close any opened port
     const curr_port = await namespaceInstance.storeGet('curr_port');
@@ -175,9 +213,20 @@ async function handleError(): Promise<void> {
     }
     log('Falling back to proxy server...');
     const result = await startLocalTunnel();
+
+    const debouncedHandleLocalTunnelError = debounce(async (error: Error) => {
+      console.error('Error with the local tunnel: ', error.message);
+      await handleLocalTunnelError(error);
+    }, 500);
+
+    result?.tunnel?.on('error', async (error: Error) => {
+      await debouncedHandleLocalTunnelError(error);
+    });
+
     if (result.success) {
       log('Local tunnel started successfully!');
       log('Tunnel URL:', result.result);
+      localTunnelRetries = 0;
       await namespaceInstance.storeSet('Port_Exposure', 'localtunnel');
       let subdomain = '';
       if (result.result) {
@@ -187,11 +236,10 @@ async function handleError(): Promise<void> {
       }
       await namespaceInstance.storeSet('subdomain', subdomain);
     } else {
-      log('Error starting local tunnel:', result.error);
+      throw new Error(result.error);
     }
   } catch (error: any) {
-    await namespaceInstance.storeSet('Port_Exposure', 'Failure');
-    log(`Error starting local tunnel: ${error.message}`);
+    await handleLocalTunnelError(error);
   }
 }
 

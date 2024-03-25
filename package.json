@@ -174,7 +174,7 @@
   },
   "devDependencies": {
     "@cspell/eslint-plugin": "^6.31.1",
-    "@electron/notarize": "^1.2.3",
+    "@electron/notarize": "^2.3.0",
     "@electron/rebuild": "^3.2.10",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
     "@svgr/webpack": "^6.5.1",

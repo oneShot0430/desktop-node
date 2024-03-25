@@ -42,7 +42,6 @@ import {
 import { isNetworkingTask } from 'renderer/features/tasks/utils';
 import { stopTask } from 'renderer/services';
 import { isValidWalletAddress } from 'renderer/utils';
-import { getKoiiFromRoe } from 'utils';
 
 import { StartPauseTaskButton } from '../../AvailableTaskRow/components/StartPauseTaskButton/StartPauseTaskButton';
 import { SuccessMessage } from '../../AvailableTasksTable/components/SuccessMessage';
@@ -83,16 +82,11 @@ export function AddPrivateTask({ columnsLayout, onClose }: Props) {
   const [isTaskValidToRun, setIsTaskValidToRun] = useState(false);
   const [taskStartSucceeded, setTaskStartSucceeded] = useState(false);
   const [valueToStake, setValueToStake] = useState<number>(0);
-  const [meetsMinimumStake, setMeetsMinimumStake] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string[]>([]);
   const [taskWarning, setTaskWarning] = useState<string>(DEFAULT_TASK_WARNING);
   const { data: mainAccountPubKey = '' } = useMainAccount();
 
-  const {
-    data: task,
-    isLoading: loadingTask,
-    error: taskLoadingError,
-  } = useTaskById({
+  const { data: task, isLoading: loadingTask } = useTaskById({
     taskPubkey,
     options: {
       enabled:
@@ -108,6 +102,11 @@ export function AddPrivateTask({ columnsLayout, onClose }: Props) {
           setTaskWarning(TASK_ALREADY_STARTED_WARNING);
         } else {
           setTaskWarning(DEFAULT_TASK_WARNING);
+        }
+      },
+      onSuccess: (data) => {
+        if (data?.minimumStakeAmount) {
+          setValueToStake(data.minimumStakeAmount);
         }
       },
     },
@@ -215,42 +214,12 @@ export function AddPrivateTask({ columnsLayout, onClose }: Props) {
     validateAllVariablesWerePaired();
   }, [pairedVariables, globalAndTaskVariables]);
 
-  const validateTask = useCallback(() => {
-    const hasEnoughKoii =
-      (accountBalance >= CRITICAL_MAIN_ACCOUNT_BALANCE &&
-        alreadyStakedTokensAmount >= Number(minStake)) ||
-      accountBalance >= valueToStake + CRITICAL_MAIN_ACCOUNT_BALANCE;
-    const hasMinimumStake =
-      (alreadyStakedTokensAmount || valueToStake) >= Number(minStake);
-    const isTaskValid = hasMinimumStake && isTaskToolsValid && hasEnoughKoii;
-
-    setIsTaskValidToRun(isTaskValid);
-
-    const errorMessage = getErrorMessage({
-      hasEnoughKoii,
-      minStake,
-      isTaskRunning: !!task?.isRunning,
-      hasMinimumStake,
-      isTaskToolsValid,
-      isActive: !!task?.isActive,
-      isUsingNetworking,
-      userHasNetworkingEnabled,
-    });
-
-    setErrorMessage(errorMessage);
-  }, [
-    accountBalance,
-    minStake,
-    valueToStake,
-    alreadyStakedTokensAmount,
-    isTaskToolsValid,
-    task?.isRunning,
-    task?.isActive,
-  ]);
-
-  useEffect(() => {
-    validateTask();
-  }, [validateTask]);
+  const hasEnoughKoii =
+    (accountBalance >= CRITICAL_MAIN_ACCOUNT_BALANCE &&
+      alreadyStakedTokensAmount >= Number(minStake)) ||
+    accountBalance >= valueToStake + CRITICAL_MAIN_ACCOUNT_BALANCE;
+  const meetsMinimumStake =
+    (alreadyStakedTokensAmount || valueToStake) >= Number(minStake);
 
   const handleStopTask = async () => {
     try {
@@ -264,8 +233,6 @@ export function AddPrivateTask({ columnsLayout, onClose }: Props) {
 
   const handleStakeValueChange = (value: number) => {
     setValueToStake(value);
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    setMeetsMinimumStake(value >= minStake!);
   };
 
   const handleOpenAddTaskVariableModal = useCallback(
@@ -284,8 +251,7 @@ export function AddPrivateTask({ columnsLayout, onClose }: Props) {
     [showAddTaskVariableModal]
   );
 
-  const { userConfig: settings, isUserConfigLoading: loadingSettings } =
-    useUserAppConfig();
+  const { userConfig: settings } = useUserAppConfig();
 
   const isUsingNetworking = useMemo(
     () => isNetworkingTask(metadata),
@@ -322,7 +288,6 @@ export function AddPrivateTask({ columnsLayout, onClose }: Props) {
     [startedTasks, taskPubkey]
   );
 
-  const myStakeInKoii = getKoiiFromRoe(alreadyStakedTokensAmount);
   const isActive = task?.isActive;
   const startPauseDisabled =
     !isActive ||
@@ -342,6 +307,38 @@ export function AddPrivateTask({ columnsLayout, onClose }: Props) {
       ),
     [errorMessage, isLoadingMetadata]
   );
+
+  const validateTask = useCallback(() => {
+    const isTaskValid = meetsMinimumStake && isTaskToolsValid && hasEnoughKoii;
+
+    setIsTaskValidToRun(isTaskValid);
+
+    const errorMessage = getErrorMessage({
+      hasEnoughKoii,
+      minStake,
+      isTaskRunning: !!task?.isRunning,
+      hasMinimumStake: meetsMinimumStake,
+      isTaskToolsValid,
+      isActive: !!task?.isActive,
+      isUsingNetworking,
+      userHasNetworkingEnabled,
+    });
+
+    setErrorMessage(errorMessage);
+  }, [
+    minStake,
+    isTaskToolsValid,
+    task?.isRunning,
+    task?.isActive,
+    hasEnoughKoii,
+    isUsingNetworking,
+    meetsMinimumStake,
+    userHasNetworkingEnabled,
+  ]);
+
+  useEffect(() => {
+    validateTask();
+  }, [validateTask]);
 
   useAutoPairVariables({
     taskPublicKey: taskPubkey,
@@ -370,7 +367,7 @@ export function AddPrivateTask({ columnsLayout, onClose }: Props) {
 
           <div className="mt-4">
             <EditStakeInput
-              meetsMinimumStake={meetsMinimumStake}
+              meetsMinimumStake={meetsMinimumStake && hasEnoughKoii}
               stake={valueToStake}
               minStake={minStake as number}
               onChange={handleStakeValueChange}

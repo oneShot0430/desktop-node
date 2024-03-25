@@ -4,6 +4,7 @@ import CloseIcon from 'assets/svgs/cross-icon.svg';
 import SearchIcon from 'assets/svgs/search.svg';
 import UpdateIcon from 'assets/svgs/update-icon.svg';
 import { Button, Placement, Tooltip } from 'renderer/components/ui';
+import { Popover } from 'renderer/components/ui/Popover/Popover';
 
 interface UpgradeAvailableContentProps {
   onUpgrade: () => void;
@@ -40,6 +41,7 @@ export function UpgradeAvailableContent({
   const tooltipContent = isCoolingDown
     ? 'The upgrade will be available after 3 rounds.'
     : 'Running tasks that are not vetted by our team could be risky.';
+  const reviewTooltipContent = "Review what's new in this update.";
 
   return (
     <>
@@ -49,12 +51,14 @@ export function UpgradeAvailableContent({
 
       <div className="col-span-1 ml-[50%]">
         <div />
-        <Button
-          onClick={onReview}
-          icon={<SearchIcon />}
-          label="Review"
-          className="border-2 border-white text-white h-9 w-[115px] bg-transparent rounded-md"
-        />
+        <Popover tooltipContent={reviewTooltipContent}>
+          <Button
+            onClick={onReview}
+            icon={<SearchIcon />}
+            label="Review"
+            className="border-2 border-white text-white h-9 w-[115px] bg-transparent rounded-md"
+          />
+        </Popover>
       </div>
 
       <div className="col-span-3 ml-10">
