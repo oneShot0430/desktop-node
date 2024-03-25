@@ -34,7 +34,7 @@ export function Referral() {
   const shouldSeeTheNewTag = userConfig?.hasCopiedReferralCode === false;
 
   return (
-    <div className="font-light">
+    <div className="font-light text-white">
       <div className="flex gap-3">
         <p className="font-semibold mb-4">Referral Link</p>
         {shouldSeeTheNewTag && <span className="text-finnieOrange">NEW!</span>}

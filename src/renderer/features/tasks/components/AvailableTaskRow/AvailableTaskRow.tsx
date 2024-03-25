@@ -48,6 +48,7 @@ import {
   useOrcaPodman,
   useConfirmRunTask,
   useUserAppConfig,
+  useFundNewAccountModal,
 } from 'renderer/features';
 import { useAutoPairVariables } from 'renderer/features/common/hooks/useAutoPairVariables';
 import {
@@ -244,6 +245,7 @@ function AvailableTaskRow({ task, columnsLayout }: Props) {
     () => isNetworkingTask(metadata),
     [metadata]
   );
+
   const userHasNetworkingEnabled = useMemo(
     () => settings?.networkingFeaturesEnabled,
     [settings]
@@ -255,14 +257,22 @@ function AvailableTaskRow({ task, columnsLayout }: Props) {
 
   const navigate = useNavigate();
 
+  const { showModal: showFundModal } = useFundNewAccountModal({});
+
+  const hasEnoughKoii =
+    (accountBalance >= CRITICAL_MAIN_ACCOUNT_BALANCE &&
+      alreadyStakedTokensAmount >= minStake) ||
+    accountBalance >= valueToStake + CRITICAL_MAIN_ACCOUNT_BALANCE;
+
+  const meetsMinimumStake = useMemo(
+    () =>
+      alreadyStakedTokensAmount >= getKoiiFromRoe(minStake) ||
+      valueToStake >= getKoiiFromRoe(minStake),
+    [alreadyStakedTokensAmount, valueToStake, minStake]
+  );
+
   const validateTask = useCallback(() => {
-    const hasEnoughKoii =
-      (accountBalance >= CRITICAL_MAIN_ACCOUNT_BALANCE &&
-        alreadyStakedTokensAmount >= minStake) ||
-      accountBalance >= valueToStake + CRITICAL_MAIN_ACCOUNT_BALANCE;
-    const hasMinimumStake =
-      (alreadyStakedTokensAmount || valueToStake) >= minStake;
-    const isTaskValid = hasMinimumStake && isTaskToolsValid && hasEnoughKoii;
+    const isTaskValid = meetsMinimumStake && isTaskToolsValid && hasEnoughKoii;
     setIsTaskValidToRun(isTaskValid);
 
     const getErrorMessage = () => {
@@ -272,9 +282,10 @@ function AvailableTaskRow({ task, columnsLayout }: Props) {
         {
           condition: hasEnoughKoii,
           errorMessage: `have enough ${tokenTicker} to stake`,
+          action: showFundModal,
         },
         {
-          condition: hasMinimumStake,
+          condition: meetsMinimumStake,
           errorMessage: `stake at least ${getKoiiFromRoe(
             minStake
           )} ${tokenTicker} on this Task`,
@@ -327,7 +338,7 @@ function AvailableTaskRow({ task, columnsLayout }: Props) {
                 {errorMessage}
               </button>
             ) : (
-              <>• {errorMessage}</>
+              errorMessage
             )}
           </li>
         ));
@@ -347,12 +358,11 @@ function AvailableTaskRow({ task, columnsLayout }: Props) {
     isRunning,
     isTaskToolsValid,
     minStake,
-    valueToStake,
-    accountBalance,
-    alreadyStakedTokensAmount,
     isUsingNetworking,
     userHasNetworkingEnabled,
     navigate,
+    hasEnoughKoii,
+    meetsMinimumStake,
   ]);
 
   useEffect(() => {
@@ -381,13 +391,6 @@ function AvailableTaskRow({ task, columnsLayout }: Props) {
     }
     setValueToStake(value);
   };
-
-  const meetsMinimumStake = useMemo(
-    () =>
-      alreadyStakedTokensAmount >= getKoiiFromRoe(minStake) ||
-      valueToStake >= getKoiiFromRoe(minStake),
-    [alreadyStakedTokensAmount, valueToStake, minStake]
-  );
 
   const handleOpenAddTaskVariableModal = useCallback(
     (dropdownRef: RefObject<HTMLButtonElement>, tool: string) => {
@@ -591,7 +594,7 @@ function AvailableTaskRow({ task, columnsLayout }: Props) {
         <RoundTime roundTimeInMs={roundTime} />
 
         <EditStakeInput
-          meetsMinimumStake={meetsMinimumStake}
+          meetsMinimumStake={meetsMinimumStake && hasEnoughKoii}
           stake={alreadyStakedTokensAmount || valueToStake}
           minStake={minStake as number}
           onChange={handleStakeValueChange}

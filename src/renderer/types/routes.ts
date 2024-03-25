@@ -5,6 +5,7 @@ export enum AppRoute {
   Rewards = '/rewards',
   AddTask = '/add-tasks',
   Notifications = '/notifications',
+  Referral = '/settings/Referral',
   Settings = '/settings',
   SettingsGeneral = '/settings/general',
   SettingsSecurity = '/settings/security',

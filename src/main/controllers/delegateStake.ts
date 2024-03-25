@@ -68,7 +68,8 @@ const delegateStake = async (
     sleep(TRANSACTION_FINALITY_WAIT);
 
     const subdomain = await namespaceInstance.storeGet('subdomain');
-    const subdomainToEncode = isNetworkingTask && subdomain ? subdomain : '';
+    const subdomainToEncode =
+      isNetworkingTask && subdomain ? `https://${subdomain}` : '';
 
     const data = encodeData(TASK_INSTRUCTION_LAYOUTS.Stake, {
       stakeAmount: stakeAmount * LAMPORTS_PER_SOL,

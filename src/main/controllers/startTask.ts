@@ -249,6 +249,8 @@ export async function executeTasks(
     }),
     silent: true,
   };
+  if (options.env === undefined) options.env = {};
+  options.env.PATH = process.env.PATH;
 
   const stakingAccPubkey = await getStakingAccountPublicKey();
   const STAKE = selectedTask.stake_list[stakingAccPubkey];

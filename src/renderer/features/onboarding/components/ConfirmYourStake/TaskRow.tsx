@@ -3,7 +3,9 @@ import { twMerge } from 'tailwind-merge';
 
 import CheckmarkIconSvg from 'assets/svgs/checkmark-teal-icon.svg';
 import EditIconSvg from 'assets/svgs/edit-icon.svg';
+import { CRITICAL_MAIN_ACCOUNT_BALANCE } from 'config/node';
 import { Button, EditStakeInput } from 'renderer/components/ui';
+import { useMainAccountBalance } from 'renderer/features/settings';
 import { TaskWithStake } from 'renderer/types';
 import { getKoiiFromRoe } from 'utils';
 
@@ -25,7 +27,11 @@ export function TaskRow({
 
   const stakeInKoii = useMemo(() => getKoiiFromRoe(stake), [stake]);
 
-  const meetsMinimumStake = useMemo(() => stake >= minStake, [stake, minStake]);
+  const { accountBalance = 0 } = useMainAccountBalance();
+
+  const meetsMinimumStake =
+    stake >= minStake &&
+    accountBalance >= stake + CRITICAL_MAIN_ACCOUNT_BALANCE;
 
   const handleEditInputChange = (newStake: number) => setStake(newStake);
 
